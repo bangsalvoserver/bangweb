@@ -1,6 +1,6 @@
 import { connect } from 'socket.io-client';
 import './App.css';
-import Lobby from './Components/Lobby';
+import LobbyElement from './Components/LobbyElement';
 import WaitingArea from './Components/WaitingArea';
 import { useState, useEffect } from 'react';
 
@@ -88,7 +88,7 @@ function checkLobbyes () {
       <button onClick={checkLobbyes}>Check</button>
       {connected ? <WaitingArea />: <button onClick={onClick}>Click</button>}
       {lobbies.map((lobby_data) => ( // Map over the lobbies array and render a Lobby component for each lobby
-        <Lobby key={lobby_data.lobby_id} lobby={lobby_data}/>
+        <LobbyElement key={lobby_data.lobby_id} lobby={lobby_data}/>
       ))}
 
 

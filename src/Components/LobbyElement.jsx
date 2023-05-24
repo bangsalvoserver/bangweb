@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Lobby(props) {
+function LobbyElement(props) {
 
   // lobby.lobby
 
@@ -17,4 +17,4 @@ function Lobby(props) {
   )
 }
 
-export default Lobby
+export default LobbyElement
