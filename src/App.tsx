@@ -36,7 +36,7 @@ function App() {
     <div className="App">
       <h1>React App</h1>
       <Play onClick={onClickConnect} />
-      {connected ? <WaitingArea gameManager={gameManager} /> : null}
+      {connected ? <WaitingArea GameManager={gameManager} /> : null}
     </div>
   );
 }

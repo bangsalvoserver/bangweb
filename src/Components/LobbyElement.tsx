@@ -1,6 +1,6 @@
 import React from 'react'
 
-function LobbyElement(props) {
+function LobbyElement(props: any) {
 
   // lobby.lobby
 
