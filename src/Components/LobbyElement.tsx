@@ -1,19 +1,20 @@
-import React from 'react'
+import { GameManager } from '../Messages/GameManager'
+import { LobbyUpdate } from '../Messages/ServerMessage'
 
-function LobbyElement(props: any) {
+export type LobbyElementProps = {
+  lobby: LobbyUpdate,
+  gameManager: GameManager
+}
 
-  // lobby.lobby
-
-  
-
+function LobbyElement({ lobby, gameManager }: LobbyElementProps) {
   return (
-    <>
-    <div>{props.lobby.name}</div>
-    <div>{props.lobby.id}</div>
-    <div>{props.lobby.num_players}/8</div>
-    <div>{props.lobby.state}</div>
-    <button> join</button>
-    </>
+    <div>
+    <div>{lobby.name}</div>
+    <div>{lobby.lobby_id}</div>
+    <div>{lobby.num_players}/8</div>
+    <div>{lobby.state}</div>
+    <button>join</button>
+    </div>
   )
 }
 
