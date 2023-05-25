@@ -1,12 +1,12 @@
 import './App.css';
 import WaitingArea from './Components/WaitingArea';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Play from './Components/Buttons/Play';
 import { GameManager } from './Messages/GameManager';
 
 function App() {
   const [scene, setScene] = useState<JSX.Element | null>(null);
-  const [gameManager, setGameManager] = useState(new GameManager());
+  const gameManager = useRef(new GameManager());
   
   useEffect(() => {
     let handlers = [
