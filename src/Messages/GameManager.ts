@@ -33,7 +33,7 @@ export class GameManager {
             self.receiveMessage(messageType, data[messageType]);
         };
         this.socket.onopen = function () {
-            console.log('WebSocket connection established. sending connect message');
+            console.log('WebSocket connection established');
             self.receiveMessage('connect', {});
         };
         this.socket.onclose = function () {
@@ -41,6 +41,10 @@ export class GameManager {
             self.receiveMessage('disconnect', {});
             self.socket = null;
         };
+    }
+
+    disconnect() {
+        this.socket?.close();
     }
 
     receiveMessage(messageType: string, message: any) {

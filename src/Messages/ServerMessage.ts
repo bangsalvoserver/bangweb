@@ -1,7 +1,7 @@
 import { GameOptions } from "./GameUpdate"
 
 export type ClientAccepted = {
-  id: number
+  user_id: number
 };
 
 export type LobbyError = {
