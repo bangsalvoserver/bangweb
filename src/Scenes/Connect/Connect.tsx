@@ -6,17 +6,17 @@ import { serializeImage } from '../../Messages/ImageSerial';
 
 type ConnectProps = {
   gameManager: GameManager,
-  propic?: string
+  getPropic: () => string | undefined
 }
 
-export default function ConnectScene({ gameManager, propic }: ConnectProps) {
+export default function ConnectScene({ gameManager, getPropic }: ConnectProps) {
   const username = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => gameManager.addHandlers([
     ['connect', () => {
       gameManager.sendMessage('connect', {
         user_name: username.current.value,
-        profile_image: serializeImage(propic, 50),
+        profile_image: serializeImage(getPropic(), 50),
         commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
       });
     }],

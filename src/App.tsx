@@ -4,10 +4,11 @@ import { GameManager } from './Messages/GameManager';
 import ConnectScene from './Scenes/Connect/Connect';
 import Header from './components/Header';
 import UserMenu from './components/UserMenu';
+import { useStateRef } from './Utils/Utils';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [propic, setPropic] = useState<string>();
+  const [propic, setPropic, propicRef] = useStateRef<string>();
 
   const gameManager = useRef<GameManager>();
   if (!gameManager.current) {
@@ -15,8 +16,7 @@ function App() {
   }
 
   const gameMgr = gameManager.current;
-
-  const [scene, setScene] = useState(<ConnectScene gameManager={gameMgr} propic={propic} />);
+  const [scene, setScene] = useState(<ConnectScene gameManager={gameMgr} getPropic={() => propicRef.current} />);
 
   useEffect(() => {
     gameMgr.setSceneCallback(scene => setScene(scene));
@@ -25,7 +25,9 @@ function App() {
       ['lobby_error', (message: string) => {
         console.error("Lobby error: " + message);
       }],
-      ['disconnect', () => gameMgr.changeScene(<ConnectScene gameManager={gameMgr} propic={propic} />)]
+      ['disconnect', () => {
+        gameMgr.changeScene(<ConnectScene gameManager={gameMgr} getPropic={() => propicRef.current} />);
+      }]
     ]);
   });
 
