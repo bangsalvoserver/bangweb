@@ -1,5 +1,5 @@
 type MessageHandler = {
-    type: String,
+    type: string,
     handler: (message: any) => void
 };
 
@@ -35,7 +35,6 @@ export class GameManager {
     receiveMessage(messageType: string, message: any) {
         this.messageHandlers.forEach(({type, handler}: MessageHandler, id: number) => {
             if (type === messageType) {
-                console.log(type + " triggered");
                 handler(message);
             }
         });

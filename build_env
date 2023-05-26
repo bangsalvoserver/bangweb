@@ -1,0 +1,8 @@
+#!/bin/sh
+
+BANGSERVER_COMMIT_HASH_API=https://api.github.com/repos/salvoilmiosi/banggameserver/branches/release
+BANGSERVER_URL=ws://bang.salvoserver.it:47654
+
+commit_hash=`curl -s ${BANGSERVER_COMMIT_HASH_API} | jq -r '.commit.sha'`
+
+echo "REACT_APP_BANG_SERVER_URL=${BANGSERVER_URL}\nREACT_APP_BANG_SERVER_COMMIT_HASH=${commit_hash}" > .env

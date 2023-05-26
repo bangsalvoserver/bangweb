@@ -6,27 +6,32 @@ import { GameManager } from './Messages/GameManager';
 
 function App() {
   const [scene, setScene] = useState<JSX.Element | null>(null);
+
   const gameManager = useRef(new GameManager());
+  const mgr = gameManager.current;
   
   useEffect(() => {
     let handlers = [
-      gameManager.onMessage('connect', () => {
-        gameManager.sendMessage('connect', { user_name: 'Tizio', profile_image: '', commit_hash: 'ad5640ec0932ed743c21ca3a1c7186672ca49d31' });
+      mgr.onMessage('connect', () => {
+        mgr.sendMessage('connect',
+          { user_name: 'Tizio', profile_image: '', commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || '' });
       }),
-      gameManager.onMessage('disconnect', () => {
+      mgr.onMessage('disconnect', () => {
         setScene(null);
       }),
-      gameManager.onMessage('client_accepted', () => {
-        setScene(<WaitingArea gameManager={gameManager} />);
+      mgr.onMessage('client_accepted', () => {
+        setScene(<WaitingArea gameManager={mgr} />);
       })
     ];
 
-    return () => gameManager.removeHandlers(handlers);
+    return () => mgr.removeHandlers(handlers);
   });
 
   const onClickConnect = () => {
-    if (!gameManager.isConnected()) {
-      gameManager.connect('ws://salvoserver.my.to:47654');
+    console.log(process.env.REACT_APP_BANG_SERVER_COMMIT_HASH);
+    
+    if (!mgr.isConnected()) {
+      mgr.connect(process.env.REACT_APP_BANG_SERVER_URL || '');
     }
   };
 
