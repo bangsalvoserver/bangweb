@@ -4,11 +4,25 @@ import { useEffect, useState, useRef } from 'react';
 import Play from './Components/Buttons/Play';
 import { GameManager } from './Messages/GameManager';
 
-function App() {
-  const [scene, setScene] = useState<JSX.Element | null>(null);
+function ConnectScene(mgr: GameManager) {
+  const onClickConnect = () => {
+    console.log(process.env.REACT_APP_BANG_SERVER_COMMIT_HASH);
 
+    if (!mgr.isConnected()) {
+      mgr.connect(process.env.REACT_APP_BANG_SERVER_URL || '');
+    }
+  };
+
+  return (
+    <Play onClick={onClickConnect} />
+  )
+}
+
+function App() {
   const gameManager = useRef(new GameManager());
   const mgr = gameManager.current;
+
+  const [scene, setScene] = useState(ConnectScene(mgr));
   
   useEffect(() => {
     let handlers = [
@@ -17,7 +31,7 @@ function App() {
           { user_name: 'Tizio', profile_image: '', commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || '' });
       }),
       mgr.onMessage('disconnect', () => {
-        setScene(null);
+        setScene(ConnectScene(mgr));
       }),
       mgr.onMessage('client_accepted', () => {
         setScene(<WaitingArea gameManager={mgr} />);
@@ -27,19 +41,10 @@ function App() {
     return () => mgr.removeHandlers(handlers);
   });
 
-  const onClickConnect = () => {
-    console.log(process.env.REACT_APP_BANG_SERVER_COMMIT_HASH);
-    
-    if (!mgr.isConnected()) {
-      mgr.connect(process.env.REACT_APP_BANG_SERVER_URL || '');
-    }
-  };
-
   return (
     <div className="App">
-      <h1>React App</h1>
-      <Play onClick={onClickConnect} />
-      {scene || null}
+      <h1>Bang! Web</h1>
+      {scene}
     </div>
   );
 }
