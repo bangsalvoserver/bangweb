@@ -1,7 +1,7 @@
 import React, { MutableRefObject, SyntheticEvent, useEffect, useRef } from 'react'
-import { SceneType } from '../SceneType';
 import { ClientAccepted } from '../../Messages/ServerMessage';
 import { GameManager } from '../../Messages/GameManager';
+import WaitingArea from '../WaitingArea/WaitingArea';
 
 type ConnectProps = {
   gameManager: GameManager
@@ -16,7 +16,7 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
       gameManager.sendMessage('connect', { user_name: username.current.value, commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || '' });
     }],
     ['client_accepted', ({ user_id }: ClientAccepted) => {
-      gameManager.changeScene(SceneType.WaitingArea, { myUserId: user_id });
+      gameManager.changeScene(<WaitingArea gameManager={gameManager} myUserId={user_id} />);
     }]
   ]));
 

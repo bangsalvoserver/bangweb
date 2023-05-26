@@ -2,7 +2,7 @@ import { MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from "r
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import { LobbyEntered, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
 import { GameManager } from "../../Messages/GameManager";
-import { SceneType } from "../SceneType";
+import LobbyScene from "../Lobby/Lobby";
 
 type WaitingAreaProps = {
   gameManager: GameManager,
@@ -30,7 +30,7 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
         );
       }],
       ['lobby_entered', ({ name }: LobbyEntered) => {
-        gameManager.changeScene(SceneType.Lobby, { lobbyName: name, myUserId: myUserId });
+        gameManager.changeScene(<LobbyScene gameManager={gameManager} lobbyName={name} myUserId={myUserId} />);
       }]
     ]);
   });

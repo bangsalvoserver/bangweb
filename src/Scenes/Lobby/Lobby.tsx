@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { GameManager } from '../../Messages/GameManager';
-import { SceneType } from '../SceneType';
 import { LobbyAddUser, LobbyRemoveUser } from '../../Messages/ServerMessage';
 import LobbyUser, { LobbyUserProps, UserValue } from './LobbyUser';
+import WaitingArea from '../WaitingArea/WaitingArea';
 
 type LobbyProps = {
   gameManager: GameManager,
@@ -24,7 +24,7 @@ export default function LobbyScene({ gameManager, lobbyName, myUserId }: LobbyPr
         users.filter(user => user.id !== user_id)
       );
       if (user_id === myUserId) {
-        gameManager.changeScene(SceneType.WaitingArea, { myUserId });
+        gameManager.changeScene(<WaitingArea gameManager={gameManager} myUserId={user_id} />);
       }
     }]
   ]));

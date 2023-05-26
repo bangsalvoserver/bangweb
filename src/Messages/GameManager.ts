@@ -1,5 +1,3 @@
-import { SceneType } from "../Scenes/SceneType";
-
 type MessageHandler = {
     type: string,
     handler: (message: any) => void
@@ -8,17 +6,19 @@ type MessageHandler = {
 export class GameManager {
     private socket: WebSocket | null = null;
     private messageHandlers = new Set<MessageHandler>();
-    private setSceneCallback: (scene: [SceneType, any]) => void;
+    private sceneCallback?: (scene: JSX.Element) => void;
     private queuedMessages = [] as [string, any][];
     private isLoading = true;
 
-    constructor(setSceneCallback: (scene: [SceneType, any]) => void) {
-        this.setSceneCallback = setSceneCallback;
+    setSceneCallback(sceneCallback: (scene: JSX.Element) => void) {
+        this.sceneCallback = sceneCallback;
     }
 
-    changeScene(scene: SceneType, args?: any) {
+    changeScene(scene: JSX.Element) {
         this.isLoading = true;
-        this.setSceneCallback([scene, args]);
+        if (this.sceneCallback) {
+            this.sceneCallback(scene);
+        }
     }
 
     isConnected(): boolean {

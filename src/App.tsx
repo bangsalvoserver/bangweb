@@ -1,22 +1,26 @@
 import './App.css';
 import { useEffect, useState, useRef } from 'react';
 import { GameManager } from './Messages/GameManager';
-import { GetCurrentScene, SceneType } from './Scenes/SceneType';
+import ConnectScene from './Scenes/Connect/Connect';
 
 function App() {
-  const [[scene, args], setScene] = useState([SceneType.Connect, null] as [SceneType, any]);
-  const gameManager = useRef(new GameManager(setScene));
+  const gameManager = useRef(new GameManager());
+  const [scene, setScene] = useState(<ConnectScene gameManager={gameManager.current} />);
 
   const mgr = gameManager.current;
 
-  useEffect(() => mgr.addHandlers([
-    ['disconnect', () => mgr.changeScene(SceneType.Connect)]
-  ]));
+  useEffect(() => {
+    mgr.setSceneCallback(setScene);
+
+    return mgr.addHandlers([
+      ['disconnect', () => mgr.changeScene(<ConnectScene gameManager={mgr} />)]
+    ]);
+  });
 
   return (
     <div className="App">
       <h1>Bang! Web</h1>
-      <GetCurrentScene scene={scene} args={args} gameManager={gameManager.current} />
+      {scene}
     </div>
   );
 }
