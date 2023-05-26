@@ -1,8 +1,13 @@
 import React, { MutableRefObject, SyntheticEvent, useEffect, useRef } from 'react'
-import { SceneProps, SceneType } from '../SceneProps';
+import { SceneType } from '../SceneType';
 import { ClientAccepted } from '../../Messages/ServerMessage';
+import { GameManager } from '../../Messages/GameManager';
 
-export default function ConnectScene({ gameManager }: SceneProps) {
+type ConnectProps = {
+  gameManager: GameManager
+}
+
+export default function ConnectScene({ gameManager }: ConnectProps) {
   const username = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {
@@ -13,7 +18,7 @@ export default function ConnectScene({ gameManager }: SceneProps) {
       }),
       gameManager.onMessage('client_accepted', ({ user_id }: ClientAccepted) => {
         console.log("Client Accepted: user_id = " + user_id);
-        gameManager.changeScene(SceneType.WaitingArea);
+        gameManager.changeScene(SceneType.WaitingArea, { myUserId: user_id });
       })
     ];
 

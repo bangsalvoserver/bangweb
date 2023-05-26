@@ -1,4 +1,4 @@
-import { SceneType } from "../Scenes/SceneProps";
+import { SceneType } from "../Scenes/SceneType";
 
 export type MessageHandler = {
     type: string,
@@ -8,14 +8,14 @@ export type MessageHandler = {
 export class GameManager {
     private socket: WebSocket | null = null;
     private messageHandlers = new Set<MessageHandler>();
-    private setSceneFun: (scene: SceneType) => void;
+    private setSceneCallback: (scene: [SceneType, any]) => void;
 
-    constructor(setSceneFun: (scene: SceneType) => void) {
-        this.setSceneFun = setSceneFun;
+    constructor(setSceneCallback: (scene: [SceneType, any]) => void) {
+        this.setSceneCallback = setSceneCallback;
     }
 
-    changeScene(scene: SceneType) {
-        this.setSceneFun(scene);
+    changeScene(scene: SceneType, args?: any) {
+        this.setSceneCallback([scene, args]);
     }
 
     isConnected(): boolean {

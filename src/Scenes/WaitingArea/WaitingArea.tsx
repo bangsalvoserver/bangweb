@@ -1,31 +1,36 @@
 import { MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from "react";
-import LobbyElement from "./LobbyElement";
+import LobbyElement, { LobbyValue } from "./LobbyElement";
 import { LobbyEntered, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
-import { SceneProps } from "../SceneProps";
+import { GameManager } from "../../Messages/GameManager";
+import { SceneType } from "../SceneType";
 
-function WaitingArea({ gameManager }: SceneProps) {
-  const [lobbies, setLobbies] = useState([] as LobbyUpdate[]);
+type WaitingAreaProps = {
+  gameManager: GameManager,
+  myUserId: number
+};
+
+function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
+  const [lobbies, setLobbies] = useState([] as LobbyValue[]);
   const lobby_name = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {
     gameManager.sendMessage("lobby_list", {});
 
     let handlers = [
-      gameManager.onMessage("lobby_update", (message: LobbyUpdate) => {
-        setLobbies((lobbies) =>
+      gameManager.onMessage("lobby_update", ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
+        setLobbies(lobbies =>
           lobbies
-            .filter((lobby) => lobby.lobby_id !== message.lobby_id)
-            .concat(message)
+            .filter((lobby) => lobby.id !== lobby_id)
+            .concat({ id: lobby_id, name: name, num_players: num_players, state: state })
         );
       }),
       gameManager.onMessage("lobby_removed", ({ lobby_id }: LobbyRemoved) => {
-        setLobbies((lobbies) =>
-          lobbies.filter((lobby) => lobby.lobby_id !== lobby_id)
+        setLobbies(lobbies =>
+          lobbies.filter((lobby) => lobby.id !== lobby_id)
         );
       }),
       gameManager.onMessage('lobby_entered', ({ name }: LobbyEntered) => {
-        console.log("Entered lobby " + name);
-        // TODO go to lobby scene
+        gameManager.changeScene(SceneType.Lobby, { lobbyName: name, myUserId: myUserId });
       })
     ];
 
@@ -36,10 +41,10 @@ function WaitingArea({ gameManager }: SceneProps) {
     gameManager.disconnect();
   };
 
-  const handleCreateLobby = function(event: SyntheticEvent) {
+  const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
     if (lobby_name.current.value) {
-      gameManager.sendMessage('lobby_make', {name: lobby_name.current.value});
+      gameManager.sendMessage('lobby_make', { name: lobby_name.current.value });
     }
   };
 
@@ -58,7 +63,7 @@ function WaitingArea({ gameManager }: SceneProps) {
       </div>
       <div>{lobbies.map((lobby) => (
         <LobbyElement
-          key={lobby.lobby_id}
+          key={lobby.id}
           lobby={lobby}
           gameManager={gameManager}
         />

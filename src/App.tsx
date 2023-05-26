@@ -1,10 +1,10 @@
 import './App.css';
 import { useEffect, useState, useRef } from 'react';
 import { GameManager } from './Messages/GameManager';
-import { GetCurrentScene, SceneType } from './Scenes/SceneProps';
+import { GetCurrentScene, SceneType } from './Scenes/SceneType';
 
 function App() {
-  const [scene, setScene] = useState(SceneType.Connect);
+  const [[scene, args], setScene] = useState([SceneType.Connect, null] as [SceneType, any]);
   const gameManager = useRef(new GameManager(setScene));
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function App() {
   return (
     <div className="App">
       <h1>Bang! Web</h1>
-      <GetCurrentScene scene={scene} gameManager={gameManager.current} />
+      <GetCurrentScene scene={scene} args={args} gameManager={gameManager.current} />
     </div>
   );
 }

@@ -38,13 +38,13 @@ export type LobbyOwner = {
 };
 
 export type LobbyAddUser = {
-  id: number,
+  user_id: number,
   name: string,
   profile_image: string
 };
 
 export type LobbyRemoveUser = {
-  id: number
+  user_id: number
 };
 
 export type LobbyChat = {
