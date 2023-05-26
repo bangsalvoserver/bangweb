@@ -4,7 +4,7 @@ import { LobbyEntered, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMe
 import { SceneProps } from "../SceneProps";
 
 function WaitingArea({ gameManager }: SceneProps) {
-  const [lobbies, setLobbies] = useState<Array<LobbyUpdate>>([]);
+  const [lobbies, setLobbies] = useState([] as LobbyUpdate[]);
   const lobby_name = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {

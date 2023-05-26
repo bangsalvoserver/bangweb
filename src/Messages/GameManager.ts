@@ -1,14 +1,13 @@
 import { SceneType } from "../Scenes/SceneProps";
 
-type MessageHandler = {
+export type MessageHandler = {
     type: string,
     handler: (message: any) => void
 };
 
 export class GameManager {
     private socket: WebSocket | null = null;
-    private messageHandlers = new Map<number, MessageHandler>();
-    private handlerCounter = 0;
+    private messageHandlers = new Set<MessageHandler>();
     private setSceneFun: (scene: SceneType) => void;
 
     constructor(setSceneFun: (scene: SceneType) => void) {
@@ -48,7 +47,7 @@ export class GameManager {
     }
 
     receiveMessage(messageType: string, message: any) {
-        this.messageHandlers.forEach(({type, handler}: MessageHandler, id: number) => {
+        this.messageHandlers.forEach(({type, handler}: MessageHandler) => {
             if (type === messageType) {
                 handler(message);
             }
@@ -56,15 +55,13 @@ export class GameManager {
     }
 
     onMessage(messageType: string, handler: (message: any) => void) {
-        this.messageHandlers.set(this.handlerCounter, {type: messageType, handler: handler});
-        return this.handlerCounter++;
+        let messageHandler: MessageHandler = {type: messageType, handler: handler};
+        this.messageHandlers.add(messageHandler);
+        return messageHandler;
     }
 
-    removeHandlers(handlerIds: Array<number>) {
-        handlerIds.forEach(id => this.messageHandlers.delete(id));
-        if (this.messageHandlers.size === 0) {
-            this.handlerCounter = 0;
-        }
+    removeHandlers(handlers: MessageHandler[]) {
+        handlers.forEach(hdl => this.messageHandlers.delete(hdl));
     }
 
     sendMessage(messageType: string, message: any) {
