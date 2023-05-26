@@ -5,6 +5,7 @@ import { LobbyAddUser, LobbyEntered, LobbyOwner, LobbyRemoveUser } from "../../M
 import LobbyScene from "../Lobby/Lobby";
 import WaitingArea from "../WaitingArea/WaitingArea";
 import { GameUpdate } from "../../Messages/GameUpdate";
+import { deserializeImage } from "../../Messages/ImageSerial";
 
 type GameSceneProps = {
   gameManager: GameManager,
@@ -26,9 +27,9 @@ export default function GameScene({ gameManager, users, owner, myUserId }: GameS
     ['lobby_entered', ({ name, options}: LobbyEntered) => {
       gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} myUserId={myUserId} />);
     }],
-    ['lobby_add_user', ({ user_id, name }: LobbyAddUser) => {
+    ['lobby_add_user', ({ user_id, name, profile_image }: LobbyAddUser) => {
       setLobbyUsers(users =>
-        users.filter(user => user.id !== user_id).concat({ id: user_id, name })
+        users.filter(user => user.id !== user_id).concat({ id: user_id, name, propic: deserializeImage(profile_image) })
       );
     }],
     ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {

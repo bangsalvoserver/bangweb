@@ -1,4 +1,5 @@
 import { GameOptions } from "./GameUpdate"
+import { ImagePixels } from "./ImageSerial";
 
 export type ClientAccepted = {
   user_id: number
@@ -36,7 +37,7 @@ export type LobbyOwner = {
 export type LobbyAddUser = {
   user_id: number,
   name: string,
-  profile_image: string
+  profile_image: ImagePixels
 };
 
 export type LobbyRemoveUser = {

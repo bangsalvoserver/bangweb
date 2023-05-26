@@ -1,6 +1,7 @@
 export type UserValue = {
     id: number,
-    name: string
+    name: string,
+    propic: string | null
 }
 
 export type LobbyUserProps = {
@@ -10,6 +11,9 @@ export type LobbyUserProps = {
 
 export default function LobbyUser({ user }: LobbyUserProps) {
   return (
-    <div>{user.name}</div>
+    <div>
+    {user.propic ? <img src={user.propic} /> : null}
+    {user.name}
+    </div>
   );
 }
