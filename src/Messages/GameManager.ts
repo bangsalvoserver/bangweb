@@ -27,26 +27,24 @@ export class GameManager {
 
     connect(url: string) {
         this.socket = new WebSocket(url);
-        let self = this; 
-
-        this.socket.onmessage = function (event) {
+        this.socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             const messageType = Object.keys(data)[0];
-            self.receiveMessage(messageType, data[messageType]);
+            this.receiveMessage(messageType, data[messageType]);
         };
-        this.socket.onopen = function () {
+        this.socket.onopen = () => {
             console.log('WebSocket connection established');
-            self.receiveMessage('connect', {});
+            this.receiveMessage('connect', {});
         };
-        this.socket.onclose = function () {
+        this.socket.onclose = () => {
             console.log('WebSocket connection closed');
-            self.receiveMessage('disconnect', {});
-            self.socket = null;
+            this.receiveMessage('disconnect', {});
+            this.socket = null;
         };
-        this.socket.onerror = function() {
+        this.socket.onerror = () => {
             console.log('WebSocket connection error');
-            self.receiveMessage('disconnect', {});
-            self.socket = null;
+            this.receiveMessage('disconnect', {});
+            this.socket = null;
         };
     }
 
