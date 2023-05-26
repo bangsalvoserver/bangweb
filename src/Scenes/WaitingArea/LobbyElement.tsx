@@ -1,4 +1,3 @@
-import { GameManager } from '../../Messages/GameManager'
 import { LobbyState } from '../../Messages/ServerMessage'
 
 export type LobbyValue = {
@@ -10,20 +9,16 @@ export type LobbyValue = {
 
 export type LobbyElementProps = {
   lobby: LobbyValue,
-  gameManager: GameManager
+  onClickJoin: (lobby_id: number) => void
 }
 
-function LobbyElement({ lobby, gameManager }: LobbyElementProps) {
-  const handleJoin = () => {
-    gameManager.sendMessage('lobby_join', {lobby_id: lobby.id});
-  };
-
+function LobbyElement({ lobby, onClickJoin }: LobbyElementProps) {
   return (
     <div>
     <span>{lobby.name}</span>
     <span>{lobby.num_players}/8</span>
     <span>{lobby.state}</span>
-    <button onClick={handleJoin}>Join</button>
+    <button onClick={() => onClickJoin(lobby.id)}>Join</button>
     </div>
   )
 }

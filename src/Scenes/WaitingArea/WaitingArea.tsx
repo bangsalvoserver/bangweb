@@ -48,6 +48,10 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
     }
   };
 
+  const handleClickJoin = (lobby_id: number) => {
+    gameManager.sendMessage('lobby_join', { lobby_id });
+  };
+
   return (
     <div>
       <h1>Welcome To The Waiting Area</h1>
@@ -62,7 +66,7 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
         </form>
       </div>
       <div>{lobbies.map((lobby) => (
-        <LobbyElement key={lobby.id} lobby={lobby} gameManager={gameManager} />
+        <LobbyElement key={lobby.id} lobby={lobby} onClickJoin={handleClickJoin} />
       ))}</div>
     </div>
   );
