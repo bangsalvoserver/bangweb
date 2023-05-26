@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GameManager } from '../../Messages/GameManager';
 import { LobbyAddUser, LobbyRemoveUser } from '../../Messages/ServerMessage';
-import LobbyUser, { LobbyUserProps, UserValue } from './LobbyUser';
+import LobbyUser, { UserValue } from './LobbyUser';
 import WaitingArea from '../WaitingArea/WaitingArea';
 
 type LobbyProps = {

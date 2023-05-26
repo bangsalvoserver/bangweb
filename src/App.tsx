@@ -10,7 +10,7 @@ function App() {
   const mgr = gameManager.current;
 
   useEffect(() => {
-    mgr.setSceneCallback(setScene);
+    mgr.setSceneCallback(scene => setScene(scene));
 
     return mgr.addHandlers([
       ['disconnect', () => mgr.changeScene(<ConnectScene gameManager={mgr} />)]
