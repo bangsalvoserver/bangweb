@@ -16,23 +16,23 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
   useEffect(() => {
     gameManager.sendMessage("lobby_list", {});
 
-    let handlers = [
-      gameManager.onMessage("lobby_update", ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
+    let handlers = gameManager.addHandlers([
+      ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
         setLobbies(lobbies =>
           lobbies
             .filter((lobby) => lobby.id !== lobby_id)
             .concat({ id: lobby_id, name: name, num_players: num_players, state: state })
         );
-      }),
-      gameManager.onMessage("lobby_removed", ({ lobby_id }: LobbyRemoved) => {
+      }],
+      ['lobby_removed', ({ lobby_id }: LobbyRemoved) => {
         setLobbies(lobbies =>
           lobbies.filter((lobby) => lobby.id !== lobby_id)
         );
-      }),
-      gameManager.onMessage('lobby_entered', ({ name }: LobbyEntered) => {
+      }],
+      ['lobby_entered', ({ name }: LobbyEntered) => {
         gameManager.changeScene(SceneType.Lobby, { lobbyName: name, myUserId: myUserId });
-      })
-    ];
+      }]
+    ]);
 
     return () => gameManager.removeHandlers(handlers);
   });
@@ -62,11 +62,7 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
         </form>
       </div>
       <div>{lobbies.map((lobby) => (
-        <LobbyElement
-          key={lobby.id}
-          lobby={lobby}
-          gameManager={gameManager}
-        />
+        <LobbyElement key={lobby.id} lobby={lobby} gameManager={gameManager} />
       ))}</div>
     </div>
   );

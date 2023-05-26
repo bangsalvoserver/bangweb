@@ -11,16 +11,15 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
   const username = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {
-    let handlers = [
-      gameManager.onMessage('connect', () => {
+    let handlers = gameManager.addHandlers([
+      ['connect', () => {
         // TODO add profile_image
         gameManager.sendMessage('connect', { user_name: username.current.value, commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || '' });
-      }),
-      gameManager.onMessage('client_accepted', ({ user_id }: ClientAccepted) => {
-        console.log("Client Accepted: user_id = " + user_id);
+      }],
+      ['client_accepted', ({ user_id }: ClientAccepted) => {
         gameManager.changeScene(SceneType.WaitingArea, { myUserId: user_id });
-      })
-    ];
+      }]
+    ]);
 
     return () => gameManager.removeHandlers(handlers);
   });

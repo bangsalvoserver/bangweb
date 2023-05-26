@@ -14,21 +14,21 @@ export default function LobbyScene({ gameManager, lobbyName, myUserId }: LobbyPr
   const [users, setUsers] = useState([] as UserValue[]);
 
   useEffect(() => {
-    let handlers = [
-      gameManager.onMessage('lobby_add_user', ({ user_id, name }: LobbyAddUser) => {
-        setUsers(users => 
-          users.filter(user => user.id !== user_id).concat({id:user_id, name})
+    let handlers = gameManager.addHandlers([
+      ['lobby_add_user', ({ user_id, name }: LobbyAddUser) => {
+        setUsers(users =>
+          users.filter(user => user.id !== user_id).concat({ id: user_id, name })
         );
-      }),
-      gameManager.onMessage('lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
-        setUsers(users => 
+      }],
+      ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
+        setUsers(users =>
           users.filter(user => user.id !== user_id)
         );
         if (user_id === myUserId) {
           gameManager.changeScene(SceneType.WaitingArea, { myUserId });
         }
-      })
-    ];
+      }]
+    ]);
 
     return () => gameManager.removeHandlers(handlers);
   });

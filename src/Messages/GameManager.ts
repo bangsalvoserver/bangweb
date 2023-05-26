@@ -1,6 +1,6 @@
 import { SceneType } from "../Scenes/SceneType";
 
-export type MessageHandler = {
+type MessageHandler = {
     type: string,
     handler: (message: any) => void
 };
@@ -9,12 +9,15 @@ export class GameManager {
     private socket: WebSocket | null = null;
     private messageHandlers = new Set<MessageHandler>();
     private setSceneCallback: (scene: [SceneType, any]) => void;
+    private queuedMessages = [] as [string, any][];
+    private isLoading = true;
 
     constructor(setSceneCallback: (scene: [SceneType, any]) => void) {
         this.setSceneCallback = setSceneCallback;
     }
 
     changeScene(scene: SceneType, args?: any) {
+        this.isLoading = true;
         this.setSceneCallback([scene, args]);
     }
 
@@ -46,18 +49,33 @@ export class GameManager {
         this.socket?.close();
     }
 
-    receiveMessage(messageType: string, message: any) {
-        this.messageHandlers.forEach(({type, handler}: MessageHandler) => {
-            if (type === messageType) {
-                handler(message);
-            }
+    processMessages() {
+        this.queuedMessages.forEach(([messageType, message]) => {
+            this.messageHandlers.forEach(({type, handler}: MessageHandler) => {
+                if (type === messageType) {
+                    handler(message);
+                }
+            });
         });
+        this.queuedMessages = [];
     }
 
-    onMessage(messageType: string, handler: (message: any) => void) {
-        let messageHandler: MessageHandler = {type: messageType, handler: handler};
-        this.messageHandlers.add(messageHandler);
-        return messageHandler;
+    receiveMessage(messageType: string, message: any) {
+        this.queuedMessages.push([messageType, message]);
+        if (!this.isLoading) {
+            this.processMessages();
+        }
+    }
+
+    addHandlers(handlers: [string, (message: any) => void][]) {
+        let ret = handlers.map(([messageType, handler]) => {
+            let messageHandler: MessageHandler = {type: messageType, handler};
+            this.messageHandlers.add(messageHandler);
+            return messageHandler;
+        });
+        this.isLoading = false;
+        this.processMessages();
+        return ret;
     }
 
     removeHandlers(handlers: MessageHandler[]) {

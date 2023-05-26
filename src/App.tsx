@@ -9,11 +9,11 @@ function App() {
 
   useEffect(() => {
     const mgr = gameManager.current;
-    let handlers = [
-      mgr.onMessage('disconnect', () => {
+    let handlers = mgr.addHandlers([
+      ['disconnect', () => {
         mgr.changeScene(SceneType.Connect);
-      }),
-    ];
+      }]
+    ]);
 
     return () => mgr.removeHandlers(handlers);
   });
