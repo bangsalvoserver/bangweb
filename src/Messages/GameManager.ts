@@ -79,7 +79,7 @@ export class GameManager {
         return () => ret.forEach(hdl => this.messageHandlers.delete(hdl));
     }
 
-    sendMessage(messageType: string, message: any) {
+    sendMessage(messageType: string, message: any = {}) {
         this.socket?.send(JSON.stringify({[messageType]: message}));
     }
 }

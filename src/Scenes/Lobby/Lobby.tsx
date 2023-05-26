@@ -30,7 +30,7 @@ export default function LobbyScene({ gameManager, lobbyName, myUserId }: LobbyPr
   ]));
 
   const handleLeaveLobby = () => {
-    gameManager.sendMessage('lobby_leave', {});
+    gameManager.sendMessage('lobby_leave');
   };
 
   return (

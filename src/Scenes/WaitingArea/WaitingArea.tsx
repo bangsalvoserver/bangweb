@@ -14,7 +14,7 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
   const lobby_name = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {
-    gameManager.sendMessage("lobby_list", {});
+    gameManager.sendMessage("lobby_list");
 
     return gameManager.addHandlers([
       ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
