@@ -5,18 +5,18 @@ import WaitingArea from '../WaitingArea/WaitingArea';
 import { serializeImage } from '../../Messages/ImageSerial';
 
 type ConnectProps = {
-  gameManager: GameManager
+  gameManager: GameManager,
+  propic?: string
 }
 
-export default function ConnectScene({ gameManager }: ConnectProps) {
-  const [propic, setPropic] = useState<string>();
+export default function ConnectScene({ gameManager, propic }: ConnectProps) {
   const username = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => gameManager.addHandlers([
     ['connect', () => {
       gameManager.sendMessage('connect', {
         user_name: username.current.value,
-        profile_image: propic ? serializeImage(propic, 50) : {},
+        profile_image: serializeImage(propic, 50),
         commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
       });
     }],
@@ -24,19 +24,6 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
       gameManager.changeScene(<WaitingArea gameManager={gameManager} myUserId={user_id} />);
     }]
   ]));
-
-  const handlePropicChange = function(event: ChangeEvent<HTMLInputElement>) {
-    let file = event.target.files && event.target.files[0] || null;
-    if (file) {
-      let reader = new FileReader();
-      reader.onload = () => {
-        setPropic(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPropic(undefined);
-    }
-  };
 
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
@@ -46,18 +33,40 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
   };
 
   return (
-    <form onSubmit={handleConnect}>
-      <div>
-          <label htmlFor='propic_file'>Profile picture:</label>
-          {propic ? <img src={propic} /> : null}
-          <input type='file' id='propic_file' accept="image/*" onChange={handlePropicChange} />
-      </div>
-      <div>
-        <label htmlFor='username'>User Name:</label><input type='text' id='username' ref={username}></input>
-      </div>
-      <div>
-        <button type='submit'>Connect</button>
-      </div>
-    </form>
+    <form onSubmit={handleConnect} className="flex flex-col items-center">
+    <label htmlFor="username" className="text-lg font-medium mb-2">User Name:</label>
+    <input
+      className="
+      border-2
+      border-gray-300
+      rounded-md
+      p-2
+      w-64
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500
+      "
+      type="text"
+      id="username"
+      ref={username}
+    />
+    <button
+      type="submit"
+      className="
+      mt-4
+      bg-blue-500
+      hover:bg-blue-600
+      text-white
+      py-2
+      px-4
+      rounded-md
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500
+      "
+    >
+      Connect
+    </button>
+  </form>
   )
 }

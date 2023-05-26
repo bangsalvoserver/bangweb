@@ -4,7 +4,9 @@ export type ImagePixels = {
     pixels: string
 };
 
-export function serializeImage(src: string, scale?: number): ImagePixels | null {
+export function serializeImage(src: string | undefined, scale?: number): ImagePixels | null {
+    if (!src) return null;
+
     let image = document.createElement('img');
     image.src = src;
 
