@@ -7,13 +7,16 @@ export type LobbyElementProps = {
 }
 
 function LobbyElement({ lobby, gameManager }: LobbyElementProps) {
+  const handleJoin = () => {
+    gameManager.sendMessage('lobby_join', {lobby_id: lobby.lobby_id});
+  };
+
   return (
     <div>
-    <div>{lobby.name}</div>
-    <div>{lobby.lobby_id}</div>
-    <div>{lobby.num_players}/8</div>
-    <div>{lobby.state}</div>
-    <button>join</button>
+    <span>{lobby.name}</span>
+    <span>{lobby.num_players}/8</span>
+    <span>{lobby.state}</span>
+    <button onClick={handleJoin}>Join</button>
     </div>
   )
 }
