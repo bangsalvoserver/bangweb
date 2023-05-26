@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import LobbyElement from "./LobbyElement";
-import { GameManager } from "../Messages/GameManager";
-import { LobbyRemoved, LobbyUpdate } from "../Messages/ServerMessage";
+import { LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
+import { SceneProps } from "../SceneProps";
 
-export type WaitingAreaProps = {
-  gameManager: GameManager;
-};
-
-function WaitingArea({ gameManager }: WaitingAreaProps) {
+function WaitingArea({ gameManager }: SceneProps) {
   const [lobbies, setLobbies] = useState<Array<LobbyUpdate>>([]);
 
   useEffect(() => {

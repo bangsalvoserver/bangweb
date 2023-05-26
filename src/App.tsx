@@ -1,41 +1,18 @@
 import './App.css';
-import WaitingArea from './Components/WaitingArea';
 import { useEffect, useState, useRef } from 'react';
-import Play from './Components/Buttons/Play';
 import { GameManager } from './Messages/GameManager';
-
-function ConnectScene(mgr: GameManager) {
-  const onClickConnect = () => {
-    console.log(process.env.REACT_APP_BANG_SERVER_COMMIT_HASH);
-
-    if (!mgr.isConnected()) {
-      mgr.connect(process.env.REACT_APP_BANG_SERVER_URL || '');
-    }
-  };
-
-  return (
-    <Play onClick={onClickConnect} />
-  )
-}
+import { GetCurrentScene, SceneType } from './Scenes/SceneProps';
 
 function App() {
-  const gameManager = useRef(new GameManager());
-  const mgr = gameManager.current;
+  const [scene, setScene] = useState(SceneType.Connect);
+  const gameManager = useRef(new GameManager(setScene));
 
-  const [scene, setScene] = useState(ConnectScene(mgr));
-  
   useEffect(() => {
+    const mgr = gameManager.current;
     let handlers = [
-      mgr.onMessage('connect', () => {
-        mgr.sendMessage('connect',
-          { user_name: 'Tizio', profile_image: '', commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || '' });
-      }),
       mgr.onMessage('disconnect', () => {
-        setScene(ConnectScene(mgr));
+        mgr.changeScene(SceneType.Connect);
       }),
-      mgr.onMessage('client_accepted', () => {
-        setScene(<WaitingArea gameManager={mgr} />);
-      })
     ];
 
     return () => mgr.removeHandlers(handlers);
@@ -44,12 +21,9 @@ function App() {
   return (
     <div className="App">
       <h1>Bang! Web</h1>
-      {scene}
+      <GetCurrentScene scene={scene} gameManager={gameManager.current} />
     </div>
   );
 }
 
 export default App;
-
-
-

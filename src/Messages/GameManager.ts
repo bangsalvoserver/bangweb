@@ -1,3 +1,5 @@
+import { SceneType } from "../Scenes/SceneProps";
+
 type MessageHandler = {
     type: string,
     handler: (message: any) => void
@@ -7,6 +9,15 @@ export class GameManager {
     private socket: WebSocket | null = null;
     private messageHandlers = new Map<number, MessageHandler>();
     private handlerCounter = 0;
+    private setSceneFun: (scene: SceneType) => void;
+
+    constructor(setSceneFun: (scene: SceneType) => void) {
+        this.setSceneFun = setSceneFun;
+    }
+
+    changeScene(scene: SceneType) {
+        this.setSceneFun(scene);
+    }
 
     isConnected(): boolean {
         return this.socket != null;

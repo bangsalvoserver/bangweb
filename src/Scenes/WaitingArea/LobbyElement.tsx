@@ -1,5 +1,5 @@
-import { GameManager } from '../Messages/GameManager'
-import { LobbyUpdate } from '../Messages/ServerMessage'
+import { GameManager } from '../../Messages/GameManager'
+import { LobbyUpdate } from '../../Messages/ServerMessage'
 
 export type LobbyElementProps = {
   lobby: LobbyUpdate,
