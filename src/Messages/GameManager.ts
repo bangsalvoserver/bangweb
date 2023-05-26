@@ -4,7 +4,7 @@ type MessageHandler = {
 };
 
 export class GameManager {
-    private socket: WebSocket | null = null;
+    private socket?: WebSocket;
     private messageHandlers = new Set<MessageHandler>();
     private sceneCallback?: (scene: JSX.Element) => void;
     private queuedMessages = [] as [string, any][];
@@ -22,7 +22,7 @@ export class GameManager {
     }
 
     isConnected(): boolean {
-        return this.socket != null;
+        return this.socket != undefined;
     }
 
     connect(url: string) {
@@ -39,12 +39,12 @@ export class GameManager {
         this.socket.onclose = () => {
             console.log('WebSocket connection closed');
             this.receiveMessage('disconnect', {});
-            this.socket = null;
+            delete this.socket;
         };
         this.socket.onerror = () => {
             console.log('WebSocket connection error');
             this.receiveMessage('disconnect', {});
-            this.socket = null;
+            delete this.socket;
         };
     }
 

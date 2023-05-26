@@ -15,7 +15,7 @@ type LobbyProps = {
 
 export default function LobbyScene({ gameManager, name, options, myUserId }: LobbyProps) {
   const [users, setUsers] = useState([] as UserValue[]);
-  const [owner, setOwner] = useState<number | null>(null);
+  const [owner, setOwner] = useState<number>();
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
 

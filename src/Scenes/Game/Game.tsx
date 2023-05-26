@@ -9,7 +9,7 @@ import { GameUpdate } from "../../Messages/GameUpdate";
 type GameSceneProps = {
   gameManager: GameManager,
   users: UserValue[],
-  owner: number | null,
+  owner?: number,
   myUserId: number
 };
 
