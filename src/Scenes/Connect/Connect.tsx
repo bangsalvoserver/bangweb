@@ -28,9 +28,40 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
   };
 
   return (
-    <form onSubmit={handleConnect}>
-    <label htmlFor='username'>User Name:</label><input type='text' id='username' ref={username}></input>
-    <button type='submit'>Connect</button>
-    </form>
+    <form onSubmit={handleConnect} className="flex flex-col items-center">
+    <label htmlFor="username" className="text-lg font-medium mb-2">User Name:</label>
+    <input
+      className="
+      border-2
+      border-gray-300
+      rounded-md
+      p-2
+      w-64
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500
+      "
+      type="text"
+      id="username"
+      ref={username}
+    />
+    <button
+      type="submit"
+      className="
+      mt-4
+      bg-blue-500
+      hover:bg-blue-600
+      text-white
+      py-2
+      px-4
+      rounded-md
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500
+      "
+    >
+      Connect
+    </button>
+  </form>
   )
 }
