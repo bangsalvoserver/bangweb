@@ -11,3 +11,5 @@ export type GameOptions = {
     bot_play_timer: number,
     tumbleweed_timer: number
 };
+
+export type GameUpdate = {};

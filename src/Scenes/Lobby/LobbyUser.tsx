@@ -4,7 +4,8 @@ export type UserValue = {
 }
 
 export type LobbyUserProps = {
-    user: UserValue
+    user: UserValue,
+    isOwner: boolean
 };
 
 export default function LobbyUser({ user }: LobbyUserProps) {

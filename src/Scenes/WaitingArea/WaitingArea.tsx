@@ -29,8 +29,8 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
           lobbies.filter((lobby) => lobby.id !== lobby_id)
         );
       }],
-      ['lobby_entered', ({ name }: LobbyEntered) => {
-        gameManager.changeScene(<LobbyScene gameManager={gameManager} lobbyName={name} myUserId={myUserId} />);
+      ['lobby_entered', ({ name, options }: LobbyEntered) => {
+        gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} myUserId={myUserId} />);
       }]
     ]);
   });

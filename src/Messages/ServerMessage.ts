@@ -4,10 +4,6 @@ export type ClientAccepted = {
   user_id: number
 };
 
-export type LobbyError = {
-  lobby_error: string
-};
-
 export enum LobbyState {
   waiting,
   playing,

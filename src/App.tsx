@@ -13,6 +13,9 @@ function App() {
     mgr.setSceneCallback(scene => setScene(scene));
 
     return mgr.addHandlers([
+      ['lobby_error', (message: string) => {
+        console.error("Lobby error: " + message);
+      }],
       ['disconnect', () => mgr.changeScene(<ConnectScene gameManager={mgr} />)]
     ]);
   });
