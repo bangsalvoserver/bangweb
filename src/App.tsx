@@ -7,16 +7,11 @@ function App() {
   const [[scene, args], setScene] = useState([SceneType.Connect, null] as [SceneType, any]);
   const gameManager = useRef(new GameManager(setScene));
 
-  useEffect(() => {
-    const mgr = gameManager.current;
-    let handlers = mgr.addHandlers([
-      ['disconnect', () => {
-        mgr.changeScene(SceneType.Connect);
-      }]
-    ]);
+  const mgr = gameManager.current;
 
-    return () => mgr.removeHandlers(handlers);
-  });
+  useEffect(() => mgr.addHandlers([
+    ['disconnect', () => mgr.changeScene(SceneType.Connect)]
+  ]));
 
   return (
     <div className="App">

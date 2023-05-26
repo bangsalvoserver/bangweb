@@ -16,7 +16,7 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
   useEffect(() => {
     gameManager.sendMessage("lobby_list", {});
 
-    let handlers = gameManager.addHandlers([
+    return gameManager.addHandlers([
       ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
         setLobbies(lobbies =>
           lobbies
@@ -33,8 +33,6 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
         gameManager.changeScene(SceneType.Lobby, { lobbyName: name, myUserId: myUserId });
       }]
     ]);
-
-    return () => gameManager.removeHandlers(handlers);
   });
 
   const handleDisconnect = () => {

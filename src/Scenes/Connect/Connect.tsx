@@ -10,19 +10,15 @@ type ConnectProps = {
 export default function ConnectScene({ gameManager }: ConnectProps) {
   const username = useRef() as MutableRefObject<HTMLInputElement>;
 
-  useEffect(() => {
-    let handlers = gameManager.addHandlers([
-      ['connect', () => {
-        // TODO add profile_image
-        gameManager.sendMessage('connect', { user_name: username.current.value, commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || '' });
-      }],
-      ['client_accepted', ({ user_id }: ClientAccepted) => {
-        gameManager.changeScene(SceneType.WaitingArea, { myUserId: user_id });
-      }]
-    ]);
-
-    return () => gameManager.removeHandlers(handlers);
-  });
+  useEffect(() => gameManager.addHandlers([
+    ['connect', () => {
+      // TODO add profile_image
+      gameManager.sendMessage('connect', { user_name: username.current.value, commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || '' });
+    }],
+    ['client_accepted', ({ user_id }: ClientAccepted) => {
+      gameManager.changeScene(SceneType.WaitingArea, { myUserId: user_id });
+    }]
+  ]));
 
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();

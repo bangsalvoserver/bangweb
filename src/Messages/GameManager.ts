@@ -75,11 +75,8 @@ export class GameManager {
         });
         this.isLoading = false;
         this.processMessages();
-        return ret;
-    }
-
-    removeHandlers(handlers: MessageHandler[]) {
-        handlers.forEach(hdl => this.messageHandlers.delete(hdl));
+        
+        return () => ret.forEach(hdl => this.messageHandlers.delete(hdl));
     }
 
     sendMessage(messageType: string, message: any) {
