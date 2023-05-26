@@ -43,6 +43,11 @@ export class GameManager {
             self.receiveMessage('disconnect', {});
             self.socket = null;
         };
+        this.socket.onerror = function() {
+            console.log('WebSocket connection error');
+            self.receiveMessage('disconnect', {});
+            self.socket = null;
+        };
     }
 
     disconnect() {
