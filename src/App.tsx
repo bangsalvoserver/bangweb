@@ -4,11 +4,10 @@ import { GameManager } from './Messages/GameManager';
 import ConnectScene from './Scenes/Connect/Connect';
 import Header from './components/Header';
 import UserMenu from './components/UserMenu';
-import { useStateRef } from './Utils/Utils';
+import { serializeImage } from './Messages/ImageSerial';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [propic, setPropic, propicRef] = useStateRef<string>();
 
   const gameManager = useRef<GameManager>();
   if (!gameManager.current) {
@@ -16,17 +15,27 @@ function App() {
   }
 
   const gameMgr = gameManager.current;
-  const [scene, setScene] = useState(<ConnectScene gameManager={gameMgr} getPropic={() => propicRef.current} />);
+  const [scene, setScene] = useState(<ConnectScene gameManager={gameMgr} />);
 
   useEffect(() => {
     gameMgr.setSceneCallback(scene => setScene(scene));
 
     return gameMgr.addHandlers([
-      ['lobby_error', (message: string) => {
-        console.error("Lobby error: " + message);
+      ['connect', () => {
+        let name = gameMgr.getConfig('username');
+        serializeImage(gameMgr.getConfig('propic'), 50)
+          .then(profile_image => {
+            gameMgr.sendMessage('connect', {
+              user: { name, profile_image },
+              commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
+            });
+          });
       }],
       ['disconnect', () => {
-        gameMgr.changeScene(<ConnectScene gameManager={gameMgr} getPropic={() => propicRef.current} />);
+        gameMgr.changeScene(<ConnectScene gameManager={gameMgr} />);
+      }],
+      ['lobby_error', (message: string) => {
+        console.error("Lobby error: " + message);
       }]
     ]);
   });
@@ -34,8 +43,8 @@ function App() {
   return (
 <>
     <Header
-    onClickToggleMenu={() => setIsMenuOpen(value => !value)}
-    propic = {propic} setPropic = {setPropic}
+      gameManager={gameMgr}
+      onClickToggleMenu={() => setIsMenuOpen(value => !value)}
     />
 <div className="home-page
 min-h-screen

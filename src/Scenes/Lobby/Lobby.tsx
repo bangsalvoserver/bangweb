@@ -21,7 +21,7 @@ export default function LobbyScene({ gameManager, name, options, myUserId }: Lob
   const [lobbyOptions, setLobbyOptions] = useState(options);
 
   useEffect(() => gameManager.addHandlers([
-    ['lobby_add_user', ({ user_id, name, profile_image }: LobbyAddUser) => {
+    ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
       setUsers(users =>
         users.filter(user => user.id !== user_id).concat({ id: user_id, name, propic: deserializeImage(profile_image) })
       );

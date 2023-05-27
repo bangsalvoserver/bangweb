@@ -9,6 +9,7 @@ export class GameManager {
     private sceneCallback?: (scene: JSX.Element) => void;
     private queuedMessages = [] as [string, any][];
     private isLoading = true;
+    private config = new Map<string, any>();
 
     setSceneCallback(sceneCallback: (scene: JSX.Element) => void) {
         this.sceneCallback = sceneCallback;
@@ -84,6 +85,14 @@ export class GameManager {
 
     sendMessage(messageType: string, message: any = {}) {
         this.socket?.send(JSON.stringify({[messageType]: message}));
+    }
+
+    getConfig(key: string) {
+        return this.config.get(key);
+    }
+
+    setConfig(key: string, value: any) {
+        this.config.set(key, value);
     }
 }
 

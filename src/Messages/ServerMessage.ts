@@ -34,10 +34,14 @@ export type LobbyOwner = {
   id: number
 };
 
-export type LobbyAddUser = {
-  user_id: number,
+export type UserInfo = {
   name: string,
   profile_image: ImagePixels
+}
+
+export type LobbyAddUser = {
+  user_id: number,
+  user: UserInfo
 };
 
 export type LobbyRemoveUser = {

@@ -2,28 +2,23 @@ import React, { ChangeEvent, MutableRefObject, SyntheticEvent, useEffect, useRef
 import { ClientAccepted } from '../../Messages/ServerMessage';
 import { GameManager } from '../../Messages/GameManager';
 import WaitingArea from '../WaitingArea/WaitingArea';
-import { serializeImage } from '../../Messages/ImageSerial';
 
 type ConnectProps = {
-  gameManager: GameManager,
-  getPropic: () => string | undefined
+  gameManager: GameManager
 }
 
-export default function ConnectScene({ gameManager, getPropic }: ConnectProps) {
+export default function ConnectScene({ gameManager }: ConnectProps) {
   const username = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => gameManager.addHandlers([
-    ['connect', () => {
-      gameManager.sendMessage('connect', {
-        user_name: username.current.value,
-        profile_image: serializeImage(getPropic(), 50),
-        commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
-      });
-    }],
     ['client_accepted', ({ user_id }: ClientAccepted) => {
       gameManager.changeScene(<WaitingArea gameManager={gameManager} myUserId={user_id} />);
     }]
   ]));
+
+  const handleChangeUsername = () => {
+    gameManager.setConfig('username', username.current.value);
+  };
 
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
@@ -49,6 +44,7 @@ export default function ConnectScene({ gameManager, getPropic }: ConnectProps) {
       type="text"
       id="username"
       ref={username}
+      onChange={handleChangeUsername}
     />
     <button
       type="submit"

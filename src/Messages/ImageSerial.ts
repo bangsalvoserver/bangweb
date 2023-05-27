@@ -4,11 +4,19 @@ export type ImagePixels = {
     pixels: string
 };
 
-export function serializeImage(src: string | undefined, scale?: number): ImagePixels | null {
+async function loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+        let image = document.createElement('img');
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = src;
+    });
+}
+
+export async function serializeImage(src: string | undefined, scale?: number): Promise<ImagePixels | null> {
     if (!src) return null;
 
-    let image = document.createElement('img');
-    image.src = src;
+    let image = await loadImage(src);
 
     let canvas = document.createElement('canvas');
     canvas.width = image.width;

@@ -27,7 +27,7 @@ export default function GameScene({ gameManager, users, owner, myUserId }: GameS
     ['lobby_entered', ({ name, options}: LobbyEntered) => {
       gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} myUserId={myUserId} />);
     }],
-    ['lobby_add_user', ({ user_id, name, profile_image }: LobbyAddUser) => {
+    ['lobby_add_user', ({ user_id, user: {name, profile_image} }: LobbyAddUser) => {
       setLobbyUsers(users =>
         users.filter(user => user.id !== user_id).concat({ id: user_id, name, propic: deserializeImage(profile_image) })
       );

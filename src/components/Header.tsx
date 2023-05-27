@@ -1,13 +1,23 @@
-import React, { ChangeEvent, MutableRefObject, useRef, useState } from 'react';
+import React, { ChangeEvent, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { GameManager } from '../Messages/GameManager';
+import { serializeImage } from '../Messages/ImageSerial';
 
 type HeaderProps = {
-    onClickToggleMenu: () => void,
-    propic?: string,
-    setPropic: (propic?: string) => void,
+  gameManager: GameManager,
+  onClickToggleMenu: () => void,
 }
 
-function Header({ onClickToggleMenu, propic, setPropic }: HeaderProps) {
+function Header({ gameManager, onClickToggleMenu }: HeaderProps) {
   const inputFile = useRef() as MutableRefObject<HTMLInputElement>;
+  const [propic, setPropic] = useState<string>();
+  
+  useEffect(() => {
+    gameManager.setConfig('propic', propic);
+
+    let name = gameManager.getConfig('username');
+    serializeImage(gameManager.getConfig('propic'), 50)
+      .then(profile_image => gameManager.sendMessage('user_edit', { name, profile_image }));
+  }, [propic]);
 
   const handlePropicClick = () => {
     inputFile.current.click();
@@ -21,8 +31,6 @@ function Header({ onClickToggleMenu, propic, setPropic }: HeaderProps) {
         setPropic(reader.result as string);
       };
       reader.readAsDataURL(file);
-    } else {
-      setPropic(undefined);
     }
   };
 
