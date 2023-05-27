@@ -8,7 +8,15 @@ type ConnectProps = {
 }
 
 export default function ConnectScene({ gameManager }: ConnectProps) {
-  const username = useRef() as MutableRefObject<HTMLInputElement>;
+  const [username, setUsername] = useState(localStorage.getItem('username'));
+
+  useEffect(() => {
+    if (username) {
+      localStorage.setItem('username', username);
+    } else {
+      localStorage.removeItem('username');
+    }
+  }, [username]);
 
   useEffect(() => gameManager.addHandlers([
     ['client_accepted', ({ user_id }: ClientAccepted) => {
@@ -16,13 +24,9 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
     }]
   ]));
 
-  const handleChangeUsername = () => {
-    gameManager.setConfig('username', username.current.value);
-  };
-
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
-    if (!gameManager.isConnected() && username.current.value) {
+    if (!gameManager.isConnected() && username) {
       gameManager.connect(process.env.REACT_APP_BANG_SERVER_URL || '');
     }
   };
@@ -43,8 +47,8 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
       "
       type="text"
       id="username"
-      ref={username}
-      onChange={handleChangeUsername}
+      value={username || ''}
+      onChange={e => setUsername(e.target.value)}
     />
     <button
       type="submit"

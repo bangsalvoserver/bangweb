@@ -22,8 +22,8 @@ function App() {
 
     return gameMgr.addHandlers([
       ['connect', () => {
-        let name = gameMgr.getConfig('username');
-        serializeImage(gameMgr.getConfig('propic'), 50)
+        let name = localStorage.getItem('username');
+        serializeImage(localStorage.getItem('propic'), 50)
           .then(profile_image => {
             gameMgr.sendMessage('connect', {
               user: { name, profile_image },

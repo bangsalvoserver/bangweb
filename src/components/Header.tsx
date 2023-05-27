@@ -9,13 +9,17 @@ type HeaderProps = {
 
 function Header({ gameManager, onClickToggleMenu }: HeaderProps) {
   const inputFile = useRef() as MutableRefObject<HTMLInputElement>;
-  const [propic, setPropic] = useState<string>();
+  const [propic, setPropic] = useState<string | null>(localStorage.getItem('propic'));
   
   useEffect(() => {
-    gameManager.setConfig('propic', propic);
+    if (propic) {
+      localStorage.setItem('propic', propic);
+    } else {
+      localStorage.removeItem('propic');
+    }
 
-    let name = gameManager.getConfig('username');
-    serializeImage(gameManager.getConfig('propic'), 50)
+    let name = localStorage.getItem('username');
+    serializeImage(propic, 50)
       .then(profile_image => gameManager.sendMessage('user_edit', { name, profile_image }));
   }, [propic]);
 

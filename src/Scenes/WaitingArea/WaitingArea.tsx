@@ -11,7 +11,15 @@ type WaitingAreaProps = {
 
 function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
   const [lobbies, setLobbies] = useState([] as LobbyValue[]);
-  const lobby_name = useRef() as MutableRefObject<HTMLInputElement>;
+  const [lobbyName, setLobbyName] = useState(localStorage.getItem('lobbyName'));
+
+  useEffect(() => {
+    if (lobbyName) {
+      localStorage.setItem('lobbyName', lobbyName);
+    } else {
+      localStorage.removeItem('lobbyName');
+    }
+  }, [lobbyName]);
 
   useEffect(() => {
     gameManager.sendMessage("lobby_list");
@@ -41,8 +49,8 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
-    if (lobby_name.current.value) {
-      gameManager.sendMessage('lobby_make', { name: lobby_name.current.value });
+    if (lobbyName) {
+      gameManager.sendMessage('lobby_make', { name: lobbyName });
     }
   };
 
@@ -58,8 +66,8 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
       </div>
       <div>
         <form onSubmit={handleCreateLobby}>
-          <label htmlFor="lobby_name">Lobby Name:</label>
-          <input type="text" id="lobby_name" ref={lobby_name}></input>
+          <label htmlFor="lobbyName">Lobby Name:</label>
+          <input type="text" id="lobbyName" value={lobbyName || ''} onChange={e => setLobbyName(e.target.value)}></input>
           <button type="submit">Create Lobby</button>
         </form>
       </div>

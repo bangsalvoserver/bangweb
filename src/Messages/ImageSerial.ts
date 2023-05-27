@@ -13,7 +13,7 @@ async function loadImage(src: string): Promise<HTMLImageElement> {
     });
 }
 
-export async function serializeImage(src: string | undefined, scale?: number): Promise<ImagePixels | null> {
+export async function serializeImage(src: string | null, scale?: number): Promise<ImagePixels | null> {
     if (!src) return null;
 
     let image = await loadImage(src);
