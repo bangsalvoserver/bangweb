@@ -18,16 +18,10 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
     }
   }, [username]);
 
-  useEffect(() => gameManager.addHandlers([
-    ['client_accepted', ({ user_id }: ClientAccepted) => {
-      gameManager.changeScene(<WaitingArea gameManager={gameManager} myUserId={user_id} />);
-    }]
-  ]));
-
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
     if (!gameManager.isConnected() && username) {
-      gameManager.connect(process.env.REACT_APP_BANG_SERVER_URL || '');
+      gameManager.connect();
     }
   };
 

@@ -5,11 +5,10 @@ import { GameManager } from "../../Messages/GameManager";
 import LobbyScene from "../Lobby/Lobby";
 
 type WaitingAreaProps = {
-  gameManager: GameManager,
-  myUserId: number
+  gameManager: GameManager
 };
 
-function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
+function WaitingArea({ gameManager }: WaitingAreaProps) {
   const [lobbies, setLobbies] = useState([] as LobbyValue[]);
   const [lobbyName, setLobbyName] = useState(localStorage.getItem('lobbyName'));
 
@@ -22,7 +21,12 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
   }, [lobbyName]);
 
   useEffect(() => {
-    gameManager.sendMessage("lobby_list");
+    gameManager.sendMessage('lobby_list');
+
+    let cachedLobbyId = localStorage.getItem('lobby_id');
+    if (cachedLobbyId) {
+      gameManager.sendMessage('lobby_join', { lobby_id: parseInt(cachedLobbyId) });
+    }
 
     return gameManager.addHandlers([
       ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
@@ -37,11 +41,12 @@ function WaitingArea({ gameManager, myUserId }: WaitingAreaProps) {
           lobbies.filter((lobby) => lobby.id !== lobby_id)
         );
       }],
-      ['lobby_entered', ({ name, options }: LobbyEntered) => {
-        gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} myUserId={myUserId} />);
+      ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
+        localStorage.setItem('lobby_id', lobby_id.toString());
+        gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} />);
       }]
     ]);
-  });
+  }, [gameManager]);
 
   const handleDisconnect = () => {
     gameManager.disconnect();

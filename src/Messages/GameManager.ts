@@ -25,8 +25,8 @@ export class GameManager {
         return this.socket != undefined;
     }
 
-    connect(url: string) {
-        this.socket = new WebSocket(url);
+    connect() {
+        this.socket = new WebSocket(process.env.REACT_APP_BANG_SERVER_URL || '');
         this.socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             const messageType = Object.keys(data)[0];
@@ -83,7 +83,9 @@ export class GameManager {
     }
 
     sendMessage(messageType: string, message: any = {}) {
-        this.socket?.send(JSON.stringify({[messageType]: message}));
+        if (this.socket?.readyState == WebSocket.OPEN) {
+            this.socket.send(JSON.stringify({[messageType]: message}));
+        }
     }
 }
 

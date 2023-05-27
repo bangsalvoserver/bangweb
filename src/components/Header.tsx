@@ -9,7 +9,7 @@ type HeaderProps = {
 
 function Header({ gameManager, onClickToggleMenu }: HeaderProps) {
   const inputFile = useRef() as MutableRefObject<HTMLInputElement>;
-  const [propic, setPropic] = useState<string | null>(localStorage.getItem('propic'));
+  const [propic, setPropic] = useState(localStorage.getItem('propic'));
   
   useEffect(() => {
     if (propic) {

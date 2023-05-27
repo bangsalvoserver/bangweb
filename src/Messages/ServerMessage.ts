@@ -23,7 +23,12 @@ export type LobbyInfo = {
   options: GameOptions
 };
 
-export type LobbyEntered = LobbyInfo;
+export type LobbyEntered = {
+  lobby_id: number,
+  name: string,
+  options: GameOptions
+};
+
 export type LobbyEdited = LobbyInfo;
 
 export type LobbyRemoved = {

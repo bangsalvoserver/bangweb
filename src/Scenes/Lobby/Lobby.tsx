@@ -10,15 +10,16 @@ import { deserializeImage } from '../../Messages/ImageSerial';
 type LobbyProps = {
   gameManager: GameManager,
   name: string,
-  options: GameOptions,
-  myUserId: number
+  options: GameOptions
 };
 
-export default function LobbyScene({ gameManager, name, options, myUserId }: LobbyProps) {
+export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
   const [users, setUsers] = useState([] as UserValue[]);
   const [owner, setOwner] = useState<number>();
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
+
+  const myUserId = parseInt(localStorage.getItem('user_id') as string);
 
   useEffect(() => gameManager.addHandlers([
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
@@ -36,7 +37,8 @@ export default function LobbyScene({ gameManager, name, options, myUserId }: Lob
     }],
     ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
       if (user_id === myUserId) {
-        gameManager.changeScene(<WaitingArea gameManager={gameManager} myUserId={user_id} />);
+        localStorage.removeItem('lobby_id');
+        gameManager.changeScene(<WaitingArea gameManager={gameManager} />);
       } else {
         setUsers(users =>
           users.filter(user => user.id !== user_id)
@@ -51,9 +53,9 @@ export default function LobbyScene({ gameManager, name, options, myUserId }: Lob
       setOwner(id);
     }],
     ['game_started', () => {
-      gameManager.changeScene(<GameScene gameManager={gameManager} users={users} owner={owner} myUserId={myUserId} />)
+      gameManager.changeScene(<GameScene gameManager={gameManager} users={users} owner={owner} />)
     }]
-  ]));
+  ]), [gameManager]);
 
   const handleLeaveLobby = () => {
     gameManager.sendMessage('lobby_leave');

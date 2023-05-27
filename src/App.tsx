@@ -5,6 +5,8 @@ import ConnectScene from './Scenes/Connect/Connect';
 import Header from './components/Header';
 import UserMenu from './components/UserMenu';
 import { serializeImage } from './Messages/ImageSerial';
+import { ClientAccepted } from './Messages/ServerMessage';
+import WaitingArea from './Scenes/WaitingArea/WaitingArea';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,6 +21,11 @@ function App() {
 
   useEffect(() => {
     gameMgr.setSceneCallback(scene => setScene(scene));
+    
+    const myUserId = parseInt(localStorage.getItem('user_id') as string) || 0;
+    if (myUserId && !gameMgr.isConnected()) {
+      gameMgr.connect();
+    }
 
     return gameMgr.addHandlers([
       ['connect', async () => {
@@ -27,8 +34,13 @@ function App() {
             name: localStorage.getItem('username'),
             profile_image: await serializeImage(localStorage.getItem('propic'), 50)
           },
+          user_id: myUserId,
           commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
         });
+      }],
+      ['client_accepted', ({ user_id }: ClientAccepted) => {
+        localStorage.setItem('user_id', user_id.toString());
+        gameMgr.changeScene(<WaitingArea gameManager={gameMgr} />);
       }],
       ['disconnect', () => {
         gameMgr.changeScene(<ConnectScene gameManager={gameMgr} />);
@@ -37,7 +49,7 @@ function App() {
         console.error("Lobby error: " + message);
       }]
     ]);
-  });
+  }, [gameMgr]);
 
   return (
 <>
