@@ -22,9 +22,17 @@ export default function LobbyScene({ gameManager, name, options, myUserId }: Lob
 
   useEffect(() => gameManager.addHandlers([
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
-      setUsers(users =>
-        users.filter(user => user.id !== user_id).concat({ id: user_id, name, propic: deserializeImage(profile_image) })
-      );
+      setUsers(users => {
+        let copy = [...users];
+        const newUser = { id: user_id, name, propic: deserializeImage(profile_image) };
+        let index = copy.findIndex(user => user.id == user_id);
+        if (index >= 0) {
+          copy[index] = newUser;
+        } else {
+          copy.push(newUser);
+        }
+        return copy;
+      });
     }],
     ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
       if (user_id === myUserId) {
