@@ -18,9 +18,10 @@ function Header({ gameManager, onClickToggleMenu }: HeaderProps) {
       localStorage.removeItem('propic');
     }
 
-    let name = localStorage.getItem('username');
-    serializeImage(propic, 50)
-      .then(profile_image => gameManager.sendMessage('user_edit', { name, profile_image }));
+    (async () => gameManager.sendMessage('user_edit', {
+      name: localStorage.getItem('username'),
+      profile_image: await serializeImage(propic, 50)
+    }))();
   }, [propic]);
 
   const handlePropicClick = () => {

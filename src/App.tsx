@@ -21,15 +21,14 @@ function App() {
     gameMgr.setSceneCallback(scene => setScene(scene));
 
     return gameMgr.addHandlers([
-      ['connect', () => {
-        let name = localStorage.getItem('username');
-        serializeImage(localStorage.getItem('propic'), 50)
-          .then(profile_image => {
-            gameMgr.sendMessage('connect', {
-              user: { name, profile_image },
-              commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
-            });
-          });
+      ['connect', async () => {
+        gameMgr.sendMessage('connect', {
+          user: {
+            name: localStorage.getItem('username'),
+            profile_image: await serializeImage(localStorage.getItem('propic'), 50)
+          },
+          commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
+        });
       }],
       ['disconnect', () => {
         gameMgr.changeScene(<ConnectScene gameManager={gameMgr} />);
