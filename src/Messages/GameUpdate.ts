@@ -107,7 +107,7 @@ export interface PlayerShowRoleUpdate extends AnimationUpdate {
 
 export interface PlayerStatusUpdate {
     player: number;
-    flags: string;
+    flags: string[];
     range_mod: number;
     weapon_range: number;
     distance_mod: number;
@@ -134,7 +134,7 @@ export interface StatusReadyArgs {
 }
 
 export interface GameOptions {
-    expanions: string;
+    expanions: string[];
     enable_ghost_cards: boolean;
     character_choice: boolean;
     allow_beer_in_duel: boolean;

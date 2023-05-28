@@ -1,7 +1,7 @@
 export interface CardEffect {
     target: string;
-    player_filter: string;
-    card_filter: string;
+    player_filter: string[];
+    card_filter: string[];
     effect_value: number;
     target_value: number;
     type: string;
@@ -25,7 +25,7 @@ export interface CardData {
     optionals: CardEffect[];
     equips: CardEquip[];
     tag_list: CardTag[];
-    expansion: string;
+    expansion: string[];
     deck: string;
     modifier: {
         type: string
