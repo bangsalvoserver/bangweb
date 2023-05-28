@@ -1,7 +1,7 @@
 import { GameManager } from "../../Messages/GameManager";
 import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { AnimationBase, GameAnimation } from "./GameAnimation";
-import { GameTable } from "./GameTable";
+import { CardPocket, GameTable } from "./GameTable";
 import { TargetSelector } from "./TargetSelector";
 
 export class Game {
@@ -45,7 +45,7 @@ export class Game {
 
     constructor(gameManager: GameManager) {
         this.gameTable = new GameTable();
-        this.targetSelector = new TargetSelector(gameManager);
+        this.targetSelector = new TargetSelector(this.gameTable, gameManager);
     }
 
     getGameTable() {
@@ -99,11 +99,16 @@ export class Game {
     }
 
     private handleAddCards({ card_ids, pocket_type, player }: AddCardsUpdate) {
-        // TODO
+        let pocket = this.gameTable.getPocket(pocket_type, player);
+        card_ids.forEach(({id, deck}) => {
+            pocket.addCard(this.gameTable.addCard(id, deck));
+        });
     }
 
     private handleRemoveCards({ cards }: RemoveCardsUpdate) {
-        // TODO
+       cards.forEach(card_id => {
+        this.gameTable.removeCard(card_id);
+       })
     }
 
     private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
