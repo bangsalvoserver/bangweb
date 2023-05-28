@@ -3,120 +3,166 @@ import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, FlashCardUpdate, Ga
 export class Game {
 
     private myUserId: number;
+    private queuedUpdates: any[] = [];
 
-    constructor (myUserId: number) {
+    private gameUpdateHandlers = new Map<string, (update: any) => void>([
+        ['game_error', this.handleGameError],
+        ['game_log', this.handleGameLog],
+        ['game_prompt', this.handleGamePrompt],
+        ['add_cards', this.handleAddCards],
+        ['remove_cards', this.handleRemoveCards],
+        ['move_card', this.handleMoveCard],
+        ['add_cubes', this.handleAddCubes],
+        ['move_cubes', this.handleMoveCubes],
+        ['move_scenario_deck', this.handleMoveScenarioDeck],
+        ['move_train', this.handleMoveTrain],
+        ['deck_shuffled', this.handleDeckShuffled],
+        ['show_card', this.handleShowCard],
+        ['hide_card', this.handleHideCard],
+        ['tap_card', this.handleTapCard],
+        ['flash_card', this.handleFlashCard],
+        ['short_pause', this.handleShortPause],
+        ['player_add', this.handlePlayerAdd],
+        ['player_order', this.handlePlayerOrder],
+        ['player_hp', this.handlePlayerHp],
+        ['player_gold', this.handlePlayerGold],
+        ['player_show_role', this.handlePlayerShowRole],
+        ['player_status', this.handlePlayerStatus],
+        ['switch_turn', this.handleSwitchTurn],
+        ['request_status', this.handleRequestStatus],
+        ['status_ready', this.handleStatusReady],
+        ['game_flags', this.handleGameFlags],
+        ['play_sound', this.handlePlaySound],
+        ['status_clear', this.handleStatusClear],
+    ]);
+
+    constructor(myUserId: number) {
         this.myUserId = myUserId;
     }
 
-    handleGameError(message: GameString) {
+    queueUpdate(update: any) {
+        this.queuedUpdates.push(update);
+    }
+
+    tick() {
+        if (this.queuedUpdates.length == 0) return;
+        const update = this.queuedUpdates.shift();
+        console.log(JSON.stringify(update));
+        
+        const updateType = Object.keys(update)[0];
+        const handler = this.gameUpdateHandlers.get(updateType);
+        if (handler) handler(update[updateType]);
+    }
+
+    private handleGameError(message: GameString) {
         // TODO
     }
 
-    handleGameLog(message: GameString) {
+    private handleGameLog(message: GameString) {
         // TODO
     }
 
-    handleGamePrompt(message: GameString) {
+    private handleGamePrompt(message: GameString) {
         // TODO
     }
 
-    handleAddCards({ card_ids, pocket_type, player }: AddCardsUpdate) {
+    private handleAddCards({ card_ids, pocket_type, player }: AddCardsUpdate) {
         // TODO
     }
 
-    handleRemoveCards({ cards }: RemoveCardsUpdate) {
+    private handleRemoveCards({ cards }: RemoveCardsUpdate) {
         // TODO
     }
 
-    handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
+    private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
         // TODO
     }
 
-    handleAddCubes({ num_cubes, target_card }: AddCubesUpdate) {
+    private handleAddCubes({ num_cubes, target_card }: AddCubesUpdate) {
         // TODO
     }
 
-    handleMoveCubes({ num_cubes, origin_card, target_card, duration }: MoveCubesUpdate) {
+    private handleMoveCubes({ num_cubes, origin_card, target_card, duration }: MoveCubesUpdate) {
         // TODO
     }
 
-    handleMoveScenarioDeck({ player, pocket, duration }: MoveScenarioDeckUpdate) {
+    private handleMoveScenarioDeck({ player, pocket, duration }: MoveScenarioDeckUpdate) {
         // TODO
     }
 
-    handleMoveTrain({ position, duration }: MoveTrainUpdate) {
+    private handleMoveTrain({ position, duration }: MoveTrainUpdate) {
         // TODO
     }
 
-    handleDeckShuffled({ pocket, duration }: DeckShuffledUpdate) {
+    private handleDeckShuffled({ pocket, duration }: DeckShuffledUpdate) {
         // TODO
     }
 
-    handleShowCard({ card, info, duration }: ShowCardUpdate) {
+    private handleShowCard({ card, info, duration }: ShowCardUpdate) {
         // TODO
     }
 
-    handleHideCard({ card, duration }: HideCardUpdate) {
+    private handleHideCard({ card, duration }: HideCardUpdate) {
         // TODO
     }
 
-    handleTapCard({ card, inactive, duration }: TapCardUpdate) {
+    private handleTapCard({ card, inactive, duration }: TapCardUpdate) {
         // TODO
     }
 
-    handleFlashCard({ card, duration }: FlashCardUpdate) {
+    private handleFlashCard({ card, duration }: FlashCardUpdate) {
         // TODO
     }
 
-    handleShortPause({ card, duration }: ShortPauseUpdate) {
+    private handleShortPause({ card, duration }: ShortPauseUpdate) {
         // TODO
     }
 
-    handlePlayerAdd({ players }: PlayerAddUpdate) {
+    private handlePlayerAdd({ players }: PlayerAddUpdate) {
         // TODO
     }
 
-    handlePlayerOrder({ players, duration }: PlayerOrderUpdate) {
-        // TODO
-    }
-    
-    handlePlayerHp({ player, hp, duration }: PlayerHpUpdate) {
+    private handlePlayerOrder({ players, duration }: PlayerOrderUpdate) {
         // TODO
     }
 
-    handlePlayerGold({ player, gold }: PlayerGoldUpdate) {
+    private handlePlayerHp({ player, hp, duration }: PlayerHpUpdate) {
         // TODO
     }
 
-    handlePlayerShowRole({ player, role, duration }: PlayerShowRoleUpdate) {
+    private handlePlayerGold({ player, gold }: PlayerGoldUpdate) {
         // TODO
     }
 
-    handlePlayerStatus({ player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate) {
+    private handlePlayerShowRole({ player, role, duration }: PlayerShowRoleUpdate) {
         // TODO
     }
-    
-    handleSwitchTurn(player: number) {
+
+    private handlePlayerStatus({ player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate) {
         // TODO
     }
-    
-    handleRequestStatus({ origin_card, origin, target, status_text, auto_select, respond_cards, pick_cards, highlight_cards }: RequestStatusArgs) {
+
+    private handleSwitchTurn(player: number) {
         // TODO
     }
-    
-    handleStatusReady({ play_cards }: StatusReadyArgs) {
+
+    private handleRequestStatus({ origin_card, origin, target, status_text, auto_select, respond_cards, pick_cards, highlight_cards }: RequestStatusArgs) {
         // TODO
     }
-    
-    handleGameFlags(flags: string) {
+
+    private handleStatusReady({ play_cards }: StatusReadyArgs) {
         // TODO
     }
-    
-    handlePlaySound(sound: string) {
+
+    private handleGameFlags(flags: string) {
         // TODO
     }
-    
-    handleStatusClear() {
+
+    private handlePlaySound(sound: string) {
+        // TODO
+    }
+
+    private handleStatusClear() {
         // TODO
     }
 }
