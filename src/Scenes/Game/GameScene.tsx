@@ -22,7 +22,7 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
 
   const game = useRef<Game>();
   if (!game.current) {
-    game.current = new Game(myUserId);
+    game.current = new Game(gameManager);
   }
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
       setLobbyOwner(id);
     }],
     ['game_update', (update: any) => {
-      game.current?.queueUpdate(update);
+      game.current?.pushUpdate(update);
     }]
   ]), [gameManager]);
 

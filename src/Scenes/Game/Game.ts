@@ -1,11 +1,16 @@
+import { GameManager } from "../../Messages/GameManager";
 import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { AnimationBase, GameAnimation } from "./GameAnimation";
+import { GameTable } from "./GameTable";
+import { TargetSelector } from "./TargetSelector";
 
 export class Game {
 
-    private myUserId: number;
     private queuedUpdates: any[] = [];
     private animations: GameAnimation[] = [];
+
+    private gameTable: GameTable;
+    private targetSelector: TargetSelector;
 
     private gameUpdateHandlers = new Map<string, (update: any) => void>([
         ['game_error', this.handleGameError],
@@ -38,11 +43,20 @@ export class Game {
         ['status_clear', this.handleStatusClear],
     ]);
 
-    constructor(myUserId: number) {
-        this.myUserId = myUserId;
+    constructor(gameManager: GameManager) {
+        this.gameTable = new GameTable();
+        this.targetSelector = new TargetSelector(gameManager);
     }
 
-    queueUpdate(update: any) {
+    getGameTable() {
+        return this.gameTable;
+    }
+
+    getTargetSelector() {
+        return this.targetSelector;
+    }
+
+    pushUpdate(update: any) {
         this.queuedUpdates.push(update);
     }
 
