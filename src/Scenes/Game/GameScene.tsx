@@ -26,7 +26,8 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
   }
 
   useEffect(() => {
-    const interval = setInterval(() => game.current?.tick(), 1000 / FRAMERATE);
+    const tickTime = 1000 / FRAMERATE;
+    const interval = setInterval(() => game.current?.tick(tickTime), tickTime);
     return () => clearInterval(interval);
   }, [game]);
 

@@ -1,9 +1,11 @@
 import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
+import { AnimationBase, GameAnimation } from "./GameAnimation";
 
 export class Game {
 
     private myUserId: number;
     private queuedUpdates: any[] = [];
+    private animations: GameAnimation[] = [];
 
     private gameUpdateHandlers = new Map<string, (update: any) => void>([
         ['game_error', this.handleGameError],
@@ -44,14 +46,30 @@ export class Game {
         this.queuedUpdates.push(update);
     }
 
-    tick() {
-        if (this.queuedUpdates.length == 0) return;
-        const update = this.queuedUpdates.shift();
-        console.log(JSON.stringify(update));
-        
-        const updateType = Object.keys(update)[0];
-        const handler = this.gameUpdateHandlers.get(updateType);
-        if (handler) handler(update[updateType]);
+    tick(timeElapsed: number) {
+        let tickTime = timeElapsed;
+        while (true) {
+            if (this.animations.length == 0) {
+                if (this.queuedUpdates.length != 0) {
+                    const update = this.queuedUpdates.shift();
+                    const updateType = Object.keys(update)[0];
+                    this.gameUpdateHandlers.get(updateType)?.call(this, update[updateType]);
+                } else {
+                    break;
+                }
+            } else {
+                const anim = this.animations[0];
+                anim.tick(tickTime);
+                if (anim.done()) {
+                    tickTime = anim.extraTime();
+
+                    anim.end();
+                    this.animations.shift();
+                } else {
+                    break;
+                }
+            }
+        }
     }
 
     private handleGameError(message: GameString) {
@@ -75,7 +93,7 @@ export class Game {
     }
 
     private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleAddCubes({ num_cubes, target_card }: AddCubesUpdate) {
@@ -83,39 +101,39 @@ export class Game {
     }
 
     private handleMoveCubes({ num_cubes, origin_card, target_card, duration }: MoveCubesUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleMoveScenarioDeck({ player, pocket, duration }: MoveScenarioDeckUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleMoveTrain({ position, duration }: MoveTrainUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleDeckShuffled({ pocket, duration }: DeckShuffledUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleShowCard({ card, info, duration }: ShowCardUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleHideCard({ card, duration }: HideCardUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleTapCard({ card, inactive, duration }: TapCardUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleFlashCard({ card, duration }: FlashCardUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handleShortPause({ card, duration }: ShortPauseUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handlePlayerAdd({ players }: PlayerAddUpdate) {
@@ -123,11 +141,11 @@ export class Game {
     }
 
     private handlePlayerOrder({ players, duration }: PlayerOrderUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handlePlayerHp({ player, hp, duration }: PlayerHpUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handlePlayerGold({ player, gold }: PlayerGoldUpdate) {
@@ -135,7 +153,7 @@ export class Game {
     }
 
     private handlePlayerShowRole({ player, role, duration }: PlayerShowRoleUpdate) {
-        // TODO
+        this.animations.push(new AnimationBase(duration));
     }
 
     private handlePlayerStatus({ player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate) {
@@ -154,7 +172,7 @@ export class Game {
         // TODO
     }
 
-    private handleGameFlags(flags: string) {
+    private handleGameFlags(flags: string[]) {
         // TODO
     }
 
