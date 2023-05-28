@@ -2,9 +2,9 @@ import React, { ChangeEvent, MutableRefObject, useEffect, useRef, useState } fro
 import { GameManager } from '../Messages/GameManager';
 import { serializeImage } from '../Messages/ImageSerial';
 
-type HeaderProps = {
-  gameManager: GameManager,
-  onClickToggleMenu: () => void,
+export interface HeaderProps {
+  gameManager: GameManager;
+  onClickToggleMenu: () => void;
 }
 
 function Header({ gameManager, onClickToggleMenu }: HeaderProps) {

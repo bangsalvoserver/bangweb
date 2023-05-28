@@ -1,11 +1,6 @@
-type MessageHandler = {
-    type: string,
-    handler: (message: any) => void
-};
-
 export class GameManager {
     private socket?: WebSocket;
-    private messageHandlers = new Set<MessageHandler>();
+    private messageHandlers = new Set<[type: string, handler: (message: any) => void]>();
     private sceneCallback?: (scene: JSX.Element) => void;
     private queuedMessages = [] as [string, any][];
     private isLoading = true;
@@ -54,7 +49,7 @@ export class GameManager {
 
     processMessages() {
         this.queuedMessages.forEach(([messageType, message]) => {
-            this.messageHandlers.forEach(({type, handler}: MessageHandler) => {
+            this.messageHandlers.forEach(([type, handler]) => {
                 if (type === messageType) {
                     handler(message);
                 }
@@ -71,10 +66,9 @@ export class GameManager {
     }
 
     addHandlers(handlers: [string, (message: any) => void][]) {
-        let ret = handlers.map(([messageType, handler]) => {
-            let messageHandler: MessageHandler = {type: messageType, handler};
-            this.messageHandlers.add(messageHandler);
-            return messageHandler;
+        let ret = handlers.map(handler => {
+            this.messageHandlers.add(handler);
+            return handler;
         });
         this.isLoading = false;
         this.processMessages();

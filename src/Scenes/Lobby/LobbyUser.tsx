@@ -1,13 +1,13 @@
-export type UserValue = {
-    id: number,
-    name: string,
-    propic: string | null
+export interface UserValue {
+    id: number;
+    name: string;
+    propic: string | null;
 }
 
-export type LobbyUserProps = {
-    user: UserValue,
-    isOwner: boolean
-};
+export interface LobbyUserProps {
+    user: UserValue;
+    isOwner: boolean;
+}
 
 export default function LobbyUser({ user }: LobbyUserProps) {
   return (

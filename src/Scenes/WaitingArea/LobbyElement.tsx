@@ -1,15 +1,15 @@
 import { LobbyState } from '../../Messages/ServerMessage'
 
-export type LobbyValue = {
-  id: number,
-  name: string,
-  num_players: number,
-  state: LobbyState
+export interface LobbyValue {
+  id: number;
+  name: string;
+  num_players: number;
+  state: LobbyState;
 }
 
-export type LobbyElementProps = {
-  lobby: LobbyValue,
-  onClickJoin: (lobby_id: number) => void
+export interface LobbyElementProps {
+  lobby: LobbyValue;
+  onClickJoin: (lobby_id: number) => void;
 }
 
 function LobbyElement({ lobby, onClickJoin }: LobbyElementProps) {

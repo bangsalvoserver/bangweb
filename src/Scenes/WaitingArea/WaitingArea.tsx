@@ -4,9 +4,9 @@ import { LobbyEntered, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMe
 import { GameManager } from "../../Messages/GameManager";
 import LobbyScene from "../Lobby/Lobby";
 
-type WaitingAreaProps = {
-  gameManager: GameManager
-};
+export interface WaitingAreaProps {
+  gameManager: GameManager;
+}
 
 function WaitingArea({ gameManager }: WaitingAreaProps) {
   const [lobbies, setLobbies] = useState([] as LobbyValue[]);

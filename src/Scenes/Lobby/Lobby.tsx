@@ -4,14 +4,14 @@ import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyChat } fr
 import LobbyUser, { UserValue } from './LobbyUser';
 import WaitingArea from '../WaitingArea/WaitingArea';
 import { GameOptions } from '../../Messages/GameUpdate';
-import GameScene from '../Game/Game';
+import GameScene from '../Game/GameScene';
 import { deserializeImage } from '../../Messages/ImageSerial';
 
-type LobbyProps = {
-  gameManager: GameManager,
-  name: string,
-  options: GameOptions
-};
+export interface LobbyProps {
+  gameManager: GameManager;
+  name: string;
+  options: GameOptions;
+}
 
 export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
   const [users, setUsers] = useState([] as UserValue[]);

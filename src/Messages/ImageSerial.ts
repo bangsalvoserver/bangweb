@@ -1,8 +1,8 @@
-export type ImagePixels = {
-    width: number,
-    height: number,
-    pixels: string
-};
+export interface ImagePixels {
+    width: number;
+    height: number;
+    pixels: string;
+}
 
 async function loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {

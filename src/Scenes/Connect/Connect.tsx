@@ -3,8 +3,8 @@ import { ClientAccepted } from '../../Messages/ServerMessage';
 import { GameManager } from '../../Messages/GameManager';
 import WaitingArea from '../WaitingArea/WaitingArea';
 
-type ConnectProps = {
-  gameManager: GameManager
+export interface ConnectProps {
+  gameManager: GameManager;
 }
 
 export default function ConnectScene({ gameManager }: ConnectProps) {
