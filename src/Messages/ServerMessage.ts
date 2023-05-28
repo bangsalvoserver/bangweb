@@ -5,17 +5,11 @@ export interface ClientAccepted {
   user_id: number;
 }
 
-export enum LobbyState {
-  waiting,
-  playing,
-  finished
-}
-
 export interface LobbyUpdate {
   lobby_id: number;
   name: string;
   num_players: number;
-  state: LobbyState;
+  state: string;
 }
 
 export interface LobbyInfo {

@@ -1,19 +1,25 @@
-import { CardData, CardDeckType, CardPocketType, PlayerRole } from "./CardData";
+import { CardData } from "./CardData";
 
 export interface AnimationUpdate {
     duration: number;
 }
 
-export interface GameString {
+export interface FormatInteger { integer: number };
+export interface FormatCard { card: number };
+export interface FormatPlayer { player: number };
+export type FormatArg = FormatInteger | FormatCard | FormatPlayer;
 
+export interface GameString {
+    format_str: string;
+    format_args: FormatArg[];
 }
 
 export interface AddCardsUpdate {
     card_ids: {
         id: number,
-        deck: CardDeckType
+        deck: string
     }[];
-    pocket_type: CardPocketType;
+    pocket_type: string;
     player?: number;
 }
 
@@ -24,7 +30,7 @@ export interface RemoveCardsUpdate {
 export interface MoveCardUpdate extends AnimationUpdate {
     card: number;
     player?: number;
-    pocket: CardPocketType;
+    pocket: string;
 }
 
 export interface AddCubesUpdate {
@@ -40,7 +46,7 @@ export interface MoveCubesUpdate extends AnimationUpdate {
 
 export interface MoveScenarioDeckUpdate extends AnimationUpdate {
     player: number;
-    pocket: CardPocketType;
+    pocket: string;
 }
 
 export interface MoveTrainUpdate extends AnimationUpdate {
@@ -48,7 +54,7 @@ export interface MoveTrainUpdate extends AnimationUpdate {
 }
 
 export interface DeckShuffledUpdate extends AnimationUpdate {
-    pocket: CardPocketType;
+    pocket: string;
 }
 
 export interface ShowCardUpdate extends AnimationUpdate {
@@ -96,7 +102,7 @@ export interface PlayerGoldUpdate {
 
 export interface PlayerShowRoleUpdate extends AnimationUpdate {
     player: number;
-    role: PlayerRole;
+    role: string;
 }
 
 export interface PlayerStatusUpdate {
@@ -107,8 +113,10 @@ export interface PlayerStatusUpdate {
     distance_mod: number;
 }
 
-export type CardNode = {card: number, branches: CardNode[]};
-export type CardTree = CardNode[];
+export interface CardNode {
+    card: number;
+    branches: CardNode[];
+}
 
 export interface RequestStatusArgs {
     origin_card?: number;
@@ -116,13 +124,13 @@ export interface RequestStatusArgs {
     target?: number;
     status_text: GameString;
     auto_select: boolean;
-    respond_cards: CardTree;
+    respond_cards: CardNode[];
     pick_cards: number[];
     highlight_cards: number[];
 }
 
 export interface StatusReadyArgs {
-    play_cards: CardTree;
+    play_cards: CardNode[];
 }
 
 export interface GameOptions {

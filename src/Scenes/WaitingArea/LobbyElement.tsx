@@ -1,10 +1,8 @@
-import { LobbyState } from '../../Messages/ServerMessage'
-
 export interface LobbyValue {
   id: number;
   name: string;
   num_players: number;
-  state: LobbyState;
+  state: string;
 }
 
 export interface LobbyElementProps {

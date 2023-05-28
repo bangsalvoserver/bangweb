@@ -1,51 +1,45 @@
-export enum CardDeckType {
-    none,
-    main_deck,
-    character,
-    role,
-    goldrush,
-    highnoon,
-    fistfulofcards,
-    wildwestshow,
-    station,
-    locomotive,
-    train,
+export interface CardEffect {
+    target: string;
+    player_filter: string;
+    card_filter: string;
+    effect_value: number;
+    target_value: number;
+    type: string;
 }
 
-export enum CardPocketType {
-    none,
-    player_hand,
-    player_table,
-    player_character,
-    player_backup,
-    main_deck,
-    discard_pile,
-    selection,
-    shop_deck,
-    shop_discard,
-    shop_selection,
-    hidden_deck,
-    scenario_deck,
-    scenario_card,
-    wws_scenario_deck,
-    wws_scenario_card,
-    button_row,
-    stations,
-    train_deck,
-    train,
+export interface CardEquip {
+    effect_value: number;
+    type: string;
 }
 
-export enum PlayerRole {
-    unknown,
-    sheriff,
-    deputy,
-    outlaw,
-    renegade,
-    deputy_3p,
-    outlaw_3p,
-    renegade_3p,
+export interface CardTag {
+    tag_value: number;
+    type: string;
 }
 
 export interface CardData {
-
+    name: string;
+    image: string;
+    effects: CardEffect[];
+    responses: CardEffect[];
+    optionals: CardEffect[];
+    equips: CardEquip[];
+    tag_list: CardTag[];
+    expansion: string;
+    deck: string;
+    modifier: {
+        type: string
+    };
+    mth_effect: {
+        type: string
+    };
+    mth_response: {
+        type: string
+    };
+    equip_target: string;
+    color: string;
+    sign: {
+        suit: string;
+        rank: string;
+    };
 }
