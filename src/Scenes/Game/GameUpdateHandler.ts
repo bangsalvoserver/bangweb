@@ -50,7 +50,7 @@ function sortById(lhs: Id, rhs: Id) {
     return lhs.id - rhs.id;
 }
 
-function editById<T extends Id>(values: T[], mapper: (value: T) => T, id?: number): T[] {
+function editById<T extends Id>(values: T[], id: number | undefined, mapper: (value: T) => T): T[] {
     if (id && searchById(values, id)) {
         return values.map(value => {
             if (value.id === id) {
@@ -95,7 +95,7 @@ function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCards
     const ret = {
         ...table,
         cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocket, player))).sort(sortById),
-        players: editById(table.players, p => ({ ...p, pockets: addToPocket(p.pockets, pocket, addedCards) }), player),
+        players: editById(table.players, player, p => ({ ...p, pockets: addToPocket(p.pockets, pocket, addedCards) })),
         pockets: addToPocket(table.pockets, pocket, addedCards)
     };
 
@@ -119,7 +119,7 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
     pocketCards.forEach((cards, {pocketName, player}) => {
         newTable = {
             ...newTable,
-            players: editById(table.players, p => ({ ...p, pockets: removeFromPocket(p.pockets, pocketName, cards)}), player),
+            players: editById(table.players, player, p => ({ ...p, pockets: removeFromPocket(p.pockets, pocketName, cards)})),
             pockets: removeFromPocket(table.pockets, pocketName, cards)
         };
     });
@@ -141,31 +141,31 @@ function handlePlayerOrder(table: GameTable, { players }: PlayerOrderUpdate): Ga
 function handlePlayerHp(table: GameTable, { player, hp }: PlayerHpUpdate): GameTable {
     return {
         ...table,
-        players: editById(table.players, p => ({ ...p, status: { ...p.status, hp }}), player)
+        players: editById(table.players, player, p => ({ ...p, status: { ...p.status, hp }}))
     };
 }
 
 function handlePlayerGold(table: GameTable, { player, gold }: PlayerGoldUpdate): GameTable {
     return {
         ...table,
-        players: editById(table.players, p => ({ ...p, status: { ...p.status, gold }}), player)
+        players: editById(table.players, player, p => ({ ...p, status: { ...p.status, gold }}))
     };
 }
 
 function handlePlayerShowRole(table: GameTable, { player, role }: PlayerShowRoleUpdate): GameTable {
     return {
         ...table,
-        players: editById(table.players, p => ({ ...p, status: { ...p.status, role }}), player)
+        players: editById(table.players, player, p => ({ ...p, status: { ...p.status, role }}))
     };
 }
 
 function handlePlayerStatus(table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable {
     return {
         ...table,
-        players: editById(table.players, p => ({ ...p, status: {
+        players: editById(table.players, player, p => ({ ...p, status: {
             ...p.status,
             flags, range_mod, weapon_range, distance_mod
-        }}), player)
+        }}))
     };
 }
 
@@ -176,15 +176,15 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
     const cardList = [card];
     const oldPocket = cardObj.pocket?.pocketName || 'none';
 
-    let newPlayers = editById(table.players, player => ({ ...player, pockets: removeFromPocket(player.pockets, oldPocket, cardList) }), cardObj.pocket?.player);
-    newPlayers = editById(newPlayers, player => ({ ...player, pockets: addToPocket(player.pockets, pocket, cardList) }), player);
+    let newPlayers = editById(table.players, cardObj.pocket?.player, player => ({ ...player, pockets: removeFromPocket(player.pockets, oldPocket, cardList) }));
+    newPlayers = editById(newPlayers, player, player => ({ ...player, pockets: addToPocket(player.pockets, pocket, cardList) }));
 
     let newPockets = removeFromPocket(table.pockets, oldPocket, cardList);
     newPockets = addToPocket(newPockets, pocket, cardList);
 
     return {
         ...table,
-        cards: editById(table.cards, card => ({ ...card, pocket: { pocketName: pocket, player }}), card),
+        cards: editById(table.cards, card, card => ({ ...card, pocket: { pocketName: pocket, player }})),
         players: newPlayers,
         pockets: newPockets
     };
@@ -216,21 +216,21 @@ function handleDeckShuffled(table: GameTable, { pocket }: DeckShuffledUpdate): G
 function handleShowCard(table: GameTable, { card, info }: ShowCardUpdate): GameTable {
     return {
         ...table,
-        cards: editById(table.cards, card => ({ ...card, cardData: info }), card)
+        cards: editById(table.cards, card, card => ({ ...card, cardData: info }))
     };
 }
 
 function handleHideCard(table: GameTable, { card }: HideCardUpdate): GameTable {
     return {
         ...table,
-        cards: editById(table.cards, card => ({ ...card, cardData: undefined }), card)
+        cards: editById(table.cards, card, card => ({ ...card, cardData: undefined }))
     };
 }
 
 function handleTapCard(table: GameTable, { card, inactive }: TapCardUpdate): GameTable {
     return {
         ...table,
-        cards: editById(table.cards, card => ({ ...card, inactive }), card)
+        cards: editById(table.cards, card, card => ({ ...card, inactive }))
     };
 }
 
@@ -241,10 +241,10 @@ function handleAddCubes(table: GameTable, { num_cubes, target_card }: AddCubesUp
             ...table.status,
             num_cubes: table.status.num_cubes + (target_card ? 0 : num_cubes)
         },
-        cards: editById(table.cards, card => ({
+        cards: editById(table.cards, target_card, card => ({
             ...card,
             num_cubes: card.num_cubes + num_cubes
-        }), target_card)
+        }))
     };
 }
 
@@ -253,8 +253,8 @@ function handleMoveCubes(table: GameTable, { num_cubes, origin_card, target_card
     if (!origin_card) tableCubes -= num_cubes;
     else if (!target_card) tableCubes += num_cubes;
 
-    let tableCards = editById(table.cards, card => ({ ...card, num_cubes: card.num_cubes - num_cubes }), origin_card);
-    tableCards = editById(table.cards, card => ({ ...card, num_cubes: card.num_cubes + num_cubes}), target_card);
+    let tableCards = editById(table.cards, origin_card, card => ({ ...card, num_cubes: card.num_cubes - num_cubes }));
+    tableCards = editById(table.cards, target_card, card => ({ ...card, num_cubes: card.num_cubes + num_cubes}));
     return {
         ...table,
         status: {
