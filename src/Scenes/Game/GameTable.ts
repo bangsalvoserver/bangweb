@@ -1,5 +1,5 @@
 import { CardData } from "../../Messages/CardData";
-import { AddCardsUpdate, AddCubesUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
+import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
 
 interface Id {
     id: number
@@ -201,7 +201,7 @@ const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => Ga
     ['move_cubes', handleMoveCubes],
     ['move_scenario_deck', handleMoveScenarioDeck],
     ['move_train', handleMoveTrain],
-    // ['deck_shuffled', handleDeckShuffled],
+    ['deck_shuffled', handleDeckShuffled],
     ['show_card', handleShowCard],
     ['hide_card', handleHideCard],
     ['tap_card', handleTapCard],
@@ -348,6 +348,29 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
     };
 }
 
+function handleDeckShuffled(table: GameTable, { pocket }: DeckShuffledUpdate): GameTable {
+    if (pocket == 'main_deck' || pocket == 'shop_discard') {
+        const destPocket = pocket == 'main_deck' ? 'discard_pile' : 'shop_discard';
+        return {
+            ... table,
+            cards: table.cards.map(card => {
+                if (card.pocket?.pocketName == pocket) {
+                    return { ... card, cardData: undefined, pocket: { pocketName: destPocket } };
+                } else {
+                    return card;
+                }
+            }),
+            pockets: {
+                ... table.pockets,
+                [pocket]: [],
+                [destPocket]: table.pockets[destPocket].concat(table.pockets[pocket])
+            }
+        };
+    } else {
+        throw new Error('invalid pocket in DeckShuffledUpdate');
+    }
+}
+
 function handleShowCard(table: GameTable, { card, info }: ShowCardUpdate): GameTable {
     return {
         ... table,
@@ -418,7 +441,7 @@ function handleMoveScenarioDeck(table: GameTable, { player, pocket }: MoveScenar
             }
         }
     } else {
-        return table;
+        throw new Error("invalid pocket in MoveScenarioDeckUpdate");
     }
 }
 
