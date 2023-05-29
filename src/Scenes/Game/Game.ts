@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { GameUpdate } from "./GameTable";
+import { GameUpdate } from "./GameUpdateHandler";
 import { AnimationBase, GameAnimation } from "./GameAnimation";
 
 export class Game {

@@ -6,8 +6,9 @@ import LobbyScene from "../Lobby/Lobby";
 import WaitingArea from "../WaitingArea/WaitingArea";
 import { deserializeImage } from "../../Messages/ImageSerial";
 import { Game } from "./Game";
-import { gameTableHandleUpdate, newGameTable, getPlayer, Player } from "./GameTable";
+import { newGameTable, getPlayer, Player } from "./GameTable";
 import PlayerView from "./Components/PlayerView";
+import { handleGameUpdate } from "./GameUpdateHandler";
 
 const FRAMERATE = 60;
 
@@ -22,7 +23,7 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
   const [lobbyOwner, setLobbyOwner] = useState(owner);
   const myUserId = parseInt(localStorage.getItem('user_id') as string);
 
-  const [table, tableDispatch] = useReducer(gameTableHandleUpdate, null, newGameTable);
+  const [table, tableDispatch] = useReducer(handleGameUpdate, null, newGameTable);
 
   const game = useRef<Game>();
   if (!game.current) {
