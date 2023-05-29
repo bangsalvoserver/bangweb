@@ -36,6 +36,10 @@ export interface Card extends Id {
     pocket?: PocketRef;
 }
 
+type Pockets = {
+    [key: string]: number[]
+};
+
 export interface Player extends Id {
     userid: number;
     pockets: {
@@ -133,11 +137,11 @@ function newCard(id: number, deck: string, pocket_type: string, player?: number)
     };
 }
 
-function addToPocket(pockets: any, cards: number[], pocket_type: string) {
+function addToPocket<T extends Pockets>(pockets: T, cards: number[], pocket_type: string): T {
     if (pocket_type in pockets) {
         return {
             ...pockets,
-            [pocket_type]: (pockets[pocket_type] as number[]).concat(cards)
+            [pocket_type]: pockets[pocket_type].concat(cards)
         };
     } else {
         return pockets;
@@ -171,7 +175,7 @@ function handleAddCards(table: GameTable, { card_ids, pocket_type, player }: Add
     };
 }
 
-function removeFromPockets(pockets: any, cards: number[], pocket_type: string) {
+function removeFromPockets<T extends Pockets>(pockets: T, cards: number[], pocket_type: string): T {
     if (pocket_type in pockets) {
         return {
             ...pockets,
