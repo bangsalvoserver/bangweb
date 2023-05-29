@@ -27,11 +27,18 @@ export default function GameScene({ game, table, users }: GameSceneProps) {
     return () => clearInterval(interval);
   }, []);
 
+  const newPlayerView = (player_id: number) => {
+    const player = getPlayer(table, player_id) as Player;
+    const user = users.find(({id}) => id == player.userid);
+    
+    return (
+      <PlayerView key={player_id} table={table} user={user} player={player} />
+    );
+  };
+
   return (
     <>
-      {table.alive_players.map(player_id => (
-        <PlayerView key={player_id} table={table} users={users} player={getPlayer(table, player_id) as Player} />
-      ))}
+      {table.alive_players.map(newPlayerView)}
     </>
   );
 }
