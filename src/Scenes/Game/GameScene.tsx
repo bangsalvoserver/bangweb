@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import { GameManager } from "../../Messages/GameManager"
+import { GameManager, useHandlers } from "../../Messages/GameManager"
 import { UserValue } from "../Lobby/LobbyUser"
 import { LobbyAddUser, LobbyEntered, LobbyOwner, LobbyRemoveUser } from "../../Messages/ServerMessage";
 import LobbyScene from "../Lobby/Lobby";
@@ -36,7 +36,7 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => gameManager.addHandlers([
+  useHandlers(gameManager, [],
     ['lobby_entered', ({ name, options}: LobbyEntered) => {
       gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} />);
     }],
@@ -61,7 +61,7 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
     ['game_update', (update: any) => {
       game.current?.pushUpdate(update);
     }]
-  ]), []);
+  );
 
   const handleLeaveLobby = () => {
     gameManager.sendMessage('lobby_leave');

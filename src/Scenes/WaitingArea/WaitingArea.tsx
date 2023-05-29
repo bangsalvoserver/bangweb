@@ -1,7 +1,7 @@
 import { MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from "react";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import { LobbyEntered, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
-import { GameManager } from "../../Messages/GameManager";
+import { GameManager, useHandlers } from "../../Messages/GameManager";
 import LobbyScene from "../Lobby/Lobby";
 
 export interface WaitingAreaProps {
@@ -27,26 +27,26 @@ function WaitingArea({ gameManager }: WaitingAreaProps) {
     if (cachedLobbyId) {
       gameManager.sendMessage('lobby_join', { lobby_id: parseInt(cachedLobbyId) });
     }
-
-    return gameManager.addHandlers([
-      ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
-        setLobbies(lobbies =>
-          lobbies
-            .filter((lobby) => lobby.id !== lobby_id)
-            .concat({ id: lobby_id, name: name, num_players: num_players, state: state })
-        );
-      }],
-      ['lobby_removed', ({ lobby_id }: LobbyRemoved) => {
-        setLobbies(lobbies =>
-          lobbies.filter((lobby) => lobby.id !== lobby_id)
-        );
-      }],
-      ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
-        localStorage.setItem('lobby_id', lobby_id.toString());
-        gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} />);
-      }]
-    ]);
   }, []);
+
+  useHandlers(gameManager, [],
+    ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
+      setLobbies(lobbies =>
+        lobbies
+          .filter((lobby) => lobby.id !== lobby_id)
+          .concat({ id: lobby_id, name: name, num_players: num_players, state: state })
+      );
+    }],
+    ['lobby_removed', ({ lobby_id }: LobbyRemoved) => {
+      setLobbies(lobbies =>
+        lobbies.filter((lobby) => lobby.id !== lobby_id)
+      );
+    }],
+    ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
+      localStorage.setItem('lobby_id', lobby_id.toString());
+      gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} />);
+    }]
+  );
 
   const handleDisconnect = () => {
     gameManager.disconnect();

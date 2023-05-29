@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GameManager } from '../../Messages/GameManager';
+import { GameManager, useHandlers } from '../../Messages/GameManager';
 import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
 import WaitingArea from '../WaitingArea/WaitingArea';
@@ -22,7 +22,7 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
 
   const myUserId = parseInt(localStorage.getItem('user_id') as string);
 
-  useEffect(() => gameManager.addHandlers([
+  useHandlers(gameManager, [],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
       setUsers(users => {
         let copy = [...users];
@@ -53,13 +53,13 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
     ['lobby_owner', ({ id }: LobbyOwner) => {
       setOwner(id);
     }]
-  ]), [gameManager, myUserId]);
+  );
 
-  useEffect(() => gameManager.addHandlers([
+  useHandlers(gameManager, [users, owner],
     ['game_started', () => {
       gameManager.changeScene(<GameScene gameManager={gameManager} users={users} owner={owner} />)
     }]
-  ]), [gameManager, users, owner]);
+  );
 
   const handleLeaveLobby = () => {
     gameManager.sendMessage('lobby_leave');

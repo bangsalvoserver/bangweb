@@ -1,11 +1,15 @@
+import { Dispatch, SetStateAction, useEffect } from "react";
+
+export type MessageHandler = [string, (message: any) => void];
+
 export class GameManager {
     private socket?: WebSocket;
-    private messageHandlers = new Set<[type: string, handler: (message: any) => void]>();
-    private sceneCallback?: (scene: JSX.Element) => void;
+    private messageHandlers = new Set<MessageHandler>();
+    private sceneCallback?: Dispatch<SetStateAction<JSX.Element>>;
     private queuedMessages = [] as [string, any][];
     private isLoading = true;
 
-    setSceneCallback(sceneCallback: (scene: JSX.Element) => void) {
+    setSceneCallback(sceneCallback: Dispatch<SetStateAction<JSX.Element>>) {
         this.sceneCallback = sceneCallback;
     }
 
@@ -48,6 +52,7 @@ export class GameManager {
     }
 
     processMessages() {
+        this.isLoading = false;
         this.queuedMessages.forEach(([messageType, message]) => {
             this.messageHandlers.forEach(([type, handler]) => {
                 if (type === messageType) {
@@ -65,15 +70,12 @@ export class GameManager {
         }
     }
 
-    addHandlers(handlers: [string, (message: any) => void][]) {
-        let ret = handlers.map(handler => {
-            this.messageHandlers.add(handler);
-            return handler;
-        });
-        this.isLoading = false;
-        this.processMessages();
-        
-        return () => ret.forEach(hdl => this.messageHandlers.delete(hdl));
+    addHandler(handler: MessageHandler) {
+        this.messageHandlers.add(handler);
+    }
+    
+    removeHandler(handler: MessageHandler) {
+        this.messageHandlers.delete(handler);
     }
 
     sendMessage(messageType: string, message: any = {}) {
@@ -81,6 +83,14 @@ export class GameManager {
             this.socket.send(JSON.stringify({[messageType]: message}));
         }
     }
+}
+
+export function useHandlers(gameManager: GameManager, deps: any[], ...handlers: MessageHandler[]) {
+    useEffect(() => {
+        handlers.forEach(handler => gameManager.addHandler(handler));
+        gameManager.processMessages();
+        return () => handlers.forEach(handler => gameManager.removeHandler(handler));
+    }, deps);
 }
 
 

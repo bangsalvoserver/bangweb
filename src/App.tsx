@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect, useState, useRef } from 'react';
-import { GameManager } from './Messages/GameManager';
+import { GameManager, useHandlers } from './Messages/GameManager';
 import ConnectScene from './Scenes/Connect/Connect';
 import Header from './components/Header';
 import UserMenu from './components/UserMenu';
@@ -19,37 +19,38 @@ function App() {
   const gameMgr = gameManager.current;
   const [scene, setScene] = useState(<ConnectScene gameManager={gameMgr} />);
 
+  const myUserId = parseInt(localStorage.getItem('user_id') as string) || 0;
+
   useEffect(() => {
-    gameMgr.setSceneCallback(scene => setScene(scene));
+    gameMgr.setSceneCallback(setScene);
     
-    const myUserId = parseInt(localStorage.getItem('user_id') as string) || 0;
     if (myUserId && !gameMgr.isConnected()) {
       gameMgr.connect();
     }
-
-    return gameMgr.addHandlers([
-      ['connect', async () => {
-        gameMgr.sendMessage('connect', {
-          user: {
-            name: localStorage.getItem('username'),
-            profile_image: await serializeImage(localStorage.getItem('propic'), 50)
-          },
-          user_id: myUserId,
-          commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
-        });
-      }],
-      ['client_accepted', ({ user_id }: ClientAccepted) => {
-        localStorage.setItem('user_id', user_id.toString());
-        gameMgr.changeScene(<WaitingArea gameManager={gameMgr} />);
-      }],
-      ['disconnect', () => {
-        gameMgr.changeScene(<ConnectScene gameManager={gameMgr} />);
-      }],
-      ['lobby_error', (message: string) => {
-        console.error("Lobby error: " + message);
-      }]
-    ]);
   }, []);
+
+  useHandlers(gameMgr, [], 
+    ['connect', async () => {
+      gameMgr.sendMessage('connect', {
+        user: {
+          name: localStorage.getItem('username'),
+          profile_image: await serializeImage(localStorage.getItem('propic'), 50)
+        },
+        user_id: myUserId,
+        commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
+      });
+    }],
+    ['client_accepted', ({ user_id }: ClientAccepted) => {
+      localStorage.setItem('user_id', user_id.toString());
+      gameMgr.changeScene(<WaitingArea gameManager={gameMgr} />);
+    }],
+    ['disconnect', () => {
+      gameMgr.changeScene(<ConnectScene gameManager={gameMgr} />);
+    }],
+    ['lobby_error', (message: string) => {
+      console.error("Lobby error: " + message);
+    }]
+  );
 
   return (
 <>
