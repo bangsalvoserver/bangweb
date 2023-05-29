@@ -49,7 +49,7 @@ function App() {
         console.error("Lobby error: " + message);
       }]
     ]);
-  }, [gameMgr]);
+  }, []);
 
   return (
 <>

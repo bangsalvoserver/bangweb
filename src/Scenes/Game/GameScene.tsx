@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { GameManager } from "../../Messages/GameManager"
 import { UserValue } from "../Lobby/LobbyUser"
 import { LobbyAddUser, LobbyEntered, LobbyOwner, LobbyRemoveUser } from "../../Messages/ServerMessage";
@@ -6,6 +6,7 @@ import LobbyScene from "../Lobby/Lobby";
 import WaitingArea from "../WaitingArea/WaitingArea";
 import { deserializeImage } from "../../Messages/ImageSerial";
 import { Game } from "./Game";
+import { Player, Card, gameTableHandleUpdate, GameTable, newGameTable } from "./GameTable";
 
 const FRAMERATE = 60;
 
@@ -20,16 +21,18 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
   const [lobbyOwner, setLobbyOwner] = useState(owner);
   const myUserId = parseInt(localStorage.getItem('user_id') as string);
 
+  const [table, tableDispatch] = useReducer(gameTableHandleUpdate, null, newGameTable);
+
   const game = useRef<Game>();
   if (!game.current) {
-    game.current = new Game(gameManager);
+    game.current = new Game(tableDispatch);
   }
 
   useEffect(() => {
     const tickTime = 1000 / FRAMERATE;
     const interval = setInterval(() => game.current?.tick(tickTime), tickTime);
     return () => clearInterval(interval);
-  }, [game]);
+  }, []);
 
   useEffect(() => gameManager.addHandlers([
     ['lobby_entered', ({ name, options}: LobbyEntered) => {
@@ -56,7 +59,7 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
     ['game_update', (update: any) => {
       game.current?.pushUpdate(update);
     }]
-  ]), [gameManager]);
+  ]), []);
 
   const handleLeaveLobby = () => {
     gameManager.sendMessage('lobby_leave');

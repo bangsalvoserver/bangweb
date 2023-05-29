@@ -55,7 +55,7 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
     ['game_started', () => {
       gameManager.changeScene(<GameScene gameManager={gameManager} users={users} owner={owner} />)
     }]
-  ]), [gameManager]);
+  ]), []);
 
   const handleLeaveLobby = () => {
     gameManager.sendMessage('lobby_leave');

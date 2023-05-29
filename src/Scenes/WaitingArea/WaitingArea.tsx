@@ -46,7 +46,7 @@ function WaitingArea({ gameManager }: WaitingAreaProps) {
         gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} />);
       }]
     ]);
-  }, [gameManager]);
+  }, []);
 
   const handleDisconnect = () => {
     gameManager.disconnect();

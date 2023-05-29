@@ -1,23 +1,19 @@
-import { GameManager } from "../../Messages/GameManager";
-import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
+import { Dispatch } from "react";
+import { AddCubesUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
+import { GameUpdate } from "./GameTable";
 import { AnimationBase, GameAnimation } from "./GameAnimation";
-import { CardPocket, GameTable } from "./GameTable";
-import { TargetSelector } from "./TargetSelector";
 
 export class Game {
 
     private queuedUpdates: any[] = [];
     private animations: GameAnimation[] = [];
 
-    private gameTable: GameTable;
-    private targetSelector: TargetSelector;
+    private tableDispatch: Dispatch<GameUpdate>;
 
     private gameUpdateHandlers = new Map<string, (update: any) => void>([
         ['game_error', this.handleGameError],
         ['game_log', this.handleGameLog],
         ['game_prompt', this.handleGamePrompt],
-        ['add_cards', this.handleAddCards],
-        ['remove_cards', this.handleRemoveCards],
         ['move_card', this.handleMoveCard],
         ['add_cubes', this.handleAddCubes],
         ['move_cubes', this.handleMoveCubes],
@@ -43,17 +39,8 @@ export class Game {
         ['status_clear', this.handleStatusClear],
     ]);
 
-    constructor(gameManager: GameManager) {
-        this.gameTable = new GameTable();
-        this.targetSelector = new TargetSelector(this.gameTable, gameManager);
-    }
-
-    getGameTable() {
-        return this.gameTable;
-    }
-
-    getTargetSelector() {
-        return this.targetSelector;
+    constructor(tableDispatch: Dispatch<any>) {
+        this.tableDispatch = tableDispatch;
     }
 
     pushUpdate(update: any) {
@@ -67,7 +54,14 @@ export class Game {
                 if (this.queuedUpdates.length != 0) {
                     const update = this.queuedUpdates.shift();
                     const updateType = Object.keys(update)[0];
-                    this.gameUpdateHandlers.get(updateType)?.call(this, update[updateType]);
+                    const updateValue = update[updateType];
+
+                    let handler = this.gameUpdateHandlers.get(updateType);
+                    if (handler) {
+                        handler.call(this, updateValue);
+                    } else {
+                        this.tableDispatch({ updateType, updateValue });
+                    }
                 } else {
                     break;
                 }
@@ -96,19 +90,6 @@ export class Game {
 
     private handleGamePrompt(message: GameString) {
         // TODO
-    }
-
-    private handleAddCards({ card_ids, pocket_type, player }: AddCardsUpdate) {
-        let pocket = this.gameTable.getPocket(pocket_type, player);
-        card_ids.forEach(({id, deck}) => {
-            pocket.addCard(this.gameTable.addCard(id, deck));
-        });
-    }
-
-    private handleRemoveCards({ cards }: RemoveCardsUpdate) {
-       cards.forEach(card_id => {
-        this.gameTable.removeCard(card_id);
-       })
     }
 
     private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
