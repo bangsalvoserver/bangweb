@@ -424,20 +424,12 @@ function handleMoveCubes(table: GameTable, { num_cubes, origin_card, target_card
 }
 
 function handleMoveScenarioDeck(table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable {
-    if (pocket == 'scenario_deck') {
+    if (pocket == 'scenario_deck' || pocket == 'wws_scenario_deck') {
         return {
             ... table,
             status: {
                 ... table.status,
-                scenario_deck_holder: player
-            }
-        }
-    } else if (pocket == 'wws_scenario_deck') {
-        return {
-            ... table,
-            status: {
-                ... table.status,
-                wws_scenario_deck_holder: player
+                [pocket + '_holder']: player
             }
         }
     } else {
