@@ -6,7 +6,8 @@ import LobbyScene from "../Lobby/Lobby";
 import WaitingArea from "../WaitingArea/WaitingArea";
 import { deserializeImage } from "../../Messages/ImageSerial";
 import { Game } from "./Game";
-import { Player, Card, gameTableHandleUpdate, GameTable, newGameTable } from "./GameTable";
+import { gameTableHandleUpdate, newGameTable, getPlayer, Player } from "./GameTable";
+import PlayerView from "./Components/PlayerView";
 
 const FRAMERATE = 60;
 
@@ -70,6 +71,11 @@ export default function GameScene({ gameManager, users, owner }: GameSceneProps)
       <h1>Game Scene</h1>
       <div>
         <button onClick={handleLeaveLobby}>Exit Game</button>
+      </div>
+      <div>
+        {table.alive_players.map(player_id => (
+          <PlayerView key={player_id} table={table} users={lobbyUsers} player={getPlayer(table, player_id) as Player} />
+        ))}
       </div>
     </div>
   );

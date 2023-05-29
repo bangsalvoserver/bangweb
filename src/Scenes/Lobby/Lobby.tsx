@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GameManager } from '../../Messages/GameManager';
 import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyChat } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
@@ -15,7 +15,13 @@ export interface LobbyProps {
 
 export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
   const [users, setUsers] = useState([] as UserValue[]);
+  const usersRef = useRef(users);
+  useEffect(() => { usersRef.current = users }, [users]);
+
   const [owner, setOwner] = useState<number>();
+  const ownerRef = useRef(owner);
+  useEffect(() => { ownerRef.current = owner }, [owner]);
+
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
 
@@ -53,7 +59,7 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
       setOwner(id);
     }],
     ['game_started', () => {
-      gameManager.changeScene(<GameScene gameManager={gameManager} users={users} owner={owner} />)
+      gameManager.changeScene(<GameScene gameManager={gameManager} users={usersRef.current} owner={ownerRef.current} />)
     }]
   ]), []);
 

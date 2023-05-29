@@ -255,7 +255,7 @@ function removeFromPocket<T extends Pockets>(pockets: T, pocket_type: string, ca
     if (pocket_type in pockets) {
         return {
             ...pockets,
-            [pocket_type]: (pockets[pocket_type] as number[]).filter(id => !(id in cards))
+            [pocket_type]: pockets[pocket_type].filter(id => !cards.includes(id))
         }
     } else {
         return pockets;
@@ -279,7 +279,7 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
         ... table,
         players: editById(table.players, p => ({ ... p, pockets: removeFromPocket(p.pockets, pocket_type, cards)}), player),
         pockets: removeFromPocket(table.pockets, pocket_type, cards)
-    }), { ... table, cards: table.cards.filter(card => !(card.id in cards))});
+    }), { ... table, cards: table.cards.filter(({id}) => !cards.includes(id))});
 }
 
 function handlePlayerAdd(table: GameTable, { players }: PlayerAddUpdate): GameTable {

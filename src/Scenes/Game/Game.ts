@@ -26,9 +26,10 @@ export class Game {
                     const updateType = Object.keys(update)[0];
                     const updateValue = update[updateType];
 
+                    console.log(JSON.stringify(update));
                     this.tableDispatch({ updateType, updateValue });
 
-                    if ('duration' in updateValue) {
+                    if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
                         this.animations.push(new AnimationBase(updateValue.duration as number));
                     }
                 } else {
