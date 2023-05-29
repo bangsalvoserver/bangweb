@@ -1,5 +1,5 @@
 import { CardData } from "../../Messages/CardData";
-import { AddCardsUpdate, RemoveCardsUpdate } from "../../Messages/GameUpdate";
+import { AddCardsUpdate, AddCubesUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
 
 interface Id {
     id: number
@@ -24,6 +24,20 @@ function searchById<T extends Id>(values: T[], target: number): T | null {
     return null;
 }
 
+function editById<T extends Id>(values: T[], mapper: (value: T) => T, id?: number): T[] {
+    if (id && searchById(values, id)) {
+        return values.map(value => {
+            if (value.id == id) {
+                return mapper(value);
+            } else {
+                return value;
+            }
+        });
+    } else {
+        return values;
+    }
+}
+
 interface PocketRef {
     pocket_type: string;
     player?: number;
@@ -32,8 +46,23 @@ interface PocketRef {
 export interface Card extends Id {
     deck: string;
 
+    inactive: boolean;
+    num_cubes: number;
+
     cardData?: CardData;
     pocket?: PocketRef;
+}
+
+function newCard(id: number, deck: string, pocket_type: string, player?: number): Card {
+    return {
+        id, deck,
+        inactive: false,
+        num_cubes: 0,
+        pocket: {
+            pocket_type,
+            player
+        }
+    };
 }
 
 type Pockets = {
@@ -42,6 +71,15 @@ type Pockets = {
 
 export interface Player extends Id {
     userid: number;
+    status: {
+        role: string,
+        hp: number,
+        gold: number,
+        flags: string[],
+        range_mod: number,
+        weapon_range: number,
+        distance_mod: number
+    };
     pockets: {
         player_hand: number[],
         player_table: number[],
@@ -50,11 +88,31 @@ export interface Player extends Id {
     };
 }
 
+function newPlayer(id: number, userid: number): Player {
+    return {
+        id, userid,
+        status: {
+            role: 'unknown',
+            hp: 0,
+            gold: 0,
+            flags: [],
+            range_mod: 0,
+            weapon_range: 1,
+            distance_mod: 0
+        },
+        pockets: {
+            player_hand: [],
+            player_table: [],
+            player_character: [],
+            player_backup: []
+        }
+    };
+}
+
 export interface GameTable {
-    alive_players: number[],
-    dead_players: number[],
     players: Player[];
     cards: Card[];
+    
     pockets: {
         main_deck: number[],
         discard_pile: number[],
@@ -72,14 +130,24 @@ export interface GameTable {
         train: number[],
         train_deck: number[]
     };
+
+    alive_players: number[];
+    dead_players: number[];
+
+    status: {
+        num_cubes: number;
+        train_position: number;
+        flags: string[];
+        scenario_deck_holder?: number;
+        wws_scenario_deck_holder?: number;
+    };
 }
 
 export function newGameTable(): GameTable {
     return {
-        alive_players: [],
-        dead_players: [],
         players: [],
         cards: [],
+
         pockets: {
             main_deck: [],
             discard_pile: [],
@@ -97,6 +165,15 @@ export function newGameTable(): GameTable {
             train: [],
             train_deck: []
         },
+
+        alive_players: [],
+        dead_players: [],
+
+        status: {
+            num_cubes: 0,
+            train_position: 0,
+            flags: [],
+        }
     };
 }
 
@@ -114,8 +191,34 @@ export interface GameUpdate {
 }
 
 const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => GameTable>([
+    // ['game_error', handleGameError],
+    // ['game_log', handleGameLog],
+    // ['game_prompt', handleGamePrompt],
     ['add_cards', handleAddCards],
     ['remove_cards', handleRemoveCards],
+    ['move_card', handleMoveCard],
+    ['add_cubes', handleAddCubes],
+    ['move_cubes', handleMoveCubes],
+    ['move_scenario_deck', handleMoveScenarioDeck],
+    ['move_train', handleMoveTrain],
+    // ['deck_shuffled', handleDeckShuffled],
+    ['show_card', handleShowCard],
+    ['hide_card', handleHideCard],
+    ['tap_card', handleTapCard],
+    // ['flash_card', handleFlashCard],
+    // ['short_pause', handleShortPause],
+    ['player_add', handlePlayerAdd],
+    ['player_order', handlePlayerOrder],
+    ['player_hp', handlePlayerHp],
+    ['player_gold', handlePlayerGold],
+    ['player_show_role', handlePlayerShowRole],
+    ['player_status', handlePlayerStatus],
+    // ['switch_turn', handleSwitchTurn],
+    // ['request_status', handleRequestStatus],
+    // ['status_ready', handleStatusReady],
+    ['game_flags', handleGameFlags],
+    // ['play_sound', handlePlaySound]
+    // ['status_clear', handleStatusClear]
 ]);
 
 export function gameTableHandleUpdate(table: GameTable, update: GameUpdate) {
@@ -124,30 +227,6 @@ export function gameTableHandleUpdate(table: GameTable, update: GameUpdate) {
         return handler(table, update.updateValue);
     } else {
         return table;
-    }
-}
-
-function newCard(id: number, deck: string, pocket_type: string, player?: number) {
-    return {
-        id, deck,
-        pocket: {
-            pocket_type,
-            player
-        }
-    };
-}
-
-function editById<T extends Id>(values: T[], mapper: (value: T) => T, id?: number): T[] {
-    if (id && searchById(values, id)) {
-        return values.map(value => {
-            if (value.id == id) {
-                return mapper(value);
-            } else {
-                return value;
-            }
-        });
-    } else {
-        return values;
     }
 }
 
@@ -201,4 +280,162 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
         players: editById(table.players, p => ({ ... p, pockets: removeFromPocket(p.pockets, pocket_type, cards)}), player),
         pockets: removeFromPocket(table.pockets, pocket_type, cards)
     }), { ... table, cards: table.cards.filter(card => !(card.id in cards))});
+}
+
+function handlePlayerAdd(table: GameTable, { players }: PlayerAddUpdate): GameTable {
+    return {
+        ... table,
+        players: table.players.concat(players.map(({player_id, user_id}) => newPlayer(player_id, user_id))).sort(sortById),
+        alive_players: table.alive_players.concat(players.map(({player_id}) => player_id))
+    };
+}
+
+function handlePlayerOrder(table: GameTable, { players }: PlayerOrderUpdate): GameTable {
+    return { ... table, alive_players: players };
+}
+
+function handlePlayerHp(table: GameTable, { player, hp }: PlayerHpUpdate): GameTable {
+    return {
+        ... table,
+        players: editById(table.players, p => ({ ... p, status: { ... p.status, hp }}), player)
+    };
+}
+
+function handlePlayerGold(table: GameTable, { player, gold }: PlayerGoldUpdate): GameTable {
+    return {
+        ... table,
+        players: editById(table.players, p => ({ ... p, status: { ... p.status, gold }}), player)
+    };
+}
+
+function handlePlayerShowRole(table: GameTable, { player, role }: PlayerShowRoleUpdate): GameTable {
+    return {
+        ... table,
+        players: editById(table.players, p => ({ ... p, status: { ... p.status, role }}), player)
+    };
+}
+
+function handlePlayerStatus(table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable {
+    return {
+        ... table,
+        players: editById(table.players, p => ({ ... p, status: {
+            ... p.status,
+            flags, range_mod, weapon_range, distance_mod
+        }}), player)
+    };
+}
+
+function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable {
+    const cardObj = getCard(table, card);
+    if (!cardObj) return table;
+
+    const cardList = [card];
+    const oldPocket = cardObj.pocket?.pocket_type || 'none';
+
+    let newPlayers = editById(table.players, player => ({ ... player, pockets: removeFromPocket(player.pockets, oldPocket, cardList) }), cardObj.pocket?.player);
+    newPlayers = editById(newPlayers, player => ({ ... player, pockets: addToPocket(player.pockets, pocket, cardList) }), player);
+
+    let newPockets = removeFromPocket(table.pockets, oldPocket, cardList);
+    newPockets = addToPocket(newPockets, pocket, cardList);
+
+    return {
+        ... table,
+        cards: editById(table.cards, card => ({ ... card, pocket: { pocket_type: pocket, player }}), card),
+        players: newPlayers,
+        pockets: newPockets
+    };
+}
+
+function handleShowCard(table: GameTable, { card, info }: ShowCardUpdate): GameTable {
+    return {
+        ... table,
+        cards: editById(table.cards, card => ({ ... card, cardData: info }), card)
+    };
+}
+
+function handleHideCard(table: GameTable, { card }: HideCardUpdate): GameTable {
+    return {
+        ... table,
+        cards: editById(table.cards, card => ({ ... card, cardData: undefined }), card)
+    };
+}
+
+function handleTapCard(table: GameTable, { card, inactive }: TapCardUpdate): GameTable {
+    return {
+        ... table,
+        cards: editById(table.cards, card => ({ ... card, inactive }), card)
+    };
+}
+
+function handleAddCubes(table: GameTable, { num_cubes, target_card }: AddCubesUpdate): GameTable {
+    return {
+        ... table,
+        status: {
+            ... table.status,
+            num_cubes: table.status.num_cubes + (target_card ? 0 : num_cubes)
+        },
+        cards: editById(table.cards, card => ({
+            ... card,
+            num_cubes: card.num_cubes + num_cubes
+        }), target_card)
+    };
+}
+
+function handleMoveCubes(table: GameTable, { num_cubes, origin_card, target_card }: MoveCubesUpdate): GameTable {
+    let tableCubes = table.status.num_cubes;
+    if (!origin_card) tableCubes -= num_cubes;
+    else if (!target_card) tableCubes += num_cubes;
+
+    let tableCards = editById(table.cards, card => ({ ... card, num_cubes: card.num_cubes - num_cubes }), origin_card);
+    tableCards = editById(table.cards, card => ({ ... card, num_cubes: card.num_cubes + num_cubes}), target_card);
+    return {
+        ... table,
+        status: {
+            ... table.status,
+            num_cubes: tableCubes
+        },
+        cards: tableCards
+    };
+}
+
+function handleMoveScenarioDeck(table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable {
+    if (pocket == 'scenario_deck') {
+        return {
+            ... table,
+            status: {
+                ... table.status,
+                scenario_deck_holder: player
+            }
+        }
+    } else if (pocket == 'wws_scenario_deck') {
+        return {
+            ... table,
+            status: {
+                ... table.status,
+                wws_scenario_deck_holder: player
+            }
+        }
+    } else {
+        return table;
+    }
+}
+
+function handleMoveTrain(table: GameTable, { position }: MoveTrainUpdate): GameTable {
+    return {
+        ... table,
+        status: {
+            ... table.status,
+            train_position: position
+        }
+    };
+}
+
+function handleGameFlags(table: GameTable, flags: string[]): GameTable {
+    return {
+        ... table,
+        status: {
+            ... table.status,
+            flags
+        }
+    };
 }
