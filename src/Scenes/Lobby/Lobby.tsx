@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
-import { GameManager, useHandlers } from '../../Messages/GameManager';
+import { Connection, useHandlers } from '../../Messages/Connection';
 import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
 import WaitingArea from '../WaitingArea/WaitingArea';
@@ -12,12 +12,12 @@ import { newGameTable } from '../Game/GameTable';
 
 export interface LobbyProps {
   myLobbyId: number,
-  gameManager: GameManager;
+  connection: Connection;
   name: string;
   options: GameOptions;
 }
 
-export default function LobbyScene({ myLobbyId, gameManager, name, options }: LobbyProps) {
+export default function LobbyScene({ myLobbyId, connection, name, options }: LobbyProps) {
   const [table, tableDispatch] = useReducer(handleGameUpdate, null, newGameTable);
   const game = useRef<Game>();
 
@@ -29,7 +29,7 @@ export default function LobbyScene({ myLobbyId, gameManager, name, options }: Lo
 
   const myUserId = parseInt(localStorage.getItem('user_id') as string);
 
-  useHandlers(gameManager, [],
+  useHandlers(connection, [],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
       setUsers(users => {
         let copy = [...users];
@@ -44,14 +44,9 @@ export default function LobbyScene({ myLobbyId, gameManager, name, options }: Lo
       });
     }],
     ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
-      if (user_id === myUserId) {
-        localStorage.removeItem('lobby_id');
-        gameManager.changeScene(<WaitingArea gameManager={gameManager} />);
-      } else {
-        setUsers(users =>
-          users.filter(user => user.id !== user_id)
-        );
-      }
+      setUsers(users =>
+        users.filter(user => user.id !== user_id)
+      );
     }],
     ['lobby_edited', ({ name, options }: LobbyEntered) => {
       setLobbyName(name);
@@ -64,19 +59,13 @@ export default function LobbyScene({ myLobbyId, gameManager, name, options }: Lo
       game.current = new Game(tableDispatch);
       tableDispatch({ updateType: 'reset' });
     }],
-    ['lobby_entered', ({ lobby_id }: LobbyEntered) => {
-      if (lobby_id == myLobbyId) {
-        game.current = undefined;
-        tableDispatch({ updateType: 'reset' });
-      }
-    }],
     ['game_update', (update: any) => {
       game.current?.pushUpdate(update);
     }]
   );
 
   const handleLeaveLobby = () => {
-    gameManager.sendMessage('lobby_leave');
+    connection.sendMessage('lobby_leave');
   };
 
   return (

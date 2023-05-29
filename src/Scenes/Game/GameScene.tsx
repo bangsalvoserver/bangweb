@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import { GameManager, useHandlers } from "../../Messages/GameManager"
+import { Connection, useHandlers } from "../../Messages/Connection"
 import { UserValue } from "../Lobby/LobbyUser"
 import { LobbyAddUser, LobbyEntered, LobbyOwner, LobbyRemoveUser } from "../../Messages/ServerMessage";
 import LobbyScene from "../Lobby/Lobby";

@@ -1,14 +1,14 @@
 import { MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from "react";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import { LobbyEntered, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
-import { GameManager, useHandlers } from "../../Messages/GameManager";
+import { Connection, useHandlers } from "../../Messages/Connection";
 import LobbyScene from "../Lobby/Lobby";
 
 export interface WaitingAreaProps {
-  gameManager: GameManager;
+  connection: Connection;
 }
 
-function WaitingArea({ gameManager }: WaitingAreaProps) {
+function WaitingArea({ connection }: WaitingAreaProps) {
   const [lobbies, setLobbies] = useState([] as LobbyValue[]);
   const [lobbyName, setLobbyName] = useState(localStorage.getItem('lobbyName'));
 
@@ -21,15 +21,15 @@ function WaitingArea({ gameManager }: WaitingAreaProps) {
   }, [lobbyName]);
 
   useEffect(() => {
-    gameManager.sendMessage('lobby_list');
+    connection.sendMessage('lobby_list');
 
     let cachedLobbyId = localStorage.getItem('lobby_id');
     if (cachedLobbyId) {
-      gameManager.sendMessage('lobby_join', { lobby_id: parseInt(cachedLobbyId) });
+      connection.sendMessage('lobby_join', { lobby_id: parseInt(cachedLobbyId) });
     }
   }, []);
 
-  useHandlers(gameManager, [],
+  useHandlers(connection, [],
     ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
       setLobbies(lobbies =>
         lobbies
@@ -41,26 +41,22 @@ function WaitingArea({ gameManager }: WaitingAreaProps) {
       setLobbies(lobbies =>
         lobbies.filter((lobby) => lobby.id !== lobby_id)
       );
-    }],
-    ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
-      localStorage.setItem('lobby_id', lobby_id.toString());
-      gameManager.changeScene(<LobbyScene myLobbyId={lobby_id} gameManager={gameManager} name={name} options={options} />);
     }]
   );
 
   const handleDisconnect = () => {
-    gameManager.disconnect();
+    connection.disconnect();
   };
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
     if (lobbyName) {
-      gameManager.sendMessage('lobby_make', { name: lobbyName });
+      connection.sendMessage('lobby_make', { name: lobbyName });
     }
   };
 
   const handleClickJoin = (lobby_id: number) => {
-    gameManager.sendMessage('lobby_join', { lobby_id });
+    connection.sendMessage('lobby_join', { lobby_id });
   };
 
   return (

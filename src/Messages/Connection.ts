@@ -2,26 +2,26 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 
 export type MessageHandler = [string, (message: any) => void];
 
-export class GameManager {
+export class Connection {
     private socket?: WebSocket;
     private messageHandlers = new Set<MessageHandler>();
-    private sceneCallback?: Dispatch<SetStateAction<JSX.Element>>;
     private queuedMessages = [] as [string, any][];
-    private isLoading = true;
 
-    setSceneCallback(sceneCallback: Dispatch<SetStateAction<JSX.Element>>) {
-        this.sceneCallback = sceneCallback;
-    }
-
-    changeScene(scene: JSX.Element) {
-        this.isLoading = true;
-        if (this.sceneCallback) {
-            this.sceneCallback(scene);
-        }
-    }
+    private locked = false;
 
     isConnected(): boolean {
         return this.socket != undefined;
+    }
+
+    isLocked(): boolean {
+        return this.locked;
+    }
+
+    setLocked(locked: boolean) {
+        this.locked = locked;
+        if (!locked) {
+            this.processMessages();
+        }
     }
 
     connect() {
@@ -51,25 +51,6 @@ export class GameManager {
         this.socket?.close();
     }
 
-    processMessages() {
-        this.isLoading = false;
-        this.queuedMessages.forEach(([messageType, message]) => {
-            this.messageHandlers.forEach(([type, handler]) => {
-                if (type === messageType) {
-                    handler(message);
-                }
-            });
-        });
-        this.queuedMessages = [];
-    }
-
-    receiveMessage(messageType: string, message: any) {
-        this.queuedMessages.push([messageType, message]);
-        if (!this.isLoading) {
-            this.processMessages();
-        }
-    }
-
     addHandler(handler: MessageHandler) {
         this.messageHandlers.add(handler);
     }
@@ -83,13 +64,36 @@ export class GameManager {
             this.socket.send(JSON.stringify({[messageType]: message}));
         }
     }
+
+    private receiveMessage(messageType: string, message: any) {
+        this.queuedMessages.push([messageType, message]);
+        if (!this.locked) {
+            this.processMessages();
+        }
+    }
+
+    private processMessage(messageType: string, message: any) {
+        this.messageHandlers.forEach(([type, handler]) => {
+            if (type === messageType) {
+                handler(message);
+            }
+        });
+    }
+
+    private processMessages() {
+        this.locked = false;
+        this.queuedMessages.forEach(([messageType, message]) => {
+            this.processMessage(messageType, message);
+        });
+        this.queuedMessages = [];
+    }
 }
 
-export function useHandlers(gameManager: GameManager, deps: any[], ...handlers: MessageHandler[]) {
+export function useHandlers(connection: Connection, deps: any[], ...handlers: MessageHandler[]) {
     useEffect(() => {
-        handlers.forEach(handler => gameManager.addHandler(handler));
-        gameManager.processMessages();
-        return () => handlers.forEach(handler => gameManager.removeHandler(handler));
+        handlers.forEach(handler => connection.addHandler(handler));
+        connection.setLocked(false);
+        return () => handlers.forEach(handler => connection.removeHandler(handler));
     }, deps);
 }
 

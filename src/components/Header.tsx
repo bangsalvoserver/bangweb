@@ -1,13 +1,13 @@
 import React, { ChangeEvent, MutableRefObject, useEffect, useRef, useState } from 'react';
-import { GameManager } from '../Messages/GameManager';
+import { Connection } from '../Messages/Connection';
 import { serializeImage } from '../Messages/ImageSerial';
 
 export interface HeaderProps {
-  gameManager: GameManager;
+  connection: Connection;
   onClickToggleMenu: () => void;
 }
 
-function Header({ gameManager, onClickToggleMenu }: HeaderProps) {
+function Header({ connection, onClickToggleMenu }: HeaderProps) {
   const inputFile = useRef() as MutableRefObject<HTMLInputElement>;
   const [propic, setPropic] = useState(localStorage.getItem('propic'));
   
@@ -18,7 +18,7 @@ function Header({ gameManager, onClickToggleMenu }: HeaderProps) {
       localStorage.removeItem('propic');
     }
 
-    (async () => gameManager.sendMessage('user_edit', {
+    (async () => connection.sendMessage('user_edit', {
       name: localStorage.getItem('username'),
       profile_image: await serializeImage(propic, 50)
     }))();

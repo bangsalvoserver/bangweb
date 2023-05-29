@@ -1,13 +1,13 @@
 import React, { ChangeEvent, MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from 'react'
 import { ClientAccepted } from '../../Messages/ServerMessage';
-import { GameManager } from '../../Messages/GameManager';
+import { Connection } from '../../Messages/Connection';
 import WaitingArea from '../WaitingArea/WaitingArea';
 
 export interface ConnectProps {
-  gameManager: GameManager;
+  connection: Connection;
 }
 
-export default function ConnectScene({ gameManager }: ConnectProps) {
+export default function ConnectScene({ connection }: ConnectProps) {
   const [username, setUsername] = useState(localStorage.getItem('username'));
 
   useEffect(() => {
@@ -20,8 +20,8 @@ export default function ConnectScene({ gameManager }: ConnectProps) {
 
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
-    if (!gameManager.isConnected() && username) {
-      gameManager.connect();
+    if (!connection.isConnected() && username) {
+      connection.connect();
     }
   };
 

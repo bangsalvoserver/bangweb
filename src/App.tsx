@@ -1,37 +1,36 @@
 import './App.css';
 import { useEffect, useState, useRef } from 'react';
-import { GameManager, useHandlers } from './Messages/GameManager';
+import { Connection, useHandlers } from './Messages/Connection';
 import ConnectScene from './Scenes/Connect/Connect';
 import Header from './components/Header';
 import UserMenu from './components/UserMenu';
 import { serializeImage } from './Messages/ImageSerial';
-import { ClientAccepted } from './Messages/ServerMessage';
+import { ClientAccepted, LobbyEntered, LobbyRemoveUser } from './Messages/ServerMessage';
 import WaitingArea from './Scenes/WaitingArea/WaitingArea';
+import CurrentScene, { CurrentSceneProps, CurrentSceneUnion } from './Scenes/CurrentScene';
+import { connect } from 'http2';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const gameManager = useRef<GameManager>();
-  if (!gameManager.current) {
-    gameManager.current = new GameManager();
+  const connection = useRef<Connection>();
+  if (!connection.current) {
+    connection.current = new Connection();
   }
 
-  const gameMgr = gameManager.current;
-  const [scene, setScene] = useState(<ConnectScene gameManager={gameMgr} />);
+  const [scene, setScene] = useState<CurrentSceneUnion>({ connect: { connection : connection.current }});
 
   const myUserId = parseInt(localStorage.getItem('user_id') as string) || 0;
 
   useEffect(() => {
-    gameMgr.setSceneCallback(setScene);
-    
-    if (myUserId && !gameMgr.isConnected()) {
-      gameMgr.connect();
+    if (myUserId && !connection.current?.isConnected()) {
+      connection.current?.connect();
     }
-  }, []);
+  }, [connection]);
 
-  useHandlers(gameMgr, [], 
+  useHandlers(connection.current, [connection], 
     ['connect', async () => {
-      gameMgr.sendMessage('connect', {
+      connection.current?.sendMessage('connect', {
         user: {
           name: localStorage.getItem('username'),
           profile_image: await serializeImage(localStorage.getItem('propic'), 50)
@@ -42,20 +41,33 @@ function App() {
     }],
     ['client_accepted', ({ user_id }: ClientAccepted) => {
       localStorage.setItem('user_id', user_id.toString());
-      gameMgr.changeScene(<WaitingArea gameManager={gameMgr} />);
+      connection.current?.setLocked(true);
+      setScene({ waiting_area: { connection: connection.current as Connection }});
     }],
     ['disconnect', () => {
-      gameMgr.changeScene(<ConnectScene gameManager={gameMgr} />);
+      setScene({ connect: { connection: connection.current as Connection }})
     }],
     ['lobby_error', (message: string) => {
       console.error("Lobby error: " + message);
+    }],
+    ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
+      localStorage.setItem('lobby_id', lobby_id.toString());
+      connection.current?.setLocked(true);
+      setScene({ lobby: { connection: connection.current as Connection, myLobbyId: lobby_id, name, options }});
+    }],
+    ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
+      if (user_id === myUserId) {
+        localStorage.removeItem('lobby_id');
+        connection.current?.setLocked(true);
+        setScene({waiting_area: { connection: connection.current as Connection }});
+      }
     }]
   );
 
   return (
 <>
     <Header
-      gameManager={gameMgr}
+      connection={connection.current}
       onClickToggleMenu={() => setIsMenuOpen(value => !value)}
     />
 <div className="home-page
@@ -77,7 +89,7 @@ min-h-screen
       ' 
       > Bang!</h1>
       <UserMenu isMenuOpen={isMenuOpen}/>
-      {scene}
+      <CurrentScene scene={scene} />
     </div>
 
 </div>
