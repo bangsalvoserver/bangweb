@@ -19,7 +19,7 @@ export interface AddCardsUpdate {
         id: number,
         deck: string
     }[];
-    pocket_type: string;
+    pocket: string;
     player?: number;
 }
 

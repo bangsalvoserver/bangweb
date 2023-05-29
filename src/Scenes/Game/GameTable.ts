@@ -39,7 +39,7 @@ function editById<T extends Id>(values: T[], mapper: (value: T) => T, id?: numbe
 }
 
 interface PocketRef {
-    pocket_type: string;
+    pocketName: string;
     player?: number;
 }
 
@@ -53,13 +53,13 @@ export interface Card extends Id {
     pocket?: PocketRef;
 }
 
-function newCard(id: number, deck: string, pocket_type: string, player?: number): Card {
+function newCard(id: number, deck: string, pocketName: string, player?: number): Card {
     return {
         id, deck,
         inactive: false,
         num_cubes: 0,
         pocket: {
-            pocket_type,
+            pocketName,
             player
         }
     };
@@ -230,32 +230,34 @@ export function gameTableHandleUpdate(table: GameTable, update: GameUpdate) {
     }
 }
 
-function addToPocket<T extends Pockets>(pockets: T, pocket_type: string, cards: number[]): T {
-    if (pocket_type in pockets) {
+function addToPocket<T extends Pockets>(pockets: T, pocketName: string, cards: number[]): T {
+    if (pocketName in pockets) {
         return {
             ...pockets,
-            [pocket_type]: pockets[pocket_type].concat(cards)
+            [pocketName]: pockets[pocketName].concat(cards)
         };
     } else {
         return pockets;
     }
 }
 
-function handleAddCards(table: GameTable, { card_ids, pocket_type, player }: AddCardsUpdate): GameTable {
+function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable {
     const addedCards = card_ids.map(({id}) => id);
-    return {
+    const ret = {
         ... table,
-        cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocket_type, player))).sort(sortById),
-        players: editById(table.players, p => ({ ... p, pockets: addToPocket(p.pockets, pocket_type, addedCards) }), player),
-        pockets: addToPocket(table.pockets, pocket_type, addedCards)
+        cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocket, player))).sort(sortById),
+        players: editById(table.players, p => ({ ... p, pockets: addToPocket(p.pockets, pocket, addedCards) }), player),
+        pockets: addToPocket(table.pockets, pocket, addedCards)
     };
+
+    return ret;
 }
 
-function removeFromPocket<T extends Pockets>(pockets: T, pocket_type: string, cards: number[]): T {
-    if (pocket_type in pockets) {
+function removeFromPocket<T extends Pockets>(pockets: T, pocketName: string, cards: number[]): T {
+    if (pocketName in pockets) {
         return {
             ...pockets,
-            [pocket_type]: pockets[pocket_type].filter(id => !cards.includes(id))
+            [pocketName]: pockets[pocketName].filter(id => !cards.includes(id))
         }
     } else {
         return pockets;
@@ -275,10 +277,10 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
         }
     });
 
-    return [...cardsToPockets.entries()].reduce((table, [{pocket_type, player}, cards]) => ({
+    return [...cardsToPockets.entries()].reduce((table, [{pocketName, player}, cards]) => ({
         ... table,
-        players: editById(table.players, p => ({ ... p, pockets: removeFromPocket(p.pockets, pocket_type, cards)}), player),
-        pockets: removeFromPocket(table.pockets, pocket_type, cards)
+        players: editById(table.players, p => ({ ... p, pockets: removeFromPocket(p.pockets, pocketName, cards)}), player),
+        pockets: removeFromPocket(table.pockets, pocketName, cards)
     }), { ... table, cards: table.cards.filter(({id}) => !cards.includes(id))});
 }
 
@@ -330,7 +332,7 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
     if (!cardObj) return table;
 
     const cardList = [card];
-    const oldPocket = cardObj.pocket?.pocket_type || 'none';
+    const oldPocket = cardObj.pocket?.pocketName || 'none';
 
     let newPlayers = editById(table.players, player => ({ ... player, pockets: removeFromPocket(player.pockets, oldPocket, cardList) }), cardObj.pocket?.player);
     newPlayers = editById(newPlayers, player => ({ ... player, pockets: addToPocket(player.pockets, pocket, cardList) }), player);
@@ -340,7 +342,7 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
 
     return {
         ... table,
-        cards: editById(table.cards, card => ({ ... card, pocket: { pocket_type: pocket, player }}), card),
+        cards: editById(table.cards, card => ({ ... card, pocket: { pocketName: pocket, player }}), card),
         players: newPlayers,
         pockets: newPockets
     };
