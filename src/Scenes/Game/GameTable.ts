@@ -349,21 +349,21 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
 }
 
 function handleDeckShuffled(table: GameTable, { pocket }: DeckShuffledUpdate): GameTable {
-    if (pocket === 'main_deck' || pocket === 'shop_discard') {
-        const destPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
+    if (pocket === 'main_deck' || pocket === 'shop_deck') {
+        const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
         return {
             ...table,
             cards: table.cards.map(card => {
                 if (card.pocket?.pocketName === pocket) {
-                    return { ...card, cardData: undefined, pocket: { pocketName: destPocket } };
+                    return { ...card, cardData: undefined, pocket: { pocketName: pocket } };
                 } else {
                     return card;
                 }
             }),
             pockets: {
                 ...table.pockets,
-                [pocket]: [],
-                [destPocket]: table.pockets[destPocket].concat(table.pockets[pocket])
+                [fromPocket]: [],
+                [pocket]: table.pockets[fromPocket]
             }
         };
     } else {
