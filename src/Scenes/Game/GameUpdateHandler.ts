@@ -1,9 +1,9 @@
 import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
-import { GameTable, Id, getCard, newCard, newPlayer, searchById } from "./GameTable";
+import { GameTable, Id, getCard, newCard, newGameTable, newPlayer, searchById } from "./GameTable";
 
 export interface GameUpdate {
     updateType: string,
-    updateValue: any
+    updateValue?: any
 }
 
 export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTable {
@@ -16,6 +16,7 @@ export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTabl
 }
 
 const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => GameTable>([
+    ['reset', newGameTable],
     // ['game_error', handleGameError],
     // ['game_log', handleGameLog],
     // ['game_prompt', handleGamePrompt],

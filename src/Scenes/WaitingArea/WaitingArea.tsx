@@ -44,7 +44,7 @@ function WaitingArea({ gameManager }: WaitingAreaProps) {
     }],
     ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
       localStorage.setItem('lobby_id', lobby_id.toString());
-      gameManager.changeScene(<LobbyScene gameManager={gameManager} name={name} options={options} />);
+      gameManager.changeScene(<LobbyScene myLobbyId={lobby_id} gameManager={gameManager} name={name} options={options} />);
     }]
   );
 

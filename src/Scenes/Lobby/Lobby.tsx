@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { GameManager, useHandlers } from '../../Messages/GameManager';
 import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
@@ -6,14 +6,21 @@ import WaitingArea from '../WaitingArea/WaitingArea';
 import { GameOptions } from '../../Messages/GameUpdate';
 import GameScene from '../Game/GameScene';
 import { deserializeImage } from '../../Messages/ImageSerial';
+import { Game } from '../Game/Game';
+import { handleGameUpdate } from '../Game/GameUpdateHandler';
+import { newGameTable } from '../Game/GameTable';
 
 export interface LobbyProps {
+  myLobbyId: number,
   gameManager: GameManager;
   name: string;
   options: GameOptions;
 }
 
-export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
+export default function LobbyScene({ myLobbyId, gameManager, name, options }: LobbyProps) {
+  const [table, tableDispatch] = useReducer(handleGameUpdate, null, newGameTable);
+  const game = useRef<Game>();
+
   const [users, setUsers] = useState([] as UserValue[]);
   const [owner, setOwner] = useState<number>();
 
@@ -52,12 +59,19 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
     }],
     ['lobby_owner', ({ id }: LobbyOwner) => {
       setOwner(id);
-    }]
-  );
-
-  useHandlers(gameManager, [users, owner],
+    }],
     ['game_started', () => {
-      gameManager.changeScene(<GameScene gameManager={gameManager} users={users} owner={owner} />)
+      game.current = new Game(tableDispatch);
+      tableDispatch({ updateType: 'reset' });
+    }],
+    ['lobby_entered', ({ lobby_id }: LobbyEntered) => {
+      if (lobby_id == myLobbyId) {
+        game.current = undefined;
+        tableDispatch({ updateType: 'reset' });
+      }
+    }],
+    ['game_update', (update: any) => {
+      game.current?.pushUpdate(update);
     }]
   );
 
@@ -71,9 +85,13 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
       <div>
         <button onClick={handleLeaveLobby}>Leave Lobby</button>
       </div>
-      <div>{users.map(user => (
+      <div>
+      {game.current ?
+      <GameScene game={game.current} table={table} users={users} />
+      : users.map(user => (
         <LobbyUser key={user.id} user={user} isOwner={user.id === owner} />
-      ))}</div>
+      ))}
+      </div>
     </div>
   );
 }
