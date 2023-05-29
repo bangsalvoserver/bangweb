@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GameManager } from '../../Messages/GameManager';
-import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyChat } from '../../Messages/ServerMessage';
+import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
 import WaitingArea from '../WaitingArea/WaitingArea';
 import { GameOptions } from '../../Messages/GameUpdate';
@@ -15,12 +15,7 @@ export interface LobbyProps {
 
 export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
   const [users, setUsers] = useState([] as UserValue[]);
-  const usersRef = useRef(users);
-  useEffect(() => { usersRef.current = users }, [users]);
-
   const [owner, setOwner] = useState<number>();
-  const ownerRef = useRef(owner);
-  useEffect(() => { ownerRef.current = owner }, [owner]);
 
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
@@ -32,7 +27,7 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
       setUsers(users => {
         let copy = [...users];
         const newUser = { id: user_id, name, propic: deserializeImage(profile_image) };
-        let index = copy.findIndex(user => user.id == user_id);
+        let index = copy.findIndex(user => user.id === user_id);
         if (index >= 0) {
           copy[index] = newUser;
         } else {
@@ -57,11 +52,14 @@ export default function LobbyScene({ gameManager, name, options }: LobbyProps) {
     }],
     ['lobby_owner', ({ id }: LobbyOwner) => {
       setOwner(id);
-    }],
-    ['game_started', () => {
-      gameManager.changeScene(<GameScene gameManager={gameManager} users={usersRef.current} owner={ownerRef.current} />)
     }]
-  ]), []);
+  ]), [gameManager, myUserId]);
+
+  useEffect(() => gameManager.addHandlers([
+    ['game_started', () => {
+      gameManager.changeScene(<GameScene gameManager={gameManager} users={users} owner={owner} />)
+    }]
+  ]), [gameManager, users, owner]);
 
   const handleLeaveLobby = () => {
     gameManager.sendMessage('lobby_leave');
