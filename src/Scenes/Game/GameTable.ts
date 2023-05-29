@@ -137,7 +137,21 @@ function newCard(id: number, deck: string, pocket_type: string, player?: number)
     };
 }
 
-function addToPocket<T extends Pockets>(pockets: T, cards: number[], pocket_type: string): T {
+function editById<T extends Id>(values: T[], mapper: (value: T) => T, id?: number): T[] {
+    if (id && searchById(values, id)) {
+        return values.map(value => {
+            if (value.id == id) {
+                return mapper(value);
+            } else {
+                return value;
+            }
+        });
+    } else {
+        return values;
+    }
+}
+
+function addToPocket<T extends Pockets>(pockets: T, pocket_type: string, cards: number[]): T {
     if (pocket_type in pockets) {
         return {
             ...pockets,
@@ -148,34 +162,17 @@ function addToPocket<T extends Pockets>(pockets: T, cards: number[], pocket_type
     }
 }
 
-function addToPlayerPocket(players: Player[], cards: number[], pocket_type: string, player_id?: number) {
-    if (player_id) {
-        return players.map(player => {
-            if (player.id == player_id) {
-                return {
-                    ... player,
-                    pockets: addToPocket(player.pockets, cards, pocket_type)
-                };
-            } else {
-                return player;
-            }
-        })
-    } else {
-        return players;
-    }
-}
-
 function handleAddCards(table: GameTable, { card_ids, pocket_type, player }: AddCardsUpdate): GameTable {
     const addedCards = card_ids.map(({id}) => id);
     return {
         ... table,
         cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocket_type, player))).sort(sortById),
-        players: addToPlayerPocket(table.players, addedCards, pocket_type, player),
-        pockets: addToPocket(table.pockets, addedCards, pocket_type)
+        players: editById(table.players, p => ({ ... p, pockets: addToPocket(p.pockets, pocket_type, addedCards) }), player),
+        pockets: addToPocket(table.pockets, pocket_type, addedCards)
     };
 }
 
-function removeFromPockets<T extends Pockets>(pockets: T, cards: number[], pocket_type: string): T {
+function removeFromPocket<T extends Pockets>(pockets: T, pocket_type: string, cards: number[]): T {
     if (pocket_type in pockets) {
         return {
             ...pockets,
@@ -183,23 +180,6 @@ function removeFromPockets<T extends Pockets>(pockets: T, cards: number[], pocke
         }
     } else {
         return pockets;
-    }
-}
-
-function removeFromPlayerPockets(players: Player[], cards: number[], pocket_type: string, player_id?: number): Player[] {
-    if (player_id) {
-        return players.map(player => {
-            if (player.id == player_id) {
-                return {
-                    ... player,
-                    pockets: removeFromPockets(player.pockets, cards, pocket_type)
-                }
-            } else {
-                return player;
-            }
-        })
-    } else {
-        return players;
     }
 }
 
@@ -218,7 +198,7 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
 
     return [...cardsToPockets.entries()].reduce((table, [{pocket_type, player}, cards]) => ({
         ... table,
-        players: removeFromPlayerPockets(table.players, cards, pocket_type, player),
-        pockets: removeFromPockets(table.pockets, cards, pocket_type)
+        players: editById(table.players, p => ({ ... p, pockets: removeFromPocket(p.pockets, pocket_type, cards)}), player),
+        pockets: removeFromPocket(table.pockets, pocket_type, cards)
     }), { ... table, cards: table.cards.filter(card => !(card.id in cards))});
 }
