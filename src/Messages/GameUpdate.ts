@@ -144,7 +144,7 @@ export interface GameOptions {
     character_choice: boolean;
     allow_beer_in_duel: boolean;
     quick_discard_all: boolean;
-    scenario_deck_size: boolean;
+    scenario_deck_size: number;
     num_bots: number;
     damage_timer: Milliseconds;
     escape_timer: Milliseconds;

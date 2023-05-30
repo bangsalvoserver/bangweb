@@ -54,7 +54,7 @@ function App() {
     ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
       localStorage.setItem('lobby_id', lobby_id.toString());
       connection.current?.setLocked(true);
-      setScene({ lobby: { connection: connection.current as Connection, myUserId: myUserId.current as UserId, name, options }});
+      setScene({ lobby: { connection: connection.current as Connection, myLobbyId: lobby_id, myUserId: myUserId.current as UserId, name, options }});
     }],
     ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
       if (user_id === myUserId.current) {
