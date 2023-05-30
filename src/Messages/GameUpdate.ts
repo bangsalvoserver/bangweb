@@ -139,7 +139,7 @@ export interface StatusReadyArgs {
 }
 
 export interface GameOptions {
-    expanions: string[];
+    expansions: string[];
     enable_ghost_cards: boolean;
     character_choice: boolean;
     allow_beer_in_duel: boolean;
