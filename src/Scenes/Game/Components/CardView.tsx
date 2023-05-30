@@ -1,5 +1,5 @@
 import { Card, GameTable } from "../GameTable";
-import { localizeCardName } from "../Locale";
+import { LocalizedCardName } from "../Locale";
 
 export interface CardProps {
     table: GameTable;
@@ -9,7 +9,7 @@ export interface CardProps {
 export default function CardView({ table, card }: CardProps) {
     return (
         <div>
-            {card.cardData ? localizeCardName(card.cardData.name, card.cardData.sign) : card.deck }
+            {card.cardData ? <LocalizedCardName name={card.cardData.name} sign={card.cardData.sign} /> : card.deck }
         </div>
     )
 }

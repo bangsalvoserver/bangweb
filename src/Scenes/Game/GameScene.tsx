@@ -3,10 +3,10 @@ import { UserValue } from "../Lobby/LobbyUser";
 import { Game } from "./Game";
 import { getPlayer, Player, GameTable } from "./GameTable";
 import PlayerView from "./Components/PlayerView";
-import { PlayerId } from "../../Messages/GameUpdate";
+import { GameString, PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { Connection } from "../../Messages/Connection";
-import { evaluateGameString, localizeMessage } from "./Locale";
+import { GameStringComponent } from "./Locale";
 
 const FRAMERATE = 60;
 
@@ -41,11 +41,15 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
 
   const handleReturnLobby = () => connection.sendMessage('lobby_return');
 
+  const newGameStringComponent = (message: GameString, key?: number) => {
+    return <GameStringComponent key={key} table={table} users={users} message={message} />
+  };
+
   return (
     <>
       { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
-      { table.status.request && 'status_text' in table.status.request ?
-        <div>{evaluateGameString(table, users, table.status.request.status_text)}</div> : null}
+      {/* {table.status.logs.map(newGameStringComponent)} */}
+      { table.status.request && 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
       { table.alive_players.map(newPlayerView) }
     </>
   );
