@@ -1,4 +1,4 @@
-import { CardData } from "./CardData";
+import { CardData, CardSign } from "./CardData";
 import { UserId } from "./ServerMessage";
 
 export type CardId = number;
@@ -10,7 +10,7 @@ export interface AnimationUpdate {
 }
 
 export interface FormatInteger { integer: number };
-export interface FormatCard { card: CardId };
+export interface FormatCard { card: { name: string, sign: CardSign } };
 export interface FormatPlayer { player: PlayerId };
 export type FormatArg = FormatInteger | FormatCard | FormatPlayer;
 

@@ -1,4 +1,4 @@
-import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
+import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { GameTable, Id, getCard, newCard, newGameTable, newPlayer, searchById } from "./GameTable";
 
@@ -19,7 +19,7 @@ export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTabl
 const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => GameTable>([
     ['reset', handleReset],
     // ['game_error', handleGameError],
-    // ['game_log', handleGameLog],
+    ['game_log', handleGameLog],
     // ['game_prompt', handleGamePrompt],
     ['add_cards', handleAddCards],
     ['remove_cards', handleRemoveCards],
@@ -41,11 +41,11 @@ const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => Ga
     ['player_show_role', handlePlayerShowRole],
     ['player_status', handlePlayerStatus],
     ['switch_turn', handleSwitchTurn],
-    // ['request_status', handleRequestStatus],
-    // ['status_ready', handleStatusReady],
+    ['request_status', handleRequestStatus],
+    ['status_ready', handleRequestStatus],
     ['game_flags', handleGameFlags],
     // ['play_sound', handlePlaySound]
-    // ['status_clear', handleStatusClear]
+    ['status_clear', handleStatusClear]
 ]);
 
 /// GameTable.players and GameTable.cards are sorted by id
@@ -375,6 +375,39 @@ function handleGameFlags(table: GameTable, flags: string[]): GameTable {
         status: {
             ...table.status,
             flags
+        }
+    };
+}
+
+// Handles the 'request_status' and the 'status_ready' updates, changes the status.request field
+function handleRequestStatus(table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable {
+    return {
+        ...table,
+        status: {
+            ...table.status,
+            request: status
+        }
+    };
+}
+
+// Handles the 'status_clear' update, clearing the status.request field
+function handleStatusClear(table: GameTable): GameTable {
+    return {
+        ...table,
+        status: {
+            ...table.status,
+            request: undefined
+        }
+    };
+}
+
+// Handles the 'game_log' update, pushing a log to the list
+function handleGameLog(table: GameTable, message: GameString): GameTable {
+    return {
+        ...table,
+        status: {
+            ...table.status,
+            logs: table.status.logs.concat(message)
         }
     };
 }

@@ -17,6 +17,11 @@ export interface CardTag {
     type: string;
 }
 
+export interface CardSign {
+    suit: string;
+    rank: string;
+}
+
 export interface CardData {
     name: string;
     image: string;
@@ -38,8 +43,5 @@ export interface CardData {
     };
     equip_target: string;
     color: string;
-    sign: {
-        suit: string;
-        rank: string;
-    };
+    sign: CardSign;
 }

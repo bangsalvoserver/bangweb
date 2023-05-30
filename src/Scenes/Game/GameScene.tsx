@@ -6,6 +6,7 @@ import PlayerView from "./Components/PlayerView";
 import { PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { Connection } from "../../Messages/Connection";
+import { evaluateGameString, localizeMessage } from "./Locale";
 
 const FRAMERATE = 60;
 
@@ -43,7 +44,9 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
   return (
     <>
       { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
-      {table.alive_players.map(newPlayerView)}
+      { table.status.request && 'status_text' in table.status.request ?
+        <div>{evaluateGameString(table, users, table.status.request.status_text)}</div> : null}
+      { table.alive_players.map(newPlayerView) }
     </>
   );
 }

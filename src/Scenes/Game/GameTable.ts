@@ -1,5 +1,5 @@
 import { CardData } from "../../Messages/CardData";
-import { CardId, PlayerId } from "../../Messages/GameUpdate";
+import { CardId, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 
 export interface Id {
@@ -121,6 +121,8 @@ export interface GameTable {
         scenario_deck_holder?: PlayerId;
         wws_scenario_deck_holder?: PlayerId;
         current_turn?: PlayerId;
+        logs: GameString[];
+        request?: RequestStatusArgs | StatusReadyArgs;
     };
 }
 
@@ -156,6 +158,7 @@ export function newGameTable(myUserId: UserId): GameTable {
             num_cubes: 0,
             train_position: 0,
             flags: [],
+            logs: []
         }
     };
 }
