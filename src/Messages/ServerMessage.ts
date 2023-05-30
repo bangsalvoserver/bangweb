@@ -33,7 +33,7 @@ export interface LobbyRemoved {
 }
 
 export interface LobbyOwner {
-  id: UserId;
+  user_id: UserId;
 }
 
 export interface UserInfo {

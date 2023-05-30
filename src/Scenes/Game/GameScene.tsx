@@ -4,16 +4,20 @@ import { Game } from "./Game";
 import { getPlayer, Player, GameTable } from "./GameTable";
 import PlayerView from "./Components/PlayerView";
 import { PlayerId } from "../../Messages/GameUpdate";
+import { UserId } from "../../Messages/ServerMessage";
+import { Connection } from "../../Messages/Connection";
 
 const FRAMERATE = 60;
 
 export interface GameSceneProps {
+  connection: Connection;
   game: Game;
   table: GameTable;
   users: UserValue[];
+  lobbyOwner?: UserId;
 }
 
-export default function GameScene({ game, table, users }: GameSceneProps) {
+export default function GameScene({ connection, game, table, users, lobbyOwner }: GameSceneProps) {
   useEffect(() => {
     const tickTime = 1000 / FRAMERATE;
     const interval = setInterval(() => game.tick(tickTime), tickTime);
@@ -29,8 +33,16 @@ export default function GameScene({ game, table, users }: GameSceneProps) {
     );
   };
 
+  const showReturnButton = () => {
+    return table.myUserId == lobbyOwner
+      && table.status.flags.includes('game_over');
+  };
+
+  const handleReturnLobby = () => connection.sendMessage('lobby_return');
+
   return (
     <>
+      { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
       {table.alive_players.map(newPlayerView)}
     </>
   );

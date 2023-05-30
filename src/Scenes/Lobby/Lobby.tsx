@@ -21,7 +21,7 @@ export default function LobbyScene({ myUserId, connection, name, options }: Lobb
   const game = useRef<Game>();
 
   const [users, setUsers] = useState<UserValue[]>([]);
-  const [owner, setOwner] = useState<UserId>();
+  const [lobbyOwner, setLobbyOwner] = useState<UserId>();
 
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
@@ -49,8 +49,8 @@ export default function LobbyScene({ myUserId, connection, name, options }: Lobb
       setLobbyName(name);
       setLobbyOptions(options);
     }],
-    ['lobby_owner', ({ id }: LobbyOwner) => {
-      setOwner(id);
+    ['lobby_owner', ({ user_id }: LobbyOwner) => {
+      setLobbyOwner(user_id);
     }],
     ['game_started', () => {
       game.current = new Game(tableDispatch);
@@ -61,9 +61,25 @@ export default function LobbyScene({ myUserId, connection, name, options }: Lobb
     }]
   );
 
-  const handleLeaveLobby = () => {
-    connection.sendMessage('lobby_leave');
+  const handleLeaveLobby = () => connection.sendMessage('lobby_leave');
+  const handleStartGame = () => connection.sendMessage('game_start');
+
+  const getGameScene = () => {
+    return (
+      <GameScene connection={connection} game={game.current as Game} table={table} users={users} lobbyOwner={lobbyOwner} />
+    );
   };
+
+  const getLobbyScene = () => {
+    return (
+      <>
+      { myUserId == lobbyOwner ? <button onClick={handleStartGame}>Start Game</button> : null}
+      {users.map(user => (
+        <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
+      ))}
+      </>
+    )
+  }
 
   return (
     <div>
@@ -72,11 +88,7 @@ export default function LobbyScene({ myUserId, connection, name, options }: Lobb
         <button onClick={handleLeaveLobby}>Leave Lobby</button>
       </div>
       <div>
-      {game.current ?
-      <GameScene game={game.current} table={table} users={users} />
-      : users.map(user => (
-        <LobbyUser key={user.id} user={user} isOwner={user.id === owner} />
-      ))}
+        { game.current ? getGameScene() : getLobbyScene() }
       </div>
     </div>
   );
