@@ -16,11 +16,13 @@ export default function LobbyOptionsEditor({lobbyOptions, setLobbyOptions }: Lob
     };
 
     const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const prop = event.target.id;
-        setLobbyOptions({
-            ... lobbyOptions,
-            [prop]: event.target.valueAsNumber
-        });
+        if (!isNaN(event.target.valueAsNumber)) {
+            const prop = event.target.id;
+            setLobbyOptions({
+                ... lobbyOptions,
+                [prop]: event.target.valueAsNumber
+            });
+        }
     };
 
     return (

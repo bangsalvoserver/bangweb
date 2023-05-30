@@ -50,7 +50,7 @@ export interface LobbyRemoveUser {
   user_id: UserId;
 }
 
-export interface LobbyChat {
+export interface ChatMessage {
   user_id: UserId;
   message: String;
 }

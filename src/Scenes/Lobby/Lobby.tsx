@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { Connection, useHandlers } from '../../Messages/Connection';
-import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyId, UserId } from '../../Messages/ServerMessage';
+import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyId, UserId, ChatMessage } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
 import { GameOptions } from '../../Messages/GameUpdate';
 import GameScene from '../Game/GameScene';
@@ -9,6 +9,7 @@ import { Game } from '../Game/Game';
 import { handleGameUpdate } from '../Game/GameUpdateHandler';
 import { newGameTable } from '../Game/GameTable';
 import LobbyOptionsEditor from './LobbyOptionsEditor';
+import LobbyChat from './LobbyChat';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -27,6 +28,8 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
 
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
+
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   useHandlers(connection, [game],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
@@ -53,6 +56,9 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     }],
     ['lobby_owner', ({ user_id }: LobbyOwner) => {
       setLobbyOwner(user_id);
+    }],
+    ['lobby_chat', (message: ChatMessage) => {
+      setChatMessages(messages => messages.concat(message));
     }],
     ['lobby_entered', ({ lobby_id }: LobbyEntered) => {
       if (lobby_id == myLobbyId) {
@@ -103,6 +109,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       <div>
         <button onClick={handleLeaveLobby}>Leave Lobby</button>
       </div>
+      <LobbyChat connection={connection} myUserId={myUserId} users={users} messages={chatMessages} />
       <div>
         { game.current ? getGameScene() : getLobbyScene() }
       </div>
