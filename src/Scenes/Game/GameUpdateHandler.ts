@@ -1,4 +1,5 @@
 import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
+import { UserId } from "../../Messages/ServerMessage";
 import { GameTable, Id, getCard, newCard, newGameTable, newPlayer, searchById } from "./GameTable";
 
 export interface GameUpdate {
@@ -16,7 +17,7 @@ export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTabl
 }
 
 const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => GameTable>([
-    ['reset', newGameTable],
+    ['reset', handleReset],
     // ['game_error', handleGameError],
     // ['game_log', handleGameLog],
     // ['game_prompt', handleGamePrompt],
@@ -99,9 +100,14 @@ function removeFromPocket<T extends Pockets>(pockets: T, pocketName: string, car
     }
 }
 
+/// Handles the 'reset' update, recreating the game table
+function handleReset(table: GameTable, userId?: UserId): GameTable {
+    return newGameTable(userId || table.myUserId);
+}
+
 /// Handles the 'add_cards' update, creates new cards and adds them in the specified pocket
 function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable {
-    const addedCards = card_ids.map(({id}) => id);
+    const addedCards = card_ids.map(card => card.id);
     const ret = {
         ...table,
         cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocket, player))).sort(sortById),
@@ -128,7 +134,7 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
     });
 
     // Removes the cards themselves
-    let newTable = { ...table, cards: table.cards.filter(({id}) => !cards.includes(id))};
+    let newTable = { ...table, cards: table.cards.filter(card => !cards.includes(card.id))};
 
     // For each pocket remove all the cards in the array
     pocketCards.forEach((cards, {pocketName, player}) => {
@@ -141,18 +147,32 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
     return newTable;
 }
 
+// Moves the player which the user is controlling to the first element of the array
+function rotatePlayers(players: PlayerId[], self_player?: PlayerId) {
+    if (self_player) {
+        const index = players.indexOf(self_player);
+        if (index > 0) {
+            players.unshift(...players.splice(index, players.length));
+        }
+    }
+    return players;
+};
+
 // Handles the 'player_add' update, creates new players with specified player_id and user_id
 function handlePlayerAdd(table: GameTable, { players }: PlayerAddUpdate): GameTable {
+    const newPlayers = table.players.concat(players.map(({player_id, user_id}) => newPlayer(player_id, user_id))).sort(sortById);
+    const selfPlayer = newPlayers.find(p => p.userid === table.myUserId)?.id;
     return {
         ...table,
-        players: table.players.concat(players.map(({player_id, user_id}) => newPlayer(player_id, user_id))).sort(sortById),
-        alive_players: table.alive_players.concat(players.map(({player_id}) => player_id))
+        players: newPlayers,
+        alive_players: rotatePlayers(table.alive_players.concat(players.map(player => player.player_id)), selfPlayer),
+        self_player: selfPlayer
     };
 }
 
 // Handles the 'player_order' update, changing the order of how players are seated
 function handlePlayerOrder(table: GameTable, { players }: PlayerOrderUpdate): GameTable {
-    return { ...table, alive_players: players };
+    return { ...table, alive_players: rotatePlayers(players, table.self_player) };
 }
 
 // Handles the 'player_hp' update, changes a player's hp

@@ -87,6 +87,9 @@ export function newPlayer(id: PlayerId, userid: UserId): Player {
 }
 
 export interface GameTable {
+    myUserId: UserId;
+    self_player?: PlayerId;
+
     players: Player[];
     cards: Card[];
     
@@ -121,8 +124,10 @@ export interface GameTable {
     };
 }
 
-export function newGameTable(): GameTable {
+export function newGameTable(myUserId: UserId): GameTable {
     return {
+        myUserId,
+        
         players: [],
         cards: [],
 

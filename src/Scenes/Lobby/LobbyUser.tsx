@@ -11,11 +11,17 @@ export interface LobbyUserProps {
     isOwner?: boolean;
 }
 
+export const DEFAULT_USER_PROPIC = "/docs/images/people/profile-picture-3.jpg";
+export const PROPIC_DISCONNECTED = "/docs/images/people/profile-picture-3.jpg";
+export const USERNAME_DISCONNECTED = "Disconnected";
+
 export default function LobbyUser({ user }: LobbyUserProps) {
+  const propic = user ? (user.propic ?? DEFAULT_USER_PROPIC) : PROPIC_DISCONNECTED;
+  const username = user?.name ?? USERNAME_DISCONNECTED;
   return (
     <div>
-    {user && user.propic ? <img src={user.propic} /> : null}
-    {user?.name || 'Disconnected'}
+    <img src={propic} />
+    {username}
     </div>
   );
 }

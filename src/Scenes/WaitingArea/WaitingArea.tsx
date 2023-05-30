@@ -1,8 +1,7 @@
-import { MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
-import { LobbyEntered, LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
+import { LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
 import { Connection, useHandlers } from "../../Messages/Connection";
-import LobbyScene from "../Lobby/Lobby";
 
 export interface WaitingAreaProps {
   connection: Connection;

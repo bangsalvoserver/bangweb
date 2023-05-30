@@ -1,14 +1,8 @@
-import { useEffect, useReducer, useRef, useState } from "react";
-import { Connection, useHandlers } from "../../Messages/Connection"
-import { UserValue } from "../Lobby/LobbyUser"
-import { LobbyAddUser, LobbyEntered, LobbyOwner, LobbyRemoveUser } from "../../Messages/ServerMessage";
-import LobbyScene from "../Lobby/Lobby";
-import WaitingArea from "../WaitingArea/WaitingArea";
-import { deserializeImage } from "../../Messages/ImageSerial";
+import { useEffect } from "react";
+import { UserValue } from "../Lobby/LobbyUser";
 import { Game } from "./Game";
-import { newGameTable, getPlayer, Player, GameTable } from "./GameTable";
+import { getPlayer, Player, GameTable } from "./GameTable";
 import PlayerView from "./Components/PlayerView";
-import { handleGameUpdate } from "./GameUpdateHandler";
 import { PlayerId } from "../../Messages/GameUpdate";
 
 const FRAMERATE = 60;
@@ -20,8 +14,6 @@ export interface GameSceneProps {
 }
 
 export default function GameScene({ game, table, users }: GameSceneProps) {
-  const myUserId = parseInt(localStorage.getItem('user_id') as string);
-
   useEffect(() => {
     const tickTime = 1000 / FRAMERATE;
     const interval = setInterval(() => game.tick(tickTime), tickTime);
@@ -30,7 +22,7 @@ export default function GameScene({ game, table, users }: GameSceneProps) {
 
   const newPlayerView = (player_id: PlayerId) => {
     const player = getPlayer(table, player_id) as Player;
-    const user = users.find(({id}) => id == player.userid);
+    const user = users.find(user => user.id === player.userid);
     
     return (
       <PlayerView key={player_id} table={table} user={user} player={player} />

@@ -1,8 +1,7 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useReducer, useRef, useState } from 'react';
 import { Connection, useHandlers } from '../../Messages/Connection';
 import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyId, UserId } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
-import WaitingArea from '../WaitingArea/WaitingArea';
 import { GameOptions } from '../../Messages/GameUpdate';
 import GameScene from '../Game/GameScene';
 import { deserializeImage } from '../../Messages/ImageSerial';
@@ -11,14 +10,14 @@ import { handleGameUpdate } from '../Game/GameUpdateHandler';
 import { newGameTable } from '../Game/GameTable';
 
 export interface LobbyProps {
-  myLobbyId: LobbyId,
+  myUserId: UserId;
   connection: Connection;
   name: string;
   options: GameOptions;
 }
 
-export default function LobbyScene({ myLobbyId, connection, name, options }: LobbyProps) {
-  const [table, tableDispatch] = useReducer(handleGameUpdate, null, newGameTable);
+export default function LobbyScene({ myUserId, connection, name, options }: LobbyProps) {
+  const [table, tableDispatch] = useReducer(handleGameUpdate, myUserId, newGameTable);
   const game = useRef<Game>();
 
   const [users, setUsers] = useState<UserValue[]>([]);
@@ -26,8 +25,6 @@ export default function LobbyScene({ myLobbyId, connection, name, options }: Lob
 
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
-
-  const myUserId = parseInt(localStorage.getItem('user_id') as string);
 
   useHandlers(connection, [],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {

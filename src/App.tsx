@@ -1,14 +1,11 @@
 import './App.css';
 import { useEffect, useState, useRef } from 'react';
 import { Connection, useHandlers } from './Messages/Connection';
-import ConnectScene from './Scenes/Connect/Connect';
 import Header from './components/Header';
 import UserMenu from './components/UserMenu';
 import { serializeImage } from './Messages/ImageSerial';
-import { ClientAccepted, LobbyEntered, LobbyRemoveUser } from './Messages/ServerMessage';
-import WaitingArea from './Scenes/WaitingArea/WaitingArea';
-import CurrentScene, { CurrentSceneProps, CurrentSceneUnion } from './Scenes/CurrentScene';
-import { connect } from 'http2';
+import { ClientAccepted, LobbyEntered, LobbyRemoveUser, UserId } from './Messages/ServerMessage';
+import CurrentScene, { CurrentSceneUnion } from './Scenes/CurrentScene';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,7 +17,10 @@ function App() {
 
   const [scene, setScene] = useState<CurrentSceneUnion>({ connect: { connection : connection.current }});
 
-  const myUserId = parseInt(localStorage.getItem('user_id') as string) || 0;
+  let myUserId = useRef<UserId>();
+  if (!myUserId.current) {
+    myUserId.current = parseInt(localStorage.getItem('user_id') as string) || undefined;
+  }
 
   useEffect(() => {
     if (myUserId && !connection.current?.isConnected()) {
@@ -35,11 +35,12 @@ function App() {
           name: localStorage.getItem('username'),
           profile_image: await serializeImage(localStorage.getItem('propic'), 50)
         },
-        user_id: myUserId,
+        user_id: myUserId.current,
         commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
       });
     }],
     ['client_accepted', ({ user_id }: ClientAccepted) => {
+      myUserId.current = user_id;
       localStorage.setItem('user_id', user_id.toString());
       connection.current?.setLocked(true);
       setScene({ waiting_area: { connection: connection.current as Connection }});
@@ -53,10 +54,10 @@ function App() {
     ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
       localStorage.setItem('lobby_id', lobby_id.toString());
       connection.current?.setLocked(true);
-      setScene({ lobby: { connection: connection.current as Connection, myLobbyId: lobby_id, name, options }});
+      setScene({ lobby: { connection: connection.current as Connection, myUserId: myUserId.current as UserId, name, options }});
     }],
     ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
-      if (user_id === myUserId) {
+      if (user_id === myUserId.current) {
         localStorage.removeItem('lobby_id');
         connection.current?.setLocked(true);
         setScene({waiting_area: { connection: connection.current as Connection }});
