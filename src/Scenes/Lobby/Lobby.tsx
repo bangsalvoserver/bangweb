@@ -8,7 +8,7 @@ import { deserializeImage } from '../../Messages/ImageSerial';
 import { Game } from '../Game/Game';
 import { handleGameUpdate } from '../Game/GameUpdateHandler';
 import { newGameTable } from '../Game/GameTable';
-import LobbyOptionsEditor from './LobbyOptionsEditor';
+import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 
 export interface LobbyProps {
@@ -27,7 +27,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
   const [lobbyOwner, setLobbyOwner] = useState<UserId>();
 
   const [lobbyName, setLobbyName] = useState(name);
-  const [lobbyOptions, setLobbyOptions] = useState(options);
+  const [gameOptions, setGameOptions] = useState(options);
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
@@ -52,7 +52,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     }],
     ['lobby_edited', ({ name, options }: LobbyEntered) => {
       setLobbyName(name);
-      setLobbyOptions(options);
+      setGameOptions(options);
     }],
     ['lobby_owner', ({ user_id }: LobbyOwner) => {
       setLobbyOwner(user_id);
@@ -75,15 +75,16 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     }]
   );
 
+  useEffect(() => {
+    if (myUserId == lobbyOwner) {
+      localStorage.setItem('lobbyName', lobbyName);
+      localStorage.setItem('gameOptions', JSON.stringify(gameOptions));
+      connection.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
+    }
+  }, [lobbyOwner, lobbyName, gameOptions]);
+
   const handleLeaveLobby = () => connection.sendMessage('lobby_leave');
   const handleStartGame = () => connection.sendMessage('game_start');
-
-  const handleSetLobbyOptions = (options: GameOptions) => {
-    if (myUserId == lobbyOwner) {
-      connection.sendMessage('lobby_edit', { name: lobbyName, options });
-      setLobbyOptions(options);
-    }
-  };
 
   const getGameScene = () => {
     return (
@@ -95,7 +96,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     return (
       <>
       { myUserId == lobbyOwner ? <button onClick={handleStartGame}>Start Game</button> : null}
-      <LobbyOptionsEditor lobbyOptions={lobbyOptions} setLobbyOptions={handleSetLobbyOptions} />
+      <GameOptionsEditor gameOptions={gameOptions} setGameOptions={setGameOptions} />
       {users.map(user => (
         <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
       ))}

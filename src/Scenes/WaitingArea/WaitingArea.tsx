@@ -50,7 +50,8 @@ function WaitingArea({ connection }: WaitingAreaProps) {
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
     if (lobbyName) {
-      connection.sendMessage('lobby_make', { name: lobbyName });
+      const gameOptions = localStorage.getItem('gameOptions');
+      connection.sendMessage('lobby_make', { name: lobbyName, options: gameOptions ? JSON.parse(gameOptions) : undefined });
     }
   };
 

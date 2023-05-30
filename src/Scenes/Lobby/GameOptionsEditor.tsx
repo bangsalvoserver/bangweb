@@ -1,41 +1,41 @@
 import { GameOptions } from "../../Messages/GameUpdate";
-import { ChangeEvent, Dispatch } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
-export interface LobbyOptionsProps {
-    lobbyOptions: GameOptions;
-    setLobbyOptions: (lobbyOptions: GameOptions) => void;
+export interface GameOptionProps {
+    gameOptions: GameOptions;
+    setGameOptions: Dispatch<SetStateAction<GameOptions>>;
 }
 
 type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
 type GameOptionsOf<T> = { [Property in FilteredKeys<GameOptions, T>]: GameOptions[Property] };
 
-export default function LobbyOptionsEditor({lobbyOptions, setLobbyOptions }: LobbyOptionsProps) {
+export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameOptionProps) {
     const newExpansionCheckbox = (name: string, label: string) => {
         const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
-            const oldValue = lobbyOptions.expansions.includes(name);
+            const oldValue = gameOptions.expansions.includes(name);
             const newValue = event.target.checked;
             if (oldValue != newValue) {
-                setLobbyOptions({
-                    ... lobbyOptions,
+                setGameOptions({
+                    ... gameOptions,
                     expansions: newValue
-                        ? lobbyOptions.expansions.concat(name)
-                        : lobbyOptions.expansions.filter(e => e != name)
+                        ? gameOptions.expansions.concat(name)
+                        : gameOptions.expansions.filter(e => e != name)
                 });
             }
         };
 
         return (<>
-            <input id={name} type="checkbox" checked={lobbyOptions.expansions.includes(name)} onChange={handleExpansionChange} />
+            <input id={name} type="checkbox" checked={gameOptions.expansions.includes(name)} onChange={handleExpansionChange} />
             <label htmlFor={name}>{label}</label>
         </>);
     };
 
     const newOptionCheckbox = function(prop: keyof GameOptionsOf<boolean>, label: string) {
         return (<>
-            <input id={prop} type="checkbox" checked={lobbyOptions[prop]}
+            <input id={prop} type="checkbox" checked={gameOptions[prop]}
             onChange={event => {
-                setLobbyOptions({
-                    ... lobbyOptions,
+                setGameOptions({
+                    ... gameOptions,
                     [prop]: event.target.checked
                 });
             }} />
@@ -46,11 +46,11 @@ export default function LobbyOptionsEditor({lobbyOptions, setLobbyOptions }: Lob
     const newOptionNumber = function(prop: keyof GameOptionsOf<number>, label: string) {
         return (<>
             <label htmlFor={prop}>{label}</label>
-            <input id={prop} type="number" value={lobbyOptions[prop]}
+            <input id={prop} type="number" value={gameOptions[prop]}
             onChange={event => {
                 if (!isNaN(event.target.valueAsNumber)) {
-                    setLobbyOptions({
-                        ... lobbyOptions,
+                    setGameOptions({
+                        ... gameOptions,
                         [prop]: event.target.valueAsNumber
                     });
                 }
