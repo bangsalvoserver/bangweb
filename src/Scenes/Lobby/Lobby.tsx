@@ -28,7 +28,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
 
-  useHandlers(connection,
+  useHandlers(connection, [game],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
       setUsers(users => {
         let copy = [...users];
@@ -57,7 +57,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     ['lobby_entered', ({ lobby_id }: LobbyEntered) => {
       if (lobby_id == myLobbyId) {
         game.current = undefined;
-        tableDispatch({ updateType: 'reset' });
+        setUsers([]);
       }
     }],
     ['game_started', () => {

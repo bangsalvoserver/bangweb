@@ -89,12 +89,12 @@ export class Connection {
     }
 }
 
-export function useHandlers(connection: Connection, ...handlers: MessageHandler[]) {
+export function useHandlers(connection: Connection, deps: any[], ...handlers: MessageHandler[]) {
     useEffect(() => {
         handlers.forEach(handler => connection.addHandler(handler));
         connection.setLocked(false);
         return () => handlers.forEach(handler => connection.removeHandler(handler));
-    }, []);
+    }, [connection, ...deps]);
 }
 
 

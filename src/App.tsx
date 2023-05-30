@@ -28,7 +28,7 @@ function App() {
     }
   }, []);
 
-  useHandlers(connection.current, 
+  useHandlers(connection.current, [],
     ['connect', async () => {
       connection.current?.sendMessage('connect', {
         user: {
@@ -51,16 +51,21 @@ function App() {
     ['lobby_error', (message: string) => {
       console.error("Lobby error: " + message);
     }],
-    ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
-      localStorage.setItem('lobby_id', lobby_id.toString());
-      connection.current?.setLocked(true);
-      setScene({ lobby: { connection: connection.current as Connection, myLobbyId: lobby_id, myUserId: myUserId.current as UserId, name, options }});
-    }],
     ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
       if (user_id === myUserId.current) {
         localStorage.removeItem('lobby_id');
         connection.current?.setLocked(true);
         setScene({waiting_area: { connection: connection.current as Connection }});
+      }
+    }]
+  );
+
+  useHandlers(connection.current, [scene],
+    ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
+      if (!('lobby' in scene) || (scene.lobby.myLobbyId != lobby_id)) {
+        localStorage.setItem('lobby_id', lobby_id.toString());
+        connection.current?.setLocked(true);
+        setScene({ lobby: { connection: connection.current as Connection, myLobbyId: lobby_id, myUserId: myUserId.current as UserId, name, options }});
       }
     }]
   );

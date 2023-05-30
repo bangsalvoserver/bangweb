@@ -28,7 +28,7 @@ function WaitingArea({ connection }: WaitingAreaProps) {
     }
   }, []);
 
-  useHandlers(connection,
+  useHandlers(connection, [],
     ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
       setLobbies(lobbies =>
         lobbies
