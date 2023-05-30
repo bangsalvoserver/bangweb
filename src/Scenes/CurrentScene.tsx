@@ -13,10 +13,10 @@ export interface CurrentSceneProps {
 
 export default function CurrentScene({ scene }: CurrentSceneProps) {
     if ('connect' in scene) {
-        return (<ConnectScene { ... scene.connect }/>);
+        return (<ConnectScene { ...scene.connect }/>);
     }
     if ('waiting_area' in scene) {
-        return (<WaitingArea { ... scene.waiting_area }/>);
+        return (<WaitingArea { ...scene.waiting_area }/>);
     }
     if ('lobby' in scene) {
         return (<LobbyScene { ...scene.lobby } />);

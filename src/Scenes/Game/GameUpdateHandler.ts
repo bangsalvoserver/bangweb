@@ -201,12 +201,21 @@ function handlePlayerShowRole(table: GameTable, { player, role }: PlayerShowRole
 
 // Handles the 'player_hp' update, changes a player's status
 function handlePlayerStatus(table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable {
+    let newAlivePlayers = table.alive_players;
+    let newDeadPlayers = table.dead_players;
+    if (flags.includes('removed') && newAlivePlayers.includes(player)) {
+        newAlivePlayers = newAlivePlayers.filter(id => id !== player);
+        newDeadPlayers = newDeadPlayers.concat(player);
+    }
+
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, status: {
             ...p.status,
             flags, range_mod, weapon_range, distance_mod
-        }}))
+        }})),
+        alive_players: newAlivePlayers,
+        dead_players: newDeadPlayers
     };
 }
 
@@ -224,7 +233,9 @@ function handleSwitchTurn(table: GameTable, player: PlayerId): GameTable {
 // Handles the 'move_card' update, removing a card from its pocket and moving it to another
 function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable {
     const cardObj = getCard(table, card);
-    if (!cardObj) return table;
+    if (!cardObj) {
+        throw new Error("Card not found in MoveCardUpdate");
+    }
 
     const cardList = [card];
     const oldPocket = cardObj.pocket?.pocketName || 'none';
