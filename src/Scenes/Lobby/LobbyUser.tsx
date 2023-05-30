@@ -1,5 +1,7 @@
+import { UserId } from "../../Messages/ServerMessage";
+
 export interface UserValue {
-    id: number;
+    id: UserId;
     name: string;
     propic: string | null;
 }

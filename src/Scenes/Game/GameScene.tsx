@@ -9,6 +9,7 @@ import { Game } from "./Game";
 import { newGameTable, getPlayer, Player, GameTable } from "./GameTable";
 import PlayerView from "./Components/PlayerView";
 import { handleGameUpdate } from "./GameUpdateHandler";
+import { PlayerId } from "../../Messages/GameUpdate";
 
 const FRAMERATE = 60;
 
@@ -27,7 +28,7 @@ export default function GameScene({ game, table, users }: GameSceneProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const newPlayerView = (player_id: number) => {
+  const newPlayerView = (player_id: PlayerId) => {
     const player = getPlayer(table, player_id) as Player;
     const user = users.find(({id}) => id == player.userid);
     

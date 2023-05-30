@@ -1,5 +1,7 @@
+import { LobbyId } from "../../Messages/ServerMessage";
+
 export interface LobbyValue {
-  id: number;
+  id: LobbyId;
   name: string;
   num_players: number;
   state: string;
@@ -7,7 +9,7 @@ export interface LobbyValue {
 
 export interface LobbyElementProps {
   lobby: LobbyValue;
-  onClickJoin: (lobby_id: number) => void;
+  onClickJoin: (lobby_id: LobbyId) => void;
 }
 
 function LobbyElement({ lobby, onClickJoin }: LobbyElementProps) {

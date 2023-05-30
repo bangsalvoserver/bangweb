@@ -1,4 +1,4 @@
-import { AddCardsUpdate, AddCubesUpdate, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
+import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, ShowCardUpdate, TapCardUpdate } from "../../Messages/GameUpdate";
 import { GameTable, Id, getCard, newCard, newGameTable, newPlayer, searchById } from "./GameTable";
 
 export interface GameUpdate {
@@ -39,7 +39,7 @@ const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => Ga
     ['player_gold', handlePlayerGold],
     ['player_show_role', handlePlayerShowRole],
     ['player_status', handlePlayerStatus],
-    // ['switch_turn', handleSwitchTurn],
+    ['switch_turn', handleSwitchTurn],
     // ['request_status', handleRequestStatus],
     // ['status_ready', handleStatusReady],
     ['game_flags', handleGameFlags],
@@ -70,14 +70,13 @@ function editById<T extends Id>(values: T[], id: number | undefined, mapper: (va
     }
 }
 
-/// This type is a generic constraint to make sure all pockets are an array of numbers
-/// The numbers are the ids of GameTable.cards
+/// This type is a generic constraint to make sure all pockets are an array of card ids
 type Pockets = {
-    [key: string]: number[]
+    [key: string]: CardId[]
 };
 
 /// If `pockets` contains a pocket named `pocketName`, adds `cards` to that pocket
-function addToPocket<T extends Pockets>(pockets: T, pocketName: string, cards: number[]): T {
+function addToPocket<T extends Pockets>(pockets: T, pocketName: string, cards: CardId[]): T {
     if (pocketName in pockets) {
         return {
             ...pockets,
@@ -89,7 +88,7 @@ function addToPocket<T extends Pockets>(pockets: T, pocketName: string, cards: n
 }
 
 /// If `pockets` contains a pocket named `pocketName`, removes `cards` to that pocket
-function removeFromPocket<T extends Pockets>(pockets: T, pocketName: string, cards: number[]): T {
+function removeFromPocket<T extends Pockets>(pockets: T, pocketName: string, cards: CardId[]): T {
     if (pocketName in pockets) {
         return {
             ...pockets,
@@ -116,7 +115,7 @@ function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCards
 /// Handles the 'remove_cards' update, removes the specified cards
 function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): GameTable {
     // Groups cards by pocket
-    let pocketCards = new Map<{pocketName: string, player?: number}, number[]>();
+    let pocketCards = new Map<{pocketName: string, player?: PlayerId}, CardId[]>();
     cards.forEach(id => {
         let pocket = getCard(table, id)?.pocket;
         if (pocket) {
@@ -156,7 +155,7 @@ function handlePlayerOrder(table: GameTable, { players }: PlayerOrderUpdate): Ga
     return { ...table, alive_players: players };
 }
 
-// Handles the 'player_hp' update, changes a players' hp
+// Handles the 'player_hp' update, changes a player's hp
 function handlePlayerHp(table: GameTable, { player, hp }: PlayerHpUpdate): GameTable {
     return {
         ...table,
@@ -164,7 +163,7 @@ function handlePlayerHp(table: GameTable, { player, hp }: PlayerHpUpdate): GameT
     };
 }
 
-// Handles the 'player_hp' update, changes a players' gold
+// Handles the 'player_hp' update, changes a player's gold
 function handlePlayerGold(table: GameTable, { player, gold }: PlayerGoldUpdate): GameTable {
     return {
         ...table,
@@ -172,7 +171,7 @@ function handlePlayerGold(table: GameTable, { player, gold }: PlayerGoldUpdate):
     };
 }
 
-// Handles the 'player_hp' update, changes a players' role
+// Handles the 'player_hp' update, changes a player's role
 function handlePlayerShowRole(table: GameTable, { player, role }: PlayerShowRoleUpdate): GameTable {
     return {
         ...table,
@@ -180,7 +179,7 @@ function handlePlayerShowRole(table: GameTable, { player, role }: PlayerShowRole
     };
 }
 
-// Handles the 'player_hp' update, changes a players' status
+// Handles the 'player_hp' update, changes a player's status
 function handlePlayerStatus(table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable {
     return {
         ...table,
@@ -188,6 +187,17 @@ function handlePlayerStatus(table: GameTable, { player, flags, range_mod, weapon
             ...p.status,
             flags, range_mod, weapon_range, distance_mod
         }}))
+    };
+}
+
+/// Handles the 'switch_turn' update, changes the current_turn field
+function handleSwitchTurn(table: GameTable, player: PlayerId): GameTable {
+    return {
+        ...table,
+        status: {
+            ...table.status,
+            current_turn: player
+        }
     };
 }
 

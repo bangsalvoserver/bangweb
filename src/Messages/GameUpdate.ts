@@ -1,12 +1,17 @@
 import { CardData } from "./CardData";
+import { UserId } from "./ServerMessage";
+
+export type CardId = number;
+export type PlayerId = number;
+export type Milliseconds = number;
 
 export interface AnimationUpdate {
-    duration: number;
+    duration: Milliseconds;
 }
 
 export interface FormatInteger { integer: number };
-export interface FormatCard { card: number };
-export interface FormatPlayer { player: number };
+export interface FormatCard { card: CardId };
+export interface FormatPlayer { player: PlayerId };
 export type FormatArg = FormatInteger | FormatCard | FormatPlayer;
 
 export interface GameString {
@@ -16,36 +21,36 @@ export interface GameString {
 
 export interface AddCardsUpdate {
     card_ids: {
-        id: number,
+        id: CardId,
         deck: string
     }[];
     pocket: string;
-    player?: number;
+    player?: PlayerId;
 }
 
 export interface RemoveCardsUpdate {
-    cards: number[];
+    cards: CardId[];
 }
 
 export interface MoveCardUpdate extends AnimationUpdate {
-    card: number;
-    player?: number;
+    card: CardId;
+    player?: PlayerId;
     pocket: string;
 }
 
 export interface AddCubesUpdate {
     num_cubes: number;
-    target_card?: number;
+    target_card?: CardId;
 }
 
 export interface MoveCubesUpdate extends AnimationUpdate {
     num_cubes: number;
-    origin_card?: number;
-    target_card?: number;
+    origin_card?: CardId;
+    target_card?: CardId;
 }
 
 export interface MoveScenarioDeckUpdate extends AnimationUpdate {
-    player: number;
+    player: PlayerId;
     pocket: string;
 }
 
@@ -58,55 +63,55 @@ export interface DeckShuffledUpdate extends AnimationUpdate {
 }
 
 export interface ShowCardUpdate extends AnimationUpdate {
-    card: number;
+    card: CardId;
     info: CardData;
 }
 
 export interface HideCardUpdate extends AnimationUpdate {
-    card: number;
+    card: CardId;
 }
 
 export interface TapCardUpdate extends AnimationUpdate {
-    card: number;
+    card: CardId;
     inactive: boolean;
 }
 
 export interface FlashCardUpdate extends AnimationUpdate {
-    card: number;
+    card: CardId;
 }
 
 export interface ShortPauseUpdate extends AnimationUpdate {
-    card?: number;
+    card?: CardId;
 }
 
 export interface PlayerAddUpdate {
     players: {
-        player_id: number,
-        user_id: number
+        player_id: PlayerId,
+        user_id: UserId
     }[];
 }
 
 export interface PlayerOrderUpdate extends AnimationUpdate {
-    players: number[];
+    players: PlayerId[];
 }
 
 export interface PlayerHpUpdate extends AnimationUpdate {
-    player: number;
+    player: PlayerId;
     hp: number;
 }
 
 export interface PlayerGoldUpdate {
-    player: number;
+    player: PlayerId;
     gold: number;
 }
 
 export interface PlayerShowRoleUpdate extends AnimationUpdate {
-    player: number;
+    player: PlayerId;
     role: string;
 }
 
 export interface PlayerStatusUpdate {
-    player: number;
+    player: PlayerId;
     flags: string[];
     range_mod: number;
     weapon_range: number;
@@ -114,19 +119,19 @@ export interface PlayerStatusUpdate {
 }
 
 export interface CardNode {
-    card: number;
+    card: CardId;
     branches: CardNode[];
 }
 
 export interface RequestStatusArgs {
-    origin_card?: number;
-    origin?: number;
-    target?: number;
+    origin_card?: CardId;
+    origin?: PlayerId;
+    target?: PlayerId;
     status_text: GameString;
     auto_select: boolean;
     respond_cards: CardNode[];
-    pick_cards: number[];
-    highlight_cards: number[];
+    pick_cards: CardId[];
+    highlight_cards: CardId[];
 }
 
 export interface StatusReadyArgs {
@@ -141,8 +146,8 @@ export interface GameOptions {
     quick_discard_all: boolean;
     scenario_deck_size: boolean;
     num_bots: number;
-    damage_timer: number;
-    escape_timer: number;
-    bot_play_timer: number;
-    tumbleweed_timer: number;
+    damage_timer: Milliseconds;
+    escape_timer: Milliseconds;
+    bot_play_timer: Milliseconds;
+    tumbleweed_timer: Milliseconds;
 }

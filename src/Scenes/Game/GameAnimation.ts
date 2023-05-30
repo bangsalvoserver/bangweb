@@ -1,20 +1,22 @@
+import { Milliseconds } from "../../Messages/GameUpdate";
+
 export interface GameAnimation {
-    tick(timeElapsed: number): void;
+    tick(timeElapsed: Milliseconds): void;
     end(): void;
     done(): boolean;
-    extraTime(): number;
+    extraTime(): Milliseconds;
 }
 
 export class AnimationBase implements GameAnimation {
-    private duration: number;
-    private elapsed: number;
+    private duration: Milliseconds;
+    private elapsed: Milliseconds;
 
-    constructor(duration: number) {
+    constructor(duration: Milliseconds) {
         this.duration = duration;
         this.elapsed = 0;
     }
 
-    tick(timeElapsed: number): void {
+    tick(timeElapsed: Milliseconds): void {
         this.elapsed += timeElapsed;
     }
 
@@ -23,7 +25,7 @@ export class AnimationBase implements GameAnimation {
     done(): boolean {
         return this.elapsed >= this.duration;
     }
-    extraTime(): number {
+    extraTime(): Milliseconds {
         return this.elapsed - this.duration;
     }
 }

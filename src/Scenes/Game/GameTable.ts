@@ -1,4 +1,6 @@
 import { CardData } from "../../Messages/CardData";
+import { CardId, PlayerId } from "../../Messages/GameUpdate";
+import { UserId } from "../../Messages/ServerMessage";
 
 export interface Id {
     id: number
@@ -28,11 +30,11 @@ export interface Card extends Id {
     cardData?: CardData;
     pocket?: {
         pocketName: string,
-        player?: number
+        player?: PlayerId
     };
 }
 
-export function newCard(id: number, deck: string, pocketName: string, player?: number): Card {
+export function newCard(id: CardId, deck: string, pocketName: string, player?: PlayerId): Card {
     return {
         id, deck,
         inactive: false,
@@ -45,7 +47,7 @@ export function newCard(id: number, deck: string, pocketName: string, player?: n
 }
 
 export interface Player extends Id {
-    userid: number;
+    userid: UserId;
     status: {
         role: string,
         hp: number,
@@ -56,14 +58,14 @@ export interface Player extends Id {
         distance_mod: number
     };
     pockets: {
-        player_hand: number[],
-        player_table: number[],
-        player_character: number[],
-        player_backup: number[]
+        player_hand: CardId[],
+        player_table: CardId[],
+        player_character: CardId[],
+        player_backup: CardId[]
     };
 }
 
-export function newPlayer(id: number, userid: number): Player {
+export function newPlayer(id: PlayerId, userid: UserId): Player {
     return {
         id, userid,
         status: {
@@ -89,32 +91,33 @@ export interface GameTable {
     cards: Card[];
     
     pockets: {
-        main_deck: number[],
-        discard_pile: number[],
-        selection: number[],
-        shop_deck: number[],
-        shop_selection: number[],
-        shop_discard: number[],
-        hidden_deck: number[],
-        scenario_deck: number[],
-        scenario_card: number[],
-        wws_scenario_deck: number[],
-        wws_scenario_card: number[],
-        button_row: number[],
-        stations: number[],
-        train: number[],
-        train_deck: number[]
+        main_deck: CardId[],
+        discard_pile: CardId[],
+        selection: CardId[],
+        shop_deck: CardId[],
+        shop_selection: CardId[],
+        shop_discard: CardId[],
+        hidden_deck: CardId[],
+        scenario_deck: CardId[],
+        scenario_card: CardId[],
+        wws_scenario_deck: CardId[],
+        wws_scenario_card: CardId[],
+        button_row: CardId[],
+        stations: CardId[],
+        train: CardId[],
+        train_deck: CardId[]
     };
 
-    alive_players: number[];
-    dead_players: number[];
+    alive_players: PlayerId[];
+    dead_players: PlayerId[];
 
     status: {
         num_cubes: number;
         train_position: number;
         flags: string[];
-        scenario_deck_holder?: number;
-        wws_scenario_deck_holder?: number;
+        scenario_deck_holder?: PlayerId;
+        wws_scenario_deck_holder?: PlayerId;
+        current_turn?: PlayerId;
     };
 }
 
@@ -152,10 +155,10 @@ export function newGameTable(): GameTable {
     };
 }
 
-export function getCard(table: GameTable, id: number): Card | null {
+export function getCard(table: GameTable, id: CardId): Card | null {
     return searchById(table.cards, id);
 }
 
-export function getPlayer(table: GameTable, id: number): Player | null {
+export function getPlayer(table: GameTable, id: PlayerId): Player | null {
     return searchById(table.players, id);
 }

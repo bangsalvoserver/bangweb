@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 import { GameUpdate } from "./GameUpdateHandler";
 import { AnimationBase, GameAnimation } from "./GameAnimation";
+import { Milliseconds } from "../../Messages/GameUpdate";
 
 export class Game {
 
@@ -17,7 +18,7 @@ export class Game {
         this.queuedUpdates.push(update);
     }
 
-    tick(timeElapsed: number) {
+    tick(timeElapsed: Milliseconds) {
         let tickTime = timeElapsed;
         while (true) {
             if (this.animations.length == 0) {
@@ -30,7 +31,7 @@ export class Game {
                     this.tableDispatch({ updateType, updateValue });
 
                     if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
-                        this.animations.push(new AnimationBase(updateValue.duration as number));
+                        this.animations.push(new AnimationBase(updateValue.duration as Milliseconds));
                     }
                 } else {
                     break;

@@ -1,6 +1,6 @@
 import { MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from "react";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
-import { LobbyEntered, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
+import { LobbyEntered, LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
 import { Connection, useHandlers } from "../../Messages/Connection";
 import LobbyScene from "../Lobby/Lobby";
 
@@ -55,7 +55,7 @@ function WaitingArea({ connection }: WaitingAreaProps) {
     }
   };
 
-  const handleClickJoin = (lobby_id: number) => {
+  const handleClickJoin = (lobby_id: LobbyId) => {
     connection.sendMessage('lobby_join', { lobby_id });
   };
 

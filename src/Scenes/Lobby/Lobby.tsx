@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { Connection, useHandlers } from '../../Messages/Connection';
-import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner } from '../../Messages/ServerMessage';
+import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyId, UserId } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
 import WaitingArea from '../WaitingArea/WaitingArea';
 import { GameOptions } from '../../Messages/GameUpdate';
@@ -11,7 +11,7 @@ import { handleGameUpdate } from '../Game/GameUpdateHandler';
 import { newGameTable } from '../Game/GameTable';
 
 export interface LobbyProps {
-  myLobbyId: number,
+  myLobbyId: LobbyId,
   connection: Connection;
   name: string;
   options: GameOptions;
@@ -21,8 +21,8 @@ export default function LobbyScene({ myLobbyId, connection, name, options }: Lob
   const [table, tableDispatch] = useReducer(handleGameUpdate, null, newGameTable);
   const game = useRef<Game>();
 
-  const [users, setUsers] = useState([] as UserValue[]);
-  const [owner, setOwner] = useState<number>();
+  const [users, setUsers] = useState<UserValue[]>([]);
+  const [owner, setOwner] = useState<UserId>();
 
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
