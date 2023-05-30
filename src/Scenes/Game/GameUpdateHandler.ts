@@ -147,14 +147,20 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
     return newTable;
 }
 
-// Moves the player which the user is controlling to the first element of the array
-function rotatePlayers(players: PlayerId[], self_player?: PlayerId) {
-    if (self_player) {
-        const index = players.indexOf(self_player);
+function tryRotate<T>(values: T[], value?: T): boolean {
+    if (value) {
+        const index = values.indexOf(value);
         if (index > 0) {
-            players.unshift(...players.splice(index, players.length));
+            values.unshift(...values.splice(index, values.length));
+            return true;
         }
     }
+    return false;
+}
+
+// Moves the player which the user is controlling to the first element of the array
+function rotatePlayers(players: PlayerId[], selfPlayer?: PlayerId, firstPlayer?: PlayerId) {
+    tryRotate(players, selfPlayer) || tryRotate(players, firstPlayer);
     return players;
 };
 
@@ -172,7 +178,7 @@ function handlePlayerAdd(table: GameTable, { players }: PlayerAddUpdate): GameTa
 
 // Handles the 'player_order' update, changing the order of how players are seated
 function handlePlayerOrder(table: GameTable, { players }: PlayerOrderUpdate): GameTable {
-    return { ...table, alive_players: rotatePlayers(players, table.self_player) };
+    return { ...table, alive_players: rotatePlayers(players, table.self_player, table.alive_players.at(0)) };
 }
 
 // Handles the 'player_hp' update, changes a player's hp
