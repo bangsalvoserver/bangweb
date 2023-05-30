@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { useEffect } from "react";
 
 export type MessageHandler = [string, (message: any) => void];
 
@@ -89,12 +89,12 @@ export class Connection {
     }
 }
 
-export function useHandlers(connection: Connection, deps: any[], ...handlers: MessageHandler[]) {
+export function useHandlers(connection: Connection, ...handlers: MessageHandler[]) {
     useEffect(() => {
         handlers.forEach(handler => connection.addHandler(handler));
         connection.setLocked(false);
         return () => handlers.forEach(handler => connection.removeHandler(handler));
-    }, deps);
+    }, []);
 }
 
 

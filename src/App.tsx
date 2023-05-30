@@ -26,9 +26,9 @@ function App() {
     if (myUserId && !connection.current?.isConnected()) {
       connection.current?.connect();
     }
-  }, [connection]);
+  }, []);
 
-  useHandlers(connection.current, [connection], 
+  useHandlers(connection.current, 
     ['connect', async () => {
       connection.current?.sendMessage('connect', {
         user: {

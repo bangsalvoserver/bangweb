@@ -26,7 +26,7 @@ export default function LobbyScene({ myUserId, connection, name, options }: Lobb
   const [lobbyName, setLobbyName] = useState(name);
   const [lobbyOptions, setLobbyOptions] = useState(options);
 
-  useHandlers(connection, [],
+  useHandlers(connection,
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
       setUsers(users => {
         let copy = [...users];
