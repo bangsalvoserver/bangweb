@@ -37,6 +37,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
 
     ui: {
         UNKNOWN_CARD: "(Unknown card)",
-        USER_DISCONNECTED: "(User disconnected)",
+        USER_DISCONNECTED: "(Disconnected)",
     },
 };

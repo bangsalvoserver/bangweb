@@ -12,8 +12,8 @@ export interface LobbyUserProps {
     isOwner?: boolean;
 }
 
-export const DEFAULT_USER_PROPIC = "/docs/images/people/profile-picture-3.jpg";
-export const PROPIC_DISCONNECTED = "/docs/images/people/profile-picture-3.jpg";
+export const DEFAULT_USER_PROPIC = "/media/icon_default_user.png";
+export const PROPIC_DISCONNECTED = "/media/icon_disconnected.png";
 
 export function getPropic(user?: UserValue) {
   return user? (user.propic ?? DEFAULT_USER_PROPIC) : PROPIC_DISCONNECTED;

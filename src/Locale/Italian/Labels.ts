@@ -37,7 +37,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
 
     ui: {
         UNKNOWN_CARD: "(Carta sconosciuta)",
-        USER_DISCONNECTED: "(Utente disconnesso)",
+        USER_DISCONNECTED: "(Disconnesso)",
     },
 
 };
