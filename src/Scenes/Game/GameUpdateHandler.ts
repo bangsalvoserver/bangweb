@@ -279,7 +279,7 @@ function handleDeckShuffled(table: GameTable, { pocket }: DeckShuffledUpdate): G
         ...table,
         cards: table.cards.map(card => {
             if (card.pocket?.name === pocket) {
-                return { ...card, cardData: undefined, pocket: { name: pocket } };
+                return { ...card, cardData: { deck: card.cardData.deck }, pocket: { name: pocket } };
             } else {
                 return card;
             }
@@ -304,7 +304,7 @@ function handleShowCard(table: GameTable, { card, info }: ShowCardUpdate): GameT
 function handleHideCard(table: GameTable, { card }: HideCardUpdate): GameTable {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, cardData: undefined }))
+        cards: editById(table.cards, card, card => ({ ...card, cardData: { deck: card.cardData.deck } }))
     };
 }
 

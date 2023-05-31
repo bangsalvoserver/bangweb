@@ -9,7 +9,7 @@ export interface CardProps {
 export default function CardView({ table, card }: CardProps) {
     return (
         <div>
-            {card.cardData ? <LocalizedCardName name={card.cardData.name} sign={card.cardData.sign} /> : card.deck }
+            {'name' in card.cardData ? <LocalizedCardName name={card.cardData.name} sign={card.cardData.sign} /> : card.cardData.deck }
         </div>
     )
 }

@@ -25,13 +25,11 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
 export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId };
 
 export interface Card extends Id {
-    deck: DeckType;
+    cardData: { deck: DeckType } | CardData;
+    pocket?: PocketRef;
 
     inactive: boolean;
     num_cubes: number;
-
-    cardData?: CardData;
-    pocket?: PocketRef;
 }
 
 export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketRef | undefined {
@@ -46,10 +44,11 @@ export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketR
 
 export function newCard(id: CardId, deck: DeckType, pocket?: PocketRef): Card {
     return {
-        id, deck,
+        id,
+        cardData: { deck },
+        pocket,
         inactive: false,
         num_cubes: 0,
-        pocket
     };
 }
 
