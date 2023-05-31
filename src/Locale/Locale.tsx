@@ -9,7 +9,7 @@ const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
     if (language in REGISTRIES) {
         return REGISTRIES[language];
     } else {
-        return REGISTRIES['it-IT'];
+        return REGISTRIES['en'];
     }
 })();
 
@@ -29,7 +29,6 @@ export interface CardNameProps {
 }
 
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
-    // TODO
     if (name) {
         const localizedName = name in cardRegistry ? cardRegistry[name] : name;
         if (sign && sign.rank != 'none' && sign.suit != 'none') {
