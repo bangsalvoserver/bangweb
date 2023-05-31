@@ -1,6 +1,7 @@
+import { GameFlag, PlayerPocketType, TablePocketType } from "../../Messages/CardEnums";
 import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
-import { GameTable, Id, getCard, newCard, newGameTable, newPlayer, searchById } from "./GameTable";
+import { GameTable, Id, PocketRef, getCard, newCard, newGameTable, newPlayer, newPocketRef, searchById } from "./GameTable";
 
 export interface GameUpdate {
     updateType: string,
@@ -77,26 +78,18 @@ type Pockets = {
 };
 
 /// If `pockets` contains a pocket named `pocketName`, adds `cards` to that pocket
-function addToPocket<T extends Pockets>(pockets: T, pocketName: string, cards: CardId[]): T {
-    if (pocketName in pockets) {
-        return {
-            ...pockets,
-            [pocketName]: pockets[pocketName].concat(cards)
-        };
-    } else {
-        return pockets;
-    }
+function addToPocket<T extends Pockets>(pockets: T, pocketName: keyof T, cards: CardId[]): T {
+    return {
+        ...pockets,
+        [pocketName]: pockets[pocketName].concat(cards)
+    };
 }
 
 /// If `pockets` contains a pocket named `pocketName`, removes `cards` to that pocket
-function removeFromPocket<T extends Pockets>(pockets: T, pocketName: string, cards: CardId[]): T {
-    if (pocketName in pockets) {
-        return {
-            ...pockets,
-            [pocketName]: pockets[pocketName].filter(id => !cards.includes(id))
-        }
-    } else {
-        return pockets;
+function removeFromPocket<T extends Pockets>(pockets: T, pocketName: keyof T, cards: CardId[]): T {
+    return {
+        ...pockets,
+        [pocketName]: pockets[pocketName].filter(id => !cards.includes(id))
     }
 }
 
@@ -108,11 +101,19 @@ function handleReset(table: GameTable, userId?: UserId): GameTable {
 /// Handles the 'add_cards' update, creates new cards and adds them in the specified pocket
 function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable {
     const addedCards = card_ids.map(card => card.id);
+    let newPlayers = table.players;
+    let newPockets = table.pockets;
+    if (pocket != 'none') {
+        if (player) {
+            newPlayers = editById(table.players, player, p => ({ ...p, pockets: addToPocket(p.pockets, pocket as PlayerPocketType, addedCards) }));
+        } else {
+            newPockets = addToPocket(table.pockets, pocket as TablePocketType, addedCards);
+        }
+    }
     const ret = {
         ...table,
         cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocket, player))).sort(sortById),
-        players: editById(table.players, player, p => ({ ...p, pockets: addToPocket(p.pockets, pocket, addedCards) })),
-        pockets: addToPocket(table.pockets, pocket, addedCards)
+        players: newPlayers, pockets: newPockets
     };
 
     return ret;
@@ -121,7 +122,7 @@ function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCards
 /// Handles the 'remove_cards' update, removes the specified cards
 function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): GameTable {
     // Groups cards by pocket
-    let pocketCards = new Map<{pocketName: string, player?: PlayerId}, CardId[]>();
+    let pocketCards = new Map<PocketRef, CardId[]>();
     cards.forEach(id => {
         let pocket = getCard(table, id)?.pocket;
         if (pocket) {
@@ -137,12 +138,15 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
     let newTable = { ...table, cards: table.cards.filter(card => !cards.includes(card.id))};
 
     // For each pocket remove all the cards in the array
-    pocketCards.forEach((cards, {pocketName, player}) => {
-        newTable = {
-            ...newTable,
-            players: editById(table.players, player, p => ({ ...p, pockets: removeFromPocket(p.pockets, pocketName, cards)})),
-            pockets: removeFromPocket(table.pockets, pocketName, cards)
-        };
+    pocketCards.forEach((cards, pocket) => {
+        let newPlayers = table.players;
+        let newPockets = table.pockets;
+        if ('player' in pocket) {
+            newPlayers = editById(table.players, pocket.player, p => ({ ...p, pockets: removeFromPocket(p.pockets, pocket.name, cards)}));
+        } else {
+            newPockets = removeFromPocket(table.pockets, pocket.name, cards);
+        }
+        newTable = { ...newTable, players: newPlayers, pockets: newPockets };
     });
     return newTable;
 }
@@ -244,17 +248,29 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
     }
 
     const cardList = [card];
-    const oldPocket = cardObj.pocket?.pocketName || 'none';
+    const pocketRef = cardObj.pocket;
 
-    let newPlayers = editById(table.players, cardObj.pocket?.player, player => ({ ...player, pockets: removeFromPocket(player.pockets, oldPocket, cardList) }));
-    newPlayers = editById(newPlayers, player, player => ({ ...player, pockets: addToPocket(player.pockets, pocket, cardList) }));
-
-    let newPockets = removeFromPocket(table.pockets, oldPocket, cardList);
-    newPockets = addToPocket(newPockets, pocket, cardList);
+    let newPlayers = table.players;
+    let newPockets = table.pockets;
+    if (pocketRef) {
+        if ('player' in pocketRef) {
+            newPlayers = editById(newPlayers, pocketRef.player, player => (
+                { ...player, pockets: removeFromPocket(player.pockets, pocketRef.name, cardList) }));
+        } else {
+            newPockets = removeFromPocket(newPockets, pocketRef.name, cardList);
+        }
+    }
+    if (pocket != 'none') {
+        if (player) {
+            newPlayers = editById(newPlayers, player, player => ({ ...player, pockets: addToPocket(player.pockets, pocket as PlayerPocketType, cardList) }));
+        } else {
+            newPockets = addToPocket(newPockets, pocket as TablePocketType, cardList);
+        }
+    }
 
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, pocket: { pocketName: pocket, player }})),
+        cards: editById(table.cards, card, card => ({ ...card, pocket: newPocketRef(pocket, player) })),
         players: newPlayers,
         pockets: newPockets
     };
@@ -263,26 +279,22 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
 // Handles the 'deck_shuffled' update
 // This moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
 function handleDeckShuffled(table: GameTable, { pocket }: DeckShuffledUpdate): GameTable {
-    if (pocket === 'main_deck' || pocket === 'shop_deck') {
-        const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
-        return {
-            ...table,
-            cards: table.cards.map(card => {
-                if (card.pocket?.pocketName === pocket) {
-                    return { ...card, cardData: undefined, pocket: { pocketName: pocket } };
-                } else {
-                    return card;
-                }
-            }),
-            pockets: {
-                ...table.pockets,
-                [fromPocket]: [],
-                [pocket]: table.pockets[fromPocket]
+    const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
+    return {
+        ...table,
+        cards: table.cards.map(card => {
+            if (card.pocket?.name === pocket) {
+                return { ...card, cardData: undefined, pocket: { name: pocket } };
+            } else {
+                return card;
             }
-        };
-    } else {
-        throw new Error('invalid pocket in DeckShuffledUpdate');
-    }
+        }),
+        pockets: {
+            ...table.pockets,
+            [fromPocket]: [],
+            [pocket]: table.pockets[fromPocket]
+        }
+    };
 }
 
 // Handles the 'show_card' update, sets the cardData field
@@ -344,16 +356,12 @@ function handleMoveCubes(table: GameTable, { num_cubes, origin_card, target_card
 
 // Handles the 'move_scenario_deck' update, changes the scenario_deck_holder or wws_scenario_deck_holder field
 function handleMoveScenarioDeck(table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable {
-    if (pocket === 'scenario_deck' || pocket === 'wws_scenario_deck') {
-        return {
-            ...table,
-            status: {
-                ...table.status,
-                [pocket + '_holder']: player
-            }
+    return {
+        ...table,
+        status: {
+            ...table.status,
+            [pocket + '_holder']: player
         }
-    } else {
-        throw new Error("invalid pocket in MoveScenarioDeckUpdate");
     }
 }
 
@@ -369,7 +377,7 @@ function handleMoveTrain(table: GameTable, { position }: MoveTrainUpdate): GameT
 }
 
 // Handles the 'game_flags' update, changes the status.flags field
-function handleGameFlags(table: GameTable, flags: string[]): GameTable {
+function handleGameFlags(table: GameTable, flags: GameFlag[]): GameTable {
     return {
         ...table,
         status: {

@@ -1,3 +1,4 @@
+import { ExpansionType } from "../../Messages/CardEnums";
 import { GameOptions } from "../../Messages/GameUpdate";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
@@ -10,7 +11,7 @@ type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T
 type GameOptionsOf<T> = { [Property in FilteredKeys<GameOptions, T>]: GameOptions[Property] };
 
 export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameOptionProps) {
-    const newExpansionCheckbox = (name: string, label: string) => {
+    const newExpansionCheckbox = (name: ExpansionType, label: string) => {
         const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
             const oldValue = gameOptions.expansions.includes(name);
             const newValue = event.target.checked;

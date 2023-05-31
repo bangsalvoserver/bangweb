@@ -1,4 +1,5 @@
 import { CardData } from "../../Messages/CardData";
+import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "../../Messages/CardEnums";
 import { CardId, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 
@@ -21,48 +22,59 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
     return null;
 }
 
+export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId };
+
 export interface Card extends Id {
-    deck: string;
+    deck: DeckType;
 
     inactive: boolean;
     num_cubes: number;
 
     cardData?: CardData;
-    pocket?: {
-        pocketName: string,
-        player?: PlayerId
-    };
+    pocket?: PocketRef;
 }
 
-export function newCard(id: CardId, deck: string, pocketName: string, player?: PlayerId): Card {
+export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketRef | undefined {
+    if (pocketName == 'none') {
+        return undefined;
+    } else if (player) {
+        return { name: pocketName as PlayerPocketType, player };
+    } else {
+        return { name: pocketName as TablePocketType };
+    }
+}
+
+export function newCard(id: CardId, deck: DeckType, pocketName: PocketType, player?: PlayerId): Card {
     return {
         id, deck,
         inactive: false,
         num_cubes: 0,
-        pocket: {
-            pocketName,
-            player
-        }
+        pocket: newPocketRef(pocketName, player)
     };
+}
+
+type Extract<T, U> = T extends U ? T : never;
+
+type PlayerPockets = {
+    [T in Extract<PlayerPocketType, string>]: CardId[]
+}
+
+type TablePockets = {
+    [T in Extract<TablePocketType, string>]: CardId[]
 }
 
 export interface Player extends Id {
     userid: UserId;
     status: {
-        role: string,
+        role: PlayerRole,
         hp: number,
         gold: number,
-        flags: string[],
+        flags: PlayerFlag[],
         range_mod: number,
         weapon_range: number,
         distance_mod: number
     };
-    pockets: {
-        player_hand: CardId[],
-        player_table: CardId[],
-        player_character: CardId[],
-        player_backup: CardId[]
-    };
+    pockets: PlayerPockets;
 }
 
 export function newPlayer(id: PlayerId, userid: UserId): Player {
@@ -93,23 +105,7 @@ export interface GameTable {
     players: Player[];
     cards: Card[];
     
-    pockets: {
-        main_deck: CardId[],
-        discard_pile: CardId[],
-        selection: CardId[],
-        shop_deck: CardId[],
-        shop_selection: CardId[],
-        shop_discard: CardId[],
-        hidden_deck: CardId[],
-        scenario_deck: CardId[],
-        scenario_card: CardId[],
-        wws_scenario_deck: CardId[],
-        wws_scenario_card: CardId[],
-        button_row: CardId[],
-        stations: CardId[],
-        train: CardId[],
-        train_deck: CardId[]
-    };
+    pockets: TablePockets;
 
     alive_players: PlayerId[];
     dead_players: PlayerId[];
@@ -117,7 +113,7 @@ export interface GameTable {
     status: {
         num_cubes: number;
         train_position: number;
-        flags: string[];
+        flags: GameFlag[];
         scenario_deck_holder?: PlayerId;
         wws_scenario_deck_holder?: PlayerId;
         current_turn?: PlayerId;

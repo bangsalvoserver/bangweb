@@ -21,7 +21,7 @@ export default function LobbyChat({ connection, myUserId, users, messages }: Cha
         }
     };
 
-    const newMessageTag = (user_id: UserId, message: String, index: number) => {
+    const newMessageTag = (user_id: UserId, message: string, index: number) => {
         if (user_id) {
             const username = users.find(user => user.id == user_id)?.name ?? USERNAME_DISCONNECTED;
             return (<li key={index}>{username} : {message}</li>);

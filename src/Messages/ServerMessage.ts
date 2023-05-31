@@ -8,11 +8,13 @@ export interface ClientAccepted {
   user_id: UserId;
 }
 
+export type LobbyState = 'waiting' | 'playing' | 'finished';
+
 export interface LobbyUpdate {
   lobby_id: LobbyId;
   name: string;
   num_players: number;
-  state: string;
+  state: LobbyState;
 }
 
 export interface LobbyInfo {
@@ -52,5 +54,5 @@ export interface LobbyRemoveUser {
 
 export interface ChatMessage {
   user_id: UserId;
-  message: String;
+  message: string;
 }

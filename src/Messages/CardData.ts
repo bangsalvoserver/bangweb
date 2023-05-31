@@ -1,25 +1,27 @@
+import { CardColor, CardFilter, CardRank, CardSuit, DeckType, EffectType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType, TargetType } from "./CardEnums";
+
 export interface CardEffect {
-    target: string;
-    player_filter: string[];
-    card_filter: string[];
+    target: TargetType;
+    player_filter: PlayerFilter[];
+    card_filter: CardFilter[];
     effect_value: number;
     target_value: number;
-    type: string;
+    type: EffectType;
 }
 
 export interface CardEquip {
     effect_value: number;
-    type: string;
+    type: EquipType;
 }
 
 export interface CardTag {
     tag_value: number;
-    type: string;
+    type: TagType;
 }
 
 export interface CardSign {
-    suit: string;
-    rank: string;
+    suit: CardSuit;
+    rank: CardRank;
 }
 
 export interface CardData {
@@ -30,18 +32,18 @@ export interface CardData {
     optionals: CardEffect[];
     equips: CardEquip[];
     tag_list: CardTag[];
-    expansion: string[];
-    deck: string;
+    expansion: ExpansionType[];
+    deck: DeckType;
     modifier: {
-        type: string
+        type: ModifierType
     };
     mth_effect: {
-        type: string
+        type: MthType
     };
     mth_response: {
-        type: string
+        type: MthType
     };
-    equip_target: string;
-    color: string;
+    equip_target: PlayerFilter[];
+    color: CardColor;
     sign: CardSign;
 }

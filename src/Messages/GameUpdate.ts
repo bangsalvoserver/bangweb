@@ -1,4 +1,5 @@
 import { CardData, CardSign } from "./CardData";
+import { DeckType, ExpansionType, PlayerFlag, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
 import { UserId } from "./ServerMessage";
 
 export type CardId = number;
@@ -22,9 +23,9 @@ export interface GameString {
 export interface AddCardsUpdate {
     card_ids: {
         id: CardId,
-        deck: string
+        deck: DeckType
     }[];
-    pocket: string;
+    pocket: PocketType;
     player?: PlayerId;
 }
 
@@ -35,7 +36,7 @@ export interface RemoveCardsUpdate {
 export interface MoveCardUpdate extends AnimationUpdate {
     card: CardId;
     player?: PlayerId;
-    pocket: string;
+    pocket: PocketType;
 }
 
 export interface AddCubesUpdate {
@@ -51,7 +52,7 @@ export interface MoveCubesUpdate extends AnimationUpdate {
 
 export interface MoveScenarioDeckUpdate extends AnimationUpdate {
     player: PlayerId;
-    pocket: string;
+    pocket: 'scenario_deck' | 'wws_scenario_deck';
 }
 
 export interface MoveTrainUpdate extends AnimationUpdate {
@@ -59,7 +60,7 @@ export interface MoveTrainUpdate extends AnimationUpdate {
 }
 
 export interface DeckShuffledUpdate extends AnimationUpdate {
-    pocket: string;
+    pocket: 'main_deck' | 'shop_deck';
 }
 
 export interface ShowCardUpdate extends AnimationUpdate {
@@ -107,12 +108,12 @@ export interface PlayerGoldUpdate {
 
 export interface PlayerShowRoleUpdate extends AnimationUpdate {
     player: PlayerId;
-    role: string;
+    role: PlayerRole;
 }
 
 export interface PlayerStatusUpdate {
     player: PlayerId;
-    flags: string[];
+    flags: PlayerFlag[];
     range_mod: number;
     weapon_range: number;
     distance_mod: number;
@@ -139,7 +140,7 @@ export interface StatusReadyArgs {
 }
 
 export interface GameOptions {
-    expansions: string[];
+    expansions: ExpansionType[];
     enable_ghost_cards: boolean;
     character_choice: boolean;
     allow_beer_in_duel: boolean;
