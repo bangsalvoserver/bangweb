@@ -1,7 +1,7 @@
-import { GameFlag, PlayerPocketType, TablePocketType } from "../../Messages/CardEnums";
+import { GameFlag, PlayerPocketType, PocketType, TablePocketType } from "../../Messages/CardEnums";
 import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
-import { GameTable, Id, PocketRef, getCard, newCard, newGameTable, newPlayer, newPocketRef, searchById } from "./GameTable";
+import { GameTable, Id, Player, PocketRef, TablePockets, getCard, newCard, newGameTable, newPlayer, newPocketRef, searchById } from "./GameTable";
 
 export interface GameUpdate {
     updateType: string,
@@ -77,20 +77,42 @@ type Pockets = {
     [key: string]: CardId[]
 };
 
-/// If `pockets` contains a pocket named `pocketName`, adds `cards` to that pocket
-function addToPocket<T extends Pockets>(pockets: T, pocketName: keyof T, cards: CardId[]): T {
-    return {
-        ...pockets,
-        [pocketName]: pockets[pocketName].concat(cards)
-    };
+function addToPockets(pockets: TablePockets, players: Player[], cards: CardId[], pocket?: PocketRef): [TablePockets, Player[]] {
+    /// If `pockets` contains a pocket named `pocketName`, adds `cards` to that pocket
+    function addToPocket<T extends Pockets>(pockets: T, pocketName: keyof T, cards: CardId[]): T {
+        return {
+            ...pockets,
+            [pocketName]: pockets[pocketName].concat(cards)
+        };
+    }
+
+    if (pocket) {
+        if ('player' in pocket) {
+            players = editById(players, pocket.player, player => ({ ...player, pockets: addToPocket(player.pockets, pocket.name, cards) }));
+        } else {
+            pockets = addToPocket(pockets, pocket.name, cards);
+        }
+    }
+    return [pockets, players];
 }
 
-/// If `pockets` contains a pocket named `pocketName`, removes `cards` to that pocket
-function removeFromPocket<T extends Pockets>(pockets: T, pocketName: keyof T, cards: CardId[]): T {
-    return {
-        ...pockets,
-        [pocketName]: pockets[pocketName].filter(id => !cards.includes(id))
+function removeFromPockets(pockets: TablePockets, players: Player[], cards: CardId[], pocket?: PocketRef): [TablePockets, Player[]] {
+    /// If `pockets` contains a pocket named `pocketName`, removes `cards` to that pocket
+    function removeFromPocket<T extends Pockets> (pockets: T, pocketName: keyof T, cards: CardId[]): T {
+        return {
+            ...pockets,
+            [pocketName]: pockets[pocketName].filter(id => !cards.includes(id))
+        }
     }
+
+    if (pocket) {
+        if ('player' in pocket) {
+            players = editById(players, pocket.player, p => ({ ...p, pockets: removeFromPocket(p.pockets, pocket.name, cards)}));
+        } else {
+            pockets = removeFromPocket(pockets, pocket.name, cards);
+        }
+    }
+    return [pockets, players];
 }
 
 /// Handles the 'reset' update, recreating the game table
@@ -100,23 +122,13 @@ function handleReset(table: GameTable, userId?: UserId): GameTable {
 
 /// Handles the 'add_cards' update, creates new cards and adds them in the specified pocket
 function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable {
-    const addedCards = card_ids.map(card => card.id);
-    let newPlayers = table.players;
-    let newPockets = table.pockets;
-    if (pocket != 'none') {
-        if (player) {
-            newPlayers = editById(table.players, player, p => ({ ...p, pockets: addToPocket(p.pockets, pocket as PlayerPocketType, addedCards) }));
-        } else {
-            newPockets = addToPocket(table.pockets, pocket as TablePocketType, addedCards);
-        }
-    }
-    const ret = {
+    const pocketRef = newPocketRef(pocket, player);
+    const [pockets, players] = addToPockets(table.pockets, table.players, card_ids.map(card => card.id), pocketRef);
+    return {
         ...table,
-        cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocket, player))).sort(sortById),
-        players: newPlayers, pockets: newPockets
+        cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocketRef))).sort(sortById),
+        pockets, players
     };
-
-    return ret;
 }
 
 /// Handles the 'remove_cards' update, removes the specified cards
@@ -134,21 +146,20 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
         }
     });
 
-    // Removes the cards themselves
-    let newTable = { ...table, cards: table.cards.filter(card => !cards.includes(card.id))};
+    let players = table.players;
+    let pockets = table.pockets;
 
     // For each pocket remove all the cards in the array
     pocketCards.forEach((cards, pocket) => {
-        let newPlayers = table.players;
-        let newPockets = table.pockets;
-        if ('player' in pocket) {
-            newPlayers = editById(table.players, pocket.player, p => ({ ...p, pockets: removeFromPocket(p.pockets, pocket.name, cards)}));
-        } else {
-            newPockets = removeFromPocket(table.pockets, pocket.name, cards);
-        }
-        newTable = { ...newTable, players: newPlayers, pockets: newPockets };
+        [pockets, players] = removeFromPockets(pockets, players, cards, pocket);
     });
-    return newTable;
+
+    // ... and remove the cards themselves
+    return {
+        ...table,
+        cards: table.cards.filter(card => !cards.includes(card.id)),
+        pockets, players
+    };
 }
 
 function tryRotate<T>(values: T[], value?: T): boolean {
@@ -247,32 +258,16 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
         throw new Error("Card not found in MoveCardUpdate");
     }
 
-    const cardList = [card];
-    const pocketRef = cardObj.pocket;
-
-    let newPlayers = table.players;
-    let newPockets = table.pockets;
-    if (pocketRef) {
-        if ('player' in pocketRef) {
-            newPlayers = editById(newPlayers, pocketRef.player, player => (
-                { ...player, pockets: removeFromPocket(player.pockets, pocketRef.name, cardList) }));
-        } else {
-            newPockets = removeFromPocket(newPockets, pocketRef.name, cardList);
-        }
-    }
-    if (pocket != 'none') {
-        if (player) {
-            newPlayers = editById(newPlayers, player, player => ({ ...player, pockets: addToPocket(player.pockets, pocket as PlayerPocketType, cardList) }));
-        } else {
-            newPockets = addToPocket(newPockets, pocket as TablePocketType, cardList);
-        }
-    }
+    const pocketRef = newPocketRef(pocket, player);
+    
+    let [pockets, players] = removeFromPockets(table.pockets, table.players, [card], cardObj.pocket);
+    [pockets, players] = addToPockets(pockets, players, [card], pocketRef);
 
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, pocket: newPocketRef(pocket, player) })),
-        players: newPlayers,
-        pockets: newPockets
+        cards: editById(table.cards, card, card => ({ ...card, pocket: pocketRef })),
+        players: players,
+        pockets: pockets
     };
 }
 

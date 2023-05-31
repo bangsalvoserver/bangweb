@@ -44,22 +44,22 @@ export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketR
     }
 }
 
-export function newCard(id: CardId, deck: DeckType, pocketName: PocketType, player?: PlayerId): Card {
+export function newCard(id: CardId, deck: DeckType, pocket?: PocketRef): Card {
     return {
         id, deck,
         inactive: false,
         num_cubes: 0,
-        pocket: newPocketRef(pocketName, player)
+        pocket
     };
 }
 
 type Extract<T, U> = T extends U ? T : never;
 
-type PlayerPockets = {
+export type PlayerPockets = {
     [T in Extract<PlayerPocketType, string>]: CardId[]
 }
 
-type TablePockets = {
+export type TablePockets = {
     [T in Extract<TablePocketType, string>]: CardId[]
 }
 
