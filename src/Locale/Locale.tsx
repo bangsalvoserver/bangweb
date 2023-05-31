@@ -13,11 +13,16 @@ const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
     }
 })();
 
-export function getLocalizedLabel(group: string, name: string) {
+export function getLocalizedLabel(group: string, name: string, ...formatArgs: string[]): string {
     if (group in labelRegistry) {
         const labelGroup = labelRegistry[group];
         if (name in labelGroup) {
-            return labelGroup[name];
+            const value = labelGroup[name];
+            if (typeof value == 'string') {
+                return value;
+            } else {
+                return value(...formatArgs);
+            }
         }
     }
     return group + '.' + name;
@@ -51,19 +56,24 @@ export interface GameStringProps {
 }
 
 export function GameStringComponent({ table, users, message}: GameStringProps): JSX.Element {
-    const formatArgs = message.format_args.map(arg => {
-        if ('integer' in arg) return (<>{arg.integer}</>)
-        if ('card' in arg) return LocalizedCardName({name: arg.card.name, sign: arg.card.sign});
-        if ('player' in arg) {
-            const userid = getPlayer(table, arg.player)?.userid;
-            return (<>{users.find(user => user.id === userid)?.name || getLocalizedLabel('ui', 'USERNAME_DISCONNECTED')}</>);
-        }
-        throw new Error('Invalid argument in format_args');
-    });
+    if (message.format_str in gameStringRegistry) {
+        const value = gameStringRegistry[message.format_str];
+        if (typeof value == 'function') {
+            const formatArgs = message.format_args.map(arg => {
+                if ('integer' in arg) return (<>{arg.integer}</>)
+                if ('card' in arg) return LocalizedCardName({name: arg.card.name, sign: arg.card.sign});
+                if ('player' in arg) {
+                    const userid = getPlayer(table, arg.player)?.userid;
+                    return (<>{users.find(user => user.id === userid)?.name || getLocalizedLabel('ui', 'USERNAME_DISCONNECTED')}</>);
+                }
+                throw new Error('Invalid argument in format_args');
+            });
 
-    try {
-        return gameStringRegistry[message.format_str](...formatArgs);
-    } catch (e: any) {
+            return value(...formatArgs);
+        } else {
+            return value;
+        }
+    } else {
         return (<>{message.format_str}</>);
     }
 }
