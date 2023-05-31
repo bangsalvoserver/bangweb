@@ -64,7 +64,7 @@ export function GameStringComponent({ table, users, message}: GameStringProps): 
                 if ('card' in arg) return LocalizedCardName({name: arg.card.name, sign: arg.card.sign});
                 if ('player' in arg) {
                     const userid = getPlayer(table, arg.player)?.userid;
-                    return (<>{users.find(user => user.id === userid)?.name || getLocalizedLabel('ui', 'USERNAME_DISCONNECTED')}</>);
+                    return (<>{users.find(user => user.id === userid)?.name || getLocalizedLabel('ui', 'USER_DISCONNECTED')}</>);
                 }
                 throw new Error('Invalid argument in format_args');
             });
