@@ -22,19 +22,19 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
     return null;
 }
 
-export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId };
+export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
-    pocket?: PocketRef;
+    pocket: PocketRef;
 
     inactive: boolean;
     num_cubes: number;
 }
 
-export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketRef | undefined {
+export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketRef {
     if (pocketName == 'none') {
-        return undefined;
+        return null;
     } else if (player && pocketName.startsWith('player_')) {
         return { name: pocketName as PlayerPocketType, player };
     } else {
@@ -42,7 +42,7 @@ export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketR
     }
 }
 
-export function newCard(id: CardId, deck: DeckType, pocket?: PocketRef): Card {
+export function newCard(id: CardId, deck: DeckType, pocket: PocketRef): Card {
     return {
         id,
         cardData: { deck },

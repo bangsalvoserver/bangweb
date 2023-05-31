@@ -30,7 +30,7 @@ function Header({ connection, onClickToggleMenu }: HeaderProps) {
   };
 
   const handlePropicChange = function(event: ChangeEvent<HTMLInputElement>) {
-    let file = event.target.files && event.target.files[0] || null;
+    let file = event.target.files ? event.target.files[0] : null;
     if (file) {
       let reader = new FileReader();
       reader.onload = () => {
