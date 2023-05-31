@@ -116,7 +116,6 @@ export interface GameTable {
         scenario_deck_holder?: PlayerId;
         wws_scenario_deck_holder?: PlayerId;
         current_turn?: PlayerId;
-        logs: GameString[];
         request?: RequestStatusArgs | StatusReadyArgs;
     };
 }
@@ -152,8 +151,7 @@ export function newGameTable(myUserId: UserId): GameTable {
         status: {
             num_cubes: 0,
             train_position: 0,
-            flags: [],
-            logs: []
+            flags: []
         }
     };
 }

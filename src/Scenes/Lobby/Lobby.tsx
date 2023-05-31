@@ -2,7 +2,7 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import { Connection, useHandlers } from '../../Messages/Connection';
 import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyId, UserId, ChatMessage } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
-import { GameOptions } from '../../Messages/GameUpdate';
+import { GameOptions, GameString } from '../../Messages/GameUpdate';
 import GameScene from '../Game/GameScene';
 import { deserializeImage } from '../../Messages/ImageSerial';
 import { Game } from '../Game/Game';
@@ -21,6 +21,7 @@ export interface LobbyProps {
 
 export default function LobbyScene({ myLobbyId, myUserId, connection, name, options }: LobbyProps) {
   const [table, tableDispatch] = useReducer(handleGameUpdate, myUserId, newGameTable);
+  const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const game = useRef<Game>();
 
   const [users, setUsers] = useState<UserValue[]>([]);
@@ -67,7 +68,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       }
     }],
     ['game_started', () => {
-      game.current = new Game(tableDispatch);
+      game.current = new Game(tableDispatch, setGameLogs);
       tableDispatch({ updateType: 'reset' });
     }],
     ['game_update', (update: any) => {

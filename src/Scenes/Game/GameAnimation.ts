@@ -1,4 +1,8 @@
+import { Dispatch } from "react";
 import { Milliseconds } from "../../Messages/GameUpdate";
+import { GameUpdate } from "./GameUpdateHandler";
+import { AnimationUpdate } from "../../Messages/GameUpdate";
+import { table } from "console";
 
 export interface GameAnimation {
     tick(timeElapsed: Milliseconds): void;
@@ -27,5 +31,18 @@ export class AnimationBase implements GameAnimation {
     }
     extraTime(): Milliseconds {
         return this.elapsed - this.duration;
+    }
+}
+
+export class DispatchAnimation extends AnimationBase {
+    private action: () => void;
+
+    constructor(duration: Milliseconds, action: () => void) {
+        super(duration);
+        this.action = action;
+    }
+
+    override end(): void {
+        this.action();
     }
 }

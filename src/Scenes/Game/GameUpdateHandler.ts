@@ -19,9 +19,6 @@ export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTabl
 
 const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => GameTable>([
     ['reset', handleReset],
-    // ['game_error', handleGameError],
-    ['game_log', handleGameLog],
-    // ['game_prompt', handleGamePrompt],
     ['add_cards', handleAddCards],
     ['remove_cards', handleRemoveCards],
     ['move_card', handleMoveCard],
@@ -33,8 +30,6 @@ const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => Ga
     ['show_card', handleShowCard],
     ['hide_card', handleHideCard],
     ['tap_card', handleTapCard],
-    // ['flash_card', handleFlashCard],
-    // ['short_pause', handleShortPause],
     ['player_add', handlePlayerAdd],
     ['player_order', handlePlayerOrder],
     ['player_hp', handlePlayerHp],
@@ -45,7 +40,6 @@ const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => Ga
     ['request_status', handleRequestStatus],
     ['status_ready', handleRequestStatus],
     ['game_flags', handleGameFlags],
-    // ['play_sound', handlePlaySound]
     ['status_clear', handleStatusClear]
 ]);
 
@@ -80,6 +74,9 @@ type Pockets = {
 function addToPockets(pockets: TablePockets, players: Player[], cards: CardId[], pocket?: PocketRef): [TablePockets, Player[]] {
     /// If `pockets` contains a pocket named `pocketName`, adds `cards` to that pocket
     function addToPocket<T extends Pockets>(pockets: T, pocketName: keyof T, cards: CardId[]): T {
+        if (!(pocketName in pockets)) {
+            throw new Error(`invalid pocketName: ${pocketName.toString()}`);
+        }
         return {
             ...pockets,
             [pocketName]: pockets[pocketName].concat(cards)
@@ -99,6 +96,9 @@ function addToPockets(pockets: TablePockets, players: Player[], cards: CardId[],
 function removeFromPockets(pockets: TablePockets, players: Player[], cards: CardId[], pocket?: PocketRef): [TablePockets, Player[]] {
     /// If `pockets` contains a pocket named `pocketName`, removes `cards` to that pocket
     function removeFromPocket<T extends Pockets> (pockets: T, pocketName: keyof T, cards: CardId[]): T {
+        if (!(pocketName in pockets)) {
+            throw new Error(`invalid pocketName: ${pocketName.toString()}`);
+        }
         return {
             ...pockets,
             [pocketName]: pockets[pocketName].filter(id => !cards.includes(id))
@@ -400,17 +400,6 @@ function handleStatusClear(table: GameTable): GameTable {
         status: {
             ...table.status,
             request: undefined
-        }
-    };
-}
-
-// Handles the 'game_log' update, pushing a log to the list
-function handleGameLog(table: GameTable, message: GameString): GameTable {
-    return {
-        ...table,
-        status: {
-            ...table.status,
-            logs: table.status.logs.concat(message)
         }
     };
 }
