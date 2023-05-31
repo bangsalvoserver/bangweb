@@ -66,53 +66,35 @@ function editById<T extends Id>(values: T[], id: number | undefined, mapper: (va
     }
 }
 
-/// This type is a generic constraint to make sure all pockets are an array of card ids
-type Pockets = {
-    [key: string]: CardId[]
-};
-
-function addToPockets(pockets: TablePockets, players: Player[], cards: CardId[], pocket?: PocketRef): [TablePockets, Player[]] {
-    /// If `pockets` contains a pocket named `pocketName`, adds `cards` to that pocket
-    function addToPocket<T extends Pockets>(pockets: T, pocketName: keyof T, cards: CardId[]): T {
-        if (!(pocketName in pockets)) {
+function editPocketMap(
+    pockets: TablePockets, players: Player[], pocket: PocketRef | undefined,
+    mapper: (cards: CardId[]) => CardId[]): [TablePockets, Player[]]
+{
+    const checkedMapper = <T extends { [key: string]: CardId[] }>(pocketMap: T, pocketName: keyof T): T => {
+        if (pocketName in pocketMap) {
+            return { ...pocketMap, [pocketName]: mapper(pocketMap[pocketName]) };
+        } else {
             throw new Error(`invalid pocketName: ${pocketName.toString()}`);
         }
-        return {
-            ...pockets,
-            [pocketName]: pockets[pocketName].concat(cards)
-        };
-    }
-
+    };
     if (pocket) {
         if ('player' in pocket) {
-            players = editById(players, pocket.player, player => ({ ...player, pockets: addToPocket(player.pockets, pocket.name, cards) }));
+            players = editById(players, pocket.player, player => ({ ...player, pockets: checkedMapper(player.pockets, pocket.name)}));
         } else {
-            pockets = addToPocket(pockets, pocket.name, cards);
+            pockets = checkedMapper(pockets, pocket.name);
         }
     }
     return [pockets, players];
 }
 
-function removeFromPockets(pockets: TablePockets, players: Player[], cards: CardId[], pocket?: PocketRef): [TablePockets, Player[]] {
-    /// If `pockets` contains a pocket named `pocketName`, removes `cards` to that pocket
-    function removeFromPocket<T extends Pockets> (pockets: T, pocketName: keyof T, cards: CardId[]): T {
-        if (!(pocketName in pockets)) {
-            throw new Error(`invalid pocketName: ${pocketName.toString()}`);
-        }
-        return {
-            ...pockets,
-            [pocketName]: pockets[pocketName].filter(id => !cards.includes(id))
-        }
-    }
+/// Adds a list of cards to a pocket
+function addToPocket(pockets: TablePockets, players: Player[], cardsToAdd: CardId[], pocket?: PocketRef) {
+    return editPocketMap(pockets, players, pocket, cards => cards.concat(cardsToAdd));
+}
 
-    if (pocket) {
-        if ('player' in pocket) {
-            players = editById(players, pocket.player, p => ({ ...p, pockets: removeFromPocket(p.pockets, pocket.name, cards)}));
-        } else {
-            pockets = removeFromPocket(pockets, pocket.name, cards);
-        }
-    }
-    return [pockets, players];
+/// Removes a list of cards from a pocket
+function removeFromPocket(pockets: TablePockets, players: Player[], cardsToRemove: CardId[], pocket?: PocketRef) {
+    return editPocketMap(pockets, players, pocket, cards => cards.filter(id => !cardsToRemove.includes(id)));
 }
 
 /// Handles the 'reset' update, recreating the game table
@@ -123,7 +105,7 @@ function handleReset(table: GameTable, userId?: UserId): GameTable {
 /// Handles the 'add_cards' update, creates new cards and adds them in the specified pocket
 function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable {
     const pocketRef = newPocketRef(pocket, player);
-    const [pockets, players] = addToPockets(table.pockets, table.players, card_ids.map(card => card.id), pocketRef);
+    const [pockets, players] = addToPocket(table.pockets, table.players, card_ids.map(card => card.id), pocketRef);
     return {
         ...table,
         cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocketRef))).sort(sortById),
@@ -151,7 +133,7 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
 
     // For each pocket remove all the cards in the array
     pocketCards.forEach((cards, pocket) => {
-        [pockets, players] = removeFromPockets(pockets, players, cards, pocket);
+        [pockets, players] = removeFromPocket(pockets, players, cards, pocket);
     });
 
     // ... and remove the cards themselves
@@ -260,8 +242,8 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
 
     const pocketRef = newPocketRef(pocket, player);
     
-    let [pockets, players] = removeFromPockets(table.pockets, table.players, [card], cardObj.pocket);
-    [pockets, players] = addToPockets(pockets, players, [card], pocketRef);
+    let [pockets, players] = removeFromPocket(table.pockets, table.players, [card], cardObj.pocket);
+    [pockets, players] = addToPocket(pockets, players, [card], pocketRef);
 
     return {
         ...table,
