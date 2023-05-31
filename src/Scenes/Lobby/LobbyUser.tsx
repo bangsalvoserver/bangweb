@@ -15,13 +15,19 @@ export interface LobbyUserProps {
 export const DEFAULT_USER_PROPIC = "/docs/images/people/profile-picture-3.jpg";
 export const PROPIC_DISCONNECTED = "/docs/images/people/profile-picture-3.jpg";
 
+export function getPropic(user?: UserValue) {
+  return user? (user.propic ?? DEFAULT_USER_PROPIC) : PROPIC_DISCONNECTED;
+}
+
+export function getUsername(user?: UserValue) {
+  return user?.name ?? getLocalizedLabel('ui', 'USER_DISCONNECTED');
+}
+
 export default function LobbyUser({ user }: LobbyUserProps) {
-  const propic = user ? (user.propic ?? DEFAULT_USER_PROPIC) : PROPIC_DISCONNECTED;
-  const username = user?.name ?? getLocalizedLabel('ui', 'USER_DISCONNECTED');
   return (
     <div>
-    <img style={{display:'inline'}} src={propic} />
-    {username}
+    <img style={{display:'inline'}} src={getPropic(user)} />
+    {getUsername(user)}
     </div>
   );
 }

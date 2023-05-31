@@ -1,7 +1,7 @@
 import { REGISTRIES } from "./Registry";
 import { CardSign } from "../Messages/CardData";
 import { GameString } from "../Messages/GameUpdate";
-import { UserValue } from "../Scenes/Lobby/LobbyUser";
+import { UserValue, getUsername } from "../Scenes/Lobby/LobbyUser";
 import { GameTable, getPlayer } from "../Scenes/Game/GameTable";
 
 const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
@@ -18,10 +18,10 @@ export function getLocalizedLabel(group: string, name: string, ...formatArgs: st
         const labelGroup = labelRegistry[group];
         if (name in labelGroup) {
             const value = labelGroup[name];
-            if (typeof value == 'string') {
-                return value;
-            } else {
+            if (typeof value == 'function') {
                 return value(...formatArgs);
+            } else {
+                return value;
             }
         }
     }
@@ -59,21 +59,20 @@ export function GameStringComponent({ table, users, message}: GameStringProps): 
     if (message.format_str in gameStringRegistry) {
         const value = gameStringRegistry[message.format_str];
         if (typeof value == 'function') {
-            const formatArgs = message.format_args.map(arg => {
+            return value(...message.format_args.map(arg => {
                 if ('integer' in arg) return (<>{arg.integer}</>)
                 if ('card' in arg) return LocalizedCardName({name: arg.card.name, sign: arg.card.sign});
                 if ('player' in arg) {
                     const userid = getPlayer(table, arg.player)?.userid;
-                    return (<>{users.find(user => user.id === userid)?.name || getLocalizedLabel('ui', 'USER_DISCONNECTED')}</>);
+                    const user = users.find(user => user.id === userid);
+                    return <>{getUsername(user)}</>;
                 }
                 throw new Error('Invalid argument in format_args');
-            });
-
-            return value(...formatArgs);
+            }));
         } else {
             return value;
         }
     } else {
-        return (<>{message.format_str}</>);
+        return <>{message.format_str}</>;
     }
 }
