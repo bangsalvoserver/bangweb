@@ -156,10 +156,18 @@ export function newGameTable(myUserId: UserId): GameTable {
     };
 }
 
-export function getCard(table: GameTable, id: CardId): Card | null {
-    return searchById(table.cards, id);
+export function getCard(table: GameTable, id: CardId): Card {
+    const card = searchById(table.cards, id);
+    if (!card) {
+        throw new Error(`Card not found: ${id}`);
+    }
+    return card;
 }
 
-export function getPlayer(table: GameTable, id: PlayerId): Player | null {
-    return searchById(table.players, id);
+export function getPlayer(table: GameTable, id: PlayerId): Player {
+    const player = searchById(table.players, id);
+    if (!player) {
+        throw new Error(`Player not found: ${id}`);
+    }
+    return player;
 }

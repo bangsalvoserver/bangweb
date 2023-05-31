@@ -32,7 +32,7 @@ export default function GameScene({ connection, game, table, logs, users, lobbyO
   }, []);
 
   const newPlayerView = (player_id: PlayerId) => {
-    const player = getPlayer(table, player_id) as Player;
+    const player = getPlayer(table, player_id);
     const user = users.find(user => user.id === player.userid);
     
     return (
@@ -55,7 +55,7 @@ export default function GameScene({ connection, game, table, logs, users, lobbyO
     <>
       { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
       { table.status.request && 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
-      { table.pockets.discard_pile.slice(-1).map(id => <CardView key={id} card={getCard(table, id) as Card} /> )}
+      { table.pockets.discard_pile.slice(-1).map(id => <CardView key={id} card={getCard(table, id)} /> )}
       <div>{table.pockets.main_deck.length} cards in deck</div>
       { table.alive_players.map(newPlayerView) }
     </>

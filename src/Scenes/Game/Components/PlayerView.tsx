@@ -12,11 +12,11 @@ export default function PlayerView({ user, table, player }: PlayerProps) {
     return (
         <div>
             <LobbyUser user={user} />
-            <div>{player.pockets.player_character.length > 0 ? <CardView card={getCard(table, player.pockets.player_character[0]) as Card} /> : null }</div>
+            <div>{player.pockets.player_character.length > 0 ? <CardView card={getCard(table, player.pockets.player_character[0])} /> : null }</div>
             <div>{player.pockets.player_hand.length} cards in hand</div>
             <div>
                 {player.pockets.player_table.map(card_id => 
-                    <CardView key={card_id} card={getCard(table, card_id) as Card} />
+                    <CardView key={card_id} card={getCard(table, card_id)} />
                 )}
             </div>
         </div>

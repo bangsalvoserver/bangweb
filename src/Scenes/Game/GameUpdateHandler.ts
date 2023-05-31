@@ -1,7 +1,7 @@
 import { GameFlag } from "../../Messages/CardEnums";
 import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
-import { GameTable, Id, Player, PocketRef, TablePockets, getCard, newCard, newGameTable, newPlayer, newPocketRef, searchById } from "./GameTable";
+import { GameTable, Id, Player, PocketRef, TablePockets, getCard, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
 
 export interface GameUpdate {
     updateType: string,
@@ -85,7 +85,7 @@ function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<
 gameUpdateHandlers.remove_cards = (table: GameTable, { cards }: RemoveCardsUpdate): GameTable => {
     // Groups cards by pocket
     // NOTE pockets are compared by identity in the map, this could be optimized
-    const pocketCards = group(cards, id => getCard(table, id)?.pocket ?? null);
+    const pocketCards = group(cards, id => getCard(table, id).pocket);
 
     let [pockets, players] = [table.pockets, table.players];
 
@@ -193,21 +193,15 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
 
 // Removes a card from its pocket and moving it to another
 gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
-    const cardObj = getCard(table, card);
-    if (!cardObj) {
-        throw new Error("Card not found in MoveCardUpdate");
-    }
-
-    const pocketRef = newPocketRef(pocket, player);
+    let [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
     
-    let [pockets, players] = removeFromPocket(table.pockets, table.players, [card], cardObj.pocket);
+    const pocketRef = newPocketRef(pocket, player);
     [pockets, players] = addToPocket(pockets, players, [card], pocketRef);
 
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, pocket: pocketRef })),
-        players: players,
-        pockets: pockets
+        players, pockets
     };
 };
 
