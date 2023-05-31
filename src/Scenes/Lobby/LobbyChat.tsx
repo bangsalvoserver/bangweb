@@ -1,7 +1,8 @@
 import { MutableRefObject, SyntheticEvent, useRef } from "react";
 import { Connection } from "../../Messages/Connection";
 import { ChatMessage, UserId } from "../../Messages/ServerMessage";
-import { USERNAME_DISCONNECTED, UserValue } from "./LobbyUser";
+import { UserValue } from "./LobbyUser";
+import { getLocalizedLabel } from "../../Locale/Locale";
 
 export interface ChatProps {
     connection: Connection;
@@ -23,7 +24,7 @@ export default function LobbyChat({ connection, myUserId, users, messages }: Cha
 
     const newMessageTag = (user_id: UserId, message: string, index: number) => {
         if (user_id) {
-            const username = users.find(user => user.id == user_id)?.name ?? USERNAME_DISCONNECTED;
+            const username = users.find(user => user.id == user_id)?.name ?? getLocalizedLabel('ui', 'USER_DISCONNECTED');
             return (<li key={index}>{username} : {message}</li>);
         } else {
             return (<li key={index}>{message}</li>);

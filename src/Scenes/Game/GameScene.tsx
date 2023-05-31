@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { UserValue } from "../Lobby/LobbyUser";
-import { Game } from "./Game";
-import { getPlayer, Player, GameTable, getCard, Card } from "./GameTable";
-import PlayerView from "./Components/PlayerView";
+import { Connection } from "../../Messages/Connection";
 import { GameString, PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
-import { Connection } from "../../Messages/Connection";
-import { GameStringComponent } from "./Locale";
+import { UserValue } from "../Lobby/LobbyUser";
+import { GameStringComponent } from "../../Locale/Locale";
 import CardView from "./Components/CardView";
+import PlayerView from "./Components/PlayerView";
+import { Game } from "./Game";
+import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 
 const FRAMERATE = 60;
 
@@ -15,11 +15,12 @@ export interface GameSceneProps {
   connection: Connection;
   game: Game;
   table: GameTable;
+  logs: GameString[];
   users: UserValue[];
   lobbyOwner?: UserId;
 }
 
-export default function GameScene({ connection, game, table, users, lobbyOwner }: GameSceneProps) {
+export default function GameScene({ connection, game, table, logs, users, lobbyOwner }: GameSceneProps) {
   useEffect(() => {
     let startTime = Date.now();
     const interval = setInterval(() => {

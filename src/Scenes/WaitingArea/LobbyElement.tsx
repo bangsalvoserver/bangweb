@@ -1,4 +1,5 @@
 import { LobbyId } from "../../Messages/ServerMessage";
+import { getLocalizedLabel } from "../../Locale/Locale";
 
 export interface LobbyValue {
   id: LobbyId;
@@ -17,7 +18,7 @@ function LobbyElement({ lobby, onClickJoin }: LobbyElementProps) {
     <div>
     <span>{lobby.name}</span>
     <span>{lobby.num_players}/8</span>
-    <span>{lobby.state}</span>
+    <span>{getLocalizedLabel('LobbyState', lobby.state)}</span>
     <button onClick={() => onClickJoin(lobby.id)}>Join</button>
     </div>
   )

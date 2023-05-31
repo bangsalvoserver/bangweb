@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
+import { FlashCardUpdate, GameString, Milliseconds, ShortPauseUpdate } from "../../Messages/GameUpdate";
+import { AnimationBase, GameAnimation } from "./GameAnimation";
 import { GameUpdate } from "./GameUpdateHandler";
-import { AnimationBase, DispatchAnimation, GameAnimation } from "./GameAnimation";
-import { AnimationUpdate, FlashCardUpdate, GameString, Milliseconds, ShortPauseUpdate } from "../../Messages/GameUpdate";
 
 export class Game {
 
@@ -10,15 +10,6 @@ export class Game {
 
     private tableDispatch: Dispatch<GameUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
-
-    private updateHandlers = new Map<string, (update: any) => void>([
-        ['game_error', this.handleGameError],
-        ['game_log', this.handleGameLog],
-        ['game_prompt', this.handleGamePrompt],
-        ['flash_card', this.handleFlashCard],
-        ['short_pause', this.handleShortPause],
-        ['play_sound', this.handlePlaySound]
-    ]);
 
     constructor(tableDispatch: Dispatch<any>, setGameLogs: Dispatch<SetStateAction<GameString[]>>) {
         this.tableDispatch = tableDispatch;
@@ -40,9 +31,17 @@ export class Game {
 
                     console.log(JSON.stringify(update));
 
-                    const handler = this.updateHandlers.get(updateType);
-                    if (handler) {
-                        handler.call(this, updateValue);
+                    const updateHandlers: Record<string, (update: any) => void> = {
+                        game_error: this.handleGameError,
+                        game_log: this.handleGameLog,
+                        game_prompt: this.handleGamePrompt,
+                        flash_card: this.handleFlashCard,
+                        short_pause: this.handleShortPause,
+                        play_sound: this.handlePlaySound,
+                    };
+
+                    if (updateType in updateHandlers) {
+                        updateHandlers[updateType].call(this, updateValue);
                     } else {
                         this.tableDispatch({ updateType, updateValue });
                     }

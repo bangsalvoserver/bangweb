@@ -1,6 +1,7 @@
 import { ExpansionType } from "../../Messages/CardEnums";
 import { GameOptions } from "../../Messages/GameUpdate";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { getLocalizedLabel } from "../../Locale/Locale";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
@@ -11,7 +12,7 @@ type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T
 type GameOptionsOf<T> = { [Property in FilteredKeys<GameOptions, T>]: GameOptions[Property] };
 
 export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameOptionProps) {
-    const newExpansionCheckbox = (name: ExpansionType, label: string) => {
+    const newExpansionCheckbox = (name: ExpansionType) => {
         const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
             const oldValue = gameOptions.expansions.includes(name);
             const newValue = event.target.checked;
@@ -27,11 +28,11 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
 
         return (<>
             <input id={name} type="checkbox" checked={gameOptions.expansions.includes(name)} onChange={handleExpansionChange} />
-            <label htmlFor={name}>{label}</label>
+            <label htmlFor={name}>{getLocalizedLabel('ExpansionType', name)}</label>
         </>);
     };
 
-    const newOptionCheckbox = function(prop: keyof GameOptionsOf<boolean>, label: string) {
+    const newOptionCheckbox = function(prop: keyof GameOptionsOf<boolean>) {
         return (<>
             <input id={prop} type="checkbox" checked={gameOptions[prop]}
             onChange={event => {
@@ -40,13 +41,13 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                     [prop]: event.target.checked
                 });
             }} />
-            <label htmlFor={prop}>{label}</label>
+            <label htmlFor={prop}>{getLocalizedLabel('GameOptions', prop)}</label>
         </>)
     };
 
-    const newOptionNumber = function(prop: keyof GameOptionsOf<number>, label: string) {
+    const newOptionNumber = function(prop: keyof GameOptionsOf<number>) {
         return (<>
-            <label htmlFor={prop}>{label}</label>
+            <label htmlFor={prop}>{getLocalizedLabel('GameOptions', prop)}</label>
             <input id={prop} type="number" value={gameOptions[prop]}
             onChange={event => {
                 if (!isNaN(event.target.valueAsNumber)) {
@@ -61,25 +62,25 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
 
     return (
         <ul>
-            <li>{newExpansionCheckbox('dodgecity', 'Dodge City')}</li>
-            <li>{newExpansionCheckbox('goldrush', 'Gold Rush')}</li>
-            <li>{newExpansionCheckbox('armedanddangerous', 'Armed & Dangerous')}</li>
-            <li>{newExpansionCheckbox('greattrainrobbery', 'Great Train Robbery')}</li>
-            <li>{newExpansionCheckbox('valleyofshadows', 'Valley Of Shadows')}</li>
-            <li>{newExpansionCheckbox('highnoon', 'High Noon')}</li>
-            <li>{newExpansionCheckbox('fistfulofcards', 'Fistful Of Cards')}</li>
-            <li>{newExpansionCheckbox('wildwestshow', 'Wild West Show')}</li>
-            <li>{newExpansionCheckbox('thebullet', 'The Bullet')}</li>
-            <li>{newOptionCheckbox('enable_ghost_cards', 'Enable Ghost Cards')}</li>
-            <li>{newOptionCheckbox('character_choice', 'Character Choice')}</li>
-            <li>{newOptionCheckbox('allow_beer_in_duel', 'Allow Beer in Duel')}</li>
-            <li>{newOptionCheckbox('quick_discard_all', 'Quick Discard All')}</li>
-            <li>{newOptionNumber('scenario_deck_size', 'Scenario Deck Size')}</li>
-            <li>{newOptionNumber('num_bots', 'Number of Bots')}</li>
-            <li>{newOptionNumber('damage_timer', 'Damage Timer (ms):')}</li>
-            <li>{newOptionNumber('escape_timer', 'Escape Timer (ms):')}</li>
-            <li>{newOptionNumber('bot_play_timer', 'Bot Play Timer (ms):')}</li>
-            <li>{newOptionNumber('tumbleweed_timer', 'Tumbleweed Timer (ms):')}</li>
+            <li>{newExpansionCheckbox('dodgecity')}</li>
+            <li>{newExpansionCheckbox('goldrush')}</li>
+            <li>{newExpansionCheckbox('armedanddangerous')}</li>
+            <li>{newExpansionCheckbox('greattrainrobbery')}</li>
+            <li>{newExpansionCheckbox('valleyofshadows')}</li>
+            <li>{newExpansionCheckbox('highnoon')}</li>
+            <li>{newExpansionCheckbox('fistfulofcards')}</li>
+            <li>{newExpansionCheckbox('wildwestshow')}</li>
+            <li>{newExpansionCheckbox('thebullet')}</li>
+            <li>{newOptionCheckbox('enable_ghost_cards')}</li>
+            <li>{newOptionCheckbox('character_choice')}</li>
+            <li>{newOptionCheckbox('allow_beer_in_duel')}</li>
+            <li>{newOptionCheckbox('quick_discard_all')}</li>
+            <li>{newOptionNumber('scenario_deck_size')}</li>
+            <li>{newOptionNumber('num_bots')}</li>
+            <li>{newOptionNumber('damage_timer')}</li>
+            <li>{newOptionNumber('escape_timer')}</li>
+            <li>{newOptionNumber('bot_play_timer')}</li>
+            <li>{newOptionNumber('tumbleweed_timer')}</li>
         </ul>
     );
 }

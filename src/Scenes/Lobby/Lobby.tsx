@@ -89,7 +89,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
 
   const getGameScene = () => {
     return (
-      <GameScene connection={connection} game={game.current as Game} table={table} users={users} lobbyOwner={lobbyOwner} />
+      <GameScene connection={connection} game={game.current as Game} table={table} logs={gameLogs} users={users} lobbyOwner={lobbyOwner} />
     );
   };
 

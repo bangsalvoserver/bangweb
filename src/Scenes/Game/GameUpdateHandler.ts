@@ -8,41 +8,6 @@ export interface GameUpdate {
     updateValue?: any
 }
 
-export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTable {
-    let handler = gameUpdateHandlers.get(update.updateType);
-    if (handler) {
-        return handler(table, update.updateValue);
-    } else {
-        return table;
-    }
-}
-
-const gameUpdateHandlers = new Map<string, (table: GameTable, update: any) => GameTable>([
-    ['reset', handleReset],
-    ['add_cards', handleAddCards],
-    ['remove_cards', handleRemoveCards],
-    ['move_card', handleMoveCard],
-    ['add_cubes', handleAddCubes],
-    ['move_cubes', handleMoveCubes],
-    ['move_scenario_deck', handleMoveScenarioDeck],
-    ['move_train', handleMoveTrain],
-    ['deck_shuffled', handleDeckShuffled],
-    ['show_card', handleShowCard],
-    ['hide_card', handleHideCard],
-    ['tap_card', handleTapCard],
-    ['player_add', handlePlayerAdd],
-    ['player_order', handlePlayerOrder],
-    ['player_hp', handlePlayerHp],
-    ['player_gold', handlePlayerGold],
-    ['player_show_role', handlePlayerShowRole],
-    ['player_status', handlePlayerStatus],
-    ['switch_turn', handleSwitchTurn],
-    ['request_status', handleRequestStatus],
-    ['status_ready', handleRequestStatus],
-    ['game_flags', handleGameFlags],
-    ['status_clear', handleStatusClear]
-]);
-
 /// GameTable.players and GameTable.cards are sorted by id
 /// So that finding an object in those arrays is O(log n)
 function sortById(lhs: Id, rhs: Id) {
@@ -89,13 +54,15 @@ function removeFromPocket(pockets: TablePockets, players: Player[], cardsToRemov
     return editPocketMap(pockets, players, pocket, cards => cards.filter(id => !cardsToRemove.includes(id)));
 }
 
-/// Handles the 'reset' update, recreating the game table
-function handleReset(table: GameTable, userId?: UserId): GameTable {
-    return newGameTable(userId ?? table.myUserId);
-}
+const gameUpdateHandlers: Record<string, (table: GameTable, update: any) => GameTable> = {};
 
-/// Handles the 'add_cards' update, creates new cards and adds them in the specified pocket
-function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable {
+/// Recreates the game table
+gameUpdateHandlers.reset = (table: GameTable, userId?: UserId): GameTable => {
+    return newGameTable(userId ?? table.myUserId);
+};
+
+/// Creates new cards and adds them in the specified pocket
+gameUpdateHandlers.add_cards = (table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable => {
     const pocketRef = newPocketRef(pocket, player);
     const [pockets, players] = addToPocket(table.pockets, table.players, card_ids.map(card => card.id), pocketRef);
     return {
@@ -103,7 +70,7 @@ function handleAddCards(table: GameTable, { card_ids, pocket, player }: AddCards
         cards: table.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocketRef))).sort(sortById),
         pockets, players
     };
-}
+};
 
 function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<Key, Value[]> {
     let map = new Map<Key, Value[]>();
@@ -114,8 +81,8 @@ function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<
     return map;
 }
 
-/// Handles the 'remove_cards' update, removes the specified cards
-function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): GameTable {
+/// Removes the specified cards
+gameUpdateHandlers.remove_cards = (table: GameTable, { cards }: RemoveCardsUpdate): GameTable => {
     // Groups cards by pocket
     // NOTE pockets are compared by identity in the map, this could be optimized
     const pocketCards = group(cards, id => getCard(table, id)?.pocket ?? null);
@@ -133,7 +100,7 @@ function handleRemoveCards(table: GameTable, { cards }: RemoveCardsUpdate): Game
         cards: table.cards.filter(card => !cards.includes(card.id)),
         pockets, players
     };
-}
+};
 
 function tryRotate<T>(values: T[], value?: T): boolean {
     if (value) {
@@ -152,8 +119,8 @@ function rotatePlayers(players: PlayerId[], selfPlayer?: PlayerId, firstPlayer?:
     return players;
 };
 
-// Handles the 'player_add' update, creates new players with specified player_id and user_id
-function handlePlayerAdd(table: GameTable, { players }: PlayerAddUpdate): GameTable {
+// Creates new players with specified player_id and user_id
+gameUpdateHandlers.player_add = (table: GameTable, { players }: PlayerAddUpdate): GameTable => {
     const newPlayers = table.players.concat(players.map(({player_id, user_id}) => newPlayer(player_id, user_id))).sort(sortById);
     const selfPlayer = newPlayers.find(p => p.userid === table.myUserId)?.id;
     return {
@@ -162,39 +129,39 @@ function handlePlayerAdd(table: GameTable, { players }: PlayerAddUpdate): GameTa
         alive_players: rotatePlayers(table.alive_players.concat(players.map(player => player.player_id)), selfPlayer),
         self_player: selfPlayer
     };
-}
+};
 
 // Handles the 'player_order' update, changing the order of how players are seated
-function handlePlayerOrder(table: GameTable, { players }: PlayerOrderUpdate): GameTable {
+gameUpdateHandlers.player_order = (table: GameTable, { players }: PlayerOrderUpdate): GameTable => {
     return { ...table, alive_players: rotatePlayers(players, table.self_player, table.alive_players.at(0)) };
-}
+};
 
-// Handles the 'player_hp' update, changes a player's hp
-function handlePlayerHp(table: GameTable, { player, hp }: PlayerHpUpdate): GameTable {
+// Changes a player's hp
+gameUpdateHandlers.player_hp = (table: GameTable, { player, hp }: PlayerHpUpdate): GameTable => {
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, status: { ...p.status, hp }}))
     };
-}
+};
 
-// Handles the 'player_hp' update, changes a player's gold
-function handlePlayerGold(table: GameTable, { player, gold }: PlayerGoldUpdate): GameTable {
+// Changes a player's gold
+gameUpdateHandlers.player_gold = (table: GameTable, { player, gold }: PlayerGoldUpdate): GameTable => {
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, status: { ...p.status, gold }}))
     };
-}
+};
 
-// Handles the 'player_hp' update, changes a player's role
-function handlePlayerShowRole(table: GameTable, { player, role }: PlayerShowRoleUpdate): GameTable {
+// Changes a player's role
+gameUpdateHandlers.show_role = (table: GameTable, { player, role }: PlayerShowRoleUpdate): GameTable => {
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, status: { ...p.status, role }}))
     };
-}
+};
 
-// Handles the 'player_hp' update, changes a player's status
-function handlePlayerStatus(table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable {
+// Changes a player's status
+gameUpdateHandlers.player_status = (table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable => {
     let newAlivePlayers = table.alive_players;
     let newDeadPlayers = table.dead_players;
     if (flags.includes('removed') && newAlivePlayers.includes(player)) {
@@ -211,10 +178,10 @@ function handlePlayerStatus(table: GameTable, { player, flags, range_mod, weapon
         alive_players: newAlivePlayers,
         dead_players: newDeadPlayers
     };
-}
+};
 
-/// Handles the 'switch_turn' update, changes the current_turn field
-function handleSwitchTurn(table: GameTable, player: PlayerId): GameTable {
+/// Changes the current_turn field
+gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable => {
     return {
         ...table,
         status: {
@@ -222,10 +189,10 @@ function handleSwitchTurn(table: GameTable, player: PlayerId): GameTable {
             current_turn: player
         }
     };
-}
+};
 
-// Handles the 'move_card' update, removing a card from its pocket and moving it to another
-function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable {
+// Removes a card from its pocket and moving it to another
+gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
     const cardObj = getCard(table, card);
     if (!cardObj) {
         throw new Error("Card not found in MoveCardUpdate");
@@ -242,11 +209,10 @@ function handleMoveCard(table: GameTable, { card, player, pocket }: MoveCardUpda
         players: players,
         pockets: pockets
     };
-}
+};
 
-// Handles the 'deck_shuffled' update
-// This moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
-function handleDeckShuffled(table: GameTable, { pocket }: DeckShuffledUpdate): GameTable {
+// Moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
+gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket }: DeckShuffledUpdate): GameTable => {
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
     return {
         ...table,
@@ -263,34 +229,34 @@ function handleDeckShuffled(table: GameTable, { pocket }: DeckShuffledUpdate): G
             [pocket]: table.pockets[fromPocket]
         }
     };
-}
+};
 
-// Handles the 'show_card' update, sets the cardData field
-function handleShowCard(table: GameTable, { card, info }: ShowCardUpdate): GameTable {
+// Sets the cardData field
+gameUpdateHandlers.show_card = (table: GameTable, { card, info }: ShowCardUpdate): GameTable => {
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, cardData: info }))
     };
-}
+};
 
 // Handles the 'hide_card' update, clears the cardData field
-function handleHideCard(table: GameTable, { card }: HideCardUpdate): GameTable {
+gameUpdateHandlers.hide_card = (table: GameTable, { card }: HideCardUpdate): GameTable => {
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, cardData: { deck: card.cardData.deck } }))
     };
 }
 
-// Handles the 'tap_card' update, sets the inactive field
-function handleTapCard(table: GameTable, { card, inactive }: TapCardUpdate): GameTable {
+// Sets the inactive field
+gameUpdateHandlers.tap_card = (table: GameTable, { card, inactive }: TapCardUpdate): GameTable => {
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, inactive }))
     };
 }
 
-// Handles the 'add_cubes' update, adding cubes to a target_card (or the table if not set)
-function handleAddCubes(table: GameTable, { num_cubes, target_card }: AddCubesUpdate): GameTable {
+// Adds cubes to a target_card (or the table if not set)
+gameUpdateHandlers.add_cubes = (table: GameTable, { num_cubes, target_card }: AddCubesUpdate): GameTable => {
     let tableCards = table.cards;
     let tableCubes = table.status.num_cubes;
     if (target_card) {
@@ -303,10 +269,10 @@ function handleAddCubes(table: GameTable, { num_cubes, target_card }: AddCubesUp
         status: { ...table.status, num_cubes: tableCubes },
         cards: tableCards
     };
-}
+};
 
-// Handles the 'move_cubes' update, moving `num_cubes` from origin_card (or the table if not set) to target_card (or the table if not set)
-function handleMoveCubes(table: GameTable, { num_cubes, origin_card, target_card }: MoveCubesUpdate): GameTable {
+// Moves `num_cubes` from origin_card (or the table if not set) to target_card (or the table if not set)
+gameUpdateHandlers.move_cubes = (table: GameTable, { num_cubes, origin_card, target_card }: MoveCubesUpdate): GameTable => {
     let tableCubes = table.status.num_cubes;
     let tableCards = table.cards;
     
@@ -328,10 +294,10 @@ function handleMoveCubes(table: GameTable, { num_cubes, origin_card, target_card
         },
         cards: tableCards
     };
-}
+};
 
-// Handles the 'move_scenario_deck' update, changes the scenario_deck_holder or wws_scenario_deck_holder field
-function handleMoveScenarioDeck(table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable {
+// Changes the scenario_deck_holder or wws_scenario_deck_holder field
+gameUpdateHandlers.move_scenario_deck = (table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable => {
     return {
         ...table,
         status: {
@@ -339,10 +305,10 @@ function handleMoveScenarioDeck(table: GameTable, { player, pocket }: MoveScenar
             [pocket + '_holder']: player
         }
     }
-}
+};
 
-// Handles the 'move_train' update, changes the train_position field
-function handleMoveTrain(table: GameTable, { position }: MoveTrainUpdate): GameTable {
+// Changes the train_position field
+gameUpdateHandlers.move_train = (table: GameTable, { position }: MoveTrainUpdate): GameTable => {
     return {
         ...table,
         status: {
@@ -350,10 +316,10 @@ function handleMoveTrain(table: GameTable, { position }: MoveTrainUpdate): GameT
             train_position: position
         }
     };
-}
+};
 
-// Handles the 'game_flags' update, changes the status.flags field
-function handleGameFlags(table: GameTable, flags: GameFlag[]): GameTable {
+// Changes the status.flags field
+gameUpdateHandlers.game_flags = (table: GameTable, flags: GameFlag[]): GameTable => {
     return {
         ...table,
         status: {
@@ -361,10 +327,10 @@ function handleGameFlags(table: GameTable, flags: GameFlag[]): GameTable {
             flags
         }
     };
-}
+};
 
 // Handles the 'request_status' and the 'status_ready' updates, changes the status.request field
-function handleRequestStatus(table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable {
+gameUpdateHandlers.request_status = (table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable => {
     return {
         ...table,
         status: {
@@ -372,10 +338,10 @@ function handleRequestStatus(table: GameTable, status: RequestStatusArgs | Statu
             request: status
         }
     };
-}
+};
 
-// Handles the 'status_clear' update, clearing the status.request field
-function handleStatusClear(table: GameTable): GameTable {
+// Clears the status.request field
+gameUpdateHandlers.status_clear = (table: GameTable): GameTable => {
     return {
         ...table,
         status: {
@@ -383,4 +349,12 @@ function handleStatusClear(table: GameTable): GameTable {
             request: undefined
         }
     };
+};
+
+export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTable {
+    if (update.updateType in gameUpdateHandlers) {
+        return gameUpdateHandlers[update.updateType](table, update.updateValue);
+    } else {
+        return table;
+    }
 }
