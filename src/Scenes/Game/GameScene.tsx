@@ -21,8 +21,12 @@ export interface GameSceneProps {
 
 export default function GameScene({ connection, game, table, users, lobbyOwner }: GameSceneProps) {
   useEffect(() => {
-    const tickTime = 1000 / FRAMERATE;
-    const interval = setInterval(() => game.tick(tickTime), tickTime);
+    let startTime = Date.now();
+    const interval = setInterval(() => {
+      let endTime = Date.now();
+      game.tick(endTime - startTime);
+      startTime = endTime;
+    }, 1000 / FRAMERATE);
     return () => clearInterval(interval);
   }, []);
 
