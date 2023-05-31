@@ -1,6 +1,7 @@
 import LobbyUser, { UserValue } from "../../Lobby/LobbyUser";
-import { Card, GameTable, Player, getCard } from "../GameTable";
+import { GameTable, Player, getCard } from "../GameTable";
 import CardView from "./CardView";
+import "./PlayerView.css";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -9,8 +10,13 @@ export interface PlayerProps {
 }
 
 export default function PlayerView({ user, table, player }: PlayerProps) {
+    let className = '';
+    if (player.id == table.status.current_turn) {
+        className = 'current-turn';
+    }
+
     return (
-        <div>
+        <div className={className}>
             <LobbyUser user={user} />
             <div>{player.pockets.player_character.length > 0 ? <CardView card={getCard(table, player.pockets.player_character[0])} /> : null }</div>
             <div>{player.pockets.player_hand.length} cards in hand</div>
