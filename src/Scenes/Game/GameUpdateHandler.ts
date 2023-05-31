@@ -1,5 +1,5 @@
-import { GameFlag, PlayerPocketType, PocketType, TablePocketType } from "../../Messages/CardEnums";
-import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
+import { GameFlag } from "../../Messages/CardEnums";
+import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { GameTable, Id, Player, PocketRef, TablePockets, getCard, newCard, newGameTable, newPlayer, newPocketRef, searchById } from "./GameTable";
 
@@ -68,20 +68,16 @@ function editById<T extends Id>(values: T[], id: number | undefined, mapper: (va
 
 function editPocketMap(
     pockets: TablePockets, players: Player[], pocket: PocketRef | undefined,
-    mapper: (cards: CardId[]) => CardId[]): [TablePockets, Player[]]
+    cardMapper: (cards: CardId[]) => CardId[]): [TablePockets, Player[]]
 {
-    const checkedMapper = <T extends { [key: string]: CardId[] }>(pocketMap: T, pocketName: keyof T): T => {
-        if (pocketName in pocketMap) {
-            return { ...pocketMap, [pocketName]: mapper(pocketMap[pocketName]) };
-        } else {
-            throw new Error(`invalid pocketName: ${pocketName.toString()}`);
-        }
+    const mapper = <T extends { [key: string]: CardId[] }>(pocketMap: T, pocketName: keyof T): T => {
+        return { ...pocketMap, [pocketName]: cardMapper(pocketMap[pocketName]) };
     };
     if (pocket) {
         if ('player' in pocket) {
-            players = editById(players, pocket.player, player => ({ ...player, pockets: checkedMapper(player.pockets, pocket.name)}));
+            players = editById(players, pocket.player, player => ({ ...player, pockets: mapper(player.pockets, pocket.name)}));
         } else {
-            pockets = checkedMapper(pockets, pocket.name);
+            pockets = mapper(pockets, pocket.name);
         }
     }
     return [pockets, players];

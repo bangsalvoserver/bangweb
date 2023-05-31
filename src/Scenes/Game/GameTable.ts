@@ -35,7 +35,7 @@ export interface Card extends Id {
 export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketRef | undefined {
     if (pocketName == 'none') {
         return undefined;
-    } else if (player) {
+    } else if (player && pocketName.startsWith('player_')) {
         return { name: pocketName as PlayerPocketType, player };
     } else {
         return { name: pocketName as TablePocketType };
