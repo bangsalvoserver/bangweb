@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { UserValue } from "../Lobby/LobbyUser";
 import { Game } from "./Game";
-import { getPlayer, Player, GameTable } from "./GameTable";
+import { getPlayer, Player, GameTable, getCard } from "./GameTable";
 import PlayerView from "./Components/PlayerView";
 import { GameString, PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { Connection } from "../../Messages/Connection";
 import { GameStringComponent } from "./Locale";
+import CardView from "./Components/CardView";
 
 const FRAMERATE = 60;
 
@@ -48,8 +49,8 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
   return (
     <>
       { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
-      {/* {table.status.logs.map(newGameStringComponent)} */}
       { table.status.request && 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
+      { table.pockets.discard_pile.length > 0 ? <CardView table={table} card={table.pockets.discard_pile[table.pockets.discard_pile.length - 1]} /> : null }
       { table.alive_players.map(newPlayerView) }
     </>
   );

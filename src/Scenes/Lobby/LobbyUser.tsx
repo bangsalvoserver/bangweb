@@ -20,7 +20,7 @@ export default function LobbyUser({ user }: LobbyUserProps) {
   const username = user?.name ?? USERNAME_DISCONNECTED;
   return (
     <div>
-    <img src={propic} />
+    <img style={{display:'inline'}} src={propic} />
     {username}
     </div>
   );
