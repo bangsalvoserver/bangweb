@@ -11,8 +11,8 @@ export interface AnimationUpdate {
 }
 
 export interface FormatInteger { integer: number };
-export interface FormatCard { card: { name: string, sign: CardSign } };
-export interface FormatPlayer { player: PlayerId };
+export interface FormatCard { card: { name: string, sign: CardSign } | {} };
+export interface FormatPlayer { player: PlayerId | null };
 export type FormatArg = FormatInteger | FormatCard | FormatPlayer;
 
 export interface GameString {

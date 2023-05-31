@@ -29,24 +29,21 @@ export function getLocalizedLabel(group: string, name: string, ...formatArgs: st
 }
 
 export interface CardNameProps {
-    name?: string;
+    name: string;
     sign?: CardSign;
 }
 
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
-    if (name) {
-        const localizedName = name in cardRegistry ? cardRegistry[name] : name;
-        if (sign && sign.rank != 'none' && sign.suit != 'none') {
-            return (<>
-                {localizedName} (
-                <img style={{display:'inline'}} src={`/cards/misc/${sign.rank}.png`}/>
-                <img style={{display:'inline'}} src={`/cards/misc/suit_${sign.suit}.png`}/>)
-            </>);
-        } else {
-            return (<>{localizedName}</>);
-        }
+    const localizedName = name in cardRegistry ? cardRegistry[name] : name;
+    if (sign && sign.rank != 'none' && sign.suit != 'none') {
+        return (<>
+            {localizedName} (
+            <img style={{display:'inline'}} src={`/cards/misc/${sign.rank}.png`}/>
+            <img style={{display:'inline'}} src={`/cards/misc/suit_${sign.suit}.png`}/>)
+        </>);
+    } else {
+        return (<>{localizedName}</>);
     }
-    return (<>{getLocalizedLabel('ui', 'UNKNOWN_CARD')}</>);
 }
 
 export interface GameStringProps {
@@ -60,12 +57,22 @@ export function GameStringComponent({ table, users, message}: GameStringProps): 
         const value = gameStringRegistry[message.format_str];
         if (typeof value == 'function') {
             return value(...message.format_args.map(arg => {
-                if ('integer' in arg) return (<>{arg.integer}</>)
-                if ('card' in arg) return LocalizedCardName({name: arg.card.name, sign: arg.card.sign});
-                if ('player' in arg) {
-                    const userid = getPlayer(table, arg.player)?.userid;
-                    const user = users.find(user => user.id === userid);
-                    return <>{getUsername(user)}</>;
+                if ('integer' in arg) {
+                    return <>{arg.integer}</>;
+                } else if ('card' in arg) {
+                    if ('name' in arg.card) {
+                        return <LocalizedCardName name={arg.card.name} sign={arg.card.sign} />;
+                    } else {
+                        return <>{getLocalizedLabel('ui', 'UNKNOWN_CARD')}</>;
+                    }
+                } else if ('player' in arg) {
+                    if (arg.player) {
+                        const userid = getPlayer(table, arg.player).userid;
+                        const user = users.find(user => user.id === userid);
+                        return <>{getUsername(user)}</>;
+                    } else {
+                        return <>{getLocalizedLabel('ui', 'UNKNOWN_PLAYER')}</>
+                    }
                 }
                 throw new Error('Invalid argument in format_args');
             }));
