@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { UserValue } from "../Lobby/LobbyUser";
 import { Game } from "./Game";
-import { getPlayer, Player, GameTable, getCard } from "./GameTable";
+import { getPlayer, Player, GameTable, getCard, Card } from "./GameTable";
 import PlayerView from "./Components/PlayerView";
 import { GameString, PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
@@ -50,7 +50,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
     <>
       { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
       { table.status.request && 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
-      { table.pockets.discard_pile.length > 0 ? <CardView table={table} card={table.pockets.discard_pile[table.pockets.discard_pile.length - 1]} /> : null }
+      { table.pockets.discard_pile.slice(-1).map(id => <CardView key={id} card={getCard(table, id) as Card} /> )}
       <div>{table.pockets.main_deck.length} cards in deck</div>
       { table.alive_players.map(newPlayerView) }
     </>

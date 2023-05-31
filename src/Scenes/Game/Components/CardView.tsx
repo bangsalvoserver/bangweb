@@ -1,17 +1,14 @@
-import { CardId } from "../../../Messages/GameUpdate";
-import { Card, GameTable, getCard } from "../GameTable";
+import { Card } from "../GameTable";
 import { LocalizedCardName } from "../Locale";
 
 export interface CardProps {
-    table: GameTable;
-    card: CardId;
+    card: Card;
 }
 
-export default function CardView({ table, card }: CardProps) {
-    const cardObj = getCard(table, card) as Card;
+export default function CardView({ card }: CardProps) {
     return (
         <div>
-            {'name' in cardObj.cardData ? <LocalizedCardName name={cardObj.cardData.name} sign={cardObj.cardData.sign} /> : cardObj.cardData.deck }
+            {'name' in card.cardData ? <LocalizedCardName name={card.cardData.name} sign={card.cardData.sign} /> : card.cardData.deck }
         </div>
     )
 }
