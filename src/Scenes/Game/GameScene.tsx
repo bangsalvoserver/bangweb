@@ -51,6 +51,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
       { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
       { table.status.request && 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
       { table.pockets.discard_pile.length > 0 ? <CardView table={table} card={table.pockets.discard_pile[table.pockets.discard_pile.length - 1]} /> : null }
+      <div>{table.pockets.main_deck.length} cards in deck</div>
       { table.alive_players.map(newPlayerView) }
     </>
   );
