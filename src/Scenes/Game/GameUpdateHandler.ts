@@ -211,7 +211,7 @@ gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket }: DeckShuffledUp
     return {
         ...table,
         cards: table.cards.map(card => {
-            if (card.pocket?.name === pocket) {
+            if (card.pocket?.name === fromPocket) {
                 return { ...card, cardData: { deck: card.cardData.deck }, pocket: { name: pocket } };
             } else {
                 return card;
