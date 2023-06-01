@@ -13,9 +13,6 @@
 }
 
 @keyframes move-card {
-    from {
-        transform: translate(0, 0);
-    }
     to {
         transform: translate(var(--diffX), var(--diffY));
     }

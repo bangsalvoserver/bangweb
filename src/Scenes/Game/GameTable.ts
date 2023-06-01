@@ -1,6 +1,6 @@
 import { CardData } from "../../Messages/CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "../../Messages/CardEnums";
-import { CardId, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../Messages/GameUpdate";
+import { CardId, GameString, Milliseconds, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 
 export interface Id {
@@ -28,6 +28,7 @@ export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
     pocket: PocketRef;
 
+    flipping?: Milliseconds;
     inactive: boolean;
     num_cubes: number;
 }

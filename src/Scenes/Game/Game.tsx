@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { FlashCardUpdate, GameString, Milliseconds, MoveCardUpdate, ShortPauseUpdate } from "../../Messages/GameUpdate";
+import { FlashCardUpdate, GameString, HideCardUpdate, Milliseconds, MoveCardUpdate, ShortPauseUpdate, ShowCardUpdate } from "../../Messages/GameUpdate";
 import { GameUpdate } from "./GameUpdateHandler";
 import { AnimationState } from "./GameAnimation";
 import { getCard, newPocketRef } from "./GameTable";
@@ -49,13 +49,15 @@ export class Game {
                 short_pause: this.handleShortPause,
                 play_sound: this.handlePlaySound,
                 move_card: this.handleMoveCard,
+                show_card: this.handleFlipCard,
+                hide_card: this.handleFlipCard
             };
 
             if (updateType in updateHandlers) {
                 updateHandlers[updateType].call(this, updateValue);
-            } else {
-                this.tableDispatch({ updateType, updateValue });
             }
+            this.tableDispatch({ updateType, updateValue });
+
             if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
                 this.updateTimer = updateValue.duration as Milliseconds;
             }
@@ -88,10 +90,11 @@ export class Game {
 
     private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
         const destPocket = newPocketRef(pocket, player);
-
-        this.tableDispatch({ updateType:'move_card_begin', updateValue: { card }} );
-        this.queuedUpdates.unshift({ updateType:'move_card_end', updateValue: { card: card, pocket: destPocket }} );
-
+        this.queuedUpdates.unshift({ updateType: 'move_card_end', updateValue: { card: card, pocket: destPocket } });
         this.setAnimationState({move_card: { card, destPocket, duration }});
     };
+
+    private handleFlipCard({ card }: ShowCardUpdate) {
+        this.queuedUpdates.unshift({ updateType: 'flip_card_end', updateValue: { card } });
+    }
 }

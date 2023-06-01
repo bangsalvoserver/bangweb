@@ -192,7 +192,7 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
 };
 
 // Removes a card from its pocket
-gameUpdateHandlers.move_card_begin = (table: GameTable, { card }: { card: CardId }): GameTable => {
+gameUpdateHandlers.move_card = (table: GameTable, { card }: MoveCardUpdate): GameTable => {
     const [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
     return {... table, players, pockets };
 };
@@ -229,18 +229,25 @@ gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket }: DeckShuffledUp
 };
 
 // Sets the cardData field
-gameUpdateHandlers.show_card = (table: GameTable, { card, info }: ShowCardUpdate): GameTable => {
+gameUpdateHandlers.show_card = (table: GameTable, { card, info, duration }: ShowCardUpdate): GameTable => {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, cardData: info }))
+        cards: editById(table.cards, card, card => ({ ...card, flipping: duration, cardData: info }))
     };
 };
 
 // Resets the cardData field
-gameUpdateHandlers.hide_card = (table: GameTable, { card }: HideCardUpdate): GameTable => {
+gameUpdateHandlers.hide_card = (table: GameTable, { card, duration }: HideCardUpdate): GameTable => {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, cardData: { deck: card.cardData.deck } }))
+        cards: editById(table.cards, card, card => ({ ...card, flipping: duration, cardData: { deck: card.cardData.deck } }))
+    };
+}
+
+gameUpdateHandlers.flip_card_end = (table: GameTable, { card }: { card: CardId }): GameTable => {
+    return {
+        ...table,
+        cards: editById(table.cards, card, card => ({ ...card, flipping: undefined }))
     };
 }
 
