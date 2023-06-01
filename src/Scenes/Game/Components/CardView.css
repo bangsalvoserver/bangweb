@@ -54,19 +54,32 @@
     transform: translate(-50%, -50%);
 }
 
-.card-flip-animation, .card-unflip-animation {
-    animation-name: flip-card;
+.card-animation {
     animation-duration: var(--duration);
     animation-fill-mode: forwards;
     transition: ease-in-out;
 }
 
-.card-unflip-animation {
+.card-animation-reverse {
     animation-direction: reverse;
+}
+
+.card-animation-flip {
+    animation-name: flip-card;
 }
 
 @keyframes flip-card {
     to {
         transform: rotateY(180deg)
+    }
+}
+
+.card-animation-turn {
+    animation-name: turn-card;
+}
+
+@keyframes turn-card {
+    to {
+        transform: rotate(90deg);
     }
 }

@@ -23,32 +23,40 @@ export default function CardView({ card }: CardProps) {
         imageSrc = backfaceSrc;
     }
 
-    let imageClass = 'card-view';
-    if (card.inactive) {
-        imageClass += ' card-horizontal';
-    }
     let style: CSSProperties | undefined;
+    let classes = ['card-view'];
 
-    if (card.flipping) {
-        if (card.cardData) {
-            imageClass += ' card-unflip-animation';
-        } else {
-            imageClass += ' card-flip-animation';
-        }
+    if (card.animation) {
+        const [cardAnimation, duration] = card.animation;
         style = {
-            '--duration': card.flipping + 'ms'
+            '--duration': duration + 'ms'
         } as CSSProperties;
+
+        classes.push('card-animation');
+
+        switch (cardAnimation) {
+        case 'flipping':
+            classes.push('card-animation-flip');
+            if (card.cardData) classes.push('card-animation-reverse');
+            break;
+        case 'turning':
+            classes.push('card-animation-turn');
+            if (!card.inactive) classes.push('card-animation-reverse');
+            break;
+        }
+    } else if (card.inactive) {
+        classes.push('card-horizontal');
     }
 
     return (
-        <div style={style} className={imageClass}>
+        <div style={style} className={classes.join(' ')}>
             <div className="card-front">
                 <img className="card-view-img" src={imageSrc}/>
                 {'sign' in card.cardData ? <div className="card-view-inner">
                     <CardSignView sign={card.cardData.sign} />
                 </div> : null}
             </div>
-            { card.flipping ?
+            { card.animation && card.animation[0] == 'flipping' ?
             <div className="card-back">
                 <img className="card-view-img" src={backfaceSrc} />
             </div> : null}

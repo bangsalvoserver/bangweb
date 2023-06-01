@@ -232,7 +232,7 @@ gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket }: DeckShuffledUp
 gameUpdateHandlers.show_card = (table: GameTable, { card, info, duration }: ShowCardUpdate): GameTable => {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, flipping: duration, cardData: info }))
+        cards: editById(table.cards, card, card => ({ ...card, animation: ['flipping', duration], cardData: info }))
     };
 };
 
@@ -240,22 +240,22 @@ gameUpdateHandlers.show_card = (table: GameTable, { card, info, duration }: Show
 gameUpdateHandlers.hide_card = (table: GameTable, { card, duration }: HideCardUpdate): GameTable => {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, flipping: duration, cardData: { deck: card.cardData.deck } }))
-    };
-}
-
-gameUpdateHandlers.flip_card_end = (table: GameTable, { card }: { card: CardId }): GameTable => {
-    return {
-        ...table,
-        cards: editById(table.cards, card, card => ({ ...card, flipping: undefined }))
+        cards: editById(table.cards, card, card => ({ ...card, animation: ['flipping', duration], cardData: { deck: card.cardData.deck } }))
     };
 }
 
 // Sets the inactive field
-gameUpdateHandlers.tap_card = (table: GameTable, { card, inactive }: TapCardUpdate): GameTable => {
+gameUpdateHandlers.tap_card = (table: GameTable, { card, inactive, duration }: TapCardUpdate): GameTable => {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, inactive }))
+        cards: editById(table.cards, card, card => ({ ...card, inactive, animation: ['turning', duration] }))
+    };
+}
+
+gameUpdateHandlers.card_animation_end = (table: GameTable, { card }: { card: CardId }): GameTable => {
+    return {
+        ...table,
+        cards: editById(table.cards, card, card => ({ ...card, animation: undefined }))
     };
 }
 

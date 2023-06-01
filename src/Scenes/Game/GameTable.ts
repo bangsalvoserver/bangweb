@@ -24,11 +24,14 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
 
 export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
 
+export type CardAnimation = 'flipping' | 'turning';
+
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
     pocket: PocketRef;
 
-    flipping?: Milliseconds;
+    animation?: [CardAnimation, Milliseconds];
+
     inactive: boolean;
     num_cubes: number;
 }
