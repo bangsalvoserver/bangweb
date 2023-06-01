@@ -9,13 +9,12 @@
 
 .card-front, .card-back {
     height: min-content;
-    position: absolute;
+    position: relative;
     backface-visibility: hidden;
-    top: 0;
-    left: 0;
 }
 
 .card-back {
+    position: absolute;
     transform: rotateY(180deg);
 }
 
