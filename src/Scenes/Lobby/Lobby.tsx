@@ -97,7 +97,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     return (
       <>
       { myUserId == lobbyOwner ? <button onClick={handleStartGame}>Start Game</button> : null}
-      <GameOptionsEditor gameOptions={gameOptions} setGameOptions={setGameOptions} />
+      <GameOptionsEditor gameOptions={gameOptions} setGameOptions={setGameOptions} readOnly={myUserId != lobbyOwner} />
       {users.map(user => (
         <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
       ))}

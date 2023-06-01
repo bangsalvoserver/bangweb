@@ -6,12 +6,13 @@ import { getLocalizedLabel } from "../../Locale/Locale";
 export interface GameOptionProps {
     gameOptions: GameOptions;
     setGameOptions: Dispatch<SetStateAction<GameOptions>>;
+    readOnly: boolean;
 }
 
 type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
 type GameOptionsOf<T> = { [Property in FilteredKeys<GameOptions, T>]: GameOptions[Property] };
 
-export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameOptionProps) {
+export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnly }: GameOptionProps) {
     const newExpansionCheckbox = (name: ExpansionType) => {
         const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
             const oldValue = gameOptions.expansions.includes(name);
@@ -27,7 +28,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         };
 
         return (<>
-            <input id={name} type="checkbox" checked={gameOptions.expansions.includes(name)} onChange={handleExpansionChange} />
+            <input id={name} type="checkbox" checked={gameOptions.expansions.includes(name)} onChange={readOnly ? undefined : handleExpansionChange} readOnly={readOnly} />
             <label htmlFor={name}>{getLocalizedLabel('ExpansionType', name)}</label>
         </>);
     };
@@ -35,7 +36,8 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
     const newOptionCheckbox = function(prop: keyof GameOptionsOf<boolean>) {
         return (<>
             <input id={prop} type="checkbox" checked={gameOptions[prop]}
-            onChange={event => {
+            readOnly={readOnly}
+            onChange={readOnly ? undefined : event => {
                 setGameOptions({
                     ... gameOptions,
                     [prop]: event.target.checked
@@ -49,7 +51,8 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         return (<>
             <label htmlFor={prop}>{getLocalizedLabel('GameOptions', prop)}</label>
             <input id={prop} type="number" value={gameOptions[prop]}
-            onChange={event => {
+            readOnly={readOnly}
+            onChange={readOnly ? undefined : event => {
                 if (!isNaN(event.target.valueAsNumber)) {
                     setGameOptions({
                         ... gameOptions,
