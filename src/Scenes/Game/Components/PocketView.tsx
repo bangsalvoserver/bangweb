@@ -16,7 +16,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, re
         getRect: () => pocketRef.current.getBoundingClientRect()
     }));
 
-    return <div ref={pocketRef}>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;
+    return <div ref={pocketRef} style={{display:'inline-block'}}>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;
 });
 
 export default PocketView;

@@ -10,6 +10,7 @@ import { handleGameUpdate } from '../Game/GameUpdateHandler';
 import { newGameTable } from '../Game/GameTable';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
+import { AnimationState } from '../Game/GameAnimation';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -21,6 +22,7 @@ export interface LobbyProps {
 
 export default function LobbyScene({ myLobbyId, myUserId, connection, name, options }: LobbyProps) {
   const [table, tableDispatch] = useReducer(handleGameUpdate, myUserId, newGameTable);
+  const [animation, setAnimation] = useState<AnimationState>();
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const game = useRef<Game>();
 
@@ -68,7 +70,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       }
     }],
     ['game_started', () => {
-      game.current = new Game(tableDispatch, setGameLogs);
+      game.current = new Game(tableDispatch, setGameLogs, setAnimation);
       tableDispatch({ updateType: 'reset' });
     }],
     ['game_update', (update: any) => {
@@ -89,7 +91,15 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
 
   const getGameScene = () => {
     return (
-      <GameScene connection={connection} game={game.current as Game} table={table} logs={gameLogs} users={users} lobbyOwner={lobbyOwner} />
+      <GameScene
+        connection={connection}
+        game={game.current as Game}
+        table={table}
+        animation={animation}
+        logs={gameLogs}
+        users={users}
+        lobbyOwner={lobbyOwner}
+      />
     );
   };
 

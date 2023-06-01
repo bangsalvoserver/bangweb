@@ -1,48 +1,19 @@
-import { Dispatch } from "react";
 import { Milliseconds } from "../../Messages/GameUpdate";
-import { GameUpdate } from "./GameUpdateHandler";
-import { AnimationUpdate } from "../../Messages/GameUpdate";
-import { table } from "console";
+import { AnimationRenderArgs } from "./Components/Animations/AnimationView";
 
-export interface GameAnimation {
-    tick(timeElapsed: Milliseconds): void;
-    end(): void;
-    done(): boolean;
-    extraTime(): Milliseconds;
+export type RenderFunction = (props: AnimationRenderArgs) => JSX.Element | null;
+export interface AnimationState {
+    duration: Milliseconds;
+    elapsed: Milliseconds;
+
+    end: () => void;
+    render: RenderFunction;
 }
 
-export class AnimationBase implements GameAnimation {
-    private duration: Milliseconds;
-    private elapsed: Milliseconds;
-
-    constructor(duration: Milliseconds) {
-        this.duration = duration;
-        this.elapsed = 0;
-    }
-
-    tick(timeElapsed: Milliseconds): void {
-        this.elapsed += timeElapsed;
-    }
-
-    end(): void { }
-
-    done(): boolean {
-        return this.elapsed >= this.duration;
-    }
-    extraTime(): Milliseconds {
-        return this.elapsed - this.duration;
-    }
-}
-
-export class DispatchAnimation extends AnimationBase {
-    private action: () => void;
-
-    constructor(duration: Milliseconds, action: () => void) {
-        super(duration);
-        this.action = action;
-    }
-
-    override end(): void {
-        this.action();
+export function newAnimation(duration: Milliseconds, end?: () => void, render?: RenderFunction): AnimationState {
+    return {
+        duration, elapsed: 0,
+        end: end ?? (() => {}),
+        render: render ?? (() => null)
     }
 }

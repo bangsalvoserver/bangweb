@@ -1,19 +1,27 @@
 import { Dispatch, SetStateAction } from "react";
-import { FlashCardUpdate, GameString, Milliseconds, ShortPauseUpdate } from "../../Messages/GameUpdate";
-import { AnimationBase, GameAnimation } from "./GameAnimation";
+import { FlashCardUpdate, GameString, Milliseconds, MoveCardUpdate, ShortPauseUpdate } from "../../Messages/GameUpdate";
 import { GameUpdate } from "./GameUpdateHandler";
+import { AnimationState, newAnimation } from "./GameAnimation";
+import { getCard, newPocketRef } from "./GameTable";
+import MoveCardAnimation from "./Components/Animations/MoveCardAnimation";
 
 export class Game {
 
     private queuedUpdates: any[] = [];
-    private animations: GameAnimation[] = [];
+    private animations: AnimationState[] = [];
 
     private tableDispatch: Dispatch<GameUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
+    private setAnimationState: Dispatch<SetStateAction<AnimationState | undefined>>;
 
-    constructor(tableDispatch: Dispatch<any>, setGameLogs: Dispatch<SetStateAction<GameString[]>>) {
+    constructor(
+        tableDispatch: Dispatch<any>,
+        setGameLogs: Dispatch<SetStateAction<GameString[]>>,
+        setAnimationState: Dispatch<SetStateAction<AnimationState | undefined>>
+    ) {
         this.tableDispatch = tableDispatch;
         this.setGameLogs = setGameLogs;
+        this.setAnimationState = setAnimationState;
     }
 
     pushUpdate(update: any) {
@@ -29,7 +37,7 @@ export class Game {
                     const updateType = Object.keys(update)[0];
                     const updateValue = update[updateType];
 
-                    console.log(JSON.stringify(update));
+                    // console.log(JSON.stringify(update));
 
                     const updateHandlers: Record<string, (update: any) => void> = {
                         game_error: this.handleGameError,
@@ -38,6 +46,7 @@ export class Game {
                         flash_card: this.handleFlashCard,
                         short_pause: this.handleShortPause,
                         play_sound: this.handlePlaySound,
+                        move_card: this.handleMoveCard,
                     };
 
                     if (updateType in updateHandlers) {
@@ -45,21 +54,29 @@ export class Game {
                     } else {
                         this.tableDispatch({ updateType, updateValue });
                     }
-                    if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
-                        this.animations.push(new AnimationBase(updateValue.duration as Milliseconds));
+                    if (updateType !== 'move_card') {
+                        // TODO add handlers for every animation
+                        if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
+                            this.animations.push(newAnimation(updateValue.duration as Milliseconds));
+                        }
                     }
                 } else {
                     break;
                 }
             } else {
-                const anim = this.animations[0];
-                anim.tick(tickTime);
-                if (anim.done()) {
-                    tickTime = anim.extraTime();
+                const anim = {
+                    ...this.animations[0],
+                    elapsed: this.animations[0].elapsed + tickTime
+                };
+                if (anim.elapsed > anim.duration) {
+                    tickTime = anim.elapsed - anim.duration;
 
                     anim.end();
+                    this.setAnimationState(undefined);
                     this.animations.shift();
                 } else {
+                    this.animations[0] = anim;
+                    this.setAnimationState(anim);
                     break;
                 }
             }
@@ -89,4 +106,21 @@ export class Game {
     private handlePlaySound(sound: string) {
         // TODO
     }
+
+    private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
+        const destPocket = newPocketRef(pocket, player);
+
+        this.tableDispatch({
+            updateType:'move_card_begin',
+            updateValue: { card }
+        });
+        this.animations.push(newAnimation(duration,
+            () => this.tableDispatch({
+                updateType: 'move_card_end',
+                updateValue: { card: card, pocket: destPocket }
+            }),
+            ({table, getPocketRect, amount}) => {
+                return (<MoveCardAnimation getPocketRect={getPocketRect} card={getCard(table, card)} destPocket={destPocket} amount={amount} />);
+            }));
+    };
 }

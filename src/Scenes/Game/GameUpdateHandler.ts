@@ -191,16 +191,19 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
     };
 };
 
-// Removes a card from its pocket and adds it to another
-gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
-    let [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
-    
-    const pocketRef = newPocketRef(pocket, player);
-    [pockets, players] = addToPocket(pockets, players, [card], pocketRef);
+// Removes a card from its pocket
+gameUpdateHandlers.move_card_begin = (table: GameTable, { card }: { card: CardId }): GameTable => {
+    const [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
+    return {... table, players, pockets };
+};
+
+// Adds a card to another pocket
+gameUpdateHandlers.move_card_end = (table: GameTable, { card, pocket }: { card: CardId, pocket: PocketRef }): GameTable => {
+    const [pockets, players] = addToPocket(table.pockets, table.players, [card], pocket);
 
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, pocket: pocketRef })),
+        cards: editById(table.cards, card, card => ({ ...card, pocket })),
         players, pockets
     };
 };
@@ -345,9 +348,9 @@ gameUpdateHandlers.status_clear = (table: GameTable): GameTable => {
     };
 };
 
-export function handleGameUpdate(table: GameTable, update: GameUpdate): GameTable {
-    if (update.updateType in gameUpdateHandlers) {
-        return gameUpdateHandlers[update.updateType](table, update.updateValue);
+export function handleGameUpdate(table: GameTable, {updateType, updateValue}: GameUpdate): GameTable {
+    if (updateType in gameUpdateHandlers) {
+        return gameUpdateHandlers[updateType](table, updateValue);
     } else {
         return table;
     }
