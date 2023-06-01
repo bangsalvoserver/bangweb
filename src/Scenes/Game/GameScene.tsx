@@ -39,7 +39,7 @@ export default function GameScene({ connection, game, table, logs, users, lobbyO
   const handleReturnLobby = () => connection.sendMessage('lobby_return');
 
   return (
-    <div className="align-center">
+    <div>
       { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
       <TableView table={table} users={users} />
     </div>

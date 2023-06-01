@@ -3,6 +3,7 @@ import { CardSign } from "../Messages/CardData";
 import { GameString } from "../Messages/GameUpdate";
 import { UserValue, getUsername } from "../Scenes/Lobby/LobbyUser";
 import { GameTable, getPlayer } from "../Scenes/Game/GameTable";
+import CardSignView from "../Scenes/Game/Components/CardSignView";
 
 const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
     const language = navigator.language;
@@ -36,11 +37,7 @@ export interface CardNameProps {
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
     const localizedName = name in cardRegistry ? cardRegistry[name] : name;
     if (sign && sign.rank != 'none' && sign.suit != 'none') {
-        return (<>
-            {localizedName} (
-            <img style={{display:'inline'}} src={`/cards/misc/${sign.rank}.png`}/>
-            <img style={{display:'inline'}} src={`/cards/misc/suit_${sign.suit}.png`}/>)
-        </>);
+        return (<>{localizedName} (<CardSignView sign={sign} />)</>);
     } else {
         return (<>{localizedName}</>);
     }

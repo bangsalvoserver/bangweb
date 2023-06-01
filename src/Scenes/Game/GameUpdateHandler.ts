@@ -1,4 +1,4 @@
-import { GameFlag } from "../../Messages/CardEnums";
+import { GameFlag, PocketType } from "../../Messages/CardEnums";
 import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { GameTable, Id, Player, PocketRef, TablePockets, getCard, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
@@ -31,7 +31,7 @@ function editPocketMap(
     pockets: TablePockets, players: Player[], pocket: PocketRef,
     cardMapper: (cards: CardId[]) => CardId[]): [TablePockets, Player[]]
 {
-    const mapper = <T extends { [key: string]: CardId[] }>(pocketMap: T, pocketName: keyof T): T => {
+    const mapper = <Key extends PocketType, T extends Record<Key, CardId[]>>(pocketMap: T, pocketName: Key): T => {
         return { ...pocketMap, [pocketName]: cardMapper(pocketMap[pocketName]) };
     };
     if (pocket) {

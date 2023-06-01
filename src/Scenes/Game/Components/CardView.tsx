@@ -1,6 +1,7 @@
 import "./CardView.css";
 import { Card } from "../GameTable";
 import { CardSign } from "../../../Messages/CardData";
+import CardSignView from "./CardSignView";
 
 export interface CardProps {
     card: Card;
@@ -19,13 +20,7 @@ export default function CardView({ card }: CardProps) {
     }
     imageSrc += '.png';
 
-    let cardSign: CardSign | undefined;
-    if ('sign' in card.cardData && card.cardData.sign.rank != 'none' && card.cardData.sign.suit != 'none') {
-        cardSign = card.cardData.sign;
-    }
-
     let imageClass = 'card-view';
-
     if (card.inactive) {
         imageClass += ' card-horizontal';
     }
@@ -33,9 +28,8 @@ export default function CardView({ card }: CardProps) {
     return (
         <div className={imageClass}>
             <img className="card-view-img" src={imageSrc}/>
-            {cardSign ? <div className="card-view-inner">
-                <img src={`/cards/misc/${cardSign.rank}.png`}/>
-                <img src={`/cards/misc/suit_${cardSign.suit}.png`}/>
+            {'sign' in card.cardData ? <div className="card-view-inner">
+                <CardSignView sign={card.cardData.sign} />
             </div> : null}
         </div>
     )

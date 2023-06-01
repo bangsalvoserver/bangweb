@@ -52,8 +52,6 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketRef): Card {
     };
 }
 
-type Extract<T, U> = T extends U ? T : never;
-
 export type PlayerPockets = {
     [T in Extract<PlayerPocketType, string>]: CardId[]
 }
