@@ -1,9 +1,13 @@
+import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
 import { getLocalizedLabel } from "../../../Locale/Locale";
+import { PlayerPocketType } from "../../../Messages/CardEnums";
 import LobbyUser, { UserValue } from "../../Lobby/LobbyUser";
 import { GameTable, Player, getCard } from "../GameTable";
 import CardView from "./CardView";
 import "./PlayerView.css";
 import RoleView from "./RoleView";
+import { PocketPosition } from "./TableView";
+import PocketView from "./PocketView";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -11,7 +15,22 @@ export interface PlayerProps {
     player: Player
 }
 
-export default function PlayerView({ user, table, player }: PlayerProps) {
+export type PlayerPocketPositions = {
+  [T in Extract<PlayerPocketType, string>]?: MutableRefObject<PocketPosition>;
+};
+
+export interface GetPlayerPocketPositions {
+    positions: PlayerPocketPositions;
+}
+
+const PlayerView = forwardRef<GetPlayerPocketPositions, PlayerProps>(({ user, table, player }, ref) => {
+    const positions: PlayerPocketPositions = {
+        player_hand: useRef() as MutableRefObject<PocketPosition>,
+        player_table: useRef() as MutableRefObject<PocketPosition>
+    };
+
+    useImperativeHandle(ref, () => ({ positions }));
+
     let className = 'player-view';
     if (player.id == table.status.current_turn) {
         className += ' current-turn';
@@ -36,16 +55,10 @@ export default function PlayerView({ user, table, player }: PlayerProps) {
                     { isWinner ? <div style={{color: 'yellow'}}>Winner</div> : null }
                 </div>
             </div>
-            <div className="card-pocket">
-                {player.pockets.player_hand.map(card_id => 
-                    <CardView key={card_id} card={getCard(table, card_id)} />
-                )}
-            </div>
-            <div className="card-pocket">
-                {player.pockets.player_table.map(card_id => 
-                    <CardView key={card_id} card={getCard(table, card_id)} />
-                )}
-            </div>
+            <div className="card-pocket"><PocketView ref={positions.player_hand} table={table} cards={player.pockets.player_hand} /></div>
+            <div className="card-pocket"><PocketView ref={positions.player_table} table={table} cards={player.pockets.player_table} /></div>
         </div>
     )
-}
+});
+
+export default PlayerView;
