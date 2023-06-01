@@ -153,7 +153,7 @@ gameUpdateHandlers.player_gold = (table: GameTable, { player, gold }: PlayerGold
 };
 
 // Changes a player's role
-gameUpdateHandlers.show_role = (table: GameTable, { player, role }: PlayerShowRoleUpdate): GameTable => {
+gameUpdateHandlers.player_show_role = (table: GameTable, { player, role }: PlayerShowRoleUpdate): GameTable => {
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, status: { ...p.status, role }}))

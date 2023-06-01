@@ -1,0 +1,28 @@
+.card-view {
+    display: inline-block;
+    margin: 5px;
+    position: relative;
+    width: 60px;
+    height: max-content;
+}
+
+.card-horizontal {
+    transform: rotate(90deg);
+}
+
+.card-view-img {
+    border-radius: 4px 4px;
+}
+
+.card-view-inner {
+    position: absolute;
+    left: 6%;
+    bottom: 4%;
+}
+
+.card-view-inner img {
+    vertical-align: bottom;
+    display: inline;
+    width: 25%;
+    bottom: 0;
+}

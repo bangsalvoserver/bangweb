@@ -1,0 +1,13 @@
+.table-view {
+    width: 100%;
+    display: flex;
+}
+
+.table-view-inner {
+    display: inline-block;
+    margin: auto;
+}
+
+.status-text {
+    height: 50px;
+}
