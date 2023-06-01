@@ -9,6 +9,8 @@ export interface PocketProps {
     cards: CardId[];
 }
 
+export type PocketPositionRef = MutableRefObject<PocketPosition>;
+
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, ref) => {
     const pocketRef = useRef() as MutableRefObject<HTMLDivElement>;
 

@@ -4,12 +4,12 @@ import CardView from "./CardView";
 import { GameString, PlayerId } from "../../../Messages/GameUpdate";
 import { GameStringComponent } from "../../../Locale/Locale";
 import { UserValue } from "../../Lobby/LobbyUser";
-import PlayerView, { GetPlayerPocketPositions } from "./PlayerView";
+import PlayerView,{ PlayerPocketPositions } from "./PlayerView";
 import CardButtonView from "./CardButtonView";
 import CountPocket, { CountPocketProps } from "./CountPocket";
-import { MutableRefObject, createRef, useEffect, useRef, useState } from "react";
+import { MutableRefObject, RefObject, createRef, useEffect, useRef, useState } from "react";
 import { PlayerPocketType, TablePocketType } from "../../../Messages/CardEnums";
-import PocketView from "./PocketView";
+import PocketView, { PocketPositionRef } from "./PocketView";
 import { AnimationState } from "../GameAnimation";
 import AnimationView from "./Animations/AnimationView";
 
@@ -23,9 +23,6 @@ export interface TableProps {
     users: UserValue[];
 }
 
-type PocketPositionRef = MutableRefObject<PocketPosition>;
-type GetPlayerPocketPositionsRef = MutableRefObject<GetPlayerPocketPositions>;
-
 export type TablePocketPositions = {
   [T in Extract<TablePocketType, string>]?: PocketPositionRef;
 };
@@ -33,18 +30,19 @@ export type TablePocketPositions = {
 export default function TableView({ table, animation, users }: TableProps) {
     const positions: TablePocketPositions = {
       main_deck: useRef() as PocketPositionRef,
-      discard_pile: useRef() as PocketPositionRef
+      discard_pile: useRef() as PocketPositionRef,
+      selection: useRef() as PocketPositionRef,
     };
 
-    const playerPositions = useRef<Map<PlayerId, GetPlayerPocketPositionsRef>>();
-    if (!playerPositions.current) {
-      playerPositions.current = new Map<PlayerId, GetPlayerPocketPositionsRef>();
-    }
+    const playerPositions = useRef<Record<PlayerId, PlayerPocketPositions | null>>({});
 
     const getPocketRect = (pocket: PocketRef): DOMRect | undefined => {
       if (pocket) {
         if ('player' in pocket) {
-          return playerPositions.current?.get(pocket.player)?.current.positions[pocket.name]?.current.getRect();
+          if (pocket.player in playerPositions.current) {
+            let positions = playerPositions.current[pocket.player];
+            if (positions) return positions[pocket.name]?.current.getRect();
+          }
         } else {
           return positions[pocket.name]?.current.getRect();
         }
@@ -59,17 +57,8 @@ export default function TableView({ table, animation, users }: TableProps) {
     const newPlayerView = (player_id: PlayerId) => {
       const player = getPlayer(table, player_id);
       const user = users.find(user => user.id === player.userid);
-
-      const getPlayerRef = () => {
-        let ref = playerPositions.current?.get(player_id);
-        if (!ref) {
-          ref = createRef() as MutableRefObject<GetPlayerPocketPositions>;
-          playerPositions.current?.set(player_id, ref);
-        }
-        return ref;
-      };
       
-      return <PlayerView ref={getPlayerRef()} key={player_id} table={table} user={user} player={player} />;
+      return <PlayerView ref={ref => playerPositions.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
     };
 
     return (
