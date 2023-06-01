@@ -340,7 +340,7 @@ gameUpdateHandlers.status_clear = (table: GameTable): GameTable => {
         ...table,
         status: {
             ...table.status,
-            request: undefined
+            request: {}
         }
     };
 };

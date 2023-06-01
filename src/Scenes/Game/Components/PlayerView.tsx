@@ -18,8 +18,8 @@ export default function PlayerView({ user, table, player }: PlayerProps) {
     }
 
     const isAlive = !player.status.flags.includes('dead');
-    const isOrigin = table.status.request && 'origin' in table.status.request && table.status.request.origin == player.id;
-    const isTarget = table.status.request && 'target' in table.status.request && table.status.request.target == player.id;
+    const isOrigin = 'origin' in table.status.request && table.status.request.origin == player.id;
+    const isTarget = 'target' in table.status.request && table.status.request.target == player.id;
     const isWinner = player.status.flags.includes('winner');
 
     return (

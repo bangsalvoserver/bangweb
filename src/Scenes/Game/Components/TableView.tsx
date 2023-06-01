@@ -35,8 +35,7 @@ export default function TableView({ table, users }: TableProps) {
         </div>
         <div className="table-view">
             <div className="table-view-inner status-text">
-                { table.status.request && 'status_text' in table.status.request
-                    ? newGameStringComponent(table.status.request.status_text) : null }
+                { 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
             </div>
         </div>
         { table.alive_players.map(newPlayerView) }
