@@ -1,16 +1,17 @@
-import { CSSProperties } from "react";
+import "./MoveCardAnimation.css";
 import { Card, PocketRef } from "../../GameTable";
 import CardView from "../CardView";
 import { GetPocketRectFunction } from "./AnimationView";
+import { CSSProperties } from "react";
 
 export interface MoveCardProps {
     getPocketRect: GetPocketRectFunction;
     card: Card;
     destPocket: PocketRef;
-    amount: number;
+    duration: number;
 }
 
-export default function MoveCardAnimation({ getPocketRect, card, destPocket, amount }: MoveCardProps) {
+export default function MoveCardAnimation({ getPocketRect, card, destPocket, duration }: MoveCardProps) {
     const rectCenter = (rect?: DOMRect) => {
         if (rect) {
             return {
@@ -25,19 +26,22 @@ export default function MoveCardAnimation({ getPocketRect, card, destPocket, amo
     const sourcePos = rectCenter(getPocketRect(card.pocket));
     const destPos = rectCenter(getPocketRect(destPocket));
 
-    const lerp = (from: number, to: number) => {
-        return (to - from) * amount + from;
-    };
-
     if (sourcePos && destPos) {
-        const style: CSSProperties = {
-            position: 'absolute',
-            left: lerp(sourcePos.x, destPos.x),
-            top: lerp(sourcePos.y, destPos.y),
-            transform: 'translate(-50%, -50%)'
-        };
+        const style = {
+            '--startX': sourcePos.x + 'px',
+            '--startY': sourcePos.y + 'px',
+            '--diffX': (destPos.x - sourcePos.x) + 'px',
+            '--diffY': (destPos.y - sourcePos.y) + 'px',
+            '--duration': duration + 'ms'
+        } as CSSProperties;
 
-        return <div style={style}><CardView card={card} /></div>
+        return (
+            <div style={style} className="move-card-animation">
+                <div className="move-card-animation-inner">
+                    <CardView card={card} />
+                </div>
+            </div>
+        );
     } else {
         return null;
     }

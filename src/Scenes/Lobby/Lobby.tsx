@@ -22,7 +22,7 @@ export interface LobbyProps {
 
 export default function LobbyScene({ myLobbyId, myUserId, connection, name, options }: LobbyProps) {
   const [table, tableDispatch] = useReducer(handleGameUpdate, myUserId, newGameTable);
-  const [animation, setAnimation] = useState<AnimationState>();
+  const [animation, setAnimation] = useState<AnimationState>(null);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const game = useRef<Game>();
 
@@ -74,7 +74,9 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       tableDispatch({ updateType: 'reset' });
     }],
     ['game_update', (update: any) => {
-      game.current?.pushUpdate(update);
+      const updateType = Object.keys(update)[0];
+      const updateValue = update[updateType];
+      game.current?.pushUpdate({ updateType, updateValue });
     }]
   );
 

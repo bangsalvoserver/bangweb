@@ -1,0 +1,22 @@
+.move-card-animation {
+    position: absolute;
+    left: var(--startX);
+    top: var(--startY);
+    animation-name: move-card;
+    animation-duration: var(--duration);
+    animation-fill-mode: forwards;
+    transition: ease-in-out;
+}
+
+.move-card-animation-inner {
+    transform: translate(-50%, -50%);
+}
+
+@keyframes move-card {
+    from {
+        transform: translate(0, 0);
+    }
+    to {
+        transform: translate(var(--diffX), var(--diffY));
+    }
+}

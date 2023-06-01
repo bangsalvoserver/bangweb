@@ -1,5 +1,6 @@
 import { AnimationState } from "../../GameAnimation";
-import { GameTable, PocketRef } from "../../GameTable";
+import { GameTable, PocketRef, getCard } from "../../GameTable";
+import MoveCardAnimation from "./MoveCardAnimation";
 
 export type GetPocketRectFunction = (pocket: PocketRef) => DOMRect | undefined;
 
@@ -12,9 +13,18 @@ export interface AnimationProps {
 export interface AnimationRenderArgs {
     table: GameTable;
     getPocketRect: GetPocketRectFunction;
-    amount: number;
 }
 
 export default function AnimationView({ state, table, getPocketRect}: AnimationProps) {
-    return state?.render({ table, getPocketRect, amount: state.elapsed / state.duration }) || null;
+    if (state) {
+        if ('move_card' in state) {
+            return <MoveCardAnimation
+                getPocketRect={getPocketRect}
+                card={getCard(table, state.move_card.card)}
+                destPocket={state.move_card.destPocket}
+                duration={state.move_card.duration}
+            />
+        }
+    }
+    return null;
 }
