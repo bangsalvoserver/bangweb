@@ -131,7 +131,7 @@ gameUpdateHandlers.player_add = (table: GameTable, { players }: PlayerAddUpdate)
     };
 };
 
-// Handles the 'player_order' update, changing the order of how players are seated
+// Changes the order of how players are seated
 gameUpdateHandlers.player_order = (table: GameTable, { players }: PlayerOrderUpdate): GameTable => {
     return { ...table, alive_players: rotatePlayers(players, table.self_player, table.alive_players.at(0)) };
 };
@@ -191,7 +191,7 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
     };
 };
 
-// Removes a card from its pocket and moving it to another
+// Removes a card from its pocket and adds it to another
 gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
     let [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
     
@@ -233,7 +233,7 @@ gameUpdateHandlers.show_card = (table: GameTable, { card, info }: ShowCardUpdate
     };
 };
 
-// Handles the 'hide_card' update, clears the cardData field
+// Resets the cardData field
 gameUpdateHandlers.hide_card = (table: GameTable, { card }: HideCardUpdate): GameTable => {
     return {
         ...table,
@@ -323,8 +323,8 @@ gameUpdateHandlers.game_flags = (table: GameTable, flags: GameFlag[]): GameTable
     };
 };
 
-// Handles the 'request_status' and the 'status_ready' updates, changes the status.request field
-gameUpdateHandlers.request_status = (table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable => {
+// Changes the status.request field
+gameUpdateHandlers.request_status = gameUpdateHandlers.status_ready = (table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable => {
     return {
         ...table,
         status: {
