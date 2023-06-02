@@ -10,7 +10,7 @@ import { handleGameUpdate } from '../Game/GameUpdateHandler';
 import { newGameTable } from '../Game/GameTable';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
-import { AnimationState } from '../Game/GameAnimation';
+import { AnimationState } from '../Game/Components/Animations/AnimationView';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;

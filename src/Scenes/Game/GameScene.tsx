@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 import { Connection } from "../../Messages/Connection";
-import { GameString, PlayerId } from "../../Messages/GameUpdate";
+import { GameString } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { UserValue } from "../Lobby/LobbyUser";
-import { GameStringComponent } from "../../Locale/Locale";
-import PlayerView from "./Components/PlayerView";
-import { Game } from "./Game";
-import {  GameTable, Player, getCard, getPlayer } from "./GameTable";
+import { AnimationState } from "./Components/Animations/AnimationView";
 import TableView from "./Components/TableView";
-import { AnimationState } from "./GameAnimation";
+import { Game } from "./Game";
+import { GameTable } from "./GameTable";
 
 const FRAMERATE = 60;
 

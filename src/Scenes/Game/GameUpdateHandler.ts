@@ -1,8 +1,7 @@
-import { CardData } from "../../Messages/CardData";
 import { GameFlag, PocketType } from "../../Messages/CardEnums";
-import { AddCardsUpdate, AddCubesUpdate, CardId, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
+import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
-import { GameTable, Id, Player, PocketRef, TablePockets, getCard, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
+import { GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
 
 export interface GameUpdate {
     updateType: string,
@@ -157,11 +156,12 @@ gameUpdateHandlers.player_gold = (table: GameTable, { player, gold }: PlayerGold
 gameUpdateHandlers.player_show_role = (table: GameTable, { player, role, duration }: PlayerShowRoleUpdate): GameTable => {
     return {
         ...table,
-        players: editById(table.players, player, p => ({ ...p, animation: [{flipping_role:{role: p.status.role}}, duration], status: { ...p.status, role }}))
+        players: editById(table.players, player, p => ({ ...p, animation: {flipping_role:{role: p.status.role, duration}}, status: { ...p.status, role }}))
     };
 };
 
-gameUpdateHandlers.player_animation_end = (table: GameTable, { player }: { player: PlayerId }): GameTable => {
+gameUpdateHandlers.player_animation_end = (table: GameTable, { player }: PlayerIdUpdate): GameTable => {
+    if (!player) return table;
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, animation: undefined }))
@@ -206,12 +206,13 @@ gameUpdateHandlers.move_card = (table: GameTable, { card }: MoveCardUpdate): Gam
 };
 
 // Adds a card to another pocket
-gameUpdateHandlers.move_card_end = (table: GameTable, { card, pocket }: { card: CardId, pocket: PocketRef }): GameTable => {
-    const [pockets, players] = addToPocket(table.pockets, table.players, [card], pocket);
+gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
+    const pocketRef = newPocketRef(pocket, player);
+    const [pockets, players] = addToPocket(table.pockets, table.players, [card], pocketRef);
 
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, pocket })),
+        cards: editById(table.cards, card, card => ({ ...card, pocket: pocketRef })),
         players, pockets
     };
 };
@@ -240,7 +241,7 @@ gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket }: DeckShuffledUp
 gameUpdateHandlers.show_card = (table: GameTable, { card, info, duration }: ShowCardUpdate): GameTable => {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, animation: [{flipping:{}}, duration], cardData: info }))
+        cards: editById(table.cards, card, card => ({ ...card, animation: {flipping:{duration}}, cardData: info }))
     };
 };
 
@@ -250,7 +251,7 @@ gameUpdateHandlers.hide_card = (table: GameTable, { card, duration }: HideCardUp
         ...table,
         cards: editById(table.cards, card, card => ({
             ...card,
-            animation: [{ flipping: { cardData:card.cardData as CardData }}, duration],
+            animation: { flipping: { cardImage: getCardImage(card), duration }},
             cardData: { deck: card.cardData.deck } }))
     };
 }
@@ -259,11 +260,20 @@ gameUpdateHandlers.hide_card = (table: GameTable, { card, duration }: HideCardUp
 gameUpdateHandlers.tap_card = (table: GameTable, { card, inactive, duration }: TapCardUpdate): GameTable => {
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, inactive, animation: [{turning:{}}, duration] }))
+        cards: editById(table.cards, card, card => ({ ...card, inactive, animation: {turning:{duration}} }))
     };
 }
 
-gameUpdateHandlers.card_animation_end = (table: GameTable, { card }: { card: CardId }): GameTable => {
+gameUpdateHandlers.short_pause = (table: GameTable, { card, duration }: ShortPauseUpdate): GameTable => {
+    if (!card) return table;
+    return {
+        ...table,
+        cards: editById(table.cards, card, card => ({ ...card, animation: {short_pause:{duration}}}))
+    };
+}
+
+gameUpdateHandlers.card_animation_end = (table: GameTable, { card }: CardIdUpdate): GameTable => {
+    if (!card) return table;
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, animation: undefined }))

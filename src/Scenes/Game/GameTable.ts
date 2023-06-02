@@ -1,4 +1,4 @@
-import { CardData } from "../../Messages/CardData";
+import { CardData, CardSign } from "../../Messages/CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "../../Messages/CardEnums";
 import { AnimationUpdate, CardId, GameString, Milliseconds, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
@@ -24,23 +24,39 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
 
 export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
 
-export interface CardFlipping {
-    cardData?: CardData;
+export interface CardImage {
+    image: string;
+    sign?: CardSign;
 }
+
+export interface CardFlipping extends AnimationUpdate {
+    cardImage?: CardImage;
+}
+
+export type CardTurning = AnimationUpdate;
+export type ShortPause = AnimationUpdate;
 
 export type CardAnimation =
     {flipping: CardFlipping} |
-    {turning: {}};
+    {turning: CardTurning} |
+    {short_pause: ShortPause};
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
     pocket: PocketRef;
 
-    animation?: [CardAnimation, Milliseconds];
+    animation?: CardAnimation;
 
     inactive: boolean;
     num_cubes: number;
 }
+
+export function getCardImage(card: Card): CardImage | undefined {
+    return 'image' in card.cardData ? {
+        image: card.cardData.image,
+        sign: card.cardData.sign.rank != 'none' && card.cardData.sign.suit != 'none' ? card.cardData.sign : undefined
+    } : undefined;
+};
 
 export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketRef {
     if (pocketName == 'none') {
@@ -70,11 +86,12 @@ export type TablePockets = {
     [T in Extract<TablePocketType, string>]: CardId[]
 }
 
-export interface PlayerFlippingRole {
+export interface PlayerFlippingRole extends AnimationUpdate {
     role: PlayerRole;
 }
 
-export type PlayerAnimation = { flipping_role: PlayerFlippingRole };
+export type PlayerAnimation =
+    { flipping_role: PlayerFlippingRole };
 
 export interface Player extends Id {
     userid: UserId;
@@ -87,7 +104,7 @@ export interface Player extends Id {
         weapon_range: number,
         distance_mod: number
     };
-    animation?: [PlayerAnimation, Milliseconds];
+    animation?: PlayerAnimation;
     pockets: PlayerPockets;
 }
 

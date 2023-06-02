@@ -45,6 +45,10 @@
     transition: ease-in-out;
 }
 
+.card-overlay {
+    z-index: 1;
+}
+
 .card-animation-reverse {
     animation-direction: reverse;
 }

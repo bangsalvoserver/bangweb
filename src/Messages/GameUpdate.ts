@@ -139,6 +139,14 @@ export interface StatusReadyArgs {
     play_cards: CardNode[];
 }
 
+export interface CardIdUpdate {
+    card?: CardId;
+}
+
+export interface PlayerIdUpdate {
+    player?: CardId;
+}
+
 export interface GameOptions {
     expansions: ExpansionType[];
     enable_ghost_cards: boolean;

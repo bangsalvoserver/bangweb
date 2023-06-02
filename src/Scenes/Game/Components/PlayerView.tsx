@@ -36,11 +36,10 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, table, pl
     let playerRole = player.status.role;
     
     if (player.animation) {
-        const [animationType, duration] = player.animation;
-        if ('flipping_role' in animationType) {
-            flipDuration = duration;
+        if ('flipping_role' in player.animation) {
+            flipDuration = player.animation.flipping_role.duration;
             if (player.status.role == 'unknown') {
-                playerRole = animationType.flipping_role.role;
+                playerRole = player.animation.flipping_role.role;
             }
         }
     }

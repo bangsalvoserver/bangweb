@@ -1,10 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { CardId, FlashCardUpdate, GameString, HideCardUpdate, Milliseconds, MoveCardUpdate, PlayerId, ShortPauseUpdate, ShowCardUpdate } from "../../Messages/GameUpdate";
+import { CardIdUpdate, FlashCardUpdate, GameString, Milliseconds, MoveCardUpdate, PlayerIdUpdate, ShortPauseUpdate } from "../../Messages/GameUpdate";
 import { GameUpdate } from "./GameUpdateHandler";
-import { AnimationState } from "./GameAnimation";
-import { getCard, newPocketRef } from "./GameTable";
-import MoveCardAnimation from "./Components/Animations/MoveCardAnimation";
-import { AnimationRenderArgs } from "./Components/Animations/AnimationView";
+import { AnimationState } from "./Components/Animations/AnimationView";
 
 export class Game {
 
@@ -46,12 +43,12 @@ export class Game {
                 game_log: this.handleGameLog,
                 game_prompt: this.handleGamePrompt,
                 flash_card: this.handleFlashCard,
-                short_pause: this.handleShortPause,
                 play_sound: this.handlePlaySound,
                 move_card: this.handleMoveCard,
                 show_card: this.handleCardAnimation,
                 hide_card: this.handleCardAnimation,
                 tap_card: this.handleCardAnimation,
+                short_pause: this.handleCardAnimation,
                 player_show_role: this.handlePlayerAnimation,
             };
 
@@ -82,25 +79,20 @@ export class Game {
         // TODO
     }
 
-    private handleShortPause({ card }: ShortPauseUpdate) {
-        // TODO
-    }
-
     private handlePlaySound(sound: string) {
         // TODO
     }
 
     private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
-        const destPocket = newPocketRef(pocket, player);
-        this.queuedUpdates.unshift({ updateType: 'move_card_end', updateValue: { card: card, pocket: destPocket } });
-        this.setAnimationState({ move_card: { card, destPocket, duration }});
+        this.queuedUpdates.unshift({ updateType: 'move_card_end', updateValue: { card, player, pocket } });
+        this.setAnimationState({ move_card: { card, player, pocket, duration }});
     };
 
-    private handleCardAnimation({ card }: { card: CardId }) {
+    private handleCardAnimation({ card }: CardIdUpdate) {
         this.queuedUpdates.unshift({ updateType: 'card_animation_end', updateValue: { card } });
     }
 
-    private handlePlayerAnimation({ player }: { player: PlayerId }) {
+    private handlePlayerAnimation({ player }: PlayerIdUpdate) {
         this.queuedUpdates.unshift({ updateType: 'player_animation_end', updateValue: { player } });
     }
 }
