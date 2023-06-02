@@ -3,14 +3,13 @@ import { Connection, useHandlers } from '../../Messages/Connection';
 import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyId, UserId, ChatMessage } from '../../Messages/ServerMessage';
 import LobbyUser, { UserValue } from './LobbyUser';
 import { GameOptions, GameString } from '../../Messages/GameUpdate';
-import GameScene from '../Game/GameScene';
+import GameScene from '../Game/Components/GameScene';
 import { deserializeImage } from '../../Messages/ImageSerial';
-import { Game } from '../Game/Game';
-import { handleGameUpdate } from '../Game/GameUpdateHandler';
+import { GameUpdateHandler } from '../Game/GameUpdateHandler';
+import { gameTableDispatch } from '../Game/GameTableDispatch';
 import { newGameTable } from '../Game/GameTable';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
-import { AnimationState } from '../Game/Components/Animations/AnimationView';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -21,10 +20,8 @@ export interface LobbyProps {
 }
 
 export default function LobbyScene({ myLobbyId, myUserId, connection, name, options }: LobbyProps) {
-  const [table, tableDispatch] = useReducer(handleGameUpdate, myUserId, newGameTable);
-  const [animation, setAnimation] = useState<AnimationState>(null);
-  const [gameLogs, setGameLogs] = useState<GameString[]>([]);
-  const game = useRef<Game>();
+  const [table, tableDispatch] = useReducer(gameTableDispatch, myUserId, newGameTable);
+  const gameUpdateHandler = useRef<GameUpdateHandler>();
 
   const [users, setUsers] = useState<UserValue[]>([]);
   const [lobbyOwner, setLobbyOwner] = useState<UserId>();
@@ -34,7 +31,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
-  useHandlers(connection, [game],
+  useHandlers(connection, [gameUpdateHandler],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
       setUsers(users => {
         let copy = [...users];
@@ -65,18 +62,18 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     }],
     ['lobby_entered', ({ lobby_id }: LobbyEntered) => {
       if (lobby_id == myLobbyId) {
-        game.current = undefined;
+        gameUpdateHandler.current = undefined;
         setUsers([]);
       }
     }],
     ['game_started', () => {
-      game.current = new Game(tableDispatch, setGameLogs, setAnimation);
+      gameUpdateHandler.current = new GameUpdateHandler(tableDispatch);
       tableDispatch({ updateType: 'reset' });
     }],
     ['game_update', (update: any) => {
       const updateType = Object.keys(update)[0];
       const updateValue = update[updateType];
-      game.current?.pushUpdate({ updateType, updateValue });
+      gameUpdateHandler.current?.pushUpdate({ updateType, updateValue });
     }]
   );
 
@@ -95,10 +92,8 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     return (
       <GameScene
         connection={connection}
-        game={game.current as Game}
+        game={gameUpdateHandler.current as GameUpdateHandler}
         table={table}
-        animation={animation}
-        logs={gameLogs}
         users={users}
         lobbyOwner={lobbyOwner}
       />
@@ -125,7 +120,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       </div>
       <LobbyChat connection={connection} myUserId={myUserId} users={users} messages={chatMessages} />
       <div>
-        { game.current ? getGameScene() : getLobbyScene() }
+        { gameUpdateHandler.current ? getGameScene() : getLobbyScene() }
       </div>
     </div>
   );

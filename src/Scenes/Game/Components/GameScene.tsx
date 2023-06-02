@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { GameStringComponent } from "../../../Locale/Locale";
 import { GameString, PlayerId } from "../../../Messages/GameUpdate";
 import { UserValue } from "../../Lobby/LobbyUser";
@@ -8,22 +8,46 @@ import CardButtonView from "./CardButtonView";
 import CountPocket from "./CountPocket";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPositionMap, PocketPositionRef, Rect } from "./PocketView";
-import "./TableView.css";
+import "./GameScene.css";
+import { GameUpdateHandler } from "../GameUpdateHandler";
+import { UserId } from "../../../Messages/ServerMessage";
+import { Connection } from "../../../Messages/Connection";
+
+const FRAMERATE = 60;
 
 export interface TableProps {
+    connection: Connection;
+    game: GameUpdateHandler;
     table: GameTable;
-    animation?: AnimationState;
     users: UserValue[];
+    lobbyOwner?: UserId;
 }
 
-export default function TableView({ table, animation, users }: TableProps) {
+export default function GameScene({ connection, game, table, users, lobbyOwner }: TableProps) {
     const positions: PocketPositionMap = {
-      main_deck: useRef() as PocketPositionRef,
-      discard_pile: useRef() as PocketPositionRef,
-      selection: useRef() as PocketPositionRef,
+        main_deck: useRef() as PocketPositionRef,
+        discard_pile: useRef() as PocketPositionRef,
+        selection: useRef() as PocketPositionRef,
     };
 
     const playerPositions = useRef<Record<PlayerId, PocketPositionMap | null>>({});
+
+    useEffect(() => {
+      let startTime = Date.now();
+      const interval = setInterval(() => {
+        let endTime = Date.now();
+        game.tick(endTime - startTime);
+        startTime = endTime;
+      }, 1000 / FRAMERATE);
+      return () => clearInterval(interval);
+    }, []);
+  
+    const showReturnButton = () => {
+      return table.myUserId == lobbyOwner
+        && table.status.flags.includes('game_over');
+    };
+  
+    const handleReturnLobby = () => connection.sendMessage('lobby_return');
 
     const getPocketRect = (pocket: PocketRef): Rect | undefined => {
       if (pocket) {
@@ -50,8 +74,9 @@ export default function TableView({ table, animation, users }: TableProps) {
       return <PlayerView ref={ref => playerPositions.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
     };
 
-    return (
-      <div className="table-view">
+    return (<div>
+        { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
+        <div className="game-scene">
         <div className="align-center main-deck">
           <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} className='single-card-pocket' />
           <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
@@ -68,7 +93,8 @@ export default function TableView({ table, animation, users }: TableProps) {
         <div className="align-center">
           { table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} /> )}
         </div>
-        <AnimationView state={animation} table={table} getPocketRect={getPocketRect} />
+        <AnimationView state={table.animation} table={table} getPocketRect={getPocketRect} />
+      </div>
       </div>
   );
 }

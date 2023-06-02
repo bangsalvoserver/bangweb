@@ -1,5 +1,5 @@
 import { GameFlag, PocketType } from "../../Messages/CardEnums";
-import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, FlashCardUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
+import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
 
@@ -119,6 +119,14 @@ function rotatePlayers(players: PlayerId[], selfPlayer?: PlayerId, firstPlayer?:
     return players;
 };
 
+// Adds a message to the logs
+gameUpdateHandlers.game_log = (table: GameTable, message: GameString): GameTable => {
+    return {
+        ...table,
+        logs: table.logs.concat(message)
+    };
+}
+
 // Creates new players with specified player_id and user_id
 gameUpdateHandlers.player_add = (table: GameTable, { players }: PlayerAddUpdate): GameTable => {
     const newPlayers = table.players.concat(players.map(({player_id, user_id}) => newPlayer(player_id, user_id))).sort(sortById);
@@ -200,9 +208,9 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
 };
 
 // Removes a card from its pocket
-gameUpdateHandlers.move_card = (table: GameTable, { card }: MoveCardUpdate): GameTable => {
+gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket, duration }: MoveCardUpdate): GameTable => {
     const [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
-    return {... table, players, pockets };
+    return {... table, players, pockets, animation: {move_card: {card, player, pocket, duration }} };
 };
 
 // Adds a card to another pocket
@@ -213,7 +221,8 @@ gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: 
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, pocket: pocketRef })),
-        players, pockets
+        players, pockets,
+        animation: null
     };
 };
 
@@ -383,7 +392,7 @@ gameUpdateHandlers.status_clear = (table: GameTable): GameTable => {
     };
 };
 
-export function handleGameUpdate(table: GameTable, {updateType, updateValue}: GameUpdate): GameTable {
+export function gameTableDispatch(table: GameTable, {updateType, updateValue}: GameUpdate): GameTable {
     if (updateType in gameUpdateHandlers) {
         return gameUpdateHandlers[updateType](table, updateValue);
     } else {

@@ -1,26 +1,17 @@
 import { Dispatch, SetStateAction } from "react";
-import { CardIdUpdate, FlashCardUpdate, GameString, Milliseconds, MoveCardUpdate, PlayerIdUpdate, ShortPauseUpdate } from "../../Messages/GameUpdate";
-import { GameUpdate } from "./GameUpdateHandler";
-import { AnimationState } from "./Components/Animations/AnimationView";
+import { CardIdUpdate, GameString, Milliseconds, MoveCardUpdate, PlayerIdUpdate, ShortPauseUpdate } from "../../Messages/GameUpdate";
+import { GameUpdate } from "./GameTableDispatch";
 
-export class Game {
+export class GameUpdateHandler {
 
     private queuedUpdates: GameUpdate[] = [];
     private updateTimer?: number;
     private updateOnEnd?: GameUpdate;
 
     private tableDispatch: Dispatch<GameUpdate>;
-    private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
-    private setAnimationState: Dispatch<SetStateAction<AnimationState>>;
 
-    constructor(
-        tableDispatch: Dispatch<any>,
-        setGameLogs: Dispatch<SetStateAction<GameString[]>>,
-        setAnimationState: Dispatch<SetStateAction<AnimationState>>
-    ) {
+    constructor(tableDispatch: Dispatch<any>) {
         this.tableDispatch = tableDispatch;
-        this.setGameLogs = setGameLogs;
-        this.setAnimationState = setAnimationState;
     }
 
     pushUpdate(update: GameUpdate) {
@@ -34,7 +25,6 @@ export class Game {
                 this.updateOnEnd = undefined;
             }
             this.updateTimer = undefined;
-            this.setAnimationState(null);
         };
 
         if (this.updateTimer && (this.updateTimer -= timeElapsed) <= 0) {
@@ -60,7 +50,6 @@ export class Game {
 
     private updateHandlers: Record<string, (update: any) => void> = {
         game_error: this.handleGameError,
-        game_log: this.handleGameLog,
         game_prompt: this.handleGamePrompt,
         play_sound: this.handlePlaySound,
         move_card: this.handleMoveCard,
@@ -76,10 +65,6 @@ export class Game {
         // TODO
     }
 
-    private handleGameLog(message: GameString) {
-        this.setGameLogs(logs => logs.concat(message));
-    }
-
     private handleGamePrompt(message: GameString) {
         // TODO
     }
@@ -90,7 +75,6 @@ export class Game {
 
     private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
         this.updateOnEnd = { updateType: 'move_card_end', updateValue: { card, player, pocket } };
-        this.setAnimationState({ move_card: { card, player, pocket, duration }});
     };
 
     private handleCardAnimation({ card }: CardIdUpdate) {
