@@ -10,6 +10,7 @@ export interface UserValue {
 export interface LobbyUserProps {
     user?: UserValue;
     isOwner?: boolean;
+    alignVertical?: boolean;
 }
 
 export const DEFAULT_USER_PROPIC = "/media/icon_default_user.png";
@@ -23,11 +24,20 @@ export function getUsername(user?: UserValue) {
   return user?.name ?? getLocalizedLabel('ui', 'USER_DISCONNECTED');
 }
 
-export default function LobbyUser({ user }: LobbyUserProps) {
-  return (
-    <div>
-    <img style={{display:'inline'}} src={getPropic(user)} />
-    {getUsername(user)}
-    </div>
-  );
+export default function LobbyUser({ user, alignVertical }: LobbyUserProps) {
+  if (alignVertical) {
+    return (
+      <div className='text-center font-bold'>
+        <p>{getUsername(user)}</p>
+        <p><img style={{display:'inline'}} src={getPropic(user)} /></p>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+      <img style={{display:'inline'}} src={getPropic(user)} />
+      {getUsername(user)}
+      </div>
+    );
+  }
 }

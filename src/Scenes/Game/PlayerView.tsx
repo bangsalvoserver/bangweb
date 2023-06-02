@@ -44,20 +44,34 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, table, pl
 
     return (
         <div className={className}>
-            <LobbyUser user={user} />
-            <div className="player-character align-center-vertical">
-                <PocketView ref={positions.player_character} table={table} cards={player.pockets.player_character} />
-                <RoleView flipDuration={flipDuration} role={playerRole} />
-                <div>
-                    { isAlive ? <div>{ player.status.hp } HP</div> : null }
-                    { player.status.gold > 0 ? <div>{ player.status.gold } gold</div> : null }
+            <div className='flex flex-col'>
+                <div className='player-pocket'><PocketView ref={positions.player_hand} table={table} cards={player.pockets.player_hand} /></div>
+                <div className='player-pocket'><PocketView ref={positions.player_table} table={table} cards={player.pockets.player_table} /></div>
+            </div>
+            <div className='flex flex-col'>
+                <div className='flex flex-col flex-grow text-right'>
+                    { /* TODO swap these with icons */ }
                     { isOrigin ? <div style={{color: 'cyan'}}>Origin</div> : null }
                     { isTarget ? <div style={{color: 'red'}}>Target</div> : null }
                     { isWinner ? <div style={{color: 'yellow'}}>Winner</div> : null }
                 </div>
+                <div className='flex flex-row'>
+                    <div className='flex flex-col'>
+                        <div className='flex flex-col flex-grow text-center justify-end'>
+                            { /* TODO add player_backup and gold nuggets */ }
+                            { player.status.gold > 0 ? <div>{ player.status.gold } gold</div> : null }
+                            { isAlive ? <div>{ player.status.hp } HP</div> : null }
+                        </div>
+                        <PocketView ref={positions.player_character} table={table} cards={player.pockets.player_character} />
+                    </div>
+                    <div className='flex flex-col'>
+                        <LobbyUser user={user} alignVertical />
+                        <div className='flex flex-row justify-center'>
+                            <RoleView flipDuration={flipDuration} role={playerRole} />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="card-pocket"><PocketView ref={positions.player_hand} table={table} cards={player.pockets.player_hand} /></div>
-            <div className="card-pocket"><PocketView ref={positions.player_table} table={table} cards={player.pockets.player_table} /></div>
         </div>
     )
 });
