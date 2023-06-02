@@ -1,3 +1,4 @@
+import "./Locale.css";
 import { REGISTRIES } from "./Registry";
 import { CardSign } from "../Messages/CardData";
 import { GameString } from "../Messages/GameUpdate";
@@ -37,9 +38,9 @@ export interface CardNameProps {
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
     const localizedName = name in cardRegistry ? cardRegistry[name] : name;
     if (sign && sign.rank != 'none' && sign.suit != 'none') {
-        return (<>{localizedName} (<CardSignView sign={sign} />)</>);
+        return (<span className="card-name">{localizedName} (<CardSignView sign={sign} />)</span>);
     } else {
-        return (<>{localizedName}</>);
+        return (<span className="card-name">{localizedName}</span>);
     }
 }
 
@@ -60,15 +61,15 @@ export function GameStringComponent({ table, users, message}: GameStringProps): 
                     if ('name' in arg.card) {
                         return <LocalizedCardName name={arg.card.name} sign={arg.card.sign} />;
                     } else {
-                        return <>{getLocalizedLabel('ui', 'UNKNOWN_CARD')}</>;
+                        return <span className="card-name unknown-name">{getLocalizedLabel('ui', 'UNKNOWN_CARD')}</span>;
                     }
                 } else if ('player' in arg) {
                     if (arg.player) {
                         const userid = getPlayer(table, arg.player).userid;
                         const user = users.find(user => user.id === userid);
-                        return <>{getUsername(user)}</>;
+                        return <span className="player-name">{getUsername(user)}</span>;
                     } else {
-                        return <>{getLocalizedLabel('ui', 'UNKNOWN_PLAYER')}</>
+                        return <span className="player-name unknown-name">{getLocalizedLabel('ui', 'UNKNOWN_PLAYER')}</span>
                     }
                 }
                 throw new Error('Invalid argument in format_args');

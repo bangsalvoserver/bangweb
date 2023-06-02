@@ -1,0 +1,15 @@
+.card-name {
+    font-weight: bold;
+}
+
+.card-name img {
+    height: 1em;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.unknown-name {
+    color: gray;
+}
