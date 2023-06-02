@@ -4,7 +4,7 @@
     top: var(--startY);
     animation-name: move-card;
     animation-duration: var(--duration);
-    animation-fill-mode: forwards;
+    animation-fill-mode: both;
     transition: ease-in-out;
 }
 

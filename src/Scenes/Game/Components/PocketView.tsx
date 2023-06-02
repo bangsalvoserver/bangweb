@@ -31,13 +31,14 @@ export interface PocketPosition {
 export interface PocketProps {
     table: GameTable;
     cards: CardId[];
+    className?: string;
 }
 
 export type PocketPositionRef = MutableRefObject<PocketPosition>;
 
 export type PocketPositionMap = Partial<Record<PocketType, PocketPositionRef>>;
 
-const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, ref) => {
+const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards, className }, ref) => {
     const pocketRef = useRef() as MutableRefObject<HTMLDivElement>;
 
     useImperativeHandle(ref, () => ({
@@ -52,7 +53,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, re
         }
     }));
 
-    return <div ref={pocketRef} className='pocket-view'>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;
+    return <div ref={pocketRef} className={`pocket-view ${className ?? ''}`}>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;
 });
 
 export default PocketView;

@@ -1,11 +1,17 @@
 .pocket-view {
     display: inline-block;
     height: 100%;
+    min-width: 70px;
+    min-height: 103px;
 }
 
 .count-pocket {
     display: inline-block;
     position: relative;
+}
+
+.single-card-pocket .card-view {
+    position: absolute;
 }
 
 .count-pocket-inner {

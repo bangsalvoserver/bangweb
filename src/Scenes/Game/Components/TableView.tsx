@@ -1,17 +1,15 @@
-import "./TableView.css";
-import { GameTable, PocketRef, getCard, getPlayer } from "../GameTable";
-import CardView from "./CardView";
-import { GameString, PlayerId } from "../../../Messages/GameUpdate";
+import { useRef } from "react";
 import { GameStringComponent } from "../../../Locale/Locale";
+import { GameString, PlayerId } from "../../../Messages/GameUpdate";
 import { UserValue } from "../../Lobby/LobbyUser";
-import PlayerView from "./PlayerView";
-import CardButtonView from "./CardButtonView";
-import CountPocket, { CountPocketProps } from "./CountPocket";
-import { MutableRefObject, RefObject, createRef, useEffect, useRef, useState } from "react";
-import { PlayerPocketType, TablePocketType } from "../../../Messages/CardEnums";
-import PocketView, { PocketPositionMap, PocketPositionRef, Rect } from "./PocketView";
 import { AnimationState } from "../GameAnimation";
+import { GameTable, PocketRef, getCard, getPlayer } from "../GameTable";
 import AnimationView from "./Animations/AnimationView";
+import CardButtonView from "./CardButtonView";
+import CountPocket from "./CountPocket";
+import PlayerView from "./PlayerView";
+import PocketView, { PocketPositionMap, PocketPositionRef, Rect } from "./PocketView";
+import "./TableView.css";
 
 export interface TableProps {
     table: GameTable;
@@ -56,7 +54,7 @@ export default function TableView({ table, animation, users }: TableProps) {
     return (
       <div className="table-view">
         <div className="align-center align-center-vertical">
-          <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} />
+          <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} className='single-card-pocket' />
           <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
           <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
         </div>
