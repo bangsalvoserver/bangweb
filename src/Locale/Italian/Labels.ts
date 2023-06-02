@@ -39,6 +39,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         UNKNOWN_CARD: "(Carta sconosciuta)",
         UNKNOWN_PLAYER: "(Giocatore sconosciuto)",
         USER_DISCONNECTED: "(Disconnesso)",
+        LOBBY_CHAT_SEND: "Invia"
     },
 
 };

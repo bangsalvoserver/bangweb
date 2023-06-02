@@ -71,26 +71,18 @@ function App() {
   );
 
   return (
-<>
-    <Header
-      connection={connection.current}
-      onClickToggleMenu={() => setIsMenuOpen(value => !value)}
-    />
-<div className="home-page
-min-h-screen
-">
-    <div className="
-    home-page-login
-    min-h-screen
-    flex
-    flex-col
-    ">
-      <UserMenu isMenuOpen={isMenuOpen}/>
-      <CurrentScene scene={scene} />
+  <div className="background">
+    <div className="background-inner min-h-screen flex flex-col">
+        <Header
+          connection={connection.current}
+          onClickToggleMenu={() => setIsMenuOpen(value => !value)}
+        />
+        <UserMenu isMenuOpen={isMenuOpen}/>
+        <div className="current-scene">
+          <CurrentScene scene={scene} />
+        </div>
     </div>
-
-</div>
-    </>
+  </div>
   );
 }
 

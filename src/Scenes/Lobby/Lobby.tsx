@@ -114,12 +114,16 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
 
   return (
     <div>
-      <h1>{lobbyName}</h1>
+      <h1 className='
+        text-3xl
+        text-white
+        font-bold
+        '>{lobbyName}</h1>
       <div>
         <button onClick={handleLeaveLobby}>Leave Lobby</button>
       </div>
-      <LobbyChat connection={connection} myUserId={myUserId} users={users} messages={chatMessages} />
       { gameUpdateHandler.current ? getGameScene() : getLobbyScene() }
+      <LobbyChat connection={connection} myUserId={myUserId} users={users} messages={chatMessages} />
     </div>
   );
 }

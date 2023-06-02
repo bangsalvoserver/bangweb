@@ -39,5 +39,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
         UNKNOWN_CARD: "(Unknown card)",
         UNKNOWN_PLAYER: "(Unknown player)",
         USER_DISCONNECTED: "(Disconnected)",
+        LOBBY_CHAT_SEND: "Send",
     },
 };

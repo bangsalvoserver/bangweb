@@ -73,7 +73,6 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
 
     return (
       <div className="game-scene-top">
-        <GameLogView table={table} users={users} />
         <div className="game-scene">
           <div className="align-center main-deck">
             <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} className='single-card-pocket' />
@@ -96,6 +95,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
           </div>
           <AnimationView state={table.animation} table={table} getPocketRect={getPocketRect} />
         </div>
+        <GameLogView table={table} users={users} />
       </div>
   );
 }

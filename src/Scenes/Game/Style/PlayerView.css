@@ -3,6 +3,8 @@
     vertical-align: top;
     padding: 5px;
     margin: 5px;
+
+    border: 3px solid #2d1000ff;
 }
 
 .player-character {
@@ -13,7 +15,7 @@
 }
 
 .current-turn {
-    outline: 3px solid green;
+    border: 3px solid green;
 }
 
 .card-pocket {

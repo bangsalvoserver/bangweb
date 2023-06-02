@@ -1,0 +1,39 @@
+.lobby-chat {
+    position: absolute;
+    right: 1em;
+    bottom: 1em;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.lobby-chat-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+}
+
+.lobby-chat-form {
+    display: flex;
+    flex-direction: row;
+}
+
+.lobby-chat-form input {
+    width: 100%;
+    margin-right: 0.5em;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.self-message {
+    text-align: right;
+}
+
+.server-message {
+    color: yellow;
+}
