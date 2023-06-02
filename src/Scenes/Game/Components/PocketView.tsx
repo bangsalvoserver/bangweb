@@ -16,7 +16,15 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, re
     const pocketRef = useRef() as MutableRefObject<HTMLDivElement>;
 
     useImperativeHandle(ref, () => ({
-        getRect: () => pocketRef.current.getBoundingClientRect()
+        getRect: () => {
+            const rect = pocketRef.current.getBoundingClientRect();
+            return {
+                x: rect.left + window.scrollX,
+                y: rect.top + window.scrollY,
+                w: rect.width,
+                h: rect.height
+            };
+        }
     }));
 
     return <div ref={pocketRef} className='pocket-view'>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;

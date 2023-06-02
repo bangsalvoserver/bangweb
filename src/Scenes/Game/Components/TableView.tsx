@@ -13,8 +13,15 @@ import PocketView, { PocketPositionRef } from "./PocketView";
 import { AnimationState } from "../GameAnimation";
 import AnimationView from "./Animations/AnimationView";
 
+export interface Rect {
+  x: number,
+  y: number,
+  w: number,
+  h: number
+};
+
 export interface PocketPosition {
-    getRect: () => DOMRect;
+    getRect: () => Rect;
 }
 
 export interface TableProps {
@@ -36,7 +43,7 @@ export default function TableView({ table, animation, users }: TableProps) {
 
     const playerPositions = useRef<Record<PlayerId, PlayerPocketPositions | null>>({});
 
-    const getPocketRect = (pocket: PocketRef): DOMRect | undefined => {
+    const getPocketRect = (pocket: PocketRef): Rect | undefined => {
       if (pocket) {
         if ('player' in pocket) {
           if (pocket.player in playerPositions.current) {
