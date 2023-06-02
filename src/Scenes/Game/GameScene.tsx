@@ -12,6 +12,7 @@ import { GameUpdateHandler } from "./Model/GameUpdateHandler";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPositionMap, PocketPositionRef, Rect } from "./PocketView";
 import "./Style/GameScene.css";
+import GameLogView from "./GameLogView";
 
 const FRAMERATE = 60;
 
@@ -63,10 +64,6 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
       return undefined;
     };
 
-    const newGameStringComponent = (message: GameString, key?: number) => {
-      return <GameStringComponent key={key} table={table} users={users} message={message} />
-    };
-
     const newPlayerView = (player_id: PlayerId) => {
       const player = getPlayer(table, player_id);
       const user = users.find(user => user.id === player.userid);
@@ -85,7 +82,9 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
           </div>
         </div>
         <div className="align-center status-text">
-          { 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
+          { 'status_text' in table.status.request
+            ? <GameStringComponent table={table} users={users} message={table.status.request.status_text} />
+            : null }
         </div>
         <div className="align-center">
           { table.alive_players.map(newPlayerView) }
@@ -95,6 +94,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
         </div>
         <AnimationView state={table.animation} table={table} getPocketRect={getPocketRect} />
       </div>
+      <GameLogView table={table} users={users} />
       </div>
   );
 }

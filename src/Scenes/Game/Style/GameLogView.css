@@ -1,0 +1,10 @@
+.game-log-view {
+    position: absolute;
+    bottom: 1em;
+    left: 1em;
+    max-width: 250px;
+    max-height: calc(100% - 200px);
+    overflow-y: auto;
+    font-size: 9pt;
+    padding-right: 1em;
+}
