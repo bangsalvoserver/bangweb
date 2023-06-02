@@ -6,7 +6,8 @@ import { AnimationState } from "./Components/Animations/AnimationView";
 export class Game {
 
     private queuedUpdates: GameUpdate[] = [];
-    private updateTimer: number = 0;
+    private updateTimer?: number;
+    private updateOnEnd?: GameUpdate;
 
     private tableDispatch: Dispatch<GameUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
@@ -27,41 +28,49 @@ export class Game {
     }
 
     tick(timeElapsed: Milliseconds) {
-        if (this.updateTimer > 0) {
-            this.updateTimer -= timeElapsed;
-            if (this.updateTimer <= 0) {
-                this.updateTimer = 0;
-                this.setAnimationState(null);
-                return;
+        const onEndAnimation = () => {
+            if (this.updateOnEnd) {
+                this.tableDispatch(this.updateOnEnd);
+                this.updateOnEnd = undefined;
             }
-        }
-        while (this.updateTimer == 0 && this.queuedUpdates.length > 0) {
-            const {updateType, updateValue} = this.queuedUpdates.shift() as GameUpdate;
+            this.updateTimer = undefined;
+            this.setAnimationState(null);
+        };
 
-            const updateHandlers: Record<string, (update: any) => void> = {
-                game_error: this.handleGameError,
-                game_log: this.handleGameLog,
-                game_prompt: this.handleGamePrompt,
-                flash_card: this.handleFlashCard,
-                play_sound: this.handlePlaySound,
-                move_card: this.handleMoveCard,
-                show_card: this.handleCardAnimation,
-                hide_card: this.handleCardAnimation,
-                tap_card: this.handleCardAnimation,
-                short_pause: this.handleCardAnimation,
-                player_show_role: this.handlePlayerAnimation,
-            };
+        if (this.updateTimer && (this.updateTimer -= timeElapsed) <= 0) {
+            onEndAnimation();
+        } else {
+            while (!this.updateTimer && this.queuedUpdates.length != 0) {
+                const {updateType, updateValue} = this.queuedUpdates.shift() as GameUpdate;
 
-            if (updateType in updateHandlers) {
-                updateHandlers[updateType].call(this, updateValue);
-            }
-            this.tableDispatch({ updateType, updateValue });
-
-            if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
-                this.updateTimer = updateValue.duration as Milliseconds;
+                if (updateType in this.updateHandlers) {
+                    this.updateHandlers[updateType].call(this, updateValue);
+                }
+                this.tableDispatch({ updateType, updateValue });
+                
+                if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
+                    this.updateTimer = updateValue.duration as Milliseconds;
+                    if (this.updateTimer <= 0) {
+                        onEndAnimation();
+                    }
+                }
             }
         }
     }
+
+    private updateHandlers: Record<string, (update: any) => void> = {
+        game_error: this.handleGameError,
+        game_log: this.handleGameLog,
+        game_prompt: this.handleGamePrompt,
+        flash_card: this.handleFlashCard,
+        play_sound: this.handlePlaySound,
+        move_card: this.handleMoveCard,
+        show_card: this.handleCardAnimation,
+        hide_card: this.handleCardAnimation,
+        tap_card: this.handleCardAnimation,
+        short_pause: this.handleCardAnimation,
+        player_show_role: this.handlePlayerAnimation,
+    };
 
     private handleGameError(message: GameString) {
         // TODO
@@ -84,15 +93,15 @@ export class Game {
     }
 
     private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
-        this.queuedUpdates.unshift({ updateType: 'move_card_end', updateValue: { card, player, pocket } });
+        this.updateOnEnd = { updateType: 'move_card_end', updateValue: { card, player, pocket } };
         this.setAnimationState({ move_card: { card, player, pocket, duration }});
     };
 
     private handleCardAnimation({ card }: CardIdUpdate) {
-        this.queuedUpdates.unshift({ updateType: 'card_animation_end', updateValue: { card } });
+        this.updateOnEnd = { updateType: 'card_animation_end', updateValue: { card } };
     }
 
     private handlePlayerAnimation({ player }: PlayerIdUpdate) {
-        this.queuedUpdates.unshift({ updateType: 'player_animation_end', updateValue: { player } });
+        this.updateOnEnd = { updateType: 'player_animation_end', updateValue: { player } };
     }
 }
