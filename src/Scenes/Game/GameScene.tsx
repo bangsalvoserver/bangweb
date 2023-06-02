@@ -71,30 +71,31 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
       return <PlayerView ref={ref => playerPositions.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
     };
 
-    return (<div>
-        { showReturnButton() ? <button onClick={handleReturnLobby}>Return</button> : null }
+    return (
+      <div className="game-scene-top">
+        <GameLogView table={table} users={users} />
         <div className="game-scene">
-        <div className="align-center main-deck">
-          <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} className='single-card-pocket' />
-          <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
-          <div className="selection-pocket">
-            <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
+          <div className="align-center main-deck">
+            <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} className='single-card-pocket' />
+            <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
+            <div className="selection-pocket">
+              <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
+            </div>
           </div>
+          <div className="align-center status-text">
+            { 'status_text' in table.status.request
+              ? <GameStringComponent table={table} users={users} message={table.status.request.status_text} />
+              : null }
+            { showReturnButton() ? <button onClick={handleReturnLobby}>Return to Lobby</button> : null }
+          </div>
+          <div className="align-center">
+            { table.alive_players.map(newPlayerView) }
+          </div>
+          <div className="align-center">
+            { table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} /> )}
+          </div>
+          <AnimationView state={table.animation} table={table} getPocketRect={getPocketRect} />
         </div>
-        <div className="align-center status-text">
-          { 'status_text' in table.status.request
-            ? <GameStringComponent table={table} users={users} message={table.status.request.status_text} />
-            : null }
-        </div>
-        <div className="align-center">
-          { table.alive_players.map(newPlayerView) }
-        </div>
-        <div className="align-center">
-          { table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} /> )}
-        </div>
-        <AnimationView state={table.animation} table={table} getPocketRect={getPocketRect} />
-      </div>
-      <GameLogView table={table} users={users} />
       </div>
   );
 }

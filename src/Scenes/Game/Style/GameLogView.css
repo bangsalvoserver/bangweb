@@ -1,10 +1,10 @@
 .game-log-view {
-    position: absolute;
-    bottom: 1em;
-    left: 1em;
-    max-width: 250px;
-    max-height: calc(100% - 200px);
+    width: 300px;
+    max-height: calc(100vh - 400px);
+
     overflow-y: auto;
     font-size: 9pt;
-    padding-right: 1em;
+    margin-top: 1em;
+    padding: 0.5em;
+    background-color: rgba(255, 255, 255, 0.2);
 }

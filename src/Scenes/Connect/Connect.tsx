@@ -27,6 +27,15 @@ export default function ConnectScene({ connection }: ConnectProps) {
 
   return (
     <form onSubmit={handleConnect} className="flex flex-col items-center">
+    <h1
+    className='
+    text-6xl
+    text-center
+    text-white
+    font-bold
+    p-4
+    ' 
+    > Bang!</h1>
     <label htmlFor="username" className="text-lg font-medium mb-2">User Name:</label>
     <input
       className="

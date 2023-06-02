@@ -85,15 +85,6 @@ min-h-screen
     flex
     flex-col
     ">
-      <h1
-      className='
-      text-6xl
-      text-center
-      text-white
-      font-bold
-      p-4
-      ' 
-      > Bang!</h1>
       <UserMenu isMenuOpen={isMenuOpen}/>
       <CurrentScene scene={scene} />
     </div>
