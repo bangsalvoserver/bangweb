@@ -1,6 +1,6 @@
 import "./CardView.css";
 import { Card } from "../GameTable";
-import { CardSign } from "../../../Messages/CardData";
+import { CardData, CardSign } from "../../../Messages/CardData";
 import CardSignView from "./CardSignView";
 import { CSSProperties } from "react";
 
@@ -11,16 +11,20 @@ export interface CardProps {
 export default function CardView({ card }: CardProps) {
     let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
 
-    let imageSrc = '/cards/';
-    if ('image' in card.cardData) {
-        if (card.cardData.image.includes('/')) {
-            imageSrc += card.cardData.image;
+    const getCardDataImage = (cardData: CardData) => {
+        let imageSrc = '/cards/';
+        if (cardData.image.includes('/')) {
+            imageSrc += cardData.image;
         } else {
-            imageSrc += card.cardData.deck + '/' + card.cardData.image;
+            imageSrc += cardData.deck + '/' + cardData.image;
         }
         imageSrc += '.png';
-    } else {
-        imageSrc = backfaceSrc;
+        return imageSrc;
+    };
+
+    let cardData: CardData | undefined;
+    if ('image' in card.cardData) {
+        cardData = card.cardData;
     }
 
     let style: CSSProperties | undefined;
@@ -34,15 +38,16 @@ export default function CardView({ card }: CardProps) {
 
         classes.push('card-animation');
 
-        switch (cardAnimation) {
-        case 'flipping':
+        if ('flipping' in cardAnimation) {
             classes.push('card-animation-flip');
-            if (card.cardData) classes.push('card-animation-reverse');
-            break;
-        case 'turning':
+            if (cardAnimation.flipping.cardData) {
+                cardData = cardAnimation.flipping.cardData;
+            } else {
+                classes.push('card-animation-reverse');
+            }
+        } else if ('turning' in cardAnimation) {
             classes.push('card-animation-turn');
             if (!card.inactive) classes.push('card-animation-reverse');
-            break;
         }
     } else if (card.inactive) {
         classes.push('card-horizontal');
@@ -51,12 +56,12 @@ export default function CardView({ card }: CardProps) {
     return (
         <div style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={imageSrc}/>
-                {'sign' in card.cardData ? <div className="card-view-inner">
-                    <CardSignView sign={card.cardData.sign} />
+                <img className="card-view-img" src={cardData ? getCardDataImage(cardData) : backfaceSrc}/>
+                {cardData ? <div className="card-view-inner">
+                    <CardSignView sign={cardData.sign} />
                 </div> : null}
             </div>
-            { card.animation && card.animation[0] == 'flipping' ?
+            { classes.includes('card-animation-flip') ?
             <div className="card-back">
                 <img className="card-view-img" src={backfaceSrc} />
             </div> : null}

@@ -1,6 +1,6 @@
 import { CardData } from "../../Messages/CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "../../Messages/CardEnums";
-import { CardId, GameString, Milliseconds, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../Messages/GameUpdate";
+import { AnimationUpdate, CardId, GameString, Milliseconds, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 
 export interface Id {
@@ -24,7 +24,13 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
 
 export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
 
-export type CardAnimation = 'flipping' | 'turning';
+export interface CardFlipping {
+    cardData?: CardData;
+}
+
+export type CardAnimation =
+    {flipping: CardFlipping} |
+    {turning: {}};
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
@@ -64,6 +70,12 @@ export type TablePockets = {
     [T in Extract<TablePocketType, string>]: CardId[]
 }
 
+export interface PlayerFlippingRole {
+    role: PlayerRole;
+}
+
+export type PlayerAnimation = { flipping_role: PlayerFlippingRole };
+
 export interface Player extends Id {
     userid: UserId;
     status: {
@@ -75,6 +87,7 @@ export interface Player extends Id {
         weapon_range: number,
         distance_mod: number
     };
+    animation?: [PlayerAnimation, Milliseconds];
     pockets: PlayerPockets;
 }
 

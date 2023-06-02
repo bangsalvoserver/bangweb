@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { CardId, FlashCardUpdate, GameString, HideCardUpdate, Milliseconds, MoveCardUpdate, ShortPauseUpdate, ShowCardUpdate } from "../../Messages/GameUpdate";
+import { CardId, FlashCardUpdate, GameString, HideCardUpdate, Milliseconds, MoveCardUpdate, PlayerId, ShortPauseUpdate, ShowCardUpdate } from "../../Messages/GameUpdate";
 import { GameUpdate } from "./GameUpdateHandler";
 import { AnimationState } from "./GameAnimation";
 import { getCard, newPocketRef } from "./GameTable";
@@ -51,7 +51,8 @@ export class Game {
                 move_card: this.handleMoveCard,
                 show_card: this.handleCardAnimation,
                 hide_card: this.handleCardAnimation,
-                tap_card: this.handleCardAnimation
+                tap_card: this.handleCardAnimation,
+                player_show_role: this.handlePlayerAnimation,
             };
 
             if (updateType in updateHandlers) {
@@ -97,5 +98,9 @@ export class Game {
 
     private handleCardAnimation({ card }: { card: CardId }) {
         this.queuedUpdates.unshift({ updateType: 'card_animation_end', updateValue: { card } });
+    }
+
+    private handlePlayerAnimation({ player }: { player: PlayerId }) {
+        this.queuedUpdates.unshift({ updateType: 'player_animation_end', updateValue: { player } });
     }
 }

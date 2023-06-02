@@ -32,12 +32,25 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, table, pl
     const isTarget = 'target' in table.status.request && table.status.request.target == player.id;
     const isWinner = player.status.flags.includes('winner');
 
+    let flipDuration: number | undefined;
+    let playerRole = player.status.role;
+    
+    if (player.animation) {
+        const [animationType, duration] = player.animation;
+        if ('flipping_role' in animationType) {
+            flipDuration = duration;
+            if (player.status.role == 'unknown') {
+                playerRole = animationType.flipping_role.role;
+            }
+        }
+    }
+
     return (
         <div className={className}>
             <LobbyUser user={user} />
             <div className="player-character align-center-vertical">
                 <PocketView ref={positions.player_character} table={table} cards={player.pockets.player_character} />
-                <RoleView role={player.status.role} />
+                <RoleView flipDuration={flipDuration} role={playerRole} />
                 <div>
                     { isAlive ? <div>{ player.status.hp } HP</div> : null }
                     { player.status.gold > 0 ? <div>{ player.status.gold } gold</div> : null }
