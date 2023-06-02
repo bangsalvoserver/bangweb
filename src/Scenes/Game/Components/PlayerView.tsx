@@ -4,7 +4,7 @@ import LobbyUser, { UserValue } from "../../Lobby/LobbyUser";
 import { GameTable, Player, getCard } from "../GameTable";
 import CardView from "./CardView";
 import "./PlayerView.css";
-import PocketView, { PocketPositionRef } from "./PocketView";
+import PocketView, { PocketPositionMap, PocketPositionRef } from "./PocketView";
 import RoleView from "./RoleView";
 
 export interface PlayerProps {
@@ -13,12 +13,8 @@ export interface PlayerProps {
     player: Player
 }
 
-export type PlayerPocketPositions = {
-  [T in Extract<PlayerPocketType, string>]?: PocketPositionRef;
-};
-
-const PlayerView = forwardRef<PlayerPocketPositions, PlayerProps>(({ user, table, player }, ref) => {
-    const positions: PlayerPocketPositions = {
+const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, table, player }, ref) => {
+    const positions: PocketPositionMap = {
         player_hand: useRef() as PocketPositionRef,
         player_table: useRef() as PocketPositionRef,
         player_character: useRef() as PocketPositionRef,

@@ -1,6 +1,6 @@
 import { AnimationState } from "../../GameAnimation";
 import { GameTable, PocketRef, getCard } from "../../GameTable";
-import { Rect } from "../TableView";
+import { Rect } from "../PocketView";
 import MoveCardAnimation from "./MoveCardAnimation";
 
 export type GetPocketRectFunction = (pocket: PocketRef) => Rect | undefined;

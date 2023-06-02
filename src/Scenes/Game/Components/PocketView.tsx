@@ -3,7 +3,30 @@ import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react
 import { CardId } from "../../../Messages/GameUpdate";
 import { GameTable, getCard } from "../GameTable";
 import CardView from "./CardView";
-import { PocketPosition } from "./TableView";
+import { PocketType, TablePocketType } from "../../../Messages/CardEnums";
+
+export interface Rect {
+  x: number,
+  y: number,
+  w: number,
+  h: number
+};
+
+export interface Point {
+    x: number,
+    y: number
+}
+
+export function getRectCenter(rect: Rect): Point {
+    return {
+        x: rect.x + rect.w / 2,
+        y: rect.y + rect.h / 2
+    }
+};
+
+export interface PocketPosition {
+    getRect: () => Rect;
+}
 
 export interface PocketProps {
     table: GameTable;
@@ -11,6 +34,8 @@ export interface PocketProps {
 }
 
 export type PocketPositionRef = MutableRefObject<PocketPosition>;
+
+export type PocketPositionMap = Partial<Record<PocketType, PocketPositionRef>>;
 
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, ref) => {
     const pocketRef = useRef() as MutableRefObject<HTMLDivElement>;

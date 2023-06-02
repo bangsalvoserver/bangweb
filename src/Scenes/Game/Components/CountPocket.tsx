@@ -3,8 +3,7 @@ import { CardId } from "../../../Messages/GameUpdate";
 import { GameTable, getCard } from "../GameTable";
 import CardView from "./CardView";
 import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
-import { PocketPosition } from "./TableView";
-import PocketView from "./PocketView";
+import PocketView, { PocketPosition } from "./PocketView";
 
 export interface CountPocketProps {
     table: GameTable;

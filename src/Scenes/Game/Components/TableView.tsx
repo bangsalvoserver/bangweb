@@ -4,25 +4,14 @@ import CardView from "./CardView";
 import { GameString, PlayerId } from "../../../Messages/GameUpdate";
 import { GameStringComponent } from "../../../Locale/Locale";
 import { UserValue } from "../../Lobby/LobbyUser";
-import PlayerView,{ PlayerPocketPositions } from "./PlayerView";
+import PlayerView from "./PlayerView";
 import CardButtonView from "./CardButtonView";
 import CountPocket, { CountPocketProps } from "./CountPocket";
 import { MutableRefObject, RefObject, createRef, useEffect, useRef, useState } from "react";
 import { PlayerPocketType, TablePocketType } from "../../../Messages/CardEnums";
-import PocketView, { PocketPositionRef } from "./PocketView";
+import PocketView, { PocketPositionMap, PocketPositionRef, Rect } from "./PocketView";
 import { AnimationState } from "../GameAnimation";
 import AnimationView from "./Animations/AnimationView";
-
-export interface Rect {
-  x: number,
-  y: number,
-  w: number,
-  h: number
-};
-
-export interface PocketPosition {
-    getRect: () => Rect;
-}
 
 export interface TableProps {
     table: GameTable;
@@ -30,18 +19,14 @@ export interface TableProps {
     users: UserValue[];
 }
 
-export type TablePocketPositions = {
-  [T in Extract<TablePocketType, string>]?: PocketPositionRef;
-};
-
 export default function TableView({ table, animation, users }: TableProps) {
-    const positions: TablePocketPositions = {
+    const positions: PocketPositionMap = {
       main_deck: useRef() as PocketPositionRef,
       discard_pile: useRef() as PocketPositionRef,
       selection: useRef() as PocketPositionRef,
     };
 
-    const playerPositions = useRef<Record<PlayerId, PlayerPocketPositions | null>>({});
+    const playerPositions = useRef<Record<PlayerId, PocketPositionMap | null>>({});
 
     const getPocketRect = (pocket: PocketRef): Rect | undefined => {
       if (pocket) {
