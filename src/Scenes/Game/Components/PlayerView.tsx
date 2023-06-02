@@ -39,7 +39,7 @@ const PlayerView = forwardRef<PlayerPocketPositions, PlayerProps>(({ user, table
     return (
         <div className={className}>
             <LobbyUser user={user} />
-            <div className="player-character">
+            <div className="player-character align-center-vertical">
                 <PocketView ref={positions.player_character} table={table} cards={player.pockets.player_character} />
                 <RoleView role={player.status.role} />
                 <div>

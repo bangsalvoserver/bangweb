@@ -1,0 +1,19 @@
+.pocket-view {
+    display: inline-block;
+    height: 100%;
+}
+
+.count-pocket {
+    display: inline-block;
+    position: relative;
+}
+
+.count-pocket-inner {
+    background-color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    padding: 2px 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

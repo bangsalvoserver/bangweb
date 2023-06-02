@@ -1,3 +1,4 @@
+import "./PocketView.css"
 import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
 import { CardId } from "../../../Messages/GameUpdate";
 import { GameTable, getCard } from "../GameTable";
@@ -18,7 +19,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, re
         getRect: () => pocketRef.current.getBoundingClientRect()
     }));
 
-    return <div ref={pocketRef} style={{display:'inline-block'}}>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;
+    return <div ref={pocketRef} className='pocket-view'>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;
 });
 
 export default PocketView;

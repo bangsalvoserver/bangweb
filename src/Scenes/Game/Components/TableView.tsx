@@ -63,7 +63,7 @@ export default function TableView({ table, animation, users }: TableProps) {
 
     return (
       <div className="table-view">
-        <div className="align-center">
+        <div className="align-center align-center-vertical">
           <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} />
           <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
           <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
