@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-import { CardIdUpdate, GameString, Milliseconds, MoveCardUpdate, PlayerIdUpdate, ShortPauseUpdate } from "../../Messages/GameUpdate";
+import { Dispatch } from "react";
+import { CardIdUpdate, GameString, Milliseconds, MoveCardUpdate, PlayerIdUpdate } from "../../../Messages/GameUpdate";
 import { GameUpdate } from "./GameTableDispatch";
 
 export class GameUpdateHandler {
@@ -73,7 +73,7 @@ export class GameUpdateHandler {
         // TODO
     }
 
-    private handleMoveCard({ card, player, pocket, duration }: MoveCardUpdate) {
+    private handleMoveCard({ card, player, pocket }: MoveCardUpdate) {
         this.updateOnEnd = { updateType: 'move_card_end', updateValue: { card, player, pocket } };
     };
 

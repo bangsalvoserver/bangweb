@@ -1,11 +1,9 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
-import { PlayerPocketType } from "../../../Messages/CardEnums";
-import LobbyUser, { UserValue } from "../../Lobby/LobbyUser";
-import { GameTable, Player, getCard } from "../GameTable";
-import CardView from "./CardView";
-import "./PlayerView.css";
+import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
+import { GameTable, Player } from "./Model/GameTable";
 import PocketView, { PocketPositionMap, PocketPositionRef } from "./PocketView";
 import RoleView from "./RoleView";
+import "./Style/PlayerView.css";
 
 export interface PlayerProps {
     user?: UserValue,

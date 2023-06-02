@@ -3,8 +3,8 @@ import { REGISTRIES } from "./Registry";
 import { CardSign } from "../Messages/CardData";
 import { GameString } from "../Messages/GameUpdate";
 import { UserValue, getUsername } from "../Scenes/Lobby/LobbyUser";
-import { GameTable, getPlayer } from "../Scenes/Game/GameTable";
-import CardSignView from "../Scenes/Game/Components/CardSignView";
+import { GameTable, getPlayer } from "../Scenes/Game/Model/GameTable";
+import CardSignView from "../Scenes/Game/CardSignView";
 
 const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
     const language = navigator.language;

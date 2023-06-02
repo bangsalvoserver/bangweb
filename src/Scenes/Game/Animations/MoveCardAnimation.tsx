@@ -1,5 +1,5 @@
 import "./MoveCardAnimation.css";
-import { Card, PocketRef } from "../../GameTable";
+import { Card, PocketRef } from "../Model/GameTable";
 import CardView from "../CardView";
 import { GetPocketRectFunction } from "./AnimationView";
 import { CSSProperties } from "react";

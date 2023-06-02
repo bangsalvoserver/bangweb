@@ -1,15 +1,15 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { Connection, useHandlers } from '../../Messages/Connection';
-import { LobbyAddUser, LobbyRemoveUser, LobbyEntered, LobbyOwner, LobbyId, UserId, ChatMessage } from '../../Messages/ServerMessage';
-import LobbyUser, { UserValue } from './LobbyUser';
-import { GameOptions, GameString } from '../../Messages/GameUpdate';
-import GameScene from '../Game/Components/GameScene';
+import { GameOptions } from '../../Messages/GameUpdate';
 import { deserializeImage } from '../../Messages/ImageSerial';
-import { GameUpdateHandler } from '../Game/GameUpdateHandler';
-import { gameTableDispatch } from '../Game/GameTableDispatch';
-import { newGameTable } from '../Game/GameTable';
+import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
+import GameScene from '../Game/GameScene';
+import { newGameTable } from '../Game/Model/GameTable';
+import { gameTableDispatch } from '../Game/Model/GameTableDispatch';
+import { GameUpdateHandler } from '../Game/Model/GameUpdateHandler';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
+import LobbyUser, { UserValue } from './LobbyUser';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;

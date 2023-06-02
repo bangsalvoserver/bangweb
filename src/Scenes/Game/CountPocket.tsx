@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
-import { CardId } from "../../../Messages/GameUpdate";
-import { GameTable } from "../GameTable";
-import "./CardView.css";
+import "./Style/CardView.css";
 import PocketView, { PocketPosition } from "./PocketView";
+import { GameTable } from "./Model/GameTable";
+import { CardId } from "../../Messages/GameUpdate";
 
 export interface CountPocketProps {
     table: GameTable;

@@ -1,5 +1,5 @@
-import { MoveCardUpdate } from "../../../../Messages/GameUpdate";
-import { GameTable, PocketRef, getCard, newPocketRef } from "../../GameTable";
+import { MoveCardUpdate } from "../../../Messages/GameUpdate";
+import { GameTable, PocketRef, getCard, newPocketRef } from "../Model/GameTable";
 import { Rect } from "../PocketView";
 import MoveCardAnimation from "./MoveCardAnimation";
 

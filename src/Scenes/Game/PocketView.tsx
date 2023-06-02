@@ -1,9 +1,9 @@
-import "./PocketView.css"
 import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
-import { CardId } from "../../../Messages/GameUpdate";
-import { GameTable, getCard } from "../GameTable";
+import { PocketType } from "../../Messages/CardEnums";
+import { CardId } from "../../Messages/GameUpdate";
 import CardView from "./CardView";
-import { PocketType, TablePocketType } from "../../../Messages/CardEnums";
+import { GameTable, getCard } from "./Model/GameTable";
+import "./Style/PocketView.css";
 
 export interface Rect {
   x: number,

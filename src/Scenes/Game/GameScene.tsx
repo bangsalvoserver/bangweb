@@ -1,17 +1,17 @@
 import { useEffect, useRef } from "react";
-import { GameStringComponent } from "../../../Locale/Locale";
-import { GameString, PlayerId } from "../../../Messages/GameUpdate";
-import { UserValue } from "../../Lobby/LobbyUser";
-import { GameTable, PocketRef, getCard, getPlayer } from "../GameTable";
-import AnimationView, { AnimationState } from "./Animations/AnimationView";
+import { GameStringComponent } from "../../Locale/Locale";
+import { Connection } from "../../Messages/Connection";
+import { GameString, PlayerId } from "../../Messages/GameUpdate";
+import { UserId } from "../../Messages/ServerMessage";
+import { UserValue } from "../Lobby/LobbyUser";
+import AnimationView from "./Animations/AnimationView";
 import CardButtonView from "./CardButtonView";
 import CountPocket from "./CountPocket";
+import { GameTable, PocketRef, getCard, getPlayer } from "./Model/GameTable";
+import { GameUpdateHandler } from "./Model/GameUpdateHandler";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPositionMap, PocketPositionRef, Rect } from "./PocketView";
-import "./GameScene.css";
-import { GameUpdateHandler } from "../GameUpdateHandler";
-import { UserId } from "../../../Messages/ServerMessage";
-import { Connection } from "../../../Messages/Connection";
+import "./Style/GameScene.css";
 
 const FRAMERATE = 60;
 

@@ -1,9 +1,8 @@
-import "./CardView.css";
+import "./Style/CardView.css";
 import "./Animations/CardAnimations.css";
-import { Card, CardImage, getCardImage } from "../GameTable";
-import { CardData, CardSign } from "../../../Messages/CardData";
 import CardSignView from "./CardSignView";
 import { CSSProperties } from "react";
+import { Card, CardImage, getCardImage } from "./Model/GameTable";
 
 export interface CardProps {
     card: Card;

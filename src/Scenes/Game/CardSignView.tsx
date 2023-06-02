@@ -1,4 +1,4 @@
-import { CardSign } from "../../../Messages/CardData";
+import { CardSign } from "../../Messages/CardData";
 
 export interface CardSignProps {
     sign: CardSign;

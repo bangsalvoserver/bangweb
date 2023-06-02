@@ -1,8 +1,7 @@
-import "./CardView.css";
-import { PlayerRole } from "../../../Messages/CardEnums";
-import { PlayerAnimation } from "../GameTable";
 import { CSSProperties } from "react";
-import { Milliseconds } from "../../../Messages/GameUpdate";
+import { PlayerRole } from "../../Messages/CardEnums";
+import { Milliseconds } from "../../Messages/GameUpdate";
+import "./Style/CardView.css";
 
 export interface RoleProps {
     role: PlayerRole;
