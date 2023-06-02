@@ -1,8 +1,19 @@
 .pocket-view {
     display: inline-block;
-    height: 100%;
     min-width: 70px;
-    min-height: 103px;
+    height: 103px;
+}
+
+.main-deck {
+    position: relative;
+}
+
+.selection-pocket {
+    width: max-content;
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    transform: translate(-50%, 0);
 }
 
 .count-pocket {

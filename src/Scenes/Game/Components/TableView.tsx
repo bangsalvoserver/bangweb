@@ -52,10 +52,12 @@ export default function TableView({ table, animation, users }: TableProps) {
 
     return (
       <div className="table-view">
-        <div className="align-center align-center-vertical">
+        <div className="align-center main-deck">
           <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} className='single-card-pocket' />
           <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
-          <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
+          <div className="selection-pocket">
+            <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
+          </div>
         </div>
         <div className="align-center status-text">
           { 'status_text' in table.status.request ? newGameStringComponent(table.status.request.status_text) : null }
