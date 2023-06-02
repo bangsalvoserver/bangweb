@@ -35,11 +35,13 @@ export interface CardFlipping extends AnimationUpdate {
 
 export type CardTurning = AnimationUpdate;
 export type ShortPause = AnimationUpdate;
+export type CardFlash = AnimationUpdate;
 
 export type CardAnimation =
     {flipping: CardFlipping} |
     {turning: CardTurning} |
-    {short_pause: ShortPause};
+    {short_pause: ShortPause} |
+    {flash: CardFlash};
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;

@@ -1,0 +1,43 @@
+.card-animation {
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    transition: ease-in-out;
+}
+
+.card-animation-reverse {
+    animation-direction: reverse;
+}
+
+.card-animation-flip {
+    animation-name: flip-card;
+}
+
+@keyframes flip-card {
+    to {
+        transform: rotateY(180deg)
+    }
+}
+
+.card-animation-turn {
+    animation-name: turn-card;
+}
+
+@keyframes turn-card {
+    to {
+        transform: rotate(90deg);
+    }
+}
+
+.card-animation-flash .card-view-img {
+    animation-duration: var(--duration);
+    animation-name: flash-card;
+    animation-fill-mode: both;
+    transition: cubic-bezier(1.0, 0.0, 1.0, 0.0);
+}
+
+@keyframes flash-card {
+    from {
+        -webkit-box-shadow: 0px 0px 5px 5px yellow; 
+        box-shadow: 0px 0px 5px 5px yellow;
+    }
+}

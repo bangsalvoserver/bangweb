@@ -39,36 +39,6 @@
     bottom: 0;
 }
 
-.card-animation {
-    animation-duration: var(--duration);
-    animation-fill-mode: both;
-    transition: ease-in-out;
-}
-
 .card-overlay {
     z-index: 1;
-}
-
-.card-animation-reverse {
-    animation-direction: reverse;
-}
-
-.card-animation-flip {
-    animation-name: flip-card;
-}
-
-@keyframes flip-card {
-    to {
-        transform: rotateY(180deg)
-    }
-}
-
-.card-animation-turn {
-    animation-name: turn-card;
-}
-
-@keyframes turn-card {
-    to {
-        transform: rotate(90deg);
-    }
 }

@@ -62,12 +62,12 @@ export class Game {
         game_error: this.handleGameError,
         game_log: this.handleGameLog,
         game_prompt: this.handleGamePrompt,
-        flash_card: this.handleFlashCard,
         play_sound: this.handlePlaySound,
         move_card: this.handleMoveCard,
         show_card: this.handleCardAnimation,
         hide_card: this.handleCardAnimation,
         tap_card: this.handleCardAnimation,
+        flash_card: this.handleCardAnimation,
         short_pause: this.handleCardAnimation,
         player_show_role: this.handlePlayerAnimation,
     };
@@ -81,10 +81,6 @@ export class Game {
     }
 
     private handleGamePrompt(message: GameString) {
-        // TODO
-    }
-
-    private handleFlashCard({ card }: FlashCardUpdate) {
         // TODO
     }
 

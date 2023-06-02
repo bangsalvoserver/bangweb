@@ -1,4 +1,5 @@
 import "./CardView.css";
+import "./Animations/CardAnimations.css";
 import { Card, CardImage, getCardImage } from "../GameTable";
 import { CardData, CardSign } from "../../../Messages/CardData";
 import CardSignView from "./CardSignView";
@@ -46,6 +47,12 @@ export default function CardView({ card }: CardProps) {
 
             classes.push('card-animation', 'card-overlay', 'card-animation-turn');
             if (!card.inactive) classes.push('card-animation-reverse');
+        } else if ('flash' in card.animation) {
+            style = {
+                '--duration': card.animation.flash.duration + 'ms'
+            } as CSSProperties;
+
+            classes.push('card-overlay', 'card-animation-flash');
         } else if ('short-pause' in card.animation) {
             classes.push('card-overlay')
         }
