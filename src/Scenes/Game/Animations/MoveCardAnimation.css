@@ -6,6 +6,7 @@
     animation-duration: var(--duration);
     animation-fill-mode: both;
     transition: ease-in-out;
+    z-index: 2;
 }
 
 .move-card-animation-inner {

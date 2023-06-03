@@ -41,8 +41,9 @@ export type CardFlash = AnimationUpdate;
 export type CardAnimation =
     {flipping: CardFlipping} |
     {turning: CardTurning} |
-    {short_pause: ShortPause} |
-    {flash: CardFlash};
+    {flash: CardFlash} |
+    {short_pause: {}} |
+    {move_card: {}};
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;

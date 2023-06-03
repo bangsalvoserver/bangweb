@@ -207,20 +207,23 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
     };
 };
 
-// Removes a card from its pocket
+// Adds a card to another pocket
 gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket, duration }: MoveCardUpdate): GameTable => {
-    const [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
-    return {... table, players, pockets, animation: {move_card: {card, player, pocket, duration }} };
+    const [pockets, players] = addToPocket(table.pockets, table.players, [card], newPocketRef(pocket, player));
+    return {
+        ... table,
+        cards: editById(table.cards, card, card => ({ ...card, animation: {move_card:{}}})),
+        players, pockets,
+        animation: {move_card: {card, player, pocket, duration }}
+    };
 };
 
-// Adds a card to another pocket
+// Removes a card from its pocket
 gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
-    const pocketRef = newPocketRef(pocket, player);
-    const [pockets, players] = addToPocket(table.pockets, table.players, [card], pocketRef);
-
+    const [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, pocket: pocketRef })),
+        cards: editById(table.cards, card, card => ({ ...card, pocket: newPocketRef(pocket, player), animation: undefined })),
         players, pockets,
         animation: null
     };
@@ -284,7 +287,7 @@ gameUpdateHandlers.short_pause = (table: GameTable, { card, duration }: ShortPau
     if (!card) return table;
     return {
         ...table,
-        cards: editById(table.cards, card, card => ({ ...card, animation: {short_pause:{duration}}}))
+        cards: editById(table.cards, card, card => ({ ...card, animation: {short_pause:{}}}))
     };
 }
 

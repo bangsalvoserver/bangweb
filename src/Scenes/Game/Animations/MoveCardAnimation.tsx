@@ -1,20 +1,26 @@
 import "./MoveCardAnimation.css";
 import { Card, PocketRef } from "../Model/GameTable";
 import CardView from "../CardView";
-import { GetPocketRectFunction } from "./AnimationView";
-import { CSSProperties } from "react";
-import { getRectCenter } from "../PocketView";
+import { CSSProperties, useEffect, useState } from "react";
+import { getRectCenter } from "../Rect";
+import { CardTracker } from "../PocketView";
 
 export interface MoveCardProps {
-    getPocketRect: GetPocketRectFunction;
+    tracker: CardTracker;
     card: Card;
     destPocket: PocketRef;
     duration: number;
 }
 
-export default function MoveCardAnimation({ getPocketRect, card, destPocket, duration }: MoveCardProps) {
-    const startRect = getPocketRect(card.pocket);
-    const endRect = getPocketRect(destPocket);
+export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
+    const [rerender, setRerender] = useState(false);
+    useEffect(() => {
+        const timeout = setTimeout(() => setRerender(true), 0);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    const startRect = tracker.getPocketPosition(card.pocket)?.getCardRect(card.id);
+    const endRect = tracker.getPocketPosition(destPocket)?.getCardRect(card.id) ?? startRect;
 
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);
@@ -31,7 +37,7 @@ export default function MoveCardAnimation({ getPocketRect, card, destPocket, dur
         return (
             <div style={style} className="move-card-animation">
                 <div className="move-card-animation-inner">
-                    <CardView card={card} />
+                    <CardView card={card} forceRender />
                 </div>
             </div>
         );

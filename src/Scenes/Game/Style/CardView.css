@@ -42,3 +42,7 @@
 .card-overlay {
     z-index: 1;
 }
+
+.card-hidden {
+    visibility: hidden;
+}

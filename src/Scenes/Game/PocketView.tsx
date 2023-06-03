@@ -1,37 +1,24 @@
 import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
 import { PocketType } from "../../Messages/CardEnums";
 import { CardId } from "../../Messages/GameUpdate";
-import CardView from "./CardView";
-import { GameTable, getCard } from "./Model/GameTable";
+import CardView, { CardRef } from "./CardView";
+import { GameTable, PocketRef, getCard } from "./Model/GameTable";
 import "./Style/PocketView.css";
-
-export interface Rect {
-  x: number,
-  y: number,
-  w: number,
-  h: number
-};
-
-export interface Point {
-    x: number,
-    y: number
-}
-
-export function getRectCenter(rect: Rect): Point {
-    return {
-        x: rect.x + rect.w / 2,
-        y: rect.y + rect.h / 2
-    }
-};
-
-export interface PocketPosition {
-    getRect: () => Rect;
-}
+import { Rect, getDivRect } from "./Rect";
 
 export interface PocketProps {
     table: GameTable;
     cards: CardId[];
     className?: string;
+}
+
+export interface CardTracker {
+    getPocketPosition: (pocket: PocketRef) => PocketPosition | undefined;
+}
+
+export interface PocketPosition {
+    getPocketRect: () => Rect | undefined;
+    getCardRect: (card: CardId) => Rect | undefined;
 }
 
 export type PocketPositionRef = MutableRefObject<PocketPosition>;
@@ -40,20 +27,21 @@ export type PocketPositionMap = Partial<Record<PocketType, PocketPositionRef>>;
 
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards, className }, ref) => {
     const pocketRef = useRef() as MutableRefObject<HTMLDivElement>;
+    const cardRefs = useRef<Record<CardId, CardRef | null>>({});
 
     useImperativeHandle(ref, () => ({
-        getRect: () => {
-            const rect = pocketRef.current.getBoundingClientRect();
-            return {
-                x: rect.left + window.scrollX,
-                y: rect.top + window.scrollY,
-                w: rect.width,
-                h: rect.height
-            };
+        getPocketRect: () => getDivRect(pocketRef.current),
+        getCardRect: (card: CardId) => {
+            if (card in cardRefs.current) {
+                return cardRefs.current[card]?.getRect();
+            }
+            return undefined;
         }
     }));
 
-    return <div ref={pocketRef} className={`pocket-view ${className ?? ''}`}>{ cards.map(id => <CardView key={id} card={getCard(table, id)} /> )}</div>;
+    return <div ref={pocketRef} className={`pocket-view ${className ?? ''}`}>{
+        cards.map(id => <CardView ref={ref => cardRefs.current[id] = ref} key={id} card={getCard(table, id)} /> )
+    }</div>;
 });
 
 export default PocketView;

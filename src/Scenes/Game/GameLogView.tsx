@@ -13,7 +13,6 @@ export default function GameLogView({table, users}: GameLogProps) {
     const messagesEnd = useRef() as MutableRefObject<HTMLDivElement>;
 
     useEffect(() => {
-        console.log('new message');
         messagesEnd.current.scrollIntoView({ block: 'nearest', behavior:'smooth' });
     }, [table.logs]);
 

@@ -17,7 +17,6 @@ export default function LobbyChat({ connection, myUserId, users, messages }: Cha
     const inputMessage = useRef() as MutableRefObject<HTMLInputElement>;
 
     useEffect(() => {
-        console.log('new message');
         messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior:'smooth' });
     }, [messages]);
 

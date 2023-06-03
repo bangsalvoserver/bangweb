@@ -1,18 +1,18 @@
 import { useEffect, useRef } from "react";
 import { GameStringComponent } from "../../Locale/Locale";
 import { Connection } from "../../Messages/Connection";
-import { GameString, PlayerId } from "../../Messages/GameUpdate";
+import { PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { UserValue } from "../Lobby/LobbyUser";
 import AnimationView from "./Animations/AnimationView";
 import CardButtonView from "./CardButtonView";
 import CountPocket from "./CountPocket";
+import GameLogView from "./GameLogView";
 import { GameTable, PocketRef, getCard, getPlayer } from "./Model/GameTable";
 import { GameUpdateHandler } from "./Model/GameUpdateHandler";
-import PlayerView from "./PlayerView";
-import PocketView, { PocketPositionMap, PocketPositionRef, Rect } from "./PocketView";
+import PlayerView, { PlayerRef } from "./PlayerView";
+import PocketView, { CardTracker, PocketPositionMap, PocketPositionRef } from "./PocketView";
 import "./Style/GameScene.css";
-import GameLogView from "./GameLogView";
 
 const FRAMERATE = 60;
 
@@ -31,7 +31,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
         selection: useRef() as PocketPositionRef,
     };
 
-    const playerPositions = useRef<Record<PlayerId, PocketPositionMap | null>>({});
+    const playerRefs = useRef<Record<PlayerId, PlayerRef | null>>({});
 
     useEffect(() => {
       let startTime = Date.now();
@@ -50,32 +50,33 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
   
     const handleReturnLobby = () => connection.sendMessage('lobby_return');
 
-    const getPocketRect = (pocket: PocketRef): Rect | undefined => {
-      if (pocket) {
-        if ('player' in pocket) {
-          if (pocket.player in playerPositions.current) {
-            let positions = playerPositions.current[pocket.player];
-            if (positions) return positions[pocket.name]?.current.getRect();
+    const tracker: CardTracker = {
+      getPocketPosition: (pocket: PocketRef) => {
+        if (pocket) {
+          if ('player' in pocket) {
+            if (pocket.player in playerRefs.current) {
+              return playerRefs.current[pocket.player]?.positions[pocket.name]?.current;
+            }
+          } else {
+            return positions[pocket.name]?.current;
           }
-        } else {
-          return positions[pocket.name]?.current.getRect();
         }
+        return undefined;
       }
-      return undefined;
     };
 
     const newPlayerView = (player_id: PlayerId) => {
       const player = getPlayer(table, player_id);
       const user = users.find(user => user.id === player.userid);
       
-      return <PlayerView ref={ref => playerPositions.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
+      return <PlayerView ref={ref => playerRefs.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
     };
 
     return (
       <div className="game-scene-top">
         <div className="game-scene">
           <div className="align-center main-deck">
-            <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-1)} className='single-card-pocket' />
+            <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-2)} className='single-card-pocket' />
             <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
             <div className="selection-pocket">
               <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
@@ -93,7 +94,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
           <div className="align-center">
             { table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} /> )}
           </div>
-          <AnimationView state={table.animation} table={table} getPocketRect={getPocketRect} />
+          <AnimationView state={table.animation} table={table} tracker={tracker} />
         </div>
         <GameLogView table={table} users={users} />
       </div>

@@ -11,14 +11,18 @@ export interface PlayerProps {
     player: Player
 }
 
-const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, table, player }, ref) => {
+export interface PlayerRef {
+    positions: PocketPositionMap
+};
+
+const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, ref) => {
     const positions: PocketPositionMap = {
         player_hand: useRef() as PocketPositionRef,
         player_table: useRef() as PocketPositionRef,
         player_character: useRef() as PocketPositionRef,
     };
 
-    useImperativeHandle(ref, () => positions);
+    useImperativeHandle(ref, () => ({ positions }));
 
     let className = 'player-view';
     if (player.id == table.status.current_turn) {

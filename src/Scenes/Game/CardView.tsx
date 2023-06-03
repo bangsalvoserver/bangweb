@@ -1,14 +1,26 @@
 import "./Style/CardView.css";
 import "./Animations/CardAnimations.css";
 import CardSignView from "./CardSignView";
-import { CSSProperties } from "react";
+import { CSSProperties, MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
 import { Card, CardImage, getCardImage } from "./Model/GameTable";
+import { Rect, getDivRect } from "./Rect";
 
 export interface CardProps {
     card: Card;
+    forceRender?: boolean;
 }
 
-export default function CardView({ card }: CardProps) {
+export interface CardRef {
+    getRect: () => Rect;
+}
+
+const CardView = forwardRef<CardRef, CardProps>(({ card, forceRender }, ref) => {
+    const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
+
+    useImperativeHandle(ref, () => ({
+        getRect: () => getDivRect(cardRef.current)
+    }));
+
     let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
 
     const getImageSrc = (cardImage: CardImage) => {
@@ -52,15 +64,19 @@ export default function CardView({ card }: CardProps) {
             } as CSSProperties;
 
             classes.push('card-overlay', 'card-animation-flash');
-        } else if ('short-pause' in card.animation) {
+        } else if ('short_pause' in card.animation) {
             classes.push('card-overlay')
+        } else if ('move_card' in card.animation) {
+            if (!forceRender) {
+                classes.push('card-hidden');
+            }
         }
     } else if (card.inactive) {
         classes.push('card-horizontal');
     }
 
     return (
-        <div style={style} className={classes.join(' ')}>
+        <div ref={cardRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
                 <img className="card-view-img" src={cardImage ? getImageSrc(cardImage) : backfaceSrc}/>
                 {cardImage?.sign ? <div className="card-view-inner">
@@ -73,4 +89,6 @@ export default function CardView({ card }: CardProps) {
             </div> : null}
         </div>
     )
-}
+});
+
+export default CardView;
