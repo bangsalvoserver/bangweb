@@ -73,8 +73,14 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
                 </div>
                 <div className='flex flex-row'>
                     <div className='flex flex-col justify-end relative'>
-                        <PocketView className="player-backup" ref={positions.player_backup} table={table} cards={player.pockets.player_backup} />
-                        <PocketView className="player-character" ref={positions.player_character} table={table} cards={player.pockets.player_character} />
+                        <div className="player-backup">
+                            <PocketView ref={positions.player_backup} table={table} cards={player.pockets.player_backup} />
+                            { player.status.hp > 5 ? 
+                                <div className="player-backup-extra">
+                                    <PocketView table={table} cards={player.pockets.player_backup.slice(-1)} />
+                                </div> : null }
+                        </div>
+                        <PocketView ref={positions.player_character} table={table} cards={player.pockets.player_character} />
                         { player.status.gold > 0 ?
                             <div className="player-gold">{ /* todo add gold nugget icon */ player.status.gold } gold</div>
                         : null }

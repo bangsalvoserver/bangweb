@@ -76,7 +76,9 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
       <div className="game-scene-top">
         <div className="game-scene">
           <div className="m-auto align-middle">
-            <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-2)} className='single-card-pocket' />
+            <div className="single-card-pocket">
+              <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-2)}/>
+            </div>
             <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
             <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
           </div>

@@ -10,8 +10,8 @@ export interface CountPocketProps {
 }
 
 const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ table, cards }, ref) => {
-    return (<div className="count-pocket">
-        <PocketView ref={ref} table={table} cards={cards.slice(-2)} className='single-card-pocket' />
+    return (<div className="count-pocket single-card-pocket">
+        <PocketView ref={ref} table={table} cards={cards.slice(-2)} />
         {cards.length > 0 ? <div className="count-pocket-inner">{cards.length}</div> : null}
     </div>);
 });

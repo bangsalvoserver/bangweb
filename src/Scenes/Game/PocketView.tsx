@@ -9,7 +9,6 @@ import { Rect, getDivRect } from "./Rect";
 export interface PocketProps {
     table: GameTable;
     cards: CardId[];
-    className?: string;
 }
 
 export interface CardTracker {
@@ -25,7 +24,7 @@ export type PocketPositionRef = MutableRefObject<PocketPosition>;
 
 export type PocketPositionMap = Partial<Record<PocketType, PocketPositionRef>>;
 
-const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards, className }, ref) => {
+const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, ref) => {
     const pocketRef = useRef() as MutableRefObject<HTMLDivElement>;
     const cardRefs = useRef<Record<CardId, CardRef | null>>({});
 
@@ -39,7 +38,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards, clas
         }
     }));
 
-    return <div ref={pocketRef} className={`pocket-view ${className ?? ''}`}>{
+    return <div ref={pocketRef} className='pocket-view'>{
         cards.map(id => <CardView ref={ref => cardRefs.current[id] = ref} key={id} card={getCard(table, id)} /> )
     }</div>;
 });

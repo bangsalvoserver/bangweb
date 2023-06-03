@@ -32,6 +32,11 @@
     bottom: calc(var(--one-hp-size) * var(--player-hp));
 }
 
+.player-backup-extra {
+    position: absolute;
+    top: 90px;
+}
+
 .player-gold {
     position: absolute;
     bottom: 0.5em;

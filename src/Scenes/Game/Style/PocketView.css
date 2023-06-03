@@ -10,6 +10,7 @@
 }
 
 .single-card-pocket {
+    display: inline-block;
     width: 70px;
 }
 
