@@ -4,7 +4,7 @@ import { Connection } from "../../Messages/Connection";
 import { PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { UserValue } from "../Lobby/LobbyUser";
-import AnimationView from "./Animations/AnimationView";
+import AnimationView from "./AnimationView";
 import CardButtonView from "./CardButtonView";
 import CountPocket from "./CountPocket";
 import GameLogView from "./GameLogView";

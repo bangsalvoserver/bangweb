@@ -1,6 +1,6 @@
-import { GameTable, TableAnimation, getCard, newPocketRef } from "../Model/GameTable";
-import { CardTracker } from "../PocketView";
+import { GameTable, getCard, newPocketRef } from "./Model/GameTable";
 import MoveCardAnimation from "./MoveCardAnimation";
+import { CardTracker } from "./PocketView";
 
 export interface AnimationProps {
     table: GameTable;

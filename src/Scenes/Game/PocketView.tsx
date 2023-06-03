@@ -4,7 +4,7 @@ import { CardId } from "../../Messages/GameUpdate";
 import CardView, { CardRef } from "./CardView";
 import { GameTable, PocketRef, getCard } from "./Model/GameTable";
 import "./Style/PocketView.css";
-import { Rect, getDivRect } from "./Rect";
+import { Rect, getDivRect } from "../../Utils/Rect";
 
 export interface PocketProps {
     table: GameTable;

@@ -1,9 +1,9 @@
-import "./MoveCardAnimation.css";
-import { Card, PocketRef } from "../Model/GameTable";
-import CardView from "../CardView";
+import "./Style/MoveCardAnimation.css";
+import { Card, PocketRef } from "./Model/GameTable";
+import CardView from "./CardView";
 import { CSSProperties, useEffect, useState } from "react";
-import { getRectCenter } from "../Rect";
-import { CardTracker } from "../PocketView";
+import { getRectCenter } from "../../Utils/Rect";
+import { CardTracker } from "./PocketView";
 
 export interface MoveCardProps {
     tracker: CardTracker;

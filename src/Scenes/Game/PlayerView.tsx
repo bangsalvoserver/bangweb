@@ -1,9 +1,9 @@
 import { CSSProperties, forwardRef, useImperativeHandle, useRef } from "react";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
-import "./Animations/PlayerAnimations.css";
 import { GameTable, Player } from "./Model/GameTable";
 import PocketView, { PocketPositionMap, PocketPositionRef } from "./PocketView";
 import RoleView from "./RoleView";
+import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 
 export interface PlayerProps {

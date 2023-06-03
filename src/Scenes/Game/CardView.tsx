@@ -1,9 +1,9 @@
 import "./Style/CardView.css";
-import "./Animations/CardAnimations.css";
+import "./Style/CardAnimations.css";
 import CardSignView from "./CardSignView";
 import { CSSProperties, MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
 import { Card, CardImage, getCardImage } from "./Model/GameTable";
-import { Rect, getDivRect } from "./Rect";
+import { Rect, getDivRect } from "../../Utils/Rect";
 
 export interface CardProps {
     card: Card;
