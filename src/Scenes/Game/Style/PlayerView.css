@@ -17,10 +17,7 @@
 .pocket-scroll {
     width: 300px;
     height: 120px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: nowrap;
+    text-align: center;
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;

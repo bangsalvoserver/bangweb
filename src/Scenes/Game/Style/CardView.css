@@ -27,6 +27,7 @@
 }
 
 .card-view-inner {
+    text-align: left;
     position: absolute;
     left: 6%;
     bottom: 4%;

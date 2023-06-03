@@ -3,6 +3,7 @@
 }
 
 .card-name img {
+    display: inline;
     height: 1em;
 }
 
