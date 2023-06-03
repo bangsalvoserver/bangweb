@@ -26,8 +26,10 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
 
     useImperativeHandle(ref, () => ({ positions }));
 
+    const isTurn = player.id == table.status.current_turn;
+
     let classes = ['player-view'];
-    if (player.id == table.status.current_turn) {
+    if (isTurn) {
         classes.push('current-turn');
     }
 
@@ -65,11 +67,12 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
                 <div className='pocket-scroll'><PocketView ref={positions.player_table} table={table} cards={player.pockets.player_table} /></div>
             </div>
             <div className='flex flex-col'>
-                <div className='flex flex-col flex-grow text-right'>
-                    { /* TODO swap these with icons */ }
-                    { isOrigin ? <div style={{color: 'cyan'}}>Origin</div> : null }
-                    { isTarget ? <div style={{color: 'red'}}>Target</div> : null }
-                    { isWinner ? <div style={{color: 'yellow'}}>Winner</div> : null }
+                <div className='flex flex-row flex-grow justify-end'>
+                    { isWinner ? <div className="player-icon icon-winner"/> : <>
+                    { isOrigin ? <div className="player-icon icon-origin"/> : null }
+                    { isTarget ? <div className="player-icon icon-target"/> : null }
+                    { isTurn ? <div className="player-icon icon-turn"/> : null }
+                    </>}
                 </div>
                 <div className='flex flex-row'>
                     <div className='flex flex-col justify-end relative'>
@@ -82,7 +85,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
                         </div>
                         <PocketView ref={positions.player_character} table={table} cards={player.pockets.player_character} />
                         { player.status.gold > 0 ?
-                            <div className="player-gold">{ /* todo add gold nugget icon */ player.status.gold } gold</div>
+                            <div className="player-gold">{player.status.gold}</div>
                         : null }
                     </div>
                     <div className='flex flex-col'>

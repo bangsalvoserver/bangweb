@@ -11,7 +11,7 @@
 }
 
 .current-turn {
-    border: 3px solid green;
+    border: 3px solid #4d7f21;
 }
 
 .pocket-scroll {
@@ -39,7 +39,50 @@
 
 .player-gold {
     position: absolute;
-    bottom: 0.5em;
-    width: 100%;
+    bottom: 80px;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    transform: translateX(-50%);
     text-align: center;
+    font-weight: bold;
+    font-size: 16pt;
+    line-height: 30px;
+    background-image: url('/public/media/icon_gold.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.player-icon {
+    height: 32px;
+    width: 32px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    background-blend-mode: multiply;
+}
+
+.icon-winner {
+    background-image: url('/public/media/icon_winner.png');
+    mask-image: url('/public/media/icon_winner.png');
+    background-color: #bba14f
+}
+
+.icon-origin {
+    background-image: url('/public/media/icon_origin.png');
+    mask-image: url('/public/media/icon_origin.png');
+    background-color: #7bf7ffff;
+}
+
+.icon-target {
+    background-image: url('/public/media/icon_target.png');
+    mask-image: url('/public/media/icon_target.png');
+    background-color: #ff0000ff;
+}
+
+.icon-turn {
+    background-image: url('/public/media/icon_turn.png');
+    mask-image: url('/public/media/icon_turn.png');
+    background-color: #4d7f21;
 }
