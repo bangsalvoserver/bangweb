@@ -26,6 +26,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
 
     useImperativeHandle(ref, () => ({ positions }));
 
+    const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id == table.status.current_turn;
 
     let classes = ['player-view'];
@@ -68,10 +69,12 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
             </div>
             <div className='flex flex-col'>
                 <div className='flex flex-row flex-grow justify-end'>
-                    { isWinner ? <div className="player-icon icon-winner"/> : <>
-                    { isOrigin ? <div className="player-icon icon-origin"/> : null }
-                    { isTarget ? <div className="player-icon icon-target"/> : null }
-                    { isTurn ? <div className="player-icon icon-turn"/> : null }
+                    { isGameOver ? <>
+                        { isWinner ? <div className="player-icon icon-winner"/> : null }
+                    </> : <>
+                        { isOrigin ? <div className="player-icon icon-origin"/> : null }
+                        { isTarget ? <div className="player-icon icon-target"/> : null }
+                        { isTurn ? <div className="player-icon icon-turn"/> : null }
                     </>}
                 </div>
                 <div className='flex flex-row'>
