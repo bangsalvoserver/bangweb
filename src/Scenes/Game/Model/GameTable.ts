@@ -1,8 +1,7 @@
 import { CardData, CardSign } from "../../../Messages/CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "../../../Messages/CardEnums";
-import { AnimationUpdate, CardId, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../../Messages/GameUpdate";
+import { AnimationUpdate, CardId, GameString, MoveCardUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../../Messages/GameUpdate";
 import { UserId } from "../../../Messages/ServerMessage";
-import { AnimationState } from "../Animations/AnimationView";
 
 export interface Id {
     id: number
@@ -138,6 +137,8 @@ export function newPlayer(id: PlayerId, userid: UserId): Player {
     };
 }
 
+export type TableAnimation = {move_card: MoveCardUpdate};
+
 export interface GameTable {
     myUserId: UserId;
     self_player?: PlayerId;
@@ -160,7 +161,7 @@ export interface GameTable {
         request: RequestStatusArgs | StatusReadyArgs | {};
     };
 
-    animation: AnimationState;
+    animation?: TableAnimation;
     logs: GameString[];
 }
 
@@ -199,7 +200,6 @@ export function newGameTable(myUserId: UserId): GameTable {
             request: {},
         },
 
-        animation: null,
         logs: []
     };
 }

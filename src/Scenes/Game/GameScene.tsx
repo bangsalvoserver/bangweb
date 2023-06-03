@@ -69,13 +69,6 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
   
     const handleReturnLobby = () => connection.sendMessage('lobby_return');
 
-    const newPlayerView = (player_id: PlayerId) => {
-      const player = getPlayer(table, player_id);
-      const user = users.find(user => user.id === player.userid);
-      
-      return <PlayerView ref={ref => playerRefs.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
-    };
-
     return (
       <div className="game-scene-top">
         <div className="game-scene">
@@ -100,12 +93,17 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
             { showReturnButton() ? <button onClick={handleReturnLobby}>Return to Lobby</button> : null }
           </div>
           <div className="m-auto">
-            { table.alive_players.map(newPlayerView) }
+            { table.alive_players.map(player_id => {
+              const player = getPlayer(table, player_id);
+              const user = users.find(user => user.id === player.userid);
+              
+              return <PlayerView ref={ref => playerRefs.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
+            }) }
           </div>
           <div className="m-auto">
             { table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} /> )}
           </div>
-          <AnimationView state={table.animation} table={table} tracker={tracker} />
+          <AnimationView table={table} tracker={tracker} />
         </div>
         <GameLogView table={table} users={users} />
       </div>

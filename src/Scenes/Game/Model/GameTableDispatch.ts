@@ -228,7 +228,7 @@ gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: 
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, pocket: newPocketRef(pocket, player), animation: undefined })),
         players, pockets,
-        animation: null
+        animation: undefined
     };
 };
 
