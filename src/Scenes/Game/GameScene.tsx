@@ -30,6 +30,9 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
         main_deck: useRef() as PocketPositionRef,
         discard_pile: useRef() as PocketPositionRef,
         selection: useRef() as PocketPositionRef,
+        shop_discard: useRef() as PocketPositionRef,
+        shop_deck: useRef() as PocketPositionRef,
+        shop_selection: useRef() as PocketPositionRef
     };
 
     const playerRefs = useRef<Record<PlayerId, PlayerRef | null>>({});
@@ -77,6 +80,13 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
       <div className="game-scene-top">
         <div className="game-scene">
           <div className="m-auto align-middle">
+            { table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
+              <div className="single-card-pocket">
+                <PocketView ref={positions.shop_discard} table={table} cards={table.pockets.shop_discard.slice(-1)} />
+                <CountPocket ref={positions.shop_deck} table={table} cards={table.pockets.shop_deck}/>
+              </div>
+              <PocketView ref={positions.shop_selection} table={table} cards={table.pockets.shop_selection.slice(0).reverse()} />
+            </> : null }
             <div className="single-card-pocket">
               <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-2)}/>
             </div>
