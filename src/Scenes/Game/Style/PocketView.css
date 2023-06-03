@@ -1,24 +1,16 @@
 .pocket-view {
     display: inline-block;
-    min-width: 70px;
     height: 103px;
-}
-
-.main-deck {
-    position: relative;
-}
-
-.selection-pocket {
-    width: max-content;
-    position: absolute;
-    left: 50%;
-    bottom: 20px;
-    transform: translate(-50%, 0);
+    vertical-align: middle;
 }
 
 .count-pocket {
     display: inline-block;
     position: relative;
+}
+
+.single-card-pocket {
+    width: 70px;
 }
 
 .single-card-pocket .card-view {

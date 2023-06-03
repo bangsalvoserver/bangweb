@@ -11,14 +11,6 @@
     flex-direction: column;
 }
 
-.align-center {
-    margin: auto;
-}
-
-.align-center-vertical {
-    align-items: center;
-}
-
 .status-text {
     height: 50px;
 }

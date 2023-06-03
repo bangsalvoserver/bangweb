@@ -75,23 +75,21 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
     return (
       <div className="game-scene-top">
         <div className="game-scene">
-          <div className="align-center main-deck">
+          <div className="m-auto align-middle">
             <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-2)} className='single-card-pocket' />
             <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
-            <div className="selection-pocket">
-              <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
-            </div>
+            <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
           </div>
-          <div className="align-center status-text">
+          <div className="m-auto status-text">
             { 'status_text' in table.status.request
               ? <GameStringComponent table={table} users={users} message={table.status.request.status_text} />
               : null }
             { showReturnButton() ? <button onClick={handleReturnLobby}>Return to Lobby</button> : null }
           </div>
-          <div className="align-center">
+          <div className="m-auto">
             { table.alive_players.map(newPlayerView) }
           </div>
-          <div className="align-center">
+          <div className="m-auto">
             { table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} /> )}
           </div>
           <AnimationView state={table.animation} table={table} tracker={tracker} />

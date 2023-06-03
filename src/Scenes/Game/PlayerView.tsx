@@ -48,9 +48,9 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
 
     return (
         <div className={className}>
-            <div className='flex flex-col'>
-                <div className='player-pocket'><PocketView ref={positions.player_hand} table={table} cards={player.pockets.player_hand} /></div>
-                <div className='player-pocket'><PocketView ref={positions.player_table} table={table} cards={player.pockets.player_table} /></div>
+            <div className='flex flex-col justify-center flex-grow'>
+                <div className='pocket-scroll'><PocketView ref={positions.player_hand} table={table} cards={player.pockets.player_hand} /></div>
+                <div className='pocket-scroll'><PocketView ref={positions.player_table} table={table} cards={player.pockets.player_table} /></div>
             </div>
             <div className='flex flex-col'>
                 <div className='flex flex-col flex-grow text-right'>
