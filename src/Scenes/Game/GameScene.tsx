@@ -1,7 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { GameStringComponent } from "../../Locale/Locale";
 import { Connection } from "../../Messages/Connection";
-import { PlayerId } from "../../Messages/GameUpdate";
 import { UserId } from "../../Messages/ServerMessage";
 import { UserValue } from "../Lobby/LobbyUser";
 import AnimationView from "./AnimationView";
@@ -11,9 +10,11 @@ import GameLogView from "./GameLogView";
 import { GameTable, PocketRef, getCard, getPlayer } from "./Model/GameTable";
 import { GameUpdateHandler } from "./Model/GameUpdateHandler";
 import PlayerView, { PlayerRef } from "./PlayerView";
-import PocketView, { CardTracker, PocketPositionMap, PocketPositionRef } from "./PocketView";
+import PocketView, { CardTracker, PocketPosition } from "./PocketView";
 import "./Style/GameScene.css";
-import { TablePocketType } from "../../Messages/CardEnums";
+import { setMapRef, useMapRef } from "../../Utils/MapRef";
+import { PocketType } from "../../Messages/CardEnums";
+import { PlayerId } from "../../Messages/GameUpdate";
 
 const FRAMERATE = 60;
 
@@ -26,16 +27,8 @@ export interface TableProps {
 }
 
 export default function GameScene({ connection, game, table, users, lobbyOwner }: TableProps) {
-    const positions: PocketPositionMap = {
-        main_deck: useRef() as PocketPositionRef,
-        discard_pile: useRef() as PocketPositionRef,
-        selection: useRef() as PocketPositionRef,
-        shop_discard: useRef() as PocketPositionRef,
-        shop_deck: useRef() as PocketPositionRef,
-        shop_selection: useRef() as PocketPositionRef
-    };
-
-    const playerRefs = useRef<Record<PlayerId, PlayerRef | null>>({});
+    const pocketRefs = useMapRef<PocketType, PocketPosition>();
+    const playerRefs = useMapRef<PlayerId, PlayerRef>();
 
     const tracker: CardTracker = {
       getPocketPosition: (pocket: PocketRef) => {
@@ -43,11 +36,11 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
           return undefined;
         } else if (pocket.name == 'scenario_deck' || pocket.name == 'wws_scenario_deck') {
           const holder = pocket.name == 'scenario_deck' ? table.status.scenario_deck_holder : table.status.wws_scenario_deck_holder;
-          return !holder ? undefined : playerRefs.current[holder]?.positions[pocket.name]?.current;
+          return holder ? playerRefs.current.get(holder)?.positions.get(pocket.name) : undefined;
         } else if ('player' in pocket) {
-          return playerRefs.current[pocket.player]?.positions[pocket.name]?.current;
+          return playerRefs.current.get(pocket.player)?.positions.get(pocket.name);
         } else {
-          return positions[pocket.name]?.current;
+          return pocketRefs.current.get(pocket.name);
         }
       }
     };
@@ -75,16 +68,16 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
           <div className="m-auto align-middle">
             { table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
               <div className="single-card-pocket">
-                <PocketView ref={positions.shop_discard} table={table} cards={table.pockets.shop_discard.slice(-1)} />
-                <CountPocket ref={positions.shop_deck} table={table} cards={table.pockets.shop_deck}/>
+                <PocketView ref={setMapRef(pocketRefs, 'shop_discard')} table={table} cards={table.pockets.shop_discard.slice(-1)} />
+                <CountPocket ref={setMapRef(pocketRefs, 'shop_deck')} table={table} cards={table.pockets.shop_deck}/>
               </div>
-              <PocketView ref={positions.shop_selection} table={table} cards={table.pockets.shop_selection.slice(0).reverse()} />
+              <PocketView ref={setMapRef(pocketRefs, 'shop_selection')} table={table} cards={table.pockets.shop_selection.slice(0).reverse()} />
             </> : null }
             <div className="single-card-pocket">
-              <PocketView ref={positions.discard_pile} table={table} cards={table.pockets.discard_pile.slice(-2)}/>
+              <PocketView ref={setMapRef(pocketRefs, 'discard_pile')} table={table} cards={table.pockets.discard_pile.slice(-2)}/>
             </div>
-            <CountPocket ref={positions.main_deck} table={table} cards={table.pockets.main_deck} />
-            <PocketView ref={positions.selection} table={table} cards={table.pockets.selection} />
+            <CountPocket ref={setMapRef(pocketRefs, 'main_deck')} table={table} cards={table.pockets.main_deck} />
+            <PocketView ref={setMapRef(pocketRefs, 'selection')} table={table} cards={table.pockets.selection} />
           </div>
           <div className="m-auto status-text">
             { 'status_text' in table.status.request
@@ -97,7 +90,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
               const player = getPlayer(table, player_id);
               const user = users.find(user => user.id === player.userid);
               
-              return <PlayerView ref={ref => playerRefs.current[player_id] = ref} key={player_id} table={table} user={user} player={player} />;
+              return <PlayerView ref={setMapRef(playerRefs, player_id)} key={player_id} table={table} user={user} player={player} />;
             }) }
           </div>
           <div className="m-auto">
