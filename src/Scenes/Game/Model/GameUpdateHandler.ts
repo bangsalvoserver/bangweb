@@ -59,6 +59,7 @@ export class GameUpdateHandler {
         flash_card: this.handleCardAnimation,
         short_pause: this.handleCardAnimation,
         player_show_role: this.handlePlayerAnimation,
+        player_hp: this.handlePlayerAnimation,
     };
 
     private handleGameError(message: GameString) {

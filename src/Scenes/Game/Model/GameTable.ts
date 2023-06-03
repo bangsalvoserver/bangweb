@@ -94,8 +94,13 @@ export interface PlayerFlippingRole extends AnimationUpdate {
     role: PlayerRole;
 }
 
+export interface PlayerHp extends AnimationUpdate {
+    hp: number;
+}
+
 export type PlayerAnimation =
-    { flipping_role: PlayerFlippingRole };
+    { flipping_role: PlayerFlippingRole } |
+    { player_hp: PlayerHp };
 
 export interface Player extends Id {
     userid: UserId;

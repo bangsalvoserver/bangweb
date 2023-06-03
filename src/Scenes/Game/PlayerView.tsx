@@ -1,5 +1,6 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { CSSProperties, forwardRef, useImperativeHandle, useRef } from "react";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
+import "./Animations/PlayerAnimations.css";
 import { GameTable, Player } from "./Model/GameTable";
 import PocketView, { PocketPositionMap, PocketPositionRef } from "./PocketView";
 import RoleView from "./RoleView";
@@ -20,22 +21,26 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
         player_hand: useRef() as PocketPositionRef,
         player_table: useRef() as PocketPositionRef,
         player_character: useRef() as PocketPositionRef,
+        player_backup: useRef() as PocketPositionRef,
     };
 
     useImperativeHandle(ref, () => ({ positions }));
 
-    let className = 'player-view';
+    let classes = ['player-view'];
     if (player.id == table.status.current_turn) {
-        className += ' current-turn';
+        classes.push('current-turn');
     }
 
-    const isAlive = !player.status.flags.includes('dead');
     const isOrigin = 'origin' in table.status.request && table.status.request.origin == player.id;
     const isTarget = 'target' in table.status.request && table.status.request.target == player.id;
     const isWinner = player.status.flags.includes('winner');
 
     let flipDuration: number | undefined;
     let playerRole = player.status.role;
+
+    let playerStyle = {
+        '--player-hp': player.status.hp
+    } as CSSProperties;
     
     if (player.animation) {
         if ('flipping_role' in player.animation) {
@@ -43,11 +48,18 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
             if (player.status.role == 'unknown') {
                 playerRole = player.animation.flipping_role.role;
             }
+        } else if ('player_hp' in player.animation) {
+            playerStyle = {
+                ...playerStyle,
+                '--player-hp-diff': player.status.hp - player.animation.player_hp.hp,
+                '--duration': player.animation.player_hp.duration + 'ms'
+            } as CSSProperties;
+            classes.push('player-animation-hp');
         }
     }
 
     return (
-        <div className={className}>
+        <div className={classes.join(' ')} style={playerStyle}>
             <div className='flex flex-col justify-center flex-grow'>
                 <div className='pocket-scroll'><PocketView ref={positions.player_hand} table={table} cards={player.pockets.player_hand} /></div>
                 <div className='pocket-scroll'><PocketView ref={positions.player_table} table={table} cards={player.pockets.player_table} /></div>
@@ -60,13 +72,12 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
                     { isWinner ? <div style={{color: 'yellow'}}>Winner</div> : null }
                 </div>
                 <div className='flex flex-row'>
-                    <div className='flex flex-col'>
-                        <div className='flex flex-col flex-grow text-center justify-end'>
-                            { /* TODO add player_backup and gold nuggets */ }
-                            { player.status.gold > 0 ? <div>{ player.status.gold } gold</div> : null }
-                            { isAlive ? <div>{ player.status.hp } HP</div> : null }
-                        </div>
-                        <PocketView ref={positions.player_character} table={table} cards={player.pockets.player_character} />
+                    <div className='flex flex-col justify-end relative'>
+                        <PocketView className="player-backup" ref={positions.player_backup} table={table} cards={player.pockets.player_backup} />
+                        <PocketView className="player-character" ref={positions.player_character} table={table} cards={player.pockets.player_character} />
+                        { player.status.gold > 0 ?
+                            <div className="player-gold">{ /* todo add gold nugget icon */ player.status.gold } gold</div>
+                        : null }
                     </div>
                     <div className='flex flex-col'>
                         <LobbyUser user={user} alignVertical />

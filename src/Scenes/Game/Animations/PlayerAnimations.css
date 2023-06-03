@@ -1,0 +1,12 @@
+.player-animation-hp .player-backup {
+    animation-name: player-hp;
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    transition: ease-in-out;
+}
+
+@keyframes player-hp {
+    from {
+        transform: translateY(calc(var(--one-hp-size) * var(--player-hp-diff)));
+    }
+}

@@ -2,6 +2,7 @@ import { GameFlag, PocketType } from "../../../Messages/CardEnums";
 import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../../Messages/GameUpdate";
 import { UserId } from "../../../Messages/ServerMessage";
 import { GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
+import { GameUpdateHandler } from "./GameUpdateHandler";
 
 export interface GameUpdate {
     updateType: string,
@@ -145,10 +146,12 @@ gameUpdateHandlers.player_order = (table: GameTable, { players }: PlayerOrderUpd
 };
 
 // Changes a player's hp
-gameUpdateHandlers.player_hp = (table: GameTable, { player, hp }: PlayerHpUpdate): GameTable => {
+gameUpdateHandlers.player_hp = (table: GameTable, { player, hp, duration }: PlayerHpUpdate): GameTable => {
     return {
         ...table,
-        players: editById(table.players, player, p => ({ ...p, status: { ...p.status, hp }}))
+        players: editById(table.players, player, p => ({ ...p,
+            status: { ...p.status, hp },
+            animation: {player_hp: { hp: p.status.hp, duration }}}))
     };
 };
 

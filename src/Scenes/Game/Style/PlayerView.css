@@ -25,3 +25,16 @@
     overflow-x: auto;
     overflow-y: hidden;
 }
+
+.player-backup {
+    position: absolute;
+    --one-hp-size: 18px;
+    bottom: calc(var(--one-hp-size) * var(--player-hp));
+}
+
+.player-gold {
+    position: absolute;
+    bottom: 0.5em;
+    width: 100%;
+    text-align: center;
+}
