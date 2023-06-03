@@ -13,6 +13,7 @@ import { GameUpdateHandler } from "./Model/GameUpdateHandler";
 import PlayerView, { PlayerRef } from "./PlayerView";
 import PocketView, { CardTracker, PocketPositionMap, PocketPositionRef } from "./PocketView";
 import "./Style/GameScene.css";
+import { TablePocketType } from "../../Messages/CardEnums";
 
 const FRAMERATE = 60;
 
@@ -33,6 +34,21 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
 
     const playerRefs = useRef<Record<PlayerId, PlayerRef | null>>({});
 
+    const tracker: CardTracker = {
+      getPocketPosition: (pocket: PocketRef) => {
+        if (!pocket) {
+          return undefined;
+        } else if (pocket.name == 'scenario_deck' || pocket.name == 'wws_scenario_deck') {
+          const holder = pocket.name == 'scenario_deck' ? table.status.scenario_deck_holder : table.status.wws_scenario_deck_holder;
+          return !holder ? undefined : playerRefs.current[holder]?.positions[pocket.name]?.current;
+        } else if ('player' in pocket) {
+          return playerRefs.current[pocket.player]?.positions[pocket.name]?.current;
+        } else {
+          return positions[pocket.name]?.current;
+        }
+      }
+    };
+
     useEffect(() => {
       let startTime = Date.now();
       const interval = setInterval(() => {
@@ -49,21 +65,6 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
     };
   
     const handleReturnLobby = () => connection.sendMessage('lobby_return');
-
-    const tracker: CardTracker = {
-      getPocketPosition: (pocket: PocketRef) => {
-        if (pocket) {
-          if ('player' in pocket) {
-            if (pocket.player in playerRefs.current) {
-              return playerRefs.current[pocket.player]?.positions[pocket.name]?.current;
-            }
-          } else {
-            return positions[pocket.name]?.current;
-          }
-        }
-        return undefined;
-      }
-    };
 
     const newPlayerView = (player_id: PlayerId) => {
       const player = getPlayer(table, player_id);

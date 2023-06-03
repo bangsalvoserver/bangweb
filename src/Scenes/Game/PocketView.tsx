@@ -16,7 +16,6 @@ export interface CardTracker {
 }
 
 export interface PocketPosition {
-    getPocketRect: () => Rect | undefined;
     getCardRect: (card: CardId) => Rect | undefined;
 }
 
@@ -25,20 +24,13 @@ export type PocketPositionRef = MutableRefObject<PocketPosition>;
 export type PocketPositionMap = Partial<Record<PocketType, PocketPositionRef>>;
 
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, ref) => {
-    const pocketRef = useRef() as MutableRefObject<HTMLDivElement>;
     const cardRefs = useRef<Record<CardId, CardRef | null>>({});
 
     useImperativeHandle(ref, () => ({
-        getPocketRect: () => getDivRect(pocketRef.current),
-        getCardRect: (card: CardId) => {
-            if (card in cardRefs.current) {
-                return cardRefs.current[card]?.getRect();
-            }
-            return undefined;
-        }
+        getCardRect: (card: CardId) => cardRefs.current[card]?.getRect()
     }));
 
-    return <div ref={pocketRef} className='pocket-view'>{
+    return <div className='pocket-view'>{
         cards.map(id => <CardView ref={ref => cardRefs.current[id] = ref} key={id} card={getCard(table, id)} /> )
     }</div>;
 });
