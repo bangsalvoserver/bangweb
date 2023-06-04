@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { CardIdUpdate, GameString, Milliseconds, MoveCardUpdate, MoveCubesUpdate, PlayerIdUpdate } from "../../../Messages/GameUpdate";
+import { CardIdUpdate, DeckShuffledUpdate, GameString, Milliseconds, MoveCardUpdate, MoveCubesUpdate, PlayerIdUpdate } from "../../../Messages/GameUpdate";
 import { GameUpdate } from "./GameTableDispatch";
 
 export class GameUpdateHandler {
@@ -54,6 +54,7 @@ export class GameUpdateHandler {
         play_sound: this.handlePlaySound,
         move_card: this.handleMoveCard,
         move_cubes: this.handleMoveCubes,
+        deck_shuffled: this.handleDeckShuffled,
         show_card: this.handleCardAnimation,
         hide_card: this.handleCardAnimation,
         tap_card: this.handleCardAnimation,
@@ -81,6 +82,10 @@ export class GameUpdateHandler {
 
     private handleMoveCubes({ num_cubes, target_card }: MoveCubesUpdate) {
         this.updateOnEnd = { updateType: 'move_cubes_end', updateValue: { num_cubes, target_card } };
+    }
+
+    private handleDeckShuffled({ pocket }: DeckShuffledUpdate) {
+        this.updateOnEnd = { updateType: 'deck_shuffled_end', updateValue: { pocket } };
     }
 
     private handleCardAnimation({ card }: CardIdUpdate) {

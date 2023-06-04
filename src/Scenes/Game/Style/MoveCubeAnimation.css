@@ -1,5 +1,4 @@
 .move-cubes-animation {
-    transition: ease-in-out;
     z-index: 2;
     --total-delay: calc(var(--duration) * 0.2);
     --delay-per-cube: calc(var(--total-delay) / var(--num-cubes));
@@ -17,6 +16,7 @@
     animation-fill-mode: both;
     animation-duration: calc(var(--duration) - var(--total-delay));
     animation-delay: calc(var(--move-cube-index) * var(--delay-per-cube));
+    transition: ease-in-out;
 }
 
 .move-cubes-animation-inner img {

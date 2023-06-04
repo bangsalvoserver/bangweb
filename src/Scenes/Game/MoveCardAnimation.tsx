@@ -35,7 +35,7 @@ export default function MoveCardAnimation({ tracker, card, destPocket, duration 
 
         return (
             <div style={style} className="move-card-animation">
-                <div className="move-card-animation-inner">
+                <div className="move-top-left-half">
                     <CardView card={card} />
                 </div>
             </div>

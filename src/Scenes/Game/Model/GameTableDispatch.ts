@@ -1,8 +1,7 @@
 import { GameFlag, PocketType } from "../../../Messages/CardEnums";
 import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../../Messages/GameUpdate";
 import { UserId } from "../../../Messages/ServerMessage";
-import { GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
-import { GameUpdateHandler } from "./GameUpdateHandler";
+import { DeckShuffleAnimation, GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
 
 export interface GameUpdate {
     updateType: string,
@@ -236,8 +235,22 @@ gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: 
 };
 
 // Moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
-gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket }: DeckShuffledUpdate): GameTable => {
+gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket, duration }: DeckShuffledUpdate): GameTable => {
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
+    return {
+        ...table,
+        pockets: {
+            ...table.pockets,
+            [fromPocket]: [],
+            [pocket]: [],
+        },
+        animation: {deck_shuffle: { pocket, duration, cards: table.pockets[fromPocket] }}
+    };
+};
+
+gameUpdateHandlers.deck_shuffled_end = (table: GameTable, { pocket }: DeckShuffledUpdate): GameTable => {
+    const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
+    let animationCards = table.animation && 'deck_shuffle' in table.animation ? table.animation.deck_shuffle.cards : [];
     return {
         ...table,
         cards: table.cards.map(card => {
@@ -249,9 +262,9 @@ gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket }: DeckShuffledUp
         }),
         pockets: {
             ...table.pockets,
-            [fromPocket]: [],
-            [pocket]: table.pockets[fromPocket]
-        }
+            [pocket]: animationCards
+        },
+        animation: undefined
     };
 };
 

@@ -1,3 +1,4 @@
+import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import { GameTable, getCard, newPocketRef } from "./Model/GameTable";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
@@ -26,6 +27,15 @@ export default function AnimationView({ table, tracker}: AnimationProps) {
                 origin_card={animation.move_cubes.origin_card ? getCard(table, animation.move_cubes.origin_card) : undefined}
                 target_card={animation.move_cubes.target_card ? getCard(table, animation.move_cubes.target_card) : undefined}
                 duration={animation.move_cubes.duration}
+            />;
+        }
+        if ('deck_shuffle' in animation) {
+            return <DeckShuffleAnimation
+                tracker={tracker}
+                table={table}
+                cards={animation.deck_shuffle.cards}
+                pocket={animation.deck_shuffle.pocket}
+                duration={animation.deck_shuffle.duration}
             />;
         }
     }

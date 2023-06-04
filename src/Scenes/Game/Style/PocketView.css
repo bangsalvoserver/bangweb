@@ -10,8 +10,11 @@
 }
 
 .single-card-pocket {
-    position: relative;
     display: inline-block;
+    position: relative;
+}
+
+.single-card-pocket .pocket-view {
     width: 70px;
 }
 

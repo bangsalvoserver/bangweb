@@ -9,10 +9,6 @@
     z-index: 2;
 }
 
-.move-card-animation-inner {
-    transform: translate(-50%, -50%);
-}
-
 @keyframes move-card {
     to {
         transform: translate(var(--diffX), var(--diffY));

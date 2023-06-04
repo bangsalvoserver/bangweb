@@ -1,19 +1,20 @@
-import "./Style/CardView.css";
-import "./Style/CardAnimations.css";
-import CardSignView from "./CardSignView";
-import { CSSProperties, MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
-import { Card, CardImage, getCardImage } from "./Model/GameTable";
+import { CSSProperties, forwardRef, useImperativeHandle, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
+import CardSignView from "./CardSignView";
+import { Card, CardImage, getCardImage } from "./Model/GameTable";
+import "./Style/CardAnimations.css";
+import "./Style/CardView.css";
 
 export interface CardProps {
     card: Card;
+    showBackface?: boolean;
 }
 
 export interface CardRef {
     getRect: () => Rect | undefined;
 }
 
-const CardView = forwardRef<CardRef, CardProps>(({ card }, ref) => {
+const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface }, ref) => {
     const cardRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -43,6 +44,8 @@ const CardView = forwardRef<CardRef, CardProps>(({ card }, ref) => {
             style = {
                 '--duration': card.animation.flipping.duration + 'ms'
             } as CSSProperties;
+
+            showBackface = true;
 
             classes.push('card-animation', 'card-overlay', 'card-animation-flip');
             if (card.animation.flipping.cardImage) {
@@ -78,7 +81,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card }, ref) => {
                     <CardSignView sign={cardImage.sign} />
                 </div> : null}
             </div>
-            { classes.includes('card-animation-flip') ?
+            { showBackface ?
             <div className="card-back">
                 <img className="card-view-img" src={backfaceSrc} />
             </div> : null}

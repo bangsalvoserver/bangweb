@@ -59,3 +59,7 @@
 .card-overlay {
     z-index: 1;
 }
+
+.move-top-left-half {
+    transform: translate(-50%, -50%);
+}

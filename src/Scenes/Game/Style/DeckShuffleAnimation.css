@@ -1,0 +1,29 @@
+.deck-shuffle-animation {
+    z-index: 2;
+    --total-delay: calc(var(--duration) * 0.6);
+    --delay-per-card: calc(var(--total-delay) / var(--num-cards));
+}
+
+.deck-shuffle-animation-inner {
+    position: absolute;
+    left: var(--startX);
+    top: var(--startY);
+    animation-name: move-and-flip-card;
+    animation-fill-mode: both;
+    transition: ease-in-out;
+    animation-duration: calc(var(--duration) - var(--total-delay));
+    animation-delay: calc(var(--card-index) * var(--delay-per-card));
+    transform-style: preserve-3d;
+    transform-origin: 0 0;
+}
+
+.deck-shuffle-animation-inner .move-top-left-half {
+    transform-style: preserve-3d;
+}
+
+@keyframes move-and-flip-card {
+    to {
+        z-index: var(--card-index);
+        transform: translate(var(--diffX), var(--diffY)) rotateY(180deg);
+    }
+}
