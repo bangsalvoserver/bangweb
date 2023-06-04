@@ -212,10 +212,12 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
 
 // Adds a card to another pocket
 gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket, duration }: MoveCardUpdate): GameTable => {
-    const [pockets, players] = addToPocket(table.pockets, table.players, [card], newPocketRef(pocket, player));
+    let [pockets, players] = addToPocket(table.pockets, table.players, [card], newPocketRef(pocket, player));
+    [pockets, players] = editPocketMap(pockets, players, getCard(table, card).pocket, cards => cards.map(id => id == card ? -1 : id));
+
     return {
         ... table,
-        cards: editById(table.cards, card, card => ({ ...card, animation: {move_card:{}}})),
+        cards: editById(table.cards, card, card => ({ ...card, animation: {move_card: {duration} }})),
         players, pockets,
         animation: {move_card: {card, player, pocket, duration }}
     };
@@ -223,7 +225,8 @@ gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket, durati
 
 // Removes a card from its pocket
 gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
-    const [pockets, players] = removeFromPocket(table.pockets, table.players, [card], getCard(table, card).pocket);
+    const [pockets, players] = removeFromPocket(table.pockets, table.players, [-1], getCard(table, card).pocket);
+
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, pocket: newPocketRef(pocket, player), animation: undefined })),

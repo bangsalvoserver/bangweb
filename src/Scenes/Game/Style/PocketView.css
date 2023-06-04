@@ -10,12 +10,32 @@
 }
 
 .single-card-pocket {
+    position: relative;
     display: inline-block;
     width: 70px;
 }
 
 .single-card-pocket .card-view {
     position: absolute;
+}
+
+.single-card-pocket .card-slot {
+    margin: unset;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.align-slot-bottom {
+    width: 70px;
+}
+
+.align-slot-bottom .card-slot {
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    transform: translateX(-50%);
 }
 
 .count-pocket-inner {

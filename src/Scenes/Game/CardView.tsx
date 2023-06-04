@@ -7,14 +7,13 @@ import { Rect, getDivRect } from "../../Utils/Rect";
 
 export interface CardProps {
     card: Card;
-    forceRender?: boolean;
 }
 
 export interface CardRef {
     getRect: () => Rect;
 }
 
-const CardView = forwardRef<CardRef, CardProps>(({ card, forceRender }, ref) => {
+const CardView = forwardRef<CardRef, CardProps>(({ card }, ref) => {
     const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
 
     useImperativeHandle(ref, () => ({
@@ -66,10 +65,6 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, forceRender }, ref) => 
             classes.push('card-overlay', 'card-animation-flash');
         } else if ('short_pause' in card.animation) {
             classes.push('card-overlay')
-        } else if ('move_card' in card.animation) {
-            if (!forceRender) {
-                classes.push('card-hidden');
-            }
         }
     } else if (card.inactive) {
         classes.push('card-horizontal');

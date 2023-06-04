@@ -80,14 +80,16 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
                 </div>
                 <div className='flex flex-row'>
                     <div className='flex flex-col justify-end relative'>
-                        <div className="player-backup">
+                        <div className="player-backup single-card-pocket">
                             <PocketView ref={setMapRef(positions, 'player_backup')} table={table} cards={player.pockets.player_backup} />
                             { player.status.hp > 5 ? 
                                 <div className="player-backup-extra">
                                     <PocketView table={table} cards={player.pockets.player_backup.slice(-1)} />
                                 </div> : null }
                         </div>
-                        <PocketView ref={setMapRef(positions, 'player_character')} table={table} cards={player.pockets.player_character} />
+                        <div className="align-slot-bottom">
+                            <PocketView ref={setMapRef(positions, 'player_character')} table={table} cards={player.pockets.player_character} />
+                        </div>
                         { player.status.gold > 0 ?
                             <div className="player-gold">{player.status.gold}</div>
                         : null }

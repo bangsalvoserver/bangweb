@@ -19,7 +19,7 @@ export default function MoveCardAnimation({ tracker, card, destPocket, duration 
         return () => clearTimeout(timeout);
     }, []);
 
-    const startRect = tracker.getPocketPosition(card.pocket)?.getCardRect(card.id);
+    const startRect = tracker.getPocketPosition(card.pocket)?.getCardRect(-1);
     const endRect = tracker.getPocketPosition(destPocket)?.getCardRect(card.id) ?? startRect;
 
     if (startRect && endRect) {
@@ -37,7 +37,7 @@ export default function MoveCardAnimation({ tracker, card, destPocket, duration 
         return (
             <div style={style} className="move-card-animation">
                 <div className="move-card-animation-inner">
-                    <CardView card={card} forceRender />
+                    <CardView card={card} />
                 </div>
             </div>
         );

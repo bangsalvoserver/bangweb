@@ -1,0 +1,23 @@
+.card-slot {
+    display: inline-block;
+    width: 70px;
+    height: 93px;
+    margin-top: 5px;
+}
+
+.card-slot-stretch {
+    animation-name: stretch;
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    transition: ease-out;
+}
+
+.card-slot-stretch-in {
+    animation-direction: reverse;
+}
+
+@keyframes stretch {
+    from {
+        width: 0;
+    }
+}

@@ -3,6 +3,7 @@ import { PocketType } from "../../Messages/CardEnums";
 import { CardId } from "../../Messages/GameUpdate";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import { Rect } from "../../Utils/Rect";
+import CardSlot from "./CardSlot";
 import CardView, { CardRef } from "./CardView";
 import { GameTable, PocketRef, getCard } from "./Model/GameTable";
 import "./Style/PocketView.css";
@@ -30,7 +31,22 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, re
     }));
 
     return <div className='pocket-view'>{
-        cards.map(id => <CardView ref={setMapRef(cardRefs, id)} key={id} card={getCard(table, id)} /> )
+        cards.map(id => {
+            if (id == -1) {
+                if (table.animation && 'move_card' in table.animation) {
+                    return <CardSlot ref={setMapRef(cardRefs, id)} key={id} stretch='in' duration={table.animation.move_card.duration} />
+                } else {
+                    return null;
+                }
+            } else {
+                const card = getCard(table, id);
+                if (card.animation && 'move_card' in card.animation) {
+                    return <CardSlot ref={setMapRef(cardRefs, id)} key={id} stretch='out' duration={card.animation.move_card.duration} />
+                } else {
+                    return <CardView ref={setMapRef(cardRefs, id)} key={id} card={card} />
+                }
+            }
+        })
     }</div>;
 });
 
