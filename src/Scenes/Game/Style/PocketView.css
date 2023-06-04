@@ -22,6 +22,18 @@
     position: absolute;
 }
 
+.stack-pockets {
+    display: inline-block;
+    position: relative;
+}
+
+.stack-pockets-inner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .single-card-pocket .card-slot {
     margin: unset;
     position: absolute;

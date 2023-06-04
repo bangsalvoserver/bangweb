@@ -65,20 +65,22 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
         <div className="game-scene">
           <div className="m-auto align-middle">
             { table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
-              <div className="single-card-pocket">
-                <PocketView ref={setMapRef(pocketRefs, 'shop_discard')} table={table} cards={table.pockets.shop_discard.slice(-1)} />
+              <div className="stack-pockets">
+                <div className="stack-pockets-inner single-card-pocket">
+                  <PocketView ref={setMapRef(pocketRefs, 'shop_discard')} table={table} cards={table.pockets.shop_discard.slice(-1)} />
+                </div>
                 <CountPocket ref={setMapRef(pocketRefs, 'shop_deck')} table={table} cards={table.pockets.shop_deck}/>
               </div>
               <PocketView ref={setMapRef(pocketRefs, 'shop_selection')} table={table} cards={table.pockets.shop_selection.slice(0).reverse()} />
             </> : null }
-            <div className="single-card-pocket">
-              <PocketView ref={setMapRef(pocketRefs, 'discard_pile')} table={table} cards={table.pockets.discard_pile.slice(-2)}/>
-            </div>
-            <CountPocket ref={setMapRef(pocketRefs, 'main_deck')} table={table} cards={table.pockets.main_deck} />
             <div className='table-cubes' ref={cubesRef}>
               { table.status.num_cubes > 0 ?
                 <><img src='/media/sprite_cube.png'/>x{table.status.num_cubes}</> : null }
             </div>
+            <div className="single-card-pocket">
+              <PocketView ref={setMapRef(pocketRefs, 'discard_pile')} table={table} cards={table.pockets.discard_pile.slice(-2)}/>
+            </div>
+            <CountPocket ref={setMapRef(pocketRefs, 'main_deck')} table={table} cards={table.pockets.main_deck} />
             <PocketView ref={setMapRef(pocketRefs, 'selection')} table={table} cards={table.pockets.selection} />
           </div>
           <div className="m-auto status-text">
