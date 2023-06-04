@@ -1,9 +1,10 @@
-import "./Style/MoveCardAnimation.css";
-import { Card, PocketRef } from "./Model/GameTable";
-import CardView from "./CardView";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useReducer } from "react";
 import { getRectCenter } from "../../Utils/Rect";
+import { useInterval } from "../../Utils/UseInterval";
+import CardView from "./CardView";
+import { Card, PocketRef } from "./Model/GameTable";
 import { CardTracker } from "./PocketView";
+import "./Style/MoveCardAnimation.css";
 
 export interface MoveCardProps {
     tracker: CardTracker;
@@ -13,11 +14,8 @@ export interface MoveCardProps {
 }
 
 export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
-    const [rerender, setRerender] = useState(false);
-    useEffect(() => {
-        const timeout = setTimeout(() => setRerender(true), 0);
-        return () => clearTimeout(timeout);
-    }, []);
+    const [, forceUpdate] = useReducer(a => !a, false);
+    useInterval(forceUpdate, 0, []);
 
     const startRect = tracker.getPocketPosition(card.pocket)?.getCardRect(-1);
     const endRect = tracker.getPocketPosition(destPocket)?.getCardRect(card.id) ?? startRect;

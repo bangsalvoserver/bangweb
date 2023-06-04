@@ -15,6 +15,7 @@ import "./Style/GameScene.css";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import { PocketType } from "../../Messages/CardEnums";
 import { PlayerId } from "../../Messages/GameUpdate";
+import { useInterval } from "../../Utils/UseInterval";
 
 const FRAMERATE = 60;
 
@@ -45,15 +46,7 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
       }
     };
 
-    useEffect(() => {
-      let startTime = Date.now();
-      const interval = setInterval(() => {
-        let endTime = Date.now();
-        game.tick(endTime - startTime);
-        startTime = endTime;
-      }, 1000 / FRAMERATE);
-      return () => clearInterval(interval);
-    }, []);
+    useInterval((timeElapsed: number) => game.tick(timeElapsed), 1000 / FRAMERATE, []);
   
     const showReturnButton = () => {
       return table.myUserId == lobbyOwner
