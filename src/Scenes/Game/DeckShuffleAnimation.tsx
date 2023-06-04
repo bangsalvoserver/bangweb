@@ -15,7 +15,7 @@ export interface DeckShuffleProps {
     duration: Milliseconds;
 }
 
-const MAX_CARDS = isMobileDevice() ? 10 : 0;
+const MAX_CARDS = isMobileDevice() ? 10 : 30;
 
 export default function DeckShuffleAnimation({ tracker, table, pocket, cards, duration }: DeckShuffleProps) {
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
