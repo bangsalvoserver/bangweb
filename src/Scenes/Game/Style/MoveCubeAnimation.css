@@ -1,0 +1,30 @@
+.move-cubes-animation {
+    transition: ease-in-out;
+    z-index: 2;
+    --total-delay: calc(var(--duration) * 0.2);
+    --delay-per-cube: calc(var(--total-delay) / var(--num-cubes));
+}
+
+.total-delay-0 {
+    --total-delay: 0ms;
+}
+
+.move-cubes-animation-inner {
+    position: absolute;
+    left: var(--startX);
+    top: var(--startY);
+    animation-name: move-cube;
+    animation-fill-mode: both;
+    animation-duration: calc(var(--duration) - var(--total-delay));
+    animation-delay: calc(var(--move-cube-index) * var(--delay-per-cube));
+}
+
+.move-cubes-animation-inner img {
+    transform: translate(-50%, -50%);
+}
+
+@keyframes move-cube {
+    to {
+        transform: translate(var(--diffX), var(--diffY));
+    }
+}

@@ -10,10 +10,10 @@ export interface CardSlotProps {
 }
 
 const CardSlot = forwardRef<CardRef, CardSlotProps>(({ stretch, duration }, ref) => {
-    const slotRef = useRef() as MutableRefObject<HTMLDivElement>;
+    const slotRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
-        getRect: () => getDivRect(slotRef.current)
+        getRect: () => slotRef.current ? getDivRect(slotRef.current) : undefined
     }));
 
     const style = {

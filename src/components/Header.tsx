@@ -9,7 +9,7 @@ export interface HeaderProps {
 }
 
 function Header({ connection, onClickToggleMenu }: HeaderProps) {
-  const inputFile = useRef() as MutableRefObject<HTMLInputElement>;
+  const inputFile = useRef<HTMLInputElement>(null);
   const [propic, setPropic] = useState(localStorage.getItem('propic'));
   
   useEffect(() => {
@@ -26,7 +26,7 @@ function Header({ connection, onClickToggleMenu }: HeaderProps) {
   }, [propic]);
 
   const handlePropicClick = () => {
-    inputFile.current.click();
+    inputFile.current?.click();
   };
 
   const handlePropicChange = function(event: ChangeEvent<HTMLInputElement>) {

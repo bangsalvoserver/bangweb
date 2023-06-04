@@ -18,6 +18,22 @@
     transform: rotateY(180deg);
 }
 
+.card-cubes {
+    position: absolute;
+    width: 80%;
+    left: 50%;
+    top: 25%;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: normal;
+    line-height: 0;
+}
+
+.card-cubes img {
+    display: inline;
+    margin: 0 1px;
+}
+
 .card-horizontal {
     transform: rotate(90deg);
 }

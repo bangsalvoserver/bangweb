@@ -10,14 +10,14 @@ export interface CardProps {
 }
 
 export interface CardRef {
-    getRect: () => Rect;
+    getRect: () => Rect | undefined;
 }
 
 const CardView = forwardRef<CardRef, CardProps>(({ card }, ref) => {
-    const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
+    const cardRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
-        getRect: () => getDivRect(cardRef.current)
+        getRect: () => cardRef.current ? getDivRect(cardRef.current) : undefined
     }));
 
     let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
@@ -81,6 +81,9 @@ const CardView = forwardRef<CardRef, CardProps>(({ card }, ref) => {
             { classes.includes('card-animation-flip') ?
             <div className="card-back">
                 <img className="card-view-img" src={backfaceSrc} />
+            </div> : null}
+            {card.num_cubes > 0 ? <div className="card-cubes">
+                {[...Array(card.num_cubes)].map((item, i) => <img key={i} src='/media/sprite_cube.png' />)}
             </div> : null}
         </div>
     )

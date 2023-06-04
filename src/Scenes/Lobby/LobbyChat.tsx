@@ -13,8 +13,8 @@ export interface ChatProps {
 }
 
 export default function LobbyChat({ connection, myUserId, users, messages }: ChatProps) {
-    const messagesEnd = useRef() as MutableRefObject<HTMLDivElement>;
-    const inputMessage = useRef() as MutableRefObject<HTMLInputElement>;
+    const messagesEnd = useRef<HTMLDivElement>(null);
+    const inputMessage = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior:'smooth' });
@@ -22,7 +22,7 @@ export default function LobbyChat({ connection, myUserId, users, messages }: Cha
 
     const handleSendMessage = (event: SyntheticEvent) => {
         event.preventDefault();
-        if (inputMessage.current.value) {
+        if (inputMessage.current?.value) {
             connection.sendMessage('lobby_chat', { message: inputMessage.current.value });
             inputMessage.current.value = '';
         }

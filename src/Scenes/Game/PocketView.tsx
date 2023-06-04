@@ -15,6 +15,7 @@ export interface PocketProps {
 
 export interface CardTracker {
     getPocketPosition: (pocket: PocketRef) => PocketPosition | undefined;
+    getCubesPosition: () => Rect | undefined;
 }
 
 export interface PocketPosition {

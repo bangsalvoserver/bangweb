@@ -322,7 +322,7 @@ gameUpdateHandlers.add_cubes = (table: GameTable, { num_cubes, target_card }: Ad
 };
 
 // Moves `num_cubes` from origin_card (or the table if not set) to target_card (or the table if not set)
-gameUpdateHandlers.move_cubes = (table: GameTable, { num_cubes, origin_card, target_card }: MoveCubesUpdate): GameTable => {
+gameUpdateHandlers.move_cubes = (table: GameTable, { num_cubes, origin_card, target_card, duration }: MoveCubesUpdate): GameTable => {
     let tableCubes = table.status.num_cubes;
     let tableCards = table.cards;
     
@@ -331,6 +331,20 @@ gameUpdateHandlers.move_cubes = (table: GameTable, { num_cubes, origin_card, tar
     } else {
         tableCubes -= num_cubes;
     }
+    return {
+        ...table,
+        status: {
+            ...table.status,
+            num_cubes: tableCubes
+        },
+        cards: tableCards,
+        animation: {move_cubes:{ num_cubes, origin_card, target_card, duration }}
+    };
+};
+
+gameUpdateHandlers.move_cubes_end = (table: GameTable, { num_cubes, target_card }: MoveCubesUpdate): GameTable => {
+    let tableCubes = table.status.num_cubes;
+    let tableCards = table.cards;
     if (target_card) {
         tableCards = editById(tableCards, target_card, card => ({ ...card, num_cubes: card.num_cubes + num_cubes }));
     } else {
@@ -342,9 +356,10 @@ gameUpdateHandlers.move_cubes = (table: GameTable, { num_cubes, origin_card, tar
             ...table.status,
             num_cubes: tableCubes
         },
-        cards: tableCards
+        cards: tableCards,
+        animation: undefined
     };
-};
+}
 
 // Changes the scenario_deck_holder or wws_scenario_deck_holder field
 gameUpdateHandlers.move_scenario_deck = (table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable => {

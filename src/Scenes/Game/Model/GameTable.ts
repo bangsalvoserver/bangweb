@@ -1,6 +1,6 @@
 import { CardData, CardSign } from "../../../Messages/CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "../../../Messages/CardEnums";
-import { AnimationUpdate, CardId, GameString, MoveCardUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../../Messages/GameUpdate";
+import { AnimationUpdate, CardId, GameString, MoveCardUpdate, MoveCubesUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../../Messages/GameUpdate";
 import { UserId } from "../../../Messages/ServerMessage";
 
 export interface Id {
@@ -138,7 +138,9 @@ export function newPlayer(id: PlayerId, userid: UserId): Player {
     };
 }
 
-export type TableAnimation = {move_card: MoveCardUpdate};
+export type TableAnimation =
+    {move_card: MoveCardUpdate} |
+    {move_cubes: MoveCubesUpdate};
 
 export interface GameTable {
     myUserId: UserId;

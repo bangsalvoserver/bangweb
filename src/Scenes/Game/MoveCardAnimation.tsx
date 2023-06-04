@@ -5,12 +5,13 @@ import CardView from "./CardView";
 import { Card, PocketRef } from "./Model/GameTable";
 import { CardTracker } from "./PocketView";
 import "./Style/MoveCardAnimation.css";
+import { Milliseconds } from "../../Messages/GameUpdate";
 
 export interface MoveCardProps {
     tracker: CardTracker;
     card: Card;
     destPocket: PocketRef;
-    duration: number;
+    duration: Milliseconds;
 }
 
 export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {

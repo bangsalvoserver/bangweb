@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 import { GameStringComponent } from "../../Locale/Locale";
 import { Connection } from "../../Messages/Connection";
 import { UserId } from "../../Messages/ServerMessage";
@@ -16,6 +16,7 @@ import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import { PocketType } from "../../Messages/CardEnums";
 import { PlayerId } from "../../Messages/GameUpdate";
 import { useInterval } from "../../Utils/UseInterval";
+import { getDivRect } from "../../Utils/Rect";
 
 const FRAMERATE = 60;
 
@@ -30,6 +31,7 @@ export interface TableProps {
 export default function GameScene({ connection, game, table, users, lobbyOwner }: TableProps) {
     const pocketRefs = useMapRef<PocketType, PocketPosition>();
     const playerRefs = useMapRef<PlayerId, PlayerRef>();
+    const cubesRef = useRef<HTMLDivElement>(null);
 
     const tracker: CardTracker = {
       getPocketPosition: (pocket: PocketRef) => {
@@ -37,12 +39,15 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
           return undefined;
         } else if (pocket.name == 'scenario_deck' || pocket.name == 'wws_scenario_deck') {
           const holder = pocket.name == 'scenario_deck' ? table.status.scenario_deck_holder : table.status.wws_scenario_deck_holder;
-          return holder ? playerRefs.current.get(holder)?.positions.get(pocket.name) : undefined;
+          return holder ? playerRefs.current?.get(holder)?.positions.get(pocket.name) : undefined;
         } else if ('player' in pocket) {
-          return playerRefs.current.get(pocket.player)?.positions.get(pocket.name);
+          return playerRefs.current?.get(pocket.player)?.positions.get(pocket.name);
         } else {
-          return pocketRefs.current.get(pocket.name);
+          return pocketRefs.current?.get(pocket.name);
         }
+      },
+      getCubesPosition: () => {
+        return cubesRef.current ? getDivRect(cubesRef.current) : undefined;
       }
     };
 
@@ -70,6 +75,10 @@ export default function GameScene({ connection, game, table, users, lobbyOwner }
               <PocketView ref={setMapRef(pocketRefs, 'discard_pile')} table={table} cards={table.pockets.discard_pile.slice(-2)}/>
             </div>
             <CountPocket ref={setMapRef(pocketRefs, 'main_deck')} table={table} cards={table.pockets.main_deck} />
+            <div className='table-cubes' ref={cubesRef}>
+              { table.status.num_cubes > 0 ?
+                <><img src='/media/sprite_cube.png'/>x{table.status.num_cubes}</> : null }
+            </div>
             <PocketView ref={setMapRef(pocketRefs, 'selection')} table={table} cards={table.pockets.selection} />
           </div>
           <div className="m-auto status-text">

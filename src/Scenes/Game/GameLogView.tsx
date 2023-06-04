@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { GameStringComponent } from "../../Locale/Locale";
 import { UserValue } from "../Lobby/LobbyUser";
 import { GameTable } from "./Model/GameTable";
@@ -10,10 +10,10 @@ export interface GameLogProps {
 }
 
 export default function GameLogView({table, users}: GameLogProps) {
-    const messagesEnd = useRef() as MutableRefObject<HTMLDivElement>;
+    const messagesEnd = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        messagesEnd.current.scrollIntoView({ block: 'nearest', behavior:'smooth' });
+        messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior:'smooth' });
     }, [table.logs]);
 
     return (<div className="game-log-view">

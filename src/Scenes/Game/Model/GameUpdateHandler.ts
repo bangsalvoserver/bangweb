@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { CardIdUpdate, GameString, Milliseconds, MoveCardUpdate, PlayerIdUpdate } from "../../../Messages/GameUpdate";
+import { CardIdUpdate, GameString, Milliseconds, MoveCardUpdate, MoveCubesUpdate, PlayerIdUpdate } from "../../../Messages/GameUpdate";
 import { GameUpdate } from "./GameTableDispatch";
 
 export class GameUpdateHandler {
@@ -53,6 +53,7 @@ export class GameUpdateHandler {
         game_prompt: this.handleGamePrompt,
         play_sound: this.handlePlaySound,
         move_card: this.handleMoveCard,
+        move_cubes: this.handleMoveCubes,
         show_card: this.handleCardAnimation,
         hide_card: this.handleCardAnimation,
         tap_card: this.handleCardAnimation,
@@ -76,7 +77,11 @@ export class GameUpdateHandler {
 
     private handleMoveCard({ card, player, pocket }: MoveCardUpdate) {
         this.updateOnEnd = { updateType: 'move_card_end', updateValue: { card, player, pocket } };
-    };
+    }
+
+    private handleMoveCubes({ num_cubes, target_card }: MoveCubesUpdate) {
+        this.updateOnEnd = { updateType: 'move_cubes_end', updateValue: { num_cubes, target_card } };
+    }
 
     private handleCardAnimation({ card }: CardIdUpdate) {
         this.updateOnEnd = { updateType: 'card_animation_end', updateValue: { card } };

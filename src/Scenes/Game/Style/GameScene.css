@@ -14,3 +14,16 @@
 .status-text {
     height: 50px;
 }
+
+.table-cubes {
+    width: 80px;
+    display: inline-block;
+    font-weight: bold;
+    text-align: center;
+}
+
+.table-cubes img {
+    display: inline;
+    height: 2em;
+    margin: 2px;
+}
