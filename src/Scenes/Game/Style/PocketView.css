@@ -9,6 +9,10 @@
     position: relative;
 }
 
+.min-one-card .pocket-view {
+    min-width: 70px;
+}
+
 .single-card-pocket {
     display: inline-block;
     position: relative;

@@ -1,21 +1,18 @@
 .player-view {
     display: inline-flex;
-    flex-direction: row;
+    flex-direction: column;
 
     border: 3px solid #2d1000ff;
     margin: 10px;
     padding: 0.5em;
-    width: 480px;
-    height: 270px;
-    vertical-align: middle;
+    width: 380px;
 }
 
 .current-turn {
     border: 3px solid #4d7f21;
 }
 
-.pocket-scroll {
-    width: 300px;
+.player-table {
     height: 120px;
     text-align: center;
     white-space: nowrap;
@@ -27,6 +24,7 @@
     position: absolute;
     --one-hp-size: 18px;
     bottom: calc(var(--one-hp-size) * var(--player-hp));
+    left: 0;
 }
 
 .player-backup-extra {
@@ -50,7 +48,16 @@
     background-size: contain;
 }
 
+.player-icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: max-content;
+    z-index: 2;
+}
+
 .player-icon {
+    display: inline-block;
     height: 32px;
     width: 32px;
     background-size: contain;

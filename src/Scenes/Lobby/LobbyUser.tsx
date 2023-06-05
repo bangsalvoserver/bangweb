@@ -28,8 +28,8 @@ export default function LobbyUser({ user, alignVertical }: LobbyUserProps) {
   if (alignVertical) {
     return (
       <div className='text-center font-bold'>
-        <p>{getUsername(user)}</p>
         <p><img style={{display:'inline'}} src={getPropic(user)} /></p>
+        <p>{getUsername(user)}</p>
       </div>
     )
   } else {
