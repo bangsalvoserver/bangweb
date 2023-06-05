@@ -1,10 +1,13 @@
-import "./Locale.css";
-import { REGISTRIES } from "./Registry";
+import { useContext } from "react";
 import { CardSign } from "../Messages/CardData";
 import { GameString } from "../Messages/GameUpdate";
-import { UserValue, getUsername } from "../Scenes/Lobby/LobbyUser";
-import { GameTable, getPlayer } from "../Scenes/Game/Model/GameTable";
 import CardSignView from "../Scenes/Game/CardSignView";
+import { GameTableContext } from "../Scenes/Game/GameScene";
+import { getPlayer } from "../Scenes/Game/Model/GameTable";
+import { getUsername } from "../Scenes/Lobby/LobbyUser";
+import "./Locale.css";
+import { REGISTRIES } from "./Registry";
+import { LobbyContext } from "../Scenes/Lobby/Lobby";
 
 const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
     const language = navigator.language;
@@ -45,12 +48,13 @@ export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
 }
 
 export interface GameStringProps {
-    table: GameTable;
-    users: UserValue[];
     message: GameString;
 }
 
-export function GameStringComponent({ table, users, message}: GameStringProps): JSX.Element {
+export function GameStringComponent({ message }: GameStringProps): JSX.Element {
+    const table = useContext(GameTableContext);
+    const { users } = useContext(LobbyContext);
+
     if (message.format_str in gameStringRegistry) {
         const value = gameStringRegistry[message.format_str];
         if (typeof value == 'function') {

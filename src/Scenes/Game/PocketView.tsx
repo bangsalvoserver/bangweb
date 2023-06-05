@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
 import { PocketType } from "../../Messages/CardEnums";
 import { CardId } from "../../Messages/GameUpdate";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
@@ -7,9 +7,9 @@ import CardSlot from "./CardSlot";
 import CardView, { CardRef } from "./CardView";
 import { GameTable, PocketRef, getCard } from "./Model/GameTable";
 import "./Style/PocketView.css";
+import { GameTableContext } from "./GameScene";
 
 export interface PocketProps {
-    table: GameTable;
     cards: CardId[];
 }
 
@@ -25,7 +25,8 @@ export interface PocketPosition {
 
 export type PocketPositionMap = Map<PocketType, PocketPosition>;
 
-const PocketView = forwardRef<PocketPosition, PocketProps>(({ table, cards }, ref) => {
+const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards }, ref) => {
+    const table = useContext(GameTableContext);
     const pocketRef = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
 

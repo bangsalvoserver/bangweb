@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useImperativeHandle } from "react";
+import { CSSProperties, forwardRef, useContext, useImperativeHandle } from "react";
 import { PocketType } from "../../Messages/CardEnums";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
@@ -7,10 +7,10 @@ import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import { GameTableContext } from "./GameScene";
 
 export interface PlayerProps {
     user?: UserValue,
-    table: GameTable,
     player: Player
 }
 
@@ -18,7 +18,8 @@ export interface PlayerRef {
     positions: PocketPositionMap
 };
 
-const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, ref) => {
+const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) => {
+    const table = useContext(GameTableContext);
     const positions = useMapRef<PocketType, PocketPosition>();
 
     useImperativeHandle(ref, () => ({ positions : positions.current }));
@@ -62,10 +63,10 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
         <div className={classes.join(' ')} style={playerStyle}>
             <div className='flex flex-col justify-center flex-grow'>
                 <div className='pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_hand')} table={table} cards={player.pockets.player_hand} />
+                    <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} />
                 </div>
                 <div className='pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_table')} table={table} cards={player.pockets.player_table} />
+                    <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
                 </div>
             </div>
             <div className='flex flex-col'>
@@ -81,14 +82,14 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, table, player }, 
                 <div className='flex flex-row'>
                     <div className='flex flex-col justify-end relative'>
                         <div className="player-backup single-card-pocket">
-                            <PocketView ref={setMapRef(positions, 'player_backup')} table={table} cards={player.pockets.player_backup} />
+                            <PocketView ref={setMapRef(positions, 'player_backup')} cards={player.pockets.player_backup} />
                             { player.status.hp > 5 ? 
                                 <div className="player-backup-extra">
-                                    <PocketView table={table} cards={player.pockets.player_backup.slice(-1)} />
+                                    <PocketView cards={player.pockets.player_backup.slice(-1)} />
                                 </div> : null }
                         </div>
                         <div className="align-slot-bottom">
-                            <PocketView ref={setMapRef(positions, 'player_character')} table={table} cards={player.pockets.player_character} />
+                            <PocketView ref={setMapRef(positions, 'player_character')} cards={player.pockets.player_character} />
                         </div>
                         { player.status.gold > 0 ?
                             <div className="player-gold">{player.status.gold}</div>

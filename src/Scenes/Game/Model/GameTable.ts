@@ -146,7 +146,7 @@ export type TableAnimation =
     {deck_shuffle: DeckShuffleAnimation};
 
 export interface GameTable {
-    myUserId: UserId;
+    myUserId?: UserId;
     self_player?: PlayerId;
 
     players: Player[];
@@ -171,7 +171,7 @@ export interface GameTable {
     logs: GameString[];
 }
 
-export function newGameTable(myUserId: UserId): GameTable {
+export function newGameTable(myUserId?: UserId): GameTable {
     return {
         myUserId,
         

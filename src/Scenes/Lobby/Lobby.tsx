@@ -1,11 +1,10 @@
-import { useRef, useState } from 'react';
+import { createContext, useRef, useState } from 'react';
 import { Connection, useHandlers } from '../../Messages/Connection';
 import { GameOptions } from '../../Messages/GameUpdate';
 import { deserializeImage } from '../../Messages/ImageSerial';
 import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
 import GameScene from '../Game/GameScene';
 import { GameUpdate } from '../Game/Model/GameTableDispatch';
-import { GameChannel } from '../Game/Model/GameUpdateHandler';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
@@ -17,6 +16,14 @@ export interface LobbyProps {
   name: string;
   options: GameOptions;
 }
+
+export interface LobbyState {
+  users: UserValue[];
+  myUserId?: UserId;
+  lobbyOwner?: UserId;
+}
+
+export const LobbyContext = createContext<LobbyState>({ users:[] });
 
 export default function LobbyScene({ myLobbyId, myUserId, connection, name, options }: LobbyProps) {
   const [isGameStarted, setIsGameStarted] = useState(false);
@@ -80,21 +87,14 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
   const handleStartGame = () => connection.sendMessage('game_start');
 
   const getGameScene = () => {
-    const channel: GameChannel = {
-      getNextUpdate: () => gameUpdates.current.shift(),
-      sendGameAction: () => (messageType: string, messageValue?: any) => {
-        connection.sendMessage('game_action', { [messageType]: messageValue ?? {} });
-      },
-      handleReturnLobby: () => connection.sendMessage('lobby_return')
-    };
-
     return (
-      <GameScene
-        channel={channel}
-        users={users}
-        myUserId={myUserId}
-        lobbyOwner={lobbyOwner}
-      />
+      <GameScene channel={{
+        getNextUpdate: () => gameUpdates.current.shift(),
+        sendGameAction: () => (messageType: string, messageValue?: any) => {
+          connection.sendMessage('game_action', { [messageType]: messageValue ?? {} });
+        },
+        handleReturnLobby: () => connection.sendMessage('lobby_return')
+      }}/>
     );
   };
 
@@ -119,6 +119,10 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     )
   }
 
+  const handleSendMessage = (message: string) => {
+    connection.sendMessage('lobby_chat', { message: message });
+  }
+
   return (
     <div>
       <h1 className='
@@ -129,8 +133,10 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       <div>
         <button onClick={handleLeaveLobby}>Leave Lobby</button>
       </div>
-      {isGameStarted ? getGameScene() : getLobbyScene()}
-      <LobbyChat connection={connection} myUserId={myUserId} users={users} messages={chatMessages} />
+      <LobbyContext.Provider value={{ users, myUserId, lobbyOwner }}>
+        {isGameStarted ? getGameScene() : getLobbyScene()}
+        <LobbyChat messages={chatMessages} handleSendMessage={handleSendMessage} />
+      </LobbyContext.Provider>
     </div>
   );
 }

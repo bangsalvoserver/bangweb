@@ -1,15 +1,17 @@
+import { useContext } from "react";
 import DeckShuffleAnimation from "./DeckShuffleAnimation";
-import { GameTable, getCard, newPocketRef } from "./Model/GameTable";
+import { GameTableContext } from "./GameScene";
+import { getCard, newPocketRef } from "./Model/GameTable";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
 import { CardTracker } from "./PocketView";
 
 export interface AnimationProps {
-    table: GameTable;
     tracker: CardTracker;
 };
 
-export default function AnimationView({ table, tracker}: AnimationProps) {
+export default function AnimationView({ tracker}: AnimationProps) {
+    const table = useContext(GameTableContext);
     const animation = table.animation;
     if (animation) {
         if ('move_card' in animation) {
@@ -32,7 +34,6 @@ export default function AnimationView({ table, tracker}: AnimationProps) {
         if ('deck_shuffle' in animation) {
             return <DeckShuffleAnimation
                 tracker={tracker}
-                table={table}
                 cards={animation.deck_shuffle.cards}
                 pocket={animation.deck_shuffle.pocket}
                 duration={animation.deck_shuffle.duration}

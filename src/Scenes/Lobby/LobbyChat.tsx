@@ -1,18 +1,18 @@
-import { MutableRefObject, SyntheticEvent, useEffect, useRef } from "react";
-import { Connection } from "../../Messages/Connection";
-import { ChatMessage, UserId } from "../../Messages/ServerMessage";
-import { UserValue, getUsername } from "./LobbyUser";
-import "./Style/LobbyChat.css"
+import { SyntheticEvent, useContext, useEffect, useRef } from "react";
 import { getLocalizedLabel } from "../../Locale/Locale";
+import { ChatMessage, UserId } from "../../Messages/ServerMessage";
+import { LobbyContext } from "./Lobby";
+import { getUsername } from "./LobbyUser";
+import "./Style/LobbyChat.css";
 
 export interface ChatProps {
-    connection: Connection;
-    myUserId: UserId;
-    users: UserValue[];
-    messages: ChatMessage[]
+    messages: ChatMessage[];
+    handleSendMessage: (message: string) => void;
 }
 
-export default function LobbyChat({ connection, myUserId, users, messages }: ChatProps) {
+export default function LobbyChat({ messages, handleSendMessage }: ChatProps) {
+    const { users, myUserId } = useContext(LobbyContext);
+    
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
 
@@ -20,10 +20,10 @@ export default function LobbyChat({ connection, myUserId, users, messages }: Cha
         messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior:'smooth' });
     }, [messages]);
 
-    const handleSendMessage = (event: SyntheticEvent) => {
+    const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
         if (inputMessage.current?.value) {
-            connection.sendMessage('lobby_chat', { message: inputMessage.current.value });
+            handleSendMessage(inputMessage.current.value);
             inputMessage.current.value = '';
         }
     };
@@ -45,7 +45,7 @@ export default function LobbyChat({ connection, myUserId, users, messages }: Cha
                 {messages.map(({ user_id, message}, index) => newMessageTag(user_id, message, index))}
                 <div ref={messagesEnd} />
             </div> : null}
-            <form className="lobby-chat-form" onSubmit={handleSendMessage}>
+            <form className="lobby-chat-form" onSubmit={handleFormSubmit}>
                 <input type="text" ref={inputMessage} className="
                     border-2
                     border-gray-300
