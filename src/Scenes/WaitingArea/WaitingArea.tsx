@@ -1,13 +1,11 @@
-import { SyntheticEvent, useEffect, useState } from "react";
-import LobbyElement, { LobbyValue } from "./LobbyElement";
+import { SyntheticEvent, useContext, useEffect, useState } from "react";
+import { useHandlers } from "../../Messages/Connection";
 import { LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
-import { Connection, useHandlers } from "../../Messages/Connection";
+import LobbyElement, { LobbyValue } from "./LobbyElement";
+import { ConnectionContext } from "../../App";
 
-export interface WaitingAreaProps {
-  connection: Connection;
-}
-
-function WaitingArea({ connection }: WaitingAreaProps) {
+function WaitingArea() {
+  const connection = useContext(ConnectionContext);
   const [lobbies, setLobbies] = useState([] as LobbyValue[]);
   const [lobbyName, setLobbyName] = useState(localStorage.getItem('lobbyName'));
 
@@ -20,11 +18,11 @@ function WaitingArea({ connection }: WaitingAreaProps) {
   }, [lobbyName]);
 
   useEffect(() => {
-    connection.sendMessage('lobby_list');
+    connection?.sendMessage('lobby_list');
 
     let cachedLobbyId = localStorage.getItem('lobby_id');
     if (cachedLobbyId) {
-      connection.sendMessage('lobby_join', { lobby_id: parseInt(cachedLobbyId) });
+      connection?.sendMessage('lobby_join', { lobby_id: parseInt(cachedLobbyId) });
     }
   }, []);
 
@@ -44,19 +42,19 @@ function WaitingArea({ connection }: WaitingAreaProps) {
   );
 
   const handleDisconnect = () => {
-    connection.disconnect();
+    connection?.disconnect();
   };
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
     if (lobbyName) {
       const gameOptions = localStorage.getItem('gameOptions');
-      connection.sendMessage('lobby_make', { name: lobbyName, options: gameOptions ? JSON.parse(gameOptions) : undefined });
+      connection?.sendMessage('lobby_make', { name: lobbyName, options: gameOptions ? JSON.parse(gameOptions) : undefined });
     }
   };
 
   const handleClickJoin = (lobby_id: LobbyId) => {
-    connection.sendMessage('lobby_join', { lobby_id });
+    connection?.sendMessage('lobby_join', { lobby_id });
   };
 
   return (

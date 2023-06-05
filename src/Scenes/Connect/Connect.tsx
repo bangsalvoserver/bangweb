@@ -1,13 +1,8 @@
-import React, { ChangeEvent, MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from 'react'
-import { ClientAccepted } from '../../Messages/ServerMessage';
-import { Connection } from '../../Messages/Connection';
-import WaitingArea from '../WaitingArea/WaitingArea';
+import { SyntheticEvent, useContext, useEffect, useState } from 'react';
+import { ConnectionContext } from '../../App';
 
-export interface ConnectProps {
-  connection: Connection;
-}
-
-export default function ConnectScene({ connection }: ConnectProps) {
+export default function ConnectScene() {
+  const connection = useContext(ConnectionContext);
   const [username, setUsername] = useState(localStorage.getItem('username'));
 
   useEffect(() => {
@@ -20,8 +15,8 @@ export default function ConnectScene({ connection }: ConnectProps) {
 
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
-    if (!connection.isConnected() && username) {
-      connection.connect();
+    if (!connection?.isConnected() && username) {
+      connection?.connect();
     }
   };
 

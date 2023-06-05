@@ -1,5 +1,6 @@
-import { createContext, useRef, useState } from 'react';
-import { Connection, useHandlers } from '../../Messages/Connection';
+import { createContext, useContext, useRef, useState } from 'react';
+import { ConnectionContext } from '../../App';
+import { useHandlers } from '../../Messages/Connection';
 import { GameOptions } from '../../Messages/GameUpdate';
 import { deserializeImage } from '../../Messages/ImageSerial';
 import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
@@ -11,8 +12,7 @@ import LobbyUser, { UserValue } from './LobbyUser';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
-  myUserId: UserId;
-  connection: Connection;
+  myUserId?: UserId;
   name: string;
   options: GameOptions;
 }
@@ -25,7 +25,9 @@ export interface LobbyState {
 
 export const LobbyContext = createContext<LobbyState>({ users:[] });
 
-export default function LobbyScene({ myLobbyId, myUserId, connection, name, options }: LobbyProps) {
+export default function LobbyScene({ myLobbyId, myUserId, name, options }: LobbyProps) {
+  const connection = useContext(ConnectionContext);
+
   const [isGameStarted, setIsGameStarted] = useState(false);
   const gameUpdates = useRef([] as GameUpdate[]);
 
@@ -83,17 +85,17 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     }]
   );
 
-  const handleLeaveLobby = () => connection.sendMessage('lobby_leave');
-  const handleStartGame = () => connection.sendMessage('game_start');
+  const handleLeaveLobby = () => connection?.sendMessage('lobby_leave');
+  const handleStartGame = () => connection?.sendMessage('game_start');
 
   const getGameScene = () => {
     return (
       <GameScene channel={{
         getNextUpdate: () => gameUpdates.current.shift(),
         sendGameAction: () => (messageType: string, messageValue?: any) => {
-          connection.sendMessage('game_action', { [messageType]: messageValue ?? {} });
+          connection?.sendMessage('game_action', { [messageType]: messageValue ?? {} });
         },
-        handleReturnLobby: () => connection.sendMessage('lobby_return')
+        handleReturnLobby: () => connection?.sendMessage('lobby_return')
       }}/>
     );
   };
@@ -103,7 +105,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       if (myUserId == lobbyOwner) {
         localStorage.setItem('lobbyName', lobbyName);
         localStorage.setItem('gameOptions', JSON.stringify(gameOptions));
-        connection.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
+        connection?.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
         setGameOptions(gameOptions);
       }
     };
@@ -120,7 +122,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
   }
 
   const handleSendMessage = (message: string) => {
-    connection.sendMessage('lobby_chat', { message: message });
+    connection?.sendMessage('lobby_chat', { message: message });
   }
 
   return (

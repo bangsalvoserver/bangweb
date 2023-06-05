@@ -1,11 +1,13 @@
 import './App.css';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, createContext } from 'react';
 import { Connection, useHandlers } from './Messages/Connection';
 import Header from './components/Header';
 import UserMenu from './components/UserMenu';
 import { serializeImage } from './Messages/ImageSerial';
 import { ClientAccepted, LobbyEntered, LobbyRemoveUser, UserId } from './Messages/ServerMessage';
 import CurrentScene, { CurrentSceneUnion } from './Scenes/CurrentScene';
+
+export const ConnectionContext = createContext<Connection | null>(null);
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +17,7 @@ function App() {
     connection.current = new Connection();
   }
 
-  const [scene, setScene] = useState<CurrentSceneUnion>({ connect: { connection : connection.current }});
+  const [scene, setScene] = useState<CurrentSceneUnion>({ connect: {} });
 
   let myUserId = useRef<UserId>();
   if (!myUserId.current) {
@@ -43,10 +45,10 @@ function App() {
       myUserId.current = user_id;
       localStorage.setItem('user_id', user_id.toString());
       connection.current?.setLocked(true);
-      setScene({ waiting_area: { connection: connection.current as Connection }});
+      setScene({ waiting_area: {} });
     }],
     ['disconnect', () => {
-      setScene({ connect: { connection: connection.current as Connection }})
+      setScene({ connect: {} })
     }],
     ['lobby_error', (message: string) => {
       console.error("Lobby error: " + message);
@@ -55,7 +57,7 @@ function App() {
       if (user_id === myUserId.current) {
         localStorage.removeItem('lobby_id');
         connection.current?.setLocked(true);
-        setScene({waiting_area: { connection: connection.current as Connection }});
+        setScene({ waiting_area: {} });
       }
     }]
   );
@@ -65,22 +67,28 @@ function App() {
       if (!('lobby' in scene) || (scene.lobby.myLobbyId != lobby_id)) {
         localStorage.setItem('lobby_id', lobby_id.toString());
         connection.current?.setLocked(true);
-        setScene({ lobby: { connection: connection.current as Connection, myLobbyId: lobby_id, myUserId: myUserId.current as UserId, name, options }});
+        setScene({ lobby: { myLobbyId: lobby_id, myUserId: myUserId.current, name, options }});
       }
     }]
   );
 
+  const handleEditPropic = async (propic: string | null) => {
+    connection.current?.sendMessage('user_edit', {
+      name: localStorage.getItem('username'),
+      profile_image: await serializeImage(propic, 50)
+    });
+  }
+
   return (
   <div className="background">
     <div className="background-inner min-h-screen flex flex-col">
-        <Header
-          connection={connection.current}
-          onClickToggleMenu={() => setIsMenuOpen(value => !value)}
-        />
+      <ConnectionContext.Provider value={connection.current}>
+        <Header onEditPropic={handleEditPropic} onClickToggleMenu={() => setIsMenuOpen(value => !value)} />
         <UserMenu isMenuOpen={isMenuOpen}/>
         <div className="current-scene">
           <CurrentScene scene={scene} />
         </div>
+      </ConnectionContext.Provider>
     </div>
   </div>
   );

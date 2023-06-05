@@ -1,10 +1,10 @@
-import ConnectScene, { ConnectProps } from "./Connect/Connect";
+import ConnectScene from "./Connect/Connect";
 import LobbyScene, { LobbyProps } from "./Lobby/Lobby"
-import WaitingArea, { WaitingAreaProps } from "./WaitingArea/WaitingArea";
+import WaitingArea from "./WaitingArea/WaitingArea";
 
 export type CurrentSceneUnion =
-    { connect : ConnectProps } |
-    { waiting_area: WaitingAreaProps } |
+    { connect: {} } |
+    { waiting_area: {} } |
     { lobby: LobbyProps };
 
 export interface CurrentSceneProps {

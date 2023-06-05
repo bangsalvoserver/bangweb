@@ -1,14 +1,12 @@
-import React, { ChangeEvent, MutableRefObject, useEffect, useRef, useState } from 'react';
-import { Connection } from '../Messages/Connection';
-import { serializeImage } from '../Messages/ImageSerial';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 
 export interface HeaderProps {
-  connection: Connection;
+  onEditPropic: (propic: string | null) => void;
   onClickToggleMenu: () => void;
 }
 
-function Header({ connection, onClickToggleMenu }: HeaderProps) {
+function Header({ onEditPropic, onClickToggleMenu }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   const [propic, setPropic] = useState(localStorage.getItem('propic'));
   
@@ -19,10 +17,7 @@ function Header({ connection, onClickToggleMenu }: HeaderProps) {
       localStorage.removeItem('propic');
     }
 
-    (async () => connection.sendMessage('user_edit', {
-      name: localStorage.getItem('username'),
-      profile_image: await serializeImage(propic, 50)
-    }))();
+    onEditPropic(propic);
   }, [propic]);
 
   const handlePropicClick = () => {

@@ -89,11 +89,11 @@ export class Connection {
     }
 }
 
-export function useHandlers(connection: Connection, deps: DependencyList, ...handlers: MessageHandler[]) {
+export function useHandlers(connection: Connection | null, deps: DependencyList, ...handlers: MessageHandler[]) {
     useEffect(() => {
-        handlers.forEach(handler => connection.addHandler(handler));
-        connection.setLocked(false);
-        return () => handlers.forEach(handler => connection.removeHandler(handler));
+        handlers.forEach(handler => connection?.addHandler(handler));
+        connection?.setLocked(false);
+        return () => handlers.forEach(handler => connection?.removeHandler(handler));
     }, [connection, ...deps]);
 }
 
