@@ -61,23 +61,56 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
         }
     }
 
+    const playerIcons = (
+        <div className='player-icons'>
+            { isGameOver ? <>
+                { isWinner ? <div className="player-icon icon-winner"/> : null }
+            </> : <>
+                { isOrigin ? <div className="player-icon icon-origin"/> : null }
+                { isTarget ? <div className="player-icon icon-target"/> : null }
+                { isTurn ? <div className="player-icon icon-turn"/> : null }
+            </>}
+        </div>);
+
+    if (player.id == table.self_player) {
+        classes.push('player-view-self');
+
+        return (
+            <div className={classes.join(' ')} style={playerStyle}>
+                <div>
+                    <div className='player-pocket-scroll'>
+                        <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
+                    </div>
+                    <div className='player-pocket-scroll'>
+                        <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} />
+                    </div>
+                </div>
+                <div className='flex flex-col relative justify-end'>
+                    {playerIcons}
+                    <div className='flex flex-row'>
+                        <div className="flex flex-col justify-end">
+                            <CharacterView ref={ref => {
+                                setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
+                                setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
+                            }} player={player} />
+                        </div>
+                        <div className='flex flex-col'>
+                            <LobbyUser user={user} alignVertical />
+                            <div className='flex flex-row justify-center'>
+                                <RoleView flipDuration={flipDuration} role={playerRole} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className={classes.join(' ')} style={playerStyle}>
             <div className='flex flex-row flex-grow'>
-                <div className='flex flex-col justify-center relative'>
-                    <LobbyUser user={user} alignVertical />
-                    <div className='player-icons'>
-                        { isGameOver ? <>
-                            { isWinner ? <div className="player-icon icon-winner"/> : null }
-                        </> : <>
-                            { isTurn ? <div className="player-icon icon-turn"/> : null }
-                            { isOrigin ? <div className="player-icon icon-origin"/> : null }
-                            { isTarget ? <div className="player-icon icon-target"/> : null }
-                        </>}
-                    </div>
-                </div>
                 <div className='flex-grow text-center'>
-                    <div className='inline-block text-left mt-4'>
+                    <div className='player-top-row'>
                         <CharacterView ref={ref => {
                             setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
                             setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
@@ -88,8 +121,12 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
                         <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} />
                     </div>
                 </div>
+                <div className='flex flex-col justify-end relative'>
+                    {playerIcons}
+                    <LobbyUser user={user} alignVertical />
+                </div>
             </div>
-            <div className='player-table'>
+            <div className='player-pocket-scroll'>
                 <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
             </div>
         </div>

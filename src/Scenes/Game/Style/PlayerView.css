@@ -1,7 +1,7 @@
 :root {
-    --player-view-width: calc(var(--card-width) * 6.5);
     --player-view-margin: 0.5em;
-    --player-table-height: calc(var(--card-height) + 1.5em);
+    --player-row-width: calc(var(--card-width) * 6);
+    --player-row-height: calc(var(--card-height) + 1.5em);
     --player-icon-size: 32px;
 }
 
@@ -15,19 +15,30 @@
     
     margin: var(--player-view-margin);
     padding: 0.5em;
-    width: var(--player-view-width);
+}
+
+.player-view-self {
+    flex-direction: row;
 }
 
 .current-turn {
     border-color: #4d7f21;
 }
 
-.player-table {
-    height: var(--player-table-height);
+.player-pocket-scroll {
+    width: var(--player-row-width);
+    height: var(--player-row-height);
+
     text-align: center;
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
+}
+
+.player-top-row {
+    display: inline-block;
+    text-align: left;
+    height: var(--player-row-height);
 }
 
 .player-backup {
@@ -59,7 +70,7 @@
 .player-icons {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     width: max-content;
     z-index: 2;
 }
