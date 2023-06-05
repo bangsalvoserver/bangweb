@@ -5,7 +5,7 @@ import { getLocalizedLabel } from "../../Locale/Locale";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
-    setGameOptions: Dispatch<SetStateAction<GameOptions>>;
+    setGameOptions: (gameOptions: GameOptions) => void;
     readOnly: boolean;
 }
 

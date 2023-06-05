@@ -1,12 +1,11 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Connection, useHandlers } from '../../Messages/Connection';
 import { GameOptions } from '../../Messages/GameUpdate';
 import { deserializeImage } from '../../Messages/ImageSerial';
 import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
 import GameScene from '../Game/GameScene';
-import { newGameTable } from '../Game/Model/GameTable';
-import { gameTableDispatch } from '../Game/Model/GameTableDispatch';
-import { GameUpdateHandler } from '../Game/Model/GameUpdateHandler';
+import { GameUpdate } from '../Game/Model/GameTableDispatch';
+import { GameChannel } from '../Game/Model/GameUpdateHandler';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
@@ -20,18 +19,18 @@ export interface LobbyProps {
 }
 
 export default function LobbyScene({ myLobbyId, myUserId, connection, name, options }: LobbyProps) {
-  const [table, tableDispatch] = useReducer(gameTableDispatch, myUserId, newGameTable);
-  const gameUpdateHandler = useRef<GameUpdateHandler>();
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const gameUpdates = useRef([] as GameUpdate[]);
 
-  const [users, setUsers] = useState<UserValue[]>([]);
+  const [users, setUsers] = useState([] as UserValue[]);
   const [lobbyOwner, setLobbyOwner] = useState<UserId>();
 
   const [lobbyName, setLobbyName] = useState(name);
   const [gameOptions, setGameOptions] = useState(options);
 
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatMessages, setChatMessages] = useState([] as ChatMessage[]);
 
-  useHandlers(connection, [gameUpdateHandler],
+  useHandlers(connection, [],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
       setUsers(users => {
         let copy = [...users];
@@ -62,52 +61,60 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
     }],
     ['lobby_entered', ({ lobby_id }: LobbyEntered) => {
       if (lobby_id == myLobbyId) {
-        gameUpdateHandler.current = undefined;
+        gameUpdates.current = [];
+        setIsGameStarted(false);
         setUsers([]);
       }
     }],
     ['game_started', () => {
-      gameUpdateHandler.current = new GameUpdateHandler(tableDispatch);
-      tableDispatch({ updateType: 'reset' });
+      setIsGameStarted(true);
     }],
     ['game_update', (update: any) => {
       const updateType = Object.keys(update)[0];
       const updateValue = update[updateType];
-      gameUpdateHandler.current?.pushUpdate({ updateType, updateValue });
+      gameUpdates.current.push({ updateType, updateValue });
     }]
   );
-
-  useEffect(() => {
-    if (myUserId == lobbyOwner) {
-      localStorage.setItem('lobbyName', lobbyName);
-      localStorage.setItem('gameOptions', JSON.stringify(gameOptions));
-      connection.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
-    }
-  }, [lobbyOwner, lobbyName, gameOptions]);
 
   const handleLeaveLobby = () => connection.sendMessage('lobby_leave');
   const handleStartGame = () => connection.sendMessage('game_start');
 
   const getGameScene = () => {
+    const channel: GameChannel = {
+      getNextUpdate: () => gameUpdates.current.shift(),
+      sendGameAction: () => (messageType: string, messageValue?: any) => {
+        connection.sendMessage('game_action', { [messageType]: messageValue ?? {} });
+      },
+      handleReturnLobby: () => connection.sendMessage('lobby_return')
+    };
+
     return (
       <GameScene
-        connection={connection}
-        game={gameUpdateHandler.current as GameUpdateHandler}
-        table={table}
+        channel={channel}
         users={users}
+        myUserId={myUserId}
         lobbyOwner={lobbyOwner}
       />
     );
   };
 
   const getLobbyScene = () => {
+    const handleEditGameOptions = (gameOptions: GameOptions) => {
+      if (myUserId == lobbyOwner) {
+        localStorage.setItem('lobbyName', lobbyName);
+        localStorage.setItem('gameOptions', JSON.stringify(gameOptions));
+        connection.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
+        setGameOptions(gameOptions);
+      }
+    };
+
     return (
       <>
-      { myUserId == lobbyOwner ? <button onClick={handleStartGame}>Start Game</button> : null}
-      <GameOptionsEditor gameOptions={gameOptions} setGameOptions={setGameOptions} readOnly={myUserId != lobbyOwner} />
-      {users.map(user => (
-        <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
-      ))}
+        {myUserId == lobbyOwner ? <button onClick={handleStartGame}>Start Game</button> : null}
+        <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
+        {users.map(user => (
+          <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
+        ))}
       </>
     )
   }
@@ -122,7 +129,7 @@ export default function LobbyScene({ myLobbyId, myUserId, connection, name, opti
       <div>
         <button onClick={handleLeaveLobby}>Leave Lobby</button>
       </div>
-      { gameUpdateHandler.current ? getGameScene() : getLobbyScene() }
+      {isGameStarted ? getGameScene() : getLobbyScene()}
       <LobbyChat connection={connection} myUserId={myUserId} users={users} messages={chatMessages} />
     </div>
   );

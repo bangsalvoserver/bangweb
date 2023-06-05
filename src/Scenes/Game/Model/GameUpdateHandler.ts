@@ -2,20 +2,23 @@ import { Dispatch } from "react";
 import { CardIdUpdate, DeckShuffledUpdate, GameString, Milliseconds, MoveCardUpdate, MoveCubesUpdate, PlayerIdUpdate } from "../../../Messages/GameUpdate";
 import { GameUpdate } from "./GameTableDispatch";
 
-export class GameUpdateHandler {
+export interface GameChannel {
+  getNextUpdate: () => GameUpdate | undefined;
+  sendGameAction: (messageType: string, messageValue?: any) => void;
+  handleReturnLobby: () => void;
+};
 
-    private queuedUpdates: GameUpdate[] = [];
+export class GameUpdateHandler {
+    
+    private channel: GameChannel;
     private updateTimer?: number;
     private updateOnEnd?: GameUpdate;
 
     private tableDispatch: Dispatch<GameUpdate>;
 
-    constructor(tableDispatch: Dispatch<any>) {
+    constructor(channel: GameChannel, tableDispatch: Dispatch<any>) {
+        this.channel = channel;
         this.tableDispatch = tableDispatch;
-    }
-
-    pushUpdate(update: GameUpdate) {
-        this.queuedUpdates.push(update);
     }
 
     tick(timeElapsed: Milliseconds) {
@@ -30,8 +33,9 @@ export class GameUpdateHandler {
         if (this.updateTimer && (this.updateTimer -= timeElapsed) <= 0) {
             onEndAnimation();
         } else {
-            while (!this.updateTimer && this.queuedUpdates.length != 0) {
-                const {updateType, updateValue} = this.queuedUpdates.shift() as GameUpdate;
+            let update: GameUpdate | undefined;
+            while (!this.updateTimer && (update = this.channel.getNextUpdate())) {
+                const {updateType, updateValue} = update;
 
                 if (updateType in this.updateHandlers) {
                     this.updateHandlers[updateType].call(this, updateValue);

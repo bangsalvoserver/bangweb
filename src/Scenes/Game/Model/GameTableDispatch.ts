@@ -56,11 +56,6 @@ function removeFromPocket(pockets: TablePockets, players: Player[], cardsToRemov
 
 const gameUpdateHandlers: Record<string, (table: GameTable, update: any) => GameTable> = {};
 
-/// Recreates the game table
-gameUpdateHandlers.reset = (table: GameTable, userId?: UserId): GameTable => {
-    return newGameTable(userId ?? table.myUserId);
-};
-
 /// Creates new cards and adds them in the specified pocket
 gameUpdateHandlers.add_cards = (table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable => {
     const pocketRef = newPocketRef(pocket, player);
