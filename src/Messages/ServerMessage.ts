@@ -1,5 +1,5 @@
-import { GameOptions } from "./GameUpdate"
-import { ImagePixels } from "./ImageSerial";
+import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
+import { ImagePixels } from "../Utils/ImageSerial";
 
 export type LobbyId = number;
 export type UserId = number;

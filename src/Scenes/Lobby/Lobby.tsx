@@ -1,14 +1,13 @@
 import { createContext, useContext, useRef, useState } from 'react';
 import { ConnectionContext } from '../../App';
 import { useHandlers } from '../../Messages/Connection';
-import { GameOptions } from '../../Messages/GameUpdate';
-import { deserializeImage } from '../../Messages/ImageSerial';
+import { deserializeImage } from '../../Utils/ImageSerial';
 import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
 import GameScene from '../Game/GameScene';
-import { GameUpdate } from '../Game/Model/GameTableDispatch';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
+import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -92,8 +91,8 @@ export default function LobbyScene({ myLobbyId, myUserId, name, options }: Lobby
     return (
       <GameScene channel={{
         getNextUpdate: () => gameUpdates.current.shift(),
-        sendGameAction: () => (messageType: string, messageValue?: any) => {
-          connection?.sendMessage('game_action', { [messageType]: messageValue ?? {} });
+        sendGameAction: () => (messageType: string, messageValue: any = {}) => {
+          connection?.sendMessage('game_action', { [messageType]: messageValue });
         },
         handleReturnLobby: () => connection?.sendMessage('lobby_return')
       }}/>

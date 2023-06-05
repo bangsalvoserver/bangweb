@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
-import { GameStringComponent } from "../../Locale/Locale";
 import { GameTableContext } from "./GameScene";
+import GameStringComponent from "./GameStringComponent";
 import "./Style/GameLogView.css";
 
 export default function GameLogView() {

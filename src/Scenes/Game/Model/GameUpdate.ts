@@ -1,6 +1,6 @@
+import { UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, ExpansionType, PlayerFlag, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
-import { UserId } from "./ServerMessage";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -159,4 +159,9 @@ export interface GameOptions {
     escape_timer: Milliseconds;
     bot_play_timer: Milliseconds;
     tumbleweed_timer: Milliseconds;
+}
+
+export interface GameUpdate {
+    updateType: string,
+    updateValue?: any
 }

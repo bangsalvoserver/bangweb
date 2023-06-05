@@ -15,9 +15,10 @@ export type LabelRegistry = Record<string, LabelGroupRegistry>;
 export type GameStringRegistry = Record<string, Format<JSX.Element>>;
 
 export type Registry = [CardRegistry, LabelRegistry, GameStringRegistry];
-export type RegistryMap = Record<string, Registry>;
 
-export const REGISTRIES: RegistryMap = {
-    'it-IT': [CARDS_ITALIAN, LABELS_ITALIAN, GAME_STRINGS_ITALIAN],
-    'en': [CARDS_ENGLISH, LABELS_ENGLISH, GAME_STRINGS_ENGLISH]
-};
+export const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
+    switch (navigator.language.toLowerCase()) {
+    case 'it-it': return [CARDS_ITALIAN, LABELS_ITALIAN, GAME_STRINGS_ITALIAN];
+    default: return [CARDS_ENGLISH, LABELS_ENGLISH, GAME_STRINGS_ENGLISH];
+    }
+})();

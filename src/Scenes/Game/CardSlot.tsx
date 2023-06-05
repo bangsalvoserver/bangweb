@@ -1,7 +1,7 @@
 import { CSSProperties, MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
 import { CardRef } from "./CardView";
 import { getDivRect } from "../../Utils/Rect";
-import { Milliseconds } from "../../Messages/GameUpdate";
+import { Milliseconds } from "./Model/GameUpdate";
 import "./Style/CardSlot.css"
 
 export interface CardSlotProps {

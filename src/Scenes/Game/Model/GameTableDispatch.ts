@@ -1,12 +1,6 @@
-import { GameFlag, PocketType } from "../../../Messages/CardEnums";
-import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "../../../Messages/GameUpdate";
-import { UserId } from "../../../Messages/ServerMessage";
-import { DeckShuffleAnimation, GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newGameTable, newPlayer, newPocketRef } from "./GameTable";
-
-export interface GameUpdate {
-    updateType: string,
-    updateValue?: any
-}
+import { GameFlag, PocketType } from "./CardEnums";
+import { GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newPlayer, newPocketRef } from "./GameTable";
+import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, GameUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "./GameUpdate";
 
 /// GameTable.players and GameTable.cards are sorted by id
 /// So that finding an object in those arrays is O(log n)
@@ -54,10 +48,10 @@ function removeFromPocket(pockets: TablePockets, players: Player[], cardsToRemov
     return editPocketMap(pockets, players, pocket, cards => cards.filter(id => !cardsToRemove.includes(id)));
 }
 
-const gameUpdateHandlers: Record<string, (table: GameTable, update: any) => GameTable> = {};
+const dispatchers: Record<string, (table: GameTable, update: any) => GameTable> = {};
 
 /// Creates new cards and adds them in the specified pocket
-gameUpdateHandlers.add_cards = (table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable => {
+dispatchers.add_cards = (table: GameTable, { card_ids, pocket, player }: AddCardsUpdate): GameTable => {
     const pocketRef = newPocketRef(pocket, player);
     const [pockets, players] = addToPocket(table.pockets, table.players, card_ids.map(card => card.id), pocketRef);
     return {
@@ -77,7 +71,7 @@ function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<
 }
 
 /// Removes the specified cards
-gameUpdateHandlers.remove_cards = (table: GameTable, { cards }: RemoveCardsUpdate): GameTable => {
+dispatchers.remove_cards = (table: GameTable, { cards }: RemoveCardsUpdate): GameTable => {
     // Groups cards by pocket
     // NOTE pockets are compared by identity in the map, this could be optimized
     const pocketCards = group(cards, id => getCard(table, id).pocket);
@@ -115,7 +109,7 @@ function rotatePlayers(players: PlayerId[], selfPlayer?: PlayerId, firstPlayer?:
 };
 
 // Adds a message to the logs
-gameUpdateHandlers.game_log = (table: GameTable, message: GameString): GameTable => {
+dispatchers.game_log = (table: GameTable, message: GameString): GameTable => {
     return {
         ...table,
         logs: table.logs.concat(message)
@@ -123,7 +117,7 @@ gameUpdateHandlers.game_log = (table: GameTable, message: GameString): GameTable
 }
 
 // Creates new players with specified player_id and user_id
-gameUpdateHandlers.player_add = (table: GameTable, { players }: PlayerAddUpdate): GameTable => {
+dispatchers.player_add = (table: GameTable, { players }: PlayerAddUpdate): GameTable => {
     const newPlayers = table.players.concat(players.map(({player_id, user_id}) => newPlayer(player_id, user_id))).sort(sortById);
     const selfPlayer = newPlayers.find(p => p.userid === table.myUserId)?.id;
     return {
@@ -135,12 +129,12 @@ gameUpdateHandlers.player_add = (table: GameTable, { players }: PlayerAddUpdate)
 };
 
 // Changes the order of how players are seated
-gameUpdateHandlers.player_order = (table: GameTable, { players }: PlayerOrderUpdate): GameTable => {
+dispatchers.player_order = (table: GameTable, { players }: PlayerOrderUpdate): GameTable => {
     return { ...table, alive_players: rotatePlayers(players, table.self_player, table.alive_players.at(0)) };
 };
 
 // Changes a player's hp
-gameUpdateHandlers.player_hp = (table: GameTable, { player, hp, duration }: PlayerHpUpdate): GameTable => {
+dispatchers.player_hp = (table: GameTable, { player, hp, duration }: PlayerHpUpdate): GameTable => {
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p,
@@ -150,7 +144,7 @@ gameUpdateHandlers.player_hp = (table: GameTable, { player, hp, duration }: Play
 };
 
 // Changes a player's gold
-gameUpdateHandlers.player_gold = (table: GameTable, { player, gold }: PlayerGoldUpdate): GameTable => {
+dispatchers.player_gold = (table: GameTable, { player, gold }: PlayerGoldUpdate): GameTable => {
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, status: { ...p.status, gold }}))
@@ -158,14 +152,14 @@ gameUpdateHandlers.player_gold = (table: GameTable, { player, gold }: PlayerGold
 };
 
 // Changes a player's role
-gameUpdateHandlers.player_show_role = (table: GameTable, { player, role, duration }: PlayerShowRoleUpdate): GameTable => {
+dispatchers.player_show_role = (table: GameTable, { player, role, duration }: PlayerShowRoleUpdate): GameTable => {
     return {
         ...table,
         players: editById(table.players, player, p => ({ ...p, animation: {flipping_role:{role: p.status.role, duration}}, status: { ...p.status, role }}))
     };
 };
 
-gameUpdateHandlers.player_animation_end = (table: GameTable, { player }: PlayerIdUpdate): GameTable => {
+dispatchers.player_animation_end = (table: GameTable, { player }: PlayerIdUpdate): GameTable => {
     if (!player) return table;
     return {
         ...table,
@@ -174,7 +168,7 @@ gameUpdateHandlers.player_animation_end = (table: GameTable, { player }: PlayerI
 }
 
 // Changes a player's status
-gameUpdateHandlers.player_status = (table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable => {
+dispatchers.player_status = (table: GameTable, { player, flags, range_mod, weapon_range, distance_mod }: PlayerStatusUpdate): GameTable => {
     let newAlivePlayers = table.alive_players;
     let newDeadPlayers = table.dead_players;
     if (flags.includes('removed') && newAlivePlayers.includes(player)) {
@@ -194,7 +188,7 @@ gameUpdateHandlers.player_status = (table: GameTable, { player, flags, range_mod
 };
 
 /// Changes the current_turn field
-gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable => {
+dispatchers.switch_turn = (table: GameTable, player: PlayerId): GameTable => {
     return {
         ...table,
         status: {
@@ -205,7 +199,7 @@ gameUpdateHandlers.switch_turn = (table: GameTable, player: PlayerId): GameTable
 };
 
 // Adds a card to another pocket
-gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket, duration }: MoveCardUpdate): GameTable => {
+dispatchers.move_card = (table: GameTable, { card, player, pocket, duration }: MoveCardUpdate): GameTable => {
     let [pockets, players] = addToPocket(table.pockets, table.players, [card], newPocketRef(pocket, player));
     [pockets, players] = editPocketMap(pockets, players, getCard(table, card).pocket, cards => cards.map(id => id == card ? -1 : id));
 
@@ -218,7 +212,7 @@ gameUpdateHandlers.move_card = (table: GameTable, { card, player, pocket, durati
 };
 
 // Removes a card from its pocket
-gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
+dispatchers.move_card_end = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
     const [pockets, players] = removeFromPocket(table.pockets, table.players, [-1], getCard(table, card).pocket);
 
     return {
@@ -230,7 +224,7 @@ gameUpdateHandlers.move_card_end = (table: GameTable, { card, player, pocket }: 
 };
 
 // Moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
-gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket, duration }: DeckShuffledUpdate): GameTable => {
+dispatchers.deck_shuffled = (table: GameTable, { pocket, duration }: DeckShuffledUpdate): GameTable => {
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
     return {
         ...table,
@@ -243,7 +237,7 @@ gameUpdateHandlers.deck_shuffled = (table: GameTable, { pocket, duration }: Deck
     };
 };
 
-gameUpdateHandlers.deck_shuffled_end = (table: GameTable, { pocket }: DeckShuffledUpdate): GameTable => {
+dispatchers.deck_shuffled_end = (table: GameTable, { pocket }: DeckShuffledUpdate): GameTable => {
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
     let animationCards = table.animation && 'deck_shuffle' in table.animation ? table.animation.deck_shuffle.cards : [];
     return {
@@ -264,7 +258,7 @@ gameUpdateHandlers.deck_shuffled_end = (table: GameTable, { pocket }: DeckShuffl
 };
 
 // Sets the cardData field
-gameUpdateHandlers.show_card = (table: GameTable, { card, info, duration }: ShowCardUpdate): GameTable => {
+dispatchers.show_card = (table: GameTable, { card, info, duration }: ShowCardUpdate): GameTable => {
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, animation: {flipping:{duration}}, cardData: info }))
@@ -272,7 +266,7 @@ gameUpdateHandlers.show_card = (table: GameTable, { card, info, duration }: Show
 };
 
 // Resets the cardData field
-gameUpdateHandlers.hide_card = (table: GameTable, { card, duration }: HideCardUpdate): GameTable => {
+dispatchers.hide_card = (table: GameTable, { card, duration }: HideCardUpdate): GameTable => {
     return {
         ...table,
         cards: editById(table.cards, card, card => ({
@@ -283,21 +277,21 @@ gameUpdateHandlers.hide_card = (table: GameTable, { card, duration }: HideCardUp
 }
 
 // Sets the inactive field
-gameUpdateHandlers.tap_card = (table: GameTable, { card, inactive, duration }: TapCardUpdate): GameTable => {
+dispatchers.tap_card = (table: GameTable, { card, inactive, duration }: TapCardUpdate): GameTable => {
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, inactive, animation: {turning:{duration}} }))
     };
 }
 
-gameUpdateHandlers.flash_card = (table: GameTable, { card, duration }: FlashCardUpdate): GameTable => {
+dispatchers.flash_card = (table: GameTable, { card, duration }: FlashCardUpdate): GameTable => {
     return {
         ...table,
         cards: editById(table.cards, card, card => ({ ...card, animation: {flash:{duration}}}))
     };
 }
 
-gameUpdateHandlers.short_pause = (table: GameTable, { card, duration }: ShortPauseUpdate): GameTable => {
+dispatchers.short_pause = (table: GameTable, { card, duration }: ShortPauseUpdate): GameTable => {
     if (!card) return table;
     return {
         ...table,
@@ -305,7 +299,7 @@ gameUpdateHandlers.short_pause = (table: GameTable, { card, duration }: ShortPau
     };
 }
 
-gameUpdateHandlers.card_animation_end = (table: GameTable, { card }: CardIdUpdate): GameTable => {
+dispatchers.card_animation_end = (table: GameTable, { card }: CardIdUpdate): GameTable => {
     if (!card) return table;
     return {
         ...table,
@@ -314,7 +308,7 @@ gameUpdateHandlers.card_animation_end = (table: GameTable, { card }: CardIdUpdat
 }
 
 // Adds cubes to a target_card (or the table if not set)
-gameUpdateHandlers.add_cubes = (table: GameTable, { num_cubes, target_card }: AddCubesUpdate): GameTable => {
+dispatchers.add_cubes = (table: GameTable, { num_cubes, target_card }: AddCubesUpdate): GameTable => {
     let tableCards = table.cards;
     let tableCubes = table.status.num_cubes;
     if (target_card) {
@@ -330,7 +324,7 @@ gameUpdateHandlers.add_cubes = (table: GameTable, { num_cubes, target_card }: Ad
 };
 
 // Moves `num_cubes` from origin_card (or the table if not set) to target_card (or the table if not set)
-gameUpdateHandlers.move_cubes = (table: GameTable, { num_cubes, origin_card, target_card, duration }: MoveCubesUpdate): GameTable => {
+dispatchers.move_cubes = (table: GameTable, { num_cubes, origin_card, target_card, duration }: MoveCubesUpdate): GameTable => {
     let tableCubes = table.status.num_cubes;
     let tableCards = table.cards;
     
@@ -350,7 +344,7 @@ gameUpdateHandlers.move_cubes = (table: GameTable, { num_cubes, origin_card, tar
     };
 };
 
-gameUpdateHandlers.move_cubes_end = (table: GameTable, { num_cubes, target_card }: MoveCubesUpdate): GameTable => {
+dispatchers.move_cubes_end = (table: GameTable, { num_cubes, target_card }: MoveCubesUpdate): GameTable => {
     let tableCubes = table.status.num_cubes;
     let tableCards = table.cards;
     if (target_card) {
@@ -370,7 +364,7 @@ gameUpdateHandlers.move_cubes_end = (table: GameTable, { num_cubes, target_card 
 }
 
 // Changes the scenario_deck_holder or wws_scenario_deck_holder field
-gameUpdateHandlers.move_scenario_deck = (table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable => {
+dispatchers.move_scenario_deck = (table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable => {
     return {
         ...table,
         status: {
@@ -381,7 +375,7 @@ gameUpdateHandlers.move_scenario_deck = (table: GameTable, { player, pocket }: M
 };
 
 // Changes the train_position field
-gameUpdateHandlers.move_train = (table: GameTable, { position }: MoveTrainUpdate): GameTable => {
+dispatchers.move_train = (table: GameTable, { position }: MoveTrainUpdate): GameTable => {
     return {
         ...table,
         status: {
@@ -392,7 +386,7 @@ gameUpdateHandlers.move_train = (table: GameTable, { position }: MoveTrainUpdate
 };
 
 // Changes the status.flags field
-gameUpdateHandlers.game_flags = (table: GameTable, flags: GameFlag[]): GameTable => {
+dispatchers.game_flags = (table: GameTable, flags: GameFlag[]): GameTable => {
     return {
         ...table,
         status: {
@@ -403,7 +397,7 @@ gameUpdateHandlers.game_flags = (table: GameTable, flags: GameFlag[]): GameTable
 };
 
 // Changes the status.request field
-gameUpdateHandlers.request_status = gameUpdateHandlers.status_ready = (table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable => {
+dispatchers.request_status = dispatchers.status_ready = (table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable => {
     return {
         ...table,
         status: {
@@ -414,7 +408,7 @@ gameUpdateHandlers.request_status = gameUpdateHandlers.status_ready = (table: Ga
 };
 
 // Clears the status.request field
-gameUpdateHandlers.status_clear = (table: GameTable): GameTable => {
+dispatchers.status_clear = (table: GameTable): GameTable => {
     return {
         ...table,
         status: {
@@ -425,8 +419,8 @@ gameUpdateHandlers.status_clear = (table: GameTable): GameTable => {
 };
 
 export function gameTableDispatch(table: GameTable, {updateType, updateValue}: GameUpdate): GameTable {
-    if (updateType in gameUpdateHandlers) {
-        return gameUpdateHandlers[updateType](table, updateValue);
+    if (updateType in dispatchers) {
+        return dispatchers[updateType](table, updateValue);
     } else {
         return table;
     }

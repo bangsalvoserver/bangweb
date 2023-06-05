@@ -1,6 +1,4 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
-import { PocketType } from "../../Messages/CardEnums";
-import { CardId } from "../../Messages/GameUpdate";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSlot from "./CardSlot";
@@ -8,6 +6,8 @@ import CardView, { CardRef } from "./CardView";
 import { GameTable, PocketRef, getCard } from "./Model/GameTable";
 import "./Style/PocketView.css";
 import { GameTableContext } from "./GameScene";
+import { CardId } from "./Model/GameUpdate";
+import { PocketType } from "./Model/CardEnums";
 
 export interface PocketProps {
     cards: CardId[];

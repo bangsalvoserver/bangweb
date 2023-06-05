@@ -1,5 +1,4 @@
 import { CSSProperties, forwardRef, useContext, useImperativeHandle } from "react";
-import { PocketType } from "../../Messages/CardEnums";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTable, Player } from "./Model/GameTable";
@@ -8,6 +7,7 @@ import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 import { GameTableContext } from "./GameScene";
+import { PocketType } from "./Model/CardEnums";
 
 export interface PlayerProps {
     user?: UserValue,

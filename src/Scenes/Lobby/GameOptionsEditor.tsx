@@ -1,7 +1,7 @@
-import { ExpansionType } from "../../Messages/CardEnums";
-import { GameOptions } from "../../Messages/GameUpdate";
+import getLabel from "../../Locale/GetLabel";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { getLocalizedLabel } from "../../Locale/Locale";
+import { GameOptions } from "../Game/Model/GameUpdate";
+import { ExpansionType } from "../Game/Model/CardEnums";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
@@ -29,7 +29,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnl
 
         return (<>
             <input id={name} type="checkbox" checked={gameOptions.expansions.includes(name)} onChange={readOnly ? undefined : handleExpansionChange} readOnly={readOnly} />
-            <label htmlFor={name}>{getLocalizedLabel('ExpansionType', name)}</label>
+            <label htmlFor={name}>{getLabel('ExpansionType', name)}</label>
         </>);
     };
 
@@ -43,13 +43,13 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnl
                     [prop]: event.target.checked
                 });
             }} />
-            <label htmlFor={prop}>{getLocalizedLabel('GameOptions', prop)}</label>
+            <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
         </>)
     };
 
     const newOptionNumber = function(prop: keyof GameOptionsOf<number>) {
         return (<>
-            <label htmlFor={prop}>{getLocalizedLabel('GameOptions', prop)}</label>
+            <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
             <input id={prop} type="number" value={gameOptions[prop]}
             readOnly={readOnly}
             onChange={readOnly ? undefined : event => {

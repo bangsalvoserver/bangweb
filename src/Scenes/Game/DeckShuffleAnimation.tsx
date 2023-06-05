@@ -1,5 +1,5 @@
 import { CSSProperties, useContext } from "react";
-import { CardId, Milliseconds } from "../../Messages/GameUpdate";
+import { CardId, Milliseconds } from "./Model/GameUpdate";
 import { isMobileDevice } from "../../Utils/MobileCheck";
 import { getRectCenter } from "../../Utils/Rect";
 import CardView from "./CardView";

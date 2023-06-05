@@ -1,9 +1,9 @@
 import './App.css';
 import { useEffect, useState, useRef, createContext } from 'react';
 import { Connection, useHandlers } from './Messages/Connection';
-import Header from './components/Header';
-import UserMenu from './components/UserMenu';
-import { serializeImage } from './Messages/ImageSerial';
+import Header from './Components/Header';
+import UserMenu from './Components/UserMenu';
+import { serializeImage } from './Utils/ImageSerial';
 import { ClientAccepted, LobbyEntered, LobbyRemoveUser, UserId } from './Messages/ServerMessage';
 import CurrentScene, { CurrentSceneUnion } from './Scenes/CurrentScene';
 

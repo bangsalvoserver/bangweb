@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { CardId } from "../../Messages/GameUpdate";
+import { CardId } from "./Model/GameUpdate";
 import PocketView, { PocketPosition } from "./PocketView";
 import "./Style/CardView.css";
 

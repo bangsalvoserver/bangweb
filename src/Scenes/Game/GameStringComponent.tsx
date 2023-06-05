@@ -1,37 +1,14 @@
 import { useContext } from "react";
-import { CardSign } from "../Messages/CardData";
-import { GameString } from "../Messages/GameUpdate";
-import CardSignView from "../Scenes/Game/CardSignView";
-import { GameTableContext } from "../Scenes/Game/GameScene";
-import { getPlayer } from "../Scenes/Game/Model/GameTable";
-import { getUsername } from "../Scenes/Lobby/LobbyUser";
-import "./Locale.css";
-import { REGISTRIES } from "./Registry";
-import { LobbyContext } from "../Scenes/Lobby/Lobby";
-
-const [cardRegistry, labelRegistry, gameStringRegistry] = (() => {
-    const language = navigator.language;
-    if (language in REGISTRIES) {
-        return REGISTRIES[language];
-    } else {
-        return REGISTRIES['en'];
-    }
-})();
-
-export function getLocalizedLabel(group: string, name: string, ...formatArgs: string[]): string {
-    if (group in labelRegistry) {
-        const labelGroup = labelRegistry[group];
-        if (name in labelGroup) {
-            const value = labelGroup[name];
-            if (typeof value == 'function') {
-                return value(...formatArgs);
-            } else {
-                return value;
-            }
-        }
-    }
-    return group + '.' + name;
-}
+import getLabel from "../../Locale/GetLabel";
+import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
+import { CardSign } from "./Model/CardData";
+import { GameString } from "./Model/GameUpdate";
+import { LobbyContext } from "../Lobby/Lobby";
+import { getUsername } from "../Lobby/LobbyUser";
+import CardSignView from "./CardSignView";
+import { GameTableContext } from "./GameScene";
+import { getPlayer } from "./Model/GameTable";
+import "./Style/GameStringComponent.css"
 
 export interface CardNameProps {
     name: string;
@@ -51,7 +28,7 @@ export interface GameStringProps {
     message: GameString;
 }
 
-export function GameStringComponent({ message }: GameStringProps): JSX.Element {
+export default function GameStringComponent({ message }: GameStringProps): JSX.Element {
     const table = useContext(GameTableContext);
     const { users } = useContext(LobbyContext);
 
@@ -65,7 +42,7 @@ export function GameStringComponent({ message }: GameStringProps): JSX.Element {
                     if ('name' in arg.card) {
                         return <LocalizedCardName name={arg.card.name} sign={arg.card.sign} />;
                     } else {
-                        return <span className="card-name unknown-name">{getLocalizedLabel('ui', 'UNKNOWN_CARD')}</span>;
+                        return <span className="card-name unknown-name">{getLabel('ui', 'UNKNOWN_CARD')}</span>;
                     }
                 } else if ('player' in arg) {
                     if (arg.player) {
@@ -73,7 +50,7 @@ export function GameStringComponent({ message }: GameStringProps): JSX.Element {
                         const user = users.find(user => user.id === userid);
                         return <span className="player-name">{getUsername(user)}</span>;
                     } else {
-                        return <span className="player-name unknown-name">{getLocalizedLabel('ui', 'UNKNOWN_PLAYER')}</span>
+                        return <span className="player-name unknown-name">{getLabel('ui', 'UNKNOWN_PLAYER')}</span>;
                     }
                 }
                 throw new Error('Invalid argument in format_args');

@@ -1,5 +1,5 @@
+import getLabel from "../../Locale/GetLabel";
 import { UserId } from "../../Messages/ServerMessage";
-import { getLocalizedLabel } from "../../Locale/Locale";
 
 export interface UserValue {
     id: UserId;
@@ -21,7 +21,7 @@ export function getPropic(user?: UserValue) {
 }
 
 export function getUsername(user?: UserValue) {
-  return user?.name ?? getLocalizedLabel('ui', 'USER_DISCONNECTED');
+  return user?.name ?? getLabel('ui', 'USER_DISCONNECTED');
 }
 
 export default function LobbyUser({ user, alignVertical }: LobbyUserProps) {

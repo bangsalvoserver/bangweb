@@ -1,6 +1,5 @@
 import { Dispatch } from "react";
-import { CardIdUpdate, DeckShuffledUpdate, GameString, Milliseconds, MoveCardUpdate, MoveCubesUpdate, PlayerIdUpdate } from "../../../Messages/GameUpdate";
-import { GameUpdate } from "./GameTableDispatch";
+import { CardIdUpdate, DeckShuffledUpdate, GameString, GameUpdate, Milliseconds, MoveCardUpdate, MoveCubesUpdate, PlayerIdUpdate } from "./GameUpdate";
 
 export interface GameChannel {
   getNextUpdate: () => GameUpdate | undefined;
@@ -16,7 +15,7 @@ export class GameUpdateHandler {
 
     private tableDispatch: Dispatch<GameUpdate>;
 
-    constructor(channel: GameChannel, tableDispatch: Dispatch<any>) {
+    constructor(channel: GameChannel, tableDispatch: Dispatch<GameUpdate>) {
         this.channel = channel;
         this.tableDispatch = tableDispatch;
     }

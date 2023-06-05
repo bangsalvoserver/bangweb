@@ -1,9 +1,9 @@
 import { SyntheticEvent, useContext, useEffect, useRef } from "react";
-import { getLocalizedLabel } from "../../Locale/Locale";
 import { ChatMessage, UserId } from "../../Messages/ServerMessage";
 import { LobbyContext } from "./Lobby";
 import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
+import getLabel from "../../Locale/GetLabel";
 
 export interface ChatProps {
     messages: ChatMessage[];
@@ -67,7 +67,7 @@ export default function LobbyChat({ messages, handleSendMessage }: ChatProps) {
                     focus:ring-2
                     focus:ring-blue-500
                     "
-                >{getLocalizedLabel('ui', 'LOBBY_CHAT_SEND')}</button>
+                >{getLabel('ui', 'LOBBY_CHAT_SEND')}</button>
             </form>
         </div>
     );

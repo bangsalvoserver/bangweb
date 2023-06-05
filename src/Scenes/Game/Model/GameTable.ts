@@ -1,6 +1,6 @@
-import { CardData, CardSign } from "../../../Messages/CardData";
-import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "../../../Messages/CardEnums";
-import { AnimationUpdate, CardId, DeckShuffledUpdate, GameString, MoveCardUpdate, MoveCubesUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "../../../Messages/GameUpdate";
+import { CardData, CardSign } from "./CardData";
+import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
+import { AnimationUpdate, CardId, DeckShuffledUpdate, GameString, MoveCardUpdate, MoveCubesUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import { UserId } from "../../../Messages/ServerMessage";
 
 export interface Id {

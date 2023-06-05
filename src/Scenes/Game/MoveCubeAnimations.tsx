@@ -1,10 +1,10 @@
 import { CSSProperties, useReducer } from "react";
-import { Milliseconds } from "../../Messages/GameUpdate";
 import { Rect, getRectCenter } from "../../Utils/Rect";
 import { useInterval } from "../../Utils/UseInterval";
 import { Card } from "./Model/GameTable";
 import { CardTracker } from "./PocketView";
 import "./Style/MoveCubeAnimation.css"
+import { Milliseconds } from "./Model/GameUpdate";
 
 export interface MoveCubeProps {
     tracker: CardTracker;

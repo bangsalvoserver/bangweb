@@ -1,4 +1,4 @@
-import { LocalizedCardName } from "../../Locale/Locale";
+import { LocalizedCardName } from "./GameStringComponent";
 import { Card } from "./Model/GameTable";
 
 export interface CardButtonProps {
