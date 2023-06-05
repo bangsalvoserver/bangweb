@@ -1,8 +1,10 @@
 import { CSSProperties, MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
 import { CardRef } from "./CardView";
 import { getDivRect } from "../../Utils/Rect";
-import { Milliseconds } from "./Model/GameUpdate";
+import { CardId, Milliseconds } from "./Model/GameUpdate";
 import "./Style/CardSlot.css"
+
+export const CARD_SLOT_ID: CardId = -1;
 
 export interface CardSlotProps {
     stretch: 'in' | 'out';

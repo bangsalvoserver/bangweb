@@ -1,7 +1,7 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import { Rect, getDivRect } from "../../Utils/Rect";
-import CardSlot from "./CardSlot";
+import CardSlot, { CARD_SLOT_ID } from "./CardSlot";
 import CardView, { CardRef } from "./CardView";
 import { GameTable, PocketRef, getCard } from "./Model/GameTable";
 import "./Style/PocketView.css";
@@ -37,7 +37,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards }, ref) => {
 
     return <div ref={pocketRef} className='pocket-view'>{
         cards.map(id => {
-            if (id == -1) {
+            if (id == CARD_SLOT_ID) {
                 if (table.animation && 'move_card' in table.animation) {
                     return <CardSlot ref={setMapRef(cardRefs, id)} key={id} stretch='in' duration={table.animation.move_card.duration} />
                 } else {

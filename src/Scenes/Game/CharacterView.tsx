@@ -20,14 +20,14 @@ const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player }, ref)
     useImperativeHandle(ref, () => characterRef);
 
     return (<div className='inline-block relative'>
-        <div className="player-backup">
+        <div className="player-backup align-slot">
             <PocketView ref={characterRef.backupRef} cards={player.pockets.player_backup} />
             { player.status.hp > 5 ? 
                 <div className="player-backup-extra">
                     <PocketView cards={player.pockets.player_backup.slice(-1)} />
                 </div> : null }
         </div>
-        <div className="min-one-card">
+        <div className="align-slot">
             <PocketView ref={characterRef.characterRef} cards={player.pockets.player_character} />
         </div>
         { player.status.gold > 0 ?

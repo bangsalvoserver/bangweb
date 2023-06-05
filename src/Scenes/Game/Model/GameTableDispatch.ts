@@ -1,3 +1,4 @@
+import { CARD_SLOT_ID } from "../CardSlot";
 import { GameFlag, PocketType } from "./CardEnums";
 import { GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newPlayer, newPocketRef } from "./GameTable";
 import { AddCardsUpdate, AddCubesUpdate, CardId, CardIdUpdate, DeckShuffledUpdate, FlashCardUpdate, GameString, GameUpdate, HideCardUpdate, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerAddUpdate, PlayerGoldUpdate, PlayerHpUpdate, PlayerId, PlayerIdUpdate, PlayerOrderUpdate, PlayerShowRoleUpdate, PlayerStatusUpdate, RemoveCardsUpdate, RequestStatusArgs, ShortPauseUpdate, ShowCardUpdate, StatusReadyArgs, TapCardUpdate } from "./GameUpdate";
@@ -201,7 +202,7 @@ dispatchers.switch_turn = (table: GameTable, player: PlayerId): GameTable => {
 // Adds a card to another pocket
 dispatchers.move_card = (table: GameTable, { card, player, pocket, duration }: MoveCardUpdate): GameTable => {
     let [pockets, players] = addToPocket(table.pockets, table.players, [card], newPocketRef(pocket, player));
-    [pockets, players] = editPocketMap(pockets, players, getCard(table, card).pocket, cards => cards.map(id => id == card ? -1 : id));
+    [pockets, players] = editPocketMap(pockets, players, getCard(table, card).pocket, cards => cards.map(id => id == card ? CARD_SLOT_ID : id));
 
     return {
         ... table,
@@ -213,7 +214,7 @@ dispatchers.move_card = (table: GameTable, { card, player, pocket, duration }: M
 
 // Removes a card from its pocket
 dispatchers.move_card_end = (table: GameTable, { card, player, pocket }: MoveCardUpdate): GameTable => {
-    const [pockets, players] = removeFromPocket(table.pockets, table.players, [-1], getCard(table, card).pocket);
+    const [pockets, players] = removeFromPocket(table.pockets, table.players, [CARD_SLOT_ID], getCard(table, card).pocket);
 
     return {
         ...table,

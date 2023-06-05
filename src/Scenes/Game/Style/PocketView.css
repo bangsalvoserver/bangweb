@@ -9,8 +9,15 @@
     position: relative;
 }
 
-.min-one-card .pocket-view {
+.align-slot .pocket-view {
     min-width: 70px;
+}
+
+.align-slot .card-slot {
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    transform: translateX(-50%);
 }
 
 .single-card-pocket {
@@ -44,17 +51,6 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-}
-
-.align-slot-bottom {
-    width: 70px;
-}
-
-.align-slot-bottom .card-slot {
-    position: absolute;
-    left: 50%;
-    bottom: 5px;
-    transform: translateX(-50%);
 }
 
 .count-pocket-inner {
