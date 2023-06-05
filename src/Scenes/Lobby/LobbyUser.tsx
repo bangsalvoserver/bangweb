@@ -1,5 +1,6 @@
 import getLabel from "../../Locale/GetLabel";
 import { UserId } from "../../Messages/ServerMessage";
+import "./Style/LobbyUser.css"
 
 export interface UserValue {
     id: UserId;
@@ -27,15 +28,15 @@ export function getUsername(user?: UserValue) {
 export default function LobbyUser({ user, alignVertical }: LobbyUserProps) {
   if (alignVertical) {
     return (
-      <div className='text-center font-bold'>
-        <p><img style={{display:'inline'}} src={getPropic(user)} /></p>
+      <div className='text-center font-bold lobby-user'>
+        <p><img src={getPropic(user)} /></p>
         <p>{getUsername(user)}</p>
       </div>
     )
   } else {
     return (
-      <div>
-      <img style={{display:'inline'}} src={getPropic(user)} />
+      <div className='lobby-user'>
+      <img src={getPropic(user)} />
       {getUsername(user)}
       </div>
     );

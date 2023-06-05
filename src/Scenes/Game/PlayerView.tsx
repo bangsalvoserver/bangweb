@@ -82,7 +82,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
                             setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
                             setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
                         }} player={player} />
-                        <div className='inline-block align-middle'>
+                        <div className='pocket-view-height'>
                             <RoleView flipDuration={flipDuration} role={playerRole} />
                         </div>
                         <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} />

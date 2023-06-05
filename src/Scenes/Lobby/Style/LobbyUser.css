@@ -1,0 +1,8 @@
+:root {
+    --profile-pic-size: 50px;
+}
+
+.lobby-user img {
+    display: inline;
+    height: var(--profile-pic-size);
+}

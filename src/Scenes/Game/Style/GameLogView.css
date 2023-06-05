@@ -1,6 +1,6 @@
 .game-log-view {
-    width: 300px;
-    max-height: calc(50vh);
+    width: 15vw;
+    max-height: 50vh;
 
     overflow-y: auto;
     font-size: 10pt;

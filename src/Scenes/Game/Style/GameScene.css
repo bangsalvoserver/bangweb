@@ -1,3 +1,7 @@
+:root {
+    --table-cubes-width: calc(var(--card-width) + 1em);
+}
+
 .game-scene-top {
     width: calc(100vw - 2em);
     height: 100%;
@@ -12,11 +16,11 @@
 }
 
 .status-text {
-    height: 50px;
+    height: 5em;
 }
 
 .table-cubes {
-    width: 80px;
+    width: var(--table-cubes-width);
     display: inline-block;
     font-weight: bold;
     text-align: center;

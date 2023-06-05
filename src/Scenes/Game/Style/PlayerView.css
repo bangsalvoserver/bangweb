@@ -1,19 +1,29 @@
+:root {
+    --player-view-width: calc(var(--card-width) * 6.5);
+    --player-view-margin: 0.5em;
+    --player-table-height: calc(var(--card-height) + 1.5em);
+    --player-icon-size: 32px;
+}
+
 .player-view {
     display: inline-flex;
     flex-direction: column;
 
-    border: 3px solid #2d1000ff;
-    margin: 10px;
+    border: 0.2em;
+    border-style: solid;
+    border-color: #2d1000ff;
+    
+    margin: var(--player-view-margin);
     padding: 0.5em;
-    width: 380px;
+    width: var(--player-view-width);
 }
 
 .current-turn {
-    border: 3px solid #4d7f21;
+    border-color: #4d7f21;
 }
 
 .player-table {
-    height: 120px;
+    height: var(--player-table-height);
     text-align: center;
     white-space: nowrap;
     overflow-x: auto;
@@ -22,27 +32,25 @@
 
 .player-backup {
     position: absolute;
-    --one-hp-size: 18px;
     bottom: calc(var(--one-hp-size) * var(--player-hp));
     left: 0;
 }
 
 .player-backup-extra {
     position: absolute;
-    top: 90px;
+    top: calc(var(--one-hp-size) * 5);
 }
 
 .player-gold {
     position: absolute;
-    bottom: 80px;
+    bottom: var(--player-gold-bottom);
     left: 50%;
-    width: 32px;
-    height: 32px;
+    width: var(--player-icon-size);
+    height: var(--player-icon-size);
     transform: translateX(-50%);
     text-align: center;
     font-weight: bold;
     font-size: 16pt;
-    line-height: 30px;
     background-image: url('/public/media/icon_gold.png');
     background-repeat: no-repeat;
     background-size: contain;
@@ -58,8 +66,8 @@
 
 .player-icon {
     display: inline-block;
-    height: 32px;
-    width: 32px;
+    height: var(--player-icon-size);
+    width: var(--player-icon-size);
     background-size: contain;
     background-repeat: no-repeat;
     mask-size: contain;

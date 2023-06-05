@@ -65,7 +65,7 @@ export default function GameScene({ channel }: TableProps) {
           {table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
             <div className="stack-pockets">
               <div className="stack-pockets-inner single-card-pocket">
-                <PocketView ref={setMapRef(pocketRefs, 'shop_discard')} cards={table.pockets.shop_discard.slice(0, 1)} />
+                <PocketView ref={setMapRef(pocketRefs, 'shop_discard')} cards={table.pockets.shop_discard.slice(-1)} />
               </div>
               <CountPocket ref={setMapRef(pocketRefs, 'shop_deck')} cards={table.pockets.shop_deck} />
             </div>

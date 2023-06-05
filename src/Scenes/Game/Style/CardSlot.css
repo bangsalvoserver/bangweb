@@ -1,8 +1,8 @@
 .card-slot {
     display: inline-block;
-    width: 70px;
-    height: 93px;
-    margin-top: 5px;
+    width: var(--card-width-plus-margin);
+    height: var(--card-height);
+    margin-top: var(--card-margin);
 }
 
 .card-slot-stretch {
