@@ -1,5 +1,4 @@
 :root {
-    --player-view-margin: 0.5em;
     --player-row-width: calc(var(--card-width) * 6);
     --player-row-height: calc(var(--card-height) + 1.5em);
     --player-icon-size: 32px;
@@ -9,11 +8,12 @@
     display: inline-flex;
     flex-direction: column;
 
-    border: 0.2em;
+    border: 3px;
     border-style: solid;
     border-color: #2d1000ff;
     
-    margin: var(--player-view-margin);
+    margin: 0.5em;
+    border-radius: 0.8em;
     padding: 0.5em;
 }
 
