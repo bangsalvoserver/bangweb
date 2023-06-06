@@ -1,9 +1,9 @@
 .background {
-  background-color: #b06130;
+  background-color: #886350;
 }
 
 .background-inner {
-  background: radial-gradient(circle,rgba(166, 67, 34, 0.6)  0%, rgba(46, 23, 9, 0.8) 100%);
+  background: radial-gradient(circle,rgba(122, 56, 11, 0.418)  0%, rgba(46, 23, 9, 0.8) 100%);
 }
 
 .current-scene {

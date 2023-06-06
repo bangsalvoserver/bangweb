@@ -97,7 +97,8 @@ export default function GameScene({ channel }: TableProps) {
             ? <GameStringComponent message={table.status.request.status_text} />
             : null}
           {myUserId == lobbyOwner && table.status.flags.includes('game_over') ?
-            <button onClick={channel.handleReturnLobby}>Return to Lobby</button>
+            <button className="bg-green-500 hover:bg-green-600 font-bold py-1 px-4 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              onClick={channel.handleReturnLobby}>Return to Lobby</button>
           : null}
         </div>
         <div className="m-auto">

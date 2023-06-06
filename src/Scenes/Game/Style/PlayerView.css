@@ -1,5 +1,6 @@
 :root {
     --player-row-width: calc(var(--card-width) * 6);
+    --player-self-row-width: calc(var(--card-with) * 8);
     --player-row-height: calc(var(--card-height) + 1.5em);
     --player-icon-size: 32px;
 }
@@ -11,6 +12,7 @@
     border: 3px;
     border-style: solid;
     border-color: #2d1000ff;
+    background-color: #ffffff1a;
     
     margin: 0.5em;
     border-radius: 0.8em;
@@ -19,6 +21,10 @@
 
 .player-view-self {
     flex-direction: row;
+}
+
+.player-view-self .player-pocket-scroll {
+    width: var(--player-self-row-width);
 }
 
 .current-turn {

@@ -92,34 +92,28 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
         </div>);
 
     if (player.id == table.self_player) {
-        classes.push('player-view-self');
-
-        return (
-            <div className={classes.join(' ')} style={playerStyle}>
-                <div>
-                    <div className='player-pocket-scroll'>
-                        <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
-                    </div>
-                    <div className='player-pocket-scroll'>
-                        <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} />
-                    </div>
+        return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle}>
+            <div>
+                <div className='player-pocket-scroll'>
+                    <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
                 </div>
-                <div className='flex flex-col relative justify-end'>
-                    {playerIcons}
-                    <div className='flex flex-row'>
-                        <div className="flex flex-col justify-end">{characterView}</div>
-                        <div className='flex flex-col'>
-                            <LobbyUser user={user} alignVertical />
-                            { roleView } { scenarioDecks }
-                        </div>
+                <div className='player-pocket-scroll'>
+                    <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} />
+                </div>
+            </div>
+            <div className='flex flex-col relative justify-end'>
+                {playerIcons}
+                <div className='flex flex-row'>
+                    <div className="flex flex-col justify-end">{characterView}</div>
+                    <div className='flex flex-col'>
+                        <LobbyUser user={user} alignVertical />
+                        { roleView } { scenarioDecks }
                     </div>
                 </div>
             </div>
-        )
-    }
-
-    return (
-        <div className={classes.join(' ')} style={playerStyle}>
+        </div>
+    } else {
+        return <div className={classes.join(' ')} style={playerStyle}>
             <div className='flex flex-row flex-grow'>
                 <div className='flex-grow text-center'>
                     <div className='player-top-row'>
@@ -137,7 +131,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
                 <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
             </div>
         </div>
-    )
+    }
 });
 
 export default PlayerView;
