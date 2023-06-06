@@ -23,7 +23,8 @@ const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket
         if (deckPosition.current) return deckPosition.current;
         return {
             getPocketRect: () => slotRef.current?.getRect(),
-            getCardRect: (card: CardId) => undefined
+            getCardRect: (card: CardId) => undefined,
+            scrollToEnd: () => {}
         };
     });
 

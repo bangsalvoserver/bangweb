@@ -23,6 +23,7 @@ export interface CardTracker {
 export interface PocketPosition {
     getPocketRect: () => Rect | undefined;
     getCardRect: (card: CardId) => Rect | undefined;
+    scrollToEnd: () => void;
 }
 
 export type PocketPositionMap = Map<PocketType, PocketPosition>;
@@ -30,15 +31,17 @@ export type PocketPositionMap = Map<PocketType, PocketPosition>;
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards }, ref) => {
     const table = useContext(GameTableContext);
     const pocketRef = useRef<HTMLDivElement>(null);
+    const cardsEnd = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
 
     useImperativeHandle(ref, () => ({
         getPocketRect: () => pocketRef.current ? getDivRect(pocketRef.current) : undefined,
-        getCardRect: (card: CardId) => cardRefs.current.get(card)?.getRect()
+        getCardRect: (card: CardId) => cardRefs.current.get(card)?.getRect(),
+        scrollToEnd: () => cardsEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'auto' })
     }));
 
-    return <div ref={pocketRef} className='pocket-view'>{
-        cards.map(id => {
+    return <div ref={pocketRef} className='pocket-view'>
+        { cards.map(id => {
             if (id == CARD_SLOT_ID) {
                 if (table.animation && 'move_card' in table.animation) {
                     return <CardSlot ref={setMapRef(cardRefs, id)} key={id} stretch='in' duration={table.animation.move_card.duration} />
@@ -53,8 +56,9 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards }, ref) => {
                     return <CardView ref={setMapRef(cardRefs, id)} key={id} card={card} />
                 }
             }
-        })
-    }</div>;
+        }) }
+        <div className="inline invisible" ref={cardsEnd} />
+    </div>;
 });
 
 export default PocketView;
