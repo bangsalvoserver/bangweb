@@ -1,6 +1,6 @@
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
-import { AnimationUpdate, CardId, DeckShuffledUpdate, GameString, MoveCardUpdate, MoveCubesUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { AnimationUpdate, CardId, DeckShuffledUpdate, GameString, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import { UserId } from "../../../Messages/ServerMessage";
 
 export interface Id {
@@ -138,12 +138,18 @@ export function newPlayer(id: PlayerId, userid: UserId): Player {
     };
 }
 
-export type DeckShuffleAnimation = DeckShuffledUpdate & { cards: CardId[] };
+export interface DeckUpdate {
+    cards: CardId[];
+}
+
+export type DeckShuffleAnimation = DeckShuffledUpdate & DeckUpdate;
+export type MoveScenarioDeckAnimation = MoveScenarioDeckUpdate & DeckUpdate;
 
 export type TableAnimation =
     {move_card: MoveCardUpdate} |
     {move_cubes: MoveCubesUpdate} |
-    {deck_shuffle: DeckShuffleAnimation};
+    {deck_shuffle: DeckShuffleAnimation} |
+    {move_scenario_deck : MoveScenarioDeckAnimation};
 
 export interface GameTable {
     myUserId?: UserId;

@@ -5,11 +5,12 @@ import CharacterView from "./CharacterView";
 import CountPocket from "./CountPocket";
 import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
-import { Player } from "./Model/GameTable";
+import { Player, newPocketRef } from "./Model/GameTable";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import ScenarioDeckView from "./ScenarioDeckView";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -75,14 +76,8 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
     );
 
     const scenarioDecks = (<>
-        { table.status.scenario_deck_holder == player.id && table.pockets.scenario_deck.length != 0
-            ? <div className="single-card-pocket">
-                <PocketView ref={setMapRef(positions, 'scenario_deck')} cards={table.pockets.scenario_deck.slice(-2)} />
-            </div> : null }
-        { table.status.wws_scenario_deck_holder == player.id && table.pockets.wws_scenario_deck.length != 0
-            ? <div className="single-card-pocket">
-                <PocketView ref={setMapRef(positions, 'wws_scenario_deck')} cards={table.pockets.wws_scenario_deck.slice(-2)} />
-            </div> : null }
+        <ScenarioDeckView ref={setMapRef(positions, 'scenario_deck')} pocket='scenario_deck' player={player.id} />
+        <ScenarioDeckView ref={setMapRef(positions, 'wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
     </>);
 
     const playerIcons = (

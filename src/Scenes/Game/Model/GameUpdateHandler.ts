@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { CardIdUpdate, DeckShuffledUpdate, GameString, GameUpdate, Milliseconds, MoveCardUpdate, MoveCubesUpdate, PlayerIdUpdate } from "./GameUpdate";
+import { CardIdUpdate, DeckShuffledUpdate, GameString, GameUpdate, Milliseconds, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerIdUpdate } from "./GameUpdate";
 
 export interface GameChannel {
   getNextUpdate: () => GameUpdate | undefined;
@@ -65,6 +65,7 @@ export class GameUpdateHandler {
         short_pause: this.handleCardAnimation,
         player_show_role: this.handlePlayerAnimation,
         player_hp: this.handlePlayerAnimation,
+        move_scenario_deck: this.handleMoveScenarioDeck,
     };
 
     private handleGameError(message: GameString) {
@@ -97,5 +98,9 @@ export class GameUpdateHandler {
 
     private handlePlayerAnimation({ player }: PlayerIdUpdate) {
         this.updateOnEnd = { updateType: 'player_animation_end', updateValue: { player } };
+    }
+
+    private handleMoveScenarioDeck({ player, pocket, duration }: MoveScenarioDeckUpdate) {
+        this.updateOnEnd = { updateType: 'move_scenario_deck_end', updateValue: { player, pocket, duration } };
     }
 }

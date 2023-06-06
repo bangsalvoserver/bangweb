@@ -1,6 +1,6 @@
 import { UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, ExpansionType, PlayerFlag, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
+import { DeckType, ExpansionType, PlayerFlag, PlayerRole, PocketType, ScenarioDeckPocket } from "./CardEnums";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -52,7 +52,7 @@ export interface MoveCubesUpdate extends AnimationUpdate {
 
 export interface MoveScenarioDeckUpdate extends AnimationUpdate {
     player: PlayerId;
-    pocket: 'scenario_deck' | 'wws_scenario_deck';
+    pocket: ScenarioDeckPocket;
 }
 
 export interface MoveTrainUpdate extends AnimationUpdate {

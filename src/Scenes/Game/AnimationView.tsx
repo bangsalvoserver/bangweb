@@ -5,6 +5,7 @@ import { getCard, newPocketRef } from "./Model/GameTable";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
 import { CardTracker } from "./PocketView";
+import MoveScenarioDeckAnimation from "./MoveScenarioDeckAnimation";
 
 export interface AnimationProps {
     tracker: CardTracker;
@@ -38,6 +39,20 @@ export default function AnimationView({ tracker}: AnimationProps) {
                 pocket={animation.deck_shuffle.pocket}
                 duration={animation.deck_shuffle.duration}
             />;
+        }
+        if ('move_scenario_deck' in animation) {
+            const holder = table.status[animation.move_scenario_deck.pocket == 'scenario_deck' ? 'scenario_deck_holder' : 'wws_scenario_deck_holder'];
+            if (animation.move_scenario_deck.cards.length != 0) {
+                const card = getCard(table, animation.move_scenario_deck.cards[animation.move_scenario_deck.cards.length - 1]);
+                return <MoveScenarioDeckAnimation
+                    tracker={tracker}
+                    card={card}
+                    pocket={animation.move_scenario_deck.pocket}
+                    startPlayer={holder}
+                    endPlayer={animation.move_scenario_deck.player}
+                    duration={animation.move_scenario_deck.duration}
+                />;
+            }
         }
     }
     return null;

@@ -41,6 +41,9 @@ export default function GameScene({ channel }: TableProps) {
   const cubesRef = useRef<HTMLDivElement>(null);
 
   const tracker: CardTracker = {
+    getPlayerPosition: (player: PlayerId) => {
+      return playerRefs.current?.get(player);
+    },
     getPocketPosition: (pocket: PocketRef) => {
       if (!pocket) {
         return undefined;

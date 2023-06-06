@@ -6,14 +6,16 @@ import CardView, { CardRef } from "./CardView";
 import { GameTable, PocketRef, getCard } from "./Model/GameTable";
 import "./Style/PocketView.css";
 import { GameTableContext } from "./GameScene";
-import { CardId } from "./Model/GameUpdate";
+import { CardId, PlayerId } from "./Model/GameUpdate";
 import { PocketType } from "./Model/CardEnums";
+import { PlayerRef } from "./PlayerView";
 
 export interface PocketProps {
     cards: CardId[];
 }
 
 export interface CardTracker {
+    getPlayerPosition: (player: PlayerId) => PlayerRef | undefined;
     getPocketPosition: (pocket: PocketRef) => PocketPosition | undefined;
     getCubesPosition: () => Rect | undefined;
 }
