@@ -79,6 +79,14 @@ export default function GameScene({ channel }: TableProps) {
             <PocketView ref={setMapRef(pocketRefs, 'discard_pile')} cards={table.pockets.discard_pile.slice(-2)} />
           </div>
           <CountPocket ref={setMapRef(pocketRefs, 'main_deck')} cards={table.pockets.main_deck} />
+          { table.pockets.scenario_card.length != 0 ?
+            <div className="single-card-pocket">
+              <PocketView ref={setMapRef(pocketRefs, 'scenario_card')} cards={table.pockets.scenario_card.slice(-2)} />
+            </div> : null }
+          { table.pockets.wws_scenario_card.length != 0 ?
+            <div className="single-card-pocket">
+              <PocketView ref={setMapRef(pocketRefs, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card.slice(-2)} />
+            </div> : null }
           <PocketView ref={setMapRef(pocketRefs, 'selection')} cards={table.pockets.selection} />
         </div>
         <div className="m-auto status-text">

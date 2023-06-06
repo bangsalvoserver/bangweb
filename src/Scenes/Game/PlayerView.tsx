@@ -61,6 +61,30 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
         }
     }
 
+    const characterView = (
+        <CharacterView ref={ref => {
+            setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
+            setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
+        }} player={player} />
+    );
+
+    const roleView = (
+        <div className='pocket-view-height'>
+            <RoleView flipDuration={flipDuration} role={playerRole} />
+        </div>
+    );
+
+    const scenarioDecks = (<>
+        { table.status.scenario_deck_holder == player.id && table.pockets.scenario_deck.length != 0
+            ? <div className="single-card-pocket">
+                <PocketView ref={setMapRef(positions, 'scenario_deck')} cards={table.pockets.scenario_deck.slice(-2)} />
+            </div> : null }
+        { table.status.wws_scenario_deck_holder == player.id && table.pockets.wws_scenario_deck.length != 0
+            ? <div className="single-card-pocket">
+                <PocketView ref={setMapRef(positions, 'wws_scenario_deck')} cards={table.pockets.wws_scenario_deck.slice(-2)} />
+            </div> : null }
+    </>);
+
     const playerIcons = (
         <div className='player-icons'>
             { isGameOver ? <>
@@ -88,17 +112,10 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
                 <div className='flex flex-col relative justify-end'>
                     {playerIcons}
                     <div className='flex flex-row'>
-                        <div className="flex flex-col justify-end">
-                            <CharacterView ref={ref => {
-                                setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
-                                setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
-                            }} player={player} />
-                        </div>
+                        <div className="flex flex-col justify-end">{characterView}</div>
                         <div className='flex flex-col'>
                             <LobbyUser user={user} alignVertical />
-                            <div className='flex flex-row justify-center'>
-                                <RoleView flipDuration={flipDuration} role={playerRole} />
-                            </div>
+                            { roleView } { scenarioDecks }
                         </div>
                     </div>
                 </div>
@@ -111,14 +128,9 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) =>
             <div className='flex flex-row flex-grow'>
                 <div className='flex-grow text-center'>
                     <div className='player-top-row'>
-                        <CharacterView ref={ref => {
-                            setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
-                            setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
-                        }} player={player} />
-                        <div className='pocket-view-height'>
-                            <RoleView flipDuration={flipDuration} role={playerRole} />
-                        </div>
+                        { characterView } { roleView }
                         <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} />
+                        { scenarioDecks }
                     </div>
                 </div>
                 <div className='flex flex-col justify-end relative'>
