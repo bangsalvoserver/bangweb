@@ -1,3 +1,4 @@
+import { maybeIndexOf, rotate } from "../../../Utils/ArrayUtils";
 import { CARD_SLOT_ID } from "../CardSlot";
 import { GameFlag, PocketType } from "./CardEnums";
 import { GameTable, Id, Player, PocketRef, TablePockets, getCard, getCardImage, newCard, newPlayer, newPocketRef } from "./GameTable";
@@ -92,22 +93,10 @@ dispatchers.remove_cards = (table: GameTable, { cards }: RemoveCardsUpdate): Gam
     };
 };
 
-function tryRotate<T>(values: T[], value?: T): boolean {
-    if (value) {
-        const index = values.indexOf(value);
-        if (index > 0) {
-            values.unshift(...values.splice(index, values.length));
-            return true;
-        }
-    }
-    return false;
-}
-
 // Moves the player which the user is controlling to the first element of the array
 function rotatePlayers(players: PlayerId[], selfPlayer?: PlayerId, firstPlayer?: PlayerId) {
-    tryRotate(players, selfPlayer) || tryRotate(players, firstPlayer);
-    return players;
-};
+    return rotate(players, maybeIndexOf(players, selfPlayer) ?? maybeIndexOf(players, firstPlayer) ?? 0);
+}
 
 // Adds a message to the logs
 dispatchers.game_log = (table: GameTable, message: GameString): GameTable => {
