@@ -138,6 +138,8 @@ export interface DeckUpdate {
     cards: CardId[];
 }
 
+export type ScenarioHolders = Partial<Record<ScenarioDeckPocket, PlayerId>>;
+
 export type DeckShuffleAnimation = DeckShuffledUpdate & DeckUpdate;
 export type MoveScenarioDeckAnimation = MoveScenarioDeckUpdate & DeckUpdate;
 
@@ -163,7 +165,7 @@ export interface GameTable {
         num_cubes: number;
         train_position: number;
         flags: GameFlag[];
-        scenario_holders: Partial<Record<ScenarioDeckPocket, PlayerId>>;
+        scenario_holders: ScenarioHolders;
         current_turn?: PlayerId;
         request: RequestStatusArgs | StatusReadyArgs | {};
     };

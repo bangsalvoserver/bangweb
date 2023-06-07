@@ -1,23 +1,17 @@
 import { useContext } from "react";
+import { GameTableContext } from "../GameScene";
+import { getCard, newPocketRef } from "../Model/GameTable";
 import DeckShuffleAnimation from "./DeckShuffleAnimation";
-import { GameTableContext } from "./GameScene";
-import { getCard, newPocketRef } from "./Model/GameTable";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
-import { CardTracker } from "./PocketView";
 import MoveScenarioDeckAnimation from "./MoveScenarioDeckAnimation";
 
-export interface AnimationProps {
-    tracker: CardTracker;
-};
-
-export default function AnimationView({ tracker}: AnimationProps) {
+export default function AnimationView() {
     const table = useContext(GameTableContext);
     if (table.animation) {
         if ('move_card' in table.animation) {
             const animation = table.animation.move_card;
             return <MoveCardAnimation
-                tracker={tracker}
                 card={getCard(table, animation.card)}
                 destPocket={newPocketRef(animation.pocket, animation.player)}
                 duration={animation.duration}
@@ -25,7 +19,6 @@ export default function AnimationView({ tracker}: AnimationProps) {
         } else if ('move_cubes' in table.animation) {
             const animation = table.animation.move_cubes;
             return <MoveCubeAnimation
-                tracker={tracker}
                 num_cubes={animation.num_cubes}
                 origin_card={animation.origin_card ? getCard(table, animation.origin_card) : undefined}
                 target_card={animation.target_card ? getCard(table, animation.target_card) : undefined}
@@ -34,7 +27,6 @@ export default function AnimationView({ tracker}: AnimationProps) {
         } else if ('deck_shuffle' in table.animation) {
             const animation = table.animation.deck_shuffle;
             return <DeckShuffleAnimation
-                tracker={tracker}
                 cards={animation.cards}
                 pocket={animation.pocket}
                 duration={animation.duration}
@@ -44,7 +36,6 @@ export default function AnimationView({ tracker}: AnimationProps) {
             const card = animation.cards.at(-1);
             if (card) {
                 return <MoveScenarioDeckAnimation
-                    tracker={tracker}
                     card={getCard(table, card)}
                     pocket={animation.pocket}
                     startPlayer={table.status.scenario_holders[animation.pocket]}

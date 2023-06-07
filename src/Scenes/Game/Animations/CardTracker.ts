@@ -1,0 +1,65 @@
+import { PocketPosition, PocketPositionMap } from "../PocketView";
+import { PlayerId } from "../Model/GameUpdate";
+import { Card, PocketRef, ScenarioHolders } from "../Model/GameTable";
+import { Rect, getDivRect } from "../../../Utils/Rect";
+import { PocketType } from "../Model/CardEnums";
+import { createContext } from "react";
+
+export interface CardTracker {
+    getPlayerPockets: (player: PlayerId) => PocketPositionMap | undefined;
+    getTablePocket: (pocket: PocketRef) => PocketPosition | undefined;
+    getCubesRect: (card: Card | undefined) => Rect | undefined;
+}
+
+export const CardTrackerContext = createContext<CardTracker>({
+  getPlayerPockets: (player: PlayerId) => undefined,
+  getTablePocket: (pocket: PocketRef) => undefined,
+  getCubesRect: (card: Card | undefined) => undefined
+});
+
+export class CardTrackerImpl implements CardTracker {
+    private scenarioHolders: ScenarioHolders;
+    private pocketPositions: Map<PocketType, PocketPosition>;
+    private playerPositions: Map<PlayerId, PocketPositionMap>;
+    private cubesRef: HTMLDivElement | null;
+
+    constructor(
+        scenarioHolders: ScenarioHolders,
+        pocketPositions: Map<PocketType, PocketPosition>,
+        playerPositions: Map<PlayerId, PocketPositionMap>,
+        cubesRef: HTMLDivElement | null
+    ) {
+        this.scenarioHolders = scenarioHolders;
+        this.pocketPositions = pocketPositions;
+        this.playerPositions = playerPositions;
+        this.cubesRef = cubesRef;
+    }
+
+    getPlayerPockets(player: PlayerId) {
+        return this.playerPositions.get(player);
+    }
+
+    getTablePocket(pocket: PocketRef) {
+        if (pocket) {
+            if (pocket.name == 'scenario_deck' || pocket.name == 'wws_scenario_deck') {
+                const holder = this.scenarioHolders[pocket.name];
+                if (holder) {
+                    return this.getPlayerPockets(holder)?.get(pocket.name);
+                }
+            } else if ('player' in pocket) {
+                return this.getPlayerPockets(pocket.player)?.get(pocket.name);
+            } else {
+                return this.pocketPositions.get(pocket.name);
+            }
+        }
+        return undefined;
+    }
+
+    getCubesRect(card: Card | undefined) {
+        if (card) {
+            return this.getTablePocket(card.pocket)?.getCardRect(card.id);
+        } else {
+            return this.cubesRef ? getDivRect(this.cubesRef) : undefined;
+        }
+    }
+}

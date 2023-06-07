@@ -1,15 +1,14 @@
-import { CSSProperties, useReducer } from "react";
-import { getRectCenter } from "../../Utils/Rect";
-import { useInterval } from "../../Utils/UseInterval";
-import CardView from "./CardView";
-import { ScenarioDeckPocket } from "./Model/CardEnums";
-import { Card } from "./Model/GameTable";
-import { Milliseconds, PlayerId } from "./Model/GameUpdate";
-import { CardTracker } from "./PocketView";
+import { CSSProperties, useContext, useReducer } from "react";
+import { getRectCenter } from "../../../Utils/Rect";
+import { useInterval } from "../../../Utils/UseInterval";
+import CardView from "../CardView";
+import { ScenarioDeckPocket } from "../Model/CardEnums";
+import { Card } from "../Model/GameTable";
+import { Milliseconds, PlayerId } from "../Model/GameUpdate";
 import "./Style/MoveCardAnimation.css";
+import { CardTrackerContext } from "./CardTracker";
 
 export interface MoveScenarioDeckProps {
-    tracker: CardTracker;
     card: Card;
     pocket: ScenarioDeckPocket;
     startPlayer?: PlayerId;
@@ -17,12 +16,14 @@ export interface MoveScenarioDeckProps {
     duration: Milliseconds;
 }
 
-export default function MoveScenarioDeckAnimation({ tracker, card, pocket, startPlayer, endPlayer, duration }: MoveScenarioDeckProps) {
+export default function MoveScenarioDeckAnimation({ card, pocket, startPlayer, endPlayer, duration }: MoveScenarioDeckProps) {
+    const tracker = useContext(CardTrackerContext);
+    
     const [, forceUpdate] = useReducer(a => !a, false);
     useInterval(forceUpdate, 0, []);
 
-    const startRect = startPlayer ? tracker.getPlayerPosition(startPlayer)?.positions.get(pocket)?.getPocketRect() : undefined;
-    const endRect = endPlayer ? tracker.getPlayerPosition(endPlayer)?.positions.get(pocket)?.getPocketRect() : undefined;
+    const startRect = startPlayer ? tracker.getPlayerPockets(startPlayer)?.get(pocket)?.getPocketRect() : undefined;
+    const endRect = endPlayer ? tracker.getPlayerPockets(endPlayer)?.get(pocket)?.getPocketRect() : undefined;
 
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);

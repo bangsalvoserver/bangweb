@@ -1,26 +1,27 @@
-import { CSSProperties, useEffect, useReducer } from "react";
-import { getRectCenter } from "../../Utils/Rect";
-import { useInterval, useTimeout } from "../../Utils/UseInterval";
-import { CARD_SLOT_ID } from "./CardSlot";
-import CardView from "./CardView";
-import { Card, PocketRef } from "./Model/GameTable";
-import { Milliseconds } from "./Model/GameUpdate";
-import { CardTracker } from "./PocketView";
+import { CSSProperties, useContext, useEffect, useReducer } from "react";
+import { getRectCenter } from "../../../Utils/Rect";
+import { useInterval, useTimeout } from "../../../Utils/UseInterval";
+import { CARD_SLOT_ID } from "../CardSlot";
+import CardView from "../CardView";
+import { Card, PocketRef } from "../Model/GameTable";
+import { Milliseconds } from "../Model/GameUpdate";
 import "./Style/MoveCardAnimation.css";
+import { CardTrackerContext } from "./CardTracker";
 
 export interface MoveCardProps {
-    tracker: CardTracker;
     card: Card;
     destPocket: PocketRef;
     duration: Milliseconds;
 }
 
-export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
+export default function MoveCardAnimation({ card, destPocket, duration }: MoveCardProps) {
+    const tracker = useContext(CardTrackerContext);
+
     const [, forceUpdate] = useReducer(a => !a, false);
     useInterval(forceUpdate, 0, []);
 
-    const startRect = tracker.getPocketPosition(card.pocket)?.getCardRect(CARD_SLOT_ID);
-    const endPocket = tracker.getPocketPosition(destPocket);
+    const startRect = tracker.getTablePocket(card.pocket)?.getCardRect(CARD_SLOT_ID);
+    const endPocket = tracker.getTablePocket(destPocket);
     const endRect = endPocket?.getCardRect(card.id) ?? startRect;
 
     useEffect(() => endPocket?.scrollToEnd());

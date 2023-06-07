@@ -1,15 +1,14 @@
 import { CSSProperties, useContext } from "react";
-import { CardId, Milliseconds } from "./Model/GameUpdate";
-import { isMobileDevice } from "../../Utils/MobileCheck";
-import { getRectCenter } from "../../Utils/Rect";
-import CardView from "./CardView";
-import { GameTableContext } from "./GameScene";
-import { getCard, newPocketRef } from "./Model/GameTable";
-import { CardTracker } from "./PocketView";
+import { CardId, Milliseconds } from "../Model/GameUpdate";
+import { isMobileDevice } from "../../../Utils/MobileCheck";
+import { getRectCenter } from "../../../Utils/Rect";
+import CardView from "../CardView";
+import { GameTableContext } from "../GameScene";
+import { getCard, newPocketRef } from "../Model/GameTable";
 import "./Style/DeckShuffleAnimation.css";
+import { CardTrackerContext } from "./CardTracker";
 
 export interface DeckShuffleProps {
-    tracker: CardTracker;
     cards: CardId[];
     pocket: 'main_deck' | 'shop_deck';
     duration: Milliseconds;
@@ -17,12 +16,14 @@ export interface DeckShuffleProps {
 
 const MAX_CARDS = isMobileDevice() ? 10 : 30;
 
-export default function DeckShuffleAnimation({ tracker, pocket, cards, duration }: DeckShuffleProps) {
+export default function DeckShuffleAnimation({ pocket, cards, duration }: DeckShuffleProps) {
     const table = useContext(GameTableContext);
+    const tracker = useContext(CardTrackerContext);
+    
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
 
-    const startRect = tracker.getPocketPosition(newPocketRef(fromPocket))?.getPocketRect();
-    const endRect = tracker.getPocketPosition(newPocketRef(pocket))?.getPocketRect();
+    const startRect = tracker.getTablePocket(newPocketRef(fromPocket))?.getPocketRect();
+    const endRect = tracker.getTablePocket(newPocketRef(pocket))?.getPocketRect();
 
     if (startRect && endRect) {
         cards = cards.slice(-MAX_CARDS);

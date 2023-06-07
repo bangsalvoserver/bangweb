@@ -5,27 +5,23 @@ import CharacterView from "./CharacterView";
 import CountPocket from "./CountPocket";
 import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
-import { Player, newPocketRef } from "./Model/GameTable";
+import { Player } from "./Model/GameTable";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import RoleView from "./RoleView";
+import ScenarioDeckView from "./ScenarioDeckView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import ScenarioDeckView from "./ScenarioDeckView";
 
 export interface PlayerProps {
     user?: UserValue,
     player: Player
 }
 
-export interface PlayerRef {
-    positions: PocketPositionMap
-};
-
-const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player }, ref) => {
+const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player }, ref) => {
     const table = useContext(GameTableContext);
     const positions = useMapRef<PocketType, PocketPosition>();
 
-    useImperativeHandle(ref, () => ({ positions : positions.current }));
+    useImperativeHandle(ref, () => positions.current);
 
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id == table.status.current_turn;

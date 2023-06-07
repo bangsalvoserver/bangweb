@@ -1,33 +1,26 @@
-import { CSSProperties, useReducer } from "react";
-import { Rect, getRectCenter } from "../../Utils/Rect";
-import { useInterval } from "../../Utils/UseInterval";
-import { Card } from "./Model/GameTable";
-import { CardTracker } from "./PocketView";
-import "./Style/MoveCubeAnimation.css"
-import { Milliseconds } from "./Model/GameUpdate";
+import { CSSProperties, useContext, useReducer } from "react";
+import { Rect, getRectCenter } from "../../../Utils/Rect";
+import { useInterval } from "../../../Utils/UseInterval";
+import { Card } from "../Model/GameTable";
+import { Milliseconds } from "../Model/GameUpdate";
+import "./Style/MoveCubeAnimation.css";
+import { CardTrackerContext } from "./CardTracker";
 
 export interface MoveCubeProps {
-    tracker: CardTracker;
     num_cubes: number;
     origin_card?: Card;
     target_card?: Card;
     duration: Milliseconds;
 }
 
-export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, target_card, duration }: MoveCubeProps) {
+export default function MoveCubeAnimation ({ num_cubes, origin_card, target_card, duration }: MoveCubeProps) {
+    const tracker = useContext(CardTrackerContext);
+
     const [, forceUpdate] = useReducer(a => !a, false);
     useInterval(forceUpdate, 0, []);
 
-    const getCubesPosition = (card?: Card): Rect | undefined => {
-        if (card) {
-            return tracker.getPocketPosition(card.pocket)?.getCardRect(card.id);
-        } else {
-            return tracker.getCubesPosition();
-        }
-    }
-
-    const startRect = getCubesPosition(origin_card);
-    const endRect = getCubesPosition(target_card);
+    const startRect = tracker.getCubesRect(origin_card);
+    const endRect = tracker.getCubesRect(target_card);
     
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);
