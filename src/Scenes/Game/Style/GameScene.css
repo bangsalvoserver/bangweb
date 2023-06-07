@@ -21,7 +21,6 @@
 
 .table-cubes {
     width: var(--table-cubes-width);
-    display: inline-block;
     font-weight: bold;
     text-align: center;
 }

@@ -53,9 +53,9 @@ export default function GameScene({ channel }: TableProps) {
             </div>
             <PocketView ref={setMapRef(pocketPositions, 'shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} />
           </> : null}
-          <div className='table-cubes' ref={cubesRef}>
+          <div className='inline-block' ref={cubesRef}>
             {table.status.num_cubes > 0 ?
-              <><img src='/media/sprite_cube.png' />x{table.status.num_cubes}</> : null}
+              <div className='table-cubes'><img src='/media/sprite_cube.png' />x{table.status.num_cubes}</div> : null}
           </div>
           <div className="single-card-pocket">
             <PocketView ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile.slice(-2)} />

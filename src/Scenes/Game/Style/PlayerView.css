@@ -1,6 +1,6 @@
 :root {
     --player-row-width: calc(var(--card-width) * 6);
-    --player-self-row-width: calc(var(--card-with) * 8);
+    --player-self-row-width: calc(var(--card-width) * 8);
     --player-row-height: calc(var(--card-height) + 1.5em);
     --player-icon-size: 32px;
 }
