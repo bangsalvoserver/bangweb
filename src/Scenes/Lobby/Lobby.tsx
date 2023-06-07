@@ -12,19 +12,21 @@ import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
 export interface LobbyProps {
   myLobbyId: LobbyId;
   myUserId?: UserId;
-  name: string;
-  options: GameOptions;
+  lobbyName: string;
+  gameOptions: GameOptions;
+  editLobby: (lobbyName: string, gameOptions: GameOptions) => void;
 }
 
 export interface LobbyState {
+  lobbyName: string;
   users: UserValue[];
   myUserId?: UserId;
   lobbyOwner?: UserId;
 }
 
-export const LobbyContext = createContext<LobbyState>({ users:[] });
+export const LobbyContext = createContext<LobbyState>({ lobbyName: 'Bang!', users: [] });
 
-export default function LobbyScene({ myLobbyId, myUserId, name, options }: LobbyProps) {
+export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions, editLobby }: LobbyProps) {
   const connection = useContext(ConnectionContext);
 
   const [isGameStarted, setIsGameStarted] = useState(false);
@@ -32,9 +34,6 @@ export default function LobbyScene({ myLobbyId, myUserId, name, options }: Lobby
 
   const [users, setUsers] = useState([] as UserValue[]);
   const [lobbyOwner, setLobbyOwner] = useState<UserId>();
-
-  const [lobbyName, setLobbyName] = useState(name);
-  const [gameOptions, setGameOptions] = useState(options);
 
   const [chatMessages, setChatMessages] = useState([] as ChatMessage[]);
 
@@ -56,10 +55,6 @@ export default function LobbyScene({ myLobbyId, myUserId, name, options }: Lobby
       setUsers(users =>
         users.filter(user => user.id !== user_id)
       );
-    }],
-    ['lobby_edited', ({ name, options }: LobbyEntered) => {
-      setLobbyName(name);
-      setGameOptions(options);
     }],
     ['lobby_owner', ({ user_id }: LobbyOwner) => {
       setLobbyOwner(user_id);
@@ -84,9 +79,6 @@ export default function LobbyScene({ myLobbyId, myUserId, name, options }: Lobby
     }]
   );
 
-  const handleLeaveLobby = () => connection?.sendMessage('lobby_leave');
-  const handleStartGame = () => connection?.sendMessage('game_start');
-
   const getGameScene = () => {
     return (
       <GameScene channel={{
@@ -95,29 +87,39 @@ export default function LobbyScene({ myLobbyId, myUserId, name, options }: Lobby
           connection?.sendMessage('game_action', { [messageType]: messageValue });
         },
         handleReturnLobby: () => connection?.sendMessage('lobby_return')
-      }}/>
+      }} />
     );
   };
 
   const getLobbyScene = () => {
+    const handleStartGame = () => connection?.sendMessage('game_start');
+
     const handleEditGameOptions = (gameOptions: GameOptions) => {
-      if (myUserId == lobbyOwner) {
-        localStorage.setItem('lobbyName', lobbyName);
-        localStorage.setItem('gameOptions', JSON.stringify(gameOptions));
-        connection?.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
-        setGameOptions(gameOptions);
-      }
+      localStorage.setItem('lobbyName', lobbyName);
+      localStorage.setItem('gameOptions', JSON.stringify(gameOptions));
+      connection?.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
+      editLobby(lobbyName, gameOptions);
     };
 
-    return (
-      <>
-        {myUserId == lobbyOwner ? <button onClick={handleStartGame}>Start Game</button> : null}
-        <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
-        {users.map(user => (
-          <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
-        ))}
-      </>
-    )
+    return <div>
+      {myUserId == lobbyOwner ?
+        <button className="
+        bg-blue-500
+        hover:bg-blue-600
+        text-white
+        py-2
+        px-4
+        rounded-md
+        focus:outline-none
+        focus:ring-2
+        focus:ring-blue-500
+        " onClick={handleStartGame}>Start Game</button>
+        : null}
+      <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
+      {users.map(user => (
+        <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
+      ))}
+    </div>
   }
 
   const handleSendMessage = (message: string) => {
@@ -125,19 +127,9 @@ export default function LobbyScene({ myLobbyId, myUserId, name, options }: Lobby
   }
 
   return (
-    <div>
-      <h1 className='
-        text-3xl
-        text-white
-        font-bold
-        '>{lobbyName}</h1>
-      <div>
-        <button onClick={handleLeaveLobby}>Leave Lobby</button>
-      </div>
-      <LobbyContext.Provider value={{ users, myUserId, lobbyOwner }}>
-        {isGameStarted ? getGameScene() : getLobbyScene()}
-        <LobbyChat messages={chatMessages} handleSendMessage={handleSendMessage} />
-      </LobbyContext.Provider>
-    </div>
+    <LobbyContext.Provider value={{ lobbyName, users, myUserId, lobbyOwner }}>
+      {isGameStarted ? getGameScene() : getLobbyScene()}
+      <LobbyChat messages={chatMessages} handleSendMessage={handleSendMessage} />
+    </LobbyContext.Provider>
   );
 }

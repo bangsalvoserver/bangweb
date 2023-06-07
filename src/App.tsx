@@ -6,6 +6,7 @@ import UserMenu from './Components/UserMenu';
 import { serializeImage } from './Utils/ImageSerial';
 import { ClientAccepted, LobbyEntered, LobbyRemoveUser, UserId } from './Messages/ServerMessage';
 import CurrentScene, { CurrentSceneUnion } from './Scenes/CurrentScene';
+import { GameOptions } from './Scenes/Game/Model/GameUpdate';
 
 export const ConnectionContext = createContext<Connection | null>(null);
 
@@ -62,14 +63,27 @@ function App() {
     }]
   );
 
+  const editLobby = (lobbyName: string, gameOptions: GameOptions) => {
+    setScene(scene => {
+      if ('lobby' in scene) {
+        return { lobby: { ...scene.lobby, lobbyName, gameOptions }};
+      } else {
+        return scene;
+      }
+    });
+  };
+
   useHandlers(connection.current, [scene],
     ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
       if (!('lobby' in scene) || (scene.lobby.myLobbyId != lobby_id)) {
         localStorage.setItem('lobby_id', lobby_id.toString());
         connection.current?.setLocked(true);
-        setScene({ lobby: { myLobbyId: lobby_id, myUserId: myUserId.current, name, options }});
+        setScene({ lobby: { myLobbyId: lobby_id, myUserId: myUserId.current, lobbyName: name, gameOptions: options, editLobby }});
       }
-    }]
+    }],
+    ['lobby_edited', ({ name, options }: LobbyEntered) => {
+      editLobby(name, options);
+    }],
   );
 
   const handleEditPropic = async (propic: string | null) => {
@@ -79,11 +93,18 @@ function App() {
     });
   }
 
+  const handleLeaveLobby = () => connection.current?.sendMessage('lobby_leave');
+
   return (
   <div className="background">
     <div className="background-inner min-h-screen flex flex-col">
       <ConnectionContext.Provider value={connection.current}>
-        <Header onEditPropic={handleEditPropic} onClickToggleMenu={() => setIsMenuOpen(value => !value)} />
+        <Header
+          scene={scene}
+          onEditPropic={handleEditPropic}
+          onClickToggleMenu={() => setIsMenuOpen(value => !value)}
+          onClickLeaveLobby={handleLeaveLobby}
+        />
         <UserMenu isMenuOpen={isMenuOpen}/>
         <div className="current-scene">
           <CurrentScene scene={scene} />
