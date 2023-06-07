@@ -353,7 +353,6 @@ dispatchers.move_cubes_end = (table: GameTable, { num_cubes, target_card }: Move
     };
 }
 
-// Changes the scenario_deck_holder or wws_scenario_deck_holder field
 dispatchers.move_scenario_deck = (table: GameTable, { player, pocket, duration }: MoveScenarioDeckUpdate): GameTable => {
     return {
         ...table,
@@ -368,13 +367,17 @@ dispatchers.move_scenario_deck = (table: GameTable, { player, pocket, duration }
     }
 };
 
+// Changes the scenario_holder field
 dispatchers.move_scenario_deck_end = (table: GameTable, { player, pocket }: MoveScenarioDeckUpdate): GameTable => {
     const cards = table.animation && 'move_scenario_deck' in table.animation ? table.animation.move_scenario_deck.cards : [];
     return {
         ...table,
         status: {
             ...table.status,
-            [pocket + '_holder']: player
+            scenario_holders: {
+                ...table.status.scenario_holders,
+                [pocket]: player
+            }
         },
         pockets: {
             ...table.pockets,

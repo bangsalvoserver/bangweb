@@ -48,7 +48,7 @@ export default function GameScene({ channel }: TableProps) {
       if (!pocket) {
         return undefined;
       } else if (pocket.name == 'scenario_deck' || pocket.name == 'wws_scenario_deck') {
-        const holder = pocket.name == 'scenario_deck' ? table.status.scenario_deck_holder : table.status.wws_scenario_deck_holder;
+        const holder = table.status.scenario_holders[pocket.name];
         return holder ? playerRefs.current?.get(holder)?.positions.get(pocket.name) : undefined;
       } else if ('player' in pocket) {
         return playerRefs.current?.get(pocket.player)?.positions.get(pocket.name);

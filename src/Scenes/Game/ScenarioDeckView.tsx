@@ -14,7 +14,7 @@ export interface ScenarioDeckProps {
 const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket, player }, ref) => {
     const table = useContext(GameTableContext);
 
-    const holder = table.status[pocket == 'scenario_deck' ? 'scenario_deck_holder' : 'wws_scenario_deck_holder'];
+    const holder = table.status.scenario_holders[pocket];
 
     const deckPosition = useRef<PocketPosition>(null);
     const slotRef = useRef<CardRef>(null);

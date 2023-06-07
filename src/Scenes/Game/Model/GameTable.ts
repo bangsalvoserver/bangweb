@@ -1,7 +1,7 @@
-import { CardData, CardSign } from "./CardData";
-import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
-import { AnimationUpdate, CardId, DeckShuffledUpdate, GameString, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import { UserId } from "../../../Messages/ServerMessage";
+import { CardData, CardSign } from "./CardData";
+import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, ScenarioDeckPocket, TablePocketType } from "./CardEnums";
+import { AnimationUpdate, CardId, DeckShuffledUpdate, GameString, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
 export interface Id {
     id: number
@@ -82,13 +82,9 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketRef): Card {
     };
 }
 
-export type PlayerPockets = {
-    [T in Extract<PlayerPocketType, string>]: CardId[]
-}
+export type PlayerPockets = Record<PlayerPocketType, CardId[]>;
 
-export type TablePockets = {
-    [T in Extract<TablePocketType, string>]: CardId[]
-}
+export type TablePockets = Record<TablePocketType, CardId[]>;
 
 export interface PlayerFlippingRole extends AnimationUpdate {
     role: PlayerRole;
@@ -167,8 +163,7 @@ export interface GameTable {
         num_cubes: number;
         train_position: number;
         flags: GameFlag[];
-        scenario_deck_holder?: PlayerId;
-        wws_scenario_deck_holder?: PlayerId;
+        scenario_holders: Partial<Record<ScenarioDeckPocket, PlayerId>>;
         current_turn?: PlayerId;
         request: RequestStatusArgs | StatusReadyArgs | {};
     };
@@ -208,6 +203,7 @@ export function newGameTable(myUserId?: UserId): GameTable {
         status: {
             num_cubes: 0,
             train_position: 0,
+            scenario_holders: {},
             flags: [],
             request: {},
         },

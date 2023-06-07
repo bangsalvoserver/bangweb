@@ -13,44 +13,43 @@ export interface AnimationProps {
 
 export default function AnimationView({ tracker}: AnimationProps) {
     const table = useContext(GameTableContext);
-    const animation = table.animation;
-    if (animation) {
-        if ('move_card' in animation) {
+    if (table.animation) {
+        if ('move_card' in table.animation) {
+            const animation = table.animation.move_card;
             return <MoveCardAnimation
                 tracker={tracker}
-                card={getCard(table, animation.move_card.card)}
-                destPocket={newPocketRef(animation.move_card.pocket, animation.move_card.player)}
-                duration={animation.move_card.duration}
+                card={getCard(table, animation.card)}
+                destPocket={newPocketRef(animation.pocket, animation.player)}
+                duration={animation.duration}
             />;
-        }
-        if ('move_cubes' in animation) {
+        } else if ('move_cubes' in table.animation) {
+            const animation = table.animation.move_cubes;
             return <MoveCubeAnimation
                 tracker={tracker}
-                num_cubes={animation.move_cubes.num_cubes}
-                origin_card={animation.move_cubes.origin_card ? getCard(table, animation.move_cubes.origin_card) : undefined}
-                target_card={animation.move_cubes.target_card ? getCard(table, animation.move_cubes.target_card) : undefined}
-                duration={animation.move_cubes.duration}
+                num_cubes={animation.num_cubes}
+                origin_card={animation.origin_card ? getCard(table, animation.origin_card) : undefined}
+                target_card={animation.target_card ? getCard(table, animation.target_card) : undefined}
+                duration={animation.duration}
             />;
-        }
-        if ('deck_shuffle' in animation) {
+        } else if ('deck_shuffle' in table.animation) {
+            const animation = table.animation.deck_shuffle;
             return <DeckShuffleAnimation
                 tracker={tracker}
-                cards={animation.deck_shuffle.cards}
-                pocket={animation.deck_shuffle.pocket}
-                duration={animation.deck_shuffle.duration}
+                cards={animation.cards}
+                pocket={animation.pocket}
+                duration={animation.duration}
             />;
-        }
-        if ('move_scenario_deck' in animation) {
-            const holder = table.status[animation.move_scenario_deck.pocket == 'scenario_deck' ? 'scenario_deck_holder' : 'wws_scenario_deck_holder'];
-            if (animation.move_scenario_deck.cards.length != 0) {
-                const card = getCard(table, animation.move_scenario_deck.cards[animation.move_scenario_deck.cards.length - 1]);
+        } else if ('move_scenario_deck' in table.animation) {
+            const animation = table.animation.move_scenario_deck;
+            const card = animation.cards.at(-1);
+            if (card) {
                 return <MoveScenarioDeckAnimation
                     tracker={tracker}
-                    card={card}
-                    pocket={animation.move_scenario_deck.pocket}
-                    startPlayer={holder}
-                    endPlayer={animation.move_scenario_deck.player}
-                    duration={animation.move_scenario_deck.duration}
+                    card={getCard(table, card)}
+                    pocket={animation.pocket}
+                    startPlayer={table.status.scenario_holders[animation.pocket]}
+                    endPlayer={animation.player}
+                    duration={animation.duration}
                 />;
             }
         }
