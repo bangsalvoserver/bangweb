@@ -15,25 +15,24 @@ export class GameUpdateHandler {
     private updateOnEnd?: GameUpdate;
 
     private tableDispatch: Dispatch<GameUpdate>;
+    private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
     private setRequest: Dispatch<SetStateAction<RequestStatusUnion>>;
 
-    constructor(channel: GameChannel, tableDispatch: Dispatch<GameUpdate>, setRequest: Dispatch<SetStateAction<RequestStatusUnion>>) {
+    constructor(
+        channel: GameChannel,
+        tableDispatch: Dispatch<GameUpdate>,
+        setGameLogs: Dispatch<SetStateAction<GameString[]>>,
+        setRequest: Dispatch<SetStateAction<RequestStatusUnion>>
+    ) {
         this.channel = channel;
         this.tableDispatch = tableDispatch;
+        this.setGameLogs = setGameLogs;
         this.setRequest = setRequest;
     }
 
     tick(timeElapsed: Milliseconds) {
-        const onEndAnimation = () => {
-            if (this.updateOnEnd) {
-                this.tableDispatch(this.updateOnEnd);
-                this.updateOnEnd = undefined;
-            }
-            this.updateTimer = undefined;
-        };
-
         if (this.updateTimer && (this.updateTimer -= timeElapsed) <= 0) {
-            onEndAnimation();
+            this.onEndAnimation();
         } else {
             let update: GameUpdate | undefined;
             while (!this.updateTimer && (update = this.channel.getNextUpdate())) {
@@ -47,15 +46,24 @@ export class GameUpdateHandler {
                 if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
                     this.updateTimer = updateValue.duration as Milliseconds;
                     if (this.updateTimer <= 0) {
-                        onEndAnimation();
+                        this.onEndAnimation();
                     }
                 }
             }
         }
     }
 
+    private onEndAnimation () {
+        if (this.updateOnEnd) {
+            this.tableDispatch(this.updateOnEnd);
+            this.updateOnEnd = undefined;
+        }
+        this.updateTimer = undefined;
+    }
+
     private updateHandlers: Record<string, (update: any) => void> = {
         game_error: this.handleGameError,
+        game_log: this.handleGameLog,
         game_prompt: this.handleGamePrompt,
         play_sound: this.handlePlaySound,
         move_card: this.handleMoveCard,
@@ -76,6 +84,10 @@ export class GameUpdateHandler {
 
     private handleGameError(message: GameString) {
         // TODO
+    }
+
+    private handleGameLog(message: GameString) {
+        this.setGameLogs(logs => logs.concat(message));
     }
 
     private handleGamePrompt(message: GameString) {

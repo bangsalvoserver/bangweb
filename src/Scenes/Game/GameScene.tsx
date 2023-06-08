@@ -10,8 +10,8 @@ import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { CardTrackerImpl } from "./Animations/CardTracker";
 import { RequestStatusUnion, getCard, getPlayer, newGameTable } from "./Model/GameTable";
-import { gameTableDispatch } from "./Model/GameTableDispatch";
-import { PlayerId } from "./Model/GameUpdate";
+import { gameTableReduce } from "./Model/GameTableReducer";
+import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
@@ -30,11 +30,12 @@ export const RequestContext = createContext<RequestStatusUnion>({});
 export default function GameScene({ channel }: GameProps) {
   const { users, myUserId, lobbyOwner } = useContext(LobbyContext);
   
-  const [table, tableDispatch] = useReducer(gameTableDispatch, myUserId, newGameTable);
+  const [table, tableDispatch] = useReducer(gameTableReduce, myUserId, newGameTable);
+  const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const [request, setRequest] = useState<RequestStatusUnion>({});
 
-  const game = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, setRequest));
-  useInterval((timeElapsed: number) => game.current.tick(timeElapsed), 1000 / FRAMERATE, []);
+  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, setGameLogs, setRequest));
+  useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
 
   const pocketPositions = useMapRef<PocketType, PocketPosition>();
   const playerPositions = useMapRef<PlayerId, PocketPositionMap>();
@@ -111,7 +112,7 @@ export default function GameScene({ channel }: GameProps) {
               { buttonRow }
             </div>
           </div>
-          <GameLogView />
+          <GameLogView logs={gameLogs} />
           <AnimationView getTracker={getTracker} />
         </div>
       </RequestContext.Provider>

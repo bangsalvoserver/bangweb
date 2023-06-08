@@ -6,6 +6,15 @@ export function repeat<T>(arr: T[], n: number) {
     return ret;
 }
 
+export function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<Key, Value[]> {
+    let map = new Map<Key, Value[]>();
+    values.forEach(value => {
+        const key = mapper(value);
+        map.set(key, (map.get(key) ?? []).concat(value));
+    });
+    return map;
+}
+
 export function maybeIndexOf<T>(arr: T[], value?: T, fromIndex?: number): number | undefined {
     if (value) {
         const index = arr.indexOf(value, fromIndex);

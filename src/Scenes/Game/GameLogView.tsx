@@ -2,9 +2,13 @@ import { useContext, useEffect, useRef } from "react";
 import { GameTableContext } from "./GameScene";
 import GameStringComponent from "./GameStringComponent";
 import "./Style/GameLogView.css";
+import { GameString } from "./Model/GameUpdate";
 
-export default function GameLogView() {
-    const { logs } = useContext(GameTableContext);
+export interface GameLogProps {
+    logs: GameString[];
+}
+
+export default function GameLogView({ logs }: GameLogProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

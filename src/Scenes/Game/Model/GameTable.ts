@@ -7,6 +7,11 @@ export interface Id {
     id: number
 };
 
+/// players and cards are sorted by id so that finding an object in those arrays is O(log n)
+export function sortById(lhs: Id, rhs: Id) {
+    return lhs.id - rhs.id;
+}
+
 export function searchById<T extends Id>(values: T[], target: number): T | null {
     let left: number = 0;
     let right: number = values.length - 1;
@@ -20,6 +25,19 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
     }
   
     return null;
+}
+
+/// Takes as arguments an array of values, an id and a mapping function
+/// This function finds the element with the specified id and returns a new array of values
+/// with the found object modified according to the mapper function
+export function editById<T extends Id>(values: T[], id: number, mapper: (value: T) => T): T[] {
+    return values.map(value => {
+        if (value.id === id) {
+            return mapper(value);
+        } else {
+            return value;
+        }
+    });
 }
 
 export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
@@ -172,7 +190,6 @@ export interface GameTable {
     };
 
     animation?: TableAnimation;
-    logs: GameString[];
 }
 
 export function newGameTable(myUserId?: UserId): GameTable {
@@ -208,9 +225,7 @@ export function newGameTable(myUserId?: UserId): GameTable {
             train_position: 0,
             scenario_holders: {},
             flags: [],
-        },
-
-        logs: []
+        }
     };
 }
 
