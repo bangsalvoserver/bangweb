@@ -3,7 +3,7 @@ import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import CharacterView from "./CharacterView";
 import CountPocket from "./CountPocket";
-import { GameTableContext } from "./GameScene";
+import { GameTableContext, RequestContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { Player } from "./Model/GameTable";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
@@ -19,6 +19,7 @@ export interface PlayerProps {
 
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player }, ref) => {
     const table = useContext(GameTableContext);
+    const request = useContext(RequestContext);
     const positions = useMapRef<PocketType, PocketPosition>();
 
     useImperativeHandle(ref, () => positions.current);
@@ -31,8 +32,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player },
         classes.push('current-turn');
     }
 
-    const isOrigin = 'origin' in table.status.request && table.status.request.origin == player.id;
-    const isTarget = 'target' in table.status.request && table.status.request.target == player.id;
+    const isOrigin = 'origin' in request && request.origin == player.id;
+    const isTarget = 'target' in request && request.target == player.id;
     const isWinner = player.status.flags.includes('winner');
 
     let flipDuration: number | undefined;

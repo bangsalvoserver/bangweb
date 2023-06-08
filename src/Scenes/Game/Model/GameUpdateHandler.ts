@@ -1,5 +1,6 @@
-import { Dispatch } from "react";
-import { CardIdUpdate, DeckShuffledUpdate, GameString, GameUpdate, Milliseconds, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerIdUpdate } from "./GameUpdate";
+import { Dispatch, SetStateAction } from "react";
+import { CardIdUpdate, DeckShuffledUpdate, GameString, GameUpdate, Milliseconds, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerIdUpdate, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { RequestStatusUnion } from "./GameTable";
 
 export interface GameChannel {
   getNextUpdate: () => GameUpdate | undefined;
@@ -14,10 +15,12 @@ export class GameUpdateHandler {
     private updateOnEnd?: GameUpdate;
 
     private tableDispatch: Dispatch<GameUpdate>;
+    private setRequest: Dispatch<SetStateAction<RequestStatusUnion>>;
 
-    constructor(channel: GameChannel, tableDispatch: Dispatch<GameUpdate>) {
+    constructor(channel: GameChannel, tableDispatch: Dispatch<GameUpdate>, setRequest: Dispatch<SetStateAction<RequestStatusUnion>>) {
         this.channel = channel;
         this.tableDispatch = tableDispatch;
+        this.setRequest = setRequest;
     }
 
     tick(timeElapsed: Milliseconds) {
@@ -66,6 +69,9 @@ export class GameUpdateHandler {
         player_show_role: this.handlePlayerAnimation,
         player_hp: this.handlePlayerAnimation,
         move_scenario_deck: this.handleMoveScenarioDeck,
+        request_status: this.handleRequestStatus,
+        status_ready: this.handleRequestStatus,
+        status_clear: this.handleStatusClear
     };
 
     private handleGameError(message: GameString) {
@@ -102,5 +108,13 @@ export class GameUpdateHandler {
 
     private handleMoveScenarioDeck({ player, pocket, duration }: MoveScenarioDeckUpdate) {
         this.updateOnEnd = { updateType: 'move_scenario_deck_end', updateValue: { player, pocket, duration } };
+    }
+
+    private handleRequestStatus(status: RequestStatusArgs | StatusReadyArgs) {
+        this.setRequest(status);
+    }
+
+    private handleStatusClear() {
+        this.setRequest({});
     }
 }

@@ -138,6 +138,8 @@ export interface DeckUpdate {
     cards: CardId[];
 }
 
+export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | {};
+
 export type ScenarioHolders = Partial<Record<ScenarioDeckPocket, PlayerId>>;
 
 export type DeckShuffleAnimation = DeckShuffledUpdate & DeckUpdate;
@@ -167,7 +169,6 @@ export interface GameTable {
         flags: GameFlag[];
         scenario_holders: ScenarioHolders;
         current_turn?: PlayerId;
-        request: RequestStatusArgs | StatusReadyArgs | {};
     };
 
     animation?: TableAnimation;
@@ -207,7 +208,6 @@ export function newGameTable(myUserId?: UserId): GameTable {
             train_position: 0,
             scenario_holders: {},
             flags: [],
-            request: {},
         },
 
         logs: []

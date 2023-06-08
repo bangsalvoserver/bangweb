@@ -409,28 +409,6 @@ dispatchers.game_flags = (table: GameTable, flags: GameFlag[]): GameTable => {
     };
 };
 
-// Changes the status.request field
-dispatchers.request_status = dispatchers.status_ready = (table: GameTable, status: RequestStatusArgs | StatusReadyArgs): GameTable => {
-    return {
-        ...table,
-        status: {
-            ...table.status,
-            request: status
-        }
-    };
-};
-
-// Clears the status.request field
-dispatchers.status_clear = (table: GameTable): GameTable => {
-    return {
-        ...table,
-        status: {
-            ...table.status,
-            request: {}
-        }
-    };
-};
-
 export function gameTableDispatch(table: GameTable, {updateType, updateValue}: GameUpdate): GameTable {
     if (updateType in dispatchers) {
         return dispatchers[updateType](table, updateValue);

@@ -56,6 +56,11 @@
     transform: rotate(90deg);
 }
 
+.card-highlight {
+    -webkit-box-shadow: 0px 0px 3px 3px red; 
+    box-shadow: 0px 0px 3px 3px red;
+}
+
 .card-view-img {
     border-radius: var(--card-border) var(--card-border);
 }

@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useRef } from "react";
+import { createContext, useContext, useReducer, useRef, useState } from "react";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext } from "../Lobby/Lobby";
@@ -9,7 +9,7 @@ import GameLogView from "./GameLogView";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { CardTrackerImpl } from "./Animations/CardTracker";
-import { getCard, getPlayer, newGameTable } from "./Model/GameTable";
+import { RequestStatusUnion, getCard, getPlayer, newGameTable } from "./Model/GameTable";
 import { gameTableDispatch } from "./Model/GameTableDispatch";
 import { PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
@@ -25,13 +25,15 @@ export interface GameProps {
 }
 
 export const GameTableContext = createContext(newGameTable());
+export const RequestContext = createContext<RequestStatusUnion>({});
 
 export default function GameScene({ channel }: GameProps) {
   const { users, myUserId, lobbyOwner } = useContext(LobbyContext);
   
   const [table, tableDispatch] = useReducer(gameTableDispatch, myUserId, newGameTable);
+  const [request, setRequest] = useState<RequestStatusUnion>({});
 
-  const game = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch));
+  const game = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, setRequest));
   useInterval((timeElapsed: number) => game.current.tick(timeElapsed), 1000 / FRAMERATE, []);
 
   const pocketPositions = useMapRef<PocketType, PocketPosition>();
@@ -75,9 +77,7 @@ export default function GameScene({ channel }: GameProps) {
 
   const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} />;
 
-  const requestStatus = 'status_text' in table.status.request ?
-    <GameStringComponent message={table.status.request.status_text} />
-  : null;
+  const statusText = 'status_text' in request ? <GameStringComponent message={request.status_text} /> : null;
   
   const returnLobbyButton = myUserId == lobbyOwner && table.status.flags.includes('game_over') ?
     <button className="bg-green-500 hover:bg-green-600 font-bold py-1 px-4 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -95,24 +95,26 @@ export default function GameScene({ channel }: GameProps) {
 
   return (
     <GameTableContext.Provider value={table}>
-      <div className="game-scene-top">
-        <div className="game-scene">
-          <div className="m-auto align-middle">
-            { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }
+      <RequestContext.Provider value={request}>
+        <div className="game-scene-top">
+          <div className="game-scene">
+            <div className="m-auto align-middle">
+              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }
+            </div>
+            <div className="m-auto status-text">
+              { statusText } { returnLobbyButton }
+            </div>
+            <div className="m-auto">
+              { playerViews }
+            </div>
+            <div className="m-auto">
+              { buttonRow }
+            </div>
           </div>
-          <div className="m-auto status-text">
-            { requestStatus } { returnLobbyButton }
-          </div>
-          <div className="m-auto">
-            { playerViews }
-          </div>
-          <div className="m-auto">
-            { buttonRow }
-          </div>
+          <GameLogView />
+          <AnimationView getTracker={getTracker} />
         </div>
-        <GameLogView />
-        <AnimationView getTracker={getTracker} />
-      </div>
+      </RequestContext.Provider>
     </GameTableContext.Provider>
   );
 }

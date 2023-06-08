@@ -1,9 +1,10 @@
-import { CSSProperties, forwardRef, useImperativeHandle, useRef } from "react";
+import { CSSProperties, forwardRef, useContext, useImperativeHandle, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { Card, CardImage, getCardImage } from "./Model/GameTable";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
+import { RequestContext } from "./GameScene";
 
 export interface CardProps {
     card: Card;
@@ -15,6 +16,8 @@ export interface CardRef {
 }
 
 const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface }, ref) => {
+    const request = useContext(RequestContext);
+
     const cardRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -69,8 +72,13 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface }, ref) =>
         } else if ('short_pause' in card.animation) {
             classes.push('card-overlay')
         }
-    } else if (card.inactive) {
-        classes.push('card-horizontal');
+    } else {
+        if (card.inactive) {
+            classes.push('card-horizontal');
+        }
+        if ('highlight_cards' in request && request.highlight_cards.includes(card.id)) {
+            classes.push('card-highlight');
+        }
     }
 
     return (
