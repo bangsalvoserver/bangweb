@@ -6,9 +6,10 @@ import CardView from "../CardView";
 import { GameTableContext } from "../GameScene";
 import { getCard, newPocketRef } from "../Model/GameTable";
 import "./Style/DeckShuffleAnimation.css";
-import { CardTrackerContext } from "./CardTracker";
+import { CardTracker } from "./CardTracker";
 
 export interface DeckShuffleProps {
+    tracker: CardTracker;
     cards: CardId[];
     pocket: 'main_deck' | 'shop_deck';
     duration: Milliseconds;
@@ -16,9 +17,8 @@ export interface DeckShuffleProps {
 
 const MAX_CARDS = isMobileDevice() ? 10 : 30;
 
-export default function DeckShuffleAnimation({ pocket, cards, duration }: DeckShuffleProps) {
+export default function DeckShuffleAnimation({ tracker, pocket, cards, duration }: DeckShuffleProps) {
     const table = useContext(GameTableContext);
-    const tracker = useContext(CardTrackerContext);
     
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
 

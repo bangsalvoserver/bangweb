@@ -1,11 +1,8 @@
-import { MutableRefObject, useRef } from "react";
+import { MutableRefObject } from "react";
+import { useRefLazy } from "./LazyRef";
 
 export function useMapRef<Key, Value>() {
-    const ref = useRef() as MutableRefObject<Map<Key, Value>>;
-    if (!ref.current) {
-        ref.current = new Map<Key, Value>();
-    }
-    return ref;
+    return useRefLazy(() => new Map<Key, Value>());
 }
 
 export function setMapRef<Key, Value>(mapRef: MutableRefObject<Map<Key, Value>>, key: Key) {

@@ -6,17 +6,16 @@ import CardView from "../CardView";
 import { Card, PocketRef } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import "./Style/MoveCardAnimation.css";
-import { CardTrackerContext } from "./CardTracker";
+import { CardTracker } from "./CardTracker";
 
 export interface MoveCardProps {
+    tracker: CardTracker;
     card: Card;
     destPocket: PocketRef;
     duration: Milliseconds;
 }
 
-export default function MoveCardAnimation({ card, destPocket, duration }: MoveCardProps) {
-    const tracker = useContext(CardTrackerContext);
-
+export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
     const [, forceUpdate] = useReducer(a => !a, false);
     useInterval(forceUpdate, 0, []);
 

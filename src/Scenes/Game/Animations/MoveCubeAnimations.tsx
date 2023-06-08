@@ -4,18 +4,17 @@ import { useInterval } from "../../../Utils/UseInterval";
 import { Card } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import "./Style/MoveCubeAnimation.css";
-import { CardTrackerContext } from "./CardTracker";
+import { CardTracker } from "./CardTracker";
 
 export interface MoveCubeProps {
+    tracker: CardTracker;
     num_cubes: number;
     origin_card?: Card;
     target_card?: Card;
     duration: Milliseconds;
 }
 
-export default function MoveCubeAnimation ({ num_cubes, origin_card, target_card, duration }: MoveCubeProps) {
-    const tracker = useContext(CardTrackerContext);
-
+export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, target_card, duration }: MoveCubeProps) {
     const [, forceUpdate] = useReducer(a => !a, false);
     useInterval(forceUpdate, 0, []);
 

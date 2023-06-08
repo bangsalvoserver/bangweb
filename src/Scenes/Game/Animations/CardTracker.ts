@@ -3,20 +3,12 @@ import { PlayerId } from "../Model/GameUpdate";
 import { Card, PocketRef, ScenarioHolders } from "../Model/GameTable";
 import { Rect, getDivRect } from "../../../Utils/Rect";
 import { PocketType } from "../Model/CardEnums";
-import { createContext } from "react";
 
 export interface CardTracker {
     getPlayerPockets: (player: PlayerId) => PocketPositionMap | undefined;
     getTablePocket: (pocket: PocketRef) => PocketPosition | undefined;
     getCubesRect: (card: Card | undefined) => Rect | undefined;
 }
-
-export const CardTrackerContext = createContext<CardTracker>({
-  getPlayerPockets: (player: PlayerId) => undefined,
-  getTablePocket: (pocket: PocketRef) => undefined,
-  getCubesRect: (card: Card | undefined) => undefined
-});
-
 export class CardTrackerImpl implements CardTracker {
     private scenarioHolders: ScenarioHolders;
     private pocketPositions: Map<PocketType, PocketPosition>;
