@@ -14,7 +14,6 @@
     border-color: #2d1000ff;
     background-color: #ffffff1a;
     
-    margin: 0.5em;
     border-radius: 0.8em;
     padding: 0.5em;
 }
@@ -78,7 +77,7 @@
     top: 0;
     right: 0;
     width: max-content;
-    z-index: 2;
+    z-index: 9;
 }
 
 .player-icon {

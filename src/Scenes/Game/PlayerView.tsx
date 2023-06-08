@@ -92,10 +92,10 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player },
         return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle}>
             <div>
                 <div className='player-pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
+                    <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} />
                 </div>
                 <div className='player-pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} />
+                    <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
                 </div>
             </div>
             <div className='flex flex-col relative justify-end'>

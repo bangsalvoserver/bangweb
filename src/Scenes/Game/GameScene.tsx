@@ -1,14 +1,15 @@
 import { createContext, useContext, useReducer, useRef, useState } from "react";
+import { useRefLazy } from "../../Utils/LazyRef";
 import { setMapRef, useMapRef } from "../../Utils/MapRef";
 import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
+import { CardTrackerImpl } from "./Animations/CardTracker";
 import CardButtonView from "./CardButtonView";
 import CountPocket from "./CountPocket";
 import GameLogView from "./GameLogView";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
-import { CardTrackerImpl } from "./Animations/CardTracker";
 import { RequestStatusUnion, getCard, getPlayer, newGameTable } from "./Model/GameTable";
 import { gameTableReduce } from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
@@ -16,7 +17,7 @@ import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import "./Style/GameScene.css";
-import { useRefLazy } from "../../Utils/LazyRef";
+import "./Style/PlayerGrid.css";
 
 const FRAMERATE = 60;
 
@@ -85,11 +86,13 @@ export default function GameScene({ channel }: GameProps) {
       onClick={channel.handleReturnLobby}>Return to Lobby</button>
   : null;
 
-  const playerViews = table.alive_players.map(player_id => {
+  const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
     const user = users.find(user => user.id === player.userid);
 
-    return <PlayerView ref={setMapRef(playerPositions, player_id)} key={player_id} user={user} player={player} />;
+    return <div className="player-grid-item" player-index={index}>
+      <PlayerView ref={setMapRef(playerPositions, player_id)} key={player_id} user={user} player={player} />
+    </div>;
   });
 
   const buttonRow = table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} />);
@@ -99,13 +102,13 @@ export default function GameScene({ channel }: GameProps) {
       <RequestContext.Provider value={request}>
         <div className="game-scene-top">
           <div className="game-scene">
-            <div className="m-auto align-middle">
+            <div className="m-auto align-middle mt-2">
               { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }
             </div>
             <div className="m-auto status-text">
               { statusText } { returnLobbyButton }
             </div>
-            <div className="m-auto">
+            <div className="player-grid" num-players={table.alive_players.length}>
               { playerViews }
             </div>
             <div className="m-auto">

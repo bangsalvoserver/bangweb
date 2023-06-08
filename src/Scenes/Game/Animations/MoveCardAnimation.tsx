@@ -23,7 +23,7 @@ export default function MoveCardAnimation({ tracker, card, destPocket, duration 
     const endPocket = tracker.getTablePocket(destPocket);
     const endRect = endPocket?.getCardRect(card.id) ?? startRect;
 
-    useEffect(() => endPocket?.scrollToEnd());
+    // useEffect(() => endPocket?.scrollToEnd());
 
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);
