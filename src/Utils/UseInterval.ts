@@ -2,8 +2,8 @@ import { DependencyList } from "react";
 import { useEffect } from "react";
 
 export function useInterval(fn: (timeElapsed: number) => void, ms?: number, deps?: DependencyList) {
-    let startTime = Date.now();
     useEffect(() => {
+        let startTime = Date.now();
         const interval = setInterval(() => {
             let endTime = Date.now();
             fn(endTime - startTime);
