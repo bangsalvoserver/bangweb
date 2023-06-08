@@ -78,6 +78,8 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface }, ref) =>
         }
         if ('highlight_cards' in request && request.highlight_cards.includes(card.id)) {
             classes.push('card-highlight');
+        } else if ('origin_card' in request && request.origin_card == card.id) {
+            classes.push('card-origin');
         }
     }
 

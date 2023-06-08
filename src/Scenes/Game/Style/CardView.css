@@ -56,9 +56,14 @@
     transform: rotate(90deg);
 }
 
-.card-highlight {
+.card-highlight .card-view-img {
     -webkit-box-shadow: 0px 0px 3px 3px red; 
     box-shadow: 0px 0px 3px 3px red;
+}
+
+.card-origin .card-view-img {
+    -webkit-box-shadow: 0px 0px 3px 3px cyan; 
+    box-shadow: 0px 0px 3px 3px cyan;
 }
 
 .card-view-img {
