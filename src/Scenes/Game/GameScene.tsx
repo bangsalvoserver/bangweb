@@ -90,8 +90,8 @@ export default function GameScene({ channel }: GameProps) {
     const player = getPlayer(table, player_id);
     const user = users.find(user => user.id === player.userid);
 
-    return <div className="player-grid-item" player-index={index}>
-      <PlayerView ref={setMapRef(playerPositions, player_id)} key={player_id} user={user} player={player} />
+    return <div className="player-grid-item" key={player_id} player-index={index}>
+      <PlayerView ref={setMapRef(playerPositions, player_id)} user={user} player={player} />
     </div>;
   });
 
