@@ -7,3 +7,13 @@ export function useRefLazy<T>(init: () => T) {
     }
     return ref;
 }
+
+export function setMapRef<Key, Value>(mapRef: MutableRefObject<Map<Key, Value>>, key: Key) {
+    return (ref: Value | null) => {
+        if (ref) {
+            mapRef.current.set(key, ref);
+        } else {
+            mapRef.current.delete(key);
+        }
+    }
+}

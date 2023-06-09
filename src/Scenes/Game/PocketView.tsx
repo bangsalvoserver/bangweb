@@ -1,5 +1,5 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
-import { setMapRef, useMapRef } from "../../Utils/MapRef";
+import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSlot, { CARD_SLOT_ID } from "./CardSlot";
 import CardView, { CardRef } from "./CardView";
@@ -25,7 +25,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards }, ref) => {
     const table = useContext(GameTableContext);
     const pocketRef = useRef<HTMLDivElement>(null);
     const cardsEnd = useRef<HTMLDivElement>(null);
-    const cardRefs = useMapRef<CardId, CardRef>();
+    const cardRefs = useRefLazy(() => new Map<CardId, CardRef>());
 
     useImperativeHandle(ref, () => ({
         getPocketRect: () => pocketRef.current ? getDivRect(pocketRef.current) : undefined,

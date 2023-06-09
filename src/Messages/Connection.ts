@@ -5,7 +5,7 @@ export type MessageHandler = [string, (message: any) => void];
 export class Connection {
     private socket?: WebSocket;
     private messageHandlers = new Set<MessageHandler>();
-    private queuedMessages = [] as [string, any][];
+    private queuedMessages: [string, any][] = [];
 
     private locked = false;
 

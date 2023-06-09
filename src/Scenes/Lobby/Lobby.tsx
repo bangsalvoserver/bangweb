@@ -30,12 +30,12 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
   const connection = useContext(ConnectionContext);
 
   const [isGameStarted, setIsGameStarted] = useState(false);
-  const gameUpdates = useRef([] as GameUpdate[]);
+  const gameUpdates = useRef<GameUpdate[]>([]);
 
-  const [users, setUsers] = useState([] as UserValue[]);
+  const [users, setUsers] = useState<UserValue[]>([]);
   const [lobbyOwner, setLobbyOwner] = useState<UserId>();
 
-  const [chatMessages, setChatMessages] = useState([] as ChatMessage[]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   useHandlers(connection, [],
     ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {

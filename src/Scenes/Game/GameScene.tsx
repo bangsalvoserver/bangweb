@@ -1,6 +1,5 @@
 import { createContext, useContext, useReducer, useRef, useState } from "react";
-import { useRefLazy } from "../../Utils/LazyRef";
-import { setMapRef, useMapRef } from "../../Utils/MapRef";
+import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
@@ -38,8 +37,8 @@ export default function GameScene({ channel }: GameProps) {
   const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, setGameLogs, setRequest));
   useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
 
-  const pocketPositions = useMapRef<PocketType, PocketPosition>();
-  const playerPositions = useMapRef<PlayerId, PocketPositionMap>();
+  const pocketPositions = useRefLazy(() => new Map<PocketType, PocketPosition>());
+  const playerPositions = useRefLazy(() => new Map<PlayerId, PocketPositionMap>());
   const cubesRef = useRef<HTMLDivElement>(null);
   
   const getTracker = () => new CardTrackerImpl(table.status.scenario_holders, pocketPositions.current, playerPositions.current, cubesRef.current);

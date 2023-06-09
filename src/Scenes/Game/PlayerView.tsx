@@ -1,5 +1,5 @@
 import { CSSProperties, forwardRef, useContext, useImperativeHandle } from "react";
-import { setMapRef, useMapRef } from "../../Utils/MapRef";
+import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import CharacterView from "./CharacterView";
 import CountPocket from "./CountPocket";
@@ -20,7 +20,7 @@ export interface PlayerProps {
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player }, ref) => {
     const table = useContext(GameTableContext);
     const request = useContext(RequestContext);
-    const positions = useMapRef<PocketType, PocketPosition>();
+    const positions = useRefLazy(() => new Map<PocketType, PocketPosition>());
 
     useImperativeHandle(ref, () => positions.current);
 

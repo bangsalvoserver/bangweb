@@ -6,7 +6,7 @@ import { ConnectionContext } from "../../App";
 
 function WaitingArea() {
   const connection = useContext(ConnectionContext);
-  const [lobbies, setLobbies] = useState([] as LobbyValue[]);
+  const [lobbies, setLobbies] = useState<LobbyValue[]>([]);
   const [lobbyName, setLobbyName] = useState(localStorage.getItem('lobbyName'));
 
   useEffect(() => {
