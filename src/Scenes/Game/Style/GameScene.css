@@ -16,7 +16,15 @@
 }
 
 .status-text {
+    margin: auto;
     height: 6em;
+}
+
+.main-deck-row {
+    margin: auto;
+    vertical-align: middle;
+    margin-top: 2em;
+    margin-bottom: 4em;
 }
 
 .table-cubes {

@@ -16,7 +16,8 @@ import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import "./Style/GameScene.css";
-import "./Style/PlayerGrid.css";
+import "./Style/PlayerGridMobile.css";
+import "./Style/PlayerGridDesktop.css";
 
 const FRAMERATE = 60;
 
@@ -79,8 +80,10 @@ export default function GameScene({ channel }: GameProps) {
   const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} />;
 
   const statusText = 'status_text' in request ? <GameStringComponent message={request.status_text} /> : null;
+
+  const isGameOver = table.status.flags.includes('game_over');
   
-  const returnLobbyButton = myUserId == lobbyOwner && table.status.flags.includes('game_over') ?
+  const returnLobbyButton = isGameOver && myUserId == lobbyOwner ?
     <button className="bg-green-500 hover:bg-green-600 font-bold py-1 px-4 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
       onClick={channel.handleReturnLobby}>Return to Lobby</button>
   : null;
@@ -89,7 +92,7 @@ export default function GameScene({ channel }: GameProps) {
     const player = getPlayer(table, player_id);
     const user = users.find(user => user.id === player.userid);
 
-    return <div className="player-grid-item" key={player_id} player-index={index}>
+    return <div key={player_id} className="player-grid-item" player-index={index}>
       <PlayerView ref={setMapRef(playerPositions, player_id)} user={user} player={player} />
     </div>;
   });
@@ -101,17 +104,14 @@ export default function GameScene({ channel }: GameProps) {
       <RequestContext.Provider value={request}>
         <div className="game-scene-top">
           <div className="game-scene">
-            <div className="m-auto align-middle mt-2">
-              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }
+            <div className="status-text">
+              { isGameOver ? returnLobbyButton : <>{ statusText }{ buttonRow }</> }
             </div>
-            <div className="m-auto status-text">
-              { statusText } { returnLobbyButton }
+            <div className="main-deck-row">
+              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }
             </div>
             <div className="player-grid" num-players={table.alive_players.length}>
               { playerViews }
-            </div>
-            <div className="m-auto">
-              { buttonRow }
             </div>
           </div>
           <GameLogView logs={gameLogs} />

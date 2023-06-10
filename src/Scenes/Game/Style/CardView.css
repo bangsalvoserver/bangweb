@@ -4,8 +4,6 @@
     --card-border-unscaled: 18px;
     --one-hp-size-unscaled: 75px;
     --player-gold-bottom-unscaled: 333px;
-
-    --card-scale: 0.24;
     
     --card-width: calc(var(--card-scale) * var(--card-width-unscaled));
     --card-height: calc(var(--card-scale) * var(--card-height-unscaled));
