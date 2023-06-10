@@ -3,7 +3,7 @@ import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import CharacterView from "./CharacterView";
 import CountPocket from "./CountPocket";
-import { GameTableContext, RequestContext } from "./GameScene";
+import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { Player } from "./Model/GameTable";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
@@ -19,7 +19,7 @@ export interface PlayerProps {
 
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player }, ref) => {
     const table = useContext(GameTableContext);
-    const request = useContext(RequestContext);
+    const request = useContext(TargetSelectorContext);
     const positions = useRefLazy(() => new Map<PocketType, PocketPosition>());
 
     useImperativeHandle(ref, () => positions.current);

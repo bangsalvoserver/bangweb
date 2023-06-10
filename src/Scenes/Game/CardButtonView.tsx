@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { LocalizedCardName } from "./GameStringComponent";
 import { Card } from "./Model/GameTable";
-import { RequestContext } from "./GameScene";
+import { TargetSelectorContext } from "./GameScene";
 import { anyOf } from "../../Utils/ArrayUtils";
 import { CardNode } from "./Model/GameUpdate";
 
@@ -10,7 +10,7 @@ export interface CardButtonProps {
 }
 
 export default function CardButtonView({ card }: CardButtonProps) {
-    const request = useContext(RequestContext);
+    const { request } = useContext(TargetSelectorContext);
 
     let playableCards: CardNode[] = [];
     let classes = ['card-button-view'];

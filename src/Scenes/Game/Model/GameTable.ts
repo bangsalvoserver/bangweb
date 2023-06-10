@@ -156,8 +156,6 @@ export interface DeckUpdate {
     cards: CardId[];
 }
 
-export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | {};
-
 export type ScenarioHolders = Partial<Record<ScenarioDeckPocket, PlayerId>>;
 
 export type DeckShuffleAnimation = DeckShuffledUpdate & DeckUpdate;

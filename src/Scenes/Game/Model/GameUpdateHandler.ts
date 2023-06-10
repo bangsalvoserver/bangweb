@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { CardIdUpdate, DeckShuffledUpdate, GameString, GameUpdate, Milliseconds, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerIdUpdate, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
-import { RequestStatusUnion } from "./GameTable";
+import { TargetSelectorUpdate } from "./TargetSelectorReducer";
 
 export interface GameChannel {
   getNextUpdate: () => GameUpdate | undefined;
@@ -15,19 +15,19 @@ export class GameUpdateHandler {
     private updateOnEnd?: GameUpdate;
 
     private tableDispatch: Dispatch<GameUpdate>;
+    private selectorDispatch: Dispatch<TargetSelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
-    private setRequest: Dispatch<SetStateAction<RequestStatusUnion>>;
 
     constructor(
         channel: GameChannel,
         tableDispatch: Dispatch<GameUpdate>,
-        setGameLogs: Dispatch<SetStateAction<GameString[]>>,
-        setRequest: Dispatch<SetStateAction<RequestStatusUnion>>
+        selectorDispatch: Dispatch<TargetSelectorUpdate>,
+        setGameLogs: Dispatch<SetStateAction<GameString[]>>
     ) {
         this.channel = channel;
         this.tableDispatch = tableDispatch;
+        this.selectorDispatch = selectorDispatch;
         this.setGameLogs = setGameLogs;
-        this.setRequest = setRequest;
     }
 
     tick(timeElapsed: Milliseconds) {
@@ -123,10 +123,10 @@ export class GameUpdateHandler {
     }
 
     private handleRequestStatus(status: RequestStatusArgs | StatusReadyArgs) {
-        this.setRequest(status);
+        this.selectorDispatch({setRequest: status});
     }
 
     private handleStatusClear() {
-        this.setRequest({});
+        this.selectorDispatch({setRequest: {}});
     }
 }

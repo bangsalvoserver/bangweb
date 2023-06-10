@@ -4,7 +4,7 @@ import CardSignView from "./CardSignView";
 import { Card, CardImage, getCardImage } from "./Model/GameTable";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
-import { RequestContext } from "./GameScene";
+import { TargetSelectorContext } from "./GameScene";
 
 export interface CardProps {
     card: Card;
@@ -16,7 +16,7 @@ export interface CardRef {
 }
 
 const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface }, ref) => {
-    const request = useContext(RequestContext);
+    const { request } = useContext(TargetSelectorContext);
 
     const cardRef = useRef<HTMLDivElement>(null);
 

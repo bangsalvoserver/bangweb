@@ -9,7 +9,7 @@ import CountPocket from "./CountPocket";
 import GameLogView from "./GameLogView";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
-import { RequestStatusUnion, getCard, getPlayer, newGameTable } from "./Model/GameTable";
+import { getCard, getPlayer, newGameTable } from "./Model/GameTable";
 import { gameTableReduce } from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
@@ -19,6 +19,8 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridMobile.css";
 import "./Style/PlayerGridDesktop.css";
 import getLabel from "../../Locale/GetLabel";
+import { TargetSelectorState, newTargetSelector } from "./Model/TargetSelector";
+import { targetSelectorReduce } from "./Model/TargetSelectorReducer";
 
 const FRAMERATE = 60;
 
@@ -27,16 +29,16 @@ export interface GameProps {
 }
 
 export const GameTableContext = createContext(newGameTable());
-export const RequestContext = createContext<RequestStatusUnion>({});
+export const TargetSelectorContext = createContext<TargetSelectorState>(newTargetSelector());
 
 export default function GameScene({ channel }: GameProps) {
   const { users, myUserId, lobbyOwner } = useContext(LobbyContext);
   
   const [table, tableDispatch] = useReducer(gameTableReduce, myUserId, newGameTable);
+  const [selector, selectorDispatch] = useReducer(targetSelectorReduce, null, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
-  const [request, setRequest] = useState<RequestStatusUnion>({});
 
-  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, setGameLogs, setRequest));
+  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs));
   useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
 
   const pocketPositions = useRefLazy(() => new Map<PocketType, PocketPosition>());
@@ -80,7 +82,7 @@ export default function GameScene({ channel }: GameProps) {
 
   const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} />;
 
-  const statusText = 'status_text' in request ? <GameStringComponent message={request.status_text} /> : null;
+  const statusText = 'status_text' in selector.request ? <GameStringComponent message={selector.request.status_text} /> : null;
 
   const isGameOver = table.status.flags.includes('game_over');
   
@@ -108,7 +110,7 @@ export default function GameScene({ channel }: GameProps) {
 
   return (
     <GameTableContext.Provider value={table}>
-      <RequestContext.Provider value={request}>
+      <TargetSelectorContext.Provider value={selector}>
         <div className="game-scene-top">
           <div className="game-scene">
             <div className="status-text">
@@ -124,7 +126,7 @@ export default function GameScene({ channel }: GameProps) {
           {/* <GameLogView logs={gameLogs} /> */}
           <AnimationView getTracker={getTracker} />
         </div>
-      </RequestContext.Provider>
+      </TargetSelectorContext.Provider>
     </GameTableContext.Provider>
   );
 }
