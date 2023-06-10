@@ -40,5 +40,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         UNKNOWN_PLAYER: "(Unknown player)",
         USER_DISCONNECTED: "(Disconnected)",
         LOBBY_CHAT_SEND: "Send",
+        GAME_OVER_STATUS: "Game Over",
+        RETURN_LOBBY: "Return to Lobby",
     },
 };

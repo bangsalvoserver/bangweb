@@ -16,6 +16,8 @@
     
     border-radius: 0.8em;
     padding: 0.5em;
+    margin: 0.5em;
+    white-space: nowrap;
 }
 
 .player-view-self {
@@ -35,7 +37,6 @@
     height: var(--player-row-height);
 
     text-align: center;
-    white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
 }

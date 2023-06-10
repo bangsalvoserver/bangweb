@@ -1,7 +1,7 @@
 .lobby-chat {
     position: fixed;
     right: 1em;
-    bottom: 1em;
+    top: 80px;
     width: 300px;
 
     display: flex;

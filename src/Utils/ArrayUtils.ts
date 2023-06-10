@@ -27,3 +27,21 @@ export function rotate<T>(arr: T[], index: number): T[] {
     if (index <= 0) return arr;
     return arr.slice(index, arr.length).concat(arr.slice(0, index));
 }
+
+export function anyOf<T>(arr: T[], predicate: (value: T) => boolean): boolean {
+    for (let i=0; i<arr.length; ++i) {
+        if (predicate(arr[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function noneOf<T>(arr: T[], predicate: (value: T) => boolean): boolean {
+    for (let i=0; i<arr.length; ++i) {
+        if (predicate(arr[i])) {
+            return false;
+        }
+    }
+    return true;
+}

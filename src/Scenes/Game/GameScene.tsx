@@ -18,6 +18,7 @@ import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridMobile.css";
 import "./Style/PlayerGridDesktop.css";
+import getLabel from "../../Locale/GetLabel";
 
 const FRAMERATE = 60;
 
@@ -83,10 +84,16 @@ export default function GameScene({ channel }: GameProps) {
 
   const isGameOver = table.status.flags.includes('game_over');
   
-  const returnLobbyButton = isGameOver && myUserId == lobbyOwner ?
-    <button className="bg-green-500 hover:bg-green-600 font-bold py-1 px-4 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-      onClick={channel.handleReturnLobby}>Return to Lobby</button>
-  : null;
+  const gameOverStatus = () => {
+    if (myUserId == lobbyOwner) {
+      return (
+        <button className="bg-green-500 hover:bg-green-600 font-bold py-1 px-4 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          onClick={channel.handleReturnLobby}>{getLabel('ui', 'RETURN_LOBBY')}</button>
+      );
+    } {
+      return <>{getLabel('ui', 'GAME_OVER_STATUS')}</>;
+    }
+  };
 
   const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
@@ -105,7 +112,7 @@ export default function GameScene({ channel }: GameProps) {
         <div className="game-scene-top">
           <div className="game-scene">
             <div className="status-text">
-              { isGameOver ? returnLobbyButton : <>{ statusText }{ buttonRow }</> }
+              { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }</> }
             </div>
             <div className="main-deck-row">
               { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }
@@ -114,7 +121,7 @@ export default function GameScene({ channel }: GameProps) {
               { playerViews }
             </div>
           </div>
-          <GameLogView logs={gameLogs} />
+          {/* <GameLogView logs={gameLogs} /> */}
           <AnimationView getTracker={getTracker} />
         </div>
       </RequestContext.Provider>
