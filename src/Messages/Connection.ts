@@ -1,11 +1,26 @@
 import { DependencyList, useEffect } from "react";
+import { ClientMessage } from "./ClientMessage";
+import { ServerMessage } from "./ServerMessage";
 
-export type MessageHandler = [string, (message: any) => void];
+export type MessageHandler = {
+    [K in ServerMessage as keyof K]?: (message: K[keyof K]) => void;
+};
 
-export class Connection {
+export interface Connection {
+    isConnected: () => boolean;
+    isLocked: () => boolean;
+    setLocked: (locked: boolean) => void;
+    connect: () => void;
+    disconnect: () => void;
+    addHandler: (handler: MessageHandler) => void;
+    removeHandler: (handler: MessageHandler) => void;
+    sendMessage: (message: ClientMessage) => void;
+}
+
+export class SocketConnection implements Connection {
     private socket?: WebSocket;
     private messageHandlers = new Set<MessageHandler>();
-    private queuedMessages: [string, any][] = [];
+    private queuedMessages: ServerMessage[] = [];
 
     private locked = false;
 
@@ -27,22 +42,20 @@ export class Connection {
     connect() {
         this.socket = new WebSocket(process.env.REACT_APP_BANG_SERVER_URL || '');
         this.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            const messageType = Object.keys(data)[0];
-            this.receiveMessage(messageType, data[messageType]);
+            this.receiveMessage(JSON.parse(event.data));
         };
         this.socket.onopen = () => {
             console.log('WebSocket connection established');
-            this.receiveMessage('connect', {});
+            this.receiveMessage({ connected: {}});
         };
         this.socket.onclose = () => {
             console.log('WebSocket connection closed');
-            this.receiveMessage('disconnect', {});
+            this.receiveMessage({ disconnected: {}});
             delete this.socket;
         };
         this.socket.onerror = () => {
             console.log('WebSocket connection error');
-            this.receiveMessage('disconnect', {});
+            this.receiveMessage({ disconnected: {}});
             delete this.socket;
         };
     }
@@ -59,42 +72,46 @@ export class Connection {
         this.messageHandlers.delete(handler);
     }
 
-    sendMessage(messageType: string, message: any = {}) {
+    sendMessage(message: ClientMessage) {
         if (this.socket?.readyState == WebSocket.OPEN) {
-            this.socket.send(JSON.stringify({[messageType]: message}));
+            this.socket.send(JSON.stringify(message));
         }
     }
 
-    private receiveMessage(messageType: string, message: any) {
-        this.queuedMessages.push([messageType, message]);
+    private receiveMessage(message: ServerMessage) {
+        this.queuedMessages.push(message);
         if (!this.locked) {
             this.processMessages();
         }
     }
 
-    private processMessage(messageType: string, message: any) {
-        this.messageHandlers.forEach(([type, handler]) => {
-            if (type === messageType) {
-                handler(message);
+    private processMessage(message: ServerMessage) {
+        const messageType = Object.keys(message)[0];
+        const messageValue = Object.values(message)[0];
+        
+        this.messageHandlers.forEach(handler => {
+            if (messageType in handler) {
+                const fn = handler[messageType as keyof typeof handler] as (message: typeof messageValue) => void;
+                fn(messageValue);
             }
         });
     }
 
     private processMessages() {
         this.locked = false;
-        this.queuedMessages.forEach(([messageType, message]) => {
-            this.processMessage(messageType, message);
+        this.queuedMessages.forEach(message => {
+            this.processMessage(message);
         });
         this.queuedMessages = [];
     }
 }
 
-export function useHandlers(connection: Connection | null, deps: DependencyList, ...handlers: MessageHandler[]) {
+export function useHandler(connection: Connection, handler: MessageHandler, deps?: DependencyList) {
     useEffect(() => {
-        handlers.forEach(handler => connection?.addHandler(handler));
-        connection?.setLocked(false);
-        return () => handlers.forEach(handler => connection?.removeHandler(handler));
-    }, [connection, ...deps]);
+        connection.addHandler(handler);
+        connection.setLocked(false);
+        return () => connection.removeHandler(handler);
+    }, [connection, ...(deps ?? [])]);
 }
 
 

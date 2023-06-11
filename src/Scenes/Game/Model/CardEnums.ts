@@ -1,3 +1,4 @@
+import { KeysOfUnion } from "../../../Utils/UnionUtils";
 import { CardId, PlayerId } from "./GameUpdate";
 
 export type CardTarget =
@@ -11,8 +12,6 @@ export type CardTarget =
     { cards_other_players: CardId[] } |
     { select_cubes: CardId[] } |
     { self_cubes: {} };
-
-type KeysOfUnion<T> = T extends T ? keyof T: never;
 
 export type TargetType = KeysOfUnion<CardTarget>;
 

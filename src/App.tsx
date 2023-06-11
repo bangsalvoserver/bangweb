@@ -1,22 +1,29 @@
+import { createContext, useEffect, useRef, useState } from 'react';
 import './App.css';
-import { useEffect, useState, useRef, createContext } from 'react';
-import { Connection, useHandlers } from './Messages/Connection';
 import Header from './Components/Header';
 import UserMenu from './Components/UserMenu';
-import { serializeImage } from './Utils/ImageSerial';
-import { ClientAccepted, LobbyEntered, LobbyRemoveUser, UserId } from './Messages/ServerMessage';
+import { Connection, SocketConnection, useHandler } from './Messages/Connection';
+import { UserId } from './Messages/ServerMessage';
 import CurrentScene, { CurrentSceneUnion } from './Scenes/CurrentScene';
 import { GameOptions } from './Scenes/Game/Model/GameUpdate';
+import { serializeImage } from './Utils/ImageSerial';
+import { useRefLazy } from './Utils/LazyRef';
 
-export const ConnectionContext = createContext<Connection | null>(null);
+export const ConnectionContext = createContext<Connection>({
+  isConnected: () => false,
+  isLocked: () => true,
+  setLocked: () => {},
+  connect: () => {},
+  disconnect: () => {},
+  addHandler: () => {},
+  removeHandler: () => {},
+  sendMessage: () => {},
+});
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const connection = useRef<Connection>();
-  if (!connection.current) {
-    connection.current = new Connection();
-  }
+  const connection = useRefLazy<Connection>(() => new SocketConnection());
 
   const [scene, setScene] = useState<CurrentSceneUnion>({ connect: {} });
 
@@ -26,42 +33,48 @@ function App() {
   }
 
   useEffect(() => {
-    if (myUserId && !connection.current?.isConnected()) {
-      connection.current?.connect();
+    if (myUserId && !connection.current.isConnected()) {
+      connection.current.connect();
     }
   }, []);
 
-  useHandlers(connection.current, [],
-    ['connect', async () => {
-      connection.current?.sendMessage('connect', {
+  useHandler(connection.current, {
+
+    connected: async () => {
+      connection.current.sendMessage({connect: {
         user: {
-          name: localStorage.getItem('username'),
-          profile_image: await serializeImage(localStorage.getItem('propic'), 50)
+          name: localStorage.getItem('username') ?? '',
+          profile_image: await serializeImage(localStorage.getItem('propic'), 50) ?? undefined
         },
         user_id: myUserId.current,
         commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
-      });
-    }],
-    ['client_accepted', ({ user_id }: ClientAccepted) => {
+      }});
+    },
+
+    client_accepted: ({ user_id }) => {
       myUserId.current = user_id;
       localStorage.setItem('user_id', user_id.toString());
-      connection.current?.setLocked(true);
+      connection.current.setLocked(true);
       setScene({ waiting_area: {} });
-    }],
-    ['disconnect', () => {
-      setScene({ connect: {} })
-    }],
-    ['lobby_error', (message: string) => {
+    },
+
+    disconnected: () => {
+      setScene({ connect: {}});
+    },
+
+    lobby_error: (message) => {
       console.error("Lobby error: " + message);
-    }],
-    ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
+    },
+
+    lobby_remove_user: ({ user_id }) => {
       if (user_id === myUserId.current) {
         localStorage.removeItem('lobby_id');
-        connection.current?.setLocked(true);
+        connection.current.setLocked(true);
         setScene({ waiting_area: {} });
       }
-    }]
-  );
+    }
+
+  });
 
   const editLobby = (lobbyName: string, gameOptions: GameOptions) => {
     setScene(scene => {
@@ -73,27 +86,30 @@ function App() {
     });
   };
 
-  useHandlers(connection.current, [scene],
-    ['lobby_entered', ({ lobby_id, name, options }: LobbyEntered) => {
+  useHandler(connection.current, {
+
+    lobby_entered: ({ lobby_id, name, options }) => {
       if (!('lobby' in scene) || (scene.lobby.myLobbyId != lobby_id)) {
         localStorage.setItem('lobby_id', lobby_id.toString());
-        connection.current?.setLocked(true);
+        connection.current.setLocked(true);
         setScene({ lobby: { myLobbyId: lobby_id, myUserId: myUserId.current, lobbyName: name, gameOptions: options, editLobby }});
       }
-    }],
-    ['lobby_edited', ({ name, options }: LobbyEntered) => {
+    },
+
+    lobby_edited: ({ name, options }) => {
       editLobby(name, options);
-    }],
-  );
+    }
+  
+  }, [scene]);
 
   const handleEditPropic = async (propic: string | null) => {
-    connection.current?.sendMessage('user_edit', {
-      name: localStorage.getItem('username'),
-      profile_image: await serializeImage(propic, 50)
-    });
+    connection.current.sendMessage({user_edit: {
+      name: localStorage.getItem('username') ?? '',
+      profile_image: await serializeImage(propic, 50) ?? undefined
+    }});
   }
 
-  const handleLeaveLobby = () => connection.current?.sendMessage('lobby_leave');
+  const handleLeaveLobby = () => connection.current.sendMessage({ lobby_leave: {}});
 
   return (
   <div className="background">

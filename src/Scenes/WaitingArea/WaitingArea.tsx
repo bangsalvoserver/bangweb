@@ -1,5 +1,5 @@
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
-import { useHandlers } from "../../Messages/Connection";
+import { useHandler } from "../../Messages/Connection";
 import { LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import { ConnectionContext } from "../../App";
@@ -18,43 +18,46 @@ function WaitingArea() {
   }, [lobbyName]);
 
   useEffect(() => {
-    connection?.sendMessage('lobby_list');
+    connection.sendMessage({ lobby_list: {}});
 
     let cachedLobbyId = localStorage.getItem('lobby_id');
     if (cachedLobbyId) {
-      connection?.sendMessage('lobby_join', { lobby_id: parseInt(cachedLobbyId) });
+      connection.sendMessage({ lobby_join: { lobby_id: parseInt(cachedLobbyId) }});
     }
   }, []);
 
-  useHandlers(connection, [],
-    ['lobby_update', ({ lobby_id, name, num_players, state }: LobbyUpdate) => {
+  useHandler(connection, {
+
+    lobby_update: ({ lobby_id, name, num_players, state }) => {
       setLobbies(lobbies =>
         lobbies
           .filter((lobby) => lobby.id !== lobby_id)
           .concat({ id: lobby_id, name: name, num_players: num_players, state: state })
       );
-    }],
-    ['lobby_removed', ({ lobby_id }: LobbyRemoved) => {
+    },
+
+    lobby_removed: ({ lobby_id }) => {
       setLobbies(lobbies =>
         lobbies.filter((lobby) => lobby.id !== lobby_id)
       );
-    }]
-  );
+    }
+
+  });
 
   const handleDisconnect = () => {
-    connection?.disconnect();
+    connection.disconnect();
   };
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
     if (lobbyName) {
       const gameOptions = localStorage.getItem('gameOptions');
-      connection?.sendMessage('lobby_make', { name: lobbyName, options: gameOptions ? JSON.parse(gameOptions) : undefined });
+      connection.sendMessage({ lobby_make: { name: lobbyName, options: gameOptions ? JSON.parse(gameOptions) : undefined }});
     }
   };
 
   const handleClickJoin = (lobby_id: LobbyId) => {
-    connection?.sendMessage('lobby_join', { lobby_id });
+    connection.sendMessage({ lobby_join: { lobby_id }});
   };
 
   return (

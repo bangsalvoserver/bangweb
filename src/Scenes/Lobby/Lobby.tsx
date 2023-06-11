@@ -1,6 +1,6 @@
 import { createContext, useContext, useRef, useState } from 'react';
 import { ConnectionContext } from '../../App';
-import { useHandlers } from '../../Messages/Connection';
+import { useHandler } from '../../Messages/Connection';
 import { deserializeImage } from '../../Utils/ImageSerial';
 import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
 import GameScene from '../Game/GameScene';
@@ -8,6 +8,7 @@ import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
 import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
+import { GameAction } from '../Game/Model/GameAction';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -37,8 +38,9 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
-  useHandlers(connection, [],
-    ['lobby_add_user', ({ user_id, user: { name, profile_image } }: LobbyAddUser) => {
+  useHandler(connection, {
+
+    lobby_add_user: ({ user_id, user: { name, profile_image } }) => {
       setUsers(users => {
         let copy = [...users];
         const newUser = { id: user_id, name, propic: deserializeImage(profile_image) };
@@ -50,52 +52,59 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
         }
         return copy;
       });
-    }],
-    ['lobby_remove_user', ({ user_id }: LobbyRemoveUser) => {
+    },
+
+    lobby_remove_user: ({ user_id }) => {
       setUsers(users =>
         users.filter(user => user.id !== user_id)
       );
-    }],
-    ['lobby_owner', ({ user_id }: LobbyOwner) => {
+    },
+
+    lobby_owner: ({ user_id }) => {
       setLobbyOwner(user_id);
-    }],
-    ['lobby_chat', (message: ChatMessage) => {
+    },
+
+    lobby_chat: (message) => {
       setChatMessages(messages => messages.concat(message));
-    }],
-    ['lobby_entered', ({ lobby_id }: LobbyEntered) => {
+    },
+
+    lobby_entered: ({ lobby_id }) => {
       if (lobby_id == myLobbyId) {
         gameUpdates.current = [];
         setIsGameStarted(false);
         setUsers([]);
       }
-    }],
-    ['game_started', () => {
+    },
+    
+    game_started: () => {
       setIsGameStarted(true);
-    }],
-    ['game_update', (update: any) => {
+    },
+
+    game_update: (update) => {
       gameUpdates.current.push(update);
-    }]
-  );
+    }
+  
+  });
 
   const getGameScene = () => {
     return (
       <GameScene channel={{
         getNextUpdate: () => gameUpdates.current.shift(),
-        sendGameAction: () => (messageType: string, messageValue: any = {}) => {
-          connection?.sendMessage('game_action', { [messageType]: messageValue });
+        sendGameAction: () => (action: GameAction) => {
+          connection.sendMessage({game_action: action});
         },
-        handleReturnLobby: () => connection?.sendMessage('lobby_return')
+        handleReturnLobby: () => connection.sendMessage({ lobby_return: {}})
       }} />
     );
   };
 
   const getLobbyScene = () => {
-    const handleStartGame = () => connection?.sendMessage('game_start');
+    const handleStartGame = () => connection.sendMessage({game_start: {}});
 
     const handleEditGameOptions = (gameOptions: GameOptions) => {
       localStorage.setItem('lobbyName', lobbyName);
       localStorage.setItem('gameOptions', JSON.stringify(gameOptions));
-      connection?.sendMessage('lobby_edit', { name: lobbyName, options: gameOptions });
+      connection.sendMessage({ lobby_edit: { name: lobbyName, options: gameOptions }});
       editLobby(lobbyName, gameOptions);
     };
 
@@ -121,7 +130,7 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
   }
 
   const handleSendMessage = (message: string) => {
-    connection?.sendMessage('lobby_chat', { message: message });
+    connection.sendMessage({ lobby_chat: { message: message }});
   }
 
   return (

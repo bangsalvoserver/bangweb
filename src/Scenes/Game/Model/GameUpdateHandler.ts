@@ -2,10 +2,11 @@ import { Dispatch, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
 import { GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { TargetSelectorUpdate } from "./TargetSelectorReducer";
+import { GameAction } from "./GameAction";
 
 export interface GameChannel {
   getNextUpdate: () => GameUpdate | undefined;
-  sendGameAction: (messageType: string, messageValue?: any) => void;
+  sendGameAction: (action: GameAction) => void;
   handleReturnLobby: () => void;
 };
 
@@ -83,7 +84,7 @@ export class GameUpdateHandler {
         
         request_status (status) { this.selectorDispatch({ setRequest: status }); },
         status_ready (status) { this.selectorDispatch({ setRequest: status }); },
-        status_clear (status) { this.selectorDispatch({ setRequest: {}}); },
+        status_clear () { this.selectorDispatch({ setRequest: {}}); },
         
     });
 

@@ -15,8 +15,8 @@ export default function ConnectScene() {
 
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
-    if (!connection?.isConnected() && username) {
-      connection?.connect();
+    if (!connection.isConnected() && username) {
+      connection.connect();
     }
   };
 
