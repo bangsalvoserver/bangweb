@@ -86,13 +86,11 @@ export class SocketConnection implements Connection {
     }
 
     private processMessage(message: ServerMessage) {
-        const messageType = Object.keys(message)[0];
-        const messageValue = Object.values(message)[0];
-        
+        const [messageType, messageValue] = Object.entries(message)[0];
         this.messageHandlers.forEach(handler => {
             if (messageType in handler) {
-                const fn = handler[messageType as keyof typeof handler] as (message: typeof messageValue) => void;
-                fn(messageValue);
+                const fn = handler[messageType as keyof typeof handler];
+                (fn as (message: unknown) => void)(messageValue);
             }
         });
     }
