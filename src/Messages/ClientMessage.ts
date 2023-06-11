@@ -1,11 +1,5 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
-import { ImagePixels } from "../Utils/ImageSerial";
-import { LobbyId, LobbyInfo, UserId } from "./ServerMessage";
-
-export interface UserInfo {
-    name: string;
-    profile_image?: ImagePixels;
-}
+import { LobbyId, LobbyInfo, UserId, UserInfo } from "./ServerMessage";
 
 export interface ClientConnect {
     user: UserInfo;

@@ -44,7 +44,7 @@ function App() {
       connection.current.sendMessage({connect: {
         user: {
           name: localStorage.getItem('username') ?? '',
-          profile_image: await serializeImage(localStorage.getItem('propic'), 50) ?? undefined
+          profile_image: await serializeImage(localStorage.getItem('propic'), 50)
         },
         user_id: myUserId.current,
         commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
@@ -58,13 +58,9 @@ function App() {
       setScene({ waiting_area: {} });
     },
 
-    disconnected: () => {
-      setScene({ connect: {}});
-    },
+    disconnected: () => setScene({ connect: {}}),
 
-    lobby_error: (message) => {
-      console.error("Lobby error: " + message);
-    },
+    lobby_error: message => console.error("Lobby error: " + message), // TODO
 
     lobby_remove_user: ({ user_id }) => {
       if (user_id === myUserId.current) {
@@ -96,16 +92,14 @@ function App() {
       }
     },
 
-    lobby_edited: ({ name, options }) => {
-      editLobby(name, options);
-    }
+    lobby_edited: ({ name, options }) => editLobby(name, options),
   
   }, [scene]);
 
   const handleEditPropic = async (propic: string | null) => {
     connection.current.sendMessage({user_edit: {
       name: localStorage.getItem('username') ?? '',
-      profile_image: await serializeImage(propic, 50) ?? undefined
+      profile_image: await serializeImage(propic, 50)
     }});
   }
 

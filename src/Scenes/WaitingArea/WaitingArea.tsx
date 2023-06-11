@@ -1,8 +1,8 @@
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
-import { useHandler } from "../../Messages/Connection";
-import { LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
-import LobbyElement, { LobbyValue } from "./LobbyElement";
 import { ConnectionContext } from "../../App";
+import { useHandler } from "../../Messages/Connection";
+import { LobbyId } from "../../Messages/ServerMessage";
+import LobbyElement, { LobbyValue } from "./LobbyElement";
 
 function WaitingArea() {
   const connection = useContext(ConnectionContext);
@@ -29,18 +29,20 @@ function WaitingArea() {
   useHandler(connection, {
 
     lobby_update: ({ lobby_id, name, num_players, state }) => {
-      setLobbies(lobbies =>
-        lobbies
-          .filter((lobby) => lobby.id !== lobby_id)
-          .concat({ id: lobby_id, name: name, num_players: num_players, state: state })
-      );
+      setLobbies(lobbies => {
+        let copy = [...lobbies];
+        const newLobby = { id: lobby_id, name, num_players, state };
+        let index = copy.findIndex(lobby => lobby.id === lobby_id);
+        if (index >= 0) {
+          copy[index] = newLobby;
+        } else {
+          copy.push(newLobby);
+        }
+        return copy;
+      });
     },
 
-    lobby_removed: ({ lobby_id }) => {
-      setLobbies(lobbies =>
-        lobbies.filter((lobby) => lobby.id !== lobby_id)
-      );
-    }
+    lobby_removed: ({ lobby_id }) => setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id)),
 
   });
 

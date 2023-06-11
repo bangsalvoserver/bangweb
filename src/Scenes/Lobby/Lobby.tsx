@@ -1,14 +1,14 @@
 import { createContext, useContext, useRef, useState } from 'react';
 import { ConnectionContext } from '../../App';
 import { useHandler } from '../../Messages/Connection';
+import { ChatMessage, LobbyId, UserId } from '../../Messages/ServerMessage';
 import { deserializeImage } from '../../Utils/ImageSerial';
-import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
 import GameScene from '../Game/GameScene';
+import { GameAction } from '../Game/Model/GameAction';
+import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
-import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
-import { GameAction } from '../Game/Model/GameAction';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -54,19 +54,11 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
       });
     },
 
-    lobby_remove_user: ({ user_id }) => {
-      setUsers(users =>
-        users.filter(user => user.id !== user_id)
-      );
-    },
+    lobby_remove_user: ({ user_id }) => setUsers(users => users.filter(user => user.id !== user_id)),
 
-    lobby_owner: ({ user_id }) => {
-      setLobbyOwner(user_id);
-    },
+    lobby_owner: ({ user_id }) => setLobbyOwner(user_id),
 
-    lobby_chat: (message) => {
-      setChatMessages(messages => messages.concat(message));
-    },
+    lobby_chat: message => setChatMessages(messages => messages.concat(message)),
 
     lobby_entered: ({ lobby_id }) => {
       if (lobby_id == myLobbyId) {
@@ -76,13 +68,8 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
       }
     },
     
-    game_started: () => {
-      setIsGameStarted(true);
-    },
-
-    game_update: (update) => {
-      gameUpdates.current.push(update);
-    }
+    game_started: () => setIsGameStarted(true),
+    game_update: (update) => gameUpdates.current.push(update),
   
   });
 
