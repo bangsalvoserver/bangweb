@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
+import { GameAction } from "./GameAction";
 import { GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { TargetSelectorUpdate } from "./TargetSelectorReducer";
-import { GameAction } from "./GameAction";
 
 export interface GameChannel {
   getNextUpdate: () => GameUpdate | undefined;
@@ -68,10 +68,10 @@ export class GameUpdateHandler {
 
         play_sound (sound) { /* TODO */ },
 
-        move_card ({card, player, pocket}) { this.updateOnEnd = { move_card_end: { card, player, pocket }}; },
-        move_cubes ({ num_cubes, target_card }) { this.updateOnEnd = { move_cubes_end: { num_cubes, target_card } }; },
-        deck_shuffled({ pocket }) { this.updateOnEnd = { deck_shuffled_end: { pocket } }; },
-        move_scenario_deck ({ player, pocket }) { this.updateOnEnd = { move_scenario_deck_end: { player, pocket } }; },
+        move_card (update) { this.updateOnEnd = { move_card_end: update }; },
+        move_cubes (update) { this.updateOnEnd = { move_cubes_end: update }; },
+        deck_shuffled(update) { this.updateOnEnd = { deck_shuffled_end: update }; },
+        move_scenario_deck (update) { this.updateOnEnd = { move_scenario_deck_end: update }; },
 
         show_card ({ card }) { this.updateOnEnd = { card_animation_end: card }},
         hide_card ({ card }) { this.updateOnEnd = { card_animation_end: card }},

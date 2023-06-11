@@ -1,7 +1,7 @@
 import { UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, ScenarioDeckPocket, TablePocketType } from "./CardEnums";
-import { AnimationUpdate, CardId, DeckShuffledAnimationUpdate, MoveCardAnimationUpdate, MoveCubesAnimationUpdate, MoveScenarioDeckAnimationUpdate, PlayerId } from "./GameUpdate";
+import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerId } from "./GameUpdate";
 
 export interface Id {
     id: number
@@ -47,21 +47,12 @@ export interface CardImage {
     sign?: CardSign;
 }
 
-export interface CardFlipping extends AnimationUpdate {
-    cardImage?: CardImage;
-}
-
-export type CardTurning = AnimationUpdate;
-export type ShortPause = AnimationUpdate;
-export type CardFlash = AnimationUpdate;
-export type CardMove = AnimationUpdate;
-
 export type CardAnimation =
-    {flipping: CardFlipping} |
-    {turning: CardTurning} |
-    {flash: CardFlash} |
-    {move_card: CardMove} |
-    {short_pause: {}};
+    { flipping: { cardImage?: CardImage } & Duration } |
+    { turning: Duration } |
+    { flash: Duration } |
+    { move_card: Duration } |
+    { short_pause: {}};
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
@@ -104,17 +95,9 @@ export type PlayerPockets = Record<PlayerPocketType, CardId[]>;
 
 export type TablePockets = Record<TablePocketType, CardId[]>;
 
-export interface PlayerFlippingRole extends AnimationUpdate {
-    role: PlayerRole;
-}
-
-export interface PlayerHp extends AnimationUpdate {
-    hp: number;
-}
-
 export type PlayerAnimation =
-    { flipping_role: PlayerFlippingRole } |
-    { player_hp: PlayerHp };
+    { flipping_role: { role: PlayerRole } & Duration } |
+    { player_hp: { hp: number} & Duration };
 
 export interface Player extends Id {
     userid: UserId;
@@ -152,20 +135,17 @@ export function newPlayer(id: PlayerId, userid: UserId): Player {
     };
 }
 
-export interface DeckUpdate {
+export interface DeckCards {
     cards: CardId[];
 }
 
 export type ScenarioHolders = Partial<Record<ScenarioDeckPocket, PlayerId>>;
 
-export type DeckShuffleAnimation = DeckShuffledAnimationUpdate & DeckUpdate;
-export type MoveScenarioDeckAnimation = MoveScenarioDeckAnimationUpdate & DeckUpdate;
-
 export type TableAnimation =
-    {move_card: MoveCardAnimationUpdate} |
-    {move_cubes: MoveCubesAnimationUpdate} |
-    {deck_shuffle: DeckShuffleAnimation} |
-    {move_scenario_deck : MoveScenarioDeckAnimation};
+    { move_card: MoveCardUpdate & Duration } |
+    { move_cubes: MoveCubesUpdate & Duration } |
+    { deck_shuffle: DeckShuffledUpdate & DeckCards & Duration } |
+    { move_scenario_deck : MoveScenarioDeckUpdate & DeckCards & Duration };
 
 export interface GameTable {
     myUserId?: UserId;

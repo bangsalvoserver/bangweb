@@ -6,7 +6,7 @@ export type CardId = number;
 export type PlayerId = number;
 export type Milliseconds = number;
 
-export interface AnimationUpdate {
+export interface Duration {
     duration: Milliseconds;
 }
 
@@ -39,8 +39,6 @@ export interface MoveCardUpdate {
     pocket: PocketType;
 }
 
-export type MoveCardAnimationUpdate = MoveCardUpdate & AnimationUpdate;
-
 export interface AddCubesUpdate {
     num_cubes: number;
     target_card?: CardId;
@@ -52,16 +50,12 @@ export interface MoveCubesUpdate {
     target_card?: CardId;
 }
 
-export type MoveCubesAnimationUpdate = MoveCubesUpdate & AnimationUpdate;
-
 export interface MoveScenarioDeckUpdate {
     player: PlayerId;
     pocket: ScenarioDeckPocket;
 }
 
-export type MoveScenarioDeckAnimationUpdate = MoveScenarioDeckUpdate & AnimationUpdate;
-
-export interface MoveTrainUpdate extends AnimationUpdate {
+export interface MoveTrainUpdate {
     position: number;
 }
 
@@ -69,27 +63,25 @@ export interface DeckShuffledUpdate {
     pocket: 'main_deck' | 'shop_deck';
 }
 
-export type DeckShuffledAnimationUpdate = DeckShuffledUpdate & AnimationUpdate;
-
-export interface ShowCardUpdate extends AnimationUpdate {
+export interface ShowCardUpdate {
     card: CardId;
     info: CardData;
 }
 
-export interface HideCardUpdate extends AnimationUpdate {
+export interface HideCardUpdate {
     card: CardId;
 }
 
-export interface TapCardUpdate extends AnimationUpdate {
+export interface TapCardUpdate {
     card: CardId;
     inactive: boolean;
 }
 
-export interface FlashCardUpdate extends AnimationUpdate {
+export interface FlashCardUpdate {
     card: CardId;
 }
 
-export interface ShortPauseUpdate extends AnimationUpdate {
+export interface ShortPauseUpdate {
     card?: CardId;
 }
 
@@ -100,11 +92,11 @@ export interface PlayerAddUpdate {
     }[];
 }
 
-export interface PlayerOrderUpdate extends AnimationUpdate {
+export interface PlayerOrderUpdate {
     players: PlayerId[];
 }
 
-export interface PlayerHpUpdate extends AnimationUpdate {
+export interface PlayerHpUpdate {
     player: PlayerId;
     hp: number;
 }
@@ -114,7 +106,7 @@ export interface PlayerGoldUpdate {
     gold: number;
 }
 
-export interface PlayerShowRoleUpdate extends AnimationUpdate {
+export interface PlayerShowRoleUpdate {
     player: PlayerId;
     role: PlayerRole;
 }
@@ -169,29 +161,29 @@ export type GameUpdate =
     { add_cards: AddCardsUpdate } |
     { remove_cards: RemoveCardsUpdate } |
     { player_add: PlayerAddUpdate } |
-    { player_order: PlayerOrderUpdate } |
-    { player_hp: PlayerHpUpdate } |
+    { player_order: PlayerOrderUpdate & Duration } |
+    { player_hp: PlayerHpUpdate & Duration } |
     { player_gold: PlayerGoldUpdate } |
-    { player_show_role: PlayerShowRoleUpdate } |
+    { player_show_role: PlayerShowRoleUpdate & Duration } |
     { player_animation_end: PlayerId } |
     { player_status: PlayerStatusUpdate } |
     { switch_turn: PlayerId } |
-    { move_card: MoveCardAnimationUpdate } |
+    { move_card: MoveCardUpdate & Duration } |
     { move_card_end: MoveCardUpdate } |
-    { deck_shuffled: DeckShuffledAnimationUpdate } |
+    { deck_shuffled: DeckShuffledUpdate & Duration } |
     { deck_shuffled_end: DeckShuffledUpdate } |
-    { show_card: ShowCardUpdate } |
-    { hide_card: HideCardUpdate } |
-    { tap_card: TapCardUpdate } |
-    { flash_card: FlashCardUpdate } |
-    { short_pause: ShortPauseUpdate } |
+    { show_card: ShowCardUpdate & Duration } |
+    { hide_card: HideCardUpdate & Duration } |
+    { tap_card: TapCardUpdate & Duration } |
+    { flash_card: FlashCardUpdate & Duration } |
+    { short_pause: ShortPauseUpdate & Duration } |
     { card_animation_end: CardId } |
     { add_cubes: AddCubesUpdate } |
-    { move_cubes: MoveCubesAnimationUpdate } |
+    { move_cubes: MoveCubesUpdate & Duration } |
     { move_cubes_end: MoveCubesUpdate } |
-    { move_scenario_deck: MoveScenarioDeckAnimationUpdate } |
+    { move_scenario_deck: MoveScenarioDeckUpdate & Duration } |
     { move_scenario_deck_end: MoveScenarioDeckUpdate } |
-    { move_train: MoveTrainUpdate } |
+    { move_train: MoveTrainUpdate & Duration } |
     { game_flags: GameFlag[] } |
     { request_status: RequestStatusArgs } | 
     { status_ready: StatusReadyArgs } |
