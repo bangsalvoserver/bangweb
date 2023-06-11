@@ -19,7 +19,7 @@ export interface PlayerProps {
 
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player }, ref) => {
     const table = useContext(GameTableContext);
-    const request = useContext(TargetSelectorContext);
+    const { request } = useContext(TargetSelectorContext);
     const positions = useRefLazy(() => new Map<PocketType, PocketPosition>());
 
     useImperativeHandle(ref, () => positions.current);

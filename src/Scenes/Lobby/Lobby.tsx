@@ -73,9 +73,7 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
       setIsGameStarted(true);
     }],
     ['game_update', (update: any) => {
-      const updateType = Object.keys(update)[0];
-      const updateValue = update[updateType];
-      gameUpdates.current.push({ updateType, updateValue });
+      gameUpdates.current.push(update);
     }]
   );
 

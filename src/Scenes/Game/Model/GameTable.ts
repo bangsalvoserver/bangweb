@@ -1,7 +1,7 @@
 import { UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, ScenarioDeckPocket, TablePocketType } from "./CardEnums";
-import { AnimationUpdate, CardId, DeckShuffledUpdate, GameString, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { AnimationUpdate, CardId, DeckShuffledAnimationUpdate, MoveCardAnimationUpdate, MoveCubesAnimationUpdate, MoveScenarioDeckAnimationUpdate, PlayerId } from "./GameUpdate";
 
 export interface Id {
     id: number
@@ -158,12 +158,12 @@ export interface DeckUpdate {
 
 export type ScenarioHolders = Partial<Record<ScenarioDeckPocket, PlayerId>>;
 
-export type DeckShuffleAnimation = DeckShuffledUpdate & DeckUpdate;
-export type MoveScenarioDeckAnimation = MoveScenarioDeckUpdate & DeckUpdate;
+export type DeckShuffleAnimation = DeckShuffledAnimationUpdate & DeckUpdate;
+export type MoveScenarioDeckAnimation = MoveScenarioDeckAnimationUpdate & DeckUpdate;
 
 export type TableAnimation =
-    {move_card: MoveCardUpdate} |
-    {move_cubes: MoveCubesUpdate} |
+    {move_card: MoveCardAnimationUpdate} |
+    {move_cubes: MoveCubesAnimationUpdate} |
     {deck_shuffle: DeckShuffleAnimation} |
     {move_scenario_deck : MoveScenarioDeckAnimation};
 

@@ -1,6 +1,6 @@
 import { UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, ExpansionType, PlayerFlag, PlayerRole, PocketType, ScenarioDeckPocket } from "./CardEnums";
+import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, ScenarioDeckPocket } from "./CardEnums";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -33,35 +33,43 @@ export interface RemoveCardsUpdate {
     cards: CardId[];
 }
 
-export interface MoveCardUpdate extends AnimationUpdate {
+export interface MoveCardUpdate {
     card: CardId;
     player?: PlayerId;
     pocket: PocketType;
 }
+
+export type MoveCardAnimationUpdate = MoveCardUpdate & AnimationUpdate;
 
 export interface AddCubesUpdate {
     num_cubes: number;
     target_card?: CardId;
 }
 
-export interface MoveCubesUpdate extends AnimationUpdate {
+export interface MoveCubesUpdate {
     num_cubes: number;
     origin_card?: CardId;
     target_card?: CardId;
 }
 
-export interface MoveScenarioDeckUpdate extends AnimationUpdate {
+export type MoveCubesAnimationUpdate = MoveCubesUpdate & AnimationUpdate;
+
+export interface MoveScenarioDeckUpdate {
     player: PlayerId;
     pocket: ScenarioDeckPocket;
 }
+
+export type MoveScenarioDeckAnimationUpdate = MoveScenarioDeckUpdate & AnimationUpdate;
 
 export interface MoveTrainUpdate extends AnimationUpdate {
     position: number;
 }
 
-export interface DeckShuffledUpdate extends AnimationUpdate {
+export interface DeckShuffledUpdate {
     pocket: 'main_deck' | 'shop_deck';
 }
+
+export type DeckShuffledAnimationUpdate = DeckShuffledUpdate & AnimationUpdate;
 
 export interface ShowCardUpdate extends AnimationUpdate {
     card: CardId;
@@ -139,14 +147,6 @@ export interface StatusReadyArgs {
     play_cards: CardNode[];
 }
 
-export interface CardIdUpdate {
-    card?: CardId;
-}
-
-export interface PlayerIdUpdate {
-    player?: CardId;
-}
-
 export interface GameOptions {
     expansions: ExpansionType[];
     enable_ghost_cards: boolean;
@@ -161,7 +161,38 @@ export interface GameOptions {
     tumbleweed_timer: Milliseconds;
 }
 
-export interface GameUpdate {
-    updateType: string,
-    updateValue?: any
-}
+export type GameUpdate =
+    { game_error: GameString } |
+    { game_log: GameString } |
+    { game_prompt: GameString } |
+    { play_sound: string } |
+    { add_cards: AddCardsUpdate } |
+    { remove_cards: RemoveCardsUpdate } |
+    { player_add: PlayerAddUpdate } |
+    { player_order: PlayerOrderUpdate } |
+    { player_hp: PlayerHpUpdate } |
+    { player_gold: PlayerGoldUpdate } |
+    { player_show_role: PlayerShowRoleUpdate } |
+    { player_animation_end: PlayerId } |
+    { player_status: PlayerStatusUpdate } |
+    { switch_turn: PlayerId } |
+    { move_card: MoveCardAnimationUpdate } |
+    { move_card_end: MoveCardUpdate } |
+    { deck_shuffled: DeckShuffledAnimationUpdate } |
+    { deck_shuffled_end: DeckShuffledUpdate } |
+    { show_card: ShowCardUpdate } |
+    { hide_card: HideCardUpdate } |
+    { tap_card: TapCardUpdate } |
+    { flash_card: FlashCardUpdate } |
+    { short_pause: ShortPauseUpdate } |
+    { card_animation_end: CardId } |
+    { add_cubes: AddCubesUpdate } |
+    { move_cubes: MoveCubesAnimationUpdate } |
+    { move_cubes_end: MoveCubesUpdate } |
+    { move_scenario_deck: MoveScenarioDeckAnimationUpdate } |
+    { move_scenario_deck_end: MoveScenarioDeckUpdate } |
+    { move_train: MoveTrainUpdate } |
+    { game_flags: GameFlag[] } |
+    { request_status: RequestStatusArgs } | 
+    { status_ready: StatusReadyArgs } |
+    { status_clear: {}};

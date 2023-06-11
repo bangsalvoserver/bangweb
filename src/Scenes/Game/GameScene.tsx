@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useRef, useState } from "react";
+import getLabel from "../../Locale/GetLabel";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext } from "../Lobby/Lobby";
@@ -6,21 +7,19 @@ import AnimationView from "./Animations/AnimationView";
 import { CardTrackerImpl } from "./Animations/CardTracker";
 import CardButtonView from "./CardButtonView";
 import CountPocket from "./CountPocket";
-import GameLogView from "./GameLogView";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { getCard, getPlayer, newGameTable } from "./Model/GameTable";
-import { gameTableReduce } from "./Model/GameTableReducer";
+import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
+import { TargetSelectorState, newTargetSelector } from "./Model/TargetSelector";
+import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import "./Style/GameScene.css";
-import "./Style/PlayerGridMobile.css";
 import "./Style/PlayerGridDesktop.css";
-import getLabel from "../../Locale/GetLabel";
-import { TargetSelectorState, newTargetSelector } from "./Model/TargetSelector";
-import { targetSelectorReduce } from "./Model/TargetSelectorReducer";
+import "./Style/PlayerGridMobile.css";
 
 const FRAMERATE = 60;
 
@@ -34,8 +33,8 @@ export const TargetSelectorContext = createContext<TargetSelectorState>(newTarge
 export default function GameScene({ channel }: GameProps) {
   const { users, myUserId, lobbyOwner } = useContext(LobbyContext);
   
-  const [table, tableDispatch] = useReducer(gameTableReduce, myUserId, newGameTable);
-  const [selector, selectorDispatch] = useReducer(targetSelectorReduce, null, newTargetSelector);
+  const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
+  const [selector, selectorDispatch] = useReducer(targetSelectorReducer, null, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
 
   const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs));

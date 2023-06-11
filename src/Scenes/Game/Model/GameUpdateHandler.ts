@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
-import { CardIdUpdate, DeckShuffledUpdate, GameString, GameUpdate, Milliseconds, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerIdUpdate, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { createUnionFunction } from "../../../Utils/UnionUtils";
+import { GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { TargetSelectorUpdate } from "./TargetSelectorReducer";
 
 export interface GameChannel {
@@ -36,13 +37,10 @@ export class GameUpdateHandler {
         } else {
             let update: GameUpdate | undefined;
             while (!this.updateTimer && (update = this.channel.getNextUpdate())) {
-                const {updateType, updateValue} = update;
-
-                if (updateType in this.updateHandlers) {
-                    this.updateHandlers[updateType].call(this, updateValue);
-                }
-                this.tableDispatch({ updateType, updateValue });
+                this.updateHandler(update);
+                this.tableDispatch(update);
                 
+                const updateValue = Object.values(update)[0];
                 if (typeof(updateValue) == 'object' && 'duration' in updateValue) {
                     this.updateTimer = updateValue.duration as Milliseconds;
                     if (this.updateTimer <= 0) {
@@ -61,72 +59,32 @@ export class GameUpdateHandler {
         this.updateTimer = undefined;
     }
 
-    private updateHandlers: Record<string, (update: any) => void> = {
-        game_error: this.handleGameError,
-        game_log: this.handleGameLog,
-        game_prompt: this.handleGamePrompt,
-        play_sound: this.handlePlaySound,
-        move_card: this.handleMoveCard,
-        move_cubes: this.handleMoveCubes,
-        deck_shuffled: this.handleDeckShuffled,
-        show_card: this.handleCardAnimation,
-        hide_card: this.handleCardAnimation,
-        tap_card: this.handleCardAnimation,
-        flash_card: this.handleCardAnimation,
-        short_pause: this.handleCardAnimation,
-        player_show_role: this.handlePlayerAnimation,
-        player_hp: this.handlePlayerAnimation,
-        move_scenario_deck: this.handleMoveScenarioDeck,
-        request_status: this.handleRequestStatus,
-        status_ready: this.handleRequestStatus,
-        status_clear: this.handleStatusClear
-    };
+    private updateHandler = createUnionFunction<GameUpdateHandler, GameUpdate>({
+        
+        game_error (message) { /* TODO */ },
+        game_prompt (message) { /* TODO */ },
+        game_log (message) { this.setGameLogs(logs => logs.concat(message)); },
 
-    private handleGameError(message: GameString) {
-        // TODO
-    }
+        play_sound (sound) { /* TODO */ },
 
-    private handleGameLog(message: GameString) {
-        this.setGameLogs(logs => logs.concat(message));
-    }
+        move_card ({card, player, pocket}) { this.updateOnEnd = { move_card_end: { card, player, pocket }}; },
+        move_cubes ({ num_cubes, target_card }) { this.updateOnEnd = { move_cubes_end: { num_cubes, target_card } }; },
+        deck_shuffled({ pocket }) { this.updateOnEnd = { deck_shuffled_end: { pocket } }; },
+        move_scenario_deck ({ player, pocket }) { this.updateOnEnd = { move_scenario_deck_end: { player, pocket } }; },
 
-    private handleGamePrompt(message: GameString) {
-        // TODO
-    }
+        show_card ({ card }) { this.updateOnEnd = { card_animation_end: card }},
+        hide_card ({ card }) { this.updateOnEnd = { card_animation_end: card }},
+        tap_card ({ card }) { this.updateOnEnd = { card_animation_end: card }},
+        flash_card ({ card }) { this.updateOnEnd = { card_animation_end: card }},
+        short_pause ({ card }) { if (card) this.updateOnEnd = { card_animation_end: card }},
 
-    private handlePlaySound(sound: string) {
-        // TODO
-    }
+        player_show_role ({ player }) { this.updateOnEnd = { player_animation_end: player }},
+        player_hp ({ player }) { this.updateOnEnd = { player_animation_end: player }},
+        
+        request_status (status) { this.selectorDispatch({ setRequest: status }); },
+        status_ready (status) { this.selectorDispatch({ setRequest: status }); },
+        status_clear (status) { this.selectorDispatch({ setRequest: {}}); },
+        
+    });
 
-    private handleMoveCard({ card, player, pocket }: MoveCardUpdate) {
-        this.updateOnEnd = { updateType: 'move_card_end', updateValue: { card, player, pocket } };
-    }
-
-    private handleMoveCubes({ num_cubes, target_card }: MoveCubesUpdate) {
-        this.updateOnEnd = { updateType: 'move_cubes_end', updateValue: { num_cubes, target_card } };
-    }
-
-    private handleDeckShuffled({ pocket }: DeckShuffledUpdate) {
-        this.updateOnEnd = { updateType: 'deck_shuffled_end', updateValue: { pocket } };
-    }
-
-    private handleCardAnimation({ card }: CardIdUpdate) {
-        this.updateOnEnd = { updateType: 'card_animation_end', updateValue: { card } };
-    }
-
-    private handlePlayerAnimation({ player }: PlayerIdUpdate) {
-        this.updateOnEnd = { updateType: 'player_animation_end', updateValue: { player } };
-    }
-
-    private handleMoveScenarioDeck({ player, pocket, duration }: MoveScenarioDeckUpdate) {
-        this.updateOnEnd = { updateType: 'move_scenario_deck_end', updateValue: { player, pocket, duration } };
-    }
-
-    private handleRequestStatus(status: RequestStatusArgs | StatusReadyArgs) {
-        this.selectorDispatch({setRequest: status});
-    }
-
-    private handleStatusClear() {
-        this.selectorDispatch({setRequest: {}});
-    }
 }
