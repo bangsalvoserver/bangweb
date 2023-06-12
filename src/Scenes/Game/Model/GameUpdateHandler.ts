@@ -42,6 +42,11 @@ export class GameUpdateHandler {
         }
     }
 
+    pendingUpdates() {
+        return this.animation !== undefined
+            || this.channel.pendingUpdates();
+    }
+
     private setAnimation(update: Duration, endUpdate?: GameUpdate) {
         if (update.duration <= 0) {
             if (endUpdate) {

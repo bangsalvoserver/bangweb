@@ -77,6 +77,7 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
     return (
       <GameScene channel={{
         getNextUpdate: () => gameUpdates.current.shift(),
+        pendingUpdates: () => gameUpdates.current.length != 0,
         sendGameAction: (action: GameAction) => {
           connection.sendMessage({ game_action: action });
         },

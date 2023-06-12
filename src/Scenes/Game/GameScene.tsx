@@ -13,7 +13,7 @@ import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTabl
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetSelector, newTargetSelector } from "./Model/TargetSelector";
+import { TargetMode, TargetSelector, newTargetSelector } from "./Model/TargetSelector";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
@@ -45,11 +45,20 @@ export default function GameScene({ channel }: GameProps) {
   const pocketPositions = useRefLazy(() => new Map<PocketType, PocketPosition>());
   const playerPositions = useRefLazy(() => new Map<PlayerId, PocketPositionMap>());
   const cubesRef = useRef<HTMLDivElement>(null);
+
+  const isGameOver = table.status.flags.includes('game_over');
   
   const getTracker = () => new CardTrackerImpl(table.status.scenario_holders, pocketPositions.current, playerPositions.current, cubesRef.current);
 
-  const onClickCard = (card: Card) => handleClickCard(table, selector, selectorDispatch, card);
-  const onClickPlayer = (player: Player) => handleClickPlayer(table, selector, selectorDispatch, player);
+  const isClickAllowed = () => {
+    return !isGameOver
+      && table.self_player !== undefined
+      && !handler.current.pendingUpdates()
+      && selector.mode != TargetMode.finish;
+  };
+
+  const onClickCard = (card: Card) => { if (isClickAllowed()) handleClickCard(table, selector, selectorDispatch, card) };
+  const onClickPlayer = (player: Player) => { if (isClickAllowed()) handleClickPlayer(table, selector, selectorDispatch, player) };
 
   useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [table, selector]);
   useEffect(() => sendGameAction(channel, selector), [selector]);
@@ -90,8 +99,6 @@ export default function GameScene({ channel }: GameProps) {
   const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;
 
   const statusText = 'status_text' in selector.request ? <GameStringComponent message={selector.request.status_text} /> : null;
-
-  const isGameOver = table.status.flags.includes('game_over');
   
   const gameOverStatus = () => {
     if (myUserId == lobbyOwner) {

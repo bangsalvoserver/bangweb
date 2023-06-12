@@ -4,6 +4,7 @@ import { TargetMode, TargetSelector } from "./TargetSelector";
 
 export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
+    pendingUpdates: () => boolean;
     sendGameAction: (action: GameAction) => void;
     handleReturnLobby: () => void;
 }
