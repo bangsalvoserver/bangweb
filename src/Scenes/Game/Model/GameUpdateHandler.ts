@@ -1,20 +1,14 @@
 import { Dispatch, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
-import { GameAction } from "./GameAction";
+import { GameChannel } from "./GameChannel";
 import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
-import { TargetSelectorUpdate } from "./TargetSelectorReducer";
-
-export interface GameChannel {
-  getNextUpdate: () => GameUpdate | undefined;
-  sendGameAction: (action: GameAction) => void;
-  handleReturnLobby: () => void;
-};
+import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export class GameUpdateHandler {
     
     private channel: GameChannel;
     private tableDispatch: Dispatch<GameUpdate>;
-    private selectorDispatch: Dispatch<TargetSelectorUpdate>;
+    private selectorDispatch: Dispatch<SelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
 
     private animation?: {
@@ -25,7 +19,7 @@ export class GameUpdateHandler {
     constructor(
         channel: GameChannel,
         tableDispatch: Dispatch<GameUpdate>,
-        selectorDispatch: Dispatch<TargetSelectorUpdate>,
+        selectorDispatch: Dispatch<SelectorUpdate>,
         setGameLogs: Dispatch<SetStateAction<GameString[]>>
     ) {
         this.channel = channel;
@@ -69,7 +63,7 @@ export class GameUpdateHandler {
         },
 
         game_prompt (message) {
-            // TODO
+            this.selectorDispatch({ setPrompt: { yesno: message }});
         },
         
         play_sound (sound) {

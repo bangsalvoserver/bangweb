@@ -5,7 +5,7 @@ import CharacterView from "./CharacterView";
 import CountPocket from "./CountPocket";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
-import { Player } from "./Model/GameTable";
+import { Card, Player } from "./Model/GameTable";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import RoleView from "./RoleView";
 import ScenarioDeckView from "./ScenarioDeckView";
@@ -14,10 +14,12 @@ import "./Style/PlayerView.css";
 
 export interface PlayerProps {
     user?: UserValue,
-    player: Player
+    player: Player,
+    onClickCard: (card: Card) => void;
+    onClickPlayer: () => void;
 }
 
-const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player }, ref) => {
+const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
     const table = useContext(GameTableContext);
     const { request } = useContext(TargetSelectorContext);
     const positions = useRefLazy(() => new Map<PocketType, PocketPosition>());
@@ -63,7 +65,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player },
         <CharacterView ref={ref => {
             setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
             setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
-        }} player={player} />
+        }} player={player} onClickCard={onClickCard} />
     );
 
     const roleView = (
@@ -73,8 +75,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player },
     );
 
     const scenarioDecks = (<>
-        <ScenarioDeckView ref={setMapRef(positions, 'scenario_deck')} pocket='scenario_deck' player={player.id} />
-        <ScenarioDeckView ref={setMapRef(positions, 'wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
+        <ScenarioDeckView ref={setMapRef(positions, 'scenario_deck')} pocket='scenario_deck' player={player.id} onClickCard={onClickCard} />
+        <ScenarioDeckView ref={setMapRef(positions, 'wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} onClickCard={onClickCard} />
     </>);
 
     const playerIcons = (
@@ -89,13 +91,13 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player },
         </div>);
 
     if (player.id == table.self_player) {
-        return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle}>
+        return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={onClickPlayer}>
             <div>
                 <div className='player-pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} />
+                    <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 </div>
                 <div className='player-pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
+                    <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
                 </div>
             </div>
             <div className='flex flex-col relative justify-end'>
@@ -110,12 +112,12 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player },
             </div>
         </div>
     } else {
-        return <div className={classes.join(' ')} style={playerStyle}>
+        return <div className={classes.join(' ')} style={playerStyle} onClick={onClickPlayer}>
             <div className='flex flex-row flex-grow'>
                 <div className='flex-grow text-center'>
                     <div className='player-top-row'>
                         { characterView } { roleView }
-                        <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} />
+                        <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} onClickCard={onClickCard} />
                         { scenarioDecks }
                     </div>
                 </div>
@@ -125,7 +127,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player },
                 </div>
             </div>
             <div className='player-pocket-scroll'>
-                <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} />
+                <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
             </div>
         </div>
     }

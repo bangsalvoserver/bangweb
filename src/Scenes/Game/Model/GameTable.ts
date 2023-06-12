@@ -222,3 +222,7 @@ export function getPlayer(table: GameTable, id: PlayerId): Player {
     }
     return player;
 }
+
+export function getFirstCharacter(table: GameTable, playerId: PlayerId): Card {
+    return getCard(table, getPlayer(table, playerId).pockets.player_character[0]);
+}

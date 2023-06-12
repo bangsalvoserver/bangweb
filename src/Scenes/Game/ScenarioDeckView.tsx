@@ -5,13 +5,15 @@ import { GameTableContext } from "./GameScene";
 import { ScenarioDeckPocket } from "./Model/CardEnums";
 import { CardId, PlayerId } from "./Model/GameUpdate";
 import PocketView, { PocketPosition } from "./PocketView";
+import { Card } from "./Model/GameTable";
 
 export interface ScenarioDeckProps {
-    pocket: ScenarioDeckPocket,
-    player: PlayerId   
+    pocket: ScenarioDeckPocket;
+    player: PlayerId;
+    onClickCard: (card: Card) => void;
 }
 
-const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket, player }, ref) => {
+const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket, player, onClickCard }, ref) => {
     const table = useContext(GameTableContext);
 
     const holder = table.status.scenario_holders[pocket];
@@ -46,7 +48,7 @@ const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket
     if (holder == player && table.pockets[pocket].length != 0) {
         return (
             <div className="single-card-pocket">
-                <PocketView ref={deckPosition} cards={table.pockets[pocket].slice(-2)} />
+                <PocketView ref={deckPosition} cards={table.pockets[pocket].slice(-2)} onClickCard={onClickCard} />
             </div>
         );
     }

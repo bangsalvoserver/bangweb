@@ -1,9 +1,10 @@
 import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
-import { Player } from "./Model/GameTable";
+import { Card, Player } from "./Model/GameTable";
 import PocketView, { PocketPosition } from "./PocketView";
 
 export interface CharacterProps {
     player: Player;
+    onClickCard: (card: Card) => void;
 }
 
 export interface CharacterRef {
@@ -11,7 +12,7 @@ export interface CharacterRef {
     backupRef: MutableRefObject<PocketPosition | null>;
 }
 
-const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player }, ref) => {
+const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player, onClickCard }, ref) => {
     const characterRef = {
         characterRef: useRef<PocketPosition>(null),
         backupRef: useRef<PocketPosition>(null)
@@ -28,7 +29,7 @@ const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player }, ref)
                 </div> : null }
         </div>
         <div className="align-slot">
-            <PocketView ref={characterRef.characterRef} cards={player.pockets.player_character} />
+            <PocketView ref={characterRef.characterRef} cards={player.pockets.player_character} onClickCard={onClickCard} />
         </div>
         { player.status.gold > 0 ?
             <div className="player-gold">{player.status.gold}</div>

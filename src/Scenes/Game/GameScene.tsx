@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
@@ -9,17 +9,19 @@ import CardButtonView from "./CardButtonView";
 import CountPocket from "./CountPocket";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
-import { getCard, getPlayer, newGameTable } from "./Model/GameTable";
+import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTable";
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
-import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetSelectorState, newTargetSelector } from "./Model/TargetSelector";
+import { GameUpdateHandler } from "./Model/GameUpdateHandler";
+import { TargetSelector, newTargetSelector } from "./Model/TargetSelector";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
+import { GameChannel, sendGameAction } from "./Model/GameChannel";
+import { handleClickCard, handleClickPlayer } from "./Model/TargetSelectorManager";
 
 const FRAMERATE = 60;
 
@@ -28,13 +30,13 @@ export interface GameProps {
 }
 
 export const GameTableContext = createContext(newGameTable());
-export const TargetSelectorContext = createContext<TargetSelectorState>(newTargetSelector());
+export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({}));
 
 export default function GameScene({ channel }: GameProps) {
   const { users, myUserId, lobbyOwner } = useContext(LobbyContext);
   
   const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
-  const [selector, selectorDispatch] = useReducer(targetSelectorReducer, null, newTargetSelector);
+  const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
 
   const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs));
@@ -46,14 +48,19 @@ export default function GameScene({ channel }: GameProps) {
   
   const getTracker = () => new CardTrackerImpl(table.status.scenario_holders, pocketPositions.current, playerPositions.current, cubesRef.current);
 
+  const onClickCard = (card: Card) => handleClickCard(table, selector, selectorDispatch, card);
+  const onClickPlayer = (player: Player) => handleClickPlayer(table, selector, selectorDispatch, player);
+
+  useEffect(() => sendGameAction(channel, selector), [selector]);
+
   const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
     <div className="stack-pockets">
       <div className="stack-pockets-inner single-card-pocket">
-        <PocketView ref={setMapRef(pocketPositions, 'shop_discard')} cards={table.pockets.shop_discard.slice(-1)} />
+        <PocketView ref={setMapRef(pocketPositions, 'shop_discard')} cards={table.pockets.shop_discard.slice(-1)} onClickCard={onClickCard} />
       </div>
-      <CountPocket ref={setMapRef(pocketPositions, 'shop_deck')} cards={table.pockets.shop_deck} />
+      <CountPocket ref={setMapRef(pocketPositions, 'shop_deck')} cards={table.pockets.shop_deck} onClickCard={onClickCard} />
     </div>
-    <PocketView ref={setMapRef(pocketPositions, 'shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} />
+    <PocketView ref={setMapRef(pocketPositions, 'shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
   </> : null;
 
   const tableCubes = <div className='inline-block' ref={cubesRef}>
@@ -63,23 +70,23 @@ export default function GameScene({ channel }: GameProps) {
 
   const mainDeck = <>
     <div className="single-card-pocket">
-      <PocketView ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile.slice(-2)} />
+      <PocketView ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile.slice(-2)} onClickCard={onClickCard} />
     </div>
-    <CountPocket ref={setMapRef(pocketPositions, 'main_deck')} cards={table.pockets.main_deck} />
+    <CountPocket ref={setMapRef(pocketPositions, 'main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
   </>;
 
   const scenarioCards = <>
     { table.pockets.scenario_card.length != 0 ?
       <div className="single-card-pocket">
-        <PocketView ref={setMapRef(pocketPositions, 'scenario_card')} cards={table.pockets.scenario_card.slice(-2)} />
+        <PocketView ref={setMapRef(pocketPositions, 'scenario_card')} cards={table.pockets.scenario_card.slice(-2)} onClickCard={onClickCard} />
       </div> : null }
     { table.pockets.wws_scenario_card.length != 0 ?
       <div className="single-card-pocket">
-        <PocketView ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card.slice(-2)} />
+        <PocketView ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card.slice(-2)} onClickCard={onClickCard} />
       </div> : null }
   </>;
 
-  const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} />;
+  const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;
 
   const statusText = 'status_text' in selector.request ? <GameStringComponent message={selector.request.status_text} /> : null;
 
@@ -101,11 +108,17 @@ export default function GameScene({ channel }: GameProps) {
     const user = users.find(user => user.id === player.userid);
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
-      <PlayerView ref={setMapRef(playerPositions, player_id)} user={user} player={player} />
+      <PlayerView ref={setMapRef(playerPositions, player_id)} user={user} player={player}
+        onClickPlayer={() => onClickPlayer(player)}
+        onClickCard={onClickCard}
+      />
     </div>;
   });
 
-  const buttonRow = table.pockets.button_row.map(id => <CardButtonView key={id} card={getCard(table, id)} />);
+  const buttonRow = table.pockets.button_row.map(id => {
+    const card = getCard(table, id);
+    return <CardButtonView key={id} card={card} onClickCard={() => onClickCard(card)} />;
+  });
 
   return (
     <GameTableContext.Provider value={table}>

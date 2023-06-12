@@ -5,18 +5,20 @@ import { Card, CardImage, getCardImage } from "./Model/GameTable";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import { TargetSelectorContext } from "./GameScene";
+import { getSelectorCardClasses } from "./Model/TargetSelector";
 
 export interface CardProps {
     card: Card;
     showBackface?: boolean;
+    onClickCard?: () => void;
 }
 
 export interface CardRef {
     getRect: () => Rect | undefined;
 }
 
-const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface }, ref) => {
-    const { request } = useContext(TargetSelectorContext);
+const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCard }, ref) => {
+    const selector = useContext(TargetSelectorContext);
 
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -76,15 +78,11 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface }, ref) =>
         if (card.inactive) {
             classes.push('card-horizontal');
         }
-        if ('highlight_cards' in request && request.highlight_cards.includes(card.id)) {
-            classes.push('card-highlight');
-        } else if ('origin_card' in request && request.origin_card == card.id) {
-            classes.push('card-origin');
-        }
+        classes.push(...getSelectorCardClasses(selector, card));
     }
 
     return (
-        <div ref={cardRef} style={style} className={classes.join(' ')}>
+        <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard}>
             <div className="card-front">
                 <img className="card-view-img" src={cardImage ? getImageSrc(cardImage) : backfaceSrc}/>
                 {cardImage?.sign ? <div className="card-view-inner">
