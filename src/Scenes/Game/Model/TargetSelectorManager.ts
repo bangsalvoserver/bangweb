@@ -3,6 +3,7 @@ import { isEquipCard } from "./Filters";
 import { Card, GameTable, Player, getCard, getFirstCharacter } from "./GameTable";
 import { TargetMode, TargetSelector, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
+import { GameChannel } from "./GameUpdateHandler";
 
 export function handleClickCard(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
     switch (selector.mode) {
@@ -67,6 +68,20 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
             if (selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0) {
                 selectorDispatch({ selectPlayingCard: getCard(table, selector.request.respond_cards[0].card) });
             }
+        }
+    }
+}
+
+export function handleSendGameAction(channel: GameChannel, selector: TargetSelector, bypass_prompt: boolean = false) {
+    if (selector.mode == TargetMode.finish && (!('yesno' in selector.prompt) || bypass_prompt)) {
+        if ('picked_card' in selector.selection) {
+            const card = selector.selection.picked_card;
+            channel.sendGameAction({ pick_card: { card, bypass_prompt }});
+        } else if ('playing_card' in selector.selection && selector.selection.playing_card) {
+            const card = selector.selection.playing_card.id;
+            const modifiers = selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets }));
+            const targets = selector.selection.targets;
+            channel.sendGameAction({ play_card: { card, modifiers, targets, bypass_prompt}});
         }
     }
 }

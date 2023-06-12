@@ -12,16 +12,15 @@ import { PocketType } from "./Model/CardEnums";
 import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTable";
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
-import { GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetMode, TargetSelector, newTargetSelector } from "./Model/TargetSelector";
+import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
+import { TargetMode, TargetSelector, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import { GameChannel, sendGameAction } from "./Model/GameChannel";
-import { handleAutoSelect, handleClickCard, handleClickPlayer } from "./Model/TargetSelectorManager";
+import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 
 const FRAMERATE = 60;
 
@@ -59,9 +58,11 @@ export default function GameScene({ channel }: GameProps) {
 
   const onClickCard = (card: Card) => { if (isClickAllowed()) handleClickCard(table, selector, selectorDispatch, card) };
   const onClickPlayer = (player: Player) => { if (isClickAllowed()) handleClickPlayer(table, selector, selectorDispatch, player) };
+  const handleConfirm = () => { if (isClickAllowed()) selectorDispatch({ confirmPlay: {} }) };
+  const handleUndo = () => { if (isClickAllowed()) selectorDispatch({ undoSelection: {} }) };
 
   useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [table, selector]);
-  useEffect(() => sendGameAction(channel, selector), [selector]);
+  useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
   const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
     <div className="stack-pockets">
@@ -128,13 +129,16 @@ export default function GameScene({ channel }: GameProps) {
     return <CardButtonView key={id} card={card} onClickCard={() => onClickCard(card)} />;
   });
 
+  const confirmButton = selectorCanConfirm(selector) && <button onClick={handleConfirm}>{getLabel('ui', 'GAME_CONFIRM')}</button>;
+  const undoButton = selectorCanUndo(selector) && <button onClick={handleUndo}>{getLabel('ui', 'GAME_UNDO')}</button>;
+
   return (
     <GameTableContext.Provider value={table}>
       <TargetSelectorContext.Provider value={selector}>
         <div className="game-scene-top">
           <div className="game-scene">
             <div className="status-text">
-              { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }</> }
+              { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
             </div>
             <div className="main-deck-row">
               { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }

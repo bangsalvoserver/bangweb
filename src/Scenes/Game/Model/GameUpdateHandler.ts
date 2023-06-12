@@ -1,8 +1,15 @@
 import { Dispatch, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
-import { GameChannel } from "./GameChannel";
 import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
+import { GameAction } from "./GameAction";
+
+export interface GameChannel {
+    getNextUpdate: () => GameUpdate | undefined;
+    pendingUpdates: () => boolean;
+    sendGameAction: (action: GameAction) => void;
+    handleReturnLobby: () => void;
+}
 
 export class GameUpdateHandler {
     
@@ -37,6 +44,7 @@ export class GameUpdateHandler {
         } else {
             let update: GameUpdate | undefined;
             while (!this.animation && (update = this.channel.getNextUpdate())) {
+                console.log(JSON.stringify(update));
                 this.handleUpdate(update);
             }
         }

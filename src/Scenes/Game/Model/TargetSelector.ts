@@ -119,6 +119,17 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
     }
 }
 
+export function selectorCanUndo(selector: TargetSelector): boolean {
+    switch (selector.mode) {
+    case TargetMode.target:
+    case TargetMode.modifier:
+    case TargetMode.equip:
+        return true;
+    default:
+        return false;
+    }
+}
+
 export function getSelectorPlayCards(selector: TargetSelector) {
     if ('play_cards' in selector.request) {
         return selector.request.play_cards;
