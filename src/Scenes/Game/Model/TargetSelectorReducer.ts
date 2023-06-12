@@ -19,43 +19,9 @@ function handleAutoTargets(selector: TargetSelector) {
     return selector;
 }
 
-function handleSelectPlayingCard(selector: TargetSelector, card: Card) {
-    if ('modifier' in card.cardData) {
-        const selection = 'targets' in selector.selection ? selector.selection : newPlayCardSelection();
-        
-        if (card.cardData.modifier.type == 'none') {
-            return handleAutoTargets({
-                ...selector,
-                selection: { ...selection, playing_card: card },
-                mode: TargetMode.target
-            });
-        } else {
-            return handleAutoTargets({
-                ...selector,
-                selection: { ...selection,
-                    modifiers: selection.modifiers.concat({ modifier: card, targets: [] })
-                },
-                mode: TargetMode.modifier
-            });
-        }
-    } else {
-        throw new Error('Cannot select unknown card');
-    }
-}
-
-function handleAutoSelect(selector: TargetSelector) {
-    if ('auto_select' in selector.request && selector.request.auto_select) {
-        if (selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0) {
-            // const table = newGameTable(); // TODO find solution
-            // return handleSelectPlayingCard(selector, getCard(table, selector.request.respond_cards[0].card));
-        }
-    }
-    return selector;
-}
-
 const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>({
     setRequest (request) {
-        return handleAutoSelect(newTargetSelector(request));
+        return newTargetSelector(request);
     },
 
     setPrompt (prompt) {
@@ -71,7 +37,26 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     selectPlayingCard (card) {
-        return handleSelectPlayingCard(this, card);
+        if ('modifier' in card.cardData) {
+            const selection = 'targets' in this.selection ? this.selection : newPlayCardSelection();
+            if (card.cardData.modifier.type == 'none') {
+                return handleAutoTargets({
+                    ...this,
+                    selection: { ...selection, playing_card: card },
+                    mode: TargetMode.target
+                });
+            } else {
+                return handleAutoTargets({
+                    ...this,
+                    selection: { ...selection,
+                        modifiers: selection.modifiers.concat({ modifier: card, targets: [] })
+                    },
+                    mode: TargetMode.modifier
+                });
+            }
+        } else {
+            throw new Error('Cannot select unknown card');
+        }
     },
 
     selectPickCard (card) {

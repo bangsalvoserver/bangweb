@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { isEquipCard } from "./Filters";
-import { Card, GameTable, Player, getFirstCharacter } from "./GameTable";
+import { Card, GameTable, Player, getCard, getFirstCharacter } from "./GameTable";
 import { TargetMode, TargetSelector, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
@@ -57,6 +57,16 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
     case TargetMode.equip:
         if (isValidEquipTarget(table, selector, player)) {
             selectorDispatch({ addEquipTarget: player });
+        }
+    }
+}
+
+export function handleAutoSelect(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>) {
+    if (!('playing_card' in selector.selection) && !('picked_card' in selector.selection)) {
+        if ('auto_select' in selector.request && selector.request.auto_select) {
+            if (selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0) {
+                selectorDispatch({ selectPlayingCard: getCard(table, selector.request.respond_cards[0].card) });
+            }
         }
     }
 }

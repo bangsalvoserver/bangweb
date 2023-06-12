@@ -21,7 +21,7 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import { GameChannel, sendGameAction } from "./Model/GameChannel";
-import { handleClickCard, handleClickPlayer } from "./Model/TargetSelectorManager";
+import { handleAutoSelect, handleClickCard, handleClickPlayer } from "./Model/TargetSelectorManager";
 
 const FRAMERATE = 60;
 
@@ -51,6 +51,7 @@ export default function GameScene({ channel }: GameProps) {
   const onClickCard = (card: Card) => handleClickCard(table, selector, selectorDispatch, card);
   const onClickPlayer = (player: Player) => handleClickPlayer(table, selector, selectorDispatch, player);
 
+  useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [table, selector]);
   useEffect(() => sendGameAction(channel, selector), [selector]);
 
   const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
