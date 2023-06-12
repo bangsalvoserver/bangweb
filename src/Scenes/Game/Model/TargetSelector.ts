@@ -126,12 +126,13 @@ export function getSelectorPlayCards(selector: TargetSelector) {
 }
 
 export function getSelectorCurrentTree(selector: TargetSelector): CardNode[] {
+    const initialCards = getSelectorPlayCards(selector);
     if ('modifiers' in selector.selection) {
         return selector.selection.modifiers.reduce((tree: CardNode[], { modifier }) => {
             return (tree.find(leaf => leaf.card == modifier.id) as CardNode).branches;
-        }, getSelectorPlayCards(selector));
+        }, initialCards);
     } else {
-        return [];
+        return initialCards;
     }
 }
 
