@@ -19,7 +19,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
             cardTarget = card;
             break;
         }
-        if (cardTarget && isValidCardTarget(selector, cardTarget)) {
+        if (cardTarget && isValidCardTarget(table, selector, cardTarget)) {
             selectorDispatch({ addCardTarget: cardTarget });
         }
         break;
@@ -50,12 +50,12 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
     switch (selector.mode) {
     case TargetMode.target:
     case TargetMode.modifier:
-        if (isValidPlayerTarget(selector, player)) {
+        if (isValidPlayerTarget(table, selector, player)) {
             selectorDispatch({ addPlayerTarget: player });
         }
         break;
     case TargetMode.equip:
-        if (isValidEquipTarget(selector, player)) {
+        if (isValidEquipTarget(table, selector, player)) {
             selectorDispatch({ addEquipTarget: player });
         }
     }
