@@ -16,10 +16,10 @@ export function isEquipCard(card: Card) {
 
 export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter[], player: Player) {
     // TODO
-    return false;
+    return true;
 }
 
 export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], card: Card) {
     // TODO
-    return false;
+    return true;
 }

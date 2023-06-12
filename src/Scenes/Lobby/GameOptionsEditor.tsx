@@ -19,7 +19,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnl
             const newValue = event.target.checked;
             if (oldValue != newValue) {
                 setGameOptions({
-                    ... gameOptions,
+                    ...gameOptions,
                     expansions: newValue
                         ? gameOptions.expansions.concat(name)
                         : gameOptions.expansions.filter(e => e != name)
@@ -39,7 +39,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnl
             readOnly={readOnly}
             onChange={readOnly ? undefined : event => {
                 setGameOptions({
-                    ... gameOptions,
+                    ...gameOptions,
                     [prop]: event.target.checked
                 });
             }} />
@@ -55,7 +55,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnl
             onChange={readOnly ? undefined : event => {
                 if (!isNaN(event.target.valueAsNumber)) {
                     setGameOptions({
-                        ... gameOptions,
+                        ...gameOptions,
                         [prop]: event.target.valueAsNumber
                     });
                 }
