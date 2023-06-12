@@ -1,5 +1,5 @@
 import { anyOf } from "../../../Utils/ArrayUtils";
-import { CardEffect, getCardEffects, getEffectHolder as getEffectHolderAt, getEquipTarget, getTargetIndex as getNextTargetIndex, zipCardTargets } from "./CardData";
+import { CardEffect, getEquipTarget } from "./CardData";
 import { CardTarget } from "./CardEnums";
 import { checkCardFilter, checkPlayerFilter, isEquipCard } from "./Filters";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
@@ -101,7 +101,9 @@ export function isResponse(selector: TargetSelector) {
 }
 
 export function selectorCanConfirm(selector: TargetSelector): boolean {
-    if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
+    switch (selector.mode) {
+    case TargetMode.target:
+    case TargetMode.modifier: {
         const [effects, optionals] = getCardEffects(getCurrentCard(selector), isResponse(selector));
 
         const numEffects = effects.length;
@@ -112,7 +114,9 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
             && numTargets >= numEffects
             && (numTargets - numEffects) % numOptionals == 0;
     }
-    return false;
+    default:
+        return false;
+    }
 }
 
 export function getSelectorPlayCards(selector: TargetSelector) {
@@ -190,7 +194,7 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
     const index = getNextTargetIndex(getSelectorCurrentTargetList(selector));
-    const nextTarget = getEffectHolderAt(getCardEffects(getCurrentCard(selector), isResponse(selector)), index);
+    const nextTarget = getEffectAt(getCardEffects(getCurrentCard(selector), isResponse(selector)), index);
 
     switch (nextTarget.target) {
     case 'card':
@@ -233,8 +237,57 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
     }
 }
 
+export function countTargetableForCardsOtherPlayers(selector: TargetSelector) {
+    // TODO
+    return 0;
+}
+
+export type CardEffectPair = [CardEffect[], CardEffect[]];
+
+export function getCardEffects(card: Card, isResponse: boolean): CardEffectPair {
+    if ('effects' in card.cardData) {
+        return [isResponse ? card.cardData.responses : card.cardData.effects, card.cardData.optionals];
+    } else {
+        return [[], []];
+    }
+}
+
+export function zipCardTargets(targets: CardTarget[], [effects, optionals]: CardEffectPair) {
+    let ret: [CardTarget, CardEffect][] = [];
+    let index = 0;
+    for (let effect of effects) {
+        if (index >= effects.length) break;
+        ret.push([targets[index++], effect]);
+    }
+    while (optionals.length != 0) {
+        for (let effect of optionals) {
+            if (index >= effects.length) break;
+            ret.push([targets[index++], effect]);
+        }
+    }
+    return ret;
+}
+
+export function getNextTargetIndex(targets: CardTarget[]) {
+    if (targets.length != 0) {
+        let lastTarget = Object.values(targets[targets.length - 1])[0];
+        if (Array.isArray(lastTarget) && anyOf(lastTarget as number[], value => value == 0)) {
+            return targets.length - 1;
+        }
+    }
+    return targets.length;
+}
+
+export function getEffectAt([effects, optionals]: CardEffectPair, index: number) {
+    if (index < effects.length) {
+        return effects[index];
+    } else {
+        return optionals[(index - effects.length) % optionals.length];
+    }
+}
+
 export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, player: Player) {
-    const nextTarget = getEffectHolderAt(
+    const nextTarget = getEffectAt(
         getCardEffects(getCurrentCard(selector), isResponse(selector)),
         getNextTargetIndex(getSelectorCurrentTargetList(selector)));
 
