@@ -1,20 +1,21 @@
 import { Dispatch, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
-import { GameAction } from "./GameAction";
 import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
-import { TargetSelectorUpdate } from "./TargetSelectorReducer";
+import { SelectorUpdate } from "./TargetSelectorReducer";
+import { GameAction } from "./GameAction";
 
 export interface GameChannel {
-  getNextUpdate: () => GameUpdate | undefined;
-  sendGameAction: (action: GameAction) => void;
-  handleReturnLobby: () => void;
-};
+    getNextUpdate: () => GameUpdate | undefined;
+    pendingUpdates: () => boolean;
+    sendGameAction: (action: GameAction) => void;
+    handleReturnLobby: () => void;
+}
 
 export class GameUpdateHandler {
     
     private channel: GameChannel;
     private tableDispatch: Dispatch<GameUpdate>;
-    private selectorDispatch: Dispatch<TargetSelectorUpdate>;
+    private selectorDispatch: Dispatch<SelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
 
     private animation?: {
@@ -25,7 +26,7 @@ export class GameUpdateHandler {
     constructor(
         channel: GameChannel,
         tableDispatch: Dispatch<GameUpdate>,
-        selectorDispatch: Dispatch<TargetSelectorUpdate>,
+        selectorDispatch: Dispatch<SelectorUpdate>,
         setGameLogs: Dispatch<SetStateAction<GameString[]>>
     ) {
         this.channel = channel;
@@ -48,6 +49,11 @@ export class GameUpdateHandler {
         }
     }
 
+    pendingUpdates() {
+        return this.animation !== undefined
+            || this.channel.pendingUpdates();
+    }
+
     private setAnimation(update: Duration, endUpdate?: GameUpdate) {
         if (update.duration <= 0) {
             if (endUpdate) {
@@ -62,6 +68,7 @@ export class GameUpdateHandler {
 
         game_error (message) {
             // TODO
+            console.error(message.format_str);
         },
 
         game_log (message) {
@@ -69,7 +76,7 @@ export class GameUpdateHandler {
         },
 
         game_prompt (message) {
-            // TODO
+            this.selectorDispatch({ setPrompt: { yesno: message }});
         },
         
         play_sound (sound) {

@@ -7,9 +7,10 @@ import { CardNode } from "./Model/GameUpdate";
 
 export interface CardButtonProps {
     card: Card;
+    onClickCard: () => void;
 }
 
-export default function CardButtonView({ card }: CardButtonProps) {
+export default function CardButtonView({ card, onClickCard }: CardButtonProps) {
     const { request } = useContext(TargetSelectorContext);
 
     let playableCards: CardNode[] = [];
@@ -24,7 +25,7 @@ export default function CardButtonView({ card }: CardButtonProps) {
     }
 
     if (anyOf(playableCards, node => node.card == card.id) && 'name' in card.cardData) {
-        return <button className={classes.join(' ')}><LocalizedCardName name={card.cardData.name} /></button>
+        return <button className={classes.join(' ')} onClick={onClickCard}><LocalizedCardName name={card.cardData.name} /></button>
     } else {
         return null;
     }

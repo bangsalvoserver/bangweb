@@ -1,4 +1,6 @@
-import { CardColor, CardFilter, CardRank, CardSuit, DeckType, EffectType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType, TargetType } from "./CardEnums";
+import { anyOf } from "../../../Utils/ArrayUtils";
+import { CardColor, CardFilter, CardRank, CardSuit, CardTarget, DeckType, EffectType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType, TargetType } from "./CardEnums";
+import { Card } from "./GameTable";
 
 export interface CardEffect {
     target: TargetType;
@@ -31,7 +33,7 @@ export interface CardData {
     responses: CardEffect[];
     optionals: CardEffect[];
     equips: CardEquip[];
-    tag_list: CardTag[];
+    tags: CardTag[];
     expansion: ExpansionType[];
     deck: DeckType;
     modifier: {
@@ -46,4 +48,16 @@ export interface CardData {
     equip_target: PlayerFilter[];
     color: CardColor;
     sign: CardSign;
+}
+
+export function getTagValue(card: Card, tagType: TagType): number | undefined {
+    return 'tags' in card.cardData ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
+}
+
+export function cardHasTag(card: Card, tagType: TagType) {
+    return getTagValue(card, tagType) !== undefined;
+}
+
+export function getEquipTarget(card: Card): PlayerFilter[] {
+    return 'equip_target' in card.cardData ? card.cardData.equip_target : [];
 }
