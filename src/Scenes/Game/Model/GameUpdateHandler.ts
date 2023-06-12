@@ -44,7 +44,6 @@ export class GameUpdateHandler {
         } else {
             let update: GameUpdate | undefined;
             while (!this.animation && (update = this.channel.getNextUpdate())) {
-                console.log(JSON.stringify(update));
                 this.handleUpdate(update);
             }
         }
@@ -69,6 +68,7 @@ export class GameUpdateHandler {
 
         game_error (message) {
             // TODO
+            console.error(message.format_str);
         },
 
         game_log (message) {

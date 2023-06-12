@@ -32,7 +32,7 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
         } else if (selector.mode == TargetMode.modifier) {
             const lastModifier = selector.selection.modifiers[selector.selection.modifiers.length - 1];
             const modifiers = [
-                ...selector.selection.modifiers.slice(-1),
+                ...selector.selection.modifiers.slice(0, -1),
                 { modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) }
             ];
             return {
@@ -62,7 +62,7 @@ function appendTarget(targetType: SingleTargetType, id: number | null): TargetLi
 
 function appendTargets(targetType: MultiTargetType, id: number, index: number, maxTargets: number): TargetListMapper {
     return targets => {
-        if (index > targets.length) {
+        if (index >= targets.length) {
             let targetList = Array<number>(maxTargets).fill(0);
             if (maxTargets > 0) {
                 targetList[0] = id;
@@ -75,7 +75,7 @@ function appendTargets(targetType: MultiTargetType, id: number, index: number, m
                 const zeroIndex = targetList.indexOf(0);
                 if (zeroIndex > 0) {
                     targetList[zeroIndex] = id;
-                    return targets.slice(-1).concat({[targetType]: targetList} as CardTarget);
+                    return targets.slice(0, -1).concat({[targetType]: targetList} as CardTarget);
                 }
             }
         }
@@ -89,16 +89,16 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
     }
 
     const currentCard = getCurrentCard(selector);
-    const index = getNextTargetIndex(getSelectorCurrentTargetList(selector));
+    const targets = getSelectorCurrentTargetList(selector);
+    const index = getNextTargetIndex(targets);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
     const repeatCount = getTagValue(currentCard, 'repeatable') ?? 1;
 
-    if (index >= effects.length) {
-        if (repeatCount > 0) {
-            if (selector.selection.targets.length - effects.length == optionals.length * repeatCount) {
-                return { ...selector, mode: TargetMode.finish };
-            }
-        }
+    if (index >= effects.length && repeatCount > 0
+        && targets.length - effects.length == optionals.length * repeatCount)
+    {
+        return { ...selector, mode: selector.mode == TargetMode.modifier
+            ? TargetMode.start : TargetMode.finish };
     }
 
     // TODO auto_confirm
@@ -195,8 +195,10 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         case 'extra_card':
             return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, card.id)));
         case 'cards':
-        case 'cards_other_players':
+        case 'select_cubes':
             return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, nextEffect.target_value)));
+        case 'cards_other_players':
+            return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, countTargetableForCardsOtherPlayers(this))));
         default:
             throw new Error('Invalid TargetSelector state');
         }

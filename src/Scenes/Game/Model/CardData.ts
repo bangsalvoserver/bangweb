@@ -33,7 +33,7 @@ export interface CardData {
     responses: CardEffect[];
     optionals: CardEffect[];
     equips: CardEquip[];
-    tag_list: CardTag[];
+    tags: CardTag[];
     expansion: ExpansionType[];
     deck: DeckType;
     modifier: {
@@ -51,7 +51,7 @@ export interface CardData {
 }
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
-    return 'tag_list' in card.cardData ? card.cardData.tag_list.find(tag => tag.type == tagType)?.tag_value : undefined;
+    return 'tags' in card.cardData ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
 }
 
 export function cardHasTag(card: Card, tagType: TagType) {

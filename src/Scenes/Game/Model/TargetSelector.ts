@@ -120,14 +120,9 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
 }
 
 export function selectorCanUndo(selector: TargetSelector): boolean {
-    switch (selector.mode) {
-    case TargetMode.target:
-    case TargetMode.modifier:
-    case TargetMode.equip:
-        return true;
-    default:
-        return false;
-    }
+    return selector.mode != TargetMode.finish
+        && ('playing_card' in selector.selection
+        || 'picked_card' in selector.selection);
 }
 
 export function getSelectorPlayCards(selector: TargetSelector) {
@@ -242,7 +237,7 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
     }
     case 'select_cubes':
         return player == table.self_player
-            && nextTarget.target_value <= card.num_cubes - countSelectedCubes(selector, card);
+            && card.num_cubes > countSelectedCubes(selector, card);
     default:
         return false;
     }
@@ -267,12 +262,12 @@ export function zipCardTargets(targets: CardTarget[], [effects, optionals]: Card
     let ret: [CardTarget, CardEffect][] = [];
     let index = 0;
     for (let effect of effects) {
-        if (index >= effects.length) break;
+        if (index >= targets.length) return ret;
         ret.push([targets[index++], effect]);
     }
     while (optionals.length != 0) {
         for (let effect of optionals) {
-            if (index >= effects.length) break;
+            if (index >= targets.length) return ret;
             ret.push([targets[index++], effect]);
         }
     }
