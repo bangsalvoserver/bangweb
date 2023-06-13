@@ -3,7 +3,7 @@ import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
-import { TargetMode, TargetSelector, getSelectorCurrentTree, isCardCurrent, isCardSelected, isValidCardTarget, selectorCanPickCard } from "./Model/TargetSelector";
+import { TargetMode, TargetSelector, countSelectedCubes, getSelectorCurrentTree, isCardCurrent, isCardSelected, isValidCardTarget, isValidCubeTarget, selectorCanPickCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 
@@ -23,7 +23,9 @@ function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: 
             return 'card-selected';
         }
         if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
-            if (isValidCardTarget(table, selector, card)) {
+            if (isValidCubeTarget(table, selector, card)) {
+                return 'card-targetable-cubes';
+            } else if (isValidCardTarget(table, selector, card)) {
                 return 'card-targetable';
             }
         }
@@ -63,7 +65,9 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
         getRect: () => cardRef.current ? getDivRect(cardRef.current) : undefined
     }));
 
-    const selectorCardClass = useMemo(() => getSelectorCardClass(table, selector, card), [selector]);
+    const [selectorCardClass, selectedCubes] = useMemo(() => 
+        [getSelectorCardClass(table, selector, card), countSelectedCubes(selector, card)],
+    [selector]);
 
     let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
 
@@ -135,8 +139,9 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
                 <img className="card-view-img" src={backfaceSrc} />
             </div> : null}
             {card.num_cubes > 0 ? <div className="card-cubes">
-                {/* TODO selector cube style */}
-                {[...Array(card.num_cubes)].map((item, i) => <img key={i} src='/media/sprite_cube.png' />)}
+                {[...Array(card.num_cubes)].map((item, i) => (
+                    <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src='/media/sprite_cube.png' />
+                ))}
             </div> : null}
         </div>
     )

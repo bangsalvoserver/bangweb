@@ -94,6 +94,22 @@
     box-shadow: 0px 0px 3px 3px cyan;
 }
 
+.card-cube {
+    border-radius: 50%;
+}
+
+.card-targetable-cubes .card-cube {
+    background-color: #ffa000ff;
+    -webkit-box-shadow: 0px 0px 3px 3px #ffa000ff; 
+    box-shadow: 0px 0px 3px 3px #ffa000ff;
+}
+
+.card-cube-selected {
+    background-color: #ff0000d0 !important;
+    -webkit-box-shadow: 0px 0px 3px 3px #ff0000d0 !important;
+    box-shadow: 0px 0px 3px 3px #ff0000d0 !important;
+}
+
 .card-view-img {
     border-radius: var(--card-border) var(--card-border);
 }

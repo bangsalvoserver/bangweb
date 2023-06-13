@@ -236,6 +236,22 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card) {
     return selected;
 }
 
+export function isValidCubeTarget(table: GameTable, selector: TargetSelector, card: Card) {
+    if (!('targets' in selector.selection)) {
+        throw new Error('Invalid state in TargetSelector');
+    }
+
+    const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
+
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    
+    return nextTarget?.target == 'select_cubes'
+        && player == table.self_player
+        && card.num_cubes > countSelectedCubes(selector, card);
+}
+
 export function isValidCardTarget(table: GameTable, selector: TargetSelector, card: Card) {
     if (!('targets' in selector.selection)) {
         throw new Error('Invalid state in TargetSelector');
