@@ -1,4 +1,3 @@
-import { anyOf } from "../../../Utils/ArrayUtils";
 import { CardEffect, getEquipTarget } from "./CardData";
 import { CardTarget } from "./CardEnums";
 import { checkCardFilter, checkPlayerFilter, isEquipCard } from "./Filters";
@@ -137,7 +136,7 @@ export function getSelectorCurrentTree(selector: TargetSelector): CardNode[] {
 }
 
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): boolean {
-    return anyOf(getSelectorCurrentTree(selector), node => node.card == card.id);
+    return getSelectorCurrentTree(selector).some(node => node.card == card.id);
 }
 
 export function selectorCanPickCard(table: GameTable, selector: TargetSelector, card: Card): boolean {
@@ -145,7 +144,7 @@ export function selectorCanPickCard(table: GameTable, selector: TargetSelector, 
         switch (card.pocket?.name) {
             case 'main_deck':
             case 'discard_pile':
-                return anyOf(selector.request.pick_cards, pickCard => getCard(table, pickCard).pocket?.name == card.pocket?.name);
+                return selector.request.pick_cards.some(pickCard => getCard(table, pickCard).pocket?.name == card.pocket?.name);
             default:
                 return selector.request.pick_cards.includes(card.id);
         }
@@ -212,7 +211,7 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
         }
         const lastTarget = selector.selection.targets.at(index);
         if (lastTarget && 'cards_other_players' in lastTarget) {
-            if (anyOf(lastTarget.cards_other_players, (targetCard) => {
+            if (lastTarget.cards_other_players.some(targetCard => {
                 const selectedCard = getCard(table, targetCard);
                 if (selectedCard.pocket && 'player' in selectedCard.pocket) {
                     return selectedCard.pocket.player == player;
@@ -267,7 +266,7 @@ export function zipCardTargets(targets: CardTarget[], [effects, optionals]: Card
 export function getNextTargetIndex(targets: CardTarget[]) {
     if (targets.length != 0) {
         let lastTarget = Object.values(targets[targets.length - 1])[0];
-        if (Array.isArray(lastTarget) && anyOf(lastTarget as number[], value => value == 0)) {
+        if (Array.isArray(lastTarget) && lastTarget.includes(0)) {
             return targets.length - 1;
         }
     }

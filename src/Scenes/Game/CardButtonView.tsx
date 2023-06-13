@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { LocalizedCardName } from "./GameStringComponent";
 import { Card } from "./Model/GameTable";
 import { TargetSelectorContext } from "./GameScene";
-import { anyOf } from "../../Utils/ArrayUtils";
 import { CardNode } from "./Model/GameUpdate";
 
 export interface CardButtonProps {
@@ -24,7 +23,7 @@ export default function CardButtonView({ card, onClickCard }: CardButtonProps) {
         classes.push('card-button-respond');
     }
 
-    if (anyOf(playableCards, node => node.card == card.id) && 'name' in card.cardData) {
+    if (playableCards.some(node => node.card == card.id) && 'name' in card.cardData) {
         return <button className={classes.join(' ')} onClick={onClickCard}><LocalizedCardName name={card.cardData.name} /></button>
     } else {
         return null;

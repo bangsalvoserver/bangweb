@@ -5,7 +5,6 @@ import { Card, CardImage, getCardImage } from "./Model/GameTable";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import { TargetSelectorContext } from "./GameScene";
-import { anyOf } from "../../Utils/ArrayUtils";
 import { TargetSelector, getSelectorPlayCards } from "./Model/TargetSelector";
 
 export interface CardProps {
@@ -20,13 +19,13 @@ export interface CardRef {
 
 function getSelectorCardClasses(selector: TargetSelector, card: Card) {
     if ('playing_card' in selector.selection) {
-        if (anyOf(getSelectorPlayCards(selector), node => node.card == card.id)) {
+        if (getSelectorPlayCards(selector).some(node => node.card == card.id)) {
             return ['card-playable'];
         }
         if (selector.selection.playing_card?.id == card.id) {
             return ['card-current'];
         }
-        if (anyOf(selector.selection.modifiers, ({modifier}) => modifier.id == card.id)) {
+        if (selector.selection.modifiers.some(({modifier}) => modifier.id == card.id)) {
             return ['card-current'];
         }
     }
