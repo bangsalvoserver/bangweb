@@ -1,9 +1,9 @@
 import { Dispatch } from "react";
-import { isEquipCard } from "./Filters";
-import { Card, GameTable, Player, getCard, getFirstCharacter } from "./GameTable";
+import { isEquipCard, isPlayerAlive } from "./Filters";
+import { Card, GameTable, Player, getCard, getFirstCharacter, getPlayer } from "./GameTable";
+import { GameChannel } from "./GameUpdateHandler";
 import { TargetMode, TargetSelector, getSelectorCurrentTargetList, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
-import { GameChannel } from "./GameUpdateHandler";
 
 export function handleClickCard(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
     switch (selector.mode) {
@@ -68,14 +68,31 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
             const lastTarget = getSelectorCurrentTargetList(selector).at(-1);
             if (lastTarget) {
                 if ('conditional_player' in lastTarget && lastTarget.conditional_player === null) {
-                    const numTargetable = 0; // TODO
-                    if (numTargetable > 0) {
-                        selectorDispatch({ revertLastTarget: {} });
-                    } else {
-                        selectorDispatch({ reserveTargets: 0 });
-                    }
+                    // TODO
+                    // if (table.alive_players.some(target => isValidPlayerTarget(table, selector, getPlayer(table, target)))) {
+                    //     selectorDispatch({ revertLastTarget: {} });
+                    // } else {
+                    //     selectorDispatch({ reserveTargets: 0 });
+                    // }
                 } else if ('cards_other_players' in lastTarget && lastTarget.cards_other_players.length == 0) {
-                    const numTargetable = 0; // TODO
+                    const selection = selector.selection;
+                    const numTargetable = table.alive_players.reduce((count, target) => {
+                        if (target != table.self_player && target != selection.context.skipped_player) {
+                            const player = getPlayer(table, target);
+                            if (isPlayerAlive(player)) {
+                                if (player.pockets.player_hand.length != 0) {
+                                    return count + 1;
+                                }
+                                if (player.pockets.player_table.some(targetCard => {
+                                    const card = getCard(table, targetCard);
+                                    return 'color' in card.cardData && card.cardData.color != 'black';
+                                })) {
+                                    return count + 1;
+                                }
+                            }
+                        }
+                        return count;
+                    }, 0);
                     selectorDispatch({ reserveTargets: numTargetable });
                 }
             }

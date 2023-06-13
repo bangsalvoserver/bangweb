@@ -107,7 +107,7 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
     // TODO auto_confirm
 
     const nextEffect = getEffectAt([effects, optionals], index);
-    switch (nextEffect.target) {
+    switch (nextEffect?.target) {
     case 'none':
     case 'players':
     case 'self_cubes':
@@ -202,7 +202,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
                 if (!Array.isArray(targetValue)) {
                     throw new Error('Invalid TargetSelector state');
                 }
-                return targets.slice(0, -1).concat({[targetType]: Array.of(numTargets).fill(0)} as CardTarget);
+                return targets.slice(0, -1).concat({[targetType]: Array(numTargets).fill(0)} as CardTarget);
             });
         }
         return handleAutoTargets(selector);
@@ -212,7 +212,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         const index = getNextTargetIndex(getSelectorCurrentTargetList(this));
         const nextEffect = getEffectAt(getCardEffects(getCurrentCard(this), isResponse(this)), index);
 
-        switch (nextEffect.target) {
+        switch (nextEffect?.target) {
         case 'card':
         case 'extra_card':
             return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, card.id)));
@@ -230,7 +230,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         const index = getNextTargetIndex(getSelectorCurrentTargetList(this));
         const nextEffect = getEffectAt(getCardEffects(getCurrentCard(this), isResponse(this)), index);
 
-        switch (nextEffect.target) {
+        switch (nextEffect?.target) {
         case 'player':
         case 'conditional_player':
             return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, player.id)));

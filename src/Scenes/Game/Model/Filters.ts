@@ -14,6 +14,11 @@ export function isEquipCard(card: Card) {
     }
 }
 
+export function isPlayerAlive(player: Player) {
+    // TODO
+    return true;
+}
+
 export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter[], player: Player) {
     // TODO
     return true;

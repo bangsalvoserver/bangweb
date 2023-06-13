@@ -239,7 +239,7 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
     const index = getNextTargetIndex(getSelectorCurrentTargetList(selector));
     const nextTarget = getEffectAt(getCardEffects(getCurrentCard(selector), isResponse(selector)), index);
 
-    switch (nextTarget.target) {
+    switch (nextTarget?.target) {
     case 'card':
     case 'extra_card':
     case 'cards':
@@ -260,6 +260,7 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
         const lastTarget = selector.selection.targets.at(index);
         if (lastTarget && 'cards_other_players' in lastTarget) {
             if (lastTarget.cards_other_players.some(targetCard => {
+                if (targetCard <= 0) return false;
                 const selectedCard = getCard(table, targetCard);
                 if (selectedCard.pocket && 'player' in selectedCard.pocket) {
                     return selectedCard.pocket.player == player;
@@ -319,7 +320,7 @@ export function getNextTargetIndex(targets: CardTarget[]) {
 export function getEffectAt([effects, optionals]: CardEffectPair, index: number) {
     if (index < effects.length) {
         return effects[index];
-    } else {
+    } else if (optionals.length != 0) {
         return optionals[(index - effects.length) % optionals.length];
     }
 }
@@ -329,7 +330,7 @@ export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, 
         getCardEffects(getCurrentCard(selector), isResponse(selector)),
         getNextTargetIndex(getSelectorCurrentTargetList(selector)));
 
-    switch (nextTarget.target) {
+    switch (nextTarget?.target) {
     case 'player':
     case 'conditional_player':
         return checkPlayerFilter(selector, nextTarget.player_filter, player);
