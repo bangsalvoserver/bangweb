@@ -1,4 +1,4 @@
-import { createUnionReducer } from "../../../Utils/UnionUtils";
+import { ExtractKeys, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { getTagValue } from "./Filters";
 import { Card, KnownCard, Player, isCardKnown } from "./GameTable";
@@ -12,8 +12,7 @@ export type SelectorUpdate =
     { selectPlayingCard: KnownCard } |
     { selectPickCard: Card } |
     { selectEquipCard: KnownCard } |
-    { revertLastTarget: {} } |
-    { reserveTargets: number } |
+    { appendTarget: CardTarget } |
     { addCardTarget: Card } |
     { addPlayerTarget: Player } |
     { addEquipTarget: Player }
@@ -48,15 +47,11 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
     }
 }
 
-type EmptyKeys<T> = T extends T ? T[keyof T] extends Record<string, never> ? keyof T : never : never;
-type NumberNullKeys<T> = T extends T ? T[keyof T] extends number | null ? keyof T : never : never;
-type ArrayKeys<T> = T extends T ? T[keyof T] extends number[] ? keyof T : never : never;
+type NoTargetType = ExtractKeys<CardTarget, Record<string, never>>;
+type SingleTargetType = ExtractKeys<CardTarget, number | null>;
+type MultiTargetType = ExtractKeys<CardTarget, number[]>;
 
-type EmptyTargetType = EmptyKeys<CardTarget>;
-type SingleTargetType = NumberNullKeys<CardTarget>;
-type MultiTargetType = ArrayKeys<CardTarget>;
-
-function appendEmptyTarget(targetType: EmptyTargetType): TargetListMapper {
+function appendEmptyTarget(targetType: NoTargetType): TargetListMapper {
     return targets => targets.concat({[targetType]: {}} as CardTarget);
 }
 
@@ -151,15 +146,11 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
     case 'players':
     case 'self_cubes':
         return handleAutoTargets(editSelectorTargets(selector, appendEmptyTarget(nextEffect.target)));
-    case 'conditional_player':
-        return editSelectorTargets(selector, appendTarget('conditional_player', null));
     case 'extra_card':
         if (selector.selection.context.repeat_card) {
             return handleAutoTargets(editSelectorTargets(selector, appendTarget('extra_card', null)));
         }
         break;
-    case 'cards_other_players':
-        return editSelectorTargets(selector, appendTargets('cards_other_players', 0, index, 0));
     }
     return selector;
 }
@@ -217,25 +208,8 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         };
     },
 
-    revertLastTarget () {
-        return editSelectorTargets(this, targets => targets.slice(0, -1));
-    },
-
-    reserveTargets (numTargets) {
-        let selector = this;
-        if (numTargets > 0) {
-            selector = editSelectorTargets(selector, targets => {
-                const lastTarget = targets.at(-1);
-                if (lastTarget) {
-                    const [targetType, targetValue] = Object.entries(lastTarget)[0];
-                    if (Array.isArray(targetValue)) {
-                        return targets.slice(0, -1).concat({[targetType]: Array(numTargets).fill(0)} as CardTarget);
-                    }
-                }
-                throw new Error('TargetSelector: last target is not an array');
-            });
-        }
-        return handleAutoTargets(selector);
+    appendTarget (target) {
+        return handleAutoTargets(editSelectorTargets(this, targets => targets.concat(target)));
     },
 
     addCardTarget (card) {

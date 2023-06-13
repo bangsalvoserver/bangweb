@@ -1,4 +1,5 @@
 export type KeysOfUnion<T> = T extends T ? keyof T: never;
+export type ExtractKeys<T, U> = T extends T ? T[keyof T] extends U ? keyof T : never : never;
 
 export function createUnionReducer<State, Update extends object>(functions: {
     [K in Update as keyof K]?: (this: State, value: K[keyof K]) => State;

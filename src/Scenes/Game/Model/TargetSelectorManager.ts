@@ -2,7 +2,7 @@ import { Dispatch } from "react";
 import { checkPlayerFilter, getCardColor, isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { GameChannel } from "./GameUpdateHandler";
-import { TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, isCardCurrent, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { PlayingSelector, RequestSelector, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isCardCurrent, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 import { CardId } from "./GameUpdate";
 
@@ -63,50 +63,60 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
     }
 }
 
+function handleConditionalAutoTargets(table: GameTable, selector: PlayingSelector, selectorDispatch: Dispatch<SelectorUpdate>) {
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    if (index < targets.length) return;
+
+    // TODO handle auto_confirm
+    
+    const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    switch (nextEffect?.target) {
+    case 'conditional_player': {
+        if (!table.alive_players.some(target => checkPlayerFilter(table, selector, nextEffect.player_filter, getPlayer(table, target)))) {
+            selectorDispatch({ appendTarget: { conditional_player: null }});
+        }
+        break;
+    }
+    case 'cards_other_players': {
+        const numTargetable = table.alive_players.reduce((count, target) => {
+            if (target != table.self_player && target != selector.selection.context.skipped_player) {
+                const player = getPlayer(table, target);
+                if (isPlayerAlive(player)) {
+                    const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) == 'black';
+                    if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
+                        return count + 1;
+                    }
+                }
+            }
+            return count;
+        }, 0);
+        selectorDispatch({ appendTarget: { cards_other_players: Array<number>(numTargetable).fill(0) }});
+        break;
+    }
+    }
+}
+
 export function handleAutoSelect(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>) {
     const selectCard = (cardId: CardId) => {
         const card = getCard(table, cardId);
-        if (isCardKnown(card) && !isCardCurrent(selector, card)) {
+        if (selectorCanPlayCard(selector, card)) {
             selectorDispatch({ selectPlayingCard: card });
         }
     };
     if (isSelectionPlaying(selector)) {
-        if (selector.mode == TargetMode.start) {
+        switch (selector.mode) {
+        case TargetMode.start:
             if (selector.selection.context.repeat_card) {
                 selectCard(selector.selection.context.repeat_card);
             } else if (selector.selection.context.traincost) {
                 selectCard(selector.selection.context.traincost);
             }
-        } else if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
-            // TODO handle auto_confirm
-
-            const [currentCard, targets] = getCurrentCardAndTargets(selector);
-            const lastTarget = targets.at(-1);
-            if (lastTarget) {
-                if ('conditional_player' in lastTarget && lastTarget.conditional_player === null) {
-                    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), targets.length - 1);
-                    if (table.alive_players.some(target => checkPlayerFilter(table, selector, effect!.player_filter, getPlayer(table, target)))) {
-                        selectorDispatch({ revertLastTarget: {} });
-                    } else {
-                        selectorDispatch({ reserveTargets: 0 });
-                    }
-                } else if ('cards_other_players' in lastTarget && lastTarget.cards_other_players.length == 0) {
-                    const selection = selector.selection;
-                    const numTargetable = table.alive_players.reduce((count, target) => {
-                        if (target != table.self_player && target != selection.context.skipped_player) {
-                            const player = getPlayer(table, target);
-                            if (isPlayerAlive(player)) {
-                                const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) == 'black';
-                                if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
-                                    return count + 1;
-                                }
-                            }
-                        }
-                        return count;
-                    }, 0);
-                    selectorDispatch({ reserveTargets: numTargetable });
-                }
-            }
+            break;
+        case TargetMode.target:
+        case TargetMode.modifier:
+            handleConditionalAutoTargets(table, selector, selectorDispatch);
+            break;
         }
     } else if (!isSelectionPicking(selector)) {
         if (isResponse(selector) && selector.request.auto_select) {
