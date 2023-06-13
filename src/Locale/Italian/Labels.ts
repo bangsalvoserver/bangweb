@@ -42,6 +42,8 @@ export const LABELS_ITALIAN: LabelRegistry = {
         LOBBY_CHAT_SEND: "Invia",
         GAME_OVER_STATUS: "Partita Finita",
         RETURN_LOBBY: "Ritorna alla Lobby",
+        GAME_CONFIRM: "OK",
+        GAME_UNDO: "Annulla"
     },
 
 };

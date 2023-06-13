@@ -42,5 +42,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         LOBBY_CHAT_SEND: "Send",
         GAME_OVER_STATUS: "Game Over",
         RETURN_LOBBY: "Return to Lobby",
+        GAME_CONFIRM: "OK",
+        GAME_UNDO: "Undo"
     },
 };

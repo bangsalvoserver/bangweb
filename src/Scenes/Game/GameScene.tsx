@@ -104,8 +104,7 @@ export default function GameScene({ channel }: GameProps) {
   const gameOverStatus = () => {
     if (myUserId == lobbyOwner) {
       return (
-        <button className="bg-green-500 hover:bg-green-600 font-bold py-1 px-4 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          onClick={channel.handleReturnLobby}>{getLabel('ui', 'RETURN_LOBBY')}</button>
+        <button className="card-button-view" onClick={channel.handleReturnLobby}>{getLabel('ui', 'RETURN_LOBBY')}</button>
       );
     } {
       return <>{getLabel('ui', 'GAME_OVER_STATUS')}</>;
@@ -129,8 +128,8 @@ export default function GameScene({ channel }: GameProps) {
     return <CardButtonView key={id} card={card} onClickCard={() => onClickCard(card)} />;
   });
 
-  const confirmButton = selectorCanConfirm(selector) && <button onClick={handleConfirm}>{getLabel('ui', 'GAME_CONFIRM')}</button>;
-  const undoButton = selectorCanUndo(selector) && <button onClick={handleUndo}>{getLabel('ui', 'GAME_UNDO')}</button>;
+  const confirmButton = selectorCanConfirm(selector) && <button className="card-button-view" onClick={handleConfirm}>{getLabel('ui', 'GAME_CONFIRM')}</button>;
+  const undoButton = selectorCanUndo(selector) && <button className="card-button-view" onClick={handleUndo}>{getLabel('ui', 'GAME_UNDO')}</button>;
 
   return (
     <GameTableContext.Provider value={table}>
