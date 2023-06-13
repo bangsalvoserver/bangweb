@@ -1,8 +1,8 @@
 import { Dispatch } from "react";
-import { checkPlayerFilter, isEquipCard, isPlayerAlive } from "./Filters";
-import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
+import { checkPlayerFilter, getCardColor, isEquipCard, isPlayerAlive } from "./Filters";
+import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { GameChannel } from "./GameUpdateHandler";
-import { TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, isCardCurrent, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, isCardCurrent, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 import { CardId } from "./GameUpdate";
 
@@ -28,7 +28,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
     }
     case TargetMode.start: {
         const canPlay = selectorCanPlayCard(selector, card);
-        if ('respond_cards' in selector.request) {
+        if (isResponse(selector)) {
             const canPick = selectorCanPickCard(table, selector, card);
             if (canPlay && canPick) {
                 selectorDispatch({ setPrompt: { playpickundo: card }});
@@ -66,11 +66,11 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
 export function handleAutoSelect(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>) {
     const selectCard = (cardId: CardId) => {
         const card = getCard(table, cardId);
-        if (!isCardCurrent(selector, card)) {
+        if (isCardKnown(card) && !isCardCurrent(selector, card)) {
             selectorDispatch({ selectPlayingCard: card });
         }
     };
-    if ('playing_card' in selector.selection) {
+    if (isSelectionPlaying(selector)) {
         if (selector.mode == TargetMode.start) {
             if (selector.selection.context.repeat_card) {
                 selectCard(selector.selection.context.repeat_card);
@@ -96,13 +96,8 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
                         if (target != table.self_player && target != selection.context.skipped_player) {
                             const player = getPlayer(table, target);
                             if (isPlayerAlive(player)) {
-                                if (player.pockets.player_hand.length != 0) {
-                                    return count + 1;
-                                }
-                                if (player.pockets.player_table.some(targetCard => {
-                                    const card = getCard(table, targetCard);
-                                    return 'color' in card.cardData && card.cardData.color != 'black';
-                                })) {
+                                const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) == 'black';
+                                if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
                                     return count + 1;
                                 }
                             }
@@ -113,8 +108,8 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
                 }
             }
         }
-    } else if (!('picked_card' in selector.selection)) {
-        if ('auto_select' in selector.request && selector.request.auto_select) {
+    } else if (!isSelectionPicking(selector)) {
+        if (isResponse(selector) && selector.request.auto_select) {
             if (selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0) {
                 selectCard(selector.request.respond_cards[0].card);
             }
@@ -124,10 +119,10 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
 
 export function handleSendGameAction(channel: GameChannel, selector: TargetSelector, bypass_prompt: boolean = true) {
     if (selector.mode == TargetMode.finish && (!('yesno' in selector.prompt) || bypass_prompt)) {
-        if ('picked_card' in selector.selection) {
+        if (isSelectionPicking(selector)) {
             const card = selector.selection.picked_card;
             channel.sendGameAction({ pick_card: { card, bypass_prompt }});
-        } else if ('playing_card' in selector.selection && selector.selection.playing_card) {
+        } else if (isSelectionPlaying(selector) && selector.selection.playing_card) {
             const card = selector.selection.playing_card.id;
             const modifiers = selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets }));
             const targets = selector.selection.targets;

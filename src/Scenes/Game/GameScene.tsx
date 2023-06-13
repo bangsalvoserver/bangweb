@@ -13,7 +13,7 @@ import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTabl
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetMode, TargetSelector, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
+import { TargetMode, TargetSelector, isResponse, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
@@ -99,7 +99,7 @@ export default function GameScene({ channel }: GameProps) {
 
   const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;
 
-  const statusText = 'status_text' in selector.request ? <GameStringComponent message={selector.request.status_text} /> : null;
+  const statusText = isResponse(selector) ? <GameStringComponent message={selector.request.status_text} /> : null;
   
   const gameOverStatus = () => {
     if (myUserId == lobbyOwner) {

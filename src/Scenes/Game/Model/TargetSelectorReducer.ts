@@ -1,17 +1,17 @@
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { getTagValue } from "./Filters";
-import { Card, Player } from "./GameTable";
-import { EffectContext, GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getSelectorCurrentTree, isResponse, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
+import { Card, KnownCard, Player, isCardKnown } from "./GameTable";
+import { EffectContext, GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
     { setPrompt: GamePrompt } |
     { confirmPlay: {} } |
     { undoSelection: {} } |
-    { selectPlayingCard: Card } |
+    { selectPlayingCard: KnownCard } |
     { selectPickCard: Card } |
-    { selectEquipCard: Card } |
+    { selectEquipCard: KnownCard } |
     { revertLastTarget: {} } |
     { reserveTargets: number } |
     { addCardTarget: Card } |
@@ -22,28 +22,30 @@ export type SelectorUpdate =
 type TargetListMapper = (targets: CardTarget[]) => CardTarget[];
 
 function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper): TargetSelector {
-    if ('targets' in selector.selection) {
-        if (selector.mode == TargetMode.target) {
-            return {
-                ...selector,
-                selection: {
-                    ...selector.selection,
-                    targets: mapper(selector.selection.targets)
-                }
-            };
-        } else if (selector.mode == TargetMode.modifier) {
-            const lastModifier = selector.selection.modifiers[selector.selection.modifiers.length - 1];
-            const modifiers = [
-                ...selector.selection.modifiers.slice(0, -1),
-                { modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) }
-            ];
-            return {
-                ...selector,
-                selection: { ...selector.selection, modifiers }
-            };
-        }
+    checkSelectionPlaying(selector);
+
+    switch (selector.mode) {
+    case TargetMode.target:
+        return {
+            ...selector,
+            selection: {
+                ...selector.selection,
+                targets: mapper(selector.selection.targets)
+            }
+        };
+    case TargetMode.modifier:
+        const lastModifier = selector.selection.modifiers[selector.selection.modifiers.length - 1];
+        const modifiers = [
+            ...selector.selection.modifiers.slice(0, -1),
+            { modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) }
+        ];
+        return {
+            ...selector,
+            selection: { ...selector.selection, modifiers }
+        };
+    default:
+        throw new Error('TargetSelector: not in targeting mode');
     }
-    throw new Error('Invalid TargetSelector state');
 }
 
 type EmptyKeys<T> = T extends T ? T[keyof T] extends Record<string, never> ? keyof T : never : never;
@@ -81,18 +83,13 @@ function appendTargets(targetType: MultiTargetType, id: number, index: number, m
                 }
             }
         }
-        throw new Error('Invalid TargetSelector state');
+        throw new Error('TargetSelector: last target is not an array');
     };
 }
 
-function addModifierContext(modifier: Card, targets: CardTarget[], selector: TargetSelector): TargetSelector {
-    if (!('modifier' in modifier.cardData)) {
-        throw new Error('Invalid TargetSelector state');
-    }
+function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector: TargetSelector): TargetSelector {
     const editContext = (mapper: (context: EffectContext) => EffectContext): TargetSelector => {
-        if (!('context' in selector.selection)) {
-            throw new Error('Invalid TargetSelector state');
-        }
+        checkSelectionPlaying(selector);
         return {
             ...selector,
             selection: {
@@ -108,12 +105,12 @@ function addModifierContext(modifier: Card, targets: CardTarget[], selector: Tar
         return editContext(context => ({ ...context, card_choice: modifier.id }));
     case 'leevankliff':
     case 'moneybag': {
-        const repeat_card = getSelectorCurrentTree(selector)[0].card;
+        const repeat_card = getPlayableCards(selector)[0];
         return editContext(context => ({ ...context, repeat_card }));
     }
     case 'traincost':
         if (modifier.pocket?.name == 'stations') {
-            const traincost = getSelectorCurrentTree(selector)[0].card;
+            const traincost = getPlayableCards(selector)[0];
             return editContext(context => ({ ...context, traincost  }))
         }
         break;
@@ -129,9 +126,7 @@ function addModifierContext(modifier: Card, targets: CardTarget[], selector: Tar
 }
 
 function handleAutoTargets(selector: TargetSelector): TargetSelector {
-    if (!('targets' in selector.selection)) {
-        throw new Error('Invalid TargetSelector state');
-    }
+    checkSelectionPlaying(selector);
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
@@ -187,25 +182,21 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     selectPlayingCard (card) {
-        if ('modifier' in card.cardData) {
-            const selection = 'targets' in this.selection ? this.selection : newPlayCardSelection();
-            if (card.cardData.modifier.type == 'none') {
-                return handleAutoTargets({
-                    ...this,
-                    selection: { ...selection, playing_card: card },
-                    mode: TargetMode.target
-                });
-            } else {
-                return handleAutoTargets({
-                    ...this,
-                    selection: { ...selection,
-                        modifiers: selection.modifiers.concat({ modifier: card, targets: [] })
-                    },
-                    mode: TargetMode.modifier
-                });
-            }
+        const selection = isSelectionPlaying(this) ? this.selection : newPlayCardSelection();
+        if (card.cardData.modifier.type == 'none') {
+            return handleAutoTargets({
+                ...this,
+                selection: { ...selection, playing_card: card },
+                mode: TargetMode.target
+            });
         } else {
-            throw new Error('Cannot select unknown card');
+            return handleAutoTargets({
+                ...this,
+                selection: { ...selection,
+                    modifiers: selection.modifiers.concat({ modifier: card, targets: [] })
+                },
+                mode: TargetMode.modifier
+            });
         }
     },
 
@@ -218,16 +209,12 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     selectEquipCard (card) {
-        if ('equip_target' in card.cardData) {
-            return {
-                ...this,
-                selection: newPlayCardSelection(card),
-                mode: card.cardData.equip_target.length == 0
-                    ? TargetMode.finish : TargetMode.equip
-            };
-        } else {
-            throw new Error('Cannot select unknown card');
-        }
+        return {
+            ...this,
+            selection: newPlayCardSelection(card),
+            mode: card.cardData.equip_target.length == 0
+                ? TargetMode.finish : TargetMode.equip
+        };
     },
 
     revertLastTarget () {
@@ -239,14 +226,13 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         if (numTargets > 0) {
             selector = editSelectorTargets(selector, targets => {
                 const lastTarget = targets.at(-1);
-                if (!lastTarget) {
-                    throw new Error('Invalid TargetSelector state');
+                if (lastTarget) {
+                    const [targetType, targetValue] = Object.entries(lastTarget)[0];
+                    if (Array.isArray(targetValue)) {
+                        return targets.slice(0, -1).concat({[targetType]: Array(numTargets).fill(0)} as CardTarget);
+                    }
                 }
-                const [targetType, targetValue] = Object.entries(lastTarget)[0];
-                if (!Array.isArray(targetValue)) {
-                    throw new Error('Invalid TargetSelector state');
-                }
-                return targets.slice(0, -1).concat({[targetType]: Array(numTargets).fill(0)} as CardTarget);
+                throw new Error('TargetSelector: last target is not an array');
             });
         }
         return handleAutoTargets(selector);
@@ -267,7 +253,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         case 'cards_other_players':
             return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, 0)));
         default:
-            throw new Error('Invalid TargetSelector state');
+            throw new Error('TargetSelector: cannot add card target');
         }
     },
 
@@ -281,12 +267,12 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         case 'conditional_player':
             return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, player.id)));
         default:
-            throw new Error('Invalid TargetSelector state');
+            throw new Error('TargetSelector: cannot add player target');
         }
     },
 
     addEquipTarget (player) {
-        if ('playing_card' in this.selection && this.mode == TargetMode.equip) {
+        if (isSelectionPlaying(this) && this.mode == TargetMode.equip) {
             return {
                 ...this,
                 selection: {
@@ -296,7 +282,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
                 mode: TargetMode.finish
             };
         } else {
-            throw new Error('Invalid TargetSelector state');
+            throw new Error('TargetSelector: not in equipping mode');
         }
     }
     

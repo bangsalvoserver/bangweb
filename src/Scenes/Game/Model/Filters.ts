@@ -1,24 +1,28 @@
-import { CardFilter, PlayerFilter, TagType } from "./CardEnums";
-import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { TargetSelector } from "./TargetSelector";
+import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
+import { TargetSelector, checkSelectionPlaying, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
-    return 'tags' in card.cardData ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
+    return isCardKnown(card) ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
 }
 
-export function cardHasTag(card: Card, tagType: TagType) {
+export function cardHasTag(card: Card, tagType: TagType): boolean {
     return getTagValue(card, tagType) !== undefined;
 }
 
 export function getEquipTarget(card: Card): PlayerFilter[] {
-    return 'equip_target' in card.cardData ? card.cardData.equip_target : [];
+    return isCardKnown(card) ? card.cardData.equip_target : [];
 }
 
-export function isEquipCard(card: Card) {
+export function getCardColor(card: Card): CardColor {
+    return isCardKnown(card) ? card.cardData.color : 'none';
+}
+
+export function isEquipCard(card: Card): boolean {
     switch (card.pocket?.name) {
     case 'player_hand':
     case 'shop_selection':
-        return 'color' in card.cardData && card.cardData.color != 'brown';
+        return getCardColor(card) != 'brown';
     case 'train':
         return card.cardData.deck != 'locomotive';
     default:
@@ -26,21 +30,21 @@ export function isEquipCard(card: Card) {
     }
 }
 
-export function isPlayerAlive(player: Player) {
+export function isPlayerAlive(player: Player): boolean {
     return !player.status.flags.includes('dead')
         || player.status.flags.includes('ghost_1')
         || player.status.flags.includes('ghost_2')
         || player.status.flags.includes('temp_ghost')
 }
 
-export function isBangCard(table: GameTable, origin: Player, card: Card) {
+export function isBangCard(table: GameTable, origin: Player, card: Card): boolean {
     return table.status.flags.includes('treat_any_as_bang')
         || cardHasTag(card, 'bangcard')
         || origin.status.flags.includes('treat_missed_as_bang')
         && cardHasTag(card, 'missed');
 }
 
-export function countDistance(table: GameTable, from: Player, to: Player) {
+export function countDistance(table: GameTable, from: Player, to: Player): number {
     if (from.id == to.id) return 0;
 
     if (table.status.flags.includes('disable_player_distances')) {
@@ -76,10 +80,9 @@ export function countDistance(table: GameTable, from: Player, to: Player) {
     return Math.min(countLeft, countRight) + to.status.distance_mod;
 }
 
-export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player) {
-    if (!('context' in selector.selection)) {
-        throw new Error('Invalid TargetSelector state');
-    }
+export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
+    checkSelectionPlaying(selector);
+
     const origin = getPlayer(table, table.self_player!);
     const context = selector.selection.context;
 
@@ -95,7 +98,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
     if (filter.includes('notself') && target.id == origin?.id) return false;
 
     if (filter.includes('notorigin')) {
-        if (!('origin' in selector.request) || selector.request.origin == target.id) {
+        if (!isResponse(selector) || selector.request.origin == target.id) {
             return false;
         }
     }
@@ -118,7 +121,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
     return true;
 }
 
-export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], originCard: Card, target: Card) {
+export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], originCard: KnownCard, target: Card): boolean {
     const origin = getPlayer(table, table.self_player!);
 
     if (!filter.includes('can_target_self') && originCard.id == target.id) return false;
@@ -127,7 +130,7 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
         if (!target.pocket || !('player' in target.pocket) || getPlayer(table, target.pocket.player).pockets.player_character[0] != target.id) {
             return false;
         }
-        if (!('color' in target.cardData) || target.cardData.color != 'orange' || target.pocket?.name != 'player_table') {
+        if (getCardColor(target) != 'orange' || target.pocket?.name != 'player_table') {
             return false;
         }
     } else if (target.cardData.deck == 'character') {
@@ -142,7 +145,7 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     if (filter.includes('bronco') && !cardHasTag(target, 'bronco')) return false;
     if (filter.includes('catbalou_panic') && !cardHasTag(target, 'cat_balou') && !cardHasTag(target, 'panic')) return false;
 
-    if ('color' in target.cardData) {
+    if (isCardKnown(target)) {
         const color = target.cardData.color;
         if (filter.includes('blue') && color != 'blue') return false;
         if (filter.includes('train') && color != 'train') return false;
@@ -185,10 +188,10 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
             }
         }
 
-        if (filter.includes('origin_card_suit') && 'origin_card' in selector.request) {
+        if (filter.includes('origin_card_suit') && isResponse(selector)) {
             if (!selector.request.origin_card) return false;
             const reqOriginCard = getCard(table, selector.request.origin_card);
-            return 'sign' in reqOriginCard.cardData && reqOriginCard.cardData.sign.suit == sign.suit;
+            return isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit == sign.suit;
         }
     }
 

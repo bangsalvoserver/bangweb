@@ -25,3 +25,7 @@ export function createUnionFunction<This, Update extends object>(functions: {
         }
     };
 }
+
+export type ChangeField<T, K extends keyof T, U> = {
+    [Key in keyof T]: Key extends K ? U : T[Key];
+};

@@ -3,7 +3,7 @@ import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
-import { TargetMode, TargetSelector, countSelectedCubes, getSelectorCurrentTree, isCardCurrent, isCardSelected, isValidCardTarget, isValidCubeTarget, selectorCanPickCard } from "./Model/TargetSelector";
+import { TargetMode, TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSelectionPlaying, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard, isSelectionPicking } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 
@@ -18,7 +18,7 @@ export interface CardRef {
 }
 
 function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
-    if ('targets' in selector.selection) {
+    if (isSelectionPlaying(selector)) {
         if (isCardSelected(selector, card)) {
             return 'card-selected';
         }
@@ -32,19 +32,16 @@ function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: 
         if (isCardCurrent(selector, card)) {
             return 'card-current';
         }
-    } else if ('picked_card' in selector.selection) {
+    } else if (isSelectionPicking(selector)) {
         if (selector.selection.picked_card == card.id) {
             return 'card-picked';
         }
+    } else if (selectorCanPlayCard(selector, card)) {
+        return 'card-playable';
     } else if (selectorCanPickCard(table, selector, card)) {
         return 'card-pickable';
     }
-    if (!('playing_card' in selector.selection) || selector.selection.playing_card === undefined) {
-        if (getSelectorCurrentTree(selector).some(node => node.card == card.id)) {
-            return 'card-playable';
-        }
-    }
-    if ('respond_cards' in selector.request) {
+    if (isResponse(selector)) {
         if (selector.request.highlight_cards.includes(card.id)) {
             return 'card-highlight';
         }

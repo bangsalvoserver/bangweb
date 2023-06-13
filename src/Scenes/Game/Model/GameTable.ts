@@ -1,4 +1,5 @@
 import { UserId } from "../../../Messages/ServerMessage";
+import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, ScenarioDeckPocket, TablePocketType } from "./CardEnums";
 import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerId } from "./GameUpdate";
@@ -65,7 +66,7 @@ export interface Card extends Id {
 }
 
 export function getCardImage(card: Card): CardImage | undefined {
-    return 'image' in card.cardData ? {
+    return isCardKnown(card) ? {
         image: card.cardData.image,
         sign: card.cardData.sign.rank != 'none' && card.cardData.sign.suit != 'none' ? card.cardData.sign : undefined
     } : undefined;
@@ -89,6 +90,12 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketRef): Card {
         inactive: false,
         num_cubes: 0,
     };
+}
+
+export type KnownCard = ChangeField<Card, 'cardData', CardData>;
+
+export function isCardKnown(card: Card): card is KnownCard {
+    return 'name' in card.cardData;
 }
 
 export type PlayerPockets = Record<PlayerPocketType, CardId[]>;

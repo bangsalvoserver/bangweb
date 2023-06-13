@@ -11,7 +11,7 @@ import RoleView from "./RoleView";
 import ScenarioDeckView from "./ScenarioDeckView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { TargetMode, TargetSelector, isPlayerSelected, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import { TargetMode, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -57,8 +57,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         classes.push('current-turn');
     }
 
-    const isOrigin = 'origin' in selector.request && selector.request.origin == player.id;
-    const isTarget = 'target' in selector.request && selector.request.target == player.id;
+    const isOrigin = isResponse(selector) && selector.request.origin == player.id;
+    const isTarget = isResponse(selector) && selector.request.target == player.id;
     const isWinner = player.status.flags.includes('winner');
 
     let flipDuration: number | undefined;
