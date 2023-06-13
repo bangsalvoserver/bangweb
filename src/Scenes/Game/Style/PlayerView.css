@@ -32,6 +32,14 @@
     border-color: #4d7f21;
 }
 
+.player-selected {
+    border-color: red;
+}
+
+.player-targetable {
+    border-color: #806c00ff;
+}
+
 .player-pocket-scroll {
     width: var(--player-row-width);
     height: var(--player-row-height);

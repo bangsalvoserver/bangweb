@@ -1,16 +1,17 @@
-import { CSSProperties, forwardRef, useContext, useImperativeHandle } from "react";
+import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo } from "react";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import CharacterView from "./CharacterView";
 import CountPocket from "./CountPocket";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
-import { Card, Player } from "./Model/GameTable";
+import { Card, GameTable, Player } from "./Model/GameTable";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
 import RoleView from "./RoleView";
 import ScenarioDeckView from "./ScenarioDeckView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import { TargetMode, TargetSelector, isPlayerSelected, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -19,9 +20,29 @@ export interface PlayerProps {
     onClickPlayer: () => void;
 }
 
+function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player) {
+    if (isPlayerSelected(selector, player)) {
+        return 'player-selected';
+    }
+    switch (selector.mode) {
+    case TargetMode.target:
+    case TargetMode.modifier:
+        if (isValidPlayerTarget(table, selector, player)) {
+            return 'player-targetable';
+        }
+        break;
+    case TargetMode.equip:
+        if (isValidEquipTarget(table, selector, player)) {
+            return 'player-targetable';
+        }
+        break;
+    }
+    return null;
+}
+
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
     const table = useContext(GameTableContext);
-    const { request } = useContext(TargetSelectorContext);
+    const selector = useContext(TargetSelectorContext);
     const positions = useRefLazy(() => new Map<PocketType, PocketPosition>());
 
     useImperativeHandle(ref, () => positions.current);
@@ -29,13 +50,15 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id == table.status.current_turn;
 
+    const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(table, selector, player), [selector]);
+
     let classes = ['player-view'];
     if (isTurn) {
         classes.push('current-turn');
     }
 
-    const isOrigin = 'origin' in request && request.origin == player.id;
-    const isTarget = 'target' in request && request.target == player.id;
+    const isOrigin = 'origin' in selector.request && selector.request.origin == player.id;
+    const isTarget = 'target' in selector.request && selector.request.target == player.id;
     const isWinner = player.status.flags.includes('winner');
 
     let flipDuration: number | undefined;
@@ -59,6 +82,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
             } as CSSProperties;
             classes.push('player-animation-hp');
         }
+    } else if (selectorPlayerClass) {
+        classes.push(selectorPlayerClass);
     }
 
     const characterView = (

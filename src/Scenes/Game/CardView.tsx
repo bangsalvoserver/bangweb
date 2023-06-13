@@ -2,8 +2,8 @@ import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo, us
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
-import { Card, CardImage, getCardImage } from "./Model/GameTable";
-import { TargetSelector, getSelectorCurrentTree, isCardSelected } from "./Model/TargetSelector";
+import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
+import { TargetMode, TargetSelector, getSelectorCurrentTree, isCardSelected, isValidCardTarget, selectorCanPickCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 
@@ -17,14 +17,16 @@ export interface CardRef {
     getRect: () => Rect | undefined;
 }
 
-function getSelectorCardClass(selector: TargetSelector, card: Card) {
+function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
     if ('targets' in selector.selection) {
         if (isCardSelected(selector, card)) {
             return 'card-selected';
         }
-        // if (isValidCardTarget(table, selector, card)) {
-        //     return 'card-targetable';
-        // }
+        if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
+            if (isValidCardTarget(table, selector, card)) {
+                return 'card-targetable';
+            }
+        }
         if (selector.selection.playing_card?.id == card.id
             || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id))
         {
@@ -34,7 +36,7 @@ function getSelectorCardClass(selector: TargetSelector, card: Card) {
         if (selector.selection.picked_card == card.id) {
             return 'card-picked';
         }
-    } else if ('pick_cards' in selector.request && selector.request.pick_cards.includes(card.id)) {
+    } else if (selectorCanPickCard(table, selector, card)) {
         return 'card-pickable';
     }
     if (!('playing_card' in selector.selection) || selector.selection.playing_card === undefined) {
@@ -63,7 +65,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
         getRect: () => cardRef.current ? getDivRect(cardRef.current) : undefined
     }));
 
-    const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector, card]);
+    const selectorCardClass = useMemo(() => getSelectorCardClass(table, selector, card), [selector]);
 
     let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
 
