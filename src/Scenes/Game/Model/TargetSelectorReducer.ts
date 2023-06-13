@@ -2,7 +2,7 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { getTagValue } from "./CardData";
 import { CardTarget } from "./CardEnums";
 import { Card, Player } from "./GameTable";
-import { GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, getCardEffects, getCurrentCard, getEffectAt, getNextTargetIndex, getSelectorCurrentTargetList, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -85,13 +85,16 @@ function appendTargets(targetType: MultiTargetType, id: number, index: number, m
     };
 }
 
+function addModifierContext(modifier: Card, targets: CardTarget[], selector: TargetSelector) {
+    return selector;
+}
+
 function handleAutoTargets(selector: TargetSelector): TargetSelector {
     if (!('targets' in selector.selection)) {
         throw new Error('Invalid TargetSelector state');
     }
 
-    const currentCard = getCurrentCard(selector);
-    const targets = getSelectorCurrentTargetList(selector);
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
     const repeatCount = getTagValue(currentCard, 'repeatable') ?? 1;
@@ -99,9 +102,13 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
     if (index >= effects.length && repeatCount > 0
         && targets.length - effects.length == optionals.length * repeatCount)
     {
-        // TODO add modifier context
-        return { ...selector, mode: selector.mode == TargetMode.modifier
-            ? TargetMode.start : TargetMode.finish };
+        if (selector.mode == TargetMode.modifier) {
+            return addModifierContext(currentCard, targets, {
+                ...selector, mode: TargetMode.start
+            });
+        } else {
+            return { ...selector, mode: TargetMode.finish };
+        }
     }
 
     // TODO auto_confirm
@@ -209,8 +216,9 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     addCardTarget (card) {
-        const index = getNextTargetIndex(getSelectorCurrentTargetList(this));
-        const nextEffect = getEffectAt(getCardEffects(getCurrentCard(this), isResponse(this)), index);
+        const [currentCard, targets] = getCurrentCardAndTargets(this);
+        const index = getNextTargetIndex(targets);
+        const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(this)), index);
 
         switch (nextEffect?.target) {
         case 'card':
@@ -227,8 +235,9 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     addPlayerTarget (player) {
-        const index = getNextTargetIndex(getSelectorCurrentTargetList(this));
-        const nextEffect = getEffectAt(getCardEffects(getCurrentCard(this), isResponse(this)), index);
+        const [currentCard, targets] = getCurrentCardAndTargets(this);
+        const index = getNextTargetIndex(targets);
+        const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(this)), index);
 
         switch (nextEffect?.target) {
         case 'player':

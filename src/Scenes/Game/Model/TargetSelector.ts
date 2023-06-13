@@ -65,21 +65,20 @@ export function newTargetSelector(request: RequestStatusUnion): TargetSelector {
     };
 }
 
-export function getCurrentCard(selector: TargetSelector): Card {
+export function getCurrentCardAndTargets(selector: TargetSelector): [Card, CardTarget[]] {
     if ('targets' in selector.selection) {
         switch (selector.mode) {
-            case TargetMode.target: return selector.selection.playing_card as Card;
-            case TargetMode.modifier: return selector.selection.modifiers.at(-1)?.modifier as Card;
-        }
-    }
-    throw new Error('Invalid TargetSelector state');
-}
-
-export function getSelectorCurrentTargetList(selector: TargetSelector): CardTarget[] {
-    if ('targets' in selector.selection) {
-        switch (selector.mode) {
-            case TargetMode.target: return selector.selection.targets;
-            case TargetMode.modifier: return selector.selection.modifiers.at(-1)?.targets as CardTarget[];
+            case TargetMode.target:
+                if (selector.selection.playing_card) {
+                    return [selector.selection.playing_card, selector.selection.targets];
+                }
+                break;
+            case TargetMode.modifier: {
+                const pair = selector.selection.modifiers.at(-1);
+                if (pair) {
+                    return [pair.modifier, pair.targets];
+                }
+            }
         }
     }
     throw new Error('Invalid TargetSelector state');
@@ -93,15 +92,12 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
     switch (selector.mode) {
     case TargetMode.target:
     case TargetMode.modifier: {
-        const [effects, optionals] = getCardEffects(getCurrentCard(selector), isResponse(selector));
-
-        const numEffects = effects.length;
-        const numOptionals = optionals.length;
-        const numTargets = getSelectorCurrentTargetList(selector).length;
+        const [currentCard, targets] = getCurrentCardAndTargets(selector);
+        const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
         
-        return numOptionals != 0
-            && numTargets >= numEffects
-            && (numTargets - numEffects) % numOptionals == 0;
+        return optionals.length != 0
+            && targets.length >= effects.length
+            && (targets.length - effects.length) % optionals.length == 0;
     }
     default:
         return false;
@@ -236,8 +232,8 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
 
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
-    const currentCard = getCurrentCard(selector);
-    const index = getNextTargetIndex(getSelectorCurrentTargetList(selector));
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
 
     switch (nextTarget?.target) {
@@ -332,9 +328,9 @@ export function getEffectAt([effects, optionals]: CardEffectPair, index: number)
 }
 
 export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, player: Player) {
-    const nextTarget = getEffectAt(
-        getCardEffects(getCurrentCard(selector), isResponse(selector)),
-        getNextTargetIndex(getSelectorCurrentTargetList(selector)));
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
 
     switch (nextTarget?.target) {
     case 'player':
