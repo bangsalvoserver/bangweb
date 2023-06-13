@@ -54,6 +54,36 @@
     transform: rotate(90deg);
 }
 
+.card-selected .card-view-img {
+    -webkit-box-shadow: 0px 0px 3px 3px red; 
+    box-shadow: 0px 0px 3px 3px red;
+}
+
+.card-targetable .card-view-img {
+    -webkit-box-shadow: 0px 0px 3px 3px #ffff0060; 
+    box-shadow: 0px 0px 3px 3px #ffff0060;
+}
+
+.card-current .card-view-img {
+    -webkit-box-shadow: 0px 0px 3px 3px #306effee; 
+    box-shadow: 0px 0px 3px 3px #306effee;
+}
+
+.card-picked .card-view-img {
+    -webkit-box-shadow: 0px 0px 3px 3px #40c0ffaa; 
+    box-shadow: 0px 0px 3px 3px #40c0ffaa; 
+}
+
+.card-pickable .card-view-img {
+    -webkit-box-shadow: 0px 0px 3px 3px #ffffffaa; 
+    box-shadow: 0px 0px 3px 3px #ffffffaa; 
+}
+
+.card-playable .card-view-img {
+    -webkit-box-shadow: 0px 0px 3px 3px #1ed760aa; 
+    box-shadow: 0px 0px 3px 3px #1ed760aa;
+}
+
 .card-highlight .card-view-img {
     -webkit-box-shadow: 0px 0px 3px 3px red; 
     box-shadow: 0px 0px 3px 3px red;

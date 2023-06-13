@@ -69,6 +69,7 @@ export class GameUpdateHandler {
         game_error (message) {
             // TODO
             console.error(message.format_str);
+            this.selectorDispatch({ undoSelection: {} });
         },
 
         game_log (message) {

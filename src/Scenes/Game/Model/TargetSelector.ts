@@ -152,6 +152,54 @@ export function selectorCanPickCard(table: GameTable, selector: TargetSelector, 
     return false;
 }
 
+export function isCardSelected(selector: TargetSelector, card: Card) {
+    const check = (target: CardTarget) => {
+        if ('card' in target) {
+            return target.card == card.id;
+        }
+        if ('extra_card' in target) {
+            return target.extra_card == card.id;
+        }
+        if ('cards' in target) {
+            return target.cards.includes(card.id);
+        }
+        if ('cards_other_players' in target) {
+            return target.cards_other_players.includes(card.id);
+        }
+        return false;
+    };
+    if ('targets' in selector.selection) {
+        if (selector.selection.targets.some(check)) {
+            return true;
+        }
+        if (selector.selection.modifiers.some(({targets}) => targets.some(check))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function isPlayerSelected(selector: TargetSelector, player: Player) {
+    const check = (target: CardTarget) => {
+        if ('player' in target) {
+            return target.player == player.id;
+        }
+        if ('conditional_player' in target) {
+            return target.conditional_player == player.id;
+        }
+        return false;
+    };
+    if ('targets' in selector.selection) {
+        if (selector.selection.targets.some(check)) {
+            return true;
+        }
+        if (selector.selection.modifiers.some(({targets}) => targets.some(check))) {
+            return true;
+        }
+    }
+    return false;
+}
+
 export function countSelectedCubes(selector: TargetSelector, targetCard: Card) {
     let selected = 0;
     const response = isResponse(selector);
