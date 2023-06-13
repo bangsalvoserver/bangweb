@@ -1,7 +1,7 @@
 import { Dispatch } from "react";
 import { isEquipCard } from "./Filters";
 import { Card, GameTable, Player, getCard, getFirstCharacter } from "./GameTable";
-import { TargetMode, TargetSelector, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { TargetMode, TargetSelector, getSelectorCurrentTargetList, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 import { GameChannel } from "./GameUpdateHandler";
 
@@ -63,7 +63,24 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
 }
 
 export function handleAutoSelect(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>) {
-    if (!('playing_card' in selector.selection) && !('picked_card' in selector.selection)) {
+    if ('playing_card' in selector.selection) {
+        if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
+            const lastTarget = getSelectorCurrentTargetList(selector).at(-1);
+            if (lastTarget) {
+                if ('conditional_player' in lastTarget && lastTarget.conditional_player === null) {
+                    const numTargetable = 0; // TODO
+                    if (numTargetable > 0) {
+                        selectorDispatch({ revertLastTarget: {} });
+                    } else {
+                        selectorDispatch({ reserveTargets: 0 });
+                    }
+                } else if ('cards_other_players' in lastTarget && lastTarget.cards_other_players.length == 0) {
+                    const numTargetable = 0; // TODO
+                    selectorDispatch({ reserveTargets: numTargetable });
+                }
+            }
+        }
+    } else if (!('picked_card' in selector.selection)) {
         if ('auto_select' in selector.request && selector.request.auto_select) {
             if (selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0) {
                 selectorDispatch({ selectPlayingCard: getCard(table, selector.request.respond_cards[0].card) });

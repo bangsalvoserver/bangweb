@@ -61,7 +61,7 @@ export default function GameScene({ channel }: GameProps) {
   const handleConfirm = () => { if (isClickAllowed()) selectorDispatch({ confirmPlay: {} }) };
   const handleUndo = () => { if (isClickAllowed()) selectorDispatch({ undoSelection: {} }) };
 
-  useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [table, selector]);
+  useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [selector]);
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
   const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>

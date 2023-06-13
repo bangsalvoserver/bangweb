@@ -2,7 +2,7 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { getTagValue } from "./CardData";
 import { CardTarget } from "./CardEnums";
 import { Card, Player } from "./GameTable";
-import { GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, countTargetableForCardsOtherPlayers, getCardEffects, getCurrentCard, getEffectAt, getNextTargetIndex, getSelectorCurrentTargetList, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, getCardEffects, getCurrentCard, getEffectAt, getNextTargetIndex, getSelectorCurrentTargetList, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -12,6 +12,8 @@ export type SelectorUpdate =
     { selectPlayingCard: Card } |
     { selectPickCard: Card } |
     { selectEquipCard: Card } |
+    { revertLastTarget: {} } |
+    { reserveTargets: number } |
     { addCardTarget: Card } |
     { addPlayerTarget: Player } |
     { addEquipTarget: Player }
@@ -73,7 +75,7 @@ function appendTargets(targetType: MultiTargetType, id: number, index: number, m
             if (targetType in target) {
                 const targetList = [...target[targetType as keyof CardTarget] as number[]];
                 const zeroIndex = targetList.indexOf(0);
-                if (zeroIndex > 0) {
+                if (zeroIndex >= 0) {
                     targetList[zeroIndex] = id;
                     return targets.slice(0, -1).concat({[targetType]: targetList} as CardTarget);
                 }
@@ -97,6 +99,7 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
     if (index >= effects.length && repeatCount > 0
         && targets.length - effects.length == optionals.length * repeatCount)
     {
+        // TODO add modifier context
         return { ...selector, mode: selector.mode == TargetMode.modifier
             ? TargetMode.start : TargetMode.finish };
     }
@@ -110,17 +113,14 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
     case 'self_cubes':
         return handleAutoTargets(editSelectorTargets(selector, appendEmptyTarget(nextEffect.target)));
     case 'conditional_player':
-        break; // TODO add {conditional_player: null} if no target possible
+        return editSelectorTargets(selector, appendTarget('conditional_player', null));
     case 'extra_card':
         if (selector.selection.context.repeat_card) {
             return handleAutoTargets(editSelectorTargets(selector, appendTarget('extra_card', null)));
         }
         break;
     case 'cards_other_players':
-        if (countTargetableForCardsOtherPlayers(selector) == 0) {
-            return handleAutoTargets(editSelectorTargets(selector, appendTargets('cards_other_players', 0, index, 0)));
-        }
-        break;
+        return editSelectorTargets(selector, appendTargets('cards_other_players', 0, index, 0));
     }
     return selector;
 }
@@ -186,6 +186,28 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         }
     },
 
+    revertLastTarget () {
+        return editSelectorTargets(this, targets => targets.slice(0, -1));
+    },
+
+    reserveTargets (numTargets) {
+        let selector = this;
+        if (numTargets > 0) {
+            selector = editSelectorTargets(selector, targets => {
+                const lastTarget = targets.at(-1);
+                if (!lastTarget) {
+                    throw new Error('Invalid TargetSelector state');
+                }
+                const [targetType, targetValue] = Object.entries(lastTarget)[0];
+                if (!Array.isArray(targetValue)) {
+                    throw new Error('Invalid TargetSelector state');
+                }
+                return targets.slice(0, -1).concat({[targetType]: Array.of(numTargets).fill(0)} as CardTarget);
+            });
+        }
+        return handleAutoTargets(selector);
+    },
+
     addCardTarget (card) {
         const index = getNextTargetIndex(getSelectorCurrentTargetList(this));
         const nextEffect = getEffectAt(getCardEffects(getCurrentCard(this), isResponse(this)), index);
@@ -198,7 +220,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         case 'select_cubes':
             return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, nextEffect.target_value)));
         case 'cards_other_players':
-            return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, countTargetableForCardsOtherPlayers(this))));
+            return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, 0)));
         default:
             throw new Error('Invalid TargetSelector state');
         }

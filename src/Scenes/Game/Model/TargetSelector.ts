@@ -280,11 +280,6 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
     }
 }
 
-export function countTargetableForCardsOtherPlayers(selector: TargetSelector) {
-    // TODO
-    return 0;
-}
-
 export type CardEffectPair = [CardEffect[], CardEffect[]];
 
 export function getCardEffects(card: Card, isResponse: boolean): CardEffectPair {
