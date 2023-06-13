@@ -1,8 +1,8 @@
 import { Dispatch } from "react";
-import { isEquipCard, isPlayerAlive } from "./Filters";
+import { checkPlayerFilter, isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, Player, getCard, getFirstCharacter, getPlayer } from "./GameTable";
 import { GameChannel } from "./GameUpdateHandler";
-import { TargetMode, TargetSelector, getCurrentCardAndTargets, isCardCurrent, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, isCardCurrent, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 import { CardId } from "./GameUpdate";
 
@@ -64,14 +64,14 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
 }
 
 export function handleAutoSelect(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>) {
+    const selectCard = (cardId: CardId) => {
+        const card = getCard(table, cardId);
+        if (!isCardCurrent(selector, card)) {
+            selectorDispatch({ selectPlayingCard: card });
+        }
+    };
     if ('playing_card' in selector.selection) {
         if (selector.mode == TargetMode.start) {
-            const selectCard = (cardId: CardId) => {
-                const card = getCard(table, cardId);
-                if (!isCardCurrent(selector, card)) {
-                    selectorDispatch({ selectPlayingCard: card });
-                }
-            };
             if (selector.selection.context.repeat_card) {
                 selectCard(selector.selection.context.repeat_card);
             } else if (selector.selection.context.traincost) {
@@ -84,12 +84,16 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
             const lastTarget = targets.at(-1);
             if (lastTarget) {
                 if ('conditional_player' in lastTarget && lastTarget.conditional_player === null) {
-                    // TODO
-                    // if (table.alive_players.some(target => isValidPlayerTarget(table, selector, getPlayer(table, target)))) {
-                    //     selectorDispatch({ revertLastTarget: {} });
-                    // } else {
-                    //     selectorDispatch({ reserveTargets: 0 });
-                    // }
+                    const selection = selector.selection;
+                    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), targets.length - 1);
+                    if (table.alive_players.some(target => checkPlayerFilter(selector, effect!.player_filter,
+                        getPlayer(table, table.self_player!),
+                        getPlayer(table, target), selection.context)))
+                    {
+                        selectorDispatch({ revertLastTarget: {} });
+                    } else {
+                        selectorDispatch({ reserveTargets: 0 });
+                    }
                 } else if ('cards_other_players' in lastTarget && lastTarget.cards_other_players.length == 0) {
                     const selection = selector.selection;
                     const numTargetable = table.alive_players.reduce((count, target) => {
@@ -116,7 +120,7 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
     } else if (!('picked_card' in selector.selection)) {
         if ('auto_select' in selector.request && selector.request.auto_select) {
             if (selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0) {
-                selectorDispatch({ selectPlayingCard: getCard(table, selector.request.respond_cards[0].card) });
+                selectCard(selector.request.respond_cards[0].card);
             }
         }
     }
