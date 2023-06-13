@@ -2,8 +2,9 @@ import { Dispatch } from "react";
 import { isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, Player, getCard, getFirstCharacter, getPlayer } from "./GameTable";
 import { GameChannel } from "./GameUpdateHandler";
-import { TargetMode, TargetSelector, getCurrentCardAndTargets, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { TargetMode, TargetSelector, getCurrentCardAndTargets, isCardCurrent, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
+import { CardId } from "./GameUpdate";
 
 export function handleClickCard(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
     switch (selector.mode) {
@@ -64,7 +65,21 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
 
 export function handleAutoSelect(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>) {
     if ('playing_card' in selector.selection) {
-        if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
+        if (selector.mode == TargetMode.start) {
+            const selectCard = (cardId: CardId) => {
+                const card = getCard(table, cardId);
+                if (!isCardCurrent(selector, card)) {
+                    selectorDispatch({ selectPlayingCard: card });
+                }
+            };
+            if (selector.selection.context.repeat_card) {
+                selectCard(selector.selection.context.repeat_card);
+            } else if (selector.selection.context.traincost) {
+                selectCard(selector.selection.context.traincost);
+            }
+        } else if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
+            // TODO handle auto_confirm
+
             const [currentCard, targets] = getCurrentCardAndTargets(selector);
             const lastTarget = targets.at(-1);
             if (lastTarget) {

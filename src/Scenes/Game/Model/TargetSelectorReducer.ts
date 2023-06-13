@@ -2,7 +2,7 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { getTagValue } from "./CardData";
 import { CardTarget } from "./CardEnums";
 import { Card, Player } from "./GameTable";
-import { GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { EffectContext, GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getSelectorCurrentTree, isResponse, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -85,7 +85,46 @@ function appendTargets(targetType: MultiTargetType, id: number, index: number, m
     };
 }
 
-function addModifierContext(modifier: Card, targets: CardTarget[], selector: TargetSelector) {
+function addModifierContext(modifier: Card, targets: CardTarget[], selector: TargetSelector): TargetSelector {
+    if (!('modifier' in modifier.cardData)) {
+        throw new Error('Invalid TargetSelector state');
+    }
+    const editContext = (mapper: (context: EffectContext) => EffectContext): TargetSelector => {
+        if (!('context' in selector.selection)) {
+            throw new Error('Invalid TargetSelector state');
+        }
+        return {
+            ...selector,
+            selection: {
+                ...selector.selection,
+                context: mapper(selector.selection.context)
+            }
+        };
+    };
+    switch (modifier.cardData.modifier.type) {
+    case 'belltower':
+        return editContext(context => ({ ...context, ignore_distances: true }));
+    case 'card_choice':
+        return editContext(context => ({ ...context, card_choice: modifier.id }));
+    case 'leevankliff':
+    case 'moneybag': {
+        const repeat_card = getSelectorCurrentTree(selector)[0].card;
+        return editContext(context => ({ ...context, repeat_card }));
+    }
+    case 'traincost':
+        if (modifier.pocket?.name == 'stations') {
+            const traincost = getSelectorCurrentTree(selector)[0].card;
+            return editContext(context => ({ ...context, traincost  }))
+        }
+        break;
+    case 'sgt_blaze':
+        for (const [target, effect] of zipCardTargets(targets, getCardEffects(modifier, isResponse(selector)))) {
+            if (effect.type == 'ctx_add' && 'player' in target) {
+                return editContext(context => ({ ...context, skipped_player: target.player }));
+            }
+        }
+        break;
+    }
     return selector;
 }
 
@@ -110,8 +149,6 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
             return { ...selector, mode: TargetMode.finish };
         }
     }
-
-    // TODO auto_confirm
 
     const nextEffect = getEffectAt([effects, optionals], index);
     switch (nextEffect?.target) {

@@ -16,6 +16,8 @@ export interface PickCardSelection {
 
 export interface EffectContext {
     repeat_card?: CardId;
+    card_choice?: CardId;
+    traincost?: CardId;
     skipped_player?: PlayerId;
     ignore_distances?: boolean;
 }
@@ -146,6 +148,15 @@ export function selectorCanPickCard(table: GameTable, selector: TargetSelector, 
         }
     }
     return false;
+}
+
+export function isCardCurrent(selector: TargetSelector, card: Card) {
+    if ('playing_card' in selector.selection) {
+        return selector.selection.playing_card?.id == card.id
+            || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id);
+    } else {
+        return false;
+    }
 }
 
 export function isCardSelected(selector: TargetSelector, card: Card) {

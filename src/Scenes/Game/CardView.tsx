@@ -3,7 +3,7 @@ import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
-import { TargetMode, TargetSelector, getSelectorCurrentTree, isCardSelected, isValidCardTarget, selectorCanPickCard } from "./Model/TargetSelector";
+import { TargetMode, TargetSelector, getSelectorCurrentTree, isCardCurrent, isCardSelected, isValidCardTarget, selectorCanPickCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 
@@ -27,9 +27,7 @@ function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: 
                 return 'card-targetable';
             }
         }
-        if (selector.selection.playing_card?.id == card.id
-            || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id))
-        {
+        if (isCardCurrent(selector, card)) {
             return 'card-current';
         }
     } else if ('picked_card' in selector.selection) {

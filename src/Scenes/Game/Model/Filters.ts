@@ -23,7 +23,7 @@ export function isPlayerGhost(player: Player) {
 }
 
 export function isPlayerAlive(player: Player) {
-    return !player.status.flags.includes('dead') || !isPlayerGhost(player);
+    return !player.status.flags.includes('dead') || isPlayerGhost(player);
 }
 
 export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter[], origin: Player, target: Player, context: EffectContext) {
