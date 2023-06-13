@@ -285,10 +285,10 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
         }
         return true;
     case 'cards_other_players': {
-        if (getCardColor(card) == 'black') {
+        if (getCardColor(card) == 'black' || card.cardData.deck == 'character') {
             return false;
         }
-        if (player == table.self_player || player == selector.selection.context.skipped_player) {
+        if (!player || player == table.self_player || player == selector.selection.context.skipped_player) {
             return false;
         }
         const lastTarget = selector.selection.targets.at(index);

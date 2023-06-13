@@ -127,10 +127,20 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     if (!filter.includes('can_target_self') && originCard.id == target.id) return false;
 
     if (filter.includes('cube_slot')) {
-        if (!target.pocket || !('player' in target.pocket) || getPlayer(table, target.pocket.player).pockets.player_character[0] != target.id) {
-            return false;
+        switch (target.pocket?.name) {
+        case 'player_character': {
+            const targetOwner = 'player' in target.pocket ? getPlayer(table, target.pocket.player) : undefined;
+            if (targetOwner?.pockets.player_character[0] != target.id) {
+                return false;
+            }
+            break;
         }
-        if (getCardColor(target) != 'orange' || target.pocket?.name != 'player_table') {
+        case 'player_table':
+            if (getCardColor(target) != 'orange') {
+                return false;
+            }
+            break;
+        default:
             return false;
         }
     } else if (target.cardData.deck == 'character') {
