@@ -9,7 +9,7 @@ import { GameTableContext } from "./GameScene";
 export interface CountPocketProps {
     trackAllCards?: boolean;
     cards: CardId[];
-    onClickCard: (card: Card) => void;
+    onClickCard?: (card: Card) => void;
 }
 
 const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ trackAllCards, cards, onClickCard }, ref) => {
@@ -20,7 +20,7 @@ const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ trackAllCard
 
     if (!trackAllCards) cards = cards.slice(-2);
 
-    const handleClickLastCard = numCards > 0 ? () => {
+    const handleClickLastCard = onClickCard && numCards > 0 ? () => {
         onClickCard(getCard(table, cards[cards.length - 1]));
     } : undefined;
 

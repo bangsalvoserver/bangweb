@@ -100,8 +100,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     );
 
     const scenarioDecks = (<>
-        <ScenarioDeckView ref={setMapRef(positions, 'scenario_deck')} pocket='scenario_deck' player={player.id} onClickCard={onClickCard} />
-        <ScenarioDeckView ref={setMapRef(positions, 'wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} onClickCard={onClickCard} />
+        <ScenarioDeckView ref={setMapRef(positions, 'scenario_deck')} pocket='scenario_deck' player={player.id} />
+        <ScenarioDeckView ref={setMapRef(positions, 'wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
     </>);
 
     const playerIcons = (
