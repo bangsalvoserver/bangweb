@@ -26,7 +26,7 @@ export interface AddCardsUpdate {
         deck: DeckType
     }[];
     pocket: PocketType;
-    player?: PlayerId;
+    player: PlayerId | null;
 }
 
 export interface RemoveCardsUpdate {
@@ -35,19 +35,19 @@ export interface RemoveCardsUpdate {
 
 export interface MoveCardUpdate {
     card: CardId;
-    player?: PlayerId;
+    player: PlayerId | null;
     pocket: PocketType;
 }
 
 export interface AddCubesUpdate {
     num_cubes: number;
-    target_card?: CardId;
+    target_card: CardId | null;
 }
 
 export interface MoveCubesUpdate {
     num_cubes: number;
-    origin_card?: CardId;
-    target_card?: CardId;
+    origin_card: CardId | null;
+    target_card: CardId | null;
 }
 
 export interface MoveScenarioDeckUpdate {
@@ -82,7 +82,7 @@ export interface FlashCardUpdate {
 }
 
 export interface ShortPauseUpdate {
-    card?: CardId;
+    card: CardId | null;
 }
 
 export interface PlayerAddUpdate {
@@ -125,9 +125,9 @@ export interface CardNode {
 }
 
 export interface RequestStatusArgs {
-    origin_card?: CardId;
-    origin?: PlayerId;
-    target?: PlayerId;
+    origin_card: CardId | null;
+    origin: PlayerId | null;
+    target: PlayerId | null;
     status_text: GameString;
     auto_select: boolean;
     respond_cards: CardNode[];

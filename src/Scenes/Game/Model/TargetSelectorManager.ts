@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { checkPlayerFilter, isEquipCard, isPlayerAlive } from "./Filters";
-import { Card, GameTable, Player, getCard, getFirstCharacter, getPlayer } from "./GameTable";
+import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { GameChannel } from "./GameUpdateHandler";
 import { TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, isCardCurrent, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
@@ -13,7 +13,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
         let cardTarget: Card | undefined;
         switch (card.pocket?.name) {
         case 'player_character':
-            cardTarget = getFirstCharacter(table, card.pocket.player);
+            cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
             break;
         case 'player_table':
         case 'player_hand':
@@ -84,12 +84,8 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
             const lastTarget = targets.at(-1);
             if (lastTarget) {
                 if ('conditional_player' in lastTarget && lastTarget.conditional_player === null) {
-                    const selection = selector.selection;
                     const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), targets.length - 1);
-                    if (table.alive_players.some(target => checkPlayerFilter(selector, effect!.player_filter,
-                        getPlayer(table, table.self_player!),
-                        getPlayer(table, target), selection.context)))
-                    {
+                    if (table.alive_players.some(target => checkPlayerFilter(table, selector, effect!.player_filter, getPlayer(table, target)))) {
                         selectorDispatch({ revertLastTarget: {} });
                     } else {
                         selectorDispatch({ reserveTargets: 0 });

@@ -71,7 +71,7 @@ export function getCardImage(card: Card): CardImage | undefined {
     } : undefined;
 };
 
-export function newPocketRef(pocketName: PocketType, player?: PlayerId): PocketRef {
+export function newPocketRef(pocketName: PocketType, player: PlayerId | null = null): PocketRef {
     if (pocketName == 'none') {
         return null;
     } else if (player && pocketName.startsWith('player_')) {
@@ -221,8 +221,4 @@ export function getPlayer(table: GameTable, id: PlayerId): Player {
         throw new Error(`Player not found: ${id}`);
     }
     return player;
-}
-
-export function getFirstCharacter(table: GameTable, playerId: PlayerId): Card {
-    return getCard(table, getPlayer(table, playerId).pockets.player_character[0]);
 }

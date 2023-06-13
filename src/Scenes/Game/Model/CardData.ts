@@ -48,15 +48,3 @@ export interface CardData {
     color: CardColor;
     sign: CardSign;
 }
-
-export function getTagValue(card: Card, tagType: TagType): number | undefined {
-    return 'tags' in card.cardData ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
-}
-
-export function cardHasTag(card: Card, tagType: TagType) {
-    return getTagValue(card, tagType) !== undefined;
-}
-
-export function getEquipTarget(card: Card): PlayerFilter[] {
-    return 'equip_target' in card.cardData ? card.cardData.equip_target : [];
-}

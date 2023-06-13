@@ -1,6 +1,6 @@
-import { CardEffect, getEquipTarget } from "./CardData";
+import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
-import { checkCardFilter, checkPlayerFilter, isEquipCard } from "./Filters";
+import { checkCardFilter, checkPlayerFilter, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -251,15 +251,10 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
     case 'card':
     case 'extra_card':
     case 'cards':
-        if (player && !checkPlayerFilter(selector, nextTarget.player_filter,
-            getPlayer(table, table.self_player!),
-            getPlayer(table, player), selector.selection.context))
-        {
+        if (player && !checkPlayerFilter(table, selector, nextTarget.player_filter, getPlayer(table, player))) {
             return false;
         }
-        if (!checkCardFilter(selector, nextTarget.card_filter,
-            getPlayer(table, table.self_player!),
-            currentCard, card, selector.selection.context)) {
+        if (!checkCardFilter(table, selector, nextTarget.card_filter, currentCard, card)) {
             return false;
         }
         return true;
@@ -346,9 +341,7 @@ export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, 
     switch (nextTarget?.target) {
     case 'player':
     case 'conditional_player':
-        return checkPlayerFilter(selector, nextTarget.player_filter,
-            getPlayer(table, table.self_player!), player,
-            'context' in selector.selection ? selector.selection.context : {});
+        return checkPlayerFilter(table, selector, nextTarget.player_filter, player);
     default:
         return false;
     }
@@ -358,6 +351,5 @@ export function isValidEquipTarget(table: GameTable, selector: TargetSelector, p
     return 'playing_card' in selector.selection
         && selector.selection.playing_card !== undefined
         && isEquipCard(selector.selection.playing_card)
-        && checkPlayerFilter(selector, getEquipTarget(selector.selection.playing_card),
-            getPlayer(table, table.self_player!), player, selector.selection.context);
+        && checkPlayerFilter(table, selector, getEquipTarget(selector.selection.playing_card), player);
 }

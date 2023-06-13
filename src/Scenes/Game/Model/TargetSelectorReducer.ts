@@ -1,6 +1,6 @@
 import { createUnionReducer } from "../../../Utils/UnionUtils";
-import { getTagValue } from "./CardData";
 import { CardTarget } from "./CardEnums";
+import { getTagValue } from "./Filters";
 import { Card, Player } from "./GameTable";
 import { EffectContext, GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getSelectorCurrentTree, isResponse, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
 

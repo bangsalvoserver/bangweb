@@ -1,8 +1,18 @@
-import { cardHasTag } from "./CardData";
-import { CardFilter, PlayerFilter } from "./CardEnums";
-import { Card, Player, getPlayer } from "./GameTable";
-import { PlayerId } from "./GameUpdate";
-import { EffectContext, TargetSelector } from "./TargetSelector";
+import { CardFilter, PlayerFilter, TagType } from "./CardEnums";
+import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
+import { TargetSelector } from "./TargetSelector";
+
+export function getTagValue(card: Card, tagType: TagType): number | undefined {
+    return 'tags' in card.cardData ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
+}
+
+export function cardHasTag(card: Card, tagType: TagType) {
+    return getTagValue(card, tagType) !== undefined;
+}
+
+export function getEquipTarget(card: Card): PlayerFilter[] {
+    return 'equip_target' in card.cardData ? card.cardData.equip_target : [];
+}
 
 export function isEquipCard(card: Card) {
     switch (card.pocket?.name) {
@@ -16,17 +26,63 @@ export function isEquipCard(card: Card) {
     }
 }
 
-export function isPlayerGhost(player: Player) {
-    return player.status.flags.includes('ghost_1')
-        || player.status.flags.includes('ghost_2')
-        || player.status.flags.includes('temp_ghost');
-}
-
 export function isPlayerAlive(player: Player) {
-    return !player.status.flags.includes('dead') || isPlayerGhost(player);
+    return !player.status.flags.includes('dead')
+        || player.status.flags.includes('ghost_1')
+        || player.status.flags.includes('ghost_2')
+        || player.status.flags.includes('temp_ghost')
 }
 
-export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter[], origin: Player, target: Player, context: EffectContext) {
+export function isBangCard(table: GameTable, origin: Player, card: Card) {
+    return table.status.flags.includes('treat_any_as_bang')
+        || cardHasTag(card, 'bangcard')
+        || origin.status.flags.includes('treat_missed_as_bang')
+        && cardHasTag(card, 'missed');
+}
+
+export function countDistance(table: GameTable, from: Player, to: Player) {
+    if (from.id == to.id) return 0;
+
+    if (table.status.flags.includes('disable_player_distances')) {
+        return 1 + to.status.distance_mod;
+    }
+
+    const fromIndex = table.alive_players.indexOf(from.id);
+    const toIndex = table.alive_players.indexOf(to.id);
+
+    let countLeft = 0;
+    let countRight = 0;
+
+    let i = fromIndex;
+    while (i != toIndex) {
+        ++i;
+        if (i == table.alive_players.length) {
+            i = 0;
+        }
+        if (isPlayerAlive(getPlayer(table, table.alive_players[i]))) {
+            ++countLeft;
+        }
+    }
+    while (i != fromIndex) {
+        ++i;
+        if (i == table.alive_players.length) {
+            i = 0;
+        }
+        if (isPlayerAlive(getPlayer(table, table.alive_players[i]))) {
+            ++countRight;
+        }
+    }
+
+    return Math.min(countLeft, countRight) + to.status.distance_mod;
+}
+
+export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player) {
+    if (!('context' in selector.selection)) {
+        throw new Error('Invalid TargetSelector state');
+    }
+    const origin = getPlayer(table, table.self_player!);
+    const context = selector.selection.context;
+
     if (filter.includes('dead')) {
         if (!filter.includes('alive') && !target.status.flags.includes('dead')) {
             return false;
@@ -44,11 +100,6 @@ export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter
         }
     }
 
-    const countDistance = () => {
-        // TODO
-        return 0;
-    }
-
     if (filter.includes('notsheriff') && target.status.role == 'sheriff') return false;
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length == 0) return false;
 
@@ -61,33 +112,30 @@ export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter
         } else if (filter.includes('range_2')) {
             range += 2;
         }
-        if (countDistance() > range) return false;
+        if (countDistance(table, origin, target) > range) return false;
     }
 
     return true;
 }
 
-export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], origin: Player, originCard: Card, target: Card, context: EffectContext) {
+export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], originCard: Card, target: Card) {
+    const origin = getPlayer(table, table.self_player!);
+
     if (!filter.includes('can_target_self') && originCard.id == target.id) return false;
 
-    const isTargetCubeSlot = () => {
-        // TODO
-        return true;
-    };
-
-    const isTargetBangCard = () => {
-        // TODO
-        return true;
-    }
-
     if (filter.includes('cube_slot')) {
-        if (!isTargetCubeSlot()) return false;
+        if (!target.pocket || !('player' in target.pocket) || getPlayer(table, target.pocket.player).pockets.player_character[0] != target.id) {
+            return false;
+        }
+        if (!('color' in target.cardData) || target.cardData.color != 'orange' || target.pocket?.name != 'player_table') {
+            return false;
+        }
     } else if (target.cardData.deck == 'character') {
         return false;
     }
 
     if (filter.includes('beer') && !cardHasTag(target, 'beer')) return false;
-    if (filter.includes('bang') && !isTargetBangCard()) return false;
+    if (filter.includes('bang') && !isBangCard(table, origin, target)) return false;
     if (filter.includes('bangcard') && !cardHasTag(target, 'bangcard')) return false;
     if (filter.includes('missed') && !cardHasTag(target, 'missed')) return false;
     if (filter.includes('missedcard') && !cardHasTag(target, 'missedcard')) return false;
@@ -136,10 +184,12 @@ export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], 
                 return false;
             }
         }
-    }
 
-    if (filter.includes('origin_card_suit')) {
-        // TODO
+        if (filter.includes('origin_card_suit') && 'origin_card' in selector.request) {
+            if (!selector.request.origin_card) return false;
+            const reqOriginCard = getCard(table, selector.request.origin_card);
+            return 'sign' in reqOriginCard.cardData && reqOriginCard.cardData.sign.suit == sign.suit;
+        }
     }
 
     if (filter.includes('selection') && target.pocket?.name != 'selection') return false;

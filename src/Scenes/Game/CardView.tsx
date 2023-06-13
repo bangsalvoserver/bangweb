@@ -135,6 +135,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
                 <img className="card-view-img" src={backfaceSrc} />
             </div> : null}
             {card.num_cubes > 0 ? <div className="card-cubes">
+                {/* TODO selector cube style */}
                 {[...Array(card.num_cubes)].map((item, i) => <img key={i} src='/media/sprite_cube.png' />)}
             </div> : null}
         </div>
