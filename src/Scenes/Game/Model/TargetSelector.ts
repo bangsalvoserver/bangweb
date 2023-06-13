@@ -241,13 +241,13 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
     case 'extra_card':
     case 'cards':
         if (player && !checkPlayerFilter(selector, nextTarget.player_filter,
-            table.self_player ? getPlayer(table, table.self_player) : undefined,
+            getPlayer(table, table.self_player!),
             getPlayer(table, player), selector.selection.context))
         {
             return false;
         }
         if (!checkCardFilter(selector, nextTarget.card_filter,
-            table.self_player ? getPlayer(table, table.self_player) : undefined,
+            getPlayer(table, table.self_player!),
             currentCard, card, selector.selection.context)) {
             return false;
         }
@@ -336,7 +336,7 @@ export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, 
     case 'player':
     case 'conditional_player':
         return checkPlayerFilter(selector, nextTarget.player_filter,
-            table.self_player ? getPlayer(table, table.self_player) : undefined, player,
+            getPlayer(table, table.self_player!), player,
             'context' in selector.selection ? selector.selection.context : {});
     default:
         return false;
@@ -348,6 +348,5 @@ export function isValidEquipTarget(table: GameTable, selector: TargetSelector, p
         && selector.selection.playing_card !== undefined
         && isEquipCard(selector.selection.playing_card)
         && checkPlayerFilter(selector, getEquipTarget(selector.selection.playing_card),
-            table.self_player ? getPlayer(table, table.self_player) : undefined, player,
-            'context' in selector.selection ? selector.selection.context : {});
+            getPlayer(table, table.self_player!), player, selector.selection.context);
 }

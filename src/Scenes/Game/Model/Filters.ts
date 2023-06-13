@@ -26,7 +26,7 @@ export function isPlayerAlive(player: Player) {
     return !player.status.flags.includes('dead') || !isPlayerGhost(player);
 }
 
-export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter[], origin: Player | undefined, target: Player, context: EffectContext) {
+export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter[], origin: Player, target: Player, context: EffectContext) {
     if (filter.includes('dead')) {
         if (!filter.includes('alive') && !target.status.flags.includes('dead')) {
             return false;
@@ -52,7 +52,7 @@ export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter
     if (filter.includes('notsheriff') && target.status.role == 'sheriff') return false;
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length == 0) return false;
 
-    if (origin && !context.ignore_distances && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
+    if (!context.ignore_distances && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
         let range = origin.status.range_mod;
         if (filter.includes('reachable')) {
             range += origin.status.weapon_range;
@@ -67,7 +67,7 @@ export function checkPlayerFilter(selector: TargetSelector, filter: PlayerFilter
     return true;
 }
 
-export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], origin: Player | undefined, originCard: Card, target: Card, context: EffectContext) {
+export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], origin: Player, originCard: Card, target: Card, context: EffectContext) {
     if (!filter.includes('can_target_self') && originCard.id == target.id) return false;
 
     const isTargetCubeSlot = () => {
