@@ -236,17 +236,23 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
 
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
+    const currentCard = getCurrentCard(selector);
     const index = getNextTargetIndex(getSelectorCurrentTargetList(selector));
-    const nextTarget = getEffectAt(getCardEffects(getCurrentCard(selector), isResponse(selector)), index);
+    const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
 
     switch (nextTarget?.target) {
     case 'card':
     case 'extra_card':
     case 'cards':
-        if (player && !checkPlayerFilter(selector, nextTarget.player_filter, getPlayer(table, player))) {
+        if (player && !checkPlayerFilter(selector, nextTarget.player_filter,
+            table.self_player ? getPlayer(table, table.self_player) : undefined,
+            getPlayer(table, player), selector.selection.context))
+        {
             return false;
         }
-        if (!checkCardFilter(selector, nextTarget.card_filter, card)) {
+        if (!checkCardFilter(selector, nextTarget.card_filter,
+            table.self_player ? getPlayer(table, table.self_player) : undefined,
+            currentCard, card, selector.selection.context)) {
             return false;
         }
         return true;
@@ -333,7 +339,9 @@ export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, 
     switch (nextTarget?.target) {
     case 'player':
     case 'conditional_player':
-        return checkPlayerFilter(selector, nextTarget.player_filter, player);
+        return checkPlayerFilter(selector, nextTarget.player_filter,
+            table.self_player ? getPlayer(table, table.self_player) : undefined, player,
+            'context' in selector.selection ? selector.selection.context : {});
     default:
         return false;
     }
@@ -343,5 +351,7 @@ export function isValidEquipTarget(table: GameTable, selector: TargetSelector, p
     return 'playing_card' in selector.selection
         && selector.selection.playing_card !== undefined
         && isEquipCard(selector.selection.playing_card)
-        && checkPlayerFilter(selector, getEquipTarget(selector.selection.playing_card), player);
+        && checkPlayerFilter(selector, getEquipTarget(selector.selection.playing_card),
+            table.self_player ? getPlayer(table, table.self_player) : undefined, player,
+            'context' in selector.selection ? selector.selection.context : {});
 }
