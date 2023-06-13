@@ -66,16 +66,6 @@ export function newTargetSelector(request: RequestStatusUnion): TargetSelector {
     };
 }
 
-export function getSelectorCardClasses(selector: TargetSelector, card: Card) {
-    let classes = [];
-    if ('highlight_cards' in selector.request && selector.request.highlight_cards.includes(card.id)) {
-        classes.push('card-highlight');
-    } else if ('origin_card' in selector.request && selector.request.origin_card == card.id) {
-        classes.push('card-origin');
-    }
-    return classes;
-}
-
 export function getCurrentCard(selector: TargetSelector): Card {
     if ('targets' in selector.selection) {
         switch (selector.mode) {

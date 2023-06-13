@@ -1,11 +1,12 @@
-import { CSSProperties, forwardRef, useContext, useImperativeHandle, useRef } from "react";
+import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { Card, CardImage, getCardImage } from "./Model/GameTable";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import { TargetSelectorContext } from "./GameScene";
-import { getSelectorCardClasses } from "./Model/TargetSelector";
+import { anyOf } from "../../Utils/ArrayUtils";
+import { TargetSelector, getSelectorPlayCards } from "./Model/TargetSelector";
 
 export interface CardProps {
     card: Card;
@@ -17,6 +18,27 @@ export interface CardRef {
     getRect: () => Rect | undefined;
 }
 
+function getSelectorCardClasses(selector: TargetSelector, card: Card) {
+    if ('playing_card' in selector.selection) {
+        if (anyOf(getSelectorPlayCards(selector), node => node.card == card.id)) {
+            return ['card-playable'];
+        }
+        if (selector.selection.playing_card?.id == card.id) {
+            return ['card-current'];
+        }
+        if (anyOf(selector.selection.modifiers, ({modifier}) => modifier.id == card.id)) {
+            return ['card-current'];
+        }
+    }
+    if ('highlight_cards' in selector.request && selector.request.highlight_cards.includes(card.id)) {
+        return ['card-highlight'];
+    }
+    if ('origin_card' in selector.request && selector.request.origin_card == card.id) {
+        return ['card-origin'];
+    }
+    return [];
+}
+
 const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCard }, ref) => {
     const selector = useContext(TargetSelectorContext);
 
@@ -25,6 +47,8 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     useImperativeHandle(ref, () => ({
         getRect: () => cardRef.current ? getDivRect(cardRef.current) : undefined
     }));
+
+    const selectorCardClasses = useMemo(() => getSelectorCardClasses(selector, card), [selector, card]);
 
     let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
 
@@ -78,7 +102,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
         if (card.inactive) {
             classes.push('card-horizontal');
         }
-        classes.push(...getSelectorCardClasses(selector, card));
+        classes.push(...selectorCardClasses);
     }
 
     return (
