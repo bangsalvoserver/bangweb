@@ -65,9 +65,8 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
         getRect: () => cardRef.current ? getDivRect(cardRef.current) : undefined
     }));
 
-    const [selectorCardClass, selectedCubes] = useMemo(() => 
-        [getSelectorCardClass(table, selector, card), countSelectedCubes(selector, card)],
-    [selector]);
+    const selectorCardClass = useMemo(() => getSelectorCardClass(table, selector, card), [selector]);
+    const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
     let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
 
