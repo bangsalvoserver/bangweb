@@ -23,6 +23,7 @@ import "./Style/PlayerGridMobile.css";
 import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import PromptView from "./PromptView";
 import Button from "../../Components/Button";
+import CardChoiceView from "./CardChoiceView";
 
 const FRAMERATE = 60;
 
@@ -100,7 +101,7 @@ export default function GameScene({ channel }: GameProps) {
       </div> : null }
   </>;
 
-  const selection = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;
+  const selectionPocket = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;
 
   const statusText = isResponse(selector) ? <GameStringComponent message={selector.request.status_text} /> : null;
   
@@ -143,7 +144,7 @@ export default function GameScene({ channel }: GameProps) {
               { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
             </div>
             <div className="main-deck-row">
-              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selection }
+              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selectionPocket }
             </div>
             <div className="player-grid" num-players={table.alive_players.length}>
               { playerViews }
@@ -151,6 +152,7 @@ export default function GameScene({ channel }: GameProps) {
           </div>
           {/* <GameLogView logs={gameLogs} /> */}
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
+          <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>;
           <AnimationView getTracker={getTracker} />
         </div>
       </TargetSelectorContext.Provider>

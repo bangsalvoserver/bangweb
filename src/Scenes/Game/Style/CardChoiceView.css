@@ -1,0 +1,14 @@
+.card-choice {
+    position: absolute;
+    left: var(--card-anchor-x);
+    top: var(--card-anchor-y);
+    height: var(--card-height);
+}
+
+.card-choice-inner {
+    transform: translate(-50%, -50%) translate(0, 1.5em);
+}
+
+.card-choice .card-view {
+    margin: 0.3em;
+}
