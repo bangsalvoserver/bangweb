@@ -55,6 +55,7 @@ export default function GameScene({ channel }: GameProps) {
     return !isGameOver
       && table.self_player !== undefined
       && !handler.current.pendingUpdates()
+      && !('playpickundo' in selector.prompt)
       && selector.mode != TargetMode.finish;
   };
 
