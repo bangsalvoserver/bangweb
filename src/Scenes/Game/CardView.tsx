@@ -36,7 +36,8 @@ function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: 
         if (selector.selection.picked_card == card.id) {
             return 'card-picked';
         }
-    } else if (selectorCanPlayCard(selector, card)) {
+    }
+    if (selectorCanPlayCard(selector, card)) {
         return 'card-playable';
     } else if (selectorCanPickCard(table, selector, card)) {
         return 'card-pickable';

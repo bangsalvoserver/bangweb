@@ -1,8 +1,8 @@
 import { ExtractKeys, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { getTagValue } from "./Filters";
-import { Card, KnownCard, Player, isCardKnown } from "./GameTable";
-import { EffectContext, GamePrompt, RequestStatusUnion, TargetMode, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
+import { Card, KnownCard, Player } from "./GameTable";
+import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetMode, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -20,71 +20,62 @@ export type SelectorUpdate =
 
 type TargetListMapper = (targets: CardTarget[]) => CardTarget[];
 
-function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper): TargetSelector {
-    checkSelectionPlaying(selector);
-
+function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper): PlayingSelector {
     switch (selector.mode) {
     case TargetMode.target:
-        return {
+        return handleAutoTargets({
             ...selector,
             selection: {
                 ...selector.selection,
                 targets: mapper(selector.selection.targets)
             }
-        };
+        });
     case TargetMode.modifier:
-        const lastModifier = selector.selection.modifiers[selector.selection.modifiers.length - 1];
-        const modifiers = [
-            ...selector.selection.modifiers.slice(0, -1),
-            { modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) }
-        ];
-        return {
+        const lastModifier = selector.selection.modifiers.at(-1)!;
+        const modifiers = selector.selection.modifiers.slice(0, -1)
+            .concat({ modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) });
+        return handleAutoTargets({
             ...selector,
             selection: { ...selector.selection, modifiers }
-        };
+        });
     default:
         throw new Error('TargetSelector: not in targeting mode');
     }
 }
 
-type NoTargetType = ExtractKeys<CardTarget, Record<string, never>>;
-type SingleTargetType = ExtractKeys<CardTarget, number | null>;
 type MultiTargetType = ExtractKeys<CardTarget, number[]>;
 
-function appendEmptyTarget(targetType: NoTargetType): TargetListMapper {
-    return targets => targets.concat({[targetType]: {}} as CardTarget);
-}
-
-function appendTarget(targetType: SingleTargetType, id: number | null): TargetListMapper {
-    return targets => targets.concat({[targetType]: id} as CardTarget);
-}
-
-function appendTargets(targetType: MultiTargetType, id: number, index: number, maxTargets: number): TargetListMapper {
+function appendMultitargetReserved(targetType: MultiTargetType, id: number): TargetListMapper {
     return targets => {
-        if (index >= targets.length) {
-            let targetList = Array<number>(maxTargets).fill(0);
-            if (maxTargets > 0) {
-                targetList[0] = id;
-            }
-            return targets.concat({[targetType]: targetList} as CardTarget);
-        } else if (targets.length != 0) {
-            let target = targets[targets.length - 1];
-            if (targetType in target) {
-                const targetList = [...target[targetType as keyof CardTarget] as number[]];
-                const zeroIndex = targetList.indexOf(0);
-                if (zeroIndex >= 0) {
-                    targetList[zeroIndex] = id;
-                    return targets.slice(0, -1).concat({[targetType]: targetList} as CardTarget);
-                }
+        const target = targets.at(-1) as Record<string, number[]> | undefined;
+        if (target && targetType in target) {
+            const targetList = [...target[targetType]];
+            const zeroIndex = targetList.indexOf(0);
+            if (zeroIndex >= 0) {
+                targetList[zeroIndex] = id;
+                return targets.slice(0, -1).concat({[targetType]: targetList} as CardTarget);
             }
         }
         throw new Error('TargetSelector: last target is not an array');
     };
 }
 
-function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector: TargetSelector): TargetSelector {
-    const editContext = (mapper: (context: EffectContext) => EffectContext): TargetSelector => {
-        checkSelectionPlaying(selector);
+function appendMultitarget(targetType: MultiTargetType, id: number, index: number, maxTargets: number): TargetListMapper {
+    return targets => {
+        if (index < targets.length) {
+            return appendMultitargetReserved(targetType, id)(targets);
+        } else {
+            let targetList = Array<number>(maxTargets).fill(0);
+            if (maxTargets > 0) {
+                targetList[0] = id;
+            }
+            return targets.concat({[targetType]: targetList} as CardTarget);
+        }
+    };
+}
+
+function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector: PlayingSelector): PlayingSelector {
+    const editContext = (mapper: (context: EffectContext) => EffectContext): PlayingSelector => {
         return {
             ...selector,
             selection: {
@@ -120,9 +111,7 @@ function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector
     return selector;
 }
 
-function handleAutoTargets(selector: TargetSelector): TargetSelector {
-    checkSelectionPlaying(selector);
-
+function handleAutoTargets(selector: PlayingSelector): PlayingSelector {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
@@ -145,10 +134,10 @@ function handleAutoTargets(selector: TargetSelector): TargetSelector {
     case 'none':
     case 'players':
     case 'self_cubes':
-        return handleAutoTargets(editSelectorTargets(selector, appendEmptyTarget(nextEffect.target)));
+        return editSelectorTargets(selector, targets => targets.concat({[nextEffect.target]: {}} as CardTarget));
     case 'extra_card':
         if (selector.selection.context.repeat_card) {
-            return handleAutoTargets(editSelectorTargets(selector, appendTarget('extra_card', null)));
+            return editSelectorTargets(selector, targets => targets.concat({extra_card: null}));
         }
         break;
     }
@@ -209,10 +198,12 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     appendTarget (target) {
-        return handleAutoTargets(editSelectorTargets(this, targets => targets.concat(target)));
+        checkSelectionPlaying(this);
+        return editSelectorTargets(this, targets => targets.concat(target));
     },
 
     addCardTarget (card) {
+        checkSelectionPlaying(this);
         const [currentCard, targets] = getCurrentCardAndTargets(this);
         const index = getNextTargetIndex(targets);
         const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(this)), index);
@@ -220,18 +211,19 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'card':
         case 'extra_card':
-            return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, card.id)));
+            return editSelectorTargets(this, targets => targets.concat({[nextEffect.target]: card.id} as CardTarget));
         case 'cards':
         case 'select_cubes':
-            return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, nextEffect.target_value)));
+            return editSelectorTargets(this, appendMultitarget(nextEffect.target, card.id, index, nextEffect.target_value));
         case 'cards_other_players':
-            return handleAutoTargets(editSelectorTargets(this, appendTargets(nextEffect.target, card.id, index, 0)));
+            return editSelectorTargets(this, appendMultitargetReserved(nextEffect.target, card.id));
         default:
             throw new Error('TargetSelector: cannot add card target');
         }
     },
 
     addPlayerTarget (player) {
+        checkSelectionPlaying(this);
         const [currentCard, targets] = getCurrentCardAndTargets(this);
         const index = getNextTargetIndex(targets);
         const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(this)), index);
@@ -239,7 +231,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'player':
         case 'conditional_player':
-            return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, player.id)));
+            return editSelectorTargets(this, targets => targets.concat({[nextEffect.target]: player.id} as CardTarget));
         default:
             throw new Error('TargetSelector: cannot add player target');
         }

@@ -95,9 +95,7 @@ export function newTargetSelector(request: RequestStatusUnion): TargetSelector {
     };
 }
 
-export function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, CardTarget[]] {
-    checkSelectionPlaying(selector);
-
+export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard, CardTarget[]] {
     switch (selector.mode) {
     case TargetMode.target:
         return [selector.selection.playing_card!, selector.selection.targets];
@@ -114,7 +112,7 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
     switch (selector.mode) {
     case TargetMode.target:
     case TargetMode.modifier: {
-        const [currentCard, targets] = getCurrentCardAndTargets(selector);
+        const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
         const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
         
         return optionals.length != 0
@@ -250,9 +248,7 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
     return selected;
 }
 
-export function isValidCubeTarget(table: GameTable, selector: TargetSelector, card: Card): boolean {
-    checkSelectionPlaying(selector);
-    
+export function isValidCubeTarget(table: GameTable, selector: PlayingSelector, card: Card): boolean {
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
@@ -264,9 +260,7 @@ export function isValidCubeTarget(table: GameTable, selector: TargetSelector, ca
         && card.num_cubes > countSelectedCubes(selector, card);
 }
 
-export function isValidCardTarget(table: GameTable, selector: TargetSelector, card: Card): boolean {
-    checkSelectionPlaying(selector);
-
+export function isValidCardTarget(table: GameTable, selector: PlayingSelector, card: Card): boolean {
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
@@ -340,7 +334,7 @@ export function zipCardTargets(targets: CardTarget[], [effects, optionals]: Effe
 
 export function getNextTargetIndex(targets: CardTarget[]): number {
     if (targets.length != 0) {
-        let lastTarget = Object.values(targets[targets.length - 1])[0];
+        let lastTarget = Object.values(targets.at(-1)!)[0];
         if (Array.isArray(lastTarget) && lastTarget.includes(0)) {
             return targets.length - 1;
         }
@@ -356,7 +350,7 @@ export function getEffectAt([effects, optionals]: EffectsAndOptionals, index: nu
     }
 }
 
-export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, player: Player): boolean {
+export function isValidPlayerTarget(table: GameTable, selector: PlayingSelector, player: Player): boolean {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
@@ -370,7 +364,7 @@ export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, 
     }
 }
 
-export function isValidEquipTarget(table: GameTable, selector: TargetSelector, player: Player): boolean {
+export function isValidEquipTarget(table: GameTable, selector: PlayingSelector, player: Player): boolean {
     return isSelectionPlaying(selector)
         && selector.selection.playing_card !== null
         && isEquipCard(selector.selection.playing_card)

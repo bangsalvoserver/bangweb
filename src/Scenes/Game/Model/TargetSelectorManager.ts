@@ -1,10 +1,10 @@
 import { Dispatch } from "react";
 import { checkPlayerFilter, getCardColor, isEquipCard, isPlayerAlive } from "./Filters";
-import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
-import { GameChannel } from "./GameUpdateHandler";
-import { PlayingSelector, RequestSelector, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isCardCurrent, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
-import { SelectorUpdate } from "./TargetSelectorReducer";
+import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { CardId } from "./GameUpdate";
+import { GameChannel } from "./GameUpdateHandler";
+import { PlayingSelector, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export function handleClickCard(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
     switch (selector.mode) {
@@ -21,7 +21,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
             cardTarget = card;
             break;
         }
-        if (cardTarget && isValidCardTarget(table, selector, cardTarget)) {
+        if (cardTarget && isValidCardTarget(table, selector as PlayingSelector, cardTarget)) {
             selectorDispatch({ addCardTarget: cardTarget });
         }
         break;
@@ -52,12 +52,12 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
     switch (selector.mode) {
     case TargetMode.target:
     case TargetMode.modifier:
-        if (isValidPlayerTarget(table, selector, player)) {
+        if (isValidPlayerTarget(table, selector as PlayingSelector, player)) {
             selectorDispatch({ addPlayerTarget: player });
         }
         break;
     case TargetMode.equip:
-        if (isValidEquipTarget(table, selector, player)) {
+        if (isValidEquipTarget(table, selector as PlayingSelector, player)) {
             selectorDispatch({ addEquipTarget: player });
         }
     }
@@ -79,18 +79,18 @@ function handleConditionalAutoTargets(table: GameTable, selector: PlayingSelecto
         break;
     }
     case 'cards_other_players': {
-        const numTargetable = table.alive_players.reduce((count, target) => {
+        let numTargetable = 0;
+        for (const target of table.alive_players) {
             if (target != table.self_player && target != selector.selection.context.skipped_player) {
                 const player = getPlayer(table, target);
                 if (isPlayerAlive(player)) {
-                    const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) == 'black';
+                    const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
                     if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
-                        return count + 1;
+                        ++numTargetable;
                     }
                 }
             }
-            return count;
-        }, 0);
+        }
         selectorDispatch({ appendTarget: { cards_other_players: Array<number>(numTargetable).fill(0) }});
         break;
     }

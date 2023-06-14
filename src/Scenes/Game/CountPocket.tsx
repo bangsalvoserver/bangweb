@@ -1,10 +1,10 @@
 import { forwardRef, useContext } from "react";
+import { CARD_SLOT_ID } from "./CardSlot";
+import { GameTableContext } from "./GameScene";
+import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import PocketView, { PocketPosition } from "./PocketView";
 import "./Style/CardView.css";
-import { CARD_SLOT_ID } from "./CardSlot";
-import { Card, getCard } from "./Model/GameTable";
-import { GameTableContext } from "./GameScene";
 
 export interface CountPocketProps {
     trackAllCards?: boolean;
@@ -21,7 +21,7 @@ const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ trackAllCard
     if (!trackAllCards) cards = cards.slice(-2);
 
     const handleClickLastCard = onClickCard && numCards > 0 ? () => {
-        onClickCard(getCard(table, cards[cards.length - 1]));
+        onClickCard(getCard(table, cards.at(-1)!));
     } : undefined;
 
     return (<div className="count-pocket single-card-pocket" onClick={handleClickLastCard}>

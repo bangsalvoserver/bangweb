@@ -11,7 +11,7 @@ import RoleView from "./RoleView";
 import ScenarioDeckView from "./ScenarioDeckView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { TargetMode, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import { PlayingSelector, TargetMode, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -27,12 +27,12 @@ function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, play
     switch (selector.mode) {
     case TargetMode.target:
     case TargetMode.modifier:
-        if (isValidPlayerTarget(table, selector, player)) {
+        if (isValidPlayerTarget(table, selector as PlayingSelector, player)) {
             return 'player-targetable';
         }
         break;
     case TargetMode.equip:
-        if (isValidEquipTarget(table, selector, player)) {
+        if (isValidEquipTarget(table, selector as PlayingSelector, player)) {
             return 'player-targetable';
         }
         break;

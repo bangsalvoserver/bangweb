@@ -1,6 +1,6 @@
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
-import { TargetSelector, checkSelectionPlaying, isResponse } from "./TargetSelector";
+import { PlayingSelector, TargetSelector, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     return isCardKnown(card) ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
@@ -80,9 +80,7 @@ export function countDistance(table: GameTable, from: Player, to: Player): numbe
     return Math.min(countLeft, countRight) + to.status.distance_mod;
 }
 
-export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
-    checkSelectionPlaying(selector);
-
+export function checkPlayerFilter(table: GameTable, selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
     const origin = getPlayer(table, table.self_player!);
     const context = selector.selection.context;
 
