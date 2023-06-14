@@ -77,7 +77,7 @@ export class GameUpdateHandler {
         },
 
         game_prompt (message) {
-            this.selectorDispatch({ setPrompt: { yesno: message }});
+            this.selectorDispatch({ setPrompt: { yesno: { message, response: false } }});
         },
         
         play_sound (sound) {

@@ -150,7 +150,7 @@ export default function GameScene({ channel }: GameProps) {
             </div>
           </div>
           {/* <GameLogView logs={gameLogs} /> */}
-          <PromptView prompt={selector.prompt} channel={channel} selector={selector} selectorDispatch={selectorDispatch} />
+          <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
           <AnimationView getTracker={getTracker} />
         </div>
       </TargetSelectorContext.Provider>

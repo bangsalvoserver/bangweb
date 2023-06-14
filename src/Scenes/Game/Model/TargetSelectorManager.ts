@@ -116,7 +116,8 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
     }
 }
 
-export function handleSendGameAction(channel: GameChannel, selector: TargetSelector, bypass_prompt: boolean = false) {
+export function handleSendGameAction(channel: GameChannel, selector: TargetSelector) {
+    const bypass_prompt = 'yesno' in selector.prompt && selector.prompt.yesno.response;
     if (selector.mode == TargetMode.finish && (!('yesno' in selector.prompt) || bypass_prompt)) {
         if (isSelectionPicking(selector)) {
             const card = selector.selection.picked_card;

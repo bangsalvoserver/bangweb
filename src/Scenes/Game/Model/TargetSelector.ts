@@ -8,7 +8,7 @@ import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyA
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | {};
 
 export type GamePrompt =
-    { yesno: GameString } |
+    { yesno: { message: GameString, response: boolean } } |
     { playpickundo: KnownCard };
 
 export interface PickCardSelection {
