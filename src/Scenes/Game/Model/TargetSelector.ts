@@ -124,8 +124,24 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
     }
 }
 
+export function isAutoSelect(selector: TargetSelector): selector is RequestSelector {
+    return isResponse(selector)
+        && selector.request.auto_select
+        && selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0;
+}
+
 export function selectorCanUndo(selector: TargetSelector): boolean {
-    return selector.mode != TargetMode.finish && isSelectionPlaying(selector);
+    if (selector.mode == TargetMode.finish || !isSelectionPlaying(selector)) {
+        return false;
+    }
+    if (isAutoSelect(selector)) {
+        if (selector.mode == TargetMode.target) {
+            return selector.selection.targets.length != 0;
+        } else if (selector.mode == TargetMode.modifier) {
+            return selector.selection.modifiers.length != 1 || selector.selection.modifiers[0].targets.length != 0;
+        }
+    }
+    return true;
 }
 
 export function getPlayableCards(selector: TargetSelector): CardId[] {

@@ -3,7 +3,7 @@ import { checkPlayerFilter, getCardColor, isEquipCard, isPlayerAlive } from "./F
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { GameChannel } from "./GameUpdateHandler";
-import { PlayingSelector, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { PlayingSelector, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isAutoSelect, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export function handleClickCard(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
@@ -118,12 +118,8 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
             handleConditionalAutoTargets(table, selector, selectorDispatch);
             break;
         }
-    } else if (!isSelectionPicking(selector)) {
-        if (isResponse(selector) && selector.request.auto_select) {
-            if (selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0) {
-                selectCard(selector.request.respond_cards[0].card);
-            }
-        }
+    } else if (!isSelectionPicking(selector) && isAutoSelect(selector)) {
+        selectCard(selector.request.respond_cards[0].card);
     }
 }
 
