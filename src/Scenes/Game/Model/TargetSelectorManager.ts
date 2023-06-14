@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { checkPlayerFilter, getCardColor, isEquipCard, isPlayerAlive } from "./Filters";
+import { cardHasTag, checkPlayerFilter, getCardColor, isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { GameChannel } from "./GameUpdateHandler";
@@ -60,10 +60,39 @@ function handleConditionalAutoTargets(table: GameTable, selector: PlayingSelecto
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     if (index < targets.length) return;
-
-    // TODO handle auto_confirm
     
-    const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
+
+    if (optionals.length != 0
+        && targets.length >= effects.length
+        && (targets.length - effects.length) % optionals.length == 0) {
+
+        if (cardHasTag(currentCard, 'auto_confirm')) {
+            if (optionals.some(effect => effect.target == 'player'
+                && !table.alive_players.some(target =>
+                    checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))))
+            {
+                selectorDispatch({ confirmPlay: {} });
+                return;
+            }
+        }
+        
+        if (cardHasTag(currentCard, 'auto_confirm_red_ringo')) {
+            let cubeSlots = 0;
+            for (const cardId of getPlayer(table, table.self_player!).pockets.player_table) {
+                const card = getCard(table, cardId);
+                if (getCardColor(card) == 'orange') {
+                    cubeSlots += 4 - card.num_cubes;
+                }
+            }
+            if (currentCard.num_cubes <= 1 || cubeSlots <= 1) {
+                selectorDispatch({ confirmPlay: {} });
+                return;
+            }
+        }
+    }
+    
+    const nextEffect = getEffectAt([effects, optionals], index);
     switch (nextEffect?.target) {
     case 'conditional_player': {
         if (!table.alive_players.some(target => checkPlayerFilter(table, selector, nextEffect.player_filter, getPlayer(table, target)))) {
