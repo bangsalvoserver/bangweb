@@ -55,6 +55,12 @@
     height: var(--player-row-height);
 }
 
+.player-bottom-row {
+    display: inline-block;
+    text-align: left;
+    height: 100%;
+}
+
 .player-backup {
     position: absolute;
     bottom: calc(var(--one-hp-size) * var(--player-hp));
@@ -69,7 +75,7 @@
 .player-gold {
     position: absolute;
     bottom: var(--player-gold-bottom);
-    left: 50%;
+    left: calc(var(--card-width-plus-margin) / 2);
     width: var(--player-icon-size);
     height: var(--player-icon-size);
     transform: translateX(-50%);

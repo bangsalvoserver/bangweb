@@ -129,7 +129,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                 {playerIcons}
                 <div className='flex flex-row'>
                     <div className="flex flex-col justify-end">{characterView}</div>
-                    <div className='flex flex-col'>
+                    <div className="player-bottom-row">
                         <LobbyUser user={user} alignVertical />
                         { roleView } { scenarioDecks }
                     </div>
