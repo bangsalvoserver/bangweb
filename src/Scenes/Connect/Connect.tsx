@@ -1,5 +1,7 @@
 import { SyntheticEvent, useContext, useEffect, useState } from 'react';
 import { ConnectionContext } from '../../App';
+import Button from '../../Components/Button';
+import getLabel from '../../Locale/GetLabel';
 
 export default function ConnectScene() {
   const connection = useContext(ConnectionContext);
@@ -63,7 +65,7 @@ export default function ConnectScene() {
       focus:ring-blue-500
       "
     >
-      Connect
+    {getLabel('ui', 'BUTTON_CONNECT')}
     </button>
   </form>
   )

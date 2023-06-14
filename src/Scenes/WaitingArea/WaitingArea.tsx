@@ -3,6 +3,8 @@ import { ConnectionContext } from "../../App";
 import { useHandler } from "../../Messages/Connection";
 import { LobbyId } from "../../Messages/ServerMessage";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
+import Button from "../../Components/Button";
+import getLabel from "../../Locale/GetLabel";
 
 function WaitingArea() {
   const connection = useContext(ConnectionContext);
@@ -66,13 +68,13 @@ function WaitingArea() {
     <div>
       <h1>Welcome To The Waiting Area</h1>
       <div>
-        <button onClick={handleDisconnect}>Disconnect</button>
+        <Button color='red' onClick={handleDisconnect}>{getLabel('ui', 'BUTTON_DISCONNECT')}</Button>
       </div>
       <div>
         <form onSubmit={handleCreateLobby}>
           <label htmlFor="lobbyName">Lobby Name:</label>
           <input type="text" id="lobbyName" value={lobbyName || ''} onChange={e => setLobbyName(e.target.value)}></input>
-          <button type="submit">Create Lobby</button>
+          <Button color='blue' type="submit">{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
         </form>
       </div>
       <div>{lobbies.map((lobby) => (

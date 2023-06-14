@@ -48,5 +48,9 @@ export const LABELS_ENGLISH: LabelRegistry = {
         BUTTON_NO: "No",
         BUTTON_PLAY: "Play",
         BUTTON_PICK: "Discard",
+        BUTTON_CONNECT: "Connect",
+        BUTTON_JOIN: "Join",
+        BUTTON_CREATE_LOBBY: "Create Lobby",
+        BUTTON_DISCONNECT: "Disconnect",
     },
 };

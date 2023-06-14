@@ -1,3 +1,4 @@
+import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { LobbyId } from "../../Messages/ServerMessage";
 
@@ -19,7 +20,7 @@ function LobbyElement({ lobby, onClickJoin }: LobbyElementProps) {
     <span>{lobby.name}</span>
     <span>{lobby.num_players}/8</span>
     <span>{getLabel('LobbyState', lobby.state)}</span>
-    <button onClick={() => onClickJoin(lobby.id)}>Join</button>
+    <Button color='green' onClick={() => onClickJoin(lobby.id)}>{getLabel('ui', 'BUTTON_JOIN')}</Button>
     </div>
   )
 }

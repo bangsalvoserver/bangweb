@@ -22,6 +22,7 @@ import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import PromptView from "./PromptView";
+import Button from "../../Components/Button";
 
 const FRAMERATE = 60;
 
@@ -105,7 +106,7 @@ export default function GameScene({ channel }: GameProps) {
   const gameOverStatus = () => {
     if (myUserId == lobbyOwner) {
       return (
-        <button className="card-button-view" onClick={channel.handleReturnLobby}>{getLabel('ui', 'RETURN_LOBBY')}</button>
+        <Button color='blue' onClick={channel.handleReturnLobby}>{getLabel('ui', 'RETURN_LOBBY')}</Button>
       );
     } {
       return <>{getLabel('ui', 'GAME_OVER_STATUS')}</>;
@@ -129,8 +130,8 @@ export default function GameScene({ channel }: GameProps) {
     return <CardButtonView key={id} card={card} onClickCard={() => onClickCard(card)} />;
   });
 
-  const confirmButton = selectorCanConfirm(selector) && <button className="card-button-view" onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</button>;
-  const undoButton = selectorCanUndo(selector) && <button className="card-button-view" onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</button>;
+  const confirmButton = selectorCanConfirm(selector) && <Button color='blue' onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</Button>;
+  const undoButton = selectorCanUndo(selector) && <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>;
 
   return (
     <GameTableContext.Provider value={table}>

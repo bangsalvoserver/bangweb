@@ -1,9 +1,9 @@
 import { useContext } from "react";
+import Button from "../../Components/Button";
 import { TargetSelectorContext } from "./GameScene";
 import { LocalizedCardName } from "./GameStringComponent";
-import { Card, isCardKnown } from "./Model/GameTable";
-import { isCardCurrent, selectorCanPlayCard } from "./Model/TargetSelector";
-import "./Style/CardButtonView.css";
+import { Card } from "./Model/GameTable";
+import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 
 export interface CardButtonProps {
     card: Card;
@@ -14,7 +14,9 @@ export default function CardButtonView({ card, onClickCard }: CardButtonProps) {
     const selector = useContext(TargetSelectorContext);
 
     if (isCardCurrent(selector, card) || selectorCanPlayCard(selector, card)) {
-        return <button className='card-button-view' onClick={onClickCard}><LocalizedCardName name={card.cardData.name} /></button>
+        return <Button color={isResponse(selector) ? 'red' : 'green'} onClick={onClickCard}>
+            <LocalizedCardName name={card.cardData.name} />
+        </Button>
     } else {
         return null;
     }

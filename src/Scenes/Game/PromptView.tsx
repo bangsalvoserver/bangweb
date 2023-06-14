@@ -6,6 +6,7 @@ import { GamePrompt, TargetSelector } from "./Model/TargetSelector";
 import { handleSendGameAction } from "./Model/TargetSelectorManager";
 import { SelectorUpdate } from "./Model/TargetSelectorReducer";
 import "./Style/PromptView.css";
+import Button from "../../Components/Button";
 
 export interface PromptProps {
     prompt: GamePrompt | {};
@@ -25,31 +26,8 @@ export default function PromptView({ prompt, channel, selector, selectorDispatch
                 <p><GameStringComponent message={prompt.yesno} /></p>
             </div>
             <div className="prompt-buttons">
-                <button onClick={handleYes} className="
-                    bg-blue-500
-                    hover:bg-blue-600
-                    text-white
-                    font-bold
-                    py-2
-                    px-4
-                    rounded-md
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-blue-500
-                    "
-                >{getLabel('ui', 'BUTTON_YES')}</button>
-                <button onClick={handleNo} className="
-                    bg-red-500
-                    hover:bg-red-600
-                    text-white
-                    font-bold
-                    py-2
-                    px-4
-                    rounded-md
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-red-500
-                ">{getLabel('ui', 'BUTTON_NO')}</button>
+                <Button color='blue' onClick={handleYes}>{getLabel('ui', 'BUTTON_YES')}</Button>
+                <Button color='red' onClick={handleNo}>{getLabel('ui', 'BUTTON_NO')}</Button>
             </div>
         </div>
     } else if ('playpickundo' in prompt) {
@@ -72,44 +50,9 @@ export default function PromptView({ prompt, channel, selector, selectorDispatch
                 }} /></p>
             </div>
             <div className="prompt-buttons">
-                <button onClick={handlePlay} className="
-                    bg-blue-500
-                    hover:bg-blue-600
-                    text-white
-                    font-bold
-                    py-2
-                    px-4
-                    rounded-md
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-blue-500
-                    "
-                >{getLabel('ui', 'BUTTON_PLAY')}</button>
-                <button onClick={handlePick} className="
-                    bg-blue-500
-                    hover:bg-blue-600
-                    text-white
-                    font-bold
-                    py-2
-                    px-4
-                    rounded-md
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-blue-500
-                    "
-                >{getLabel('ui', 'BUTTON_PICK')}</button>
-                <button onClick={handleUndo} className="
-                    bg-red-500
-                    hover:bg-red-600
-                    text-white
-                    font-bold
-                    py-2
-                    px-4
-                    rounded-md
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-red-500
-                ">{getLabel('ui', 'BUTTON_UNDO')}</button>
+                <Button color='blue' onClick={handlePlay}>{getLabel('ui', 'BUTTON_PLAY')}</Button>
+                <Button color='blue' onClick={handlePick}>{getLabel('ui', 'BUTTON_PICK')}</Button>
+                <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>
             </div>
         </div>
     } else {

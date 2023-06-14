@@ -1,9 +1,9 @@
 import { SyntheticEvent, useContext, useEffect, useRef } from "react";
+import getLabel from "../../Locale/GetLabel";
 import { ChatMessage, UserId } from "../../Messages/ServerMessage";
 import { LobbyContext } from "./Lobby";
 import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
-import getLabel from "../../Locale/GetLabel";
 
 export interface ChatProps {
     messages: ChatMessage[];

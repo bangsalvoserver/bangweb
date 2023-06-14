@@ -9,6 +9,7 @@ import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
+import Button from '../../Components/Button';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -97,19 +98,7 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
     };
 
     return <div>
-      {myUserId == lobbyOwner ?
-        <button className="
-        bg-blue-500
-        hover:bg-blue-600
-        text-white
-        py-2
-        px-4
-        rounded-md
-        focus:outline-none
-        focus:ring-2
-        focus:ring-blue-500
-        " onClick={handleStartGame}>Start Game</button>
-        : null}
+      { myUserId == lobbyOwner && <Button color='blue' onClick={handleStartGame}>Start Game</Button> }
       <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
       {users.map(user => (
         <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />

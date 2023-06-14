@@ -48,6 +48,10 @@ export const LABELS_ITALIAN: LabelRegistry = {
         BUTTON_NO: "No",
         BUTTON_PLAY: "Gioca",
         BUTTON_PICK: "Scarta",
+        BUTTON_CONNECT: "Connetti",
+        BUTTON_JOIN: "Entra",
+        BUTTON_CREATE_LOBBY: "Crea Lobby",
+        BUTTON_DISCONNECT: "Disconnetti",
     },
 
 };
