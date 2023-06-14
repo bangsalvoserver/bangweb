@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release
+  workflow_dispatch:
 
 env:
   BUILD_TYPE: Release
