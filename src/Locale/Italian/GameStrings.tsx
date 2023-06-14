@@ -13,7 +13,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     PROMPT_BANG_STRENGTH: (ncards) =>                                       <>Devi rispondere con {ncards} Mancato! Continuare?</>,
     PROMPT_NO_BANGS_PLAYED: (card) =>                                       <>Non hai giocato nessun Bang, giocare {card} non avrebbe effetto. Continuare?</>,
     PROMPT_TARGET_SELF_GHOST_CARD: () =>                                    <>Stai scartando la tua carta fantasma. Continuare?</>,
-    PROMPT_PLAY_OR_PICK: () =>                                              <>Giocare la carta o scartarla?</>,
+    PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card} : Giocare la carta o scartarla?</>,
 
     STATUS_GAME_OVER: () =>                                                 <>Partita Finita</>,
     STATUS_YOUR_TURN: () =>                                                 <>Tocca a te ... Scegli come pescare</>,

@@ -9,7 +9,7 @@ export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | {};
 
 export type GamePrompt =
     { yesno: GameString } |
-    { playpickundo: Card };
+    { playpickundo: KnownCard };
 
 export interface PickCardSelection {
     picked_card: CardId;
@@ -181,9 +181,9 @@ export function selectorCanPickCard(table: GameTable, selector: TargetSelector, 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
     if (isSelectionPlaying(selector)) {
         return selector.selection.playing_card?.id == card.id
-            || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id);
+            || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id)
     } else {
-        return false;
+        return 'playpickundo' in selector.prompt && selector.prompt.playpickundo.id == card.id;
     }
 }
 

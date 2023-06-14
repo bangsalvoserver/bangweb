@@ -21,6 +21,7 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
+import PromptView from "./PromptView";
 
 const FRAMERATE = 60;
 
@@ -128,8 +129,8 @@ export default function GameScene({ channel }: GameProps) {
     return <CardButtonView key={id} card={card} onClickCard={() => onClickCard(card)} />;
   });
 
-  const confirmButton = selectorCanConfirm(selector) && <button className="card-button-view" onClick={handleConfirm}>{getLabel('ui', 'GAME_CONFIRM')}</button>;
-  const undoButton = selectorCanUndo(selector) && <button className="card-button-view" onClick={handleUndo}>{getLabel('ui', 'GAME_UNDO')}</button>;
+  const confirmButton = selectorCanConfirm(selector) && <button className="card-button-view" onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</button>;
+  const undoButton = selectorCanUndo(selector) && <button className="card-button-view" onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</button>;
 
   return (
     <GameTableContext.Provider value={table}>
@@ -147,6 +148,7 @@ export default function GameScene({ channel }: GameProps) {
             </div>
           </div>
           {/* <GameLogView logs={gameLogs} /> */}
+          <PromptView prompt={selector.prompt} channel={channel} selector={selector} selectorDispatch={selectorDispatch} />
           <AnimationView getTracker={getTracker} />
         </div>
       </TargetSelectorContext.Provider>

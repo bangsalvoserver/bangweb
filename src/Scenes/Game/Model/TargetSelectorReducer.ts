@@ -158,7 +158,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     undoSelection () {
-        return { ...this, selection: {}, mode: TargetMode.start };
+        return { ...this, prompt: {}, selection: {}, mode: TargetMode.start };
     },
 
     selectPlayingCard (card) {

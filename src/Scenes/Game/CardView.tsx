@@ -29,15 +29,14 @@ function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: 
                 return 'card-targetable';
             }
         }
-        if (isCardCurrent(selector, card)) {
-            return 'card-current';
-        }
     } else if (isSelectionPicking(selector)) {
         if (selector.selection.picked_card == card.id) {
             return 'card-picked';
         }
     }
-    if (selectorCanPlayCard(selector, card)) {
+    if (isCardCurrent(selector, card)) {
+        return 'card-current';
+    } else if (selectorCanPlayCard(selector, card)) {
         return 'card-playable';
     } else if (selectorCanPickCard(table, selector, card)) {
         return 'card-pickable';

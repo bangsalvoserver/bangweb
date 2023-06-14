@@ -42,7 +42,11 @@ export const LABELS_ENGLISH: LabelRegistry = {
         LOBBY_CHAT_SEND: "Send",
         GAME_OVER_STATUS: "Game Over",
         RETURN_LOBBY: "Return to Lobby",
-        GAME_CONFIRM: "OK",
-        GAME_UNDO: "Undo"
+        BUTTON_OK: "OK",
+        BUTTON_UNDO: "Undo",
+        BUTTON_YES: "Yes",
+        BUTTON_NO: "No",
+        BUTTON_PLAY: "Play",
+        BUTTON_PICK: "Discard",
     },
 };
