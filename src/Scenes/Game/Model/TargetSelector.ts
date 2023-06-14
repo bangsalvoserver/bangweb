@@ -277,6 +277,16 @@ export function isValidCubeTarget(table: GameTable, selector: PlayingSelector, c
 }
 
 export function isValidCardTarget(table: GameTable, selector: PlayingSelector, card: Card): boolean {
+    switch (card.pocket?.name) {
+    case 'player_character':
+    case 'player_table':
+    case 'player_hand':
+    case 'selection':
+        break;
+    default:
+        return false;
+    }
+
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);

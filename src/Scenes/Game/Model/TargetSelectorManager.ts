@@ -10,18 +10,11 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
     switch (selector.mode) {
     case TargetMode.target:
     case TargetMode.modifier: {
-        let cardTarget: Card | undefined;
-        switch (card.pocket?.name) {
-        case 'player_character':
+        let cardTarget = card;
+        if (card.pocket?.name == 'player_character') {
             cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
-            break;
-        case 'player_table':
-        case 'player_hand':
-        case 'selection':
-            cardTarget = card;
-            break;
         }
-        if (cardTarget && isValidCardTarget(table, selector as PlayingSelector, cardTarget)) {
+        if (isValidCardTarget(table, selector as PlayingSelector, cardTarget)) {
             selectorDispatch({ addCardTarget: cardTarget });
         }
         break;
