@@ -31,11 +31,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
                 selectorDispatch({ selectPickCard: card });
             }
         } else if (canPlay) {
-            if (isEquipCard(card)) {
-                selectorDispatch({ selectEquipCard: card });
-            } else {
-                selectorDispatch({ selectPlayingCard: card });
-            }
+            selectorDispatch({ selectPlayingCard: card });
         }
     }
     }

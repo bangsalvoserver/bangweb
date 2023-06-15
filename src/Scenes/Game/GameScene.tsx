@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
+import { CSSProperties, createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
@@ -78,6 +78,21 @@ export default function GameScene({ channel }: GameProps) {
     <PocketView ref={setMapRef(pocketPositions, 'shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
   </> : null;
 
+  const trainPockets = table.pockets.stations.length != 0 ?
+    <div className="train-row m-auto">
+      <div className="train-row-inner">
+        <CountPocket ref={setMapRef(pocketPositions, 'train_deck')} cards={table.pockets.train_deck} />
+        <div className="train-stations-container">
+          <PocketView ref={setMapRef(pocketPositions, 'stations')} cards={table.pockets.stations} onClickCard={onClickCard} />
+          <div className="train-container" style={{ '--train-position': table.status.train_position } as CSSProperties}>
+            <div className="train-container-inner">
+              <PocketView ref={setMapRef(pocketPositions, 'train')} cards={table.pockets.train.slice().reverse()} onClickCard={onClickCard} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> : null;
+
   const tableCubes = <div className='inline-block' ref={cubesRef}>
     {table.status.num_cubes > 0 ?
       <div className='table-cubes'><img src='/media/sprite_cube.png' />x{table.status.num_cubes}</div> : null}
@@ -144,7 +159,10 @@ export default function GameScene({ channel }: GameProps) {
               { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
             </div>
             <div className="main-deck-row">
-              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selectionPocket }
+              <div className="m-auto">
+                { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selectionPocket }
+              </div>
+              { trainPockets }
             </div>
             <div className="player-grid" num-players={table.alive_players.length}>
               { playerViews }

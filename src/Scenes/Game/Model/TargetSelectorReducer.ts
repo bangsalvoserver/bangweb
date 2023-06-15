@@ -1,8 +1,8 @@
 import { ExtractKeys, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
-import { getTagValue } from "./Filters";
+import { getTagValue, isEquipCard } from "./Filters";
 import { Card, KnownCard, Player } from "./GameTable";
-import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetMode, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
+import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetMode, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newTargetSelector, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -11,7 +11,6 @@ export type SelectorUpdate =
     { undoSelection: {} } |
     { selectPlayingCard: KnownCard } |
     { selectPickCard: Card } |
-    { selectEquipCard: KnownCard } |
     { appendTarget: CardTarget } |
     { addCardTarget: Card } |
     { addPlayerTarget: Player } |
@@ -162,8 +161,22 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     selectPlayingCard (card) {
-        const selection = isSelectionPlaying(this) ? this.selection : newPlayCardSelection();
-        if (card.cardData.modifier.type == 'none') {
+        const selection = isSelectionPlaying(this) ? this.selection : 
+            {
+                playing_card: null,
+                targets: [],
+                modifiers: [],
+                context: {}
+            };
+
+        if (isEquipCard(card)) {
+            return {
+                ...this,
+                selection: { ...selection, playing_card: card },
+                mode: card.cardData.equip_target.length == 0
+                    ? TargetMode.finish : TargetMode.equip
+            };
+        } else if (card.cardData.modifier.type == 'none') {
             return handleAutoTargets({
                 ...this,
                 selection: { ...selection, playing_card: card },
@@ -185,15 +198,6 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
             ...this,
             selection: { picked_card: card.id },
             mode: TargetMode.finish
-        };
-    },
-
-    selectEquipCard (card) {
-        return {
-            ...this,
-            selection: newPlayCardSelection(card),
-            mode: card.cardData.equip_target.length == 0
-                ? TargetMode.finish : TargetMode.equip
         };
     },
 

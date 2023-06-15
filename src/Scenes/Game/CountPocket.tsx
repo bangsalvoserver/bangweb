@@ -1,4 +1,4 @@
-import { forwardRef, useContext } from "react";
+import { forwardRef, useContext, useRef, useImperativeHandle } from "react";
 import { CARD_SLOT_ID } from "./CardSlot";
 import { GameTableContext } from "./GameScene";
 import { Card, getCard } from "./Model/GameTable";
@@ -15,6 +15,14 @@ export interface CountPocketProps {
 const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ trackAllCards, cards, onClickCard }, ref) => {
     const table = useContext(GameTableContext);
 
+    const position = useRef<PocketPosition>(null);
+
+    useImperativeHandle(ref, () => ({
+        getPocketRect: () => position.current?.getPocketRect(),
+        getCardRect: () => position.current?.getPocketRect(),
+        scrollToEnd: () => position.current?.scrollToEnd()
+    }));
+
     let numCards = cards.length;
     if (cards.includes(CARD_SLOT_ID)) --numCards;
 
@@ -25,7 +33,7 @@ const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ trackAllCard
     } : undefined;
 
     return (<div className="count-pocket single-card-pocket" onClick={handleClickLastCard}>
-        <PocketView ref={ref} cards={cards} />
+        <PocketView ref={position} cards={cards} />
         {numCards > 0 ? <div className="count-pocket-inner">{numCards}</div> : null}
     </div>);
 });

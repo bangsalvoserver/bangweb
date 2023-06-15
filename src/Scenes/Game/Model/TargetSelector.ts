@@ -43,15 +43,6 @@ export interface PlayCardSelection {
     context: EffectContext;
 }
 
-export function newPlayCardSelection(card: KnownCard | null = null): PlayCardSelection {
-    return {
-        playing_card: card,
-        targets: [],
-        modifiers: [],
-        context: {}
-    };
-}
-
 export interface TargetSelector {
     request: RequestStatusUnion;
     prompt: GamePrompt | {};
