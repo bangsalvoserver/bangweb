@@ -19,8 +19,6 @@
     position: relative;
     transform-style: preserve-3d;
     margin: var(--card-margin);
-    width: var(--card-width);
-    height: var(--card-height);
 }
 
 .card-front, .card-back {
@@ -111,7 +109,10 @@
 }
 
 .card-view-img {
+    background-color: white;
     border-radius: var(--card-border) var(--card-border);
+    width: var(--card-width);
+    height: var(--card-height);
 }
 
 .card-view-inner {
