@@ -2,7 +2,30 @@
     --profile-pic-size: 50px;
 }
 
-.lobby-user img {
-    display: inline;
+.lobby-user {
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.flex-row .lobby-username {
+    margin-left: 0.4em;
+}
+
+.lobby-username {
+    font-weight: 500;
+}
+
+.lobby-user-inner {
+    position: relative;
+    display: inline-block;
     height: var(--profile-pic-size);
+    width: var(--profile-pic-size);
+}
+
+.lobby-user-inner img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }

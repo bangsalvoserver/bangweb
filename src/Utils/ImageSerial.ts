@@ -23,10 +23,10 @@ export async function serializeImage(src: string | null, scale?: number): Promis
     canvas.height = image.height;
     if (scale != undefined) {
         if (canvas.width > canvas.height) {
-            canvas.height = scale * canvas.width / canvas.height;
+            canvas.height = scale * canvas.height / canvas.width;
             canvas.width = scale;
         } else {
-            canvas.width = scale * canvas.height / canvas.width;
+            canvas.width = scale * canvas.width / canvas.height;
             canvas.height = scale;
         }
     }

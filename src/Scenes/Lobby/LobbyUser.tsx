@@ -11,7 +11,7 @@ export interface UserValue {
 export interface LobbyUserProps {
     user?: UserValue;
     isOwner?: boolean;
-    alignVertical?: boolean;
+    align?: 'horizontal' | 'vertical';
 }
 
 export const DEFAULT_USER_PROPIC = "/media/icon_default_user.png";
@@ -25,20 +25,15 @@ export function getUsername(user?: UserValue) {
   return user?.name ?? getLabel('ui', 'USER_DISCONNECTED');
 }
 
-export default function LobbyUser({ user, alignVertical }: LobbyUserProps) {
-  if (alignVertical) {
-    return (
-      <div className='text-center font-bold lobby-user'>
-        <p><img src={getPropic(user)} /></p>
-        <p>{getUsername(user)}</p>
+export default function LobbyUser({ user, align }: LobbyUserProps) {
+  return (
+    <div className={`lobby-user ${align == 'vertical' ? 'flex-col' : 'flex-row'}`}>
+      <div className='lobby-user-inner'>
+        <img src={getPropic(user)} />
       </div>
-    )
-  } else {
-    return (
-      <div className='lobby-user'>
-      <img src={getPropic(user)} />
-      {getUsername(user)}
+      <div className='lobby-username'>
+        {getUsername(user)}
       </div>
-    );
-  }
+    </div>
+  );
 }
