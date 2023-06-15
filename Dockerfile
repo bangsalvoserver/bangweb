@@ -1,4 +1,4 @@
-FROM node:18-alpine 
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
@@ -10,8 +10,13 @@ RUN npm run build_env
 
 RUN npm run build
 
+
+FROM nginx:alpine AS prod
+
 ENV NODE_ENV production
 
-EXPOSE 3000
+COPY --from=build /app/build /usr/share/nginx/html
 
-CMD [ "npx", "serve", "build" ]
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
