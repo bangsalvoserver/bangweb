@@ -2,6 +2,7 @@ import { CSSProperties } from "react";
 import "./Style/CardView.css";
 import { PlayerRole } from "./Model/CardEnums";
 import { Milliseconds } from "./Model/GameUpdate";
+import { getCardUrl } from "./CardView";
 
 export interface RoleProps {
     role: PlayerRole;
@@ -9,8 +10,8 @@ export interface RoleProps {
 }
 
 export default function RoleView({ role, flipDuration }: RoleProps) {
-    const backfaceSrc = '/cards/backface/role.png';
-    const imageSrc = role == 'unknown' ? backfaceSrc : `/cards/role/${role}.png`;
+    const backfaceSrc = getCardUrl('backface/role');
+    const imageSrc = role == 'unknown' ? backfaceSrc : getCardUrl('role/' + role);
 
     let style: CSSProperties | undefined;
 

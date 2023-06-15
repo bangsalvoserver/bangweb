@@ -17,6 +17,11 @@ export interface CardRef {
     getRect: () => Rect | undefined;
 }
 
+export function getCardUrl(path: string) {
+    const baseUrl = process.env.REACT_APP_BANG_CARDS_BASE_URL || '';
+    return `${baseUrl}/cards/${path}.png`;
+}
+
 function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
     if (isSelectionPlaying(selector)) {
         if (isCardSelected(selector, card)) {
@@ -65,17 +70,14 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     const selectorCardClass = useMemo(() => getSelectorCardClass(table, selector, card), [selector]);
     const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
-    let backfaceSrc = '/cards/backface/' + card.cardData.deck + '.png';
+    let backfaceSrc = getCardUrl('backface/' + card.cardData.deck);
 
     const getImageSrc = (cardImage: CardImage) => {
-        let imageSrc = '/cards/';
         if (cardImage.image.includes('/')) {
-            imageSrc += cardImage.image;
+            return getCardUrl(cardImage.image);
         } else {
-            imageSrc += card.cardData.deck + '/' + cardImage.image;
+            return getCardUrl(card.cardData.deck + '/' + cardImage.image);
         }
-        imageSrc += '.png';
-        return imageSrc;
     };
 
     let cardImage = getCardImage(card);

@@ -1,5 +1,6 @@
 const BANGSERVER_COMMIT_HASH_API = 'https://api.github.com/repos/salvoilmiosi/banggameserver/branches/release';
 const BANGSERVER_URL = 'ws://bang.salvoserver.it:47654';
+const BANGCARDS_URL = 'http://bang.salvoserver.it:81';
 
 async function main () {
     try {
@@ -8,7 +9,10 @@ async function main () {
 
         const commitHash = body['commit']['sha'];
 
-        const result = `REACT_APP_BANG_SERVER_URL=${BANGSERVER_URL}\nREACT_APP_BANG_SERVER_COMMIT_HASH=${commitHash}`;
+        const result =
+            `REACT_APP_BANG_CARDS_BASE_URL=${BANGCARDS_URL}\n` +
+            `REACT_APP_BANG_SERVER_URL=${BANGSERVER_URL}\n` +
+            `REACT_APP_BANG_SERVER_COMMIT_HASH=${commitHash}`;
         
         console.log(result);
 
