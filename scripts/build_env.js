@@ -1,7 +1,12 @@
 async function getCommitHash(apiUrl) {
     const response = await fetch(apiUrl);
     const body = JSON.parse(await response.text());
-    return body['commit']['sha'];
+    if ('commit' in body) {
+        if ('sha' in body.commit) {
+            return body.commit.sha;
+        }
+    }
+    throw Error('Cannot find commit hash');
 }
 
 async function saveToFile(object, filename) {
@@ -14,15 +19,11 @@ async function saveToFile(object, filename) {
 }
 
 async function main() {
-    try {
-        await saveToFile({
-            REACT_APP_BANG_CARDS_BASE_URL: 'http://bang.salvoserver.it:81',
-            REACT_APP_BANG_SERVER_URL: 'ws://bang.salvoserver.it:47654',
-            REACT_APP_BANG_SERVER_COMMIT_HASH: await getCommitHash('https://api.github.com/repos/salvoilmiosi/banggameserver/branches/release')
-        }, '.env')
-    } catch (e) {
-        console.error(e);
-    }
+    await saveToFile({
+        REACT_APP_BANG_CARDS_BASE_URL: 'http://bang.salvoserver.it:81',
+        REACT_APP_BANG_SERVER_URL: 'ws://bang.salvoserver.it:47654',
+        REACT_APP_BANG_SERVER_COMMIT_HASH: await getCommitHash('https://api.github.com/repos/salvoilmiosi/banggameserver/branches/release')
+    }, '.env');
 }
 
-main();
+main().catch(error => { throw error });
