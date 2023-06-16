@@ -1,4 +1,5 @@
-import { CSSProperties, createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
+import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
@@ -6,6 +7,7 @@ import { LobbyContext } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import { CardTrackerImpl } from "./Animations/CardTracker";
 import CardButtonView from "./CardButtonView";
+import CardChoiceView from "./CardChoiceView";
 import CountPocket from "./CountPocket";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
@@ -14,16 +16,15 @@ import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
 import { TargetMode, TargetSelector, isResponse, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
+import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
+import PromptView from "./PromptView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
-import PromptView from "./PromptView";
-import Button from "../../Components/Button";
-import CardChoiceView from "./CardChoiceView";
+import TrainView from "./TrainView";
 
 const FRAMERATE = 60;
 
@@ -84,11 +85,7 @@ export default function GameScene({ channel }: GameProps) {
         <CountPocket ref={setMapRef(pocketPositions, 'train_deck')} cards={table.pockets.train_deck} />
         <div className="train-stations-container">
           <PocketView ref={setMapRef(pocketPositions, 'stations')} cards={table.pockets.stations} onClickCard={onClickCard} />
-          <div className="train-container" style={{ '--train-position': table.status.train_position } as CSSProperties}>
-            <div className="train-container-inner">
-              <PocketView ref={setMapRef(pocketPositions, 'train')} cards={table.pockets.train.slice().reverse()} onClickCard={onClickCard} />
-            </div>
-          </div>
+          <TrainView ref={setMapRef(pocketPositions, 'train')} onClickCard={onClickCard} />
         </div>
       </div>
     </div> : null;

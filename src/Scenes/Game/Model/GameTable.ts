@@ -2,7 +2,7 @@ import { UserId } from "../../../Messages/ServerMessage";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, ScenarioDeckPocket, TablePocketType } from "./CardEnums";
-import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, PlayerId } from "./GameUpdate";
+import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
 
 export interface Id {
     id: number
@@ -152,7 +152,8 @@ export type TableAnimation =
     { move_card: MoveCardUpdate & Duration } |
     { move_cubes: MoveCubesUpdate & Duration } |
     { deck_shuffle: DeckShuffledUpdate & DeckCards & Duration } |
-    { move_scenario_deck : MoveScenarioDeckUpdate & DeckCards & Duration };
+    { move_scenario_deck : MoveScenarioDeckUpdate & DeckCards & Duration } |
+    { move_train: MoveTrainUpdate & Duration };
 
 export interface GameTable {
     myUserId?: UserId;

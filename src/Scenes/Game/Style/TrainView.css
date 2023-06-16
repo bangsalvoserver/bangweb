@@ -1,0 +1,38 @@
+.train-row {
+    vertical-align: middle;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.train-stations-container {
+    display: inline-block;
+    position: relative;
+}
+
+.train-container {
+    width: 0;
+    height: 100%;
+    top: 60%;
+    position: absolute;
+
+    transform: translateX(calc((var(--train-position) + 1) * var(--card-width-plus-margin)));
+}
+
+.train-container-inner {
+    position: absolute;
+    width: max-content;
+    right: 0;
+}
+
+.train-container-move .train-container-inner {
+    animation-name: move-train;
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    transition: ease-in-out;
+}
+
+@keyframes move-train {
+    to {
+        transform: translateX(calc(var(--card-width-plus-margin) * var(--train-position-diff)));
+    }
+}

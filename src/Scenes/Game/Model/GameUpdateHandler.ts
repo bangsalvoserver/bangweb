@@ -174,7 +174,7 @@ export class GameUpdateHandler {
 
         move_train (update) {
             this.tableDispatch({ move_train: update });
-            this.setAnimation(update); // TODO
+            this.setAnimation(update, { move_train_end: update });
         },
 
         game_flags (update) {

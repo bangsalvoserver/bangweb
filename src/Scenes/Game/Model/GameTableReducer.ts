@@ -327,13 +327,21 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
     },
 
     // Changes the train_position field
-    move_train ({ position }) {
+    move_train ({ position, duration }) {
+        return {
+            ...this,
+            animation: { move_train: { position, duration }}
+        };
+    },
+
+    move_train_end({ position }) {
         return {
             ...this,
             status: {
                 ...this.status,
                 train_position: position
-            }
+            },
+            animation: undefined
         };
     },
 

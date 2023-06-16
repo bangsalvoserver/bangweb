@@ -184,6 +184,7 @@ export type GameUpdate =
     { move_scenario_deck: MoveScenarioDeckUpdate & Duration } |
     { move_scenario_deck_end: MoveScenarioDeckUpdate } |
     { move_train: MoveTrainUpdate & Duration } |
+    { move_train_end: MoveTrainUpdate } |
     { game_flags: GameFlag[] } |
     { request_status: RequestStatusArgs } | 
     { status_ready: StatusReadyArgs } |
