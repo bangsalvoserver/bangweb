@@ -10,7 +10,7 @@ export interface GameOptionProps {
 }
 
 type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
-type GameOptionsOf<T> = { [Property in FilteredKeys<GameOptions, T>]: GameOptions[Property] };
+type GameOptionsOf<T> = { [Property in FilteredKeys<Required<GameOptions>, T>]: GameOptions[Property] };
 
 export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnly }: GameOptionProps) {
     const newExpansionCheckbox = (name: ExpansionType) => {
@@ -53,7 +53,12 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnl
             <input id={prop} type="number" value={gameOptions[prop]}
             readOnly={readOnly}
             onChange={readOnly ? undefined : event => {
-                if (!isNaN(event.target.valueAsNumber)) {
+                if (event.target.value.length == 0) {
+                    setGameOptions({
+                        ...gameOptions,
+                        [prop]: undefined
+                    });
+                } else if (!isNaN(event.target.valueAsNumber)) {
                     setGameOptions({
                         ...gameOptions,
                         [prop]: event.target.valueAsNumber
