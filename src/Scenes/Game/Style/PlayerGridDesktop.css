@@ -10,7 +10,7 @@
         grid-template-rows: none;
     }
 
-    .player-grid[num-players="1"], .player-grid[num-players="2"], .player-grid[num-players="3"] {
+    .player-grid[num-players="1"], .player-grid[num-players="2"], .player-grid[num-players="3"], .player-grid[num-players="4"] {
         grid-template-columns: repeat(3, 8%) repeat(4, 13%) repeat(3, 8%);
     }
 
