@@ -67,7 +67,7 @@ export default function LobbyChat({ messages, handleSendMessage }: ChatProps) {
                     focus:ring-2
                     focus:ring-blue-500
                     "
-                >{getLabel('ui', 'LOBBY_CHAT_SEND')}</button>
+                >{getLabel('ui', 'BUTTON_CHAT_SEND')}</button>
             </form>
         </div>
     );

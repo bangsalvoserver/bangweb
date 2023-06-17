@@ -36,12 +36,16 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     ui: {
+        APP_TITLE: "Bang!",
         UNKNOWN_CARD: "(Carta sconosciuta)",
         UNKNOWN_PLAYER: "(Giocatore sconosciuto)",
         USER_DISCONNECTED: "(Disconnesso)",
-        LOBBY_CHAT_SEND: "Invia",
-        GAME_OVER_STATUS: "Partita Finita",
-        RETURN_LOBBY: "Ritorna alla Lobby",
+        STATUS_GAME_OVER: "Partita Finita",
+        LABEL_USERNAME: "Nome Utente:",
+        LABEL_LOBBY_NAME: "Nome Lobby:",
+        BUTTON_CHAT_SEND: "Invia",
+        BUTTON_START_GAME: "Avvia Partita",
+        BUTTON_RETURN_LOBBY: "Ritorna alla Lobby",
         BUTTON_OK: "OK",
         BUTTON_UNDO: "Annulla",
         BUTTON_YES: "Sì",
@@ -51,6 +55,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         BUTTON_CONNECT: "Connetti",
         BUTTON_JOIN: "Entra",
         BUTTON_CREATE_LOBBY: "Crea Lobby",
+        BUTTON_LEAVE_LOBBY: "Esci dalla Lobby",
         BUTTON_DISCONNECT: "Disconnetti",
     },
 

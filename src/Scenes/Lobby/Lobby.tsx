@@ -10,6 +10,7 @@ import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
 import Button from '../../Components/Button';
+import getLabel from '../../Locale/GetLabel';
 
 export interface LobbyProps {
   myLobbyId: LobbyId;
@@ -99,7 +100,7 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
 
     return <div className='flex flex-col'>
       <div className='flex flex-row justify-center h-12'>
-        { myUserId == lobbyOwner && <Button color='blue' onClick={handleStartGame}>Start Game</Button> }
+        { myUserId == lobbyOwner && <Button color='blue' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button> }
       </div>
       <div className='flex flex-row'>
         <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />

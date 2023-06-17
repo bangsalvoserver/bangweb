@@ -66,13 +66,12 @@ function WaitingArea() {
 
   return (
     <div>
-      <h1>Welcome To The Waiting Area</h1>
       <div>
         <Button color='red' onClick={handleDisconnect}>{getLabel('ui', 'BUTTON_DISCONNECT')}</Button>
       </div>
       <div>
         <form onSubmit={handleCreateLobby}>
-          <label htmlFor="lobbyName">Lobby Name:</label>
+          <label htmlFor="lobbyName">{getLabel('ui', 'LABEL_LOBBY_NAME')}</label>
           <input type="text" id="lobbyName" value={lobbyName || ''} onChange={e => setLobbyName(e.target.value)}></input>
           <Button color='blue' type="submit">{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
         </form>

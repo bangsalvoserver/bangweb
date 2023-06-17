@@ -32,8 +32,8 @@ export default function ConnectScene() {
     font-bold
     p-4
     ' 
-    > Bang!</h1>
-    <label htmlFor="username" className="text-lg font-medium mb-2">User Name:</label>
+    >{getLabel('ui', 'APP_TITLE')}</h1>
+    <label htmlFor="username" className="text-lg font-medium mb-2">{getLabel('ui', 'LABEL_USERNAME')}</label>
     <input
       className="
       border-2

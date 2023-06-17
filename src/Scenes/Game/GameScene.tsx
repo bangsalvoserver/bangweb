@@ -120,10 +120,10 @@ export default function GameScene({ channel }: GameProps) {
   const gameOverStatus = () => {
     if (myUserId == lobbyOwner) {
       return (
-        <Button color='blue' onClick={channel.handleReturnLobby}>{getLabel('ui', 'RETURN_LOBBY')}</Button>
+        <Button color='blue' onClick={channel.handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
       );
     } {
-      return <>{getLabel('ui', 'GAME_OVER_STATUS')}</>;
+      return <>{getLabel('ui', 'STATUS_GAME_OVER')}</>;
     }
   };
 

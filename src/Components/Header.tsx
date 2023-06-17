@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { CurrentSceneUnion } from '../Scenes/CurrentScene';
+import getLabel from '../Locale/GetLabel';
 
 export interface HeaderProps {
   scene: CurrentSceneUnion;
@@ -43,7 +44,7 @@ function Header({ scene, onEditPropic, onClickToggleMenu, onClickLeaveLobby }: H
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="" className="flex items-center">
           <img src="" className="h-8 mr-3" alt="" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Bang!</span>
+          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{getLabel('ui', 'APP_TITLE')}</span>
         </a>
         <div className="flex items-center md:order-2">
           <button type="button" className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
@@ -67,7 +68,7 @@ function Header({ scene, onEditPropic, onClickToggleMenu, onClickLeaveLobby }: H
               <>
                 <li className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500">{scene.lobby.lobbyName}</li>
                 <li>
-                  <a href="#" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" onClick={onClickLeaveLobby}>Leave Lobby</a>
+                  <a href="#" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" onClick={onClickLeaveLobby}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</a>
                 </li>
               </>
               :
