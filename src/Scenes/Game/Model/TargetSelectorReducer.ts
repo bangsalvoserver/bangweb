@@ -173,6 +173,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
             return {
                 ...this,
                 selection: { ...selection, playing_card: card },
+                prompt: {},
                 mode: card.cardData.equip_target.length == 0
                     ? TargetMode.finish : TargetMode.equip
             };
@@ -180,6 +181,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
             return handleAutoTargets({
                 ...this,
                 selection: { ...selection, playing_card: card },
+                prompt: {},
                 mode: TargetMode.target
             });
         } else {
@@ -188,6 +190,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
                 selection: { ...selection,
                     modifiers: selection.modifiers.concat({ modifier: card, targets: [] })
                 },
+                prompt: {},
                 mode: TargetMode.modifier
             });
         }
