@@ -86,7 +86,7 @@
     text-align: center;
     font-weight: bold;
     font-size: 16pt;
-    background-image: url('/public/media/icon_gold.png');
+    background-image: url('/media/icon_gold.png');
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -121,25 +121,25 @@
 }
 
 .icon-winner {
-    background-image: url('/public/media/icon_winner.png');
-    mask-image: url('/public/media/icon_winner.png');
+    background-image: url('/media/icon_winner.png');
+    mask-image: url('/media/icon_winner.png');
     background-color: #bba14f
 }
 
 .icon-origin {
-    background-image: url('/public/media/icon_origin.png');
-    mask-image: url('/public/media/icon_origin.png');
+    background-image: url('/media/icon_origin.png');
+    mask-image: url('/media/icon_origin.png');
     background-color: #7bf7ffff;
 }
 
 .icon-target {
-    background-image: url('/public/media/icon_target.png');
-    mask-image: url('/public/media/icon_target.png');
+    background-image: url('/media/icon_target.png');
+    mask-image: url('/media/icon_target.png');
     background-color: #ff0000ff;
 }
 
 .icon-turn {
-    background-image: url('/public/media/icon_turn.png');
-    mask-image: url('/public/media/icon_turn.png');
+    background-image: url('/media/icon_turn.png');
+    mask-image: url('/media/icon_turn.png');
     background-color: #4d7f21;
 }
