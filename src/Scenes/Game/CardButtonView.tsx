@@ -13,8 +13,11 @@ export interface CardButtonProps {
 export default function CardButtonView({ card, onClickCard }: CardButtonProps) {
     const selector = useContext(TargetSelectorContext);
 
-    if (isCardCurrent(selector, card) || selectorCanPlayCard(selector, card)) {
-        return <Button color={isResponse(selector) ? 'red' : 'green'} onClick={onClickCard}>
+    const isCurrent = isCardCurrent(selector, card);
+    const isPlayable = selectorCanPlayCard(selector, card);
+
+    if (isCurrent || isPlayable) {
+        return <Button color={isResponse(selector) ? 'red' : isCurrent ? 'blue' : 'green'} onClick={onClickCard}>
             <LocalizedCardName name={card.cardData.name} />
         </Button>
     } else {

@@ -16,8 +16,13 @@
 }
 
 .status-text {
-    margin: 2em auto;
-    height: 2em;
+    margin: 2.5em auto;
+    height: 3em;
+    line-height: 3em;
+}
+
+.status-text button {
+    line-height: initial;
 }
 
 .main-deck-row {
