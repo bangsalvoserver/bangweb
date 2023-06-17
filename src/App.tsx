@@ -47,7 +47,7 @@ function App() {
           profile_image: await serializeImage(localStorage.getItem('propic'), 50)
         },
         user_id: myUserId.current,
-        commit_hash: process.env.REACT_APP_BANG_SERVER_COMMIT_HASH || ''
+        commit_hash: import.meta.env.VITE_BANG_SERVER_COMMIT_HASH || ''
       }});
     },
 

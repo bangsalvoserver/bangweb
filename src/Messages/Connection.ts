@@ -40,7 +40,7 @@ export class SocketConnection implements Connection {
     }
 
     connect() {
-        this.socket = new WebSocket(process.env.REACT_APP_BANG_SERVER_URL || '');
+        this.socket = new WebSocket(import.meta.env.VITE_BANG_SERVER_URL || '');
         this.socket.onmessage = (event) => {
             this.receiveMessage(JSON.parse(event.data));
         };

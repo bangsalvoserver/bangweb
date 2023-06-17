@@ -18,7 +18,7 @@ export interface CardRef {
 }
 
 export function getCardUrl(path: string) {
-    const baseUrl = process.env.REACT_APP_BANG_CARDS_BASE_URL || '';
+    const baseUrl = import.meta.env.VITE_BANG_CARDS_BASE_URL || '';
     return `${baseUrl}/cards/${path}.png`;
 }
 
