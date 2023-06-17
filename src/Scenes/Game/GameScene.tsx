@@ -152,14 +152,14 @@ export default function GameScene({ channel }: GameProps) {
       <TargetSelectorContext.Provider value={selector}>
         <div className="game-scene-top">
           <div className="game-scene">
-            <div className="status-text">
-              { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
-            </div>
             <div className="main-deck-row">
               <div className="m-auto">
                 { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selectionPocket }
               </div>
               { trainPockets }
+            </div>
+            <div className="status-text">
+              { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
             </div>
             <div className="player-grid" num-players={table.alive_players.length}>
               { playerViews }

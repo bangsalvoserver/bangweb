@@ -3,13 +3,11 @@
     --card-height-unscaled: 389px;
     --card-border-unscaled: 18px;
     --one-hp-size-unscaled: 75px;
-    --player-gold-bottom-unscaled: 333px;
     
     --card-width: calc(var(--card-scale) * var(--card-width-unscaled));
     --card-height: calc(var(--card-scale) * var(--card-height-unscaled));
     --card-border: calc(var(--card-scale) * var(--card-border-unscaled));
     --one-hp-size: calc(var(--card-scale) * var(--one-hp-size-unscaled));
-    --player-gold-bottom: calc(var(--card-scale) * var(--player-gold-bottom-unscaled));
 
     --card-margin: 0.2em;
 }
@@ -46,6 +44,16 @@
 .card-cubes img {
     display: inline;
     margin: 0 1px;
+}
+
+@media (max-width:960px) {
+    .card-cubes {
+        width: 100%
+    }
+
+    .card-cubes img {
+        width: 10px;
+    }
 }
 
 .card-horizontal {

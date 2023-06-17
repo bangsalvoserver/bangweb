@@ -9,6 +9,12 @@
     z-index: 20;
 }
 
+@media (max-width:960px) {
+    .lobby-chat {
+        visibility: hidden;
+    }
+}
+
 .lobby-chat-box {
     background-color: rgba(255, 255, 255, 0.2);
     max-height: 150px;

@@ -1,6 +1,6 @@
 @media (max-width:960px) {
     :root {
-        --card-scale: 0.18;
+        --card-scale: 0.13;
     }
 
     .player-grid {

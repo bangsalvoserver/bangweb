@@ -16,7 +16,7 @@
 }
 
 .status-text {
-    margin: auto;
+    margin: 2em auto;
     height: 2em;
 }
 
@@ -27,7 +27,6 @@
     margin: auto;
     vertical-align: middle;
     margin-top: 2em;
-    margin-bottom: 4em;
 }
 
 .table-cubes {

@@ -3,6 +3,10 @@
     --player-self-row-width: calc(var(--card-width) * 8);
     --player-row-height: calc(var(--card-height) + 1.5em);
     --player-icon-size: 32px;
+    --player-gold-size: 32px;
+
+    --player-gold-bottom-unscaled: 333px;
+    --player-gold-bottom: calc(var(--card-scale) * var(--player-gold-bottom-unscaled));
 }
 
 .player-view {
@@ -76,8 +80,8 @@
     position: absolute;
     bottom: var(--player-gold-bottom);
     left: calc(var(--card-width-plus-margin) / 2);
-    width: var(--player-icon-size);
-    height: var(--player-icon-size);
+    width: var(--player-gold-size);
+    height: var(--player-gold-size);
     transform: translateX(-50%);
     text-align: center;
     font-weight: bold;
@@ -85,6 +89,16 @@
     background-image: url('/public/media/icon_gold.png');
     background-repeat: no-repeat;
     background-size: contain;
+}
+
+@media (max-width:960px) {
+    :root {
+        --player-gold-size: 20px;
+    }
+    
+    .player-gold {
+        font-size: 10pt;
+    }
 }
 
 .player-icons {
