@@ -1,0 +1,33 @@
+.game-options-editor {
+    margin-right: 2em;
+}
+
+.expansion-checkboxes {
+    width: fit-content;
+    border: 2px solid black;
+    border-radius: 1em;
+    padding: 0.5em;
+    margin: 0.5em auto;
+}
+
+.expansions-header {
+    font-weight: bold;
+    text-align: center;
+}
+
+.option-checkbox label {
+    margin-left: 0.3em;
+}
+
+.option-number label {
+    display: inline-block;
+    margin-right: 0.3em;
+    width: 12em;
+}
+
+.option-number input {
+    padding: 0.1em;
+    margin: 0.1em;
+    border-radius: 0.2em;
+    width: 5em;
+}

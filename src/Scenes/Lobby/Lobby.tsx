@@ -97,12 +97,18 @@ export default function LobbyScene({ myLobbyId, myUserId, lobbyName, gameOptions
       editLobby(lobbyName, gameOptions);
     };
 
-    return <div>
-      { myUserId == lobbyOwner && <Button color='blue' onClick={handleStartGame}>Start Game</Button> }
-      <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
-      {users.map(user => (
-        <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
-      ))}
+    return <div className='flex flex-col'>
+      <div className='flex flex-row justify-center h-12'>
+        { myUserId == lobbyOwner && <Button color='blue' onClick={handleStartGame}>Start Game</Button> }
+      </div>
+      <div className='flex flex-row'>
+        <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
+        <div className='flex flex-col'>
+          {users.map(user => (
+            <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
+          ))}
+        </div>
+      </div>
     </div>
   }
 

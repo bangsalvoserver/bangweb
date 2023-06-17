@@ -1,7 +1,8 @@
+import { ChangeEvent } from "react";
 import getLabel from "../../Locale/GetLabel";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { GameOptions } from "../Game/Model/GameUpdate";
 import { ExpansionType } from "../Game/Model/CardEnums";
+import { GameOptions } from "../Game/Model/GameUpdate";
+import './Style/GameOptionsEditor.css';
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
@@ -10,85 +11,98 @@ export interface GameOptionProps {
 }
 
 type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
-type GameOptionsOf<T> = { [Property in FilteredKeys<Required<GameOptions>, T>]: GameOptions[Property] };
+type GameOptionsOf<T> = keyof { [Property in FilteredKeys<Required<GameOptions>, T>]: unknown };
 
-export default function GameOptionsEditor({ gameOptions, setGameOptions, readOnly }: GameOptionProps) {
-    const newExpansionCheckbox = (name: ExpansionType) => {
-        const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
-            const oldValue = gameOptions.expansions.includes(name);
-            const newValue = event.target.checked;
-            if (oldValue != newValue) {
-                setGameOptions({
-                    ...gameOptions,
-                    expansions: newValue
-                        ? gameOptions.expansions.concat(name)
-                        : gameOptions.expansions.filter(e => e != name)
-                });
-            }
-        };
-
-        return (<>
-            <input id={name} type="checkbox" checked={gameOptions.expansions.includes(name)} onChange={readOnly ? undefined : handleExpansionChange} readOnly={readOnly} />
-            <label htmlFor={name}>{getLabel('ExpansionType', name)}</label>
-        </>);
+function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly }: GameOptionProps & { name: ExpansionType }) {
+    const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const oldValue = gameOptions.expansions.includes(name);
+        const newValue = event.target.checked;
+        if (oldValue != newValue) {
+            setGameOptions({
+                ...gameOptions,
+                expansions: newValue
+                    ? gameOptions.expansions.concat(name)
+                    : gameOptions.expansions.filter(e => e != name)
+            });
+        }
     };
 
-    const newOptionCheckbox = function(prop: keyof GameOptionsOf<boolean>) {
-        return (<>
-            <input id={prop} type="checkbox" checked={gameOptions[prop]}
+    return (<div className="option-checkbox">
+        <input id={name} type="checkbox"
+            checked={gameOptions.expansions.includes(name)}
+            onChange={readOnly ? undefined : handleExpansionChange}
             readOnly={readOnly}
-            onChange={readOnly ? undefined : event => {
-                setGameOptions({
-                    ...gameOptions,
-                    [prop]: event.target.checked
-                });
-            }} />
-            <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
-        </>)
-    };
+        />
+        <label htmlFor={name}>{getLabel('ExpansionType', name)}</label>
+    </div>);
+}
 
-    const newOptionNumber = function(prop: keyof GameOptionsOf<number>) {
-        return (<>
-            <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
-            <input id={prop} type="number" value={gameOptions[prop]}
+function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<boolean> }) {
+    const handleOptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setGameOptions({
+            ...gameOptions,
+            [prop]: event.target.checked
+        });
+    };
+    return (<div className="option-checkbox">
+        <input id={prop} type="checkbox"
+            checked={gameOptions[prop]}
+            onChange={readOnly ? undefined : handleOptionChange}
             readOnly={readOnly}
-            onChange={readOnly ? undefined : event => {
-                if (event.target.value.length == 0) {
-                    setGameOptions({
-                        ...gameOptions,
-                        [prop]: undefined
-                    });
-                } else if (!isNaN(event.target.valueAsNumber)) {
-                    setGameOptions({
-                        ...gameOptions,
-                        [prop]: event.target.valueAsNumber
-                    });
-                }
-            }} />
-        </>);
+        />
+        <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+    </div>)
+};
+
+function OptionNumber({ prop, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<number> }) {
+    const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length == 0) {
+            setGameOptions({
+                ...gameOptions,
+                [prop]: undefined
+            });
+        } else if (event.target.validity.valid) {
+            setGameOptions({
+                ...gameOptions,
+                [prop]: event.target.valueAsNumber
+            });
+        }
     };
 
-    return (
-        <ul>
-            <li>{newExpansionCheckbox('dodgecity')}</li>
-            <li>{newExpansionCheckbox('goldrush')}</li>
-            <li>{newExpansionCheckbox('armedanddangerous')}</li>
-            <li>{newExpansionCheckbox('greattrainrobbery')}</li>
-            <li>{newExpansionCheckbox('valleyofshadows')}</li>
-            <li>{newExpansionCheckbox('highnoon')}</li>
-            <li>{newExpansionCheckbox('fistfulofcards')}</li>
-            <li>{newExpansionCheckbox('wildwestshow')}</li>
-            <li>{newExpansionCheckbox('thebullet')}</li>
-            <li>{newOptionCheckbox('enable_ghost_cards')}</li>
-            <li>{newOptionCheckbox('character_choice')}</li>
-            <li>{newOptionCheckbox('allow_beer_in_duel')}</li>
-            <li>{newOptionCheckbox('quick_discard_all')}</li>
-            <li>{newOptionNumber('scenario_deck_size')}</li>
-            <li>{newOptionNumber('num_bots')}</li>
-            <li>{newOptionNumber('damage_timer')}</li>
-            <li>{newOptionNumber('escape_timer')}</li>
-            <li>{newOptionNumber('bot_play_timer')}</li>
-            <li>{newOptionNumber('tumbleweed_timer')}</li>
-        </ul>
-    );
+    return (<div className="option-number">
+        <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+        <input id={prop} type="number"
+            value={gameOptions[prop] ?? ''}
+            pattern='[0-9]{0,5}'
+            onChange={readOnly ? undefined : handleNumberChange}
+            readOnly={readOnly}
+        />
+    </div>);
+}
+
+export default function GameOptionsEditor(props: GameOptionProps) {
+    return (<div className="game-options-editor">
+        <div className="expansion-checkboxes">
+            <div className="expansions-header">{getLabel('GameOptions', 'expansions')}</div>
+            <ExpansionCheckbox name='dodgecity' { ...props } />
+            <ExpansionCheckbox name='goldrush' { ...props } />
+            <ExpansionCheckbox name='armedanddangerous' { ...props } />
+            <ExpansionCheckbox name='greattrainrobbery' { ...props } />
+            <ExpansionCheckbox name='valleyofshadows' { ...props } />
+            <ExpansionCheckbox name='highnoon' { ...props } />
+            <ExpansionCheckbox name='fistfulofcards' { ...props } />
+            <ExpansionCheckbox name='wildwestshow' { ...props } />
+            <ExpansionCheckbox name='thebullet' { ...props } />
+        </div>
+        <OptionCheckbox prop='enable_ghost_cards' { ...props } />
+        <OptionCheckbox prop='character_choice' { ...props } />
+        <OptionCheckbox prop='allow_beer_in_duel' { ...props } />
+        <OptionCheckbox prop='quick_discard_all' { ...props } />
+        <OptionNumber prop='scenario_deck_size' { ...props } />
+        <OptionNumber prop='num_bots' { ...props } />
+        <OptionNumber prop='damage_timer' { ...props } />
+        <OptionNumber prop='escape_timer' { ...props } />
+        <OptionNumber prop='bot_play_timer' { ...props } />
+        <OptionNumber prop='tumbleweed_timer' { ...props } />
+    </div>);
 }
