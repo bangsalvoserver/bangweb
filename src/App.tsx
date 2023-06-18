@@ -27,13 +27,16 @@ function App() {
 
   const [scene, setScene] = useState<CurrentSceneUnion>({ connect: {} });
 
-  let myUserId = useRef<UserId>();
+  const myUserId = useRef<UserId>();
   if (!myUserId.current) {
-    myUserId.current = parseInt(localStorage.getItem('user_id') as string) || undefined;
+    const userIdString = localStorage.getItem('user_id');
+    if (userIdString) {
+      myUserId.current = parseInt(userIdString);
+    }
   }
 
   useEffect(() => {
-    if (myUserId && !connection.current.isConnected()) {
+    if (myUserId.current && !connection.current.isConnected()) {
       connection.current.connect();
     }
   }, []);
