@@ -126,10 +126,13 @@ export function selectorCanUndo(selector: TargetSelector): boolean {
         return false;
     }
     if (isAutoSelect(selector)) {
+        const someTargetNotNone = (targets: CardTarget[]) => {
+            return targets.some(target => !('none' in target));
+        };
         if (selector.mode == TargetMode.target) {
-            return selector.selection.targets.length != 0;
+            return someTargetNotNone(selector.selection.targets);
         } else if (selector.mode == TargetMode.modifier) {
-            return selector.selection.modifiers.length != 1 || selector.selection.modifiers[0].targets.length != 0;
+            return selector.selection.modifiers.length != 1 || someTargetNotNone(selector.selection.modifiers[0].targets);
         }
     }
     return true;
