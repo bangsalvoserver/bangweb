@@ -3,13 +3,13 @@ import { cardHasTag, checkPlayerFilter, getCardColor, isEquipCard, isPlayerAlive
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { GameChannel } from "./GameUpdateHandler";
-import { PlayingSelector, TargetMode, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isAutoSelect, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { PlayingSelector, TargetSelector, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, isAutoSelect, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export function handleClickCard(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
-    switch (selector.mode) {
-    case TargetMode.target:
-    case TargetMode.modifier: {
+    switch (selector.selection.mode) {
+    case 'target':
+    case 'modifier': {
         let cardTarget = card;
         if (card.pocket?.name == 'player_character') {
             cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
@@ -19,7 +19,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
         }
         break;
     }
-    case TargetMode.start: {
+    case 'start': {
         const canPlay = selectorCanPlayCard(selector, card);
         if (isResponse(selector)) {
             const canPick = selectorCanPickCard(table, selector, card);
@@ -38,14 +38,14 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
 }
 
 export function handleClickPlayer(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, player: Player) {
-    switch (selector.mode) {
-    case TargetMode.target:
-    case TargetMode.modifier:
+    switch (selector.selection.mode) {
+    case 'target':
+    case 'modifier':
         if (isValidPlayerTarget(table, selector as PlayingSelector, player)) {
             selectorDispatch({ addPlayerTarget: player });
         }
         break;
-    case TargetMode.equip:
+    case 'equip':
         if (isValidEquipTarget(table, selector as PlayingSelector, player)) {
             selectorDispatch({ addEquipTarget: player });
         }
@@ -122,28 +122,28 @@ export function handleAutoSelect(table: GameTable, selector: TargetSelector, sel
             selectorDispatch({ selectPlayingCard: card });
         }
     };
-    if (isSelectionPlaying(selector)) {
-        switch (selector.mode) {
-        case TargetMode.start:
+    switch (selector.selection.mode) {
+    case 'start':
+        if (isSelectionPlaying(selector)) {
             if (selector.selection.context.repeat_card) {
                 selectCard(selector.selection.context.repeat_card);
             } else if (selector.selection.context.traincost) {
                 selectCard(selector.selection.context.traincost);
             }
-            break;
-        case TargetMode.target:
-        case TargetMode.modifier:
-            handleConditionalAutoTargets(table, selector, selectorDispatch);
-            break;
+        } else if (isAutoSelect(selector)) {
+            selectCard(selector.request.respond_cards[0].card);
         }
-    } else if (!isSelectionPicking(selector) && isAutoSelect(selector)) {
-        selectCard(selector.request.respond_cards[0].card);
+        break;
+    case 'target':
+    case 'modifier':
+        handleConditionalAutoTargets(table, selector as PlayingSelector, selectorDispatch);
+        break;
     }
 }
 
 export function handleSendGameAction(channel: GameChannel, selector: TargetSelector) {
     const bypass_prompt = 'yesno' in selector.prompt && selector.prompt.yesno.response;
-    if (selector.mode == TargetMode.finish && (!('yesno' in selector.prompt) || bypass_prompt)) {
+    if (selector.selection.mode == 'finish' && (!('yesno' in selector.prompt) || bypass_prompt)) {
         if (isSelectionPicking(selector)) {
             const card = selector.selection.picked_card;
             channel.sendGameAction({ pick_card: { card, bypass_prompt }});

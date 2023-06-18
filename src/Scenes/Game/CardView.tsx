@@ -3,7 +3,7 @@ import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
-import { TargetMode, TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSelectionPlaying, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard, isSelectionPicking } from "./Model/TargetSelector";
+import { TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSelectionPlaying, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard, isSelectionPicking } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 
@@ -27,7 +27,7 @@ function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: 
         if (isCardSelected(selector, card)) {
             return 'card-selected';
         }
-        if (selector.mode == TargetMode.target || selector.mode == TargetMode.modifier) {
+        if (selector.selection.mode == 'target' || selector.selection.mode == 'modifier') {
             if (isValidCubeTarget(table, selector, card)) {
                 return 'card-targetable-cubes';
             } else if (isValidCardTarget(table, selector, card)) {

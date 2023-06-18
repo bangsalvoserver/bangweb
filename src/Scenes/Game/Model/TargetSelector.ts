@@ -13,6 +13,7 @@ export type GamePrompt =
 
 export interface PickCardSelection {
     picked_card: CardId;
+    mode: 'finish';
 }
 
 export interface EffectContext {
@@ -22,14 +23,6 @@ export interface EffectContext {
     skipped_player?: PlayerId;
     ignore_distances?: boolean;
 }
-
-export enum TargetMode {
-    start,
-    modifier,
-    target,
-    equip,
-    finish
-};
 
 export interface PlayCardSelection {
     playing_card: KnownCard | null;
@@ -41,13 +34,26 @@ export interface PlayCardSelection {
     }[];
 
     context: EffectContext;
+    mode: 'start' | 'target' | 'modifier' | 'equip' | 'finish';
+}
+
+export function newPlayCardSelection() {
+    return {
+        playing_card: null,
+        targets: [],
+        modifiers: [],
+        context: {},
+        mode: 'start'
+    };
 }
 
 export interface TargetSelector {
     request: RequestStatusUnion;
     prompt: GamePrompt | {};
-    selection: PickCardSelection | PlayCardSelection | {};
-    mode: TargetMode;
+    selection:
+        PickCardSelection |
+        PlayCardSelection |
+        { mode: 'start' };
 }
 
 export type RequestSelector = ChangeField<TargetSelector, 'request', RequestStatusArgs>;
@@ -81,16 +87,15 @@ export function newTargetSelector(request: RequestStatusUnion): TargetSelector {
     return {
         request,
         prompt: {},
-        selection: {},
-        mode: TargetMode.start
+        selection: { mode: 'start' },
     };
 }
 
 export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard, CardTarget[]] {
-    switch (selector.mode) {
-    case TargetMode.target:
+    switch (selector.selection.mode) {
+    case 'target':
         return [selector.selection.playing_card!, selector.selection.targets];
-    case TargetMode.modifier: {
+    case 'modifier': {
         const pair = selector.selection.modifiers.at(-1)!;
         return [pair.modifier, pair.targets];
     }
@@ -100,9 +105,9 @@ export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard,
 }
 
 export function selectorCanConfirm(selector: TargetSelector): boolean {
-    switch (selector.mode) {
-    case TargetMode.target:
-    case TargetMode.modifier: {
+    switch (selector.selection.mode) {
+    case 'target':
+    case 'modifier': {
         const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
         const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
         
@@ -122,16 +127,17 @@ export function isAutoSelect(selector: TargetSelector): selector is RequestSelec
 }
 
 export function selectorCanUndo(selector: TargetSelector): boolean {
-    if (selector.mode == TargetMode.finish || !isSelectionPlaying(selector)) {
-        return false;
+    if (selector.selection.mode == 'finish') return false;
+    if (selector.selection.mode == 'start') {
+        return isSelectionPlaying(selector) && !selector.selection.playing_card;
     }
     if (isAutoSelect(selector)) {
         const someTargetNotNone = (targets: CardTarget[]) => {
             return targets.some(target => !('none' in target));
         };
-        if (selector.mode == TargetMode.target) {
+        if (selector.selection.mode == 'target') {
             return someTargetNotNone(selector.selection.targets);
-        } else if (selector.mode == TargetMode.modifier) {
+        } else if (selector.selection.mode == 'modifier') {
             return selector.selection.modifiers.length != 1 || someTargetNotNone(selector.selection.modifiers[0].targets);
         }
     }

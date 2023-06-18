@@ -15,7 +15,7 @@ import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTabl
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetMode, TargetSelector, isResponse, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
+import { TargetSelector, isResponse, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
@@ -58,7 +58,7 @@ export default function GameScene({ channel }: GameProps) {
       && table.self_player !== undefined
       && !handler.current.pendingUpdates()
       && !('playpickundo' in selector.prompt)
-      && selector.mode != TargetMode.finish;
+      && selector.selection.mode != 'finish';
   };
 
   const onClickCard = (card: Card) => { if (isClickAllowed()) handleClickCard(table, selector, selectorDispatch, card) };

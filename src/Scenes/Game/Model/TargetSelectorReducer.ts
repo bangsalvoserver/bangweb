@@ -2,7 +2,7 @@ import { ExtractKeys, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { getTagValue, isEquipCard } from "./Filters";
 import { Card, KnownCard, Player } from "./GameTable";
-import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetMode, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newTargetSelector, zipCardTargets } from "./TargetSelector";
+import { EffectContext, GamePrompt, PlayCardSelection, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -20,8 +20,8 @@ export type SelectorUpdate =
 type TargetListMapper = (targets: CardTarget[]) => CardTarget[];
 
 function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper): PlayingSelector {
-    switch (selector.mode) {
-    case TargetMode.target:
+    switch (selector.selection.mode) {
+    case 'target':
         return handleAutoTargets({
             ...selector,
             selection: {
@@ -29,7 +29,7 @@ function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper
                 targets: mapper(selector.selection.targets)
             }
         });
-    case TargetMode.modifier:
+    case 'modifier':
         const lastModifier = selector.selection.modifiers.at(-1)!;
         const modifiers = selector.selection.modifiers.slice(0, -1)
             .concat({ modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) });
@@ -119,12 +119,22 @@ function handleAutoTargets(selector: PlayingSelector): PlayingSelector {
     if (index >= effects.length && repeatCount > 0
         && targets.length - effects.length == optionals.length * repeatCount)
     {
-        if (selector.mode == TargetMode.modifier) {
+        if (selector.selection.mode == 'modifier') {
             return addModifierContext(currentCard, targets, {
-                ...selector, mode: TargetMode.start
+                ...selector,
+                selection: {
+                    ...selector.selection,
+                    mode: 'start'
+                }
             });
         } else {
-            return { ...selector, mode: TargetMode.finish };
+            return {
+                ...selector,
+                selection: {
+                    ...selector.selection,
+                    mode: 'finish'
+                }
+            };
         }
     }
 
@@ -153,45 +163,50 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     confirmPlay () {
-        return { ...this, mode: TargetMode.finish };
+        checkSelectionPlaying(this);
+        return {
+            ...this,
+            selection: { ...this.selection, mode: 'finish' }
+        };
     },
 
     undoSelection () {
-        return { ...this, prompt: {}, selection: {}, mode: TargetMode.start };
+        return { ...this, prompt: {}, selection: { mode: 'start' }};
     },
 
     selectPlayingCard (card) {
-        const selection = isSelectionPlaying(this) ? this.selection : 
-            {
-                playing_card: null,
-                targets: [],
-                modifiers: [],
-                context: {}
-            };
+        const selection = isSelectionPlaying(this) ? this.selection : newPlayCardSelection();
 
         if (isEquipCard(card)) {
             return {
                 ...this,
-                selection: { ...selection, playing_card: card },
-                prompt: {},
-                mode: card.cardData.equip_target.length == 0
-                    ? TargetMode.finish : TargetMode.equip
+                selection: {
+                    ...selection,
+                    playing_card: card,
+                    mode: card.cardData.equip_target.length == 0
+                        ? 'finish' : 'equip'
+                },
+                prompt: {}
             };
         } else if (card.cardData.modifier.type == 'none') {
             return handleAutoTargets({
                 ...this,
-                selection: { ...selection, playing_card: card },
-                prompt: {},
-                mode: TargetMode.target
+                selection: {
+                    ...selection,
+                    playing_card: card,
+                    mode: 'target'
+                },
+                prompt: {}
             });
         } else {
             return handleAutoTargets({
                 ...this,
-                selection: { ...selection,
-                    modifiers: selection.modifiers.concat({ modifier: card, targets: [] })
+                selection: {
+                    ...selection,
+                    modifiers: selection.modifiers.concat({ modifier: card, targets: [] }),
+                    mode: 'modifier'
                 },
-                prompt: {},
-                mode: TargetMode.modifier
+                prompt: {}
             });
         }
     },
@@ -199,8 +214,10 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     selectPickCard (card) {
         return {
             ...this,
-            selection: { picked_card: card.id },
-            mode: TargetMode.finish
+            selection: {
+                picked_card: card.id,
+                mode: 'finish'
+            }
         };
     },
 
@@ -245,14 +262,14 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     addEquipTarget (player) {
-        if (isSelectionPlaying(this) && this.mode == TargetMode.equip) {
+        if (this.selection.mode == 'equip') {
             return {
                 ...this,
                 selection: {
                     ...this.selection,
-                    targets: [{ player: player.id }]
+                    targets: [{ player: player.id }],
+                    mode: 'finish'
                 },
-                mode: TargetMode.finish
             };
         } else {
             throw new Error('TargetSelector: not in equipping mode');
