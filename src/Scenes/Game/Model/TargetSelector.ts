@@ -385,8 +385,7 @@ export function isValidPlayerTarget(table: GameTable, selector: PlayingSelector,
 }
 
 export function isValidEquipTarget(table: GameTable, selector: PlayingSelector, player: Player): boolean {
-    return isSelectionPlaying(selector)
-        && selector.selection.playing_card !== null
+    return selector.selection.playing_card !== null
         && isEquipCard(selector.selection.playing_card)
         && checkPlayerFilter(table, selector, getEquipTarget(selector.selection.playing_card), player);
 }
