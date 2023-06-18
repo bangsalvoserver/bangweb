@@ -20,8 +20,8 @@ async function saveToFile(filename, object) {
 
 async function main() {
     await saveToFile('.env', {
-        VITE_BANG_CARDS_BASE_URL: 'http://bang.salvoserver.it:81',
-        VITE_BANG_SERVER_URL: 'ws://bang.salvoserver.it:47654',
+        VITE_BANG_CARDS_BASE_URL: 'https://bang.salvoserver.it:81',
+        VITE_BANG_SERVER_URL: 'wss://bang.salvoserver.it:47655',
         VITE_BANG_SERVER_COMMIT_HASH: await getCommitHash('https://api.github.com/repos/salvoilmiosi/banggameserver/branches/release')
     });
 }
