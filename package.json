@@ -18,9 +18,11 @@
   },
   "scripts": {
     "build_env": "node scripts/build_env.js",
-    "start": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "vite": "vite",
+    "watch-tsc": "tsc --watch --noEmit",
+    "start": "npm-run-all --parallel watch-tsc vite"
   },
   "browserslist": {
     "production": [
@@ -37,6 +39,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.14",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "vite": "^4.3.9",

@@ -37,7 +37,7 @@ export interface PlayCardSelection {
     mode: 'start' | 'target' | 'modifier' | 'equip' | 'finish';
 }
 
-export function newPlayCardSelection() {
+export function newPlayCardSelection(): PlayCardSelection {
     return {
         playing_card: null,
         targets: [],
