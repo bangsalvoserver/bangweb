@@ -8,7 +8,7 @@ import { SettingsProps } from "../CurrentScene";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
 
-function WaitingArea({ settings, settingsDispatch }: SettingsProps) {
+function WaitingArea({ settings }: SettingsProps) {
   const connection = useContext(ConnectionContext);
   const [lobbies, setLobbies] = useState<LobbyValue[]>([]);
 
@@ -67,7 +67,7 @@ function WaitingArea({ settings, settingsDispatch }: SettingsProps) {
             focus:ring-2
             focus:ring-blue-500
           '
-          value={settings.lobbyName} onChange={e => settingsDispatch({ setLobbyName: e.target.value })}></input>
+          value={settings.lobbyName} onChange={e => settings.setLobbyName(e.target.value)}></input>
         <Button color='green' type='submit'>{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
       </form>
       <div className='lobby-list'>
