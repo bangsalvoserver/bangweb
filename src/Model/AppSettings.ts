@@ -4,8 +4,8 @@ import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 export default interface AppSettings {
     myUserId?: UserId;
     myLobbyId?: LobbyId;
-    username?: string;
-    propic?: string;
+    username: string;
+    propic: string | null;
     lobbyName?: string;
     gameOptions?: GameOptions;
 }
@@ -48,8 +48,8 @@ export function loadAppSettings(): AppSettings {
     return {
         myUserId: loadInt('user_id'),
         myLobbyId: loadInt('lobby_id'),
-        username: loadString('username'),
-        propic: loadString('propic'),
+        username: loadString('username') ?? '',
+        propic: loadString('propic') ?? null,
         lobbyName: loadString('lobby_name'),
         gameOptions: loadObject<GameOptions>('game_options')
     };
@@ -59,7 +59,7 @@ export function saveAppSettings(settings: AppSettings) {
     saveInt('user_id', settings.myUserId);
     saveInt('lobby_id', settings.myLobbyId);
     saveString('username', settings.username);
-    saveString('propic', settings.propic);
+    saveString('propic', settings.propic ?? undefined);
     saveString('lobby_name', settings.lobbyName);
     saveObject('game_options', settings.gameOptions);
 }
@@ -67,8 +67,8 @@ export function saveAppSettings(settings: AppSettings) {
 export type SettingsUpdate =
     { setMyUserId: UserId | undefined } |
     { setMyLobbyId: UserId | undefined } |
-    { setUsername: string | undefined } |
-    { setPropic: string | undefined } |
+    { setUsername: string } |
+    { setPropic: string | null } |
     { setLobbyName: string | undefined } |
     { setGameOptions: GameOptions | undefined };
 

@@ -39,8 +39,8 @@ function App() {
     connected: async () => {
       connection.current.sendMessage({connect: {
         user: {
-          name: settings.username ?? '',
-          profile_image: await serializeImage(settings.propic ?? null, 50)
+          name: settings.username,
+          profile_image: await serializeImage(settings.propic, 50)
         },
         user_id: settings.myUserId,
         commit_hash: import.meta.env.VITE_BANG_SERVER_COMMIT_HASH || ''
@@ -65,7 +65,7 @@ function App() {
       }
     }
 
-  });
+  }, [settings]);
 
   const editLobby = (lobbyName: string, gameOptions: GameOptions) => {
     setScene(scene => {
@@ -91,9 +91,11 @@ function App() {
   
   }, [scene]);
 
-  const handleEditPropic = async (propic: string | null) => {
+  const handleEditUser = async (username: string, propic: string | null) => {
+    settingsDispatch({ setUsername: username });
+    settingsDispatch({ setPropic: propic });
     connection.current.sendMessage({user_edit: {
-      name: settings.username ?? '',
+      name: username,
       profile_image: await serializeImage(propic, 50)
     }});
   }
@@ -107,9 +109,9 @@ function App() {
       <ConnectionContext.Provider value={connection.current}>
         <Header
           title={scene.type == 'lobby' ? scene.lobbyName : undefined}
-          username={settings.username ?? ''}
-          propic={settings.propic ?? null}
-          setPropic={handleEditPropic}
+          username={settings.username}
+          propic={settings.propic}
+          editUser={handleEditUser}
           handleLeaveLobby={scene.type == 'lobby' ? handleLeaveLobby : undefined}
           handleDisconnect={handleDisconnect}
         />

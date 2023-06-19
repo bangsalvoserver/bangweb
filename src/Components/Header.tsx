@@ -7,12 +7,12 @@ export interface HeaderProps {
   title?: string;
   username: string;
   propic: string | null;
-  setPropic: (propic: string | null) => void;
+  editUser: (username: string, propic: string | null) => void;
   handleLeaveLobby?: () => void;
   handleDisconnect: () => void;
 }
 
-function Header({ title, username, propic, setPropic, handleLeaveLobby, handleDisconnect }: HeaderProps) {
+function Header({ title, username, propic, editUser, handleLeaveLobby, handleDisconnect }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -25,7 +25,7 @@ function Header({ title, username, propic, setPropic, handleLeaveLobby, handleDi
     if (file) {
       let reader = new FileReader();
       reader.onload = () => {
-        setPropic(reader.result as string);
+        editUser(username, reader.result as string);
       };
       reader.readAsDataURL(file);
     }
