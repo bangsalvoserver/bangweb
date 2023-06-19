@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import AppSettings, { SettingsUpdate } from "../Model/AppSettings";
+import AppSettings from "../Model/AppSettings";
 import ConnectScene from "./Connect/Connect";
 import LobbyScene, { LobbyProps } from "./Lobby/Lobby";
 import WaitingArea from "./WaitingArea/WaitingArea";
@@ -11,7 +11,6 @@ export type SceneType =
 
 export type SettingsProps = {
     settings: AppSettings;
-    settingsDispatch: Dispatch<SettingsUpdate>;
 }
 
 export interface CurrentSceneProps extends SettingsProps {
