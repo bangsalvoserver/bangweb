@@ -138,18 +138,12 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         </div>
     } else {
         return <div className={classes.join(' ')} style={playerStyle} onClick={onClickPlayer}>
-            <div className='flex flex-row flex-grow'>
-                <div className='flex-grow text-center'>
-                    <div className='player-top-row'>
-                        { characterView } { roleView }
-                        <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} onClickCard={onClickCard} />
-                        { scenarioDecks }
-                    </div>
-                </div>
-                <div className='flex flex-col justify-end relative'>
-                    {playerIcons}
-                    <LobbyUser user={user} align='vertical' />
-                </div>
+            <div className='player-top-row'>
+                { characterView } { roleView }
+                <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                { scenarioDecks }
+                <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
+                {playerIcons}
             </div>
             <div className='player-pocket-scroll'>
                 <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />

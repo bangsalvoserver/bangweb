@@ -54,6 +54,7 @@
 }
 
 .player-top-row {
+    position: relative;
     display: inline-block;
     text-align: left;
     height: var(--player-row-height);
@@ -94,6 +95,8 @@
 @media (max-width:960px) {
     :root {
         --player-gold-size: 20px;
+        --player-row-width: calc(var(--card-width) * 4);
+        --player-self-row-width: calc(var(--card-width) * 5);
     }
     
     .player-gold {
@@ -107,6 +110,19 @@
     right: 0;
     width: max-content;
     z-index: 9;
+}
+
+.player-propic {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--profile-pic-size) * -1);
+    transform: translateX(-50%);
+}
+
+.player-propic .lobby-username {
+    background-color: #ffffff80;
+    border-radius: 0.3em 0.3em;
+    padding: 0.2em;
 }
 
 .player-icon {
