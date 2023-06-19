@@ -27,7 +27,7 @@ export interface LobbyProps {
 
 export const LobbyContext = createContext<LobbyState>({ lobbyName: 'Bang!', users: [] });
 
-export default function LobbyScene({ settings, settingsDispatch, lobbyName, gameOptions, editLobby }: SettingsProps & LobbyProps) {
+export default function LobbyScene({ settings, lobbyName, gameOptions, editLobby }: SettingsProps & LobbyProps) {
   const connection = useContext(ConnectionContext);
 
   const [isGameStarted, setIsGameStarted] = useState(false);
@@ -92,7 +92,7 @@ export default function LobbyScene({ settings, settingsDispatch, lobbyName, game
 
     const handleEditGameOptions = (gameOptions: GameOptions) => {
       connection.sendMessage({ lobby_edit: { name: lobbyName, options: gameOptions }});
-      settingsDispatch({ setGameOptions: gameOptions });
+      settings.setGameOptions(gameOptions);
       editLobby(lobbyName, gameOptions);
     };
 

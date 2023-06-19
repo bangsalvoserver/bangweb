@@ -24,7 +24,7 @@ function App() {
 
   const [scene, setScene] = useState<SceneType>({ type: 'connect' });
 
-  const [settings, settingsDispatch] = useSettings();
+  const settings = useSettings();
 
   useEffect(() => {
     if (settings.myUserId && !connection.current.isConnected()) {
@@ -46,7 +46,7 @@ function App() {
     },
 
     client_accepted: ({ user_id }) => {
-      settingsDispatch({ setMyUserId: user_id });
+      settings.setMyUserId(user_id);
       connection.current.setLocked(true);
       setScene({ type: 'waiting_area' });
     },
@@ -57,7 +57,7 @@ function App() {
 
     lobby_remove_user: ({ user_id }) => {
       if (user_id === settings.myUserId) {
-        settingsDispatch({ setMyLobbyId: undefined });
+        settings.setMyLobbyId(undefined);
         connection.current.setLocked(true);
         setScene({ type: 'waiting_area' });
       }
@@ -80,7 +80,7 @@ function App() {
     lobby_entered: ({ lobby_id, name, options }) => {
       if (scene.type != 'lobby' || (settings.myLobbyId != lobby_id)) {
         connection.current.setLocked(true);
-        settingsDispatch({ setMyLobbyId: lobby_id });
+        settings.setMyLobbyId(lobby_id);
         setScene({ type: 'lobby', lobbyName: name, gameOptions: options, editLobby });
       }
     },
@@ -90,8 +90,8 @@ function App() {
   }, [scene]);
 
   const handleEditUser = async (username: string, propic: string | null) => {
-    settingsDispatch({ setUsername: username });
-    settingsDispatch({ setPropic: propic });
+    settings.setUsername(username);
+    settings.setPropic(propic);
     connection.current.sendMessage({user_edit: {
       name: username,
       profile_image: await serializeImage(propic, 50)
@@ -114,7 +114,7 @@ function App() {
           handleDisconnect={scene.type != 'connect' ? handleDisconnect : undefined }
         />
         <div className="current-scene">
-          <CurrentScene scene={scene} settings={settings} settingsDispatch={settingsDispatch} />
+          <CurrentScene scene={scene} settings={settings} />
         </div>
       </ConnectionContext.Provider>
     </div>

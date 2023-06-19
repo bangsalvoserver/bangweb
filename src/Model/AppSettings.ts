@@ -30,20 +30,23 @@ function useLocalStorage<T>(key: string, converter: Converter<T>) {
 
 export default interface AppSettings {
     myUserId?: UserId;
-    myLobbyId?: LobbyId;
-    username: string;
-    propic: string | null;
-    lobbyName?: string;
-    gameOptions?: GameOptions;
-}
+    setMyUserId: Dispatch<UserId | undefined>;
 
-export type SettingsUpdate =
-    { setMyUserId: UserId | undefined } |
-    { setMyLobbyId: UserId | undefined } |
-    { setUsername: string } |
-    { setPropic: string | null } |
-    { setLobbyName: string | undefined } |
-    { setGameOptions: GameOptions | undefined };
+    myLobbyId?: LobbyId;
+    setMyLobbyId: Dispatch<LobbyId | undefined>;
+
+    username: string;
+    setUsername: Dispatch<string>;
+
+    propic: string | null;
+    setPropic: Dispatch<string | null>;
+
+    lobbyName?: string;
+    setLobbyName: Dispatch<LobbyId | undefined>;
+
+    gameOptions?: GameOptions;
+    setGameOptions: Dispatch<GameOptions | undefined>;
+}
 
 export function useSettings() {
     const [myUserId, setMyUserId] = useLocalStorage('user_id', intConverter);
@@ -53,30 +56,14 @@ export function useSettings() {
     const [lobbyName, setLobbyName] = useLocalStorage('lobby_name', stringConverter);
     const [gameOptions, setGameOptions] = useLocalStorage<GameOptions>('game_options', jsonConverter);
 
-    const settings: AppSettings = {
-        myUserId: myUserId,
-        myLobbyId: myLobbyId,
+    return {
+        myUserId, setMyUserId,
+        myLobbyId, setMyLobbyId,
         username: username ?? '',
+        setUsername,
         propic: propic ?? null,
-        lobbyName: lobbyName,
-        gameOptions: gameOptions
+        setPropic: propic => setPropic(propic ?? undefined),
+        lobbyName, setLobbyName
+        gameOptions, setGameOptions
     };
-
-    const settingsDispatch = (update: SettingsUpdate) => {
-        if ('setMyUserId' in update) {
-            setMyUserId(update.setMyUserId);
-        } else if ('setMyLobbyId' in update) {
-            setMyLobbyId(update.setMyLobbyId);
-        } else if ('setUsername' in update) {
-            setUsername(update.setUsername);
-        } else if ('setPropic' in update) {
-            setPropic(update.setPropic ?? undefined);
-        } else if ('setLobbyName' in update) {
-            setLobbyName(update.setLobbyName);
-        } else if ('setGameOptions' in update) {
-            setGameOptions(update.setGameOptions);
-        }
-    };
-
-    return [settings, settingsDispatch] as const;
 }
