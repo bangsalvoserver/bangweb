@@ -1,30 +1,21 @@
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
 import { ConnectionContext } from "../../App";
-import { useHandler } from "../../Messages/Connection";
-import { LobbyId } from "../../Messages/ServerMessage";
-import LobbyElement, { LobbyValue } from "./LobbyElement";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
+import { useHandler } from "../../Messages/Connection";
+import { LobbyId, LobbyInfo } from "../../Messages/ServerMessage";
+import { SettingsProps } from "../CurrentScene";
+import LobbyElement, { LobbyValue } from "./LobbyElement";
 
-function WaitingArea() {
+function WaitingArea({ settings, settingsDispatch }: SettingsProps) {
   const connection = useContext(ConnectionContext);
   const [lobbies, setLobbies] = useState<LobbyValue[]>([]);
-  const [lobbyName, setLobbyName] = useState(localStorage.getItem('lobbyName'));
-
-  useEffect(() => {
-    if (lobbyName) {
-      localStorage.setItem('lobbyName', lobbyName);
-    } else {
-      localStorage.removeItem('lobbyName');
-    }
-  }, [lobbyName]);
 
   useEffect(() => {
     connection.sendMessage({ lobby_list: {}});
 
-    let cachedLobbyId = localStorage.getItem('lobby_id');
-    if (cachedLobbyId) {
-      connection.sendMessage({ lobby_join: { lobby_id: parseInt(cachedLobbyId) }});
+    if (settings.myLobbyId) {
+      connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
     }
   }, []);
 
@@ -48,15 +39,10 @@ function WaitingArea() {
 
   });
 
-  const handleDisconnect = () => {
-    connection.disconnect();
-  };
-
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
-    if (lobbyName) {
-      const gameOptions = localStorage.getItem('gameOptions');
-      connection.sendMessage({ lobby_make: { name: lobbyName, options: gameOptions ? JSON.parse(gameOptions) : undefined }});
+    if (settings.lobbyName) {
+      connection.sendMessage({ lobby_make: { name: settings.lobbyName, options: settings.gameOptions }});
     }
   };
 
@@ -67,13 +53,10 @@ function WaitingArea() {
   return (
     <div>
       <div>
-        <Button color='red' onClick={handleDisconnect}>{getLabel('ui', 'BUTTON_DISCONNECT')}</Button>
-      </div>
-      <div>
         <form onSubmit={handleCreateLobby}>
           <label htmlFor="lobbyName">{getLabel('ui', 'LABEL_LOBBY_NAME')}</label>
-          <input type="text" id="lobbyName" value={lobbyName || ''} onChange={e => setLobbyName(e.target.value)}></input>
-          <Button color='blue' type="submit">{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
+          <input type="text" id="lobbyName" value={settings.lobbyName} onChange={e => settingsDispatch({ setLobbyName: e.target.value })}></input>
+          <Button color='green' type="submit">{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
         </form>
       </div>
       <div>{lobbies.map((lobby) => (

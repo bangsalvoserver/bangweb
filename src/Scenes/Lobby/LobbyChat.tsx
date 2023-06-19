@@ -8,10 +8,11 @@ import "./Style/LobbyChat.css";
 export interface ChatProps {
     messages: ChatMessage[];
     handleSendMessage: (message: string) => void;
+    myUserId?: UserId;
 }
 
-export default function LobbyChat({ messages, handleSendMessage }: ChatProps) {
-    const { users, myUserId } = useContext(LobbyContext);
+export default function LobbyChat({ messages, handleSendMessage, myUserId }: ChatProps) {
+    const { users } = useContext(LobbyContext);
     
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
@@ -57,15 +58,16 @@ export default function LobbyChat({ messages, handleSendMessage }: ChatProps) {
                     focus:ring-blue-500
                     " />
                 <button type="submit" className="
-                    bg-blue-500
-                    hover:bg-blue-600
+                    bg-green-800
+                    hover:bg-green-900
                     text-white
+                    font-bold
                     py-2
                     px-4
                     rounded-md
                     focus:outline-none
                     focus:ring-2
-                    focus:ring-blue-500
+                    focus:ring-green-800
                     "
                 >{getLabel('ui', 'BUTTON_CHAT_SEND')}</button>
             </form>

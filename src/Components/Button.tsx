@@ -13,11 +13,11 @@ export default function Button({ className, color, type, onClick, children }: Bu
         switch (color) {
         default:
         case 'blue':
-            return 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-500 text-white';
+            return 'bg-blue-700 hover:bg-blue-800 focus:ring-blue-700 text-white';
         case 'green':
-            return 'bg-green-600 hover:bg-green-700 focus:ring-green-600 text-white';
+            return 'bg-green-800 hover:bg-green-900 focus:ring-green-800 text-white';
         case 'red':
-            return 'bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white';
+            return 'bg-red-600 hover:bg-red-700 focus:ring-red-600 text-white';
         }
     };
 
@@ -30,7 +30,6 @@ export default function Button({ className, color, type, onClick, children }: Bu
             rounded-md
             focus:outline-none
             focus:ring-2
-            focus:ring-blue-500
             ${getColorClasses()}
             ${className ?? ''}`}
         >{children}</button>

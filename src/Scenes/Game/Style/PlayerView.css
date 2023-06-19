@@ -9,6 +9,19 @@
     --player-gold-bottom: calc(var(--card-scale) * var(--player-gold-bottom-unscaled));
 }
 
+@media (max-width:960px) {
+    :root {
+        --player-icon-size: 20px;
+        --player-gold-size: 20px;
+        --player-row-width: calc(var(--card-width) * 4);
+        --player-self-row-width: calc(var(--card-width) * 5);
+    }
+    
+    .player-gold {
+        font-size: 10pt;
+    }
+}
+
 .player-view {
     display: inline-flex;
     flex-direction: column;
@@ -16,7 +29,7 @@
     border: 3px;
     border-style: solid;
     border-color: #2d1000ff;
-    background-color: #ffffff1a;
+    background-color: #ffffff38;
     
     border-radius: 0.8em;
     padding: 0.5em;
@@ -92,18 +105,6 @@
     background-size: contain;
 }
 
-@media (max-width:960px) {
-    :root {
-        --player-gold-size: 20px;
-        --player-row-width: calc(var(--card-width) * 4);
-        --player-self-row-width: calc(var(--card-width) * 5);
-    }
-    
-    .player-gold {
-        font-size: 10pt;
-    }
-}
-
 .player-icons {
     position: absolute;
     top: 0;
@@ -119,8 +120,8 @@
     transform: translateX(-50%);
 }
 
-.player-propic .lobby-username {
-    background-color: #ffffff80;
+.player-view .lobby-username {
+    background-color: #ffdfc2;
     border-radius: 0.3em 0.3em;
     padding: 0.2em;
 }

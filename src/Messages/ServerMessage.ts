@@ -17,6 +17,11 @@ export interface LobbyUpdate {
     state: LobbyState;
 }
 
+export interface LobbyMakeArgs {
+    name: string;
+    options?: GameOptions;
+}
+
 export interface LobbyInfo {
     name: string;
     options: GameOptions;

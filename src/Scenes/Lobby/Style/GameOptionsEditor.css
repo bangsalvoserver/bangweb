@@ -1,18 +1,20 @@
 .game-options-editor {
-    margin-right: 2em;
+    margin-right: 1em;
 }
 
 .expansion-checkboxes {
     width: fit-content;
-    border: 2px solid black;
+    border: 2px solid #2d1000ff;
     border-radius: 1em;
-    padding: 0.5em;
+    background-color: #ffffff38;
+    padding: 1em;
     margin: 0.5em auto;
 }
 
 .expansions-header {
     font-weight: bold;
     text-align: center;
+    font-size: 13pt;
 }
 
 .option-checkbox label {

@@ -25,20 +25,22 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import TrainView from "./TrainView";
+import AppSettings from "../../Model/AppSettings";
 
 const FRAMERATE = 60;
 
 export interface GameProps {
   channel: GameChannel;
+  settings: AppSettings;
 }
 
 export const GameTableContext = createContext(newGameTable());
 export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({}));
 
-export default function GameScene({ channel }: GameProps) {
-  const { users, myUserId, lobbyOwner } = useContext(LobbyContext);
+export default function GameScene({ channel, settings }: GameProps) {
+  const { users, lobbyOwner } = useContext(LobbyContext);
   
-  const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
+  const [table, tableDispatch] = useReducer(gameTableReducer, settings.myUserId, newGameTable);
   const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
 
@@ -118,9 +120,9 @@ export default function GameScene({ channel }: GameProps) {
   const statusText = isResponse(selector) ? <GameStringComponent message={selector.request.status_text} /> : null;
   
   const gameOverStatus = () => {
-    if (myUserId == lobbyOwner) {
+    if (settings.myUserId == lobbyOwner) {
       return (
-        <Button color='blue' onClick={channel.handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
+        <Button color='green' onClick={channel.handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
       );
     } {
       return <>{getLabel('ui', 'STATUS_GAME_OVER')}</>;
@@ -167,7 +169,7 @@ export default function GameScene({ channel }: GameProps) {
           </div>
           {/* <GameLogView logs={gameLogs} /> */}
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
-          <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>;
+          <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
           <AnimationView getTracker={getTracker} />
         </div>
       </TargetSelectorContext.Provider>

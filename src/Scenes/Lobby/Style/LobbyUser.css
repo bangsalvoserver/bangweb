@@ -26,6 +26,7 @@
 
 .lobby-username {
     font-weight: 500;
+    font-weight: bold;
 }
 
 .lobby-user-inner {

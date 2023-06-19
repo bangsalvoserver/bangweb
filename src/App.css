@@ -1,9 +1,7 @@
-.background {
-  background-color: #886350;
-}
-
-.background-inner {
-  background: radial-gradient(circle,rgba(122, 56, 11, 0.418)  0%, rgba(46, 23, 9, 0.8) 100%);
+body {
+  background: radial-gradient(circle,
+    rgb(201, 130, 83) 0%,
+    rgb(170, 86, 35) 100%);
 }
 
 .current-scene {

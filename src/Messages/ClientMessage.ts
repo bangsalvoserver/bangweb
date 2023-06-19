@@ -1,5 +1,5 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
-import { LobbyId, LobbyInfo, UserId, UserInfo } from "./ServerMessage";
+import { LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./ServerMessage";
 
 export interface ClientConnect {
     user: UserInfo;
@@ -11,7 +11,7 @@ export type ClientMessage =
     {connect: ClientConnect} |
     {user_edit: UserInfo} |
     {lobby_list: {}} |
-    {lobby_make: LobbyInfo} |
+    {lobby_make: LobbyMakeArgs} |
     {lobby_edit: LobbyInfo} |
     {lobby_join: { lobby_id: LobbyId }} |
     {lobby_leave: {}} |
