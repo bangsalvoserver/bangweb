@@ -1,0 +1,33 @@
+.lobby-list {
+    display: table;
+    min-width: 10vw;
+    table-layout: fixed;
+    margin-top: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lobby-element {
+    display: table-row;
+}
+
+.lobby-element div {
+    display: table-cell;
+}
+
+.lobby-element div:nth-child(1) {
+    font-weight: bold;
+    padding-right: 1em;
+}
+
+.lobby-element div:nth-child(2) {
+    width: 2.5em;
+}
+
+.lobby-element div:nth-child(3) {
+    width: 5em;
+}
+
+.lobby-element div:nth-child(4) {
+    width: 0;
+}

@@ -16,10 +16,10 @@ export const LABELS_ITALIAN: LabelRegistry = {
         quick_discard_all:      "Scarta Tutto Veloce",
         scenario_deck_size:     "Carte Scenario",
         num_bots:               "Numero di Bot",
-        damage_timer:           "Timer di Danno (ms)",
-        escape_timer:           "Timer di Fuga (ms)",
-        bot_play_timer:         "Timer di Giocata Bot (ms)",
-        tumbleweed_timer:       "Timer di Cespuglio (ms)",
+        damage_timer:           "Timer Danno",
+        escape_timer:           "Timer Fuga",
+        bot_play_timer:         "Timer Giocata Bot",
+        tumbleweed_timer:       "Timer Cespuglio",
     },
 
     ExpansionType: {

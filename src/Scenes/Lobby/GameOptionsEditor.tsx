@@ -98,8 +98,8 @@ export default function GameOptionsEditor(props: GameOptionProps) {
         <OptionCheckbox prop='character_choice' { ...props } />
         <OptionCheckbox prop='allow_beer_in_duel' { ...props } />
         <OptionCheckbox prop='quick_discard_all' { ...props } />
-        <OptionNumber prop='scenario_deck_size' { ...props } />
         <OptionNumber prop='num_bots' { ...props } />
+        <OptionNumber prop='scenario_deck_size' { ...props } />
         <OptionNumber prop='damage_timer' { ...props } />
         <OptionNumber prop='escape_timer' { ...props } />
         <OptionNumber prop='bot_play_timer' { ...props } />

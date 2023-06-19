@@ -10,6 +10,14 @@
 }
 
 @media (max-width:960px) {
+    .player-view {
+        --profile-pic-size: 25px;
+    }
+
+    .player-view .lobby-user {
+        font-size: 8pt;
+    }
+
     :root {
         --player-icon-size: 20px;
         --player-gold-size: 20px;
@@ -121,7 +129,7 @@
 }
 
 .player-view .lobby-username {
-    background-color: #ffdfc2;
+    background-color: #ffffc0;
     border-radius: 0.3em 0.3em;
     padding: 0.2em;
 }

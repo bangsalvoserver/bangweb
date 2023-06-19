@@ -3,9 +3,10 @@ import { ConnectionContext } from "../../App";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { useHandler } from "../../Messages/Connection";
-import { LobbyId, LobbyInfo } from "../../Messages/ServerMessage";
+import { LobbyId } from "../../Messages/ServerMessage";
 import { SettingsProps } from "../CurrentScene";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
+import './Style/WaitingArea.css';
 
 function WaitingArea({ settings, settingsDispatch }: SettingsProps) {
   const connection = useContext(ConnectionContext);
@@ -51,17 +52,29 @@ function WaitingArea({ settings, settingsDispatch }: SettingsProps) {
   };
 
   return (
-    <div>
-      <div>
-        <form onSubmit={handleCreateLobby}>
-          <label htmlFor="lobbyName">{getLabel('ui', 'LABEL_LOBBY_NAME')}</label>
-          <input type="text" id="lobbyName" value={settings.lobbyName} onChange={e => settingsDispatch({ setLobbyName: e.target.value })}></input>
-          <Button color='green' type="submit">{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
-        </form>
+    <div className="w-full">
+      <form className='flex flex-col items-center' onSubmit={handleCreateLobby}>
+        <label htmlFor='lobby_name' className='font-bold text-xl'>{getLabel('ui', 'LABEL_LOBBY_NAME')}</label>
+        <input type='text' id='lobby_name'
+          className='
+            border-2
+            border-gray-300
+            rounded-md
+            m-2
+            p-1
+            w-64
+            focus:outline-none
+            focus:ring-2
+            focus:ring-blue-500
+          '
+          value={settings.lobbyName} onChange={e => settingsDispatch({ setLobbyName: e.target.value })}></input>
+        <Button color='green' type='submit'>{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
+      </form>
+      <div className='lobby-list'>
+        {lobbies.map((lobby) => (
+          <LobbyElement key={lobby.id} lobby={lobby} onClickJoin={handleClickJoin} />
+        ))}
       </div>
-      <div>{lobbies.map((lobby) => (
-        <LobbyElement key={lobby.id} lobby={lobby} onClickJoin={handleClickJoin} />
-      ))}</div>
     </div>
   );
 }

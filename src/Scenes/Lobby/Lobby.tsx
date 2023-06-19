@@ -104,7 +104,7 @@ export default function LobbyScene({ settings, settingsDispatch, lobbyName, game
         <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={settings.myUserId != lobbyOwner} />
         <div className='flex flex-col'>
           {users.map(user => (
-            <LobbyUser key={user.id} user={user} isOwner={user.id === lobbyOwner} />
+            <LobbyUser align='vertical' key={user.id} user={user} isOwner={user.id === lobbyOwner} />
           ))}
         </div>
       </div>

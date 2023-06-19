@@ -1,17 +1,5 @@
-@media (max-width:960px) {
-    :root {
-        --profile-pic-size: 25px;
-    }
-
-    .lobby-user {
-        font-size: 8pt;
-    }
-}
-
-@media (min-width:960px) {
-    :root {
-        --profile-pic-size: 50px;
-    }
+:root {
+    --profile-pic-size: 50px;
 }
 
 .lobby-user {

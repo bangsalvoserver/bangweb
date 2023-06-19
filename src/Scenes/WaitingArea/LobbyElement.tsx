@@ -16,11 +16,11 @@ export interface LobbyElementProps {
 
 function LobbyElement({ lobby, onClickJoin }: LobbyElementProps) {
   return (
-    <div>
-    <span>{lobby.name}</span>
-    <span>{lobby.num_players}/8</span>
-    <span>{getLabel('LobbyState', lobby.state)}</span>
-    <Button color='green' onClick={() => onClickJoin(lobby.id)}>{getLabel('ui', 'BUTTON_JOIN')}</Button>
+    <div className="lobby-element">
+      <div>{lobby.name}</div>
+      <div>{lobby.num_players}/8</div>
+      <div>{getLabel('LobbyState', lobby.state)}</div>
+      <div><Button color='green' onClick={() => onClickJoin(lobby.id)}>{getLabel('ui', 'BUTTON_JOIN')}</Button></div>
     </div>
   )
 }
