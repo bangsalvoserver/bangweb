@@ -18,17 +18,17 @@ export default function UserMenu({ username, closeMenu, handleLeaveLobby, handle
   return (
     <div style={{width: '10em'}} className='z-50
     absolute top-10 right-0
-    text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600'
+    text-base list-none divide-y rounded-lg shadow bg-gray-700 divide-gray-600'
     >
       <div className="px-4 py-3">
-        <span className="block text-sm text-gray-900 dark:text-white">{username}</span>
+        <span className="block text-sm text-white">{username}</span>
       </div>
       <ul className="py-2" aria-labelledby="user-menu-button">
         {handleLeaveLobby && <li>
-          <a href="#" onClick={handleClick(handleLeaveLobby)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</a>
+          <a href="#" onClick={handleClick(handleLeaveLobby)} className="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</a>
         </li>}
         <li>
-          <a href="#" onClick={handleClick(handleDisconnect)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">{getLabel('ui', 'BUTTON_DISCONNECT')}</a>
+          <a href="#" onClick={handleClick(handleDisconnect)} className="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">{getLabel('ui', 'BUTTON_DISCONNECT')}</a>
         </li>
       </ul>
     </div>

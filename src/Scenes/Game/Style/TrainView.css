@@ -1,7 +1,7 @@
 .train-row {
     vertical-align: middle;
     padding-top: 1em;
-    padding-bottom: 1em;
+    padding-bottom: calc(var(--card-height) * 0.4);
 }
 
 .train-stations-container {
