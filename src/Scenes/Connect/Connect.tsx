@@ -4,7 +4,7 @@ import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
 import { SettingsProps } from '../CurrentScene';
 
-export default function ConnectScene({ settings, settingsDispatch }: SettingsProps) {
+export default function ConnectScene({ settings }: SettingsProps) {
   const connection = useContext(ConnectionContext);
 
   const handleConnect = function(event: SyntheticEvent) {
@@ -40,7 +40,7 @@ export default function ConnectScene({ settings, settingsDispatch }: SettingsPro
       type="text"
       id="username"
       value={settings.username}
-      onChange={e => settingsDispatch({ setUsername: e.target.value })}
+      onChange={e => settings.setUsername(e.target.value)}
     />
     <Button type="submit" color="green">{getLabel('ui', 'BUTTON_CONNECT')}</Button>
   </form>
