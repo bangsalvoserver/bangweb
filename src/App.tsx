@@ -112,8 +112,8 @@ function App() {
           username={settings.username}
           propic={settings.propic}
           editUser={handleEditUser}
-          handleLeaveLobby={scene.type == 'lobby' ? handleLeaveLobby : undefined}
-          handleDisconnect={handleDisconnect}
+          handleLeaveLobby={scene.type == 'lobby' ? handleLeaveLobby : undefined }
+          handleDisconnect={scene.type != 'connect' ? handleDisconnect : undefined }
         />
         <div className="current-scene">
           <CurrentScene scene={scene} settings={settings} settingsDispatch={settingsDispatch} />
