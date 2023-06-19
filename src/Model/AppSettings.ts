@@ -62,7 +62,7 @@ export function useSettings() {
         username: username ?? '',
         setUsername,
         propic: propic ?? null,
-        setPropic,
+        setPropic: propic => setPropic(propic ?? undefined),
         lobbyName, setLobbyName
         gameOptions, setGameOptions
     };
