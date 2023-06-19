@@ -1,4 +1,4 @@
-@media (min-width:960px) {
+@media (min-width:1200px) {
     :root {
         --card-scale: 0.24;
     }
@@ -11,7 +11,7 @@
     }
 
     .player-grid[num-players="1"], .player-grid[num-players="2"], .player-grid[num-players="3"], .player-grid[num-players="4"] {
-        grid-template-columns: repeat(3, 8%) repeat(4, 13%) repeat(3, 8%);
+        grid-template-columns: auto 0 0 repeat(4, auto) 0 0 auto;
     }
 
     .player-grid[num-players="8"] {
