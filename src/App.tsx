@@ -1,8 +1,8 @@
-import { createContext, useEffect, useReducer, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import './App.css';
 import Header from './Components/Header';
 import { Connection, SocketConnection, useHandler } from './Messages/Connection';
-import { loadAppSettings, saveAppSettings, updateSettings } from './Model/AppSettings';
+import { useSettings } from './Model/AppSettings';
 import CurrentScene, { SceneType } from './Scenes/CurrentScene';
 import { GameOptions } from './Scenes/Game/Model/GameUpdate';
 import { serializeImage } from './Utils/ImageSerial';
@@ -24,9 +24,7 @@ function App() {
 
   const [scene, setScene] = useState<SceneType>({ type: 'connect' });
 
-  const [settings, settingsDispatch] = useReducer(updateSettings, undefined, loadAppSettings);
-
-  useEffect(() => saveAppSettings(settings), [settings]);
+  const [settings, settingsDispatch] = useSettings();
 
   useEffect(() => {
     if (settings.myUserId && !connection.current.isConnected()) {

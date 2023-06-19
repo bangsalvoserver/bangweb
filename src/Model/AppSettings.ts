@@ -1,5 +1,32 @@
+import { Dispatch, useEffect, useState } from "react";
 import { LobbyId, UserId } from "../Messages/ServerMessage";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
+
+interface Converter<T> {
+    fromString: (str: string) => T;
+    toString: (value: T) => string;
+}
+
+const stringConverter: Converter<string> = { fromString: str => str, toString : str => str };
+const intConverter: Converter<number> = { fromString: parseInt, toString: value => value.toString() };
+const jsonConverter: Converter<any> = { fromString: JSON.parse, toString: JSON.stringify };
+
+function useLocalStorage<T>(key: string, converter: Converter<T>) {
+    const [value, setValue] = useState(() => {
+        const stringValue = localStorage.getItem(key);
+        if (stringValue) {
+            return converter.fromString(stringValue);
+        }
+    });
+    useEffect(() => {
+        if (value) {
+            localStorage.setItem(key, converter.toString(value));
+        } else {
+            localStorage.removeItem(key);
+        }
+    }, [value]);
+    return [value, setValue] as const;
+}
 
 export default interface AppSettings {
     myUserId?: UserId;
@@ -10,60 +37,6 @@ export default interface AppSettings {
     gameOptions?: GameOptions;
 }
 
-function loadString(key: string): string | undefined {
-    return localStorage.getItem(key) ?? undefined;
-}
-
-function saveString(key: string, value: string | undefined) {
-    if (value) {
-        localStorage.setItem(key, value);
-    } else {
-        localStorage.removeItem(key);
-    }
-}
-
-function loadInt(key: string): number | undefined {
-    const value = loadString(key);
-    if (value) {
-        return parseInt(value);
-    }
-}
-
-function saveInt(key: string, value: number | undefined) {
-    saveString(key, value?.toString());
-}
-
-function loadObject<T extends object>(key: string): T | undefined {
-    const value = loadString(key);
-    if (value) {
-        return JSON.parse(value);
-    }
-}
-
-function saveObject<T extends object>(key: string, value: T | undefined) {
-    saveString(key, value ? JSON.stringify(value) : undefined);
-}
-
-export function loadAppSettings(): AppSettings {
-    return {
-        myUserId: loadInt('user_id'),
-        myLobbyId: loadInt('lobby_id'),
-        username: loadString('username') ?? '',
-        propic: loadString('propic') ?? null,
-        lobbyName: loadString('lobby_name'),
-        gameOptions: loadObject<GameOptions>('game_options')
-    };
-}
-
-export function saveAppSettings(settings: AppSettings) {
-    saveInt('user_id', settings.myUserId);
-    saveInt('lobby_id', settings.myLobbyId);
-    saveString('username', settings.username);
-    saveString('propic', settings.propic ?? undefined);
-    saveString('lobby_name', settings.lobbyName);
-    saveObject('game_options', settings.gameOptions);
-}
-
 export type SettingsUpdate =
     { setMyUserId: UserId | undefined } |
     { setMyLobbyId: UserId | undefined } |
@@ -72,24 +45,38 @@ export type SettingsUpdate =
     { setLobbyName: string | undefined } |
     { setGameOptions: GameOptions | undefined };
 
-export function updateSettings(settings: AppSettings, update: SettingsUpdate): AppSettings {
-    if ('setMyUserId' in update) {
-        return { ...settings, myUserId: update.setMyUserId };
-    }
-    if ('setMyLobbyId' in update) {
-        return { ...settings, myLobbyId: update.setMyLobbyId };
-    }
-    if ('setUsername' in update) {
-        return { ...settings, username: update.setUsername };
-    }
-    if ('setPropic' in update) {
-        return { ...settings, propic: update.setPropic };
-    }
-    if ('setLobbyName' in update) {
-        return { ...settings, lobbyName: update.setLobbyName };
-    }
-    if ('setGameOptions' in update) {
-        return { ...settings, gameOptions: update.setGameOptions };
-    }
-    return settings;
+export function useSettings() {
+    const [myUserId, setMyUserId] = useLocalStorage('user_id', intConverter);
+    const [myLobbyId, setMyLobbyId] = useLocalStorage('lobby_id', intConverter);
+    const [username, setUsername] = useLocalStorage('username', stringConverter);
+    const [propic, setPropic] = useLocalStorage('propic', stringConverter);
+    const [lobbyName, setLobbyName] = useLocalStorage('lobby_name', stringConverter);
+    const [gameOptions, setGameOptions] = useLocalStorage<GameOptions>('game_options', jsonConverter);
+
+    const settings: AppSettings = {
+        myUserId: myUserId,
+        myLobbyId: myLobbyId,
+        username: username ?? '',
+        propic: propic ?? null,
+        lobbyName: lobbyName,
+        gameOptions: gameOptions
+    };
+
+    const settingsDispatch = (update: SettingsUpdate) => {
+        if ('setMyUserId' in update) {
+            setMyUserId(update.setMyUserId);
+        } else if ('setMyLobbyId' in update) {
+            setMyLobbyId(update.setMyLobbyId);
+        } else if ('setUsername' in update) {
+            setUsername(update.setUsername);
+        } else if ('setPropic' in update) {
+            setPropic(update.setPropic ?? undefined);
+        } else if ('setLobbyName' in update) {
+            setLobbyName(update.setLobbyName);
+        } else if ('setGameOptions' in update) {
+            setGameOptions(update.setGameOptions);
+        }
+    };
+
+    return [settings, settingsDispatch] as const;
 }
