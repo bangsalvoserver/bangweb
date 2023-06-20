@@ -25,7 +25,7 @@ const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player, onClic
             <PocketView ref={characterRef.backupRef} cards={player.pockets.player_backup} />
             { player.status.hp > 5 ? 
                 <div className="player-backup-extra">
-                    <PocketView cards={player.pockets.player_backup.slice(-1)} />
+                    <PocketView cards={player.pockets.player_backup} />
                 </div> : null }
         </div>
         <div className="align-slot">

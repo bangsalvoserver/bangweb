@@ -45,7 +45,7 @@ const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket
     }
     
     if (holder == player && table.pockets[pocket].length != 0) {
-        return <CountPocket noCount ref={deckPosition} cards={table.pockets[pocket].slice(-2)} />;
+        return <CountPocket noCount ref={deckPosition} cards={table.pockets[pocket]} />;
     }
     
     return null;

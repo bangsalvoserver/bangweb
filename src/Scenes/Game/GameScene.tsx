@@ -74,7 +74,7 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
     <div className="inline-block relative">
       <div className="absolute">
-        <CountPocket noCount ref={setMapRef(pocketPositions, 'shop_discard')} cards={table.pockets.shop_discard.slice(-1)} />
+        <CountPocket noCount ref={setMapRef(pocketPositions, 'shop_discard')} cards={table.pockets.shop_discard} />
       </div>
       <CountPocket ref={setMapRef(pocketPositions, 'shop_deck')} cards={table.pockets.shop_deck} />
     </div>
@@ -98,15 +98,15 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   </div>;
 
   const mainDeck = <>
-    <CountPocket noCount ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile.slice(-2)} onClickCard={onClickCard} />
+    <CountPocket noCount ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
     <CountPocket ref={setMapRef(pocketPositions, 'main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
   </>;
 
   const scenarioCards = <>
     { table.pockets.scenario_card.length != 0 &&
-        <CountPocket noCount ref={setMapRef(pocketPositions, 'scenario_card')} cards={table.pockets.scenario_card.slice(-2)} onClickCard={onClickCard} /> }
+        <CountPocket noCount ref={setMapRef(pocketPositions, 'scenario_card')} cards={table.pockets.scenario_card} onClickCard={onClickCard} /> }
     { table.pockets.wws_scenario_card.length != 0 && 
-        <CountPocket noCount ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card.slice(-2)} onClickCard={onClickCard} /> }
+        <CountPocket noCount ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card} onClickCard={onClickCard} /> }
   </>;
 
   const selectionPocket = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;
