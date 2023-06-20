@@ -1,0 +1,16 @@
+.user-menu {
+    min-width: 12em;
+}
+
+.username-input input {
+    width: 100%;
+    padding: 0.2em;
+}
+
+.username-input span {
+    display: none;
+}
+
+.username-span input {
+    display: none;
+}
