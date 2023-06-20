@@ -52,6 +52,9 @@ function App() {
     },
 
     client_accepted: ({ user_id }) => {
+      if (settings.myLobbyId) {
+        connection.current.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
+      }
       settings.setMyUserId(user_id);
       settings.setIsConnected(true);
       connection.current.setLocked(true);
@@ -75,27 +78,21 @@ function App() {
 
   }, [settings]);
 
-  const editLobby = (lobbyName: string, gameOptions: GameOptions) => {
-    setScene(scene => {
-      if (scene.type == 'lobby') {
-        return { ...scene, lobbyName, gameOptions };
-      } else {
-        return scene;
-      }
-    });
-  };
-
   useHandler(connection.current, {
 
     lobby_entered: ({ lobby_id, name, options }) => {
       if (scene.type != 'lobby' || (settings.myLobbyId != lobby_id)) {
         connection.current.setLocked(true);
         settings.setMyLobbyId(lobby_id);
-        setScene({ type: 'lobby', lobbyName: name, gameOptions: options, editLobby });
+        setScene({ type: 'lobby', lobbyName: name, gameOptions: options });
       }
     },
 
-    lobby_edited: ({ name, options }) => editLobby(name, options),
+    lobby_edited: ({ name, options }) => {
+      if (scene.type == 'lobby') {
+        setScene({ type: 'lobby', lobbyName: name, gameOptions: options });
+      }
+    }
   
   }, [scene]);
 
@@ -121,7 +118,7 @@ function App() {
           handleDisconnect={scene.type != 'connect' ? handleDisconnect : undefined }
         />
         <div className="current-scene">
-          <CurrentScene scene={scene} settings={settings} />
+          <CurrentScene scene={scene} setScene={setScene} settings={settings} />
         </div>
       </ConnectionContext.Provider>
     </div>

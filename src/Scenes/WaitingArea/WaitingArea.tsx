@@ -4,21 +4,21 @@ import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { useHandler } from "../../Messages/Connection";
 import { LobbyId } from "../../Messages/ServerMessage";
-import { SettingsProps } from "../CurrentScene";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
+import { GameOptions } from "../Game/Model/GameUpdate";
 
-function WaitingArea({ settings }: SettingsProps) {
+export interface WaitingAreaProps {
+  lobbyName?: string;
+  setLobbyName: (value: string) => void;
+  gameOptions?: GameOptions;
+}
+
+function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps) {
   const connection = useContext(ConnectionContext);
   const [lobbies, setLobbies] = useState<LobbyValue[]>([]);
 
-  useEffect(() => {
-    connection.sendMessage({ lobby_list: {}});
-
-    if (settings.myLobbyId) {
-      connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
-    }
-  }, []);
+  useEffect(() => connection.sendMessage({ lobby_list: {}}), []);
 
   useHandler(connection, {
 
@@ -42,8 +42,8 @@ function WaitingArea({ settings }: SettingsProps) {
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
-    if (settings.lobbyName) {
-      connection.sendMessage({ lobby_make: { name: settings.lobbyName, options: settings.gameOptions }});
+    if (lobbyName) {
+      connection.sendMessage({ lobby_make: { name: lobbyName, options: gameOptions }});
     }
   };
 
@@ -67,7 +67,7 @@ function WaitingArea({ settings }: SettingsProps) {
             focus:ring-2
             focus:ring-blue-500
           '
-          value={settings.lobbyName} onChange={e => settings.setLobbyName(e.target.value)}></input>
+          value={lobbyName} onChange={e => setLobbyName(e.target.value)}></input>
         <Button color='green' type='submit'>{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
       </form>
       <div className='lobby-list'>

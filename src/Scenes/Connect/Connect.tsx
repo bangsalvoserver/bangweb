@@ -2,14 +2,18 @@ import { SyntheticEvent, useContext } from 'react';
 import { ConnectionContext } from '../../App';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
-import { SettingsProps } from '../CurrentScene';
 
-export default function ConnectScene({ settings }: SettingsProps) {
+export interface ConnectProps {
+  username?: string;
+  setUsername: (value: string) => void;
+}
+
+export default function ConnectScene({ username, setUsername }: ConnectProps) {
   const connection = useContext(ConnectionContext);
 
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
-    if (!connection.isConnected() && settings.username) {
+    if (!connection.isConnected() && username) {
       connection.connect();
     }
   };
@@ -39,8 +43,8 @@ export default function ConnectScene({ settings }: SettingsProps) {
       "
       type="text"
       id="username"
-      value={settings.username}
-      onChange={e => settings.setUsername(e.target.value)}
+      value={username}
+      onChange={e => setUsername(e.target.value)}
     />
     <Button type="submit" color="green">{getLabel('ui', 'BUTTON_CONNECT')}</Button>
   </form>

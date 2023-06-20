@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
+import { UserId } from "../../Messages/ServerMessage";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext } from "../Lobby/Lobby";
@@ -25,22 +26,21 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import TrainView from "./TrainView";
-import AppSettings from "../../Model/AppSettings";
 
 const FRAMERATE = 60;
 
 export interface GameProps {
   channel: GameChannel;
-  settings: AppSettings;
+  myUserId?: UserId;
 }
 
 export const GameTableContext = createContext(newGameTable());
 export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({}));
 
-export default function GameScene({ channel, settings }: GameProps) {
+export default function GameScene({ channel, myUserId }: GameProps) {
   const { users, lobbyOwner } = useContext(LobbyContext);
   
-  const [table, tableDispatch] = useReducer(gameTableReducer, settings.myUserId, newGameTable);
+  const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
   const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
 
@@ -120,7 +120,7 @@ export default function GameScene({ channel, settings }: GameProps) {
   const statusText = isResponse(selector) ? <GameStringComponent message={selector.request.status_text} /> : null;
   
   const gameOverStatus = () => {
-    if (settings.myUserId == lobbyOwner) {
+    if (myUserId == lobbyOwner) {
       return (
         <Button color='green' onClick={channel.handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
       );
