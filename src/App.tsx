@@ -36,7 +36,7 @@ function App() {
   const settings = useSettings();
 
   useEffect(() => {
-    if (settings.myUserId && !connection.current.isConnected()) {
+    if (settings.isConnected && !connection.current.isConnected()) {
       connection.current.connect();
     }
   }, []);
@@ -53,11 +53,15 @@ function App() {
 
     client_accepted: ({ user_id }) => {
       settings.setMyUserId(user_id);
+      settings.setIsConnected(true);
       connection.current.setLocked(true);
       setScene({ type: 'waiting_area' });
     },
 
-    disconnected: () => setScene({ type: 'connect' }),
+    disconnected: () => {
+      settings.setIsConnected(undefined);
+      setScene({ type: 'connect' });
+    },
 
     lobby_error: message => console.error("Lobby error: " + message), // TODO
 

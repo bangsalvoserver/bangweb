@@ -1,34 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
-import { LobbyId, UserId } from "../Messages/ServerMessage";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
-import { intConverter, jsonConverter, stringConverter, useLocalStorage } from "../Utils/UseLocalStorage";
-import { ImageSrc } from "../Utils/ImageSerial";
+import { boolConverter, intConverter, jsonConverter, stringConverter, useLocalStorage } from "../Utils/UseLocalStorage";
 
-type Setter<T> = Dispatch<SetStateAction<T | undefined>>;
-
-export default interface AppSettings {
-    myUserId?: UserId;
-    setMyUserId: Setter<UserId>;
-
-    myLobbyId?: LobbyId;
-    setMyLobbyId: Setter<LobbyId>;
-
-    username?: string;
-    setUsername: Setter<string>;
-
-    propic?: ImageSrc;
-    setPropic: Setter<ImageSrc>;
-
-    lobbyName?: string;
-    setLobbyName: Setter<string>;
-
-    gameOptions?: GameOptions;
-    setGameOptions: Setter<GameOptions>;
-}
-
-export function useSettings(): AppSettings {
+export function useSettings() {
     const [myUserId, setMyUserId] = useLocalStorage('user_id', intConverter);
     const [myLobbyId, setMyLobbyId] = useLocalStorage('lobby_id', intConverter);
+    const [isConnected, setIsConnected] = useLocalStorage('connected', boolConverter);
     const [username, setUsername] = useLocalStorage('username', stringConverter);
     const [propic, setPropic] = useLocalStorage('propic', stringConverter);
     const [lobbyName, setLobbyName] = useLocalStorage('lobby_name', stringConverter);
@@ -37,9 +13,14 @@ export function useSettings(): AppSettings {
     return {
         myUserId, setMyUserId,
         myLobbyId, setMyLobbyId,
+        isConnected, setIsConnected,
         username, setUsername,
         propic, setPropic,
         lobbyName, setLobbyName,
         gameOptions, setGameOptions
     };
 }
+
+type AppSettings = ReturnType<typeof useSettings>;
+
+export default AppSettings;

@@ -7,6 +7,8 @@ export interface Converter<T> {
 
 export const stringConverter: Converter<string> = { fromString: str => str, toString : str => str };
 export const intConverter: Converter<number> = { fromString: parseInt, toString: value => value.toString() };
+export const floatConverter: Converter<number> = { fromString: parseFloat, toString: value => value.toString() };
+export const boolConverter: Converter<boolean> = { fromString: str => str == 'true', toString: value => value ? 'true' : 'false' }
 export const jsonConverter: Converter<any> = { fromString: JSON.parse, toString: JSON.stringify };
 
 export function useLocalStorage<T>(key: string, converter: Converter<T>) {
