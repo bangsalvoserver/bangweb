@@ -1,3 +1,4 @@
+import { LobbyInfo } from "../Messages/ServerMessage";
 import AppSettings from "../Model/AppSettings";
 import ConnectScene from "./Connect/Connect";
 import { GameOptions } from "./Game/Model/GameUpdate";
@@ -7,7 +8,7 @@ import WaitingArea from "./WaitingArea/WaitingArea";
 export type SceneType =
     { type: 'connect' } |
     { type: 'waiting_area' } |
-    { type: 'lobby', lobbyName: string, gameOptions: GameOptions };
+    { type: 'lobby', lobbyInfo: LobbyInfo };
 
 export interface CurrentSceneProps {
     scene: SceneType;
@@ -32,10 +33,9 @@ export default function CurrentScene({ scene, setScene, settings }: CurrentScene
             return <LobbyScene
                 myUserId={settings.myUserId}
                 myLobbyId={settings.myLobbyId}
-                lobbyName={scene.lobbyName}
-                gameOptions={scene.gameOptions}
+                lobbyInfo={scene.lobbyInfo}
                 setGameOptions={gameOptions => {
-                    setScene({ type: 'lobby', lobbyName:scene.lobbyName, gameOptions });
+                    setScene({ type: 'lobby', lobbyInfo: { ...scene.lobbyInfo, options: gameOptions }});
                     settings.setGameOptions(gameOptions);
                 }}
             />;

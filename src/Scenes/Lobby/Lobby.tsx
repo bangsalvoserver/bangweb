@@ -3,7 +3,7 @@ import { ConnectionContext } from '../../App';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
 import { useHandler } from '../../Messages/Connection';
-import { ChatMessage, LobbyId, UserId } from '../../Messages/ServerMessage';
+import { ChatMessage, LobbyId, LobbyInfo, UserId } from '../../Messages/ServerMessage';
 import { deserializeImage } from '../../Utils/ImageSerial';
 import GameScene from '../Game/GameScene';
 import { GameAction } from '../Game/Model/GameAction';
@@ -13,7 +13,6 @@ import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
 
 export interface LobbyState {
-  lobbyName: string;
   users: UserValue[];
   lobbyOwner?: UserId;
 }
@@ -21,14 +20,13 @@ export interface LobbyState {
 export interface LobbyProps {
   myUserId?: UserId;
   myLobbyId?: LobbyId;
-  lobbyName: string;
-  gameOptions: GameOptions;
+  lobbyInfo: LobbyInfo;
   setGameOptions: (value: GameOptions) => void;
 }
 
-export const LobbyContext = createContext<LobbyState>({ lobbyName: 'Bang!', users: [] });
+export const LobbyContext = createContext<LobbyState>({ users: [] });
 
-export default function LobbyScene({ myUserId, myLobbyId, lobbyName, gameOptions, setGameOptions }: LobbyProps) {
+export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOptions }: LobbyProps) {
   const connection = useContext(ConnectionContext);
 
   const [isGameStarted, setIsGameStarted] = useState(false);
@@ -92,7 +90,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyName, gameOptions
     const handleStartGame = () => connection.sendMessage({game_start: {}});
 
     const handleEditGameOptions = (gameOptions: GameOptions) => {
-      connection.sendMessage({ lobby_edit: { name: lobbyName, options: gameOptions }});
+      connection.sendMessage({ lobby_edit: { name: lobbyInfo.name, options: gameOptions }});
       setGameOptions(gameOptions);
     };
 
@@ -101,7 +99,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyName, gameOptions
         { myUserId == lobbyOwner && <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button> }
       </div>
       <div className='flex flex-row'>
-        <GameOptionsEditor gameOptions={gameOptions} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
+        <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
         <div className='flex flex-col'>
           {users.map(user => (
             <LobbyUser align='vertical' key={user.id} user={user} isOwner={user.id === lobbyOwner} />
@@ -116,7 +114,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyName, gameOptions
   }
 
   return (
-    <LobbyContext.Provider value={{ lobbyName, users, lobbyOwner }}>
+    <LobbyContext.Provider value={{ users, lobbyOwner }}>
       {isGameStarted ? getGameScene() : getLobbyScene()}
       <LobbyChat messages={chatMessages} handleSendMessage={handleSendMessage} />
     </LobbyContext.Provider>

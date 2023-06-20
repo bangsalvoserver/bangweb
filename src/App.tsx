@@ -84,13 +84,13 @@ function App() {
       if (scene.type != 'lobby' || (settings.myLobbyId != lobby_id)) {
         connection.current.setLocked(true);
         settings.setMyLobbyId(lobby_id);
-        setScene({ type: 'lobby', lobbyName: name, gameOptions: options });
+        setScene({ type: 'lobby', lobbyInfo: { name, options } });
       }
     },
 
-    lobby_edited: ({ name, options }) => {
+    lobby_edited: lobbyInfo => {
       if (scene.type == 'lobby') {
-        setScene({ type: 'lobby', lobbyName: name, gameOptions: options });
+        setScene({ type: 'lobby', lobbyInfo });
       }
     }
   
@@ -110,7 +110,7 @@ function App() {
     <div className="flex flex-col min-h-screen">
       <ConnectionContext.Provider value={connection.current}>
         <Header
-          title={scene.type == 'lobby' ? scene.lobbyName : undefined}
+          title={scene.type == 'lobby' ? scene.lobbyInfo.name : undefined}
           username={settings.username}
           propic={settings.propic}
           editUser={handleEditUser}
