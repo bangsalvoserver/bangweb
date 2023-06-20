@@ -4,7 +4,7 @@ import { LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./ServerMes
 export interface ClientConnect {
     user: UserInfo;
     user_id?: UserId;
-    commit_hash: string;
+    commit_hash?: string;
 }
 
 export type ClientMessage =

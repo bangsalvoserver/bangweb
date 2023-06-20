@@ -1,6 +1,7 @@
 import { DependencyList, useEffect } from "react";
 import { ClientMessage } from "./ClientMessage";
 import { ServerMessage } from "./ServerMessage";
+import Env from "../Model/Env";
 
 export type MessageHandler = {
     [K in ServerMessage as keyof K]?: (message: K[keyof K]) => void;
@@ -40,7 +41,7 @@ export class SocketConnection implements Connection {
     }
 
     connect() {
-        this.socket = new WebSocket(import.meta.env.VITE_BANG_SERVER_URL || '');
+        this.socket = new WebSocket(Env.bangServerUrl);
         this.socket.onmessage = (event) => {
             this.receiveMessage(JSON.parse(event.data));
         };

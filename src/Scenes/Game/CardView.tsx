@@ -6,6 +6,7 @@ import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
 import { TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSelectionPlaying, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard, isSelectionPicking } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
+import Env from "../../Model/Env";
 
 export interface CardProps {
     card: Card;
@@ -18,8 +19,7 @@ export interface CardRef {
 }
 
 export function getCardUrl(path: string) {
-    const baseUrl = import.meta.env.VITE_BANG_CARDS_BASE_URL || '';
-    return `${baseUrl}/cards/${path}.png`;
+    return `${Env.cardsBaseUrl}/cards/${path}.png`;
 }
 
 function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {

@@ -8,6 +8,7 @@ import CurrentScene, { SceneType } from './Scenes/CurrentScene';
 import { GameOptions } from './Scenes/Game/Model/GameUpdate';
 import { ImageSrc, serializeImage } from './Utils/ImageSerial';
 import { useRefLazy } from './Utils/LazyRef';
+import Env from './Model/Env';
 
 export const ConnectionContext = createContext<Connection>({
   isConnected: () => false,
@@ -46,7 +47,7 @@ function App() {
       connection.current.sendMessage({connect: {
         user: await makeUserInfo(settings.username, settings.propic),
         user_id: settings.myUserId,
-        commit_hash: import.meta.env.VITE_BANG_SERVER_COMMIT_HASH || ''
+        commit_hash: Env.commitHash
       }});
     },
 
