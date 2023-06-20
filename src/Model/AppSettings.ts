@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { LobbyId, UserId } from "../Messages/ServerMessage";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { intConverter, jsonConverter, stringConverter, useLocalStorage } from "../Utils/UseLocalStorage";
+import { ImageSrc } from "../Utils/ImageSerial";
 
 type Setter<T> = Dispatch<SetStateAction<T | undefined>>;
 
@@ -15,8 +16,8 @@ export default interface AppSettings {
     username?: string;
     setUsername: Setter<string>;
 
-    propic?: string;
-    setPropic: Setter<string>;
+    propic?: ImageSrc;
+    setPropic: Setter<ImageSrc>;
 
     lobbyName?: string;
     setLobbyName: Setter<string>;

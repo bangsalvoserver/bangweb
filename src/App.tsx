@@ -95,7 +95,7 @@ function App() {
   
   }, [scene]);
 
-  const handleEditUser = async (username: string | undefined, propic: string | undefined) => {
+  const handleEditUser = async (username?: string, propic?: ImageSrc) => {
     settings.setUsername(username);
     settings.setPropic(propic);
     connection.current.sendMessage({ user_edit: await makeUserInfo(username, propic) });

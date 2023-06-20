@@ -3,12 +3,13 @@ import getLabel from '../Locale/GetLabel';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import UserMenu, { UserMenuItem } from './UserMenu';
 import { useEventListener } from '../Utils/UseEventListener';
+import { ImageSrc } from '../Utils/ImageSerial';
 
 export interface HeaderProps {
   title?: string;
   username?: string;
-  propic?: string;
-  editUser: (username: string | undefined, propic: string | undefined) => void;
+  propic?: ImageSrc;
+  editUser: (username?: string, propic?: ImageSrc) => void;
   handleLeaveLobby?: () => void;
   handleDisconnect?: () => void;
 }

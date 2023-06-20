@@ -6,7 +6,7 @@ import "./Style/LobbyUser.css"
 export interface UserValue {
     id: UserId;
     name: string;
-    propic: ImageSrc | undefined;
+    propic?: ImageSrc;
 }
 
 export interface LobbyUserProps {
