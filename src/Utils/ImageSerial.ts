@@ -4,7 +4,9 @@ export interface ImagePixels {
     pixels: string;
 }
 
-async function loadImage(src: string): Promise<HTMLImageElement> {
+export type ImageSrc = string;
+
+async function loadImage(src: ImageSrc): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         let image = document.createElement('img');
         image.onload = () => resolve(image);
@@ -13,9 +15,9 @@ async function loadImage(src: string): Promise<HTMLImageElement> {
     });
 }
 
-export async function serializeImage(src: string | null, scale?: number): Promise<ImagePixels | null> {
-    if (!src) return null;
-
+export async function serializeImage(src: ImageSrc | undefined, scale?: number): Promise<ImagePixels | undefined> {
+    if (!src) return undefined;
+    
     let image = await loadImage(src);
 
     let canvas = document.createElement('canvas');
@@ -33,7 +35,7 @@ export async function serializeImage(src: string | null, scale?: number): Promis
 
     let ctx = canvas.getContext('2d');
     if (!ctx) {
-        return null;
+        return undefined;
     }
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
@@ -45,9 +47,9 @@ export async function serializeImage(src: string | null, scale?: number): Promis
     return {width: canvas.width, height: canvas.height, pixels: window.btoa(binary)};
 }
 
-export function deserializeImage(data: ImagePixels | null): string | null {
+export function deserializeImage(data: ImagePixels | undefined): ImageSrc | undefined {
     if (!data || data.width == 0 || data.height == 0) {
-        return null;
+        return undefined;
     }
 
     let image_data = new ImageData(new Uint8ClampedArray(
@@ -60,7 +62,7 @@ export function deserializeImage(data: ImagePixels | null): string | null {
     
     let ctx = canvas.getContext('2d');
     if (!ctx) {
-        return null;
+        return undefined;
     }
     
     ctx.putImageData(image_data, 0, 0);

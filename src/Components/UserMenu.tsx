@@ -10,7 +10,7 @@ export function UserMenuItem({ onClick, children }: UserMenuItemProps) {
 }
 
 export interface UserMenuProps {
-  username: string;
+  username?: string;
   children: ReactNode;
 }
 

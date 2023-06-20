@@ -43,7 +43,7 @@ export default function LobbyScene({ settings, lobbyName, gameOptions, editLobby
     lobby_add_user: ({ user_id, user: { name, profile_image } }) => {
       setUsers(users => {
         let copy = [...users];
-        const newUser = { id: user_id, name, propic: deserializeImage(profile_image) };
+        const newUser: UserValue = { id: user_id, name, propic: deserializeImage(profile_image) };
         let index = copy.findIndex(user => user.id === user_id);
         if (index >= 0) {
           copy[index] = newUser;

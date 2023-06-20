@@ -2,10 +2,11 @@ import { createContext, useEffect, useState } from 'react';
 import './App.css';
 import Header from './Components/Header';
 import { Connection, SocketConnection, useHandler } from './Messages/Connection';
+import { UserInfo } from './Messages/ServerMessage';
 import { useSettings } from './Model/AppSettings';
 import CurrentScene, { SceneType } from './Scenes/CurrentScene';
 import { GameOptions } from './Scenes/Game/Model/GameUpdate';
-import { serializeImage } from './Utils/ImageSerial';
+import { ImageSrc, serializeImage } from './Utils/ImageSerial';
 import { useRefLazy } from './Utils/LazyRef';
 
 export const ConnectionContext = createContext<Connection>({
@@ -18,6 +19,13 @@ export const ConnectionContext = createContext<Connection>({
   removeHandler: () => {},
   sendMessage: () => {},
 });
+
+async function makeUserInfo (username?: string, propic?: ImageSrc): Promise<UserInfo> {
+  return {
+    name: username ?? '',
+    profile_image: await serializeImage(propic, 50)
+  };
+}
 
 function App() {
   const connection = useRefLazy<Connection>(() => new SocketConnection());
@@ -36,10 +44,7 @@ function App() {
 
     connected: async () => {
       connection.current.sendMessage({connect: {
-        user: {
-          name: settings.username,
-          profile_image: await serializeImage(settings.propic, 50)
-        },
+        user: await makeUserInfo(settings.username, settings.propic),
         user_id: settings.myUserId,
         commit_hash: import.meta.env.VITE_BANG_SERVER_COMMIT_HASH || ''
       }});
@@ -89,13 +94,10 @@ function App() {
   
   }, [scene]);
 
-  const handleEditUser = async (username: string, propic: string | null) => {
+  const handleEditUser = async (username: string | undefined, propic: string | undefined) => {
     settings.setUsername(username);
     settings.setPropic(propic);
-    connection.current.sendMessage({user_edit: {
-      name: username,
-      profile_image: await serializeImage(propic, 50)
-    }});
+    connection.current.sendMessage({ user_edit: await makeUserInfo(username, propic) });
   }
 
   const handleLeaveLobby = () => connection.current.sendMessage({ lobby_leave: {}});

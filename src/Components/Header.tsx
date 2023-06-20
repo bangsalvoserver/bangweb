@@ -6,9 +6,9 @@ import { useEventListener } from '../Utils/UseEventListener';
 
 export interface HeaderProps {
   title?: string;
-  username: string;
-  propic: string | null;
-  editUser: (username: string, propic: string | null) => void;
+  username?: string;
+  propic?: string;
+  editUser: (username: string | undefined, propic: string | undefined) => void;
   handleLeaveLobby?: () => void;
   handleDisconnect?: () => void;
 }

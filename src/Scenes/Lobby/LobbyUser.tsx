@@ -1,11 +1,12 @@
 import getLabel from "../../Locale/GetLabel";
 import { UserId } from "../../Messages/ServerMessage";
+import { ImageSrc } from "../../Utils/ImageSerial";
 import "./Style/LobbyUser.css"
 
 export interface UserValue {
     id: UserId;
     name: string;
-    propic: string | null;
+    propic: ImageSrc | undefined;
 }
 
 export interface LobbyUserProps {

@@ -45,7 +45,7 @@ export interface LobbyOwner {
 
 export interface UserInfo {
     name: string;
-    profile_image: ImagePixels | null;
+    profile_image?: ImagePixels;
 }
 
 export interface LobbyAddUser {
