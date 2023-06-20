@@ -1,4 +1,4 @@
-import { PocketPosition, PocketPositionMap } from "../PocketView";
+import { PocketPosition, PocketPositionMap } from "../Pockets/PocketView";
 import { PlayerId } from "../Model/GameUpdate";
 import { Card, PocketRef, ScenarioHolders } from "../Model/GameTable";
 import { Rect, getDivRect } from "../../../Utils/Rect";

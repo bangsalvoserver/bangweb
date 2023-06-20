@@ -9,7 +9,7 @@ import AnimationView from "./Animations/AnimationView";
 import { CardTrackerImpl } from "./Animations/CardTracker";
 import CardButtonView from "./CardButtonView";
 import CardChoiceView from "./CardChoiceView";
-import CountPocket from "./CountPocket";
+import CountPocket from "./Pockets/CountPocket";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTable";
@@ -20,12 +20,12 @@ import { TargetSelector, isResponse, newTargetSelector, selectorCanConfirm, sele
 import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
-import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
+import PocketView, { PocketPosition, PocketPositionMap } from "./Pockets/PocketView";
 import PromptView from "./PromptView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import TrainView from "./TrainView";
+import TrainView from "./Pockets/TrainView";
 
 const FRAMERATE = 60;
 
@@ -72,9 +72,9 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
   const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
-    <div className="stack-pockets">
-      <div className="stack-pockets-inner single-card-pocket">
-        <PocketView ref={setMapRef(pocketPositions, 'shop_discard')} cards={table.pockets.shop_discard.slice(-1)} />
+    <div className="inline-block relative">
+      <div className="absolute">
+        <CountPocket noCount ref={setMapRef(pocketPositions, 'shop_discard')} cards={table.pockets.shop_discard.slice(-1)} />
       </div>
       <CountPocket ref={setMapRef(pocketPositions, 'shop_deck')} cards={table.pockets.shop_deck} />
     </div>
@@ -98,21 +98,15 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   </div>;
 
   const mainDeck = <>
-    <div className="single-card-pocket">
-      <PocketView ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile.slice(-2)} onClickCard={onClickCard} />
-    </div>
+    <CountPocket noCount ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile.slice(-2)} onClickCard={onClickCard} />
     <CountPocket ref={setMapRef(pocketPositions, 'main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
   </>;
 
   const scenarioCards = <>
-    { table.pockets.scenario_card.length != 0 ?
-      <div className="single-card-pocket">
-        <PocketView ref={setMapRef(pocketPositions, 'scenario_card')} cards={table.pockets.scenario_card.slice(-2)} onClickCard={onClickCard} />
-      </div> : null }
-    { table.pockets.wws_scenario_card.length != 0 ?
-      <div className="single-card-pocket">
-        <PocketView ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card.slice(-2)} onClickCard={onClickCard} />
-      </div> : null }
+    { table.pockets.scenario_card.length != 0 &&
+        <CountPocket noCount ref={setMapRef(pocketPositions, 'scenario_card')} cards={table.pockets.scenario_card.slice(-2)} onClickCard={onClickCard} /> }
+    { table.pockets.wws_scenario_card.length != 0 && 
+        <CountPocket noCount ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card.slice(-2)} onClickCard={onClickCard} /> }
   </>;
 
   const selectionPocket = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;

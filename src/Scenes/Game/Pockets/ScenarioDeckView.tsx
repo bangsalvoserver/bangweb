@@ -1,11 +1,11 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
+import { CardRef } from "../CardView";
+import { GameTableContext } from "../GameScene";
+import { ScenarioDeckPocket } from "../Model/CardEnums";
+import { CardId, PlayerId } from "../Model/GameUpdate";
 import CardSlot from "./CardSlot";
-import { CardRef } from "./CardView";
-import { GameTableContext } from "./GameScene";
-import { ScenarioDeckPocket } from "./Model/CardEnums";
-import { CardId, PlayerId } from "./Model/GameUpdate";
 import PocketView, { PocketPosition } from "./PocketView";
-import { Card } from "./Model/GameTable";
+import CountPocket from "./CountPocket";
 
 export interface ScenarioDeckProps {
     pocket: ScenarioDeckPocket;
@@ -45,11 +45,7 @@ const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket
     }
     
     if (holder == player && table.pockets[pocket].length != 0) {
-        return (
-            <div className="single-card-pocket">
-                <PocketView ref={deckPosition} cards={table.pockets[pocket].slice(-2)} />
-            </div>
-        );
+        return <CountPocket noCount ref={deckPosition} cards={table.pockets[pocket].slice(-2)} />;
     }
     
     return null;

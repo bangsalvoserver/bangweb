@@ -1,0 +1,29 @@
+:root {
+    --card-width-plus-margin: calc(var(--card-width) + 2 * var(--card-margin));
+    --card-height-plus-margin: calc(var(--card-height) + 2 * var(--card-margin));
+}
+
+.pocket-view, .pocket-view-height {
+    display: inline-block;
+    height: var(--card-height-plus-margin);
+    vertical-align: middle;
+}
+
+.align-slot .pocket-view {
+    min-width: var(--card-width-plus-margin);
+}
+
+.align-slot .card-slot {
+    position: absolute;
+    left: 50%;
+    bottom: var(--card-margin);
+    transform: translateX(-50%);
+}
+
+.count-pocket .card-slot {
+    margin: unset;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

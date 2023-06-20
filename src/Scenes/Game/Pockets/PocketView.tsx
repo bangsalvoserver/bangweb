@@ -1,12 +1,12 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
-import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
-import { Rect, getDivRect } from "../../Utils/Rect";
+import { setMapRef, useRefLazy } from "../../../Utils/LazyRef";
+import { Rect, getDivRect } from "../../../Utils/Rect";
 import CardSlot, { CARD_SLOT_ID } from "./CardSlot";
-import CardView, { CardRef } from "./CardView";
-import { GameTableContext } from "./GameScene";
-import { PocketType } from "./Model/CardEnums";
-import { Card, getCard } from "./Model/GameTable";
-import { CardId } from "./Model/GameUpdate";
+import CardView, { CardRef } from "../CardView";
+import { GameTableContext } from "../GameScene";
+import { PocketType } from "../Model/CardEnums";
+import { Card, getCard } from "../Model/GameTable";
+import { CardId } from "../Model/GameUpdate";
 import "./Style/PocketView.css";
 
 export interface PocketProps {

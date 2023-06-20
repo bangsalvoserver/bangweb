@@ -1,8 +1,8 @@
-import { CSSProperties, MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
-import { CardRef } from "./CardView";
-import { getDivRect } from "../../Utils/Rect";
-import { CardId, Milliseconds } from "./Model/GameUpdate";
-import "./Style/CardSlot.css"
+import { CSSProperties, forwardRef, useImperativeHandle, useRef } from "react";
+import { getDivRect } from "../../../Utils/Rect";
+import { CardRef } from "../CardView";
+import { CardId, Milliseconds } from "../Model/GameUpdate";
+import "./Style/CardSlot.css";
 
 export const CARD_SLOT_ID: CardId = -1;
 

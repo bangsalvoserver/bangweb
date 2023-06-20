@@ -1,6 +1,6 @@
 import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react";
-import { Card, Player } from "./Model/GameTable";
-import PocketView, { PocketPosition } from "./PocketView";
+import { Card, Player } from "../Model/GameTable";
+import PocketView, { PocketPosition } from "../Pockets/PocketView";
 
 export interface CharacterProps {
     player: Player;

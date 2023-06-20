@@ -1,6 +1,6 @@
 import { group } from "../../../Utils/ArrayUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
-import { CARD_SLOT_ID } from "../CardSlot";
+import { CARD_SLOT_ID } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket, rotatePlayers } from "./EditPocketMap";
 import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, sortById } from "./GameTable";

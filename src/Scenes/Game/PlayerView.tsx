@@ -1,14 +1,14 @@
 import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo } from "react";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
-import CharacterView from "./CharacterView";
-import CountPocket from "./CountPocket";
+import CharacterView from "./Pockets/CharacterView";
+import CountPocket from "./Pockets/CountPocket";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { Card, GameTable, Player } from "./Model/GameTable";
-import PocketView, { PocketPosition, PocketPositionMap } from "./PocketView";
+import PocketView, { PocketPosition, PocketPositionMap } from "./Pockets/PocketView";
 import RoleView from "./RoleView";
-import ScenarioDeckView from "./ScenarioDeckView";
+import ScenarioDeckView from "./Pockets/ScenarioDeckView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
@@ -140,7 +140,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         return <div className={classes.join(' ')} style={playerStyle} onClick={onClickPlayer}>
             <div className='player-top-row'>
                 { characterView } { roleView }
-                <CountPocket ref={setMapRef(positions, 'player_hand')} trackAllCards cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                <CountPocket ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 { scenarioDecks }
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
                 {playerIcons}

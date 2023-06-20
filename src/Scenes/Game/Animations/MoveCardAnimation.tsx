@@ -1,7 +1,7 @@
 import { CSSProperties, useContext, useEffect, useReducer } from "react";
 import { getRectCenter } from "../../../Utils/Rect";
 import { useInterval, useTimeout } from "../../../Utils/UseInterval";
-import { CARD_SLOT_ID } from "../CardSlot";
+import { CARD_SLOT_ID } from "../Pockets/CardSlot";
 import CardView from "../CardView";
 import { Card, PocketRef } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
