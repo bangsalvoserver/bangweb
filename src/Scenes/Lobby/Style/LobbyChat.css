@@ -2,22 +2,19 @@
     position: fixed;
     right: 1em;
     bottom: 1em;
-    width: 300px;
 
-    display: flex;
-    flex-direction: column;
     z-index: 20;
 }
 
-@media (max-width:960px) {
-    .lobby-chat {
-        visibility: hidden;
-    }
+.lobby-chat-box {
+    display: flex;
+    flex-direction: column;
+    width: calc(min(20em, 100vw - 2em));
 }
 
-.lobby-chat-box {
-    background-color: rgba(255, 255, 255, 0.2);
-    max-height: 150px;
+.lobby-chat-messages {
+    background-color: rgba(255, 255, 255, 0.8);
+    max-height: 60vh;
     overflow-y: auto;
     margin-bottom: 0.5em;
     padding: 0.5em;
@@ -35,10 +32,6 @@
 
 .username {
     font-weight: bold;
-}
-
-.self-message {
-    text-align: right;
 }
 
 .server-message {

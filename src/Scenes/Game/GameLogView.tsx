@@ -1,8 +1,7 @@
-import { useContext, useEffect, useRef } from "react";
-import { GameTableContext } from "./GameScene";
+import { useEffect, useRef } from "react";
 import GameStringComponent from "./GameStringComponent";
-import "./Style/GameLogView.css";
 import { GameString } from "./Model/GameUpdate";
+import "./Style/GameLogView.css";
 
 export interface GameLogProps {
     logs: GameString[];

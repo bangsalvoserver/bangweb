@@ -26,6 +26,7 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import TrainView from "./Pockets/TrainView";
+import GameLogView from "./GameLogView";
 
 const FRAMERATE = 60;
 
@@ -146,6 +147,7 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   return (
     <GameTableContext.Provider value={table}>
       <TargetSelectorContext.Provider value={selector}>
+        <>
         <div className="game-scene">
           <div className="main-deck-row">
             <div className="m-auto">
@@ -163,6 +165,8 @@ export default function GameScene({ channel, myUserId }: GameProps) {
           <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
           <AnimationView getTracker={getTracker} />
         </div>
+        {/* <GameLogView logs={gameLogs} /> */}
+        </>
       </TargetSelectorContext.Provider>
     </GameTableContext.Provider>
   );
