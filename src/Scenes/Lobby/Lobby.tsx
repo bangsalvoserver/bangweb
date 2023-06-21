@@ -47,13 +47,21 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
         if (index >= 0) {
           copy[index] = newUser;
         } else {
+          setChatMessages(chatMessages => chatMessages.concat({ user_id: 0, message: getLabel('notify', 'USER_JOINED_LOBBY', name)}));
           copy.push(newUser);
         }
         return copy;
       });
     },
 
-    lobby_remove_user: ({ user_id }) => setUsers(users => users.filter(user => user.id !== user_id)),
+    lobby_remove_user: ({ user_id }) => {
+      const name = users.find(user => user.id == user_id)?.name;
+      if (name) {
+        setChatMessages(chatMessages => chatMessages.concat({ user_id: 0,
+          message: getLabel('notify', 'USER_LEFT_LOBBY', name)}));
+      }
+      setUsers(users => users.filter(user => user.id !== user_id));
+    },
 
     lobby_owner: ({ user_id }) => setLobbyOwner(user_id),
 

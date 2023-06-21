@@ -58,4 +58,9 @@ export const LABELS_ENGLISH: LabelRegistry = {
         BUTTON_LEAVE_LOBBY: "Leave Lobby",
         BUTTON_DISCONNECT: "Disconnect",
     },
+
+    notify: {
+        USER_JOINED_LOBBY: (username) => `${username} joined the lobby`,
+        USER_LEFT_LOBBY: (username) => `${username} left the lobby`
+    },
 };
