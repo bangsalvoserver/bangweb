@@ -72,51 +72,45 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
   
   });
 
-  const getGameScene = () => {
-    return (
-      <GameScene channel={{
-        getNextUpdate: () => gameUpdates.current.shift(),
-        pendingUpdates: () => gameUpdates.current.length != 0,
-        sendGameAction: (action: GameAction) => {
-          connection.sendMessage({ game_action: action });
-        },
-        handleReturnLobby: () => connection.sendMessage({ lobby_return: {}})
-      }}
-      myUserId={myUserId} />
-    );
+  const handleStartGame = () => connection.sendMessage({game_start: {}});
+
+  const handleEditGameOptions = (gameOptions: GameOptions) => {
+    connection.sendMessage({ lobby_edit: { name: lobbyInfo.name, options: gameOptions }});
+    setGameOptions(gameOptions);
   };
-
-  const getLobbyScene = () => {
-    const handleStartGame = () => connection.sendMessage({game_start: {}});
-
-    const handleEditGameOptions = (gameOptions: GameOptions) => {
-      connection.sendMessage({ lobby_edit: { name: lobbyInfo.name, options: gameOptions }});
-      setGameOptions(gameOptions);
-    };
-
-    return <div className='flex flex-col'>
-      <div className='flex flex-row justify-center h-12'>
-        { myUserId == lobbyOwner && <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button> }
-      </div>
-      <div className='flex flex-row'>
-        <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
-        <div className='flex flex-col'>
-          {users.map(user => (
-            <LobbyUser align='vertical' key={user.id} user={user} isOwner={user.id === lobbyOwner} />
-          ))}
-        </div>
-      </div>
-    </div>
-  }
-
-  const handleSendMessage = (message: string) => {
-    connection.sendMessage({ lobby_chat: { message: message }});
-  }
 
   return (
     <LobbyContext.Provider value={{ users, lobbyOwner }}>
-      {isGameStarted ? getGameScene() : getLobbyScene()}
-      <LobbyChat messages={chatMessages} handleSendMessage={handleSendMessage} />
+      { isGameStarted ?
+        (
+          <GameScene channel={{
+            getNextUpdate: () => gameUpdates.current.shift(),
+            pendingUpdates: () => gameUpdates.current.length != 0,
+            sendGameAction: (action: GameAction) => {
+              connection.sendMessage({ game_action: action });
+            },
+            handleReturnLobby: () => connection.sendMessage({ lobby_return: {}})
+          }}
+          myUserId={myUserId} />
+        )
+      :
+        (
+          <div className='flex flex-col'>
+            <div className='flex flex-row justify-center h-12'>
+              { myUserId == lobbyOwner && <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button> }
+            </div>
+            <div className='flex flex-row'>
+              <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
+              <div className='flex flex-col'>
+                {users.map(user => (
+                  <LobbyUser align='vertical' key={user.id} user={user} isOwner={user.id === lobbyOwner} />
+                ))}
+              </div>
+            </div>
+          </div>
+        )
+      }
+      <LobbyChat messages={chatMessages} />
     </LobbyContext.Provider>
   );
 }

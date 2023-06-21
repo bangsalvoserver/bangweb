@@ -4,15 +4,16 @@ import { ChatMessage, UserId } from "../../Messages/ServerMessage";
 import { LobbyContext } from "./Lobby";
 import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
+import { ConnectionContext } from "../../App";
 
 export interface ChatProps {
     messages: ChatMessage[];
-    handleSendMessage: (message: string) => void;
     myUserId?: UserId;
 }
 
-export default function LobbyChat({ messages, handleSendMessage, myUserId }: ChatProps) {
+export default function LobbyChat({ messages, myUserId }: ChatProps) {
     const { users } = useContext(LobbyContext);
+    const connection = useContext(ConnectionContext);
     
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
@@ -24,7 +25,7 @@ export default function LobbyChat({ messages, handleSendMessage, myUserId }: Cha
     const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
         if (inputMessage.current?.value) {
-            handleSendMessage(inputMessage.current.value);
+            connection.sendMessage({ lobby_chat: { message: inputMessage.current.value }});
             inputMessage.current.value = '';
         }
     };
