@@ -28,13 +28,7 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             setNumReadMessages(messages.length);
         }
-    }, [messages, isChatOpen]);
-
-    useEffect(() => {
-        if (isChatOpen) {
-            inputMessage.current?.focus();
-        }
-    }, [isChatOpen]);
+    }, [isChatOpen, messages]);
 
     useEventListener('click', ev => {
         if (!chatRef.current?.contains(ev.target as Node)) {
@@ -42,11 +36,17 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
         }
     }, []);
 
+    const handleOpenChat = () => {
+        setIsChatOpen(true);
+        setTimeout(() => inputMessage.current?.focus());
+    };
+
     const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
         if (inputMessage.current?.value) {
             connection.sendMessage({ lobby_chat: { message: inputMessage.current.value } });
             inputMessage.current.value = '';
+            inputMessage.current.focus();
         }
     };
 
@@ -66,7 +66,7 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
                 w-12 h-12 relative
                 p-2 ml-1 text-sm rounded-full focus:outline-none focus:ring-2 text-gray-400 bg-gray-600 hover:bg-gray-700 focus:ring-gray-800
                 ${isChatOpen ? 'hidden' : ''}
-            `} onClick={() => setIsChatOpen(true)}>
+            `} onClick={handleOpenChat}>
                 <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 60" xmlSpace="preserve">
                     <g>
                         <path d="M26,9.586C11.664,9.586,0,20.09,0,33c0,4.499,1.418,8.856,4.106,12.627c-0.51,5.578-1.86,9.712-3.813,11.666
