@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { UserId } from "../../Messages/ServerMessage";
@@ -147,7 +147,6 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   return (
     <GameTableContext.Provider value={table}>
       <TargetSelectorContext.Provider value={selector}>
-        <>
         <div className="game-scene">
           <div className="main-deck-row">
             <div className="m-auto">
@@ -164,9 +163,8 @@ export default function GameScene({ channel, myUserId }: GameProps) {
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
           <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
           <AnimationView getTracker={getTracker} />
+          <GameLogView logs={gameLogs} />
         </div>
-        {/* <GameLogView logs={gameLogs} /> */}
-        </>
       </TargetSelectorContext.Provider>
     </GameTableContext.Provider>
   );

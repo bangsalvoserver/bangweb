@@ -110,7 +110,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
           </div>
         )
       }
-      <LobbyChat messages={chatMessages} />
+      <LobbyChat messages={chatMessages} myUserId={myUserId} />
     </LobbyContext.Provider>
   );
 }

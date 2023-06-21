@@ -6,15 +6,29 @@
     z-index: 20;
 }
 
-.lobby-chat-box {
+.lobby-chat-open {
+    z-index: 21;
+}
+
+.lobby-chat-open .lobby-chat-box {
     display: flex;
-    flex-direction: column;
+}
+
+.lobby-chat-box {
+    display: none;
+
+    position: fixed;
+    right: 1em;
+    bottom: 4.5em;
+
     width: calc(min(20em, 100vw - 2em));
+    max-height: 60vh;
+    
+    flex-direction: column;
 }
 
 .lobby-chat-messages {
     background-color: rgba(255, 255, 255, 0.8);
-    max-height: 60vh;
     overflow-y: auto;
     margin-bottom: 0.5em;
     padding: 0.5em;

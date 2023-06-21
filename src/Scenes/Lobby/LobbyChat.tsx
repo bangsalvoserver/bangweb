@@ -30,16 +30,17 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
         }
     }, [isChatOpen, messages]);
 
+    useEffect(() => {
+        if (isChatOpen) {
+            setTimeout(() => inputMessage.current?.focus());
+        }
+    }, [isChatOpen]);
+
     useEventListener('click', ev => {
         if (!chatRef.current?.contains(ev.target as Node)) {
             setIsChatOpen(false);
         }
     }, []);
-
-    const handleOpenChat = () => {
-        setIsChatOpen(true);
-        setTimeout(() => inputMessage.current?.focus());
-    };
 
     const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
@@ -53,7 +54,7 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
     const newMessageTag = (user_id: UserId, message: string, index: number) => {
         if (user_id) {
             const user = users.find(user => user.id == user_id);
-            const pClass = user_id == myUserId ? 'test-right' : '';
+            const pClass = user_id == myUserId ? 'text-right' : '';
             return (<p key={index} className={pClass}><span className='username'>{getUsername(user)}</span> : {message}</p>);
         } else {
             return (<p key={index} className='server-message'>{message}</p>);
@@ -61,12 +62,11 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
     };
 
     return (
-        <div ref={chatRef} className="lobby-chat">
+        <div ref={chatRef} className={`lobby-chat ${isChatOpen ? 'lobby-chat-open' : ''}`}>
             <button className={`
                 w-12 h-12 relative
                 p-2 ml-1 text-sm rounded-full focus:outline-none focus:ring-2 text-gray-400 bg-gray-600 hover:bg-gray-700 focus:ring-gray-800
-                ${isChatOpen ? 'hidden' : ''}
-            `} onClick={handleOpenChat}>
+            `} onClick={() => setIsChatOpen(!isChatOpen)}>
                 <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 60" xmlSpace="preserve">
                     <g>
                         <path d="M26,9.586C11.664,9.586,0,20.09,0,33c0,4.499,1.418,8.856,4.106,12.627c-0.51,5.578-1.86,9.712-3.813,11.666
@@ -80,11 +80,11 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
                     </g>
                 </svg>
                 { numReadMessages < messages.length &&
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold bg-red-600 rounded-full w-5 h-5">
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-white font-bold bg-red-600 rounded-full w-5 h-5">
                         {messages.length - numReadMessages}
                     </div>}
             </button>
-            <div className={`lobby-chat-box ${!isChatOpen ? 'hidden': ''}`}>
+            <div className='lobby-chat-box'>
                 {messages.length != 0 && <div className="lobby-chat-messages">
                     {messages.map(({ user_id, message }, index) => newMessageTag(user_id, message, index))}
                     <div ref={messagesEnd} />
