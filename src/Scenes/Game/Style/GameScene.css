@@ -2,15 +2,9 @@
     --table-cubes-width: calc(var(--card-width) + 1em);
 }
 
-.game-scene-top {
-    width: calc(100vw - 2em);
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
 .game-scene {
-    width: 100%;
+    width: 100vw;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }

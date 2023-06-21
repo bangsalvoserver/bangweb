@@ -146,22 +146,19 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   return (
     <GameTableContext.Provider value={table}>
       <TargetSelectorContext.Provider value={selector}>
-        <div className="game-scene-top">
-          <div className="game-scene">
-            <div className="main-deck-row">
-              <div className="m-auto">
-                { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selectionPocket }
-              </div>
-              { trainPockets }
+        <div className="game-scene">
+          <div className="main-deck-row">
+            <div className="m-auto">
+              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selectionPocket }
             </div>
-            <div className="status-text">
-              { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
-            </div>
-            <div className="player-grid" num-players={table.alive_players.length}>
-              { playerViews }
-            </div>
+            { trainPockets }
           </div>
-          {/* <GameLogView logs={gameLogs} /> */}
+          <div className="status-text">
+            { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
+          </div>
+          <div className="player-grid" num-players={table.alive_players.length}>
+            { playerViews }
+          </div>
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
           <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
           <AnimationView getTracker={getTracker} />

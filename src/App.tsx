@@ -21,7 +21,7 @@ export const ConnectionContext = createContext<Connection>({
   sendMessage: () => {},
 });
 
-async function makeUserInfo (username?: string, propic?: ImageSrc): Promise<UserInfo> {
+export async function makeUserInfo (username?: string, propic?: ImageSrc): Promise<UserInfo> {
   return {
     name: username ?? '',
     profile_image: await serializeImage(propic, 50)
@@ -96,27 +96,10 @@ function App() {
   
   }, [scene]);
 
-  const handleEditUser = async (username?: string, propic?: ImageSrc) => {
-    settings.setUsername(username);
-    settings.setPropic(propic);
-    connection.current.sendMessage({ user_edit: await makeUserInfo(username, propic) });
-  }
-
-  const handleLeaveLobby = () => connection.current.sendMessage({ lobby_leave: {}});
-
-  const handleDisconnect = () => connection.current.disconnect();
-
   return (
     <div className="flex flex-col min-h-screen">
       <ConnectionContext.Provider value={connection.current}>
-        <Header
-          title={scene.type == 'lobby' ? scene.lobbyInfo.name : undefined}
-          username={settings.username}
-          propic={settings.propic}
-          editUser={handleEditUser}
-          handleLeaveLobby={scene.type == 'lobby' ? handleLeaveLobby : undefined }
-          handleDisconnect={scene.type != 'connect' ? handleDisconnect : undefined }
-        />
+        <Header scene={scene} settings={settings} />
         <div className="current-scene">
           <CurrentScene scene={scene} setScene={setScene} settings={settings} />
         </div>
