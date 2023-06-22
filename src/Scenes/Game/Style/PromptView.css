@@ -15,6 +15,10 @@
     z-index: 20;
 }
 
+.prompt-view .pocket-view {
+    width: max-content;
+}
+
 .prompt-message {
     min-width: 30vw;
     text-align: center;

@@ -82,7 +82,7 @@ export default function GameScene({ channel, myUserId }: GameProps) {
     <PocketView ref={setMapRef(pocketPositions, 'shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
   </> : null;
 
-  const trainPockets = table.pockets.stations.length != 0 ?
+  const trainPockets = table.pockets.stations.length != 0 && (
     <div className="train-row m-auto">
       <div className="train-row-inner">
         <CountPocket ref={setMapRef(pocketPositions, 'train_deck')} cards={table.pockets.train_deck} />
@@ -91,7 +91,8 @@ export default function GameScene({ channel, myUserId }: GameProps) {
           <TrainView ref={setMapRef(pocketPositions, 'train')} onClickCard={onClickCard} />
         </div>
       </div>
-    </div> : null;
+    </div>
+  );
 
   const tableCubes = <div className='inline-block' ref={cubesRef}>
     {table.status.num_cubes > 0 ?
@@ -110,7 +111,11 @@ export default function GameScene({ channel, myUserId }: GameProps) {
         <CountPocket noCount ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card} onClickCard={onClickCard} /> }
   </>;
 
-  const selectionPocket = <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />;
+  const selectionPocket = table.pockets.selection.length != 0 && (
+    <div className="prompt-view whitespace-nowrap">
+      <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />
+    </div>
+  );
 
   const statusText = isResponse(selector) ? <GameStringComponent message={selector.request.status_text} /> : null;
   
@@ -150,7 +155,7 @@ export default function GameScene({ channel, myUserId }: GameProps) {
         <div className="game-scene">
           <div className="main-deck-row">
             <div className="m-auto">
-              { shopPockets } { tableCubes } { mainDeck } { scenarioCards } { selectionPocket }
+              { shopPockets } { tableCubes } { mainDeck } { scenarioCards }
             </div>
             { trainPockets }
           </div>
@@ -160,6 +165,7 @@ export default function GameScene({ channel, myUserId }: GameProps) {
           <div className="player-grid" num-players={table.alive_players.length}>
             { playerViews }
           </div>
+          { selectionPocket }
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
           <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
           <AnimationView getTracker={getTracker} />
