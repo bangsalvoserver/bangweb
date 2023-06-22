@@ -13,6 +13,7 @@ import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
 
 export interface LobbyState {
+  myUserId?: UserId;
   users: UserValue[];
   lobbyOwner?: UserId;
 }
@@ -95,18 +96,17 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
   };
 
   return (
-    <LobbyContext.Provider value={{ users, lobbyOwner }}>
+    <LobbyContext.Provider value={{ myUserId, users, lobbyOwner }}>
       { isGameStarted ?
         (
-          <GameScene channel={{
-            getNextUpdate: () => gameUpdates.current.shift(),
-            pendingUpdates: () => gameUpdates.current.length != 0,
-            sendGameAction: (action: GameAction) => {
-              connection.sendMessage({ game_action: action });
-            },
-            handleReturnLobby: () => connection.sendMessage({ lobby_return: {}})
-          }}
-          myUserId={myUserId} />
+          <GameScene
+            channel={{
+              getNextUpdate: () => gameUpdates.current.shift(),
+              pendingUpdates: () => gameUpdates.current.length != 0,
+              sendGameAction: (action: GameAction) => connection.sendMessage({ game_action: action })
+            }}
+            handleReturnLobby={() => connection.sendMessage({ lobby_return: {}})}
+          />
         )
       :
         (
@@ -125,7 +125,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
           </div>
         )
       }
-      <LobbyChat messages={chatMessages} myUserId={myUserId} />
+      <LobbyChat messages={chatMessages} />
     </LobbyContext.Provider>
   );
 }

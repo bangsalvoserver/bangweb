@@ -32,14 +32,14 @@ const FRAMERATE = 60;
 
 export interface GameProps {
   channel: GameChannel;
-  myUserId?: UserId;
+  handleReturnLobby: () => void;
 }
 
 export const GameTableContext = createContext(newGameTable());
 export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({}));
 
-export default function GameScene({ channel, myUserId }: GameProps) {
-  const { users, lobbyOwner } = useContext(LobbyContext);
+export default function GameScene({ channel, handleReturnLobby }: GameProps) {
+  const { myUserId, users, lobbyOwner } = useContext(LobbyContext);
   
   const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
   const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
@@ -122,7 +122,7 @@ export default function GameScene({ channel, myUserId }: GameProps) {
   const gameOverStatus = () => {
     if (myUserId == lobbyOwner) {
       return (
-        <Button color='green' onClick={channel.handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
+        <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
       );
     } {
       return <>{getLabel('ui', 'STATUS_GAME_OVER')}</>;

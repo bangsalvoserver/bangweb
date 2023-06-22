@@ -9,11 +9,10 @@ import { useEventListener } from "../../Utils/UseEventListener";
 
 export interface ChatProps {
     messages: ChatMessage[];
-    myUserId?: UserId;
 }
 
-export default function LobbyChat({ messages, myUserId }: ChatProps) {
-    const { users } = useContext(LobbyContext);
+export default function LobbyChat({ messages }: ChatProps) {
+    const { myUserId, users } = useContext(LobbyContext);
     const connection = useContext(ConnectionContext);
 
     const chatRef = useRef<HTMLDivElement>(null);

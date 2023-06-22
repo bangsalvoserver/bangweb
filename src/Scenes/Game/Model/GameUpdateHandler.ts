@@ -8,7 +8,6 @@ export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
     pendingUpdates: () => boolean;
     sendGameAction: (action: GameAction) => void;
-    handleReturnLobby: () => void;
 }
 
 export class GameUpdateHandler {
