@@ -5,6 +5,7 @@ import CardView from "../CardView";
 import { Card, PocketRef } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import { CARD_SLOT_ID } from "../Pockets/CardSlot";
+import { PocketPosition } from "../Pockets/PocketView";
 import { CardTracker } from "./CardTracker";
 import "./Style/MoveCardAnimation.css";
 
@@ -15,24 +16,17 @@ export interface MoveCardProps {
     duration: Milliseconds;
 }
 
-const CARD_HALF_W = 10;
-const POCKET_MIN_W = 50;
-
-function clampCardRect(cardRect: Rect, pocketRect: Rect | undefined): Point {
-    if (pocketRect && pocketRect.w > POCKET_MIN_W) {
-        if (cardRect.x < pocketRect.x) {
-            return {
-                x: pocketRect.x + CARD_HALF_W,
-                y: pocketRect.y + pocketRect.h / 2
-            };
-        } else if (cardRect.x + cardRect.w > pocketRect.x + pocketRect.w) {
-            return {
-                x: pocketRect.x + pocketRect.w - CARD_HALF_W,
-                y: pocketRect.y + pocketRect.h / 2
-            };
+function clampCard(cardRect: Rect, pocket: PocketPosition | undefined, margin: number): Point {
+    const cardCenter = getRectCenter(cardRect);
+    const pocketRect = pocket?.getPocketRect();
+    if (pocketRect) {
+        const pocketLeft = pocketRect.x + margin;
+        const pocketRight = pocketRect.x + pocketRect.w - margin;
+        if (pocketLeft < pocketRight) {
+            cardCenter.x = Math.max(pocketLeft, Math.min(pocketRight, cardCenter.x));
         }
     }
-    return getRectCenter(cardRect);
+    return cardCenter;
 }
 
 export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
@@ -48,8 +42,8 @@ export default function MoveCardAnimation({ tracker, card, destPocket, duration 
     // useEffect(() => endPocket?.scrollToEnd());
 
     if (startRect && endRect) {
-        const startPoint = clampCardRect(startRect, startPocket?.getPocketRect());
-        const endPoint = clampCardRect(endRect, endPocket?.getPocketRect());
+        const startPoint = clampCard(startRect, startPocket, 0);
+        const endPoint = clampCard(endRect, endPocket, 10);
 
         const style = {
             '--startX': startPoint.x + 'px',
