@@ -6,7 +6,7 @@
     animation-duration: var(--duration);
     animation-fill-mode: both;
     transition: ease-in-out;
-    z-index: 10;
+    z-index: 15;
 }
 
 @keyframes move-card {

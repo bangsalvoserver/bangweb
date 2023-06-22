@@ -12,7 +12,7 @@
     border-radius: 0.8em;
     padding: 0.5em 1em;
 
-    z-index: 20;
+    z-index: 10;
 }
 
 .prompt-view .pocket-view {
