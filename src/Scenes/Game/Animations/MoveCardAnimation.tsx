@@ -1,5 +1,5 @@
 import { CSSProperties, useContext, useEffect, useReducer } from "react";
-import { getRectCenter } from "../../../Utils/Rect";
+import { getRectCenter, getRectCenterRight, rectIntersects } from "../../../Utils/Rect";
 import { useInterval, useTimeout } from "../../../Utils/UseInterval";
 import { CARD_SLOT_ID } from "../Pockets/CardSlot";
 import CardView from "../CardView";
@@ -27,7 +27,10 @@ export default function MoveCardAnimation({ tracker, card, destPocket, duration 
 
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);
-        const endPoint = getRectCenter(endRect);
+        
+        const endPocketRect = endPocket?.getPocketRect();
+        const endPoint = endPocketRect && !rectIntersects(endPocketRect, endRect)
+            ? getRectCenterRight(endPocketRect) : getRectCenter(endRect)
 
         const style = {
             '--startX': startPoint.x + 'px',

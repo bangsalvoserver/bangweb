@@ -26,3 +26,15 @@ export function getRectCenter(rect: Rect): Point {
         y: rect.y + rect.h / 2
     }
 };
+
+export function getRectCenterRight(rect: Rect): Point {
+    return {
+        x: rect.x + rect.w,
+        y: rect.y + rect.h / 2
+    };
+}
+
+export function rectIntersects(rectA: Rect, rectB: Rect): boolean {
+    return rectA.x < rectB.x + rectB.w && rectA.x + rectA.w > rectB.x
+        && rectA.y < rectB.y + rectB.h && rectA.y + rectA.h > rectB.y;
+}
