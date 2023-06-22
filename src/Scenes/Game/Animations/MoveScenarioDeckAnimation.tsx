@@ -37,10 +37,8 @@ export default function MoveScenarioDeckAnimation({ tracker, card, pocket, start
         } as CSSProperties;
 
         return (
-            <div style={style} className="move-card-animation">
-                <div className="move-top-left-half">
-                    <CardView card={card} />
-                </div>
+            <div style={style} className="move-card-animation card-anchor">
+                <CardView card={card} />
             </div>
         );
     }

@@ -49,10 +49,8 @@ export default function DeckShuffleAnimation({ tracker, pocket, cards, duration 
         return (
             <div className="deck-shuffle-animation" style={style}>
                 {cards.map((id, index) => (
-                    <div key={id} className="deck-shuffle-animation-inner" style={cardIndexStyle(cards.length - index - 1)}>
-                        <div className="move-top-left-half">
-                            <CardView card={getCard(table, id)} showBackface />
-                        </div>
+                    <div key={id} className="deck-shuffle-animation-inner card-anchor" style={cardIndexStyle(cards.length - index - 1)}>
+                        <CardView card={getCard(table, id)} showBackface />
                     </div>
                 ))}
             </div>

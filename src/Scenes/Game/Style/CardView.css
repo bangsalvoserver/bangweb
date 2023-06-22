@@ -130,7 +130,3 @@
 .card-overlay {
     z-index: 10;
 }
-
-.move-top-left-half {
-    transform: translate(-50%, -50%);
-}

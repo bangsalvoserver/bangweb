@@ -17,10 +17,6 @@
     transform-origin: 0 0;
 }
 
-.deck-shuffle-animation-inner .move-top-left-half {
-    transform-style: preserve-3d;
-}
-
 @keyframes move-and-flip-card {
     to {
         z-index: var(--card-index);

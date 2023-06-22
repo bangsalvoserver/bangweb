@@ -9,6 +9,18 @@
     z-index: 15;
 }
 
+.card-anchor {
+    width: 0;
+    height: 0;
+}
+
+.card-anchor .card-view {
+    margin: 0;
+    width: max-content;
+    height: max-content;
+    transform: translate(-50%, -50%);
+}
+
 @keyframes move-card {
     to {
         transform: translate(var(--diffX), var(--diffY));
