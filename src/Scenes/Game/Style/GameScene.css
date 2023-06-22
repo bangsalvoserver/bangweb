@@ -1,17 +1,3 @@
-:root {
-    --table-cubes-width: calc(var(--card-width) + 1em);
-}
-
-@media (max-width: 960px) {
-    .table-cubes {
-        font-size: 10pt;
-    }
-
-    .table-cubes img {
-        max-height: 1.6em;
-    }
-}
-
 .game-scene {
     width: 100vw;
     height: 100%;
@@ -28,6 +14,13 @@
     min-height: 3.5em;
 }
 
+@media (max-width: 960px) {
+    .status-text {
+        font-size: 10pt;
+        line-height: 12pt;
+    }
+}
+
 .main-deck-row {
     display: flex;
     flex-direction: column;
@@ -38,13 +31,40 @@
 }
 
 .table-cubes {
-    width: var(--table-cubes-width);
+    display: inline-flex;
+    align-items: center;
     font-weight: bold;
-    text-align: center;
+    height: var(--card-height-plus-margin);
+    vertical-align: middle;
+    justify-content: center;
 }
 
 .table-cubes img {
-    display: inline;
     height: 2em;
-    margin: 2px;
+}
+
+@media (min-width: 1200px) {
+    .table-cubes {
+        flex-direction: row;
+        margin: 0 0.2em;
+    }
+
+    .table-cubes img {
+        margin-right: 0.2em;
+    }
+}
+
+@media (max-width: 1200px) {
+    .table-cubes {
+        flex-direction: column;
+        font-size: 10pt;
+    }
+
+    .table-cubes img {
+        height: 1.8em;
+    }
+
+    .table-cubes * {
+        display: block;
+    }
 }

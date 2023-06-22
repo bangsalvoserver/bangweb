@@ -9,7 +9,7 @@
     --player-gold-bottom: calc(var(--card-scale) * var(--player-gold-bottom-unscaled));
 }
 
-@media (max-width:960px) {
+@media (max-width:1200px) {
     .player-view {
         --profile-pic-size: 25px;
     }
@@ -30,7 +30,7 @@
     }
 }
 
-@media (min-width:960px) {
+@media (min-width:1200px) {
     .player-gold {
         font-size: 16pt;
     }

@@ -94,9 +94,11 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     </div>
   );
 
-  const tableCubes = <div className='inline-block' ref={cubesRef}>
-    {table.status.num_cubes > 0 ?
-      <div className='table-cubes'><img src='/media/sprite_cube.png' />x{table.status.num_cubes}</div> : null}
+  const tableCubes = <div className='table-cubes' ref={cubesRef}>
+    { table.status.num_cubes > 0 && <>
+      <img src='/media/sprite_cube.png' />
+      <div>x{table.status.num_cubes}</div>
+    </> }
   </div>;
 
   const mainDeck = <>
@@ -112,7 +114,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   </>;
 
   const selectionPocket = table.pockets.selection.length != 0 && (
-    <div className="prompt-view whitespace-nowrap">
+    <div className="selection-view whitespace-nowrap">
       <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />
     </div>
   );
