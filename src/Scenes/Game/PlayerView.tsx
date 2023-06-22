@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo } from "react";
+import { CSSProperties, MutableRefObject, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import CharacterView from "./Pockets/CharacterView";
@@ -12,6 +12,7 @@ import ScenarioDeckView from "./Pockets/ScenarioDeckView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import { getDivRect } from "../../Utils/Rect";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -44,8 +45,19 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const table = useContext(GameTableContext);
     const selector = useContext(TargetSelectorContext);
     const positions = useRefLazy(() => new Map<PocketType, PocketPosition>());
+    const handRef = useRef<HTMLDivElement>(null);
+    const tableRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => positions.current);
+
+    const setScrollPositions = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
+        return (ref: PocketPosition | null) => {
+            setMapRef(positions, key)(ref ? {
+                ...ref,
+                getPocketRect: () => scrollRef.current ? getDivRect(scrollRef.current) : undefined,
+            } : null);
+        }
+    };
 
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id == table.status.current_turn;
@@ -118,11 +130,11 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     if (player.id == table.self_player) {
         return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={onClickPlayer}>
             <div>
-                <div className='player-pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                <div className='player-pocket-scroll' ref={handRef}>
+                    <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 </div>
-                <div className='player-pocket-scroll'>
-                    <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
+                <div className='player-pocket-scroll' ref={tableRef}>
+                    <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
                 </div>
             </div>
             <div className='flex flex-col relative justify-end'>
@@ -145,8 +157,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
                 {playerIcons}
             </div>
-            <div className='player-pocket-scroll'>
-                <PocketView ref={setMapRef(positions, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
+            <div className='player-pocket-scroll' ref={tableRef}>
+                <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
             </div>
         </div>
     }
