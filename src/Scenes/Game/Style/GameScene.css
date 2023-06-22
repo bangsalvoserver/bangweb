@@ -2,6 +2,16 @@
     --table-cubes-width: calc(var(--card-width) + 1em);
 }
 
+@media (max-width: 960px) {
+    .table-cubes {
+        font-size: 10pt;
+    }
+
+    .table-cubes img {
+        max-height: 1.6em;
+    }
+}
+
 .game-scene {
     width: 100vw;
     height: 100%;
