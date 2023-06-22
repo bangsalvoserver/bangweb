@@ -74,12 +74,8 @@ function App() {
         connection.current.setLocked(true);
         setScene({ type: 'waiting_area' });
       }
-    }
-
-  }, [settings]);
-
-  useHandler(connection.current, {
-
+    },
+    
     lobby_entered: ({ lobby_id, name, options }) => {
       if (scene.type != 'lobby' || (settings.myLobbyId != lobby_id)) {
         connection.current.setLocked(true);
@@ -93,8 +89,8 @@ function App() {
         setScene({ type: 'lobby', lobbyInfo });
       }
     }
-  
-  }, [scene]);
+
+  }, [settings, scene]);
 
   return (
     <div className="flex flex-col min-h-screen">

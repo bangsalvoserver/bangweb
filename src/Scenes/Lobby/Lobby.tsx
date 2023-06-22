@@ -85,7 +85,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
     game_started: () => setIsGameStarted(true),
     game_update: (update) => gameUpdates.current.push(update),
   
-  });
+  }, [users]);
 
   const handleStartGame = () => connection.sendMessage({game_start: {}});
 
