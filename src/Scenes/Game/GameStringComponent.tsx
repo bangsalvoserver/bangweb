@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
 import { CardSign } from "./Model/CardData";
@@ -28,32 +28,56 @@ export interface GameStringProps {
     message: GameString;
 }
 
+type GameStringFormatArg =
+    { type: 'integer', value: number} |
+    { type: 'card', value: { name: string, sign: CardSign } | null } |
+    { type: 'player', value: string | null };
+
 export default function GameStringComponent({ message }: GameStringProps): JSX.Element {
     const table = useContext(GameTableContext);
     const { users } = useContext(LobbyContext);
 
+    const formatArgs = useMemo<GameStringFormatArg[]>(() => message.format_args.map(arg => {
+        if ('integer' in arg) {
+            return { type: 'integer', value: arg.integer };
+        } else if ('card' in arg) {
+            if ('name' in arg.card) {
+                return { type: 'card', value: arg.card };
+            } else {
+                return { type: 'card', value: null };
+            }
+        } else if ('player' in arg) {
+            if (arg.player) {
+                const player = getPlayer(table, arg.player);
+                const user = getUser(users, player.userid);
+                return { type: 'player', value: getUsername(user) };
+            } else {
+                return { type: 'player', value: null }
+            }
+        }
+        throw new Error('Invalid argument in format_args');
+    }), [users, table.players]);
+
     if (message.format_str in gameStringRegistry) {
         const value = gameStringRegistry[message.format_str];
         if (typeof value == 'function') {
-            return value(...message.format_args.map(arg => {
-                if ('integer' in arg) {
-                    return <>{arg.integer}</>;
-                } else if ('card' in arg) {
-                    if ('name' in arg.card) {
-                        return <LocalizedCardName name={arg.card.name} sign={arg.card.sign} />;
+            return value(...formatArgs.map(arg => {
+                switch (arg.type) {
+                case 'integer':
+                    return <>{arg.value}</>
+                case 'card':
+                    if (arg.value) {
+                        return <LocalizedCardName name={arg.value.name} sign={arg.value.sign} />
                     } else {
-                        return <span className="card-name unknown-name">{getLabel('ui', 'UNKNOWN_CARD')}</span>;
+                        return <span className="card-name unknown-name">{getLabel('ui', 'UNKNOWN_CARD')}</span>
                     }
-                } else if ('player' in arg) {
-                    if (arg.player) {
-                        const player = getPlayer(table, arg.player);
-                        const user = getUser(users, player.userid);
-                        return <span className="player-name">{getUsername(user)}</span>;
+                case 'player':
+                    if (arg.value) {
+                        return <span className="player-name">{arg.value}</span>;
                     } else {
-                        return <span className="player-name unknown-name">{getLabel('ui', 'UNKNOWN_PLAYER')}</span>;
+                        return <span className="player-name unknown-name">{getLabel('ui', 'UNKNOWN_PLAYER')}</span>
                     }
                 }
-                throw new Error('Invalid argument in format_args');
             }));
         } else {
             return value;
