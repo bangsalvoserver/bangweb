@@ -16,34 +16,16 @@ export interface MoveCardProps {
     duration: Milliseconds;
 }
 
-function clampCard(cardRect: Rect, pocket: PocketPosition | undefined, margin: number): Point {
-    const cardCenter = getRectCenter(cardRect);
-    const pocketRect = pocket?.getPocketRect();
-    if (pocketRect) {
-        const pocketLeft = pocketRect.x + margin;
-        const pocketRight = pocketRect.x + pocketRect.w - margin;
-        if (pocketLeft < pocketRight) {
-            cardCenter.x = Math.max(pocketLeft, Math.min(pocketRight, cardCenter.x));
-        }
-    }
-    return cardCenter;
-}
-
 export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
     const [, forceUpdate] = useReducer(a => !a, false);
     useInterval(forceUpdate, 0, []);
 
-    const startPocket = tracker.getTablePocket(card.pocket);
-    const startRect = startPocket?.getCardRect(CARD_SLOT_ID);
-
-    const endPocket = tracker.getTablePocket(destPocket);
-    const endRect = endPocket?.getCardRect(card.id) ?? startRect;
-
-    // useEffect(() => endPocket?.scrollToEnd());
+    const startRect = tracker.getTablePocket(card.pocket)?.getCardRect(CARD_SLOT_ID);
+    const endRect = tracker.getTablePocket(destPocket)?.getCardRect(card.id) ?? startRect;
 
     if (startRect && endRect) {
-        const startPoint = clampCard(startRect, startPocket, 0);
-        const endPoint = clampCard(endRect, endPocket, 10);
+        const startPoint = getRectCenter(startRect);
+        const endPoint = getRectCenter(endRect);
 
         const style = {
             '--startX': startPoint.x + 'px',

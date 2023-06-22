@@ -1,18 +1,19 @@
-import { CSSProperties, MutableRefObject, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import { CSSProperties, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
+import { Point, Rect, getDivRect, getRectCenter } from "../../Utils/Rect";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
-import CharacterView from "./Pockets/CharacterView";
-import CountPocket from "./Pockets/CountPocket";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { Card, GameTable, Player } from "./Model/GameTable";
+import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import CharacterView from "./Pockets/CharacterView";
+import CountPocket from "./Pockets/CountPocket";
 import PocketView, { PocketPosition, PocketPositionMap } from "./Pockets/PocketView";
-import RoleView from "./RoleView";
 import ScenarioDeckView from "./Pockets/ScenarioDeckView";
+import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
-import { getDivRect } from "../../Utils/Rect";
+import { CardId } from "./Model/GameUpdate";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -41,6 +42,37 @@ function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, play
     return null;
 }
 
+function clampCardRect(cardRect: Rect, pocketRect: Rect | undefined): Rect {
+    if (pocketRect) {
+        const pocketLeft = pocketRect.x;
+        const pocketRight = pocketRect.x + pocketRect.w;
+        if (pocketLeft < pocketRight) {
+            if (cardRect.x < pocketLeft) {
+                return { ...cardRect, x: pocketLeft };
+            } else if (cardRect.x + cardRect.w > pocketRight) {
+                return { ...cardRect, x: pocketRight - cardRect.w };
+            }
+        }
+    }
+    return cardRect;
+}
+
+function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivElement>): PocketPosition {
+    const getScrollRect = () => {
+        if (scrollRef.current) return getDivRect(scrollRef.current);
+    };
+    return {
+        getPocketRect: getScrollRect,
+        getCardRect: (card: CardId) => {
+            const cardRect = pocket.getCardRect(card);
+            if (cardRect) {
+                return clampCardRect(cardRect, getScrollRect());
+            }
+        },
+        scrollToEnd: pocket.scrollToEnd
+    };
+}
+
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
     const table = useContext(GameTableContext);
     const selector = useContext(TargetSelectorContext);
@@ -51,11 +83,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     useImperativeHandle(ref, () => positions.current);
 
     const setScrollPositions = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
-        return (ref: PocketPosition | null) => {
-            setMapRef(positions, key)(ref ? {
-                ...ref,
-                getPocketRect: () => scrollRef.current ? getDivRect(scrollRef.current) : undefined,
-            } : null);
+        return (pocket: PocketPosition | null) => {
+            setMapRef(positions, key)(pocket ? clampedPocket(pocket, scrollRef) : null);
         }
     };
 
