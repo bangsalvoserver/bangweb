@@ -4,7 +4,7 @@ import getLabel from "../../Locale/GetLabel";
 import { UserId } from "../../Messages/ServerMessage";
 import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
-import { LobbyContext } from "../Lobby/Lobby";
+import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import { CardTrackerImpl } from "./Animations/CardTracker";
 import CardButtonView from "./CardButtonView";
@@ -131,7 +131,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
-    const user = users.find(user => user.id === player.userid);
+    const user = getUser(users, player.userid);
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
       <PlayerView ref={setMapRef(playerPositions, player_id)} user={user} player={player}

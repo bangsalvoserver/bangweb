@@ -7,15 +7,20 @@ import { ChatMessage, LobbyId, LobbyInfo, UserId } from '../../Messages/ServerMe
 import { deserializeImage } from '../../Utils/ImageSerial';
 import GameScene from '../Game/GameScene';
 import { GameAction } from '../Game/Model/GameAction';
-import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
+import { GameOptions, GameUpdate, PlayerId } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
+import { GameTable, getPlayer } from '../Game/Model/GameTable';
 
 export interface LobbyState {
   myUserId?: UserId;
   users: UserValue[];
   lobbyOwner?: UserId;
+}
+
+export function getUser(users: UserValue[], id: UserId): UserValue | undefined {
+  return users.find(user => user.id === id);
 }
 
 export interface LobbyProps {
@@ -60,11 +65,11 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
     },
 
     lobby_remove_user: ({ user_id }) => {
-      const name = users.find(user => user.id == user_id)?.name;
-      if (name) {
+      const user = getUser(users, user_id);
+      if (user) {
         setChatMessages(chatMessages => chatMessages.concat({
           user_id: 0,
-          message: getLabel('notify', 'USER_LEFT_LOBBY', name),
+          message: getLabel('notify', 'USER_LEFT_LOBBY', user.name),
           is_read: false
         }));
       }

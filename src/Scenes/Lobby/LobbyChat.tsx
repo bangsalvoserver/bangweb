@@ -1,7 +1,7 @@
 import { SyntheticEvent, useContext, useEffect, useRef, useState } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { ChatMessage, UserId } from "../../Messages/ServerMessage";
-import { LobbyContext } from "./Lobby";
+import { LobbyContext, getUser } from "./Lobby";
 import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
 import { ConnectionContext } from "../../App";
@@ -54,7 +54,7 @@ export default function LobbyChat({ messages }: ChatProps) {
 
     const newMessageTag = (user_id: UserId, message: string, index: number) => {
         if (user_id) {
-            const user = users.find(user => user.id == user_id);
+            const user = getUser(users, user_id);
             const pClass = user_id == myUserId ? 'text-right' : '';
             return (<p key={index} className={pClass}><span className='username'>{getUsername(user)}</span> : {message}</p>);
         } else {

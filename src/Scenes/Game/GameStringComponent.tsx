@@ -3,7 +3,7 @@ import getLabel from "../../Locale/GetLabel";
 import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
 import { CardSign } from "./Model/CardData";
 import { GameString } from "./Model/GameUpdate";
-import { LobbyContext } from "../Lobby/Lobby";
+import { LobbyContext, getUser } from "../Lobby/Lobby";
 import { getUsername } from "../Lobby/LobbyUser";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
@@ -46,8 +46,8 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
                     }
                 } else if ('player' in arg) {
                     if (arg.player) {
-                        const userid = getPlayer(table, arg.player).userid;
-                        const user = users.find(user => user.id === userid);
+                        const player = getPlayer(table, arg.player);
+                        const user = getUser(users, player.userid);
                         return <span className="player-name">{getUsername(user)}</span>;
                     } else {
                         return <span className="player-name unknown-name">{getLabel('ui', 'UNKNOWN_PLAYER')}</span>;
