@@ -30,6 +30,12 @@
     }
 }
 
+@media (min-width:960px) {
+    .player-gold {
+        font-size: 16pt;
+    }
+}
+
 .player-view {
     display: inline-flex;
     flex-direction: column;
@@ -107,7 +113,6 @@
     transform: translateX(-50%);
     text-align: center;
     font-weight: bold;
-    font-size: 16pt;
     background-image: url('/media/icon_gold.png');
     background-repeat: no-repeat;
     background-size: contain;
