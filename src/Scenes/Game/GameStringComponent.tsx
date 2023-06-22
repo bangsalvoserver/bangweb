@@ -56,7 +56,7 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
             }
         }
         throw new Error('Invalid argument in format_args');
-    }), [users, table.players]);
+    }), [message, users, table.players]);
 
     if (message.format_str in gameStringRegistry) {
         const value = gameStringRegistry[message.format_str];
