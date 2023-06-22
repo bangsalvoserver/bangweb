@@ -51,6 +51,7 @@ export interface UserInfo {
 export interface LobbyAddUser {
     user_id: UserId;
     user: UserInfo;
+    is_read: boolean;
 }
 
 export interface LobbyRemoveUser {
@@ -60,6 +61,7 @@ export interface LobbyRemoveUser {
 export interface ChatMessage {
     user_id: UserId;
     message: string;
+    is_read: boolean;
 }
 
 export type ServerMessage =

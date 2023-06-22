@@ -23,10 +23,12 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [numReadMessages, setNumReadMessages] = useState(0);
 
+    const numUnreadMessages = messages.reduce((prev, { is_read }) => prev + +(!is_read), 0);
+
     useEffect(() => {
         if (isChatOpen) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            setNumReadMessages(messages.length);
+            setNumReadMessages(numUnreadMessages);
         }
     }, [isChatOpen, messages]);
 
@@ -79,9 +81,9 @@ export default function LobbyChat({ messages, myUserId }: ChatProps) {
                         c0.192-0.385,0.116-0.849-0.188-1.153C57.753,46.753,56.403,42.619,55.894,37.042z"/>
                     </g>
                 </svg>
-                { numReadMessages < messages.length &&
+                { numReadMessages < numUnreadMessages &&
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-white font-bold bg-red-600 rounded-full w-5 h-5">
-                        {messages.length - numReadMessages}
+                        {numUnreadMessages - numReadMessages}
                     </div>}
             </button>
             <div className='lobby-chat-box'>
