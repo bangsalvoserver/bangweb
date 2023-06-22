@@ -1,3 +1,4 @@
+import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayingSelector, TargetSelector, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
@@ -16,6 +17,10 @@ export function getEquipTarget(card: Card): PlayerFilter[] {
 
 export function getCardColor(card: Card): CardColor {
     return isCardKnown(card) ? card.cardData.color : 'none';
+}
+
+export function getCardSign(card: Card): CardSign {
+    return isCardKnown(card) ? card.cardData.sign : {rank: 'none', suit: 'none'};
 }
 
 export function isEquipCard(card: Card): boolean {
@@ -157,54 +162,52 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     if (filter.includes('bronco') && !cardHasTag(target, 'bronco')) return false;
     if (filter.includes('catbalou_panic') && !cardHasTag(target, 'cat_balou') && !cardHasTag(target, 'panic')) return false;
 
-    if (isCardKnown(target)) {
-        const color = target.cardData.color;
-        if (filter.includes('blue') && color != 'blue') return false;
-        if (filter.includes('train') && color != 'train') return false;
-        if (filter.includes('nottrain') && color == 'train') return false;
-        if (filter.includes('blue_or_train') && color != 'blue' && color != 'train') return false;
-        if (filter.includes('black') != (color == 'black')) return false;
+    const color = getCardColor(target);
+    if (filter.includes('blue') && color != 'blue') return false;
+    if (filter.includes('train') && color != 'train') return false;
+    if (filter.includes('nottrain') && color == 'train') return false;
+    if (filter.includes('blue_or_train') && color != 'blue' && color != 'train') return false;
+    if (filter.includes('black') != (color == 'black')) return false;
 
-        const sign = target.cardData.sign;
-        if (filter.includes('hearts') && sign.suit != 'hearts') return false;
-        if (filter.includes('diamonds') && sign.suit != 'diamonds') return false;
-        if (filter.includes('clubs') && sign.suit != 'clubs') return false;
-        if (filter.includes('spades') && sign.suit != 'spades') return false;
+    const sign = getCardSign(target);
+    if (filter.includes('hearts') && sign.suit != 'hearts') return false;
+    if (filter.includes('diamonds') && sign.suit != 'diamonds') return false;
+    if (filter.includes('clubs') && sign.suit != 'clubs') return false;
+    if (filter.includes('spades') && sign.suit != 'spades') return false;
 
-        if (filter.includes('two_to_nine')) {
-            switch (sign.rank) {
-            case 'rank_2':
-            case 'rank_3':
-            case 'rank_4':
-            case 'rank_5':
-            case 'rank_6':
-            case 'rank_7':
-            case 'rank_8':
-            case 'rank_9':
-                break;
-            default:
-                return false;
-            }
+    if (filter.includes('two_to_nine')) {
+        switch (sign.rank) {
+        case 'rank_2':
+        case 'rank_3':
+        case 'rank_4':
+        case 'rank_5':
+        case 'rank_6':
+        case 'rank_7':
+        case 'rank_8':
+        case 'rank_9':
+            break;
+        default:
+            return false;
         }
+    }
 
-        if (filter.includes('ten_to_ace')) {
-            switch (sign.rank) {
-            case 'rank_10':
-            case 'rank_J':
-            case 'rank_Q':
-            case 'rank_K':
-            case 'rank_A':
-                break;
-            default:
-                return false;
-            }
+    if (filter.includes('ten_to_ace')) {
+        switch (sign.rank) {
+        case 'rank_10':
+        case 'rank_J':
+        case 'rank_Q':
+        case 'rank_K':
+        case 'rank_A':
+            break;
+        default:
+            return false;
         }
+    }
 
-        if (filter.includes('origin_card_suit') && isResponse(selector)) {
-            if (!selector.request.origin_card) return false;
-            const reqOriginCard = getCard(table, selector.request.origin_card);
-            return isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit == sign.suit;
-        }
+    if (filter.includes('origin_card_suit') && isResponse(selector)) {
+        if (!selector.request.origin_card) return false;
+        const reqOriginCard = getCard(table, selector.request.origin_card);
+        return isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit == sign.suit;
     }
 
     if (filter.includes('selection') && target.pocket?.name != 'selection') return false;
