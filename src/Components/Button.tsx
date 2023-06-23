@@ -26,7 +26,6 @@ export default function Button({ className, color, type, onClick, children }: Bu
             font-bold
             py-1
             px-4
-            m-2
             rounded-md
             focus:outline-none
             focus:ring-2

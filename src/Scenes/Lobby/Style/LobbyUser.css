@@ -6,6 +6,7 @@
     text-align: center;
     display: flex;
     align-items: center;
+    justify-items: center;
 }
 
 .flex-row .lobby-username {

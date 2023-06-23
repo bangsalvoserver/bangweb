@@ -40,3 +40,7 @@
     flex-direction: row;
     justify-content: center;
 }
+
+.prompt-buttons button {
+    margin: 0.3em;
+}

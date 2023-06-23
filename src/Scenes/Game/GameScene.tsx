@@ -6,16 +6,15 @@ import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import { CardTrackerImpl, PocketPositionMap } from "./Animations/CardTracker";
-import CardButtonView from "./CardButtonView";
 import CardChoiceView from "./CardChoiceView";
 import GameLogView from "./GameLogView";
-import GameStringComponent from "./GameStringComponent";
+import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTable";
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetSelector, isResponse, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
+import { TargetSelector, isCardCurrent, isResponse, newTargetSelector, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./Model/TargetSelector";
 import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
@@ -118,18 +117,6 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     </div>
   );
 
-  const statusText = isResponse(selector) ? <GameStringComponent message={selector.request.status_text} /> : null;
-  
-  const gameOverStatus = () => {
-    if (myUserId == lobbyOwner) {
-      return (
-        <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
-      );
-    } {
-      return <>{getLabel('ui', 'STATUS_GAME_OVER')}</>;
-    }
-  };
-
   const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
     const user = getUser(users, player.userid);
@@ -142,13 +129,42 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     </div>;
   });
 
-  const buttonRow = table.pockets.button_row.map(id => {
+  const statusText = isResponse(selector) && <GameStringComponent message={selector.request.status_text} />;
+
+  const buttonRow = table.pockets.button_row.flatMap(id => {
     const card = getCard(table, id);
-    return <CardButtonView key={id} card={card} onClickCard={() => onClickCard(card)} />;
-  });
+    const isCurrent = isCardCurrent(selector, card);
+    const isPlayable = selectorCanPlayCard(selector, card);
+    if (isCurrent || isPlayable) {
+      const color = isResponse(selector) ? 'red' : isCurrent ? 'blue' : 'green';
+      return (
+        <Button color={color} onClick={() => onClickCard(card)}>
+          <LocalizedCardName name={card.cardData.name} />
+        </Button>
+      );
+    } else {
+      return [];
+    }
+  })
 
   const confirmButton = selectorCanConfirm(selector) && <Button color='blue' onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</Button>;
   const undoButton = selectorCanUndo(selector) && <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>;
+
+  const statusBar = (() => {
+    if (isGameOver) {
+      return <div className="status-bar">{
+        myUserId == lobbyOwner
+          ? <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
+          : getLabel('ui', 'STATUS_GAME_OVER')
+        }</div>;
+    } else if (statusText || buttonRow.length !== 0 || confirmButton || undoButton ) {
+      return <div className="status-bar">
+        { statusText}{ buttonRow }{ confirmButton }{ undoButton }
+      </div>
+    } else {
+      return null;
+    }
+  })();
 
   return (
     <GameTableContext.Provider value={table}>
@@ -160,12 +176,10 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
             </div>
             { trainPockets }
           </div>
-          <div className="status-text">
-            { isGameOver ? gameOverStatus() : <>{ statusText }{ buttonRow }{ confirmButton }{ undoButton }</> }
-          </div>
           <div className="player-grid" num-players={table.alive_players.length}>
             { playerViews }
           </div>
+          { statusBar }
           { selectionPocket }
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
           <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
