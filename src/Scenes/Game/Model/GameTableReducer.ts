@@ -1,4 +1,4 @@
-import { group } from "../../../Utils/ArrayUtils";
+import { group, subtract } from "../../../Utils/ArrayUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
@@ -54,7 +54,10 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
 
     // Changes the order of how players are seated
     player_order ({ players }) {
-        return { ...this, alive_players: rotatePlayers(players, this.self_player, this.alive_players.at(0)) };
+        return { ...this,
+            alive_players: rotatePlayers(players, this.self_player, this.alive_players.at(0)),
+            dead_players: this.dead_players.concat(...subtract(this.alive_players, players))
+        };
     },
 
     // Changes a player's hp
@@ -94,13 +97,6 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
 
     // Changes a player's status
     player_status ({ player, flags, range_mod, weapon_range, distance_mod }) {
-        let newAlivePlayers = this.alive_players;
-        let newDeadPlayers = this.dead_players;
-        if (flags.includes('removed') && newAlivePlayers.includes(player)) {
-            newAlivePlayers = newAlivePlayers.filter(id => id !== player);
-            newDeadPlayers = newDeadPlayers.concat(player);
-        }
-
         return {
             ...this,
             players: editById(this.players, player, p => ({
@@ -108,9 +104,7 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
                     ...p.status,
                     flags, range_mod, weapon_range, distance_mod
                 }
-            })),
-            alive_players: newAlivePlayers,
-            dead_players: newDeadPlayers
+            }))
         };
     },
 
