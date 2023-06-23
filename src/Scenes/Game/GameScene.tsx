@@ -1,15 +1,14 @@
-import { ReactNode, createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { UserId } from "../../Messages/ServerMessage";
-import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
+import { useMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import { CardTrackerImpl } from "./Animations/CardTracker";
 import CardButtonView from "./CardButtonView";
 import CardChoiceView from "./CardChoiceView";
-import CountPocket from "./Pockets/CountPocket";
+import GameLogView from "./GameLogView";
 import GameStringComponent from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTable";
@@ -20,13 +19,13 @@ import { TargetSelector, isResponse, newTargetSelector, selectorCanConfirm, sele
 import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
+import CountPocket from "./Pockets/CountPocket";
 import PocketView, { PocketPosition, PocketPositionMap } from "./Pockets/PocketView";
+import TrainView from "./Pockets/TrainView";
 import PromptView from "./PromptView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import TrainView from "./Pockets/TrainView";
-import GameLogView from "./GameLogView";
 
 const FRAMERATE = 60;
 
@@ -48,13 +47,13 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs));
   useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
 
-  const pocketPositions = useRefLazy(() => new Map<PocketType, PocketPosition>());
-  const playerPositions = useRefLazy(() => new Map<PlayerId, PocketPositionMap>());
+  const pocketPositions = useMapRef<PocketType, PocketPosition>();
+  const playerPositions = useMapRef<PlayerId, PocketPositionMap>();
   const cubesRef = useRef<HTMLDivElement>(null);
 
   const isGameOver = table.status.flags.includes('game_over');
   
-  const getTracker = () => new CardTrackerImpl(table.status.scenario_holders, pocketPositions.current, playerPositions.current, cubesRef.current);
+  const getTracker = () => new CardTrackerImpl(table.status.scenario_holders, pocketPositions, playerPositions, cubesRef.current);
 
   const isClickAllowed = () => {
     return !isGameOver
@@ -75,20 +74,20 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
     <div className="inline-block relative">
       <div className="absolute">
-        <CountPocket noCount ref={setMapRef(pocketPositions, 'shop_discard')} cards={table.pockets.shop_discard} />
+        <CountPocket noCount ref={pocketPositions.set('shop_discard')} cards={table.pockets.shop_discard} />
       </div>
-      <CountPocket ref={setMapRef(pocketPositions, 'shop_deck')} cards={table.pockets.shop_deck} />
+      <CountPocket ref={pocketPositions.set('shop_deck')} cards={table.pockets.shop_deck} />
     </div>
-    <PocketView ref={setMapRef(pocketPositions, 'shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
+    <PocketView ref={pocketPositions.set('shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
   </> : null;
 
   const trainPockets = table.pockets.stations.length != 0 && (
     <div className="train-row m-auto">
       <div className="train-row-inner">
-        <CountPocket ref={setMapRef(pocketPositions, 'train_deck')} cards={table.pockets.train_deck} />
+        <CountPocket ref={pocketPositions.set('train_deck')} cards={table.pockets.train_deck} />
         <div className="train-stations-container">
-          <PocketView ref={setMapRef(pocketPositions, 'stations')} cards={table.pockets.stations} onClickCard={onClickCard} />
-          <TrainView ref={setMapRef(pocketPositions, 'train')} onClickCard={onClickCard} />
+          <PocketView ref={pocketPositions.set('stations')} cards={table.pockets.stations} onClickCard={onClickCard} />
+          <TrainView ref={pocketPositions.set('train')} onClickCard={onClickCard} />
         </div>
       </div>
     </div>
@@ -102,20 +101,20 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   </div>;
 
   const mainDeck = <>
-    <CountPocket noCount ref={setMapRef(pocketPositions, 'discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
-    <CountPocket ref={setMapRef(pocketPositions, 'main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
+    <CountPocket noCount ref={pocketPositions.set('discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
+    <CountPocket ref={pocketPositions.set('main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
   </>;
 
   const scenarioCards = <>
     { table.pockets.scenario_card.length != 0 &&
-        <CountPocket noCount ref={setMapRef(pocketPositions, 'scenario_card')} cards={table.pockets.scenario_card} onClickCard={onClickCard} /> }
+        <CountPocket noCount ref={pocketPositions.set('scenario_card')} cards={table.pockets.scenario_card} onClickCard={onClickCard} /> }
     { table.pockets.wws_scenario_card.length != 0 && 
-        <CountPocket noCount ref={setMapRef(pocketPositions, 'wws_scenario_card')} cards={table.pockets.wws_scenario_card} onClickCard={onClickCard} /> }
+        <CountPocket noCount ref={pocketPositions.set('wws_scenario_card')} cards={table.pockets.wws_scenario_card} onClickCard={onClickCard} /> }
   </>;
 
   const selectionPocket = table.pockets.selection.length != 0 && (
     <div className="selection-view whitespace-nowrap">
-      <PocketView ref={setMapRef(pocketPositions, 'selection')} cards={table.pockets.selection} onClickCard={onClickCard} />
+      <PocketView ref={pocketPositions.set('selection')} cards={table.pockets.selection} onClickCard={onClickCard} />
     </div>
   );
 
@@ -136,7 +135,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     const user = getUser(users, player.userid);
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
-      <PlayerView ref={setMapRef(playerPositions, player_id)} user={user} player={player}
+      <PlayerView ref={playerPositions.set(player_id)} user={user} player={player}
         onClickPlayer={() => onClickPlayer(player)}
         onClickCard={onClickCard}
       />

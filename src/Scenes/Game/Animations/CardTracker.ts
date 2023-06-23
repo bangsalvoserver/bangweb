@@ -3,6 +3,7 @@ import { PlayerId } from "../Model/GameUpdate";
 import { Card, PocketRef, ScenarioHolders } from "../Model/GameTable";
 import { Rect, getDivRect } from "../../../Utils/Rect";
 import { PocketType } from "../Model/CardEnums";
+import { MapRef } from "../../../Utils/LazyRef";
 
 export interface CardTracker {
     getPlayerPockets: (player: PlayerId) => PocketPositionMap | undefined;
@@ -11,14 +12,14 @@ export interface CardTracker {
 }
 export class CardTrackerImpl implements CardTracker {
     private scenarioHolders: ScenarioHolders;
-    private pocketPositions: Map<PocketType, PocketPosition>;
-    private playerPositions: Map<PlayerId, PocketPositionMap>;
+    private pocketPositions: MapRef<PocketType, PocketPosition>;
+    private playerPositions: MapRef<PlayerId, PocketPositionMap>;
     private cubesRef: HTMLDivElement | null;
 
     constructor(
         scenarioHolders: ScenarioHolders,
-        pocketPositions: Map<PocketType, PocketPosition>,
-        playerPositions: Map<PlayerId, PocketPositionMap>,
+        pocketPositions: MapRef<PocketType, PocketPosition>,
+        playerPositions: MapRef<PlayerId, PocketPositionMap>,
         cubesRef: HTMLDivElement | null
     ) {
         this.scenarioHolders = scenarioHolders;

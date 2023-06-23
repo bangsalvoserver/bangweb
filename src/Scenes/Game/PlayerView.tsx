@@ -1,10 +1,11 @@
 import { CSSProperties, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
-import { setMapRef, useRefLazy } from "../../Utils/LazyRef";
-import { Point, Rect, getDivRect, getRectCenter } from "../../Utils/Rect";
+import { useMapRef } from "../../Utils/LazyRef";
+import { Rect, getDivRect } from "../../Utils/Rect";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { Card, GameTable, Player } from "./Model/GameTable";
+import { CardId } from "./Model/GameUpdate";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 import CharacterView from "./Pockets/CharacterView";
 import CountPocket from "./Pockets/CountPocket";
@@ -13,7 +14,6 @@ import ScenarioDeckView from "./Pockets/ScenarioDeckView";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { CardId } from "./Model/GameUpdate";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -76,15 +76,15 @@ function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivEleme
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
     const table = useContext(GameTableContext);
     const selector = useContext(TargetSelectorContext);
-    const positions = useRefLazy(() => new Map<PocketType, PocketPosition>());
+    const positions = useMapRef<PocketType, PocketPosition>();
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
 
-    useImperativeHandle(ref, () => positions.current);
+    useImperativeHandle(ref, () => positions);
 
     const setScrollPositions = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
         return (pocket: PocketPosition | null) => {
-            setMapRef(positions, key)(pocket ? clampedPocket(pocket, scrollRef) : null);
+            positions.set(key)(pocket ? clampedPocket(pocket, scrollRef) : null);
         }
     };
 
@@ -129,8 +129,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     const characterView = (
         <CharacterView ref={ref => {
-            setMapRef(positions, 'player_character')(ref?.characterRef.current ?? null);
-            setMapRef(positions, 'player_backup')(ref?.backupRef.current ?? null);
+            positions.set('player_character')(ref?.characterRef.current ?? null);
+            positions.set('player_backup')(ref?.backupRef.current ?? null);
         }} player={player} onClickCard={onClickCard} />
     );
 
@@ -141,8 +141,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     );
 
     const scenarioDecks = (<>
-        <ScenarioDeckView ref={setMapRef(positions, 'scenario_deck')} pocket='scenario_deck' player={player.id} />
-        <ScenarioDeckView ref={setMapRef(positions, 'wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
+        <ScenarioDeckView ref={positions.set('scenario_deck')} pocket='scenario_deck' player={player.id} />
+        <ScenarioDeckView ref={positions.set('wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
     </>);
 
     const playerIcons = (
@@ -181,7 +181,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         return <div className={classes.join(' ')} style={playerStyle} onClick={onClickPlayer}>
             <div className='player-top-row'>
                 { characterView } { roleView }
-                <CountPocket noSlice ref={setMapRef(positions, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                <CountPocket noSlice ref={positions.set('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 { scenarioDecks }
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
                 {playerIcons}
