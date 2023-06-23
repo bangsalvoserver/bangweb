@@ -152,11 +152,10 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   const statusBar = (() => {
     if (isGameOver) {
-      return <div className="status-bar">{
-        myUserId == lobbyOwner
-          ? <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>
-          : getLabel('ui', 'STATUS_GAME_OVER')
-        }</div>;
+      return <div className="status-bar">
+        { getLabel('ui', 'STATUS_GAME_OVER') }
+        { myUserId == lobbyOwner && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button> }
+      </div>;
     } else if (statusText || buttonRow.length !== 0 || confirmButton || undoButton ) {
       return <div className="status-bar">
         { statusText}{ buttonRow }{ confirmButton }{ undoButton }
