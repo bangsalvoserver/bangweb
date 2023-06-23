@@ -132,6 +132,13 @@
     transform: translateX(-50%);
 }
 
+.player-propic-self {
+    position: absolute;
+    width: calc(100% - var(--card-width-plus-margin));
+    bottom: var(--card-height-plus-margin);
+    right: 0;
+}
+
 .player-view .lobby-username {
     background-color: #ffffc0;
     border-radius: 0.3em 0.3em;

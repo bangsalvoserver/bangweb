@@ -136,7 +136,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     );
 
     const roleView = (
-        <div className='pocket-view-height'>
+        <div className='card-size'>
             <RoleView flipDuration={flipDuration} role={playerRole} />
         </div>
     );
@@ -159,7 +159,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     if (player.id == table.self_player) {
         return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={onClickPlayer}>
-            <div className='flex-grow'>
+            <div className="flex-grow">
                 <div className='player-pocket-scroll' ref={handRef}>
                     <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 </div>
@@ -167,15 +167,9 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
                 </div>
             </div>
-            <div className='flex flex-col relative justify-end'>
-                {playerIcons}
-                <div className='flex flex-row'>
-                    <div className="flex flex-col justify-end">{characterView}</div>
-                    <div className="player-bottom-row">
-                        <LobbyUser user={user} align='vertical' />
-                        { roleView } { scenarioDecks }
-                    </div>
-                </div>
+            <div className='flex flex-row items-end relative'>
+                <div className='player-propic-self'><LobbyUser user={user} align='vertical' /></div>
+                { characterView } { roleView } { scenarioDecks } { playerIcons } 
             </div>
         </div>
     } else {

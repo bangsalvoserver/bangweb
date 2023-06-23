@@ -9,6 +9,8 @@
 
 .count-pocket .card-view {
     position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .count-pocket-inner {

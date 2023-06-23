@@ -33,11 +33,11 @@ const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket
         const animation = table.animation.move_scenario_deck;
         if (animation.pocket == pocket) {
             if (animation.player == player) {
-                return <div className="pocket-view-height">
+                return <div className="card-size">
                     <CardSlot ref={slotRef} stretch='out' duration={animation.duration} />
                 </div>;
             } else if (holder == player) {
-                return <div className="pocket-view-height">
+                return <div className="card-size">
                     <CardSlot ref={slotRef} stretch='in' duration={animation.duration} />
                 </div>;
             }

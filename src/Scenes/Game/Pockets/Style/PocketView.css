@@ -3,21 +3,19 @@
     --card-height-plus-margin: calc(var(--card-height) + 2 * var(--card-margin));
 }
 
-.pocket-view, .pocket-view-height {
+.pocket-view, .card-size {
     display: inline-block;
     height: var(--card-height-plus-margin);
     vertical-align: middle;
 }
 
-.align-slot .pocket-view {
-    min-width: var(--card-width-plus-margin);
+.card-size {
+    width: var(--card-width-plus-margin);
 }
 
-.align-slot .card-slot {
-    position: absolute;
-    left: 50%;
-    bottom: var(--card-margin);
-    transform: translateX(-50%);
+.align-slot .pocket-view {
+    min-width: var(--card-width-plus-margin);
+    width: max-content;
 }
 
 .count-pocket .card-slot {
