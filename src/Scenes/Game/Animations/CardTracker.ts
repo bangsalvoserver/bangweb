@@ -1,25 +1,29 @@
-import { PocketPosition, PocketPositionMap } from "../Pockets/PocketView";
-import { PlayerId } from "../Model/GameUpdate";
-import { Card, PocketRef, ScenarioHolders } from "../Model/GameTable";
+import { MapRef } from "../../../Utils/LazyRef";
 import { Rect, getDivRect } from "../../../Utils/Rect";
 import { PocketType } from "../Model/CardEnums";
-import { MapRef } from "../../../Utils/LazyRef";
+import { Card, PocketRef, ScenarioHolders } from "../Model/GameTable";
+import { PlayerId } from "../Model/GameUpdate";
+import { PocketPosition } from "../Pockets/PocketView";
+
+export type PocketPositionMap = MapRef<PocketType, PocketPosition>;
+export type PlayerPositionMap = MapRef<PlayerId, PocketPositionMap>;
 
 export interface CardTracker {
-    getPlayerPockets: (player: PlayerId) => PocketPositionMap | undefined;
-    getTablePocket: (pocket: PocketRef) => PocketPosition | undefined;
+    getPlayerPockets: (player: PlayerId) => PocketPositionMap | null;
+    getTablePocket: (pocket: PocketRef) => PocketPosition | null;
     getCubesRect: (card: Card | undefined) => Rect | undefined;
 }
+
 export class CardTrackerImpl implements CardTracker {
     private scenarioHolders: ScenarioHolders;
-    private pocketPositions: MapRef<PocketType, PocketPosition>;
-    private playerPositions: MapRef<PlayerId, PocketPositionMap>;
+    private pocketPositions: PocketPositionMap;
+    private playerPositions: PlayerPositionMap;
     private cubesRef: HTMLDivElement | null;
 
     constructor(
         scenarioHolders: ScenarioHolders,
-        pocketPositions: MapRef<PocketType, PocketPosition>,
-        playerPositions: MapRef<PlayerId, PocketPositionMap>,
+        pocketPositions: PocketPositionMap,
+        playerPositions: PlayerPositionMap,
         cubesRef: HTMLDivElement | null
     ) {
         this.scenarioHolders = scenarioHolders;
@@ -37,15 +41,15 @@ export class CardTrackerImpl implements CardTracker {
             if (pocket.name == 'scenario_deck' || pocket.name == 'wws_scenario_deck') {
                 const holder = this.scenarioHolders[pocket.name];
                 if (holder) {
-                    return this.getPlayerPockets(holder)?.get(pocket.name);
+                    return this.getPlayerPockets(holder)?.get(pocket.name) ?? null;
                 }
             } else if ('player' in pocket) {
-                return this.getPlayerPockets(pocket.player)?.get(pocket.name);
+                return this.getPlayerPockets(pocket.player)?.get(pocket.name) ?? null;
             } else {
                 return this.pocketPositions.get(pocket.name);
             }
         }
-        return undefined;
+        return null;
     }
 
     getCubesRect(card: Card | undefined) {

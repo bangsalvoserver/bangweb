@@ -9,11 +9,12 @@ import { CardId } from "./Model/GameUpdate";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 import CharacterView from "./Pockets/CharacterView";
 import CountPocket from "./Pockets/CountPocket";
-import PocketView, { PocketPosition, PocketPositionMap } from "./Pockets/PocketView";
+import PocketView, { PocketPosition } from "./Pockets/PocketView";
 import ScenarioDeckView from "./Pockets/ScenarioDeckView";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import { PocketPositionMap } from "./Animations/CardTracker";
 
 export interface PlayerProps {
     user?: UserValue,

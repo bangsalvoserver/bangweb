@@ -8,13 +8,18 @@ export function useRefLazy<T>(init: () => T) {
     return ref;
 }
 
-export function useMapRef<Key, Value>() {
+export interface MapRef<Key, Value> {
+    get: (key: Key) => Value | null,
+    set: (key: Key) => (value: Value | null) => void
+};
+
+export function useMapRef<Key, Value>(): MapRef<Key, Value> {
     const mapRef = useRefLazy(() => new Map<Key, Value>());
 
     return {
-        get: (key: Key) => mapRef.current.get(key),
+        get: key => mapRef.current.get(key) ?? null,
 
-        set: (key: Key) => (value: Value | null) => {
+        set: key => value => {
             if (value) {
                 mapRef.current.set(key, value);
             } else {
@@ -23,5 +28,3 @@ export function useMapRef<Key, Value>() {
         }
     }
 }
-
-export type MapRef<Key, Value> = ReturnType<typeof useMapRef<Key,Value>>;

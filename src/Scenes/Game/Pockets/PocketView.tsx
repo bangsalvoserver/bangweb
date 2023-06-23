@@ -20,8 +20,6 @@ export interface PocketPosition {
     scrollToEnd: () => void;
 }
 
-export type PocketPositionMap = MapRef<PocketType, PocketPosition>;
-
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard }, ref) => {
     const table = useContext(GameTableContext);
     const pocketRef = useRef<HTMLDivElement>(null);
