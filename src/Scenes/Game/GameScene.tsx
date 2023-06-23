@@ -138,7 +138,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     if (isCurrent || isPlayable) {
       const color = isResponse(selector) ? 'red' : isCurrent ? 'blue' : 'green';
       return (
-        <Button color={color} onClick={() => onClickCard(card)}>
+        <Button key={id} color={color} onClick={() => onClickCard(card)}>
           <LocalizedCardName name={card.cardData.name} />
         </Button>
       );

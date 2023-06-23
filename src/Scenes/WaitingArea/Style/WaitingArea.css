@@ -18,14 +18,16 @@
 .lobby-element div:nth-child(1) {
     font-weight: bold;
     padding-right: 1em;
+    padding-bottom: 0.5em;
 }
 
 .lobby-element div:nth-child(2) {
-    width: 2.5em;
+    width: 2em;
 }
 
 .lobby-element div:nth-child(3) {
-    width: 5em;
+    width: 6em;
+    text-align: center;
 }
 
 .lobby-element div:nth-child(4) {
