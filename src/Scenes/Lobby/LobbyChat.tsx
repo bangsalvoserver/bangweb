@@ -64,10 +64,10 @@ export default function LobbyChat({ messages }: ChatProps) {
 
     return (
         <div ref={chatRef} className={`lobby-chat ${isChatOpen ? 'lobby-chat-open' : ''}`}>
-            <button className={`
-                w-12 h-12 relative
+            <button className='
+                w-8 h-8 md:w-12 md:h-12 relative
                 p-2 ml-1 text-sm rounded-full focus:outline-none focus:ring-2 text-gray-400 bg-gray-600 hover:bg-gray-700 focus:ring-gray-800
-            `} onClick={() => setIsChatOpen(!isChatOpen)}>
+            ' onClick={() => setIsChatOpen(!isChatOpen)}>
                 <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 60" xmlSpace="preserve">
                     <g>
                         <path d="M26,9.586C11.664,9.586,0,20.09,0,33c0,4.499,1.418,8.856,4.106,12.627c-0.51,5.578-1.86,9.712-3.813,11.666

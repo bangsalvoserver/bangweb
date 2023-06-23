@@ -6,6 +6,13 @@
     z-index: 20;
 }
 
+@media (max-width: 768px) {
+    .lobby-chat {
+        right: 0.5em;
+        bottom: 0.5em;
+    }
+}
+
 .lobby-chat-open {
     z-index: 21;
 }

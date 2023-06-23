@@ -6,6 +6,13 @@
     z-index: 20;
 }
 
+@media (max-width: 768px) {
+    .game-log-view {
+        right: 3em;
+        bottom: 0.5em;
+    }
+}
+
 .game-log-open {
     z-index: 21;
 }

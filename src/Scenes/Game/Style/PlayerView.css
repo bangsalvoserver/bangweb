@@ -12,6 +12,7 @@
 @media (max-width:1200px) {
     .player-view {
         --profile-pic-size: 25px;
+        padding: 0.1em !important;
     }
 
     .player-view .lobby-user {
@@ -21,7 +22,8 @@
     :root {
         --player-icon-size: 20px;
         --player-gold-size: 20px;
-        --player-row-width: calc(var(--card-width) * 4);
+        --player-row-width: calc(var(--card-width) * 5);
+        --player-row-height: calc(var(--card-height) + 0.5em);
         --player-self-row-width: calc(var(--card-width) * 5);
     }
     
@@ -47,7 +49,6 @@
     
     border-radius: 0.8em;
     padding: 0.5em;
-    margin: 0.5em;
     white-space: nowrap;
 }
 
