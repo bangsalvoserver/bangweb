@@ -29,7 +29,7 @@ export default function ConnectScene({ username, setUsername }: ConnectProps) {
     p-4
     '
     >{getLabel('ui', 'APP_TITLE')}</h1>
-    <label htmlFor="username" className="text-lg font-medium mb-2">{getLabel('ui', 'LABEL_USERNAME')}</label>
+    <label htmlFor="username" className="text-lg font-medium">{getLabel('ui', 'LABEL_USERNAME')}</label>
     <input
       className="
       border-2
@@ -40,6 +40,7 @@ export default function ConnectScene({ username, setUsername }: ConnectProps) {
       focus:outline-none
       focus:ring-2
       focus:ring-blue-500
+      m-2
       "
       type="text"
       id="username"

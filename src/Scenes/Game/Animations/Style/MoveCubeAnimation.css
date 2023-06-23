@@ -1,5 +1,5 @@
 .move-cubes-animation {
-    z-index: 2;
+    z-index: 15;
     --total-delay: calc(var(--duration) * 0.2);
     --delay-per-cube: calc(var(--total-delay) / var(--num-cubes));
 }
