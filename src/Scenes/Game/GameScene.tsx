@@ -100,7 +100,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   </div>;
 
   const mainDeck = <>
-    <CountPocket noCount ref={pocketPositions.set('discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
+    <CountPocket slice={10} noCount ref={pocketPositions.set('discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
     <CountPocket ref={pocketPositions.set('main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
   </>;
 

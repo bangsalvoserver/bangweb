@@ -176,7 +176,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         return <div className={classes.join(' ')} style={playerStyle} onClick={onClickPlayer}>
             <div className='player-top-row'>
                 { characterView } { roleView }
-                <CountPocket noSlice ref={positions.set('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                <CountPocket slice={0} ref={positions.set('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 { scenarioDecks }
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
                 {playerIcons}

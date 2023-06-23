@@ -9,11 +9,11 @@ import "./Style/CountPocket.css";
 export interface CountPocketProps {
     cards: CardId[];
     onClickCard?: (card: Card) => void;
+    slice?: number;
     noCount?: boolean;
-    noSlice?: boolean;
 }
 
-const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ cards, onClickCard, noCount, noSlice }, ref) => {
+const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ cards, onClickCard, slice, noCount }, ref) => {
     const table = useContext(GameTableContext);
 
     const position = useRef<PocketPosition>(null);
@@ -32,7 +32,7 @@ const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ cards, onCli
     } : undefined;
 
     return (<div className='count-pocket' onClick={handleClickLastCard}>
-        <PocketView ref={position} cards={ noSlice ? cards : cards.slice(-2)} />
+        <PocketView ref={position} cards={ cards.slice(-(slice ?? 2))} />
         {!noCount && numCards > 0 ? <div className="count-pocket-inner">{numCards}</div> : null}
     </div>);
 });
