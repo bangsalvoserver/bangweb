@@ -1,6 +1,6 @@
 :root {
-    --player-row-width: calc(var(--card-width) * 6);
-    --player-self-row-width: calc(var(--card-width) * 8);
+    --player-row-width: calc(var(--card-width) * 6.5);
+    --player-self-width: calc(var(--card-width) * 11);
     --player-row-height: calc(var(--card-height) + 1.5em);
     --player-icon-size: 32px;
     --player-gold-size: 32px;
@@ -24,7 +24,7 @@
         --player-gold-size: 20px;
         --player-row-width: calc(var(--card-width) * 5);
         --player-row-height: calc(var(--card-height) + 0.5em);
-        --player-self-row-width: calc(var(--card-width) * 7);
+        --player-self-width: calc(var(--card-width) * 9.5);
     }
     
     .player-gold {
@@ -50,14 +50,12 @@
     border-radius: 0.8em;
     padding: 0.5em;
     white-space: nowrap;
+    width: var(--player-row-width);
 }
 
 .player-view-self {
     flex-direction: row;
-}
-
-.player-view-self .player-pocket-scroll {
-    width: var(--player-self-row-width);
+    width: var(--player-self-width);
 }
 
 .current-turn {
@@ -73,7 +71,7 @@
 }
 
 .player-pocket-scroll {
-    width: var(--player-row-width);
+    width: 100%;
     height: var(--player-row-height);
 
     text-align: center;

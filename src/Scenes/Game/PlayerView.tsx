@@ -159,7 +159,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     if (player.id == table.self_player) {
         return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={onClickPlayer}>
-            <div>
+            <div className='flex-grow'>
                 <div className='player-pocket-scroll' ref={handRef}>
                     <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 </div>
