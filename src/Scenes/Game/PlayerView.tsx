@@ -8,7 +8,7 @@ import { Card, GameTable, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 import CharacterView from "./Pockets/CharacterView";
-import CountPocket from "./Pockets/CountPocket";
+import StackPocket from "./Pockets/StackPocket";
 import PocketView, { PocketPosition } from "./Pockets/PocketView";
 import ScenarioDeckView from "./Pockets/ScenarioDeckView";
 import RoleView from "./RoleView";
@@ -83,9 +83,15 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     useImperativeHandle(ref, () => positions);
 
+    const setPos = (pocket: PocketType) => {
+        return (value: PocketPosition | null) => {
+            positions.set(pocket, value);
+        };
+    };
+
     const setScrollPositions = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
         return (pocket: PocketPosition | null) => {
-            positions.set(key)(pocket ? clampedPocket(pocket, scrollRef) : null);
+            positions.set(key, pocket ? clampedPocket(pocket, scrollRef) : null);
         }
     };
 
@@ -130,8 +136,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     const characterView = (
         <CharacterView ref={ref => {
-            positions.set('player_character')(ref?.characterRef.current ?? null);
-            positions.set('player_backup')(ref?.backupRef.current ?? null);
+            positions.set('player_character', ref?.characterRef.current ?? null);
+            positions.set('player_backup', ref?.backupRef.current ?? null);
         }} player={player} onClickCard={onClickCard} />
     );
 
@@ -142,8 +148,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     );
 
     const scenarioDecks = (<>
-        <ScenarioDeckView ref={positions.set('scenario_deck')} pocket='scenario_deck' player={player.id} />
-        <ScenarioDeckView ref={positions.set('wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
+        <ScenarioDeckView ref={setPos('scenario_deck')} pocket='scenario_deck' player={player.id} />
+        <ScenarioDeckView ref={setPos('wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
     </>);
 
     const playerIcons = (
@@ -176,7 +182,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         return <div className={classes.join(' ')} style={playerStyle} onClick={onClickPlayer}>
             <div className='player-top-row'>
                 { characterView } { roleView }
-                <CountPocket slice={0} ref={positions.set('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                <StackPocket showCount slice={0} ref={setPos('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 { scenarioDecks }
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
                 {playerIcons}

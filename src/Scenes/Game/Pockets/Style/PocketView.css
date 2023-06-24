@@ -18,7 +18,7 @@
     width: max-content;
 }
 
-.count-pocket .card-slot {
+.stack-pocket .card-slot {
     margin: unset;
     position: absolute;
     left: 50%;

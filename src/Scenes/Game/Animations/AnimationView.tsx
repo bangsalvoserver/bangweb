@@ -27,8 +27,8 @@ export default function AnimationView({ getTracker }: AnimationProps) {
             return <MoveCubeAnimation
                 tracker={getTracker()}
                 num_cubes={animation.num_cubes}
-                origin_card={animation.origin_card ? getCard(table, animation.origin_card) : undefined}
-                target_card={animation.target_card ? getCard(table, animation.target_card) : undefined}
+                origin_card={animation.origin_card ? getCard(table, animation.origin_card) : null}
+                target_card={animation.target_card ? getCard(table, animation.target_card) : null}
                 duration={animation.duration}
             />;
         } else if ('deck_shuffle' in table.animation) {

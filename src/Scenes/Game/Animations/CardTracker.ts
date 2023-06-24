@@ -11,7 +11,7 @@ export type PlayerPositionMap = MapRef<PlayerId, PocketPositionMap>;
 export interface CardTracker {
     getPlayerPockets: (player: PlayerId) => PocketPositionMap | null;
     getTablePocket: (pocket: PocketRef) => PocketPosition | null;
-    getCubesRect: (card: Card | undefined) => Rect | undefined;
+    getCubesRect: (card: Card | null) => Rect | null;
 }
 
 export class CardTrackerImpl implements CardTracker {
@@ -52,11 +52,11 @@ export class CardTrackerImpl implements CardTracker {
         return null;
     }
 
-    getCubesRect(card: Card | undefined) {
+    getCubesRect(card: Card | null) {
         if (card) {
-            return this.getTablePocket(card.pocket)?.getCardRect(card.id);
+            return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
         } else {
-            return this.cubesRef ? getDivRect(this.cubesRef) : undefined;
+            return this.cubesRef ? getDivRect(this.cubesRef) : null;
         }
     }
 }

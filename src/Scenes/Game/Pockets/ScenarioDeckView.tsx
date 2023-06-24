@@ -4,8 +4,8 @@ import { GameTableContext } from "../GameScene";
 import { ScenarioDeckPocket } from "../Model/CardEnums";
 import { CardId, PlayerId } from "../Model/GameUpdate";
 import CardSlot from "./CardSlot";
-import PocketView, { PocketPosition } from "./PocketView";
-import CountPocket from "./CountPocket";
+import { PocketPosition } from "./PocketView";
+import StackPocket from "./StackPocket";
 
 export interface ScenarioDeckProps {
     pocket: ScenarioDeckPocket;
@@ -45,7 +45,7 @@ const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket
     }
     
     if (holder == player && table.pockets[pocket].length != 0) {
-        return <CountPocket noCount ref={deckPosition} cards={table.pockets[pocket]} />;
+        return <StackPocket showCount ref={deckPosition} cards={table.pockets[pocket]} />;
     }
     
     return null;

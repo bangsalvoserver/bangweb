@@ -4,16 +4,16 @@ import { GameTableContext } from "../GameScene";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import PocketView, { PocketPosition } from "./PocketView";
-import "./Style/CountPocket.css";
+import "./Style/StackPocket.css";
 
-export interface CountPocketProps {
+export interface StackPocketProps {
     cards: CardId[];
     onClickCard?: (card: Card) => void;
     slice?: number;
-    noCount?: boolean;
+    showCount?: boolean;
 }
 
-const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ cards, onClickCard, slice, noCount }, ref) => {
+const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onClickCard, slice, showCount }, ref) => {
     const table = useContext(GameTableContext);
 
     const position = useRef<PocketPosition>(null);
@@ -31,10 +31,10 @@ const CountPocket = forwardRef<PocketPosition, CountPocketProps>(({ cards, onCli
         onClickCard(getCard(table, cards.at(-1)!));
     } : undefined;
 
-    return (<div className='count-pocket' onClick={handleClickLastCard}>
+    return (<div className='stack-pocket' onClick={handleClickLastCard}>
         <PocketView ref={position} cards={ cards.slice(-(slice ?? 2))} />
-        {!noCount && numCards > 0 ? <div className="count-pocket-inner">{numCards}</div> : null}
+        {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
     </div>);
 });
 
-export default CountPocket;
+export default StackPocket;

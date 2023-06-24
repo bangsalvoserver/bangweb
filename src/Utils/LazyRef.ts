@@ -10,7 +10,7 @@ export function useRefLazy<T>(init: () => T) {
 
 export interface MapRef<Key, Value> {
     get: (key: Key) => Value | null,
-    set: (key: Key) => (value: Value | null) => void
+    set: (key: Key, value: Value | null) => void
 };
 
 export function useMapRef<Key, Value>(): MapRef<Key, Value> {
@@ -19,7 +19,7 @@ export function useMapRef<Key, Value>(): MapRef<Key, Value> {
     return {
         get: key => mapRef.current.get(key) ?? null,
 
-        set: key => value => {
+        set: (key, value) => {
             if (value) {
                 mapRef.current.set(key, value);
             } else {

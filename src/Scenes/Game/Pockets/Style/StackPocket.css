@@ -1,19 +1,19 @@
-.count-pocket {
+.stack-pocket {
     display: inline-block;
     position: relative;
 }
 
-.count-pocket .pocket-view {
+.stack-pocket .pocket-view {
     width: var(--card-width-plus-margin);
 }
 
-.count-pocket .card-view {
+.stack-pocket .card-view {
     position: absolute;
     left: 0;
     top: 0;
 }
 
-.count-pocket-inner {
+.pocket-count {
     background-color: rgba(255, 255, 255, 0.8);
     font-weight: bold;
     padding: 2px 5px;

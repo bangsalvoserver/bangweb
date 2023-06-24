@@ -9,8 +9,8 @@ import { CardTracker } from "./CardTracker";
 export interface MoveCubeProps {
     tracker: CardTracker;
     num_cubes: number;
-    origin_card?: Card;
-    target_card?: Card;
+    origin_card: Card | null;
+    target_card: Card | null;
     duration: Milliseconds;
 }
 

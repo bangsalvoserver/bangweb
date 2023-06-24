@@ -26,6 +26,12 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
     const cardsEnd = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
 
+    const setPos = (id: CardId) => {
+        return (value: CardRef | null) => {
+            cardRefs.set(id, value);
+        };
+    };
+
     useImperativeHandle(ref, () => ({
         getPocketRect: () => pocketRef.current ? getDivRect(pocketRef.current) : undefined,
         getCardRect: (card: CardId) => cardRefs.get(card)?.getRect(),
@@ -36,16 +42,16 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
         { cards.map(id => {
             if (id == CARD_SLOT_ID) {
                 if (table.animation && 'move_card' in table.animation) {
-                    return <CardSlot ref={cardRefs.set(id)} key={id} stretch='in' duration={table.animation.move_card.duration} />
+                    return <CardSlot ref={setPos(id)} key={id} stretch='in' duration={table.animation.move_card.duration} />
                 } else {
                     return null;
                 }
             } else {
                 const card = getCard(table, id);
                 if (card.animation && 'move_card' in card.animation) {
-                    return <CardSlot ref={cardRefs.set(id)} key={id} stretch='out' duration={card.animation.move_card.duration} />
+                    return <CardSlot ref={setPos(id)} key={id} stretch='out' duration={card.animation.move_card.duration} />
                 } else {
-                    return <CardView ref={cardRefs.set(id)} key={id} card={card} onClickCard={onClickCard ? () => onClickCard(card) : undefined} />
+                    return <CardView ref={setPos(id)} key={id} card={card} onClickCard={onClickCard ? () => onClickCard(card) : undefined} />
                 }
             }
         }) }
