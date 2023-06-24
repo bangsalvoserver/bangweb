@@ -1,0 +1,24 @@
+.station-card {
+    display: inline-block;
+    margin: var(--card-margin);
+}
+
+.stations-view {
+    display: inline-block;
+    vertical-align: middle;
+    height: var(--card-height-plus-margin);
+}
+
+.station-card {
+    filter: drop-shadow(0px 0px 4px var(--card-highlight-color));
+    transform: translateY(-5%) scale(120%);
+}
+
+.station-card-img {
+    background-color: white;
+    width: var(--card-width);
+    height: var(--card-height);
+
+    mask-image: url('/media/mask_station.svg');
+    mask-size: 100%;
+}

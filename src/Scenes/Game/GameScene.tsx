@@ -25,6 +25,7 @@ import PromptView from "./PromptView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
+import StationsView from "./Pockets/StationsView";
 
 const FRAMERATE = 60;
 
@@ -88,7 +89,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
       <div className="train-row-inner">
         <StackPocket showCount ref={setPos('train_deck')} cards={table.pockets.train_deck} />
         <div className="train-stations-container">
-          <PocketView ref={setPos('stations')} cards={table.pockets.stations} onClickCard={onClickCard} />
+          <StationsView cards={table.pockets.stations} onClickCard={onClickCard} />
           <TrainView ref={setPos('train')} onClickCard={onClickCard} />
         </div>
       </div>

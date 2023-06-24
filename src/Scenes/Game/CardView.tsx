@@ -22,7 +22,7 @@ export function getCardUrl(path: string) {
     return `${Env.cardsBaseUrl}/cards/${path}.png`;
 }
 
-function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
+export function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
     if (isSelectionPlaying(selector)) {
         if (isCardSelected(selector, card)) {
             return 'card-selected';
