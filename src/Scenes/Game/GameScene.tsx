@@ -80,7 +80,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     <PocketView ref={pocketPositions.set('shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
   </> : null;
 
-  const trainPockets = table.pockets.stations.length != 0 && (
+  const trainPockets = (table.pockets.stations.length !== 0 || table.pockets.train_deck.length !== 0) && (
     <div className="train-row m-auto">
       <div className="train-row-inner">
         <CountPocket ref={pocketPositions.set('train_deck')} cards={table.pockets.train_deck} />
