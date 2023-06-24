@@ -4,7 +4,7 @@ import { useInterval } from "../../../Utils/UseInterval";
 import { Card } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import "./Style/MoveCubeAnimation.css";
-import { CardTracker } from "./CardTracker";
+import { CardTracker } from "../Model/CardTracker";
 
 export interface MoveCubeProps {
     tracker: CardTracker;

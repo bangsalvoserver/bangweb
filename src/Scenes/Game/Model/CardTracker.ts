@@ -1,9 +1,13 @@
 import { MapRef } from "../../../Utils/LazyRef";
 import { Rect, getDivRect } from "../../../Utils/Rect";
-import { PocketType } from "../Model/CardEnums";
-import { Card, PocketRef, ScenarioHolders } from "../Model/GameTable";
-import { PlayerId } from "../Model/GameUpdate";
-import { PocketPosition } from "../Pockets/PocketView";
+import { PocketType } from "./CardEnums";
+import { Card, PocketRef, ScenarioHolders } from "./GameTable";
+import { CardId, PlayerId } from "./GameUpdate";
+
+export interface PocketPosition {
+    getPocketRect: () => Rect | undefined;
+    getCardRect: (card: CardId) => Rect | undefined;
+}
 
 export type PocketPositionMap = MapRef<PocketType, PocketPosition>;
 export type PlayerPositionMap = MapRef<PlayerId, PocketPositionMap>;

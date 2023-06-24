@@ -1,7 +1,7 @@
 import { CSSProperties, useContext, useMemo, useReducer } from "react";
 import { getRectCenter } from "../../Utils/Rect";
 import { useInterval } from "../../Utils/UseInterval";
-import { CardTracker } from "./Animations/CardTracker";
+import { CardTracker } from "./Model/CardTracker";
 import CardView from "./CardView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { Card, getCard } from "./Model/GameTable";

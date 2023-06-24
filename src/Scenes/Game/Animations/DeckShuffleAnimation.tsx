@@ -6,7 +6,7 @@ import CardView from "../CardView";
 import { GameTableContext } from "../GameScene";
 import { getCard, newPocketRef } from "../Model/GameTable";
 import "./Style/DeckShuffleAnimation.css";
-import { CardTracker } from "./CardTracker";
+import { CardTracker } from "../Model/CardTracker";
 
 export interface DeckShuffleProps {
     tracker: CardTracker;

@@ -5,7 +5,7 @@ import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
 import MoveScenarioDeckAnimation from "./MoveScenarioDeckAnimation";
-import { CardTracker } from "./CardTracker";
+import { CardTracker } from "../Model/CardTracker";
 
 export interface AnimationProps {
     getTracker: () => CardTracker;

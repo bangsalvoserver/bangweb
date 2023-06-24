@@ -3,8 +3,9 @@ import { CARD_SLOT_ID } from "./CardSlot";
 import { GameTableContext } from "../GameScene";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
-import PocketView, { PocketPosition } from "./PocketView";
+import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
+import { PocketPosition } from "../Model/CardTracker";
 
 export interface StackPocketProps {
     cards: CardId[];

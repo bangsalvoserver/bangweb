@@ -5,7 +5,7 @@ import { useMapRef, useRefLazy } from "../../Utils/LazyRef";
 import { useInterval } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
-import { CardTrackerImpl, PocketPositionMap } from "./Animations/CardTracker";
+import { CardTrackerImpl, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
 import CardChoiceView from "./CardChoiceView";
 import GameLogView from "./GameLogView";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
@@ -19,7 +19,7 @@ import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAct
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import StackPocket from "./Pockets/StackPocket";
-import PocketView, { PocketPosition } from "./Pockets/PocketView";
+import PocketView from "./Pockets/PocketView";
 import TrainView from "./Pockets/TrainView";
 import PromptView from "./PromptView";
 import "./Style/GameScene.css";

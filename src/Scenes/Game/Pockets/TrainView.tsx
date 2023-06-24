@@ -1,8 +1,9 @@
 import { CSSProperties, forwardRef, useContext } from "react";
 import { Card } from "../Model/GameTable";
 import { GameTableContext } from "../GameScene";
-import PocketView, { PocketPosition } from "./PocketView";
+import PocketView from "./PocketView";
 import "./Style/TrainView.css";
+import { PocketPosition } from "../Model/CardTracker";
 
 export interface TrainProps {
     onClickCard: (card: Card) => void;

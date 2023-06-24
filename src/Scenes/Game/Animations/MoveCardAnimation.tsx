@@ -5,8 +5,7 @@ import CardView from "../CardView";
 import { Card, PocketRef } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import { CARD_SLOT_ID } from "../Pockets/CardSlot";
-import { PocketPosition } from "../Pockets/PocketView";
-import { CardTracker } from "./CardTracker";
+import { CardTracker } from "../Model/CardTracker";
 import "./Style/MoveCardAnimation.css";
 
 export interface MoveCardProps {

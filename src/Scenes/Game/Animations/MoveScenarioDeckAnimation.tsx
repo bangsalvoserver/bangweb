@@ -6,7 +6,7 @@ import { ScenarioDeckPocket } from "../Model/CardEnums";
 import { Card } from "../Model/GameTable";
 import { Milliseconds, PlayerId } from "../Model/GameUpdate";
 import "./Style/MoveCardAnimation.css";
-import { CardTracker } from "./CardTracker";
+import { CardTracker } from "../Model/CardTracker";
 
 export interface MoveScenarioDeckProps {
     tracker: CardTracker;

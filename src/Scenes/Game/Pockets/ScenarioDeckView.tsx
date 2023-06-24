@@ -4,8 +4,8 @@ import { GameTableContext } from "../GameScene";
 import { ScenarioDeckPocket } from "../Model/CardEnums";
 import { CardId, PlayerId } from "../Model/GameUpdate";
 import CardSlot from "./CardSlot";
-import { PocketPosition } from "./PocketView";
 import StackPocket from "./StackPocket";
+import { PocketPosition } from "../Model/CardTracker";
 
 export interface ScenarioDeckProps {
     pocket: ScenarioDeckPocket;

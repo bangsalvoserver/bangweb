@@ -1,6 +1,6 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
 import { MapRef, useMapRef } from "../../../Utils/LazyRef";
-import { Rect, getDivRect } from "../../../Utils/Rect";
+import { getDivRect } from "../../../Utils/Rect";
 import CardView, { CardRef } from "../CardView";
 import { GameTableContext } from "../GameScene";
 import { PocketType } from "../Model/CardEnums";
@@ -8,15 +8,11 @@ import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import CardSlot, { CARD_SLOT_ID } from "./CardSlot";
 import "./Style/PocketView.css";
+import { PocketPosition } from "../Model/CardTracker";
 
 export interface PocketProps {
     cards: CardId[];
     onClickCard?: (card: Card) => void;
-}
-
-export interface PocketPosition {
-    getPocketRect: () => Rect | undefined;
-    getCardRect: (card: CardId) => Rect | undefined;
 }
 
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard }, ref) => {
