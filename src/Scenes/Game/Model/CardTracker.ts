@@ -5,8 +5,8 @@ import { Card, PocketRef, ScenarioHolders } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 
 export interface PocketPosition {
-    getPocketRect: () => Rect | undefined;
-    getCardRect: (card: CardId) => Rect | undefined;
+    getPocketRect: () => Rect | null;
+    getCardRect: (card: CardId) => Rect | null;
 }
 
 export type PocketPositionMap = MapRef<PocketType, PocketPosition>;

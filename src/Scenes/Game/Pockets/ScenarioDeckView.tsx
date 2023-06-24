@@ -23,8 +23,8 @@ const ScenarioDeckView = forwardRef<PocketPosition, ScenarioDeckProps>(({ pocket
     useImperativeHandle(ref, () => {
         if (deckPosition.current) return deckPosition.current;
         return {
-            getPocketRect: () => slotRef.current?.getRect(),
-            getCardRect: (card: CardId) => undefined
+            getPocketRect: () => slotRef.current?.getRect() ?? null,
+            getCardRect: (card: CardId) => null
         };
     });
 

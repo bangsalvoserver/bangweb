@@ -27,8 +27,8 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
     };
 
     useImperativeHandle(ref, () => ({
-        getPocketRect: () => pocketRef.current ? getDivRect(pocketRef.current) : undefined,
-        getCardRect: (card: CardId) => cardRefs.get(card)?.getRect()
+        getPocketRect: () => pocketRef.current ? getDivRect(pocketRef.current) : null,
+        getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
     }));
 
     return <div ref={pocketRef} className='pocket-view'>

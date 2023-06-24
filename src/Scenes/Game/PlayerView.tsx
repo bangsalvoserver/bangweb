@@ -43,7 +43,7 @@ function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, play
     return null;
 }
 
-function clampCardRect(cardRect: Rect, pocketRect: Rect | undefined): Rect {
+function clampCardRect(cardRect: Rect, pocketRect: Rect | null): Rect {
     if (pocketRect) {
         const pocketLeft = pocketRect.x;
         const pocketRight = pocketRect.x + pocketRect.w;
@@ -59,15 +59,15 @@ function clampCardRect(cardRect: Rect, pocketRect: Rect | undefined): Rect {
 }
 
 function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivElement>): PocketPosition {
-    const getScrollRect = () => {
-        if (scrollRef.current) return getDivRect(scrollRef.current);
-    };
+    const getScrollRect = () => scrollRef.current ? getDivRect(scrollRef.current) : null;
     return {
         getPocketRect: getScrollRect,
         getCardRect: (card: CardId) => {
             const cardRect = pocket.getCardRect(card);
             if (cardRect) {
                 return clampCardRect(cardRect, getScrollRect());
+            } else {
+                return null;
             }
         }
     };
