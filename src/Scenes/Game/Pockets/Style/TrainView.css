@@ -1,12 +1,6 @@
 .train-row {
     vertical-align: middle;
-    padding-bottom: calc(var(--card-height) * 0.6);
-}
-
-@media (min-width: 960px) {
-    .train-row {
-        padding-top: 2em;
-    }
+    margin-bottom: calc(var(--card-height) * 0.6);
 }
 
 .train-stations-container {

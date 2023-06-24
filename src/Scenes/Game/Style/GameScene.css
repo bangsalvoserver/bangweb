@@ -23,16 +23,25 @@
 }
 
 .main-deck-row {
-    display: flex;
-    flex-direction: column;
-
-    margin: 2em auto;
-    vertical-align: middle;
+    text-align: center;
+    margin: 1em auto;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
     .main-deck-row {
-        margin: 3em auto;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: flex-start;
+        justify-content: space-around;
+        min-width: 50vw;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-deck-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
 
@@ -44,7 +53,7 @@
     }
 
     .main-deck-row {
-        margin: 1em auto;
+        margin-top: 0.5em;
     }
 }
 

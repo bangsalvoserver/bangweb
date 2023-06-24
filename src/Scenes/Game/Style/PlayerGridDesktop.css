@@ -8,6 +8,7 @@
         width: 100%;
         grid-template-columns: repeat(10, auto);
         grid-template-rows: none;
+        padding-bottom: 2em;
     }
 
     .player-grid[num-players="1"], .player-grid[num-players="2"], .player-grid[num-players="3"], .player-grid[num-players="4"] {

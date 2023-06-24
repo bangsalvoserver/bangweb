@@ -84,7 +84,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   </> : null;
 
   const trainPockets = (table.pockets.stations.length !== 0 || table.pockets.train_deck.length !== 0) && (
-    <div className="train-row m-auto">
+    <div className="train-row">
       <div className="train-row-inner">
         <StackPocket showCount ref={setPos('train_deck')} cards={table.pockets.train_deck} />
         <div className="train-stations-container">
@@ -173,7 +173,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
       <TargetSelectorContext.Provider value={selector}>
         <div className="game-scene">
           <div className="main-deck-row">
-            <div className="m-auto">
+            <div>
               { shopPockets } { tableCubes } { mainDeck } { scenarioCards }
             </div>
             { trainPockets }
