@@ -69,8 +69,7 @@ function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivEleme
             if (cardRect) {
                 return clampCardRect(cardRect, getScrollRect());
             }
-        },
-        scrollToEnd: pocket.scrollToEnd
+        }
     };
 }
 

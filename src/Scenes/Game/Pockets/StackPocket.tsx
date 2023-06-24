@@ -20,8 +20,7 @@ const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onCli
 
     useImperativeHandle(ref, () => ({
         getPocketRect: () => position.current?.getPocketRect(),
-        getCardRect: () => position.current?.getPocketRect(),
-        scrollToEnd: () => position.current?.scrollToEnd()
+        getCardRect: () => position.current?.getPocketRect()
     }));
 
     let numCards = cards.length;

@@ -17,13 +17,11 @@ export interface PocketProps {
 export interface PocketPosition {
     getPocketRect: () => Rect | undefined;
     getCardRect: (card: CardId) => Rect | undefined;
-    scrollToEnd: () => void;
 }
 
 const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard }, ref) => {
     const table = useContext(GameTableContext);
     const pocketRef = useRef<HTMLDivElement>(null);
-    const cardsEnd = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
 
     const setPos = (id: CardId) => {
@@ -34,8 +32,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
 
     useImperativeHandle(ref, () => ({
         getPocketRect: () => pocketRef.current ? getDivRect(pocketRef.current) : undefined,
-        getCardRect: (card: CardId) => cardRefs.get(card)?.getRect(),
-        scrollToEnd: () => cardsEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'auto' })
+        getCardRect: (card: CardId) => cardRefs.get(card)?.getRect()
     }));
 
     return <div ref={pocketRef} className='pocket-view'>
@@ -55,7 +52,6 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
                 }
             }
         }) }
-        <div className="inline invisible" ref={cardsEnd} />
     </div>;
 });
 
