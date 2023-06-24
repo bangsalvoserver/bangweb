@@ -104,7 +104,8 @@ export type TablePockets = Record<TablePocketType, CardId[]>;
 
 export type PlayerAnimation =
     { flipping_role: { role: PlayerRole } & Duration } |
-    { player_hp: { hp: number} & Duration };
+    { player_hp: { hp: number} & Duration } |
+    { player_death: Duration };
 
 export interface Player extends Id {
     userid: UserId;

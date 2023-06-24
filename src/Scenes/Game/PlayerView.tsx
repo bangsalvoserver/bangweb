@@ -130,6 +130,13 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                 '--duration': player.animation.player_hp.duration + 'ms'
             } as CSSProperties;
             classes.push('player-animation-hp');
+        } else if ('player_death' in player.animation) {
+            playerStyle = {
+                ...playerStyle,
+                '--duration': player.animation.player_death.duration + 'ms'
+            } as CSSProperties;
+            classes.push('player-animation-death');
+            // TODO css for player-animation-death
         }
     } else if (selectorPlayerClass) {
         classes.push(selectorPlayerClass);

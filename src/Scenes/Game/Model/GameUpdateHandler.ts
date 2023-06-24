@@ -90,7 +90,8 @@ export class GameUpdateHandler {
         },
 
         player_order (update) {
-            this.setAnimation(update, { player_order: update }); // TODO animazione
+            this.tableDispatch({ player_order: update });
+            this.setAnimation(update, { player_order_end: update });
         },
 
         player_hp (update) {

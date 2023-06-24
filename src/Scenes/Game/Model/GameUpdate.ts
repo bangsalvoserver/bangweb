@@ -162,6 +162,7 @@ export type GameUpdate =
     { remove_cards: RemoveCardsUpdate } |
     { player_add: PlayerAddUpdate } |
     { player_order: PlayerOrderUpdate & Duration } |
+    { player_order_end: PlayerOrderUpdate } |
     { player_hp: PlayerHpUpdate & Duration } |
     { player_gold: PlayerGoldUpdate } |
     { player_show_role: PlayerShowRoleUpdate & Duration } |
