@@ -11,7 +11,7 @@ import Env from "../../Model/Env";
 export interface CardProps {
     card: Card;
     showBackface?: boolean;
-    onClickCard?: () => void;
+    onClickCard?: (card: Card) => void;
 }
 
 export interface CardRef {
@@ -125,7 +125,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     }
 
     return (
-        <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard}>
+        <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard ? () => onClickCard(card) : undefined}>
             <div className="card-front">
                 <img className="card-view-img" src={cardImage ? getImageSrc(cardImage) : backfaceSrc}/>
                 {cardImage?.sign ? <div className="card-view-inner">

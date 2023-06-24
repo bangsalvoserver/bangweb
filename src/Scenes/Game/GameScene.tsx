@@ -60,18 +60,15 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   
   const getTracker = () => new CardTrackerImpl(table.status.scenario_holders, pocketPositions, playerPositions, cubesRef.current);
 
-  const isClickAllowed = () => {
-    return !isGameOver
+  const clickIsAllowed = !isGameOver
       && table.self_player !== undefined
-      && !handler.current.pendingUpdates()
       && !('playpickundo' in selector.prompt)
       && selector.selection.mode != 'finish';
-  };
 
-  const onClickCard = (card: Card) => { if (isClickAllowed()) handleClickCard(table, selector, selectorDispatch, card) };
-  const onClickPlayer = (player: Player) => { if (isClickAllowed()) handleClickPlayer(table, selector, selectorDispatch, player) };
-  const handleConfirm = () => { if (isClickAllowed()) selectorDispatch({ confirmPlay: {} }) };
-  const handleUndo = () => { if (isClickAllowed()) selectorDispatch({ undoSelection: {} }) };
+  const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selector, selectorDispatch, card) : undefined;
+  const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selector, selectorDispatch, player) : undefined;
+  const handleConfirm = clickIsAllowed ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
+  const handleUndo = clickIsAllowed ? () => selectorDispatch({ undoSelection: {} }) : undefined;
 
   useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [selector]);
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
@@ -129,7 +126,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
       <PlayerView ref={value => playerPositions.set(player_id, value)} user={user} player={player}
-        onClickPlayer={() => onClickPlayer(player)}
+        onClickPlayer={onClickPlayer}
         onClickCard={onClickCard}
       />
     </div>;
@@ -144,7 +141,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     if (isCurrent || isPlayable) {
       const color = isResponse(selector) ? 'red' : isCurrent ? 'blue' : 'green';
       return (
-        <Button key={id} color={color} onClick={() => onClickCard(card)}>
+        <Button key={id} color={color} onClick={onClickCard ? () => onClickCard(card) : undefined}>
           <LocalizedCardName name={card.cardData.name} />
         </Button>
       );

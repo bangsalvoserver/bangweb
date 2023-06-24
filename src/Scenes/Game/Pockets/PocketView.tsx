@@ -44,7 +44,7 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
                 if (card.animation && 'move_card' in card.animation) {
                     return <CardSlot ref={setPos(id)} key={id} stretch='out' duration={card.animation.move_card.duration} />
                 } else {
-                    return <CardView ref={setPos(id)} key={id} card={card} onClickCard={onClickCard ? () => onClickCard(card) : undefined} />
+                    return <CardView ref={setPos(id)} key={id} card={card} onClickCard={onClickCard} />
                 }
             }
         }) }

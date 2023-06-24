@@ -6,7 +6,7 @@ import "./Style/TrainView.css";
 import { PocketPosition } from "../Model/CardTracker";
 
 export interface TrainProps {
-    onClickCard: (card: Card) => void;
+    onClickCard?: (card: Card) => void;
 }
 
 const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) => {

@@ -19,8 +19,8 @@ import { PocketPosition, PocketPositionMap } from "./Model/CardTracker";
 export interface PlayerProps {
     user?: UserValue,
     player: Player,
-    onClickCard: (card: Card) => void;
-    onClickPlayer: () => void;
+    onClickCard?: (card: Card) => void;
+    onClickPlayer?: (player: Player) => void;
 }
 
 function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player) {
@@ -79,6 +79,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const positions = useMapRef<PocketType, PocketPosition>();
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
+
+    const handleClickPlayer = onClickPlayer ? () => onClickPlayer(player) : undefined;
 
     useImperativeHandle(ref, () => positions);
 
@@ -163,7 +165,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         </div>);
 
     if (player.id == table.self_player) {
-        return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={onClickPlayer}>
+        return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={handleClickPlayer}>
             <div className="flex-grow">
                 <div className='player-pocket-scroll' ref={handRef}>
                     <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
@@ -178,7 +180,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
             </div>
         </div>
     } else {
-        return <div className={classes.join(' ')} style={playerStyle} onClick={onClickPlayer}>
+        return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
             <div className='player-top-row'>
                 { characterView } { roleView }
                 <StackPocket showCount slice={0} ref={setPos('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />

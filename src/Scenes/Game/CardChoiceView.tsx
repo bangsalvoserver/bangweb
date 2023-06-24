@@ -11,14 +11,14 @@ import "./Style/CardChoiceView.css";
 
 export interface CardChoiceProps {
     getTracker: () => CardTracker;
-    onClickCard: (card: Card) => void;
+    onClickCard?: (card: Card) => void;
 }
 
 interface CardChoiceInnerProps {
     cards: Card[];
     anchor: Card;
     tracker: CardTracker;
-    onClickCard: (card: Card) => void;
+    onClickCard?: (card: Card) => void;
 }
 
 function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInnerProps) {
@@ -38,7 +38,7 @@ function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInne
         return (
             <div className="card-choice" style={cardChoiceStyle}>
                 <div className="card-choice-inner">
-                    {cards.map(card => <CardView key={card.id} card={card} onClickCard={() => onClickCard(card)} />)}
+                    {cards.map(card => <CardView key={card.id} card={card} onClickCard={onClickCard} />)}
                 </div>
             </div>
         );

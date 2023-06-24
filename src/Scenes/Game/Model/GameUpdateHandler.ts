@@ -6,7 +6,6 @@ import { GameAction } from "./GameAction";
 
 export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
-    pendingUpdates: () => boolean;
     sendGameAction: (action: GameAction) => void;
 }
 
@@ -46,11 +45,6 @@ export class GameUpdateHandler {
                 this.handleUpdate(update);
             }
         }
-    }
-
-    pendingUpdates() {
-        return this.animation !== undefined
-            || this.channel.pendingUpdates();
     }
 
     private setAnimation(update: Duration, endUpdate?: GameUpdate) {

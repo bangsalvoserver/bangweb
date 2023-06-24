@@ -5,7 +5,7 @@ import { PocketPosition } from "../Model/CardTracker";
 
 export interface CharacterProps {
     player: Player;
-    onClickCard: (card: Card) => void;
+    onClickCard?: (card: Card) => void;
 }
 
 export interface CharacterRef {
