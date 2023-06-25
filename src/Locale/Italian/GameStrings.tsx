@@ -147,7 +147,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     STATUS_MOST_WANTED_OTHER: (player, card) =>                             <>{card} contro {player}</>,
     STATUS_TRAIN_ROBBERY: (card) =>                                         <>{card} ... scegli una carta</>,
     STATUS_TRAIN_ROBBERY_OTHER: (player, card) =>                           <>{card} ... {player} deve scegliere una carta</>,
-    STATUS_TRAIN_ROBBERY_CHOOSE: (card) =>                                  <>{card} ... scegli se scartare {card} o ricevere un Bang</>,
+    STATUS_TRAIN_ROBBERY_CHOOSE: (card, target_card) =>                     <>{card} ... scegli se scartare {target_card} o ricevere un Bang</>,
     STATUS_TRAIN_ROBBERY_CHOOSE_OTH: (player, card, target_card) =>         <>{card} ... {player} deve scegliere se scartare {target_card} o ricevere un Bang</>,
 
     ERROR_INVALID_LOBBY: () =>                                              <>ID lobby non valido</>,
