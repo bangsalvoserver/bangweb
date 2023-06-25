@@ -55,7 +55,6 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
     // Adds the removed players to the dead_players array, sets the player_death animation
     player_order ({ players, duration }) {
         const removedPlayers = subtract(this.alive_players, players);
-        console.log(removedPlayers);
         if (removedPlayers.length !== 0) {
             let newPlayers = this.players;
             for (const player of removedPlayers) {
