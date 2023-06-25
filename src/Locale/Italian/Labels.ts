@@ -59,9 +59,22 @@ export const LABELS_ITALIAN: LabelRegistry = {
         BUTTON_DISCONNECT: "Disconnetti",
     },
 
-    notify: {
+    lobby: {
         USER_JOINED_LOBBY: (username) => `${username} entra in lobby`,
-        USER_LEFT_LOBBY: (username) => `${username} esce dalla lobby`
+        USER_LEFT_LOBBY: (username) => `${username} esce dalla lobby`,
+        CONNECTION_ERROR: "Errore di connessione",
+        ERROR_INVALID_LOBBY: "ID lobby non valido",
+        ERROR_PLAYER_IN_LOBBY: "Giocatore già in una lobby",
+        ERROR_PLAYER_NOT_IN_LOBBY: "Giocatore non in una lobby",
+        ERROR_PLAYER_NOT_LOBBY_OWNER: "Non proprietario della lobby",
+        ERROR_USER_NOT_CONTROLLING_PLAYER: "Giocatore non in gioco",
+        ERROR_NOT_ENOUGH_PLAYERS: "Non ci sono abbastanza giocatori",
+        ERROR_TOO_MANY_PLAYERS: "Ci sono troppi giocatori",
+        ERROR_LOBBY_NOT_WAITING: "Lobby non in attesa",
+        ERROR_LOBBY_NOT_PLAYING: "Lobby non in gioco",
+        ERROR_LOBBY_NOT_FINISHED: "Lobby non in partita finita",
+        ERROR_GAME_CHEATS_NOT_ENABLED: "I trucchi non sono abilitati",
+        INVALID_COMMAND_NAME: "Comando non valido",
     },
 
 };

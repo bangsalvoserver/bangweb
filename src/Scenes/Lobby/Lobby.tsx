@@ -55,7 +55,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
         } else {
           setChatMessages(chatMessages => chatMessages.concat({
             user_id: 0,
-            message: getLabel('notify', 'USER_JOINED_LOBBY', name),
+            message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
             is_read: is_read || user_id == myUserId
           }));
           copy.push(newUser);
@@ -69,7 +69,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
       if (user) {
         setChatMessages(chatMessages => chatMessages.concat({
           user_id: 0,
-          message: getLabel('notify', 'USER_LEFT_LOBBY', user.name),
+          message: getLabel('lobby', 'USER_LEFT_LOBBY', user.name),
           is_read: false
         }));
       }

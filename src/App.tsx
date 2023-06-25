@@ -1,14 +1,14 @@
 import { createContext, useEffect, useState } from 'react';
 import './App.css';
 import Header from './Components/Header';
+import getLabel from './Locale/GetLabel';
 import { Connection, SocketConnection, useHandler } from './Messages/Connection';
 import { UserInfo } from './Messages/ServerMessage';
 import { useSettings } from './Model/AppSettings';
+import Env from './Model/Env';
 import CurrentScene, { SceneType } from './Scenes/CurrentScene';
-import { GameOptions } from './Scenes/Game/Model/GameUpdate';
 import { ImageSrc, serializeImage } from './Utils/ImageSerial';
 import { useRefLazy } from './Utils/LazyRef';
-import Env from './Model/Env';
 
 export const ConnectionContext = createContext<Connection>({
   isConnected: () => false,
@@ -28,11 +28,11 @@ export async function makeUserInfo (username?: string, propic?: ImageSrc): Promi
   };
 }
 
-function App() {
+export default function App() {
   const connection = useRefLazy<Connection>(() => new SocketConnection());
 
   const [scene, setScene] = useState<SceneType>({ type: 'connect' });
-
+  
   const settings = useSettings();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function App() {
       setScene({ type: 'connect' });
     },
 
-    lobby_error: message => console.error("Lobby error: " + message), // TODO
+    lobby_error: message => console.error('Lobby error: ', getLabel('lobby', message)),
 
     lobby_remove_user: ({ user_id }) => {
       if (user_id === settings.myUserId) {
@@ -103,5 +103,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

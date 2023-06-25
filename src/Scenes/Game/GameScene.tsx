@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useRef, useState } fr
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { useMapRef, useRefLazy } from "../../Utils/LazyRef";
-import { FRAMERATE, useInterval } from "../../Utils/UseInterval";
+import { FRAMERATE, useInterval, useTimeout } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
@@ -41,9 +41,16 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
   const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
+  const [gameError, setGameError] = useState<GameString>();
 
-  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs));
+  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs, setGameError));
   useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
+
+  useTimeout(() => {
+    if (gameError) {
+      setGameError(undefined);
+    }
+  }, 5000, [gameError])
 
   const pocketPositions = useMapRef<PocketType, PocketPosition>();
   const playerPositions = useMapRef<PlayerId, PocketPositionMap>();
@@ -158,6 +165,11 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
         { getLabel('ui', 'STATUS_GAME_OVER') }
         { myUserId == lobbyOwner && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button> }
       </div>;
+    } else if (gameError) {
+      return <div className="status-bar font-bold">
+        <GameStringComponent message={gameError} />
+        <Button color='blue' onClick={() => setGameError(undefined)}>{getLabel('ui', 'BUTTON_OK')}</Button>
+      </div>
     } else if (statusText || buttonRow.length !== 0 || confirmButton || undoButton ) {
       return <div className="status-bar">
         { statusText}{ buttonRow }{ confirmButton }{ undoButton }

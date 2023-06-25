@@ -1,7 +1,6 @@
 import { LobbyInfo } from "../Messages/ServerMessage";
 import AppSettings from "../Model/AppSettings";
 import ConnectScene from "./Connect/Connect";
-import { GameOptions } from "./Game/Model/GameUpdate";
 import LobbyScene from "./Lobby/Lobby";
 import WaitingArea from "./WaitingArea/WaitingArea";
 

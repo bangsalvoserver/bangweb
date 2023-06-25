@@ -15,6 +15,7 @@ export class GameUpdateHandler {
     private tableDispatch: Dispatch<GameUpdate>;
     private selectorDispatch: Dispatch<SelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
+    private setGameError: Dispatch<GameString>;
 
     private animation?: {
         timer: Milliseconds;
@@ -27,12 +28,14 @@ export class GameUpdateHandler {
         channel: GameChannel,
         tableDispatch: Dispatch<GameUpdate>,
         selectorDispatch: Dispatch<SelectorUpdate>,
-        setGameLogs: Dispatch<SetStateAction<GameString[]>>
+        setGameLogs: Dispatch<SetStateAction<GameString[]>>,
+        setGameError: Dispatch<GameString>
     ) {
         this.channel = channel;
         this.tableDispatch = tableDispatch;
         this.selectorDispatch = selectorDispatch;
         this.setGameLogs = setGameLogs;
+        this.setGameError = setGameError;
     }
 
     tick(timeElapsed: Milliseconds) {
@@ -70,8 +73,7 @@ export class GameUpdateHandler {
     private handleUpdate = createUnionFunction<GameUpdateHandler, GameUpdate>({
 
         game_error (message) {
-            // TODO
-            console.error(message.format_str);
+            this.setGameError(message);
             this.selectorDispatch({ undoSelection: {} });
         },
 
