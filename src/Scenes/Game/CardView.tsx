@@ -3,7 +3,7 @@ import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
-import { TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSelectionPlaying, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard, isSelectionPicking } from "./Model/TargetSelector";
+import { TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSelectionPlaying, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard, isSelectionPicking, isCardPrompted } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import Env from "../../Model/Env";
@@ -40,6 +40,8 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
         }
     }
     if (isCardCurrent(selector, card)) {
+        return 'card-current';
+    } else if (isCardPrompted(selector, card)) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
         return 'card-playable';

@@ -160,7 +160,8 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
 }
 
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
-    return (!isSelectionPlaying(selector) || selector.selection.playing_card === null)
+    return !isCardCurrent(selector, card)
+        && !isCardSelected(selector, card)
         && isCardKnown(card)
         && getPlayableCards(selector).includes(card.id);
 }
@@ -179,12 +180,13 @@ export function selectorCanPickCard(table: GameTable, selector: TargetSelector, 
 }
 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
-    if (isSelectionPlaying(selector)) {
-        return selector.selection.playing_card?.id == card.id
-            || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id)
-    } else {
-        return 'playpickundo' in selector.prompt && selector.prompt.playpickundo.id == card.id;
-    }
+    return isSelectionPlaying(selector)
+        && (selector.selection.playing_card?.id == card.id
+        || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id));
+}
+
+export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
+    return 'playpickundo' in selector.prompt && selector.prompt.playpickundo.id == card.id;
 }
 
 export function isCardSelected(selector: TargetSelector, card: Card): boolean {

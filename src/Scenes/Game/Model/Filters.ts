@@ -1,7 +1,7 @@
 import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
-import { PlayingSelector, TargetSelector, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
+import { PlayingSelector, TargetSelector, isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     return isCardKnown(card) ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
@@ -129,7 +129,7 @@ export function checkPlayerFilter(table: GameTable, selector: PlayingSelector, f
 export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], originCard: KnownCard, target: Card): boolean {
     const origin = getPlayer(table, table.self_player!);
 
-    if (!filter.includes('can_repeat') && isCardSelected(selector, target)) return false;
+    if (!filter.includes('can_repeat') && (isCardSelected(selector, target) || isCardCurrent(selector, target))) return false;
 
     if (!filter.includes('can_target_self') && originCard.id == target.id) return false;
 
