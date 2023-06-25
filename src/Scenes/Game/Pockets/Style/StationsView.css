@@ -19,7 +19,8 @@
 }
 
 .station-card-img {
-    background-color: white;
+    background-color: rgb(208,52,37);
+    background: linear-gradient(180deg, rgba(208,52,37,1) 0%, rgba(240,216,156,1) 76%, rgba(180,106,69,1) 77%);
     width: var(--card-width);
     height: var(--card-height);
 
