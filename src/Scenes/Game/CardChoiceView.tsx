@@ -1,12 +1,12 @@
-import { CSSProperties, useContext, useMemo, useReducer } from "react";
+import { CSSProperties, useContext, useMemo } from "react";
 import { getRectCenter } from "../../Utils/Rect";
-import { useInterval } from "../../Utils/UseInterval";
-import { CardTracker } from "./Model/CardTracker";
+import { useUpdateEveryFrame } from "../../Utils/UseInterval";
 import CardView from "./CardView";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
+import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
-import { TargetSelector, getPlayableCards, isSelectionPlaying } from "./Model/TargetSelector";
+import { getPlayableCards, isSelectionPlaying } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
 
 export interface CardChoiceProps {
@@ -22,10 +22,7 @@ interface CardChoiceInnerProps {
 }
 
 function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInnerProps) {
-    const [, forceUpdate] = useReducer(a => !a, false);
-    useInterval(forceUpdate, 0, []);
-
-    const anchorRect = tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id);
+    const anchorRect = useUpdateEveryFrame(() => tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id));
 
     if (anchorRect) {
         const anchorCenter = getRectCenter(anchorRect);

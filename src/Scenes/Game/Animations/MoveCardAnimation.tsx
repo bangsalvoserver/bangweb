@@ -1,11 +1,11 @@
-import { CSSProperties, useReducer } from "react";
-import { Point, Rect, getRectCenter } from "../../../Utils/Rect";
-import { useInterval } from "../../../Utils/UseInterval";
+import { CSSProperties } from "react";
+import { getRectCenter } from "../../../Utils/Rect";
+import { useUpdateEveryFrame } from "../../../Utils/UseInterval";
 import CardView from "../CardView";
+import { CardTracker } from "../Model/CardTracker";
 import { Card, PocketRef } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import { CARD_SLOT_ID } from "../Pockets/CardSlot";
-import { CardTracker } from "../Model/CardTracker";
 import "./Style/MoveCardAnimation.css";
 
 export interface MoveCardProps {
@@ -16,15 +16,14 @@ export interface MoveCardProps {
 }
 
 export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
-    const [, forceUpdate] = useReducer(a => !a, false);
-    useInterval(forceUpdate, 0, []);
+    const [startRect, endRect] = useUpdateEveryFrame(() => ([
+        tracker.getTablePocket(card.pocket)?.getCardRect(CARD_SLOT_ID),
+        tracker.getTablePocket(destPocket)?.getCardRect(card.id)
+    ]));
 
-    const startRect = tracker.getTablePocket(card.pocket)?.getCardRect(CARD_SLOT_ID);
-    const endRect = tracker.getTablePocket(destPocket)?.getCardRect(card.id) ?? startRect;
-
-    if (startRect && endRect) {
+    if (startRect) {
         const startPoint = getRectCenter(startRect);
-        const endPoint = getRectCenter(endRect);
+        const endPoint = getRectCenter(endRect ?? startRect);
 
         const style = {
             '--startX': startPoint.x + 'px',

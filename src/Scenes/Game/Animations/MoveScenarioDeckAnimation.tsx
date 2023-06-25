@@ -1,12 +1,12 @@
-import { CSSProperties, useContext, useReducer } from "react";
+import { CSSProperties } from "react";
 import { getRectCenter } from "../../../Utils/Rect";
-import { useInterval } from "../../../Utils/UseInterval";
+import { useUpdateEveryFrame } from "../../../Utils/UseInterval";
 import CardView from "../CardView";
 import { ScenarioDeckPocket } from "../Model/CardEnums";
+import { CardTracker } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
 import { Milliseconds, PlayerId } from "../Model/GameUpdate";
 import "./Style/MoveCardAnimation.css";
-import { CardTracker } from "../Model/CardTracker";
 
 export interface MoveScenarioDeckProps {
     tracker: CardTracker;
@@ -18,11 +18,10 @@ export interface MoveScenarioDeckProps {
 }
 
 export default function MoveScenarioDeckAnimation({ tracker, card, pocket, startPlayer, endPlayer, duration }: MoveScenarioDeckProps) {
-    const [, forceUpdate] = useReducer(a => !a, false);
-    useInterval(forceUpdate, 0, []);
-
-    const startRect = startPlayer ? tracker.getPlayerPockets(startPlayer)?.get(pocket)?.getPocketRect() : undefined;
-    const endRect = endPlayer ? tracker.getPlayerPockets(endPlayer)?.get(pocket)?.getPocketRect() : undefined;
+    const [startRect, endRect] = useUpdateEveryFrame(() => ([
+        startPlayer ? tracker.getPlayerPockets(startPlayer)?.get(pocket)?.getPocketRect() : undefined,
+        endPlayer ? tracker.getPlayerPockets(endPlayer)?.get(pocket)?.getPocketRect() : undefined
+    ]));
 
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);
