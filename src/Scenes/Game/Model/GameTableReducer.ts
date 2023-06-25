@@ -55,32 +55,29 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
     // Adds the removed players to the dead_players array, sets the player_death animation
     player_order ({ players, duration }) {
         const removedPlayers = subtract(this.alive_players, players);
-        if (removedPlayers.length == 0) return this;
-
-        let newPlayers = this.players;
-        for (const player of removedPlayers) {
-            newPlayers = editById(newPlayers, player, player => ({
-                ...player,
-                animation: { player_death: { duration } }
-            }));
+        if (removedPlayers.length !== 0) {
+            let newPlayers = this.players;
+            for (const player of removedPlayers) {
+                newPlayers = editById(newPlayers, player, player => ({ ...player, animation: { player_death: { duration } } }));
+            }
+            return { ...this, players: newPlayers };
+        } else {
+            return this;
         }
-        return {
-            ...this,
-            players: newPlayers,
-            dead_players: this.dead_players.concat(removedPlayers)
-        };
     },
     
     // Changes the order of how players are seated
     player_order_end ({ players }) {
+        const removedPlayers = subtract(this.alive_players, players);
         let newPlayers = this.players;
-        for (const player of this.dead_players) {
-            newPlayers = editById(newPlayers, player, player => ({...player, animation: undefined }));
+        for (const player of removedPlayers) {
+            newPlayers = editById(newPlayers, player, player => ({ ...player, animation: undefined }));
         }
         return {
             ...this,
             players: newPlayers,
-            alive_players: rotatePlayers(players, this.self_player, this.alive_players.at(0))
+            alive_players: rotatePlayers(players, this.self_player, this.alive_players.at(0)),
+            dead_players: removedPlayers.length == 0 ? this.dead_players : this.dead_players.concat(removedPlayers)
         };
     },
 
