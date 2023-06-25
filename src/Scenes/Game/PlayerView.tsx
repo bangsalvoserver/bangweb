@@ -169,8 +169,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                 { isOrigin && <div className="player-icon icon-origin"/> }
                 { isTarget && <div className="player-icon icon-target"/> }
                 { isTurn && <div className="player-icon icon-turn"/> }
-                { isDead && <div className="player-icon icon-dead"/> }
             </>}
+            { isDead && <div className="player-icon icon-dead"/> }
         </div>);
 
     if (player.id == table.self_player) {
