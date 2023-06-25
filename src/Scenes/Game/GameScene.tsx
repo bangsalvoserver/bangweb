@@ -74,15 +74,15 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [selector]);
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
-  const shopPockets = table.pockets.shop_deck.length != 0 || table.pockets.shop_discard.length != 0 ? <>
+  const shopPockets = (table.pockets.shop_deck.length != 0 || table.pockets.shop_selection.length != 0) && (
     <div className="inline-block relative">
       <div className="absolute">
         <StackPocket ref={setPos('shop_discard')} cards={table.pockets.shop_discard} />
       </div>
       <StackPocket showCount ref={setPos('shop_deck')} cards={table.pockets.shop_deck} />
+      <PocketView ref={setPos('shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
     </div>
-    <PocketView ref={setPos('shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
-  </> : null;
+  );
 
   const trainPockets = (table.pockets.stations.length !== 0 || table.pockets.train_deck.length !== 0) && (
     <div className="train-row">
