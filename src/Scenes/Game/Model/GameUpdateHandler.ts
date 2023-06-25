@@ -21,6 +21,8 @@ export class GameUpdateHandler {
         endUpdate?: GameUpdate
     };
 
+    private remainingTime: Milliseconds = 0;
+
     constructor(
         channel: GameChannel,
         tableDispatch: Dispatch<GameUpdate>,
@@ -38,6 +40,7 @@ export class GameUpdateHandler {
             if (this.animation.endUpdate) {
                 this.tableDispatch(this.animation.endUpdate);
             }
+            this.remainingTime = -this.animation.timer;
             delete this.animation;
         } else {
             let update: GameUpdate | undefined;
@@ -48,12 +51,14 @@ export class GameUpdateHandler {
     }
 
     private setAnimation(update: Duration, endUpdate?: GameUpdate) {
-        if (update.duration <= 0) {
+        const timer = update.duration - this.remainingTime;
+        if (timer <= 0) {
+            this.remainingTime = -timer;
             if (endUpdate) {
                 this.tableDispatch(endUpdate);
             }
         } else {
-            this.animation = { timer: update.duration, endUpdate };
+            this.animation = { timer, endUpdate };
         }
     }
 
