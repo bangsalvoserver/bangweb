@@ -43,9 +43,14 @@ export class GameUpdateHandler {
             this.remainingTime = -this.animation.timer;
             delete this.animation;
         } else {
-            let update: GameUpdate | undefined;
-            while (!this.animation && (update = this.channel.getNextUpdate())) {
-                this.handleUpdate(update);
+            while (!this.animation) {
+                const update = this.channel.getNextUpdate();
+                if (update) {
+                    this.handleUpdate(update);
+                } else {
+                    this.remainingTime = 0;
+                    break;
+                }
             }
         }
     }
