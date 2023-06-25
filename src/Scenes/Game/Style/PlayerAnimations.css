@@ -10,3 +10,24 @@
         transform: translateY(calc(var(--one-hp-size) * var(--player-hp-diff)));
     }
 }
+
+.player-view.player-animation-death {
+    animation-name: player-death;
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    transition: ease-in;
+}
+
+.player-view.player-animation-death .player-pockets {
+    visibility: hidden;
+}
+
+@keyframes player-death {
+    from {
+        height: calc(var(--player-row-height) * 2);
+    }
+    to {
+        width: calc(var(--card-width-plus-margin) * 2.5);
+        height: calc(var(--player-row-height) + 1em);
+    }
+}

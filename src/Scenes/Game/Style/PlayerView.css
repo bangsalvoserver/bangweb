@@ -149,33 +149,37 @@
     display: inline-block;
     height: var(--player-icon-size);
     width: var(--player-icon-size);
-    background-size: contain;
-    background-repeat: no-repeat;
+    mask-image: var(--icon-url);
     mask-size: contain;
     mask-repeat: no-repeat;
+    background-image: var(--icon-url);
+    background-size: contain;
+    background-repeat: no-repeat;
     background-blend-mode: multiply;
+    background-color: var(--icon-color);
 }
 
 .icon-winner {
-    background-image: url('/media/icon_winner.png');
-    mask-image: url('/media/icon_winner.png');
-    background-color: #bba14f
+    --icon-url: url('/media/icon_winner.png');
+    --icon-color: #bba14f
 }
 
 .icon-origin {
-    background-image: url('/media/icon_origin.png');
-    mask-image: url('/media/icon_origin.png');
-    background-color: #7bf7ffff;
+    --icon-url: url('/media/icon_origin.png');
+    --icon-color: #7bf7ffff;
 }
 
 .icon-target {
-    background-image: url('/media/icon_target.png');
-    mask-image: url('/media/icon_target.png');
-    background-color: #ff0000ff;
+    --icon-url: url('/media/icon_target.png');
+    --icon-color: #ff0000ff;
 }
 
 .icon-turn {
-    background-image: url('/media/icon_turn.png');
-    mask-image: url('/media/icon_turn.png');
-    background-color: #4d7f21;
+    --icon-url: url('/media/icon_turn.png');
+    --icon-color: #4d7f21;
+}
+
+.icon-dead {
+    --icon-url: url('/media/icon_dead.png');
+    --icon-color: #dedbd3;
 }

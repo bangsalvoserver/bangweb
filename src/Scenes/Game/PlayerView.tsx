@@ -15,6 +15,7 @@ import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 import { PocketPosition, PocketPositionMap } from "./Model/CardTracker";
+import { isPlayerAlive } from "./Model/Filters";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -108,6 +109,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     const isOrigin = isResponse(selector) && selector.request.origin == player.id;
     const isTarget = isResponse(selector) && selector.request.target == player.id;
+    const isDead = !isPlayerAlive(player);
     const isWinner = player.status.flags.includes('winner');
 
     let flipDuration: number | undefined;
@@ -136,7 +138,6 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                 '--duration': player.animation.player_death.duration + 'ms'
             } as CSSProperties;
             classes.push('player-animation-death');
-            // TODO css for player-animation-death
         }
     } else if (selectorPlayerClass) {
         classes.push(selectorPlayerClass);
@@ -163,17 +164,18 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const playerIcons = (
         <div className='player-icons'>
             { isGameOver ? <>
-                { isWinner ? <div className="player-icon icon-winner"/> : null }
+                { isWinner && <div className="player-icon icon-winner"/> }
             </> : <>
-                { isOrigin ? <div className="player-icon icon-origin"/> : null }
-                { isTarget ? <div className="player-icon icon-target"/> : null }
-                { isTurn ? <div className="player-icon icon-turn"/> : null }
+                { isOrigin && <div className="player-icon icon-origin"/> }
+                { isTarget && <div className="player-icon icon-target"/> }
+                { isTurn && <div className="player-icon icon-turn"/> }
+                { isDead && <div className="player-icon icon-dead"/> }
             </>}
         </div>);
 
     if (player.id == table.self_player) {
         return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={handleClickPlayer}>
-            <div className="flex-grow">
+            <div className='flex-grow player-pockets'>
                 <div className='player-pocket-scroll' ref={handRef}>
                     <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 </div>
@@ -195,7 +197,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
                 {playerIcons}
             </div>
-            <div className='player-pocket-scroll' ref={tableRef}>
+            <div className='player-pockets player-pocket-scroll' ref={tableRef}>
                 <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
             </div>
         </div>
