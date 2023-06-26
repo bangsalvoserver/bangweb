@@ -112,9 +112,8 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
     const repeatCount = getTagValue(currentCard, 'repeatable') ?? 1;
 
     const autoConfirm = (() => {
-        if (optionals.length != 0
-            && targets.length >= effects.length
-            && (targets.length - effects.length) % optionals.length == 0)
+        if (optionals.length != 0 && index >= effects.length
+            && (index - effects.length) % optionals.length == 0)
         {
             if (cardHasTag(currentCard, 'auto_confirm')) {
                 if (optionals.some(effect => effect.target == 'player'
@@ -137,7 +136,7 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
             }
         }
         return index >= effects.length && repeatCount > 0
-            && targets.length - effects.length == optionals.length * repeatCount;
+            && index - effects.length == optionals.length * repeatCount;
     })();
 
     if (autoConfirm) {

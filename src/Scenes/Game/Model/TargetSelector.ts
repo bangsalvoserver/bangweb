@@ -110,10 +110,11 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
     case 'modifier': {
         const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
         const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
+        const index = getNextTargetIndex(targets);
         
         return optionals.length != 0
-            && targets.length >= effects.length
-            && (targets.length - effects.length) % optionals.length == 0;
+            && index >= effects.length
+            && (index - effects.length) % optionals.length == 0;
     }
     default:
         return false;
