@@ -19,24 +19,24 @@ export type SelectorUpdate =
 
 type TargetListMapper = (targets: CardTarget[]) => CardTarget[];
 
-function editSelectorTargets(selector: PlayingSelector, table: GameTable, mapper: TargetListMapper): TargetSelector {
+function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper): PlayingSelector {
     switch (selector.selection.mode) {
     case 'target':
-        return handleAutoTargets({
+        return {
             ...selector,
             selection: {
                 ...selector.selection,
                 targets: mapper(selector.selection.targets)
             }
-        }, table);
+        };
     case 'modifier':
         const lastModifier = selector.selection.modifiers.at(-1)!;
         const modifiers = selector.selection.modifiers.slice(0, -1)
             .concat({ modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) });
-        return handleAutoTargets({
+        return {
             ...selector,
             selection: { ...selector.selection, modifiers }
-        }, table);
+        };
     default:
         throw new Error('TargetSelector: not in targeting mode');
     }
@@ -159,48 +159,55 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
         }
     }
 
-    const nextEffect = getEffectAt([effects, optionals], index);
-    switch (nextEffect?.target) {
-    case 'none':
-    case 'players':
-    case 'self_cubes':
-        return editSelectorTargets(selector, table, appendTarget(nextEffect.target, {}));
-    case 'extra_card':
-        if (selector.selection.context.repeat_card) {
-            return editSelectorTargets(selector, table, appendTarget(nextEffect.target, null));
+    const mapper = (() => {
+        const nextEffect = getEffectAt([effects, optionals], index);
+        switch (nextEffect?.target) {
+        case 'none':
+        case 'players':
+        case 'self_cubes':
+            return appendTarget(nextEffect.target, {});
+        case 'extra_card':
+            if (selector.selection.context.repeat_card) {
+                return appendTarget(nextEffect.target, null);
+            }
+            break;
+        case 'conditional_player': {
+            if (!table.alive_players.some(target => checkPlayerFilter(table, selector, nextEffect.player_filter, getPlayer(table, target)))) {
+                return appendTarget(nextEffect.target, null);
+            }
+            break;
         }
-        break;
-    case 'conditional_player': {
-        if (!table.alive_players.some(target => checkPlayerFilter(table, selector, nextEffect.player_filter, getPlayer(table, target)))) {
-            return editSelectorTargets(selector, table, appendTarget(nextEffect.target, null));
-        }
-        break;
-    }
-    case 'cards':
-    case 'select_cubes':
-        if (index >= targets.length) {
-            return editSelectorTargets(selector, table, reserveTargets(nextEffect.target, nextEffect.target_value));
-        }
-        break;
-    case 'cards_other_players':
-        if (index >= targets.length) {
-            let numTargetable = 0;
-            for (const target of table.alive_players) {
-                if (target != table.self_player && target != selector.selection.context.skipped_player) {
-                    const player = getPlayer(table, target);
-                    if (isPlayerAlive(player)) {
-                        const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
-                        if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
-                            ++numTargetable;
+        case 'cards':
+        case 'select_cubes':
+            if (index >= targets.length) {
+                return reserveTargets(nextEffect.target, nextEffect.target_value);
+            }
+            break;
+        case 'cards_other_players':
+            if (index >= targets.length) {
+                let numTargetable = 0;
+                for (const target of table.alive_players) {
+                    if (target != table.self_player && target != selector.selection.context.skipped_player) {
+                        const player = getPlayer(table, target);
+                        if (isPlayerAlive(player)) {
+                            const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
+                            if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
+                                ++numTargetable;
+                            }
                         }
                     }
                 }
+                return reserveTargets(nextEffect.target, numTargetable);
             }
-            return editSelectorTargets(selector, table, reserveTargets(nextEffect.target, numTargetable));
+            break;
         }
-        break;
+    })();
+    
+    if (mapper) {
+        return handleAutoTargets(editSelectorTargets(selector, mapper), table);
+    } else {
+        return selector;
     }
-    return selector;
 }
 
 function handleSelectPlayingCard(selector: TargetSelector, table: GameTable, card: KnownCard): TargetSelector {
@@ -262,10 +269,9 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
 
     confirmPlay () {
         checkSelectionPlaying(this);
-        return {
-            ...this,
-            selection: { ...this.selection, mode: 'finish' }
-        };
+        const selector = editSelectorTargets(this, targets => targets.slice(0, getNextTargetIndex(targets)));
+        selector.selection.mode = 'finish';
+        return selector;
     },
 
     undoSelection ({ table }) {
@@ -299,11 +305,11 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'card':
         case 'extra_card':
-            return editSelectorTargets(this, table, appendTarget(nextEffect.target, card.id));
+            return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, card.id)), table);
         case 'cards':
         case 'select_cubes':
         case 'cards_other_players':
-            return editSelectorTargets(this, table, appendMultitarget(nextEffect.target, card.id));
+            return handleAutoTargets(editSelectorTargets(this, appendMultitarget(nextEffect.target, card.id)), table);
         default:
             throw new Error('TargetSelector: cannot add card target');
         }
@@ -318,7 +324,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'player':
         case 'conditional_player':
-            return editSelectorTargets(this, table, appendTarget(nextEffect.target, player.id));
+            return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, player.id)), table);
         default:
             throw new Error('TargetSelector: cannot add player target');
         }
