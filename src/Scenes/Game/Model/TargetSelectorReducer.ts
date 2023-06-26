@@ -1,4 +1,4 @@
-import { ExtractKeys, createUnionReducer } from "../../../Utils/UnionUtils";
+import { ExtractKeys, FilteredKeys, KeysOfUnion, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
@@ -42,9 +42,18 @@ function editSelectorTargets(selector: PlayingSelector, table: GameTable, mapper
     }
 }
 
-type MultiTargetType = ExtractKeys<CardTarget, number[]>;
+type SpreadTargetTypes = SpreadUnion<CardTarget>;
+type MultiTargetType = FilteredKeys<SpreadTargetTypes, number[]>;
 
-function appendMultitargetReserved(targetType: MultiTargetType, id: number): TargetListMapper {
+function appendTarget<Key extends keyof SpreadTargetTypes>(targetType: Key, value: SpreadTargetTypes[Key]): TargetListMapper {
+    return targets => targets.concat({[targetType]: value} as unknown as CardTarget);
+}
+
+function reserveTargets(targetType: MultiTargetType, count: number): TargetListMapper {
+    return appendTarget(targetType, Array<number>(count).fill(0));
+}
+
+function appendMultitarget(targetType: MultiTargetType, id: number): TargetListMapper {
     return targets => {
         const target = targets.at(-1) as Record<string, number[]> | undefined;
         if (target && targetType in target) {
@@ -56,20 +65,6 @@ function appendMultitargetReserved(targetType: MultiTargetType, id: number): Tar
             }
         }
         throw new Error('TargetSelector: last target is not an array');
-    };
-}
-
-function appendMultitarget(targetType: MultiTargetType, id: number, index: number, maxTargets: number): TargetListMapper {
-    return targets => {
-        if (index < targets.length) {
-            return appendMultitargetReserved(targetType, id)(targets);
-        } else {
-            let targetList = Array<number>(maxTargets).fill(0);
-            if (maxTargets > 0) {
-                targetList[0] = id;
-            }
-            return targets.concat({[targetType]: targetList} as CardTarget);
-        }
     };
 }
 
@@ -170,18 +165,24 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
     case 'none':
     case 'players':
     case 'self_cubes':
-        return editSelectorTargets(selector, table, targets => targets.concat({[nextEffect.target]: {}} as CardTarget));
+        return editSelectorTargets(selector, table, appendTarget(nextEffect.target, {}));
     case 'extra_card':
         if (selector.selection.context.repeat_card) {
-            return editSelectorTargets(selector, table, targets => targets.concat({ extra_card: null }));
+            return editSelectorTargets(selector, table, appendTarget(nextEffect.target, null));
         }
         break;
     case 'conditional_player': {
         if (!table.alive_players.some(target => checkPlayerFilter(table, selector, nextEffect.player_filter, getPlayer(table, target)))) {
-            return editSelectorTargets(selector, table, targets => targets.concat({ conditional_player: null }));
+            return editSelectorTargets(selector, table, appendTarget(nextEffect.target, null));
         }
         break;
     }
+    case 'cards':
+    case 'select_cubes':
+        if (index >= targets.length) {
+            return editSelectorTargets(selector, table, reserveTargets(nextEffect.target, nextEffect.target_value));
+        }
+        break;
     case 'cards_other_players':
         if (index >= targets.length) {
             let numTargetable = 0;
@@ -196,9 +197,7 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
                     }
                 }
             }
-            return editSelectorTargets(selector, table, targets => targets.concat({
-                cards_other_players: Array<number>(numTargetable).fill(0)
-            }));
+            return editSelectorTargets(selector, table, reserveTargets(nextEffect.target, numTargetable));
         }
         break;
     }
@@ -297,12 +296,11 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'card':
         case 'extra_card':
-            return editSelectorTargets(this, table, targets => targets.concat({[nextEffect.target]: card.id} as CardTarget));
+            return editSelectorTargets(this, table, appendTarget(nextEffect.target, card.id));
         case 'cards':
         case 'select_cubes':
-            return editSelectorTargets(this, table, appendMultitarget(nextEffect.target, card.id, index, nextEffect.target_value));
         case 'cards_other_players':
-            return editSelectorTargets(this, table, appendMultitargetReserved(nextEffect.target, card.id));
+            return editSelectorTargets(this, table, appendMultitarget(nextEffect.target, card.id));
         default:
             throw new Error('TargetSelector: cannot add card target');
         }
@@ -317,7 +315,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'player':
         case 'conditional_player':
-            return editSelectorTargets(this, table, targets => targets.concat({[nextEffect.target]: player.id} as CardTarget));
+            return editSelectorTargets(this, table, appendTarget(nextEffect.target, player.id));
         default:
             throw new Error('TargetSelector: cannot add player target');
         }
