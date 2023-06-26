@@ -110,7 +110,7 @@ export function useHandler(connection: Connection, handler: MessageHandler, deps
         connection.addHandler(handler);
         connection.setLocked(false);
         return () => connection.removeHandler(handler);
-    }, [connection, ...(deps ?? [])]);
+    }, deps);
 }
 
 

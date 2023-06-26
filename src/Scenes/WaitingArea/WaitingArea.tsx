@@ -38,7 +38,7 @@ function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps)
 
     lobby_removed: ({ lobby_id }) => setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id)),
 
-  });
+  }, []);
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
