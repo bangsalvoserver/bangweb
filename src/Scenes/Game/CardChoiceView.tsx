@@ -52,7 +52,13 @@ export default function CardChoiceView({ getTracker, onClickCard }: CardChoicePr
         if (isSelectionPlaying(selector)) {
             const anchor = selector.selection.context.card_choice;
             if (anchor) {
-                return [anchor, getPlayableCards(selector)];
+                return [anchor, getPlayableCards({
+                    ...selector,
+                    selection: {
+                        ...selector.selection,
+                        playing_card: null
+                    }
+                })];
             }
         }
     }, [selector]);

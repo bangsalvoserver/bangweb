@@ -152,6 +152,9 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
         tree = selector.request.play_cards;
     }
     if (isSelectionPlaying(selector)) {
+        if (selector.selection.playing_card !== null) {
+            return [];
+        }
         tree = selector.selection.modifiers.reduce((tree: CardNode[], { modifier }) => {
             return (tree.find(leaf => leaf.card == modifier.id) as CardNode).branches;
         }, tree);
