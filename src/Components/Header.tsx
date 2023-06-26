@@ -1,12 +1,12 @@
-import { ChangeEvent, useContext, useRef, useState } from 'react';
-import getLabel from '../Locale/GetLabel';
-import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
-import UserMenu, { UserMenuItem } from './UserMenu';
-import { useEventListener } from '../Utils/UseEventListener';
-import { ImageSrc } from '../Utils/ImageSerial';
-import { SceneType } from '../Scenes/CurrentScene';
-import AppSettings from '../Model/AppSettings';
+import { ChangeEvent, useContext, useRef } from 'react';
 import { ConnectionContext, makeUserInfo } from '../App';
+import getLabel from '../Locale/GetLabel';
+import AppSettings from '../Model/AppSettings';
+import { SceneType } from '../Scenes/CurrentScene';
+import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
+import { ImageSrc } from '../Utils/ImageSerial';
+import UserMenu, { UserMenuItem } from './UserMenu';
+import { useFocusRefState } from '../Utils/UseEventListener';
 
 export interface HeaderProps {
   scene: SceneType;
@@ -17,9 +17,9 @@ function Header({ scene, settings }: HeaderProps) {
   const connection = useContext(ConnectionContext);
 
   const inputFile = useRef<HTMLInputElement>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  
   const menuRef = useRef<HTMLDivElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useFocusRefState(menuRef);
 
   const handleEditUser = async (username?: string, propic?: ImageSrc) => {
     settings.setUsername(username);
@@ -41,12 +41,6 @@ function Header({ scene, settings }: HeaderProps) {
       reader.readAsDataURL(file);
     }
   };
-
-  useEventListener('click', ev => {
-    if (!menuRef.current?.contains(ev.target as Node)) {
-      setIsMenuOpen(false);
-    }
-  }, []);
 
   const closeMenuAnd = (fn: () => void) => {
     return () => {

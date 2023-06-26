@@ -1,21 +1,17 @@
 import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import Button from "../../Components/Button";
-import getLabel from "../../Locale/GetLabel";
 import { useMapRef, useReducerRef, useRefLazy } from "../../Utils/LazyRef";
 import { FRAMERATE, useInterval, useTimeout } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
 import GameLogView from "./GameLogView";
-import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { CardTrackerImpl, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
-import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTable";
+import { Card, Player, getPlayer, newGameTable } from "./Model/GameTable";
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetSelector, isCardCurrent, isResponse, newTargetSelector, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./Model/TargetSelector";
+import { TargetSelector, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
@@ -24,10 +20,10 @@ import StackPocket from "./Pockets/StackPocket";
 import StationsView from "./Pockets/StationsView";
 import TrainView from "./Pockets/TrainView";
 import PromptView from "./PromptView";
+import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import StatusBar from "./StatusBar";
 
 export interface GameProps {
   channel: GameChannel;

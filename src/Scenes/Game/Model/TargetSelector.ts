@@ -169,7 +169,7 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
             return [];
         }
         tree = selector.selection.modifiers.reduce((tree: CardNode[], { modifier }) => {
-            return (tree.find(leaf => leaf.card == modifier.id) as CardNode).branches;
+            return tree.find(leaf => leaf.card == modifier.id)!.branches;
         }, tree);
     }
     return tree.map(node => node.card);

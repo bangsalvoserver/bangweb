@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useFocusRefState } from "../../Utils/UseEventListener";
 import GameStringComponent from "./GameStringComponent";
 import { GameString } from "./Model/GameUpdate";
 import "./Style/GameLogView.css";
-import { useEventListener } from "../../Utils/UseEventListener";
 
 export interface GameLogProps {
     logs: GameString[];
@@ -13,20 +13,13 @@ export default function GameLogView({ logs }: GameLogProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
 
     const gameLogRef = useRef<HTMLDivElement>(null);
-
-    const [isLogOpen, setIsLogOpen] = useState(false);
+    const [isLogOpen, setIsLogOpen] = useFocusRefState(gameLogRef);
 
     useEffect(() => {
         if (isLogOpen) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior:'smooth' });
         }
     }, [isLogOpen, logs]);
-
-    useEventListener('click', ev => {
-        if (!gameLogRef.current?.contains(ev.target as Node)) {
-            setIsLogOpen(false);
-        }
-    }, []);
 
     return createPortal(
         <div ref={gameLogRef} className={`game-log-view ${isLogOpen ? 'game-log-open' : ''}`}>

@@ -1,12 +1,12 @@
 import { SyntheticEvent, useContext, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { ConnectionContext } from "../../App";
 import getLabel from "../../Locale/GetLabel";
 import { ChatMessage, UserId } from "../../Messages/ServerMessage";
+import { useFocusRefState } from "../../Utils/UseEventListener";
 import { LobbyContext, getUser } from "./Lobby";
 import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
-import { ConnectionContext } from "../../App";
-import { useEventListener } from "../../Utils/UseEventListener";
-import { createPortal } from "react-dom";
 
 export interface ChatProps {
     messages: ChatMessage[];
@@ -20,7 +20,7 @@ export default function LobbyChat({ messages }: ChatProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
 
-    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useFocusRefState(chatRef);
     const [numReadMessages, setNumReadMessages] = useState(0);
 
     const numUnreadMessages = messages.reduce((prev, { is_read }) => prev + +(!is_read), 0);
@@ -37,12 +37,6 @@ export default function LobbyChat({ messages }: ChatProps) {
             setTimeout(() => inputMessage.current?.focus());
         }
     }, [isChatOpen]);
-
-    useEventListener('click', ev => {
-        if (!chatRef.current?.contains(ev.target as Node)) {
-            setIsChatOpen(false);
-        }
-    }, []);
 
     const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
