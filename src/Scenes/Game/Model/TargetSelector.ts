@@ -305,7 +305,7 @@ export function isValidCardTarget(table: GameTable, selector: PlayingSelector, c
         if (player && !checkPlayerFilter(table, selector, nextTarget.player_filter, getPlayer(table, player))) {
             return false;
         }
-        if (!checkCardFilter(table, selector, nextTarget.card_filter, currentCard, card)) {
+        if (!checkCardFilter(table, selector, nextTarget.card_filter, card)) {
             return false;
         }
         return true;

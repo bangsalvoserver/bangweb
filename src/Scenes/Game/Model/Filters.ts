@@ -126,12 +126,12 @@ export function checkPlayerFilter(table: GameTable, selector: PlayingSelector, f
     return true;
 }
 
-export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], originCard: KnownCard, target: Card): boolean {
+export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
     const origin = getPlayer(table, table.self_player!);
 
-    if (!filter.includes('can_repeat') && (isCardSelected(selector, target) || isCardCurrent(selector, target))) return false;
+    if (!filter.includes('can_repeat') && isCardSelected(selector, target)) return false;
 
-    if (!filter.includes('can_target_self') && originCard.id == target.id) return false;
+    if (!filter.includes('can_target_self') && isCardCurrent(selector, target)) return false;
 
     if (filter.includes('cube_slot')) {
         switch (target.pocket?.name) {
