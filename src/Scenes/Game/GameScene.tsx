@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useRef, useState } fr
 import { createPortal } from "react-dom";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { useMapRef, useRefLazy } from "../../Utils/LazyRef";
+import { useMapRef, useReducerRef, useRefLazy } from "../../Utils/LazyRef";
 import { FRAMERATE, useInterval, useTimeout } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
@@ -12,6 +12,7 @@ import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { PocketType } from "./Model/CardEnums";
 import { CardTrackerImpl, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
 import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTable";
+import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
 import { TargetSelector, isCardCurrent, isResponse, newTargetSelector, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./Model/TargetSelector";
@@ -39,12 +40,12 @@ export const TargetSelectorContext = createContext<TargetSelector>(newTargetSele
 export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const { myUserId, users } = useContext(LobbyContext);
   
-  const [table, setTable] = useState(() => newGameTable(myUserId));
+  const [table, tableRef, tableDispatch] = useReducerRef(gameTableReducer, () => newGameTable(myUserId));
   const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const [gameError, setGameError] = useState<GameString>();
 
-  const handler = useRefLazy(() => new GameUpdateHandler(channel, table, setTable, selectorDispatch, setGameLogs, setGameError));
+  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableRef, tableDispatch, selectorDispatch, setGameLogs, setGameError));
   useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
 
   useTimeout(() => {

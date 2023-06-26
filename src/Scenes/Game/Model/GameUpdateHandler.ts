@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
 import { GameAction } from "./GameAction";
 import { GameTable } from "./GameTable";
-import gameTableReducer from "./GameTableReducer";
 import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
@@ -14,7 +13,7 @@ export interface GameChannel {
 export class GameUpdateHandler {
     
     private channel: GameChannel;
-    private table: GameTable;
+    private tableRef: MutableRefObject<GameTable>;
     private tableDispatch: Dispatch<GameUpdate>;
     private selectorDispatch: Dispatch<SelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
@@ -29,15 +28,15 @@ export class GameUpdateHandler {
 
     constructor(
         channel: GameChannel,
-        table: GameTable,
-        setTable: Dispatch<SetStateAction<GameTable>>,
+        tableRef: MutableRefObject<GameTable>,
+        tableDispatch: Dispatch<GameUpdate>,
         selectorDispatch: Dispatch<SelectorUpdate>,
         setGameLogs: Dispatch<SetStateAction<GameString[]>>,
         setGameError: Dispatch<GameString>
     ) {
         this.channel = channel;
-        this.table = table;
-        this.tableDispatch = (update: GameUpdate) => setTable(this.table = gameTableReducer(this.table, update));
+        this.tableRef = tableRef;
+        this.tableDispatch = tableDispatch;
         this.selectorDispatch = selectorDispatch;
         this.setGameLogs = setGameLogs;
         this.setGameError = setGameError;
@@ -79,7 +78,7 @@ export class GameUpdateHandler {
 
         game_error (message) {
             this.setGameError(message);
-            this.selectorDispatch({ undoSelection: { table: this.table } });
+            this.selectorDispatch({ undoSelection: { table: this.tableRef.current } });
         },
 
         game_log (message) {
@@ -192,15 +191,15 @@ export class GameUpdateHandler {
         },
         
         request_status (status) {
-            this.selectorDispatch({ setRequest: { status, table: this.table } });
+            this.selectorDispatch({ setRequest: { status, table: this.tableRef.current } });
         },
 
         status_ready (status) {
-            this.selectorDispatch({ setRequest: { status, table: this.table} });
+            this.selectorDispatch({ setRequest: { status, table: this.tableRef.current} });
         },
 
         status_clear () {
-            this.selectorDispatch({ setRequest: { status: {}, table: this.table }});
+            this.selectorDispatch({ setRequest: { status: {}, table: this.tableRef.current }});
         },
         
     });
