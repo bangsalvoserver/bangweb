@@ -182,21 +182,25 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
         }
         break;
     }
-    case 'cards_other_players': {
-        let numTargetable = 0;
-        for (const target of table.alive_players) {
-            if (target != table.self_player && target != selector.selection.context.skipped_player) {
-                const player = getPlayer(table, target);
-                if (isPlayerAlive(player)) {
-                    const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
-                    if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
-                        ++numTargetable;
+    case 'cards_other_players':
+        if (index >= targets.length) {
+            let numTargetable = 0;
+            for (const target of table.alive_players) {
+                if (target != table.self_player && target != selector.selection.context.skipped_player) {
+                    const player = getPlayer(table, target);
+                    if (isPlayerAlive(player)) {
+                        const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
+                        if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
+                            ++numTargetable;
+                        }
                     }
                 }
             }
+            return editSelectorTargets(selector, table, targets => targets.concat({
+                cards_other_players: Array<number>(numTargetable).fill(0)
+            }));
         }
-        return editSelectorTargets(selector, table, targets => targets.concat({ cards_other_players: Array<number>(numTargetable).fill(0) }));
-    }
+        break;
     }
     return selector;
 }
