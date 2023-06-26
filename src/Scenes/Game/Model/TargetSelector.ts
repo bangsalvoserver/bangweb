@@ -105,6 +105,12 @@ export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard,
     }
 }
 
+export function getNextEffect(selector: PlayingSelector): CardEffect | undefined {
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    return getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+}
+
 export function selectorCanConfirm(selector: TargetSelector): boolean {
     switch (selector.selection.mode) {
     case 'target':

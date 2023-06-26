@@ -1,9 +1,9 @@
-import { ExtractKeys, FilteredKeys, KeysOfUnion, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
+import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
-import { CardId } from "./GameUpdate";
-import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
+import { CardId, PlayerId } from "./GameUpdate";
+import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextEffect, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: { status: RequestStatusUnion, table: GameTable } } |
@@ -66,6 +66,32 @@ function appendMultitarget(targetType: MultiTargetType, id: number): TargetListM
         }
         throw new Error('TargetSelector: last target is not an array');
     };
+}
+
+function appendCardTarget(selector: PlayingSelector, card: CardId): TargetListMapper {
+    const effect = getNextEffect(selector);
+    switch (effect?.target) {
+    case 'card':
+    case 'extra_card':
+        return appendTarget(effect.target, card);
+    case 'cards':
+    case 'select_cubes':
+    case 'cards_other_players':
+        return appendMultitarget(effect.target, card);
+    default:
+        throw new Error('TargetSelector: cannot add card target');
+    }
+}
+
+function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): TargetListMapper {
+    const effect = getNextEffect(selector);
+    switch (effect?.target) {
+    case 'player':
+    case 'conditional_player':
+        return appendTarget(effect.target, player);
+    default:
+        throw new Error('TargetSelector: cannot add player target');
+    }
 }
 
 function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector: PlayingSelector): PlayingSelector {
@@ -298,51 +324,26 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
 
     addCardTarget ({ card, table }) {
         checkSelectionPlaying(this);
-        const [currentCard, targets] = getCurrentCardAndTargets(this);
-        const index = getNextTargetIndex(targets);
-        const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(this)), index);
-
-        switch (nextEffect?.target) {
-        case 'card':
-        case 'extra_card':
-            return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, card.id)), table);
-        case 'cards':
-        case 'select_cubes':
-        case 'cards_other_players':
-            return handleAutoTargets(editSelectorTargets(this, appendMultitarget(nextEffect.target, card.id)), table);
-        default:
-            throw new Error('TargetSelector: cannot add card target');
-        }
+        return handleAutoTargets(editSelectorTargets(this, appendCardTarget(this, card.id)), table);
     },
 
     addPlayerTarget ({ player, table }) {
         checkSelectionPlaying(this);
-        const [currentCard, targets] = getCurrentCardAndTargets(this);
-        const index = getNextTargetIndex(targets);
-        const nextEffect = getEffectAt(getCardEffects(currentCard, isResponse(this)), index);
-
-        switch (nextEffect?.target) {
-        case 'player':
-        case 'conditional_player':
-            return handleAutoTargets(editSelectorTargets(this, appendTarget(nextEffect.target, player.id)), table);
-        default:
-            throw new Error('TargetSelector: cannot add player target');
-        }
+        return handleAutoTargets(editSelectorTargets(this, appendPlayerTarget(this, player.id)), table);
     },
 
     addEquipTarget (player) {
-        if (this.selection.mode == 'equip') {
-            return {
-                ...this,
-                selection: {
-                    ...this.selection,
-                    targets: [{ player: player.id }],
-                    mode: 'finish'
-                },
-            };
-        } else {
+        if (this.selection.mode != 'equip') {
             throw new Error('TargetSelector: not in equipping mode');
         }
+        return {
+            ...this,
+            selection: {
+                ...this.selection,
+                targets: [{ player: player.id }],
+                mode: 'finish'
+            },
+        };
     }
     
 });
