@@ -212,24 +212,21 @@ function appendAutoTarget(selector: PlayingSelector, table: GameTable): TargetLi
     }
 }
 
+function setSelectorMode(selector: PlayingSelector, mode: 'start' | 'finish'): PlayingSelector {
+    return {
+        ...selector,
+        selection: {
+            ...selector.selection,
+            mode
+        }
+    };
+}
 function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetSelector {
     if (isAutoConfirmable(selector, table)) {
         if (selector.selection.mode == 'modifier') {
-            return handleAutoSelect(addModifierContext({
-                ...selector,
-                selection: {
-                    ...selector.selection,
-                    mode: 'start'
-                }
-            }), table);
+            return handleAutoSelect(setSelectorMode(addModifierContext(selector), 'start'), table);
         } else {
-            return {
-                ...selector,
-                selection: {
-                    ...selector.selection,
-                    mode: 'finish'
-                }
-            };
+            return setSelectorMode(selector, 'finish');
         }
     }
 
@@ -300,9 +297,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
 
     confirmPlay () {
         checkSelectionPlaying(this);
-        const selector = editSelectorTargets(this, targets => targets.slice(0, getNextTargetIndex(targets)));
-        selector.selection.mode = 'finish';
-        return selector;
+        return setSelectorMode(editSelectorTargets(this, targets => targets.slice(0, getNextTargetIndex(targets))), 'finish');
     },
 
     undoSelection ({ table }) {
