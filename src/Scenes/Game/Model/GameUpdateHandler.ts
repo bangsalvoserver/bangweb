@@ -3,6 +3,7 @@ import { createUnionFunction } from "../../../Utils/UnionUtils";
 import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 import { GameAction } from "./GameAction";
+import { GameTable } from "./GameTable";
 
 export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
@@ -12,6 +13,7 @@ export interface GameChannel {
 export class GameUpdateHandler {
     
     private channel: GameChannel;
+    private table: GameTable;
     private tableDispatch: Dispatch<GameUpdate>;
     private selectorDispatch: Dispatch<SelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
@@ -26,12 +28,14 @@ export class GameUpdateHandler {
 
     constructor(
         channel: GameChannel,
+        table: GameTable,
         tableDispatch: Dispatch<GameUpdate>,
         selectorDispatch: Dispatch<SelectorUpdate>,
         setGameLogs: Dispatch<SetStateAction<GameString[]>>,
         setGameError: Dispatch<GameString>
     ) {
         this.channel = channel;
+        this.table = table;
         this.tableDispatch = tableDispatch;
         this.selectorDispatch = selectorDispatch;
         this.setGameLogs = setGameLogs;
@@ -58,6 +62,10 @@ export class GameUpdateHandler {
         }
     }
 
+    setTable(table: GameTable) {
+        this.table = table;
+    }
+
     private setAnimation(update: Duration, endUpdate?: GameUpdate) {
         const timer = update.duration - this.remainingTime;
         if (timer <= 0) {
@@ -74,7 +82,7 @@ export class GameUpdateHandler {
 
         game_error (message) {
             this.setGameError(message);
-            this.selectorDispatch({ undoSelection: {} });
+            this.selectorDispatch({ undoSelection: { table: this.table } });
         },
 
         game_log (message) {
@@ -187,15 +195,15 @@ export class GameUpdateHandler {
         },
         
         request_status (status) {
-            this.selectorDispatch({ setRequest: status });
+            this.selectorDispatch({ setRequest: { status, table: this.table } });
         },
 
         status_ready (status) {
-            this.selectorDispatch({ setRequest: status });
+            this.selectorDispatch({ setRequest: { status, table: this.table} });
         },
 
         status_clear () {
-            this.selectorDispatch({ setRequest: {}});
+            this.selectorDispatch({ setRequest: { status: {}, table: this.table }});
         },
         
     });

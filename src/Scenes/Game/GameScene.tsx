@@ -43,8 +43,10 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const [gameError, setGameError] = useState<GameString>();
 
-  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs, setGameError));
+  const handler = useRefLazy(() => new GameUpdateHandler(channel, table, tableDispatch, selectorDispatch, setGameLogs, setGameError));
   useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
+
+  useEffect(() => handler.current.setTable(table), [table]);
 
   useTimeout(() => {
     if (gameError) {
@@ -74,17 +76,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selector, selectorDispatch, card) : undefined;
   const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selector, selectorDispatch, player) : undefined;
   const handleConfirm = clickIsAllowed ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
-  const handleUndo = clickIsAllowed ? () => selectorDispatch({ undoSelection: {} }) : undefined;
-
-  useEffect(() => {
-    const cardId = getAutoSelectCard(selector);
-    if (cardId) {
-      const card = getCard(table, cardId);
-      if (selectorCanPlayCard(selector, card)) {
-        selectorDispatch({ selectPlayingCard: {card, table } });
-      }
-    }
-  }, [selector]);
+  const handleUndo = clickIsAllowed ? () => selectorDispatch({ undoSelection: { table } }) : undefined;
   
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 

@@ -17,7 +17,7 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
     
     if ('yesno' in prompt) {
         const handleYes = () => selectorDispatch({ setPrompt: { yesno: { ...prompt.yesno, response: true }} });
-        const handleNo = () => selectorDispatch({ undoSelection: {} });
+        const handleNo = () => selectorDispatch({ undoSelection: { table } });
 
         return <div className="prompt-view">
             <div className="prompt-message">
@@ -43,7 +43,7 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
 
         const handlePlay = () => selectorDispatch({ selectPlayingCard: { card, table } });
         const handlePick = () => selectorDispatch({ selectPickCard: card });
-        const handleUndo = () => selectorDispatch({ undoSelection: {} });
+        const handleUndo = () => selectorDispatch({ undoSelection: { table } });
 
         return <div className="prompt-view">
             <div className="prompt-message">

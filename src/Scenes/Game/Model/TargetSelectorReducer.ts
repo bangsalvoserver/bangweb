@@ -3,13 +3,13 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
 import { CardId } from "./GameUpdate";
-import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
+import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
-    { setRequest: RequestStatusUnion } |
+    { setRequest: { status: RequestStatusUnion, table: GameTable } } |
     { setPrompt: GamePrompt } |
     { confirmPlay: {} } |
-    { undoSelection: {} } |
+    { undoSelection: { table: GameTable } } |
     { selectPlayingCard: { card: KnownCard, table: GameTable } } |
     { selectPickCard: Card } |
     { addCardTarget: { card: Card, table: GameTable } } |
@@ -147,13 +147,13 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
 
     if (autoConfirm) {
         if (selector.selection.mode == 'modifier') {
-            return addModifierContext(currentCard, targets, {
+            return handleAutoSelect(addModifierContext(currentCard, targets, {
                 ...selector,
                 selection: {
                     ...selector.selection,
                     mode: 'start'
                 }
-            });
+            }), table);
         } else {
             return {
                 ...selector,
@@ -201,9 +201,57 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
     return selector;
 }
 
+function handleSelectPlayingCard(selector: TargetSelector, table: GameTable, card: KnownCard): TargetSelector {
+    const selection = isSelectionPlaying(selector) ? selector.selection : newPlayCardSelection();
+
+    if (isEquipCard(card)) {
+        return {
+            ...selector,
+            selection: {
+                ...selection,
+                playing_card: card,
+                mode: card.cardData.equip_target.length == 0
+                    ? 'finish' : 'equip'
+            },
+            prompt: {}
+        };
+    } else if (card.cardData.modifier.type == 'none') {
+        return handleAutoTargets({
+            ...selector,
+            selection: {
+                ...selection,
+                playing_card: card,
+                mode: 'target'
+            },
+            prompt: {}
+        }, table);
+    } else {
+        return handleAutoTargets({
+            ...selector,
+            selection: {
+                ...selection,
+                modifiers: selection.modifiers.concat({ modifier: card, targets: [] }),
+                mode: 'modifier'
+            },
+            prompt: {}
+        }, table);
+    }
+}
+
+function handleAutoSelect(selector: TargetSelector, table: GameTable): TargetSelector {
+    const cardId = getAutoSelectCard(selector);
+    if (cardId) {
+      const card = getCard(table, cardId);
+      if (selectorCanPlayCard(selector, card)) {
+        return handleSelectPlayingCard(selector, table, card);
+      }
+    }
+    return selector;
+}
+
 const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>({
-    setRequest (request) {
-        return newTargetSelector(request);
+    setRequest ({ status, table }) {
+        return handleAutoSelect(newTargetSelector(status), table);
     },
 
     setPrompt (prompt) {
@@ -218,45 +266,12 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         };
     },
 
-    undoSelection () {
-        return { ...this, prompt: {}, selection: { mode: 'start' }};
+    undoSelection ({ table }) {
+        return handleAutoSelect({ ...this, prompt: {}, selection: { mode: 'start' }}, table);
     },
 
     selectPlayingCard ({ card, table }) {
-        const selection = isSelectionPlaying(this) ? this.selection : newPlayCardSelection();
-
-        if (isEquipCard(card)) {
-            return {
-                ...this,
-                selection: {
-                    ...selection,
-                    playing_card: card,
-                    mode: card.cardData.equip_target.length == 0
-                        ? 'finish' : 'equip'
-                },
-                prompt: {}
-            };
-        } else if (card.cardData.modifier.type == 'none') {
-            return handleAutoTargets({
-                ...this,
-                selection: {
-                    ...selection,
-                    playing_card: card,
-                    mode: 'target'
-                },
-                prompt: {}
-            }, table);
-        } else {
-            return handleAutoTargets({
-                ...this,
-                selection: {
-                    ...selection,
-                    modifiers: selection.modifiers.concat({ modifier: card, targets: [] }),
-                    mode: 'modifier'
-                },
-                prompt: {}
-            }, table);
-        }
+        return handleSelectPlayingCard(this, table, card);
     },
 
     selectPickCard (card) {
