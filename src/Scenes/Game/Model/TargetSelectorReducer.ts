@@ -3,7 +3,7 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard, isPlayerAlive } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextEffect, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
+import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: { status: RequestStatusUnion, table: GameTable } } |
@@ -69,7 +69,10 @@ function appendMultitarget(targetType: MultiTargetType, id: number): TargetListM
 }
 
 function appendCardTarget(selector: PlayingSelector, card: CardId): TargetListMapper {
-    const effect = getNextEffect(selector);
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+
     switch (effect?.target) {
     case 'card':
     case 'extra_card':
@@ -84,7 +87,10 @@ function appendCardTarget(selector: PlayingSelector, card: CardId): TargetListMa
 }
 
 function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): TargetListMapper {
-    const effect = getNextEffect(selector);
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+
     switch (effect?.target) {
     case 'player':
     case 'conditional_player':
@@ -94,7 +100,8 @@ function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): Target
     }
 }
 
-function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector: PlayingSelector): PlayingSelector {
+function addModifierContext(selector: PlayingSelector): PlayingSelector {
+    const [modifier, targets] = getCurrentCardAndTargets(selector);
     const editContext = (mapper: (context: EffectContext) => EffectContext): PlayingSelector => {
         return {
             ...selector,
@@ -131,43 +138,90 @@ function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector
     return selector;
 }
 
-function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetSelector {
+function isAutoConfirmable(selector: PlayingSelector, table: GameTable): boolean {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const index = getNextTargetIndex(targets);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
-    const repeatCount = getTagValue(currentCard, 'repeatable') ?? 1;
 
-    const autoConfirm = (() => {
-        if (optionals.length != 0 && index >= effects.length
-            && (index - effects.length) % optionals.length == 0)
-        {
-            if (cardHasTag(currentCard, 'auto_confirm')) {
-                if (optionals.some(effect => effect.target == 'player'
-                    && !table.alive_players.some(target =>
-                        checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))))
-                {
-                    return true;
-                }
-            } else if (cardHasTag(currentCard, 'auto_confirm_red_ringo')) {
-                let cubeSlots = 0;
-                for (const cardId of getPlayer(table, table.self_player!).pockets.player_table) {
-                    const card = getCard(table, cardId);
-                    if (getCardColor(card) == 'orange') {
-                        cubeSlots += 4 - card.num_cubes;
-                    }
-                }
-                if (currentCard.num_cubes <= 1 || cubeSlots <= 1) {
-                    return true;
+    const diff = getNextTargetIndex(targets) - effects.length;
+    if (diff < 0) return false;
+
+    if (optionals.length != 0 && diff % optionals.length == 0) {
+        if (cardHasTag(currentCard, 'auto_confirm')) {
+            if (optionals.some(effect => effect.target == 'player'
+                && !table.alive_players.some(target =>
+                    checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))))
+            {
+                return true;
+            }
+        } else if (cardHasTag(currentCard, 'auto_confirm_red_ringo')) {
+            let cubeSlots = 0;
+            for (const cardId of getPlayer(table, table.self_player!).pockets.player_table) {
+                const card = getCard(table, cardId);
+                if (getCardColor(card) == 'orange') {
+                    cubeSlots += 4 - card.num_cubes;
                 }
             }
+            if (currentCard.num_cubes <= 1 || cubeSlots <= 1) {
+                return true;
+            }
         }
-        return index >= effects.length && repeatCount > 0
-            && index - effects.length == optionals.length * repeatCount;
-    })();
+    }
 
-    if (autoConfirm) {
+    const repeatCount = getTagValue(currentCard, 'repeatable') ?? 1;
+    return repeatCount > 0 && diff == optionals.length * repeatCount;
+}
+
+function appendAutoTarget(selector: PlayingSelector, table: GameTable): TargetListMapper | undefined {
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+
+    switch (effect?.target) {
+    case 'none':
+    case 'players':
+    case 'self_cubes':
+        return appendTarget(effect.target, {});
+    case 'extra_card':
+        if (selector.selection.context.repeat_card) {
+            return appendTarget(effect.target, null);
+        }
+        break;
+    case 'conditional_player': {
+        if (!table.alive_players.some(target => checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))) {
+            return appendTarget(effect.target, null);
+        }
+        break;
+    }
+    case 'cards':
+    case 'select_cubes':
+        if (index >= targets.length) {
+            return reserveTargets(effect.target, effect.target_value);
+        }
+        break;
+    case 'cards_other_players':
+        if (index >= targets.length) {
+            let numTargetable = 0;
+            for (const target of table.alive_players) {
+                if (target != table.self_player && target != selector.selection.context.skipped_player) {
+                    const player = getPlayer(table, target);
+                    if (isPlayerAlive(player)) {
+                        const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
+                        if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
+                            ++numTargetable;
+                        }
+                    }
+                }
+            }
+            return reserveTargets(effect.target, numTargetable);
+        }
+        break;
+    }
+}
+
+function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetSelector {
+    if (isAutoConfirmable(selector, table)) {
         if (selector.selection.mode == 'modifier') {
-            return handleAutoSelect(addModifierContext(currentCard, targets, {
+            return handleAutoSelect(addModifierContext({
                 ...selector,
                 selection: {
                     ...selector.selection,
@@ -185,50 +239,7 @@ function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetS
         }
     }
 
-    const mapper = (() => {
-        const nextEffect = getEffectAt([effects, optionals], index);
-        switch (nextEffect?.target) {
-        case 'none':
-        case 'players':
-        case 'self_cubes':
-            return appendTarget(nextEffect.target, {});
-        case 'extra_card':
-            if (selector.selection.context.repeat_card) {
-                return appendTarget(nextEffect.target, null);
-            }
-            break;
-        case 'conditional_player': {
-            if (!table.alive_players.some(target => checkPlayerFilter(table, selector, nextEffect.player_filter, getPlayer(table, target)))) {
-                return appendTarget(nextEffect.target, null);
-            }
-            break;
-        }
-        case 'cards':
-        case 'select_cubes':
-            if (index >= targets.length) {
-                return reserveTargets(nextEffect.target, nextEffect.target_value);
-            }
-            break;
-        case 'cards_other_players':
-            if (index >= targets.length) {
-                let numTargetable = 0;
-                for (const target of table.alive_players) {
-                    if (target != table.self_player && target != selector.selection.context.skipped_player) {
-                        const player = getPlayer(table, target);
-                        if (isPlayerAlive(player)) {
-                            const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
-                            if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
-                                ++numTargetable;
-                            }
-                        }
-                    }
-                }
-                return reserveTargets(nextEffect.target, numTargetable);
-            }
-            break;
-        }
-    })();
-    
+    const mapper = appendAutoTarget(selector, table);
     if (mapper) {
         return handleAutoTargets(editSelectorTargets(selector, mapper), table);
     } else {
