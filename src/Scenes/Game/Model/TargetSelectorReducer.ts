@@ -1,3 +1,4 @@
+import { count } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard, isPlayerAlive } from "./Filters";
@@ -200,18 +201,11 @@ function appendAutoTarget(selector: PlayingSelector, table: GameTable): TargetLi
         break;
     case 'cards_other_players':
         if (index >= targets.length) {
-            let numTargetable = 0;
-            for (const target of table.alive_players) {
-                if (target != table.self_player && target != selector.selection.context.skipped_player) {
-                    const player = getPlayer(table, target);
-                    if (isPlayerAlive(player)) {
-                        const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
-                        if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
-                            ++numTargetable;
-                        }
-                    }
-                }
-            }
+            const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
+            const playerHasCards = (player: Player) => player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack);
+            const numTargetable = count(table.alive_players, target =>
+                target != table.self_player && target != selector.selection.context.skipped_player
+                && playerHasCards(getPlayer(table, target)));
             return reserveTargets(effect.target, numTargetable);
         }
         break;

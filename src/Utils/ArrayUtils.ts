@@ -10,6 +10,10 @@ export function subtract<T>(lhs: T[], rhs: T[]): T[] {
     return lhs.filter(value => !rhs.includes(value));
 }
 
+export function count<T>(arr: T[], predicate: (value: T) => boolean) {
+    return arr.reduce((count, value) => count + +predicate(value), 0);
+}
+
 export function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<Key, Value[]> {
     let map = new Map<Key, Value[]>();
     values.forEach(value => {
