@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import GameStringComponent from "./GameStringComponent";
 import { GameString } from "./Model/GameUpdate";
 import "./Style/GameLogView.css";
@@ -27,7 +28,7 @@ export default function GameLogView({ logs }: GameLogProps) {
         }
     }, []);
 
-    return (
+    return createPortal(
         <div ref={gameLogRef} className={`game-log-view ${isLogOpen ? 'game-log-open' : ''}`}>
             <button className='
                 w-8 h-8 md:w-12 md:h-12 relative
@@ -41,6 +42,7 @@ export default function GameLogView({ logs }: GameLogProps) {
                 ))}
                 <div ref={messagesEnd} />
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

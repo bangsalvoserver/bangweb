@@ -6,6 +6,7 @@ import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
 import { ConnectionContext } from "../../App";
 import { useEventListener } from "../../Utils/UseEventListener";
+import { createPortal } from "react-dom";
 
 export interface ChatProps {
     messages: ChatMessage[];
@@ -62,7 +63,7 @@ export default function LobbyChat({ messages }: ChatProps) {
         }
     };
 
-    return (
+    return createPortal(
         <div ref={chatRef} className={`lobby-chat ${isChatOpen ? 'lobby-chat-open' : ''}`}>
             <button className='
                 w-8 h-8 md:w-12 md:h-12 relative
@@ -115,6 +116,7 @@ export default function LobbyChat({ messages }: ChatProps) {
                     >{getLabel('ui', 'BUTTON_CHAT_SEND')}</button>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

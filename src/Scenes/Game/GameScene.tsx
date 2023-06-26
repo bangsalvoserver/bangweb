@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { useMapRef, useRefLazy } from "../../Utils/LazyRef";
@@ -25,6 +26,7 @@ import PromptView from "./PromptView";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
+import StatusBar from "./StatusBar";
 
 export interface GameProps {
   channel: GameChannel;
@@ -35,7 +37,7 @@ export const GameTableContext = createContext(newGameTable());
 export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({}));
 
 export default function GameScene({ channel, handleReturnLobby }: GameProps) {
-  const { myUserId, users, lobbyOwner } = useContext(LobbyContext);
+  const { myUserId, users } = useContext(LobbyContext);
   
   const [table, setTable] = useState(() => newGameTable(myUserId));
   const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
@@ -137,47 +139,6 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     </div>;
   });
 
-  const statusText = isResponse(selector) && <GameStringComponent message={selector.request.status_text} />;
-
-  const buttonRow = table.pockets.button_row.flatMap(id => {
-    const card = getCard(table, id);
-    const isCurrent = isCardCurrent(selector, card);
-    const isPlayable = selectorCanPlayCard(selector, card);
-    if (isCurrent || isPlayable) {
-      const color = isResponse(selector) ? 'red' : isCurrent ? 'blue' : 'green';
-      return (
-        <Button key={id} color={color} onClick={onClickCard ? () => onClickCard(card) : undefined}>
-          <LocalizedCardName name={card.cardData.name} />
-        </Button>
-      );
-    } else {
-      return [];
-    }
-  })
-
-  const confirmButton = handleConfirm && <Button color='blue' onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</Button>;
-  const undoButton = handleUndo && <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>;
-
-  const statusBar = (() => {
-    if (isGameOver) {
-      return <div className="status-bar">
-        { getLabel('ui', 'STATUS_GAME_OVER') }
-        { myUserId == lobbyOwner && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button> }
-      </div>;
-    } else if (gameError) {
-      return <div className="status-bar font-bold">
-        <GameStringComponent message={gameError} />
-        <Button color='blue' onClick={() => setGameError(undefined)}>{getLabel('ui', 'BUTTON_OK')}</Button>
-      </div>
-    } else if (statusText || buttonRow.length !== 0 || confirmButton || undoButton ) {
-      return <div className="status-bar">
-        { statusText}{ buttonRow }{ confirmButton }{ undoButton }
-      </div>
-    } else {
-      return null;
-    }
-  })();
-
   return (
     <GameTableContext.Provider value={table}>
       <TargetSelectorContext.Provider value={selector}>
@@ -191,12 +152,19 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
           <div className="player-grid" num-players={table.alive_players.length}>
             { playerViews }
           </div>
-          { statusBar }
           { selectionPocket }
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
           <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
           <AnimationView getTracker={getTracker} />
           <GameLogView logs={gameLogs} />
+          <StatusBar
+            gameError={gameError}
+            handleClearGameError={() => setGameError(undefined)}
+            handleReturnLobby={handleReturnLobby}
+            handleConfirm={handleConfirm}
+            handleUndo={handleUndo}
+            onClickCard={onClickCard}
+          />
         </div>
       </TargetSelectorContext.Provider>
     </GameTableContext.Provider>
