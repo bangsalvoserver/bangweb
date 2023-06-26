@@ -8,28 +8,28 @@ import "./Style/PromptView.css";
 import { GameTableContext } from "./GameScene";
 
 export interface PromptProps {
-    prompt: GamePrompt | {};
+    prompt: GamePrompt;
     selectorDispatch: Dispatch<SelectorUpdate>;
 }
 
 export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
     const table = useContext(GameTableContext);
     
-    if ('yesno' in prompt) {
-        const handleYes = () => selectorDispatch({ setPrompt: { yesno: { ...prompt.yesno, response: true }} });
+    if (prompt.type == 'yesno') {
+        const handleYes = () => selectorDispatch({ setPrompt: { ...prompt, response: true }});
         const handleNo = () => selectorDispatch({ undoSelection: { table } });
 
         return <div className="prompt-view">
             <div className="prompt-message">
-                <p><GameStringComponent message={prompt.yesno.message} /></p>
+                <p><GameStringComponent message={prompt.message} /></p>
             </div>
             <div className="prompt-buttons">
                 <Button color='blue' onClick={handleYes}>{getLabel('ui', 'BUTTON_YES')}</Button>
                 <Button color='red' onClick={handleNo}>{getLabel('ui', 'BUTTON_NO')}</Button>
             </div>
         </div>
-    } else if ('playpickundo' in prompt) {
-        const card = prompt.playpickundo;
+    } else if (prompt.type == 'playpick') {
+        const card = prompt.card;
 
         const message = {
             format_str: 'PROMPT_PLAY_OR_PICK',

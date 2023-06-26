@@ -215,7 +215,7 @@ function handleSelectPlayingCard(selector: TargetSelector, table: GameTable, car
                 mode: card.cardData.equip_target.length == 0
                     ? 'finish' : 'equip'
             },
-            prompt: {}
+            prompt: { type: 'none' }
         };
     } else if (card.cardData.modifier.type == 'none') {
         return handleAutoTargets({
@@ -225,7 +225,7 @@ function handleSelectPlayingCard(selector: TargetSelector, table: GameTable, car
                 playing_card: card,
                 mode: 'target'
             },
-            prompt: {}
+            prompt: { type: 'none' }
         }, table);
     } else {
         return handleAutoTargets({
@@ -235,7 +235,7 @@ function handleSelectPlayingCard(selector: TargetSelector, table: GameTable, car
                 modifiers: selection.modifiers.concat({ modifier: card, targets: [] }),
                 mode: 'modifier'
             },
-            prompt: {}
+            prompt: { type: 'none' }
         }, table);
     }
 }
@@ -269,7 +269,11 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     undoSelection ({ table }) {
-        return handleAutoSelect({ ...this, prompt: {}, selection: { mode: 'start' }}, table);
+        return handleAutoSelect({
+            ...this,
+            prompt: { type: 'none' },
+            selection: { mode: 'start' }
+        }, table);
     },
 
     selectPlayingCard ({ card, table }) {

@@ -70,13 +70,14 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   const clickIsAllowed = !isGameOver
       && table.self_player !== undefined
-      && !('playpickundo' in selector.prompt)
-      && selector.selection.mode != 'finish';
+      && selector.selection.mode != 'finish'
+      && selector.prompt.type == 'none';
 
   const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selector, selectorDispatch, card) : undefined;
   const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selector, selectorDispatch, player) : undefined;
-  const handleConfirm = clickIsAllowed ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
-  const handleUndo = clickIsAllowed ? () => selectorDispatch({ undoSelection: { table } }) : undefined;
+  
+  const handleConfirm = (clickIsAllowed && selectorCanConfirm(selector)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
+  const handleUndo = (clickIsAllowed && selectorCanUndo(selector)) ? () => selectorDispatch({ undoSelection: { table } }) : undefined;
   
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
@@ -157,8 +158,8 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     }
   })
 
-  const confirmButton = selectorCanConfirm(selector) && <Button color='blue' onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</Button>;
-  const undoButton = selectorCanUndo(selector) && <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>;
+  const confirmButton = handleConfirm && <Button color='blue' onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</Button>;
+  const undoButton = handleUndo && <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>;
 
   const statusBar = (() => {
     if (isGameOver) {

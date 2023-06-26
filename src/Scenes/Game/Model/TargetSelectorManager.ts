@@ -22,7 +22,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
         if (isResponse(selector)) {
             const canPick = selectorCanPickCard(table, selector, card);
             if (canPlay && canPick) {
-                selectorDispatch({ setPrompt: { playpickundo: card }});
+                selectorDispatch({ setPrompt: { type: 'playpick', card }});
             } else if (canPlay) {
                 selectorDispatch({ selectPlayingCard: { card, table } });
             } else if (canPick) {
@@ -51,8 +51,8 @@ export function handleClickPlayer(table: GameTable, selector: TargetSelector, se
 }
 
 export function handleSendGameAction(channel: GameChannel, selector: TargetSelector) {
-    const bypass_prompt = 'yesno' in selector.prompt && selector.prompt.yesno.response;
-    if (selector.selection.mode == 'finish' && (!('yesno' in selector.prompt) || bypass_prompt)) {
+    const bypass_prompt = selector.prompt.type == 'yesno' && selector.prompt.response;
+    if (selector.selection.mode == 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         if (isSelectionPicking(selector)) {
             const card = selector.selection.picked_card;
             channel.sendGameAction({ pick_card: { card, bypass_prompt }});

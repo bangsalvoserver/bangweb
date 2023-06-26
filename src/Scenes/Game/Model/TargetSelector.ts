@@ -8,8 +8,9 @@ import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyA
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | {};
 
 export type GamePrompt =
-    { yesno: { message: GameString, response: boolean } } |
-    { playpickundo: KnownCard };
+    { type: 'none' } |
+    { type: 'yesno', message: GameString, response: boolean } |
+    { type: 'playpick', card: KnownCard };
 
 export interface PickCardSelection {
     picked_card: CardId;
@@ -49,7 +50,7 @@ export function newPlayCardSelection(): PlayCardSelection {
 
 export interface TargetSelector {
     request: RequestStatusUnion;
-    prompt: GamePrompt | {};
+    prompt: GamePrompt;
     selection:
         PickCardSelection |
         PlayCardSelection |
@@ -86,7 +87,7 @@ export function checkSelectionPlaying(selector: TargetSelector): asserts selecto
 export function newTargetSelector(request: RequestStatusUnion): TargetSelector {
     return {
         request,
-        prompt: {},
+        prompt: { type: 'none' },
         selection: { mode: 'start' },
     };
 }
@@ -201,7 +202,7 @@ export function isCardCurrent(selector: TargetSelector, card: Card): card is Kno
 }
 
 export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
-    return 'playpickundo' in selector.prompt && selector.prompt.playpickundo.id == card.id;
+    return selector.prompt.type == 'playpick' && selector.prompt.card.id == card.id;
 }
 
 export function isCardSelected(selector: TargetSelector, card: Card): boolean {
