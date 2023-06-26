@@ -1,25 +1,25 @@
 import { ExtractKeys, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
-import { getTagValue, isEquipCard } from "./Filters";
-import { Card, KnownCard, Player } from "./GameTable";
-import { EffectContext, GamePrompt, PlayCardSelection, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
+import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard, isPlayerAlive } from "./Filters";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
+import { CardId } from "./GameUpdate";
+import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
     { setPrompt: GamePrompt } |
     { confirmPlay: {} } |
     { undoSelection: {} } |
-    { selectPlayingCard: KnownCard } |
+    { selectPlayingCard: { card: KnownCard, table: GameTable } } |
     { selectPickCard: Card } |
-    { appendTarget: CardTarget } |
-    { addCardTarget: Card } |
-    { addPlayerTarget: Player } |
+    { addCardTarget: { card: Card, table: GameTable } } |
+    { addPlayerTarget: { player: Player, table: GameTable } } |
     { addEquipTarget: Player }
 ;
 
 type TargetListMapper = (targets: CardTarget[]) => CardTarget[];
 
-function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper): PlayingSelector {
+function editSelectorTargets(selector: PlayingSelector, table: GameTable, mapper: TargetListMapper): TargetSelector {
     switch (selector.selection.mode) {
     case 'target':
         return handleAutoTargets({
@@ -28,7 +28,7 @@ function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper
                 ...selector.selection,
                 targets: mapper(selector.selection.targets)
             }
-        });
+        }, table);
     case 'modifier':
         const lastModifier = selector.selection.modifiers.at(-1)!;
         const modifiers = selector.selection.modifiers.slice(0, -1)
@@ -36,7 +36,7 @@ function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper
         return handleAutoTargets({
             ...selector,
             selection: { ...selector.selection, modifiers }
-        });
+        }, table);
     default:
         throw new Error('TargetSelector: not in targeting mode');
     }
@@ -110,15 +110,42 @@ function addModifierContext(modifier: KnownCard, targets: CardTarget[], selector
     return selector;
 }
 
-function handleAutoTargets(selector: PlayingSelector): PlayingSelector {
+function handleAutoTargets(selector: PlayingSelector, table: GameTable): TargetSelector {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
     const repeatCount = getTagValue(currentCard, 'repeatable') ?? 1;
 
-    if (index >= effects.length && repeatCount > 0
-        && targets.length - effects.length == optionals.length * repeatCount)
-    {
+    const autoConfirm = (() => {
+        if (optionals.length != 0
+            && targets.length >= effects.length
+            && (targets.length - effects.length) % optionals.length == 0)
+        {
+            if (cardHasTag(currentCard, 'auto_confirm')) {
+                if (optionals.some(effect => effect.target == 'player'
+                    && !table.alive_players.some(target =>
+                        checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))))
+                {
+                    return true;
+                }
+            } else if (cardHasTag(currentCard, 'auto_confirm_red_ringo')) {
+                let cubeSlots = 0;
+                for (const cardId of getPlayer(table, table.self_player!).pockets.player_table) {
+                    const card = getCard(table, cardId);
+                    if (getCardColor(card) == 'orange') {
+                        cubeSlots += 4 - card.num_cubes;
+                    }
+                }
+                if (currentCard.num_cubes <= 1 || cubeSlots <= 1) {
+                    return true;
+                }
+            }
+        }
+        return index >= effects.length && repeatCount > 0
+            && targets.length - effects.length == optionals.length * repeatCount;
+    })();
+
+    if (autoConfirm) {
         if (selector.selection.mode == 'modifier') {
             return addModifierContext(currentCard, targets, {
                 ...selector,
@@ -143,12 +170,33 @@ function handleAutoTargets(selector: PlayingSelector): PlayingSelector {
     case 'none':
     case 'players':
     case 'self_cubes':
-        return editSelectorTargets(selector, targets => targets.concat({[nextEffect.target]: {}} as CardTarget));
+        return editSelectorTargets(selector, table, targets => targets.concat({[nextEffect.target]: {}} as CardTarget));
     case 'extra_card':
         if (selector.selection.context.repeat_card) {
-            return editSelectorTargets(selector, targets => targets.concat({extra_card: null}));
+            return editSelectorTargets(selector, table, targets => targets.concat({ extra_card: null }));
         }
         break;
+    case 'conditional_player': {
+        if (!table.alive_players.some(target => checkPlayerFilter(table, selector, nextEffect.player_filter, getPlayer(table, target)))) {
+            return editSelectorTargets(selector, table, targets => targets.concat({ conditional_player: null }));
+        }
+        break;
+    }
+    case 'cards_other_players': {
+        let numTargetable = 0;
+        for (const target of table.alive_players) {
+            if (target != table.self_player && target != selector.selection.context.skipped_player) {
+                const player = getPlayer(table, target);
+                if (isPlayerAlive(player)) {
+                    const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
+                    if (player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack)) {
+                        ++numTargetable;
+                    }
+                }
+            }
+        }
+        return editSelectorTargets(selector, table, targets => targets.concat({ cards_other_players: Array<number>(numTargetable).fill(0) }));
+    }
     }
     return selector;
 }
@@ -174,7 +222,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         return { ...this, prompt: {}, selection: { mode: 'start' }};
     },
 
-    selectPlayingCard (card) {
+    selectPlayingCard ({ card, table }) {
         const selection = isSelectionPlaying(this) ? this.selection : newPlayCardSelection();
 
         if (isEquipCard(card)) {
@@ -197,7 +245,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
                     mode: 'target'
                 },
                 prompt: {}
-            });
+            }, table);
         } else {
             return handleAutoTargets({
                 ...this,
@@ -207,7 +255,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
                     mode: 'modifier'
                 },
                 prompt: {}
-            });
+            }, table);
         }
     },
 
@@ -221,12 +269,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         };
     },
 
-    appendTarget (target) {
-        checkSelectionPlaying(this);
-        return editSelectorTargets(this, targets => targets.concat(target));
-    },
-
-    addCardTarget (card) {
+    addCardTarget ({ card, table }) {
         checkSelectionPlaying(this);
         const [currentCard, targets] = getCurrentCardAndTargets(this);
         const index = getNextTargetIndex(targets);
@@ -235,18 +278,18 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'card':
         case 'extra_card':
-            return editSelectorTargets(this, targets => targets.concat({[nextEffect.target]: card.id} as CardTarget));
+            return editSelectorTargets(this, table, targets => targets.concat({[nextEffect.target]: card.id} as CardTarget));
         case 'cards':
         case 'select_cubes':
-            return editSelectorTargets(this, appendMultitarget(nextEffect.target, card.id, index, nextEffect.target_value));
+            return editSelectorTargets(this, table, appendMultitarget(nextEffect.target, card.id, index, nextEffect.target_value));
         case 'cards_other_players':
-            return editSelectorTargets(this, appendMultitargetReserved(nextEffect.target, card.id));
+            return editSelectorTargets(this, table, appendMultitargetReserved(nextEffect.target, card.id));
         default:
             throw new Error('TargetSelector: cannot add card target');
         }
     },
 
-    addPlayerTarget (player) {
+    addPlayerTarget ({ player, table }) {
         checkSelectionPlaying(this);
         const [currentCard, targets] = getCurrentCardAndTargets(this);
         const index = getNextTargetIndex(targets);
@@ -255,7 +298,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
         switch (nextEffect?.target) {
         case 'player':
         case 'conditional_player':
-            return editSelectorTargets(this, targets => targets.concat({[nextEffect.target]: player.id} as CardTarget));
+            return editSelectorTargets(this, table, targets => targets.concat({[nextEffect.target]: player.id} as CardTarget));
         default:
             throw new Error('TargetSelector: cannot add player target');
         }

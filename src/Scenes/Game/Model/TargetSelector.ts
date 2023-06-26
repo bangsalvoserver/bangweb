@@ -126,6 +126,17 @@ export function isAutoSelect(selector: TargetSelector): selector is RequestSelec
         && selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0;
 }
 
+export function getAutoSelectCard(selector: TargetSelector): CardId | undefined {
+    if (selector.selection.mode == 'start') {
+        if (isSelectionPlaying(selector)) {
+            const context = selector.selection.context;
+            return context.repeat_card || context.traincost;
+        } else if (isAutoSelect(selector)) {
+            return selector.request.respond_cards[0].card;
+        }
+    }
+}
+
 export function selectorCanUndo(selector: TargetSelector): boolean {
     if (selector.selection.mode == 'finish') return false;
     if (selector.selection.mode == 'start') {

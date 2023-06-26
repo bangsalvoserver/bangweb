@@ -14,8 +14,8 @@ import { Card, Player, getCard, getPlayer, newGameTable } from "./Model/GameTabl
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
-import { TargetSelector, isCardCurrent, isResponse, newTargetSelector, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./Model/TargetSelector";
-import { handleAutoSelect, handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
+import { TargetSelector, getAutoSelectCard, isCardCurrent, isResponse, newTargetSelector, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./Model/TargetSelector";
+import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
 import PlayerView from "./PlayerView";
 import PocketView from "./Pockets/PocketView";
@@ -76,7 +76,16 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const handleConfirm = clickIsAllowed ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
   const handleUndo = clickIsAllowed ? () => selectorDispatch({ undoSelection: {} }) : undefined;
 
-  useEffect(() => handleAutoSelect(table, selector, selectorDispatch), [selector]);
+  useEffect(() => {
+    const cardId = getAutoSelectCard(selector);
+    if (cardId) {
+      const card = getCard(table, cardId);
+      if (selectorCanPlayCard(selector, card)) {
+        selectorDispatch({ selectPlayingCard: {card, table } });
+      }
+    }
+  }, [selector]);
+  
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
   const shopPockets = (table.pockets.shop_deck.length != 0 || table.pockets.shop_selection.length != 0) && (
