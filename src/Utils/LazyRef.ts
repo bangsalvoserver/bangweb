@@ -1,4 +1,4 @@
-import { Dispatch, MutableRefObject, Reducer, useRef, useState } from "react";
+import { Dispatch, MutableRefObject, Reducer, useCallback, useRef, useState } from "react";
 
 export function useRefLazy<T>(init: () => T) {
     const ref = useRef() as MutableRefObject<T>;
@@ -29,12 +29,16 @@ export function useMapRef<Key, Value>(): MapRef<Key, Value> {
     }
 }
 
-export function useReducerRef<T, U>(reducer: Reducer<T, U>, init: () => T): readonly [T, MutableRefObject<T>, Dispatch<U>] {
-    const [state, setState] = useState(init);
+export type ReadOnlyRefObject<T> = {
+    readonly current: T;
+};
+
+export function useReducerRef<T, U, I>(reducer: Reducer<T, U>, initArg: I, init: (arg: I) => T): readonly [T, Dispatch<U>, ReadOnlyRefObject<T>] {
+    const [state, setState] = useState(() => init(initArg));
     const ref = useRef(state);
-    const dispatch = (update: U) => {
+    const dispatch = useCallback((update: U) => {
         ref.current = reducer(ref.current, update);
         setState(ref.current);
-    };
-    return [state, ref, dispatch] as const;
+    }, []);
+    return [state, dispatch, ref] as const;
 }

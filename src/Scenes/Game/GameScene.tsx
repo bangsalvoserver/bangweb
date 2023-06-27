@@ -36,7 +36,7 @@ export const TargetSelectorContext = createContext<TargetSelector>(newTargetSele
 export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const { myUserId, users } = useContext(LobbyContext);
   
-  const [table, tableRef, tableDispatch] = useReducerRef(gameTableReducer, () => newGameTable(myUserId));
+  const [table, tableDispatch, tableRef] = useReducerRef(gameTableReducer, myUserId, newGameTable);
   const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const [gameError, setGameError] = useState<GameString>();

@@ -1,9 +1,10 @@
-import { Dispatch, MutableRefObject, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
 import { GameAction } from "./GameAction";
 import { GameTable } from "./GameTable";
 import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
+import { ReadOnlyRefObject } from "../../../Utils/LazyRef";
 
 export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
@@ -13,7 +14,7 @@ export interface GameChannel {
 export class GameUpdateHandler {
     
     private channel: GameChannel;
-    private tableRef: MutableRefObject<GameTable>;
+    private tableRef: ReadOnlyRefObject<GameTable>;
     private tableDispatch: Dispatch<GameUpdate>;
     private selectorDispatch: Dispatch<SelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
@@ -28,7 +29,7 @@ export class GameUpdateHandler {
 
     constructor(
         channel: GameChannel,
-        tableRef: MutableRefObject<GameTable>,
+        tableRef: ReadOnlyRefObject<GameTable>,
         tableDispatch: Dispatch<GameUpdate>,
         selectorDispatch: Dispatch<SelectorUpdate>,
         setGameLogs: Dispatch<SetStateAction<GameString[]>>,
