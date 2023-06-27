@@ -54,18 +54,15 @@ function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: GameOpt
     </div>)
 };
 
-function OptionNumber({ prop, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<number> }) {
+function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<number>, max: number }) {
     const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length == 0) {
-            setGameOptions({
-                ...gameOptions,
-                [prop]: undefined
-            });
+            setGameOptions({ ...gameOptions, [prop]: undefined });
         } else if (event.target.validity.valid) {
-            setGameOptions({
-                ...gameOptions,
-                [prop]: event.target.valueAsNumber
-            });
+            const value = event.target.valueAsNumber;
+            if (value >= 0 && value <= max) {
+                setGameOptions({ ...gameOptions, [prop]: value });
+            }
         }
     };
 
@@ -98,11 +95,11 @@ export default function GameOptionsEditor(props: GameOptionProps) {
         <OptionCheckbox prop='character_choice' { ...props } />
         <OptionCheckbox prop='allow_beer_in_duel' { ...props } />
         <OptionCheckbox prop='quick_discard_all' { ...props } />
-        <OptionNumber prop='num_bots' { ...props } />
-        <OptionNumber prop='scenario_deck_size' { ...props } />
-        <OptionNumber prop='damage_timer' { ...props } />
-        <OptionNumber prop='escape_timer' { ...props } />
-        <OptionNumber prop='bot_play_timer' { ...props } />
-        <OptionNumber prop='tumbleweed_timer' { ...props } />
+        <OptionNumber prop='num_bots' max={8} { ...props } />
+        <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
+        <OptionNumber prop='damage_timer' max={10000} { ...props } />
+        <OptionNumber prop='escape_timer' max={10000} { ...props } />
+        <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
+        <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
     </div>);
 }
