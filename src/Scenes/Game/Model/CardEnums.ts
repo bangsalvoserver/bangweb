@@ -1,17 +1,18 @@
+import { Empty } from "../../../Messages/ServerMessage";
 import { KeysOfUnion } from "../../../Utils/UnionUtils";
 import { CardId, PlayerId } from "./GameUpdate";
 
 export type CardTarget =
-    { none: {} } |
+    { none: Empty } |
     { player: PlayerId } |
     { conditional_player: PlayerId | null } |
     { card: CardId } |
     { extra_card: CardId | null } |
-    { players: {} } |
+    { players: Empty } |
     { cards: CardId[] } |
     { cards_other_players: CardId[] } |
     { select_cubes: CardId[] } |
-    { self_cubes: {} };
+    { self_cubes: Empty };
 
 export type TargetType = KeysOfUnion<CardTarget>;
 

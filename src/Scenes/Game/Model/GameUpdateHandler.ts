@@ -1,10 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
 import { GameAction } from "./GameAction";
-import { GameTable } from "./GameTable";
 import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
-import { ReadOnlyRefObject } from "../../../Utils/LazyRef";
 
 export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
@@ -14,7 +12,6 @@ export interface GameChannel {
 export class GameUpdateHandler {
     
     private channel: GameChannel;
-    private tableRef: ReadOnlyRefObject<GameTable>;
     private tableDispatch: Dispatch<GameUpdate>;
     private selectorDispatch: Dispatch<SelectorUpdate>;
     private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
@@ -29,14 +26,12 @@ export class GameUpdateHandler {
 
     constructor(
         channel: GameChannel,
-        tableRef: ReadOnlyRefObject<GameTable>,
         tableDispatch: Dispatch<GameUpdate>,
         selectorDispatch: Dispatch<SelectorUpdate>,
         setGameLogs: Dispatch<SetStateAction<GameString[]>>,
         setGameError: Dispatch<GameString>
     ) {
         this.channel = channel;
-        this.tableRef = tableRef;
         this.tableDispatch = tableDispatch;
         this.selectorDispatch = selectorDispatch;
         this.setGameLogs = setGameLogs;
@@ -79,7 +74,7 @@ export class GameUpdateHandler {
 
         game_error (message) {
             this.setGameError(message);
-            this.selectorDispatch({ undoSelection: { table: this.tableRef.current } });
+            this.selectorDispatch({ undoSelection: {} });
         },
 
         game_log (message) {
@@ -192,15 +187,15 @@ export class GameUpdateHandler {
         },
         
         request_status (status) {
-            this.selectorDispatch({ setRequest: { status, table: this.tableRef.current } });
+            this.selectorDispatch({ setRequest: status });
         },
 
         status_ready (status) {
-            this.selectorDispatch({ setRequest: { status, table: this.tableRef.current} });
+            this.selectorDispatch({ setRequest: status });
         },
 
         status_clear () {
-            this.selectorDispatch({ setRequest: { status: {}, table: this.tableRef.current }});
+            this.selectorDispatch({ setRequest: {} });
         },
         
     });

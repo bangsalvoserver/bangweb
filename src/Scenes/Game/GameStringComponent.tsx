@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
 import { CardSign } from "./Model/CardData";
-import { GameString } from "./Model/GameUpdate";
+import { FormatCardName, GameString } from "./Model/GameUpdate";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import { getUsername } from "../Lobby/LobbyUser";
 import CardSignView from "./CardSignView";
@@ -30,7 +30,7 @@ export interface GameStringProps {
 
 type GameStringFormatArg =
     { type: 'integer', value: number} |
-    { type: 'card', value: { name: string, sign: CardSign } | null } |
+    { type: 'card', value: FormatCardName | null } |
     { type: 'player', value: string | null };
 
 export default function GameStringComponent({ message }: GameStringProps): JSX.Element {
@@ -42,7 +42,7 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
             return { type: 'integer', value: arg.integer };
         } else if ('card' in arg) {
             if ('name' in arg.card) {
-                return { type: 'card', value: arg.card };
+                return { type: 'card', value: arg.card as FormatCardName };
             } else {
                 return { type: 'card', value: null };
             }

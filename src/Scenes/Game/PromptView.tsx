@@ -1,12 +1,11 @@
-import { Dispatch, useContext } from "react";
+import { Dispatch } from "react";
+import { createPortal } from "react-dom";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import GameStringComponent from "./GameStringComponent";
 import { GamePrompt } from "./Model/TargetSelector";
 import { SelectorUpdate } from "./Model/TargetSelectorReducer";
 import "./Style/PromptView.css";
-import { GameTableContext } from "./GameScene";
-import { createPortal } from "react-dom";
 
 export interface PromptProps {
     prompt: GamePrompt;
@@ -14,11 +13,9 @@ export interface PromptProps {
 }
 
 export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
-    const table = useContext(GameTableContext);
-    
     if (prompt.type == 'yesno') {
         const handleYes = () => selectorDispatch({ setPrompt: { ...prompt, response: true }});
-        const handleNo = () => selectorDispatch({ undoSelection: { table } });
+        const handleNo = () => selectorDispatch({ undoSelection: {} });
 
         return createPortal(
             <div className="prompt-view">
@@ -45,9 +42,9 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
             ]
         };
 
-        const handlePlay = () => selectorDispatch({ selectPlayingCard: { card, table } });
+        const handlePlay = () => selectorDispatch({ selectPlayingCard: card });
         const handlePick = () => selectorDispatch({ selectPickCard: card });
-        const handleUndo = () => selectorDispatch({ undoSelection: { table } });
+        const handleUndo = () => selectorDispatch({ undoSelection: {} });
 
         return createPortal(
             <div className="prompt-view">

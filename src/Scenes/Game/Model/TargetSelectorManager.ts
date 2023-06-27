@@ -4,7 +4,8 @@ import { GameChannel } from "./GameUpdateHandler";
 import { PlayingSelector, TargetSelector, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
-export function handleClickCard(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
+export function handleClickCard(selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
+    const table = selector.table.current;
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier': {
@@ -13,7 +14,7 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
             cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
         }
         if (isValidCardTarget(table, selector as PlayingSelector, cardTarget)) {
-            selectorDispatch({ addCardTarget: { card: cardTarget, table } });
+            selectorDispatch({ addCardTarget: cardTarget });
         }
         break;
     }
@@ -24,23 +25,24 @@ export function handleClickCard(table: GameTable, selector: TargetSelector, sele
             if (canPlay && canPick) {
                 selectorDispatch({ setPrompt: { type: 'playpick', card }});
             } else if (canPlay) {
-                selectorDispatch({ selectPlayingCard: { card, table } });
+                selectorDispatch({ selectPlayingCard: card });
             } else if (canPick) {
                 selectorDispatch({ selectPickCard: card });
             }
         } else if (canPlay) {
-            selectorDispatch({ selectPlayingCard: { card, table } });
+            selectorDispatch({ selectPlayingCard: card });
         }
     }
     }
 }
 
-export function handleClickPlayer(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, player: Player) {
+export function handleClickPlayer(selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, player: Player) {
+    const table = selector.table.current;
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier':
         if (isValidPlayerTarget(table, selector as PlayingSelector, player)) {
-            selectorDispatch({ addPlayerTarget: { player, table } });
+            selectorDispatch({ addPlayerTarget: player });
         }
         break;
     case 'equip':

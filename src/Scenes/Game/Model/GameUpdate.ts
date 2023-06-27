@@ -1,4 +1,4 @@
-import { UserId } from "../../../Messages/ServerMessage";
+import { Empty, UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, ScenarioDeckPocket } from "./CardEnums";
 
@@ -11,7 +11,8 @@ export interface Duration {
 }
 
 export interface FormatInteger { integer: number };
-export interface FormatCard { card: { name: string, sign: CardSign } | {} };
+export interface FormatCardName { name: string, sign: CardSign };
+export interface FormatCard { card: FormatCardName | Empty };
 export interface FormatPlayer { player: PlayerId | null };
 export type FormatArg = FormatInteger | FormatCard | FormatPlayer;
 
@@ -189,4 +190,4 @@ export type GameUpdate =
     { game_flags: GameFlag[] } |
     { request_status: RequestStatusArgs } | 
     { status_ready: StatusReadyArgs } |
-    { status_clear: {}};
+    { status_clear: Empty };

@@ -1,3 +1,5 @@
+import { Empty } from "../../../Messages/ServerMessage";
+import { ReadOnlyRefObject } from "../../../Utils/LazyRef";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
@@ -5,7 +7,7 @@ import { checkCardFilter, checkPlayerFilter, getCardColor, getEquipTarget, isEqu
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
-export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | {};
+export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | Empty;
 
 export type GamePrompt =
     { type: 'none' } |
@@ -49,6 +51,7 @@ export function newPlayCardSelection(): PlayCardSelection {
 }
 
 export interface TargetSelector {
+    table: ReadOnlyRefObject<GameTable>;
     request: RequestStatusUnion;
     prompt: GamePrompt;
     selection:
@@ -84,8 +87,9 @@ export function checkSelectionPlaying(selector: TargetSelector): asserts selecto
     }
 }
 
-export function newTargetSelector(request: RequestStatusUnion): TargetSelector {
+export function newTargetSelector(table: ReadOnlyRefObject<GameTable>, request: RequestStatusUnion = {}): TargetSelector {
     return {
+        table,
         request,
         prompt: { type: 'none' },
         selection: { mode: 'start' },

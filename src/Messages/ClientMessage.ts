@@ -1,5 +1,5 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
-import { LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./ServerMessage";
+import { Empty, LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./ServerMessage";
 
 export interface ClientConnect {
     user: UserInfo;
@@ -10,12 +10,12 @@ export interface ClientConnect {
 export type ClientMessage =
     {connect: ClientConnect} |
     {user_edit: UserInfo} |
-    {lobby_list: {}} |
+    {lobby_list: Empty } |
     {lobby_make: LobbyMakeArgs} |
     {lobby_edit: LobbyInfo} |
     {lobby_join: { lobby_id: LobbyId }} |
-    {lobby_leave: {}} |
+    {lobby_leave: Empty } |
     {lobby_chat: { message: string }} |
-    {lobby_return: {}} |
-    {game_start: {}} |
+    {lobby_return: Empty } |
+    {game_start: Empty } |
     {game_action: GameAction};

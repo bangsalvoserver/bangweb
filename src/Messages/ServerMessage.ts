@@ -1,6 +1,8 @@
 import { GameOptions, GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { ImagePixels } from "../Utils/ImageSerial";
 
+export type Empty = Record<string, never>;
+
 export type LobbyId = number;
 export type UserId = number;
 
@@ -65,8 +67,8 @@ export interface ChatMessage {
 }
 
 export type ServerMessage =
-    {connected: {}} |
-    {disconnected: {}} |
+    {connected: Empty} |
+    {disconnected: Empty} |
     {client_accepted: ClientAccepted} |
     {lobby_error: string} |
     {lobby_update: LobbyUpdate} |
@@ -78,4 +80,4 @@ export type ServerMessage =
     {lobby_remove_user: LobbyRemoveUser} |
     {lobby_chat: ChatMessage} |
     {game_update: GameUpdate} |
-    {game_started: {}};
+    {game_started: Empty};

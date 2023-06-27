@@ -1,4 +1,4 @@
-import { UserId } from "../../../Messages/ServerMessage";
+import { Empty, UserId } from "../../../Messages/ServerMessage";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, ScenarioDeckPocket, TablePocketType } from "./CardEnums";
@@ -53,7 +53,7 @@ export type CardAnimation =
     { turning: Duration } |
     { flash: Duration } |
     { move_card: Duration } |
-    { short_pause: {}};
+    { short_pause: Empty };
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;

@@ -30,18 +30,19 @@ export interface GameProps {
   handleReturnLobby: () => void;
 }
 
-export const GameTableContext = createContext(newGameTable());
-export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({}));
+const EMPTY_TABLE = newGameTable();
+export const GameTableContext = createContext(EMPTY_TABLE);
+export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({ current: EMPTY_TABLE }));
 
 export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const { myUserId, users } = useContext(LobbyContext);
   
   const [table, tableDispatch, tableRef] = useReducerRef(gameTableReducer, myUserId, newGameTable);
-  const [selector, selectorDispatch] = useReducer(targetSelectorReducer, {}, newTargetSelector);
+  const [selector, selectorDispatch] = useReducer(targetSelectorReducer, tableRef, newTargetSelector);
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const [gameError, setGameError] = useState<GameString>();
 
-  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableRef, tableDispatch, selectorDispatch, setGameLogs, setGameError));
+  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs, setGameError));
   useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
 
   useTimeout(() => {
@@ -69,11 +70,11 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
       && selector.selection.mode != 'finish'
       && selector.prompt.type == 'none';
 
-  const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selector, selectorDispatch, card) : undefined;
-  const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selector, selectorDispatch, player) : undefined;
+  const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(selector, selectorDispatch, card) : undefined;
+  const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(selector, selectorDispatch, player) : undefined;
   
   const handleConfirm = (clickIsAllowed && selectorCanConfirm(selector)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
-  const handleUndo = (clickIsAllowed && selectorCanUndo(selector)) ? () => selectorDispatch({ undoSelection: { table } }) : undefined;
+  const handleUndo = (clickIsAllowed && selectorCanUndo(selector)) ? () => selectorDispatch({ undoSelection: {} }) : undefined;
   
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
