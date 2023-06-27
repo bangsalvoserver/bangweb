@@ -14,11 +14,18 @@
 }
 
 .pocket-count {
-    background-color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0px 0px 4px white, 0px 0px 4px white, 0px 0px 4px white, 0px 0px 4px white;
     font-weight: bold;
+    font-size: 16pt;
     padding: 2px 5px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+@media (max-width: 1200px) {
+    .pocket-count {
+        font-size: 14pt;
+    }
 }
