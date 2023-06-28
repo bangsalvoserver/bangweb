@@ -1,6 +1,6 @@
 import { group, subtract } from "../../../Utils/ArrayUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
-import { CARD_SLOT_ID } from "../Pockets/CardSlot";
+import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket, rotatePlayers } from "./EditPocketMap";
 import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, sortById } from "./GameTable";
@@ -142,12 +142,14 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
 
     // Adds a card to another pocket
     move_card ({ card, player, pocket, duration }) {
-        let [pockets, players] = addToPocket(this.pockets, this.players, newPocketRef(pocket, player), [card]);
-        [pockets, players] = editPocketMap(pockets, players, getCard(this, card).pocket, cards => cards.map(id => id == card ? CARD_SLOT_ID : id));
+        const fromPocket = getCard(this, card).pocket;
+        let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id == card ? CARD_SLOT_ID_FROM : id));
+
+        const toPocket = newPocketRef(pocket, player);
+        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO]);
 
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, animation: { move_card: { duration } } })),
             players, pockets,
             animation: { move_card: { card, player, pocket, duration } }
         };
@@ -155,11 +157,15 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
 
     // Removes a card from its pocket
     move_card_end ({ card, player, pocket }) {
-        const [pockets, players] = removeFromPocket(this.pockets, this.players, getCard(this, card).pocket, [CARD_SLOT_ID]);
+        const fromPocket = getCard(this, card).pocket;
+        let [pockets, players] = removeFromPocket(this.pockets, this.players, fromPocket, [CARD_SLOT_ID_FROM]);
+
+        const toPocket = newPocketRef(pocket, player);
+        [pockets, players] = editPocketMap(pockets, players, toPocket, cards => cards.map(id => id == CARD_SLOT_ID_TO ? card: id));
 
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, pocket: newPocketRef(pocket, player), animation: undefined })),
+            cards: editById(this.cards, card, card => ({ ...card, pocket: toPocket, animation: undefined })),
             players, pockets,
             animation: undefined
         };

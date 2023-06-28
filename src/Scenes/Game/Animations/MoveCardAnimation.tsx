@@ -5,7 +5,7 @@ import CardView from "../CardView";
 import { CardTracker } from "../Model/CardTracker";
 import { Card, PocketRef } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
-import { CARD_SLOT_ID } from "../Pockets/CardSlot";
+import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import "./Style/MoveCardAnimation.css";
 
 export interface MoveCardProps {
@@ -17,8 +17,8 @@ export interface MoveCardProps {
 
 export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
     const [startRect, endRect] = useUpdateEveryFrame(() => ([
-        tracker.getTablePocket(card.pocket)?.getCardRect(CARD_SLOT_ID),
-        tracker.getTablePocket(destPocket)?.getCardRect(card.id)
+        tracker.getTablePocket(card.pocket)?.getCardRect(CARD_SLOT_ID_FROM),
+        tracker.getTablePocket(destPocket)?.getCardRect(CARD_SLOT_ID_TO)
     ]));
 
     if (startRect) {

@@ -1,11 +1,12 @@
 import { forwardRef, useContext, useRef, useImperativeHandle } from "react";
-import { CARD_SLOT_ID } from "./CardSlot";
+import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import { GameTableContext } from "../GameScene";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
 import { PocketPosition } from "../Model/CardTracker";
+import { count } from "../../../Utils/ArrayUtils";
 
 export interface StackPocketProps {
     cards: CardId[];
@@ -24,8 +25,7 @@ const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onCli
         getCardRect: () => position.current?.getPocketRect() ?? null
     }));
 
-    let numCards = cards.length;
-    if (cards.includes(CARD_SLOT_ID)) --numCards;
+    const numCards = count(cards, id => id !== CARD_SLOT_ID_FROM && id !== CARD_SLOT_ID_TO);
 
     const handleClickLastCard = onClickCard && numCards > 0 ? () => {
         onClickCard(getCard(table, cards.at(-1)!));

@@ -6,7 +6,7 @@ import { GameTableContext } from "../GameScene";
 import { PocketType } from "../Model/CardEnums";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
-import CardSlot, { CARD_SLOT_ID } from "./CardSlot";
+import CardSlot, { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import "./Style/PocketView.css";
 import { PocketPosition } from "../Model/CardTracker";
 
@@ -33,19 +33,14 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
 
     return <div ref={pocketRef} className='pocket-view'>
         { cards.map(id => {
-            if (id == CARD_SLOT_ID) {
+            if (id == CARD_SLOT_ID_FROM || id == CARD_SLOT_ID_TO) {
                 if (table.animation && 'move_card' in table.animation) {
-                    return <CardSlot ref={setPos(id)} key={id} stretch='in' duration={table.animation.move_card.duration} />
+                    return <CardSlot ref={setPos(id)} key={id} stretch={id == CARD_SLOT_ID_FROM ? 'in' : 'out'} duration={table.animation.move_card.duration} />
                 } else {
                     return null;
                 }
             } else {
-                const card = getCard(table, id);
-                if (card.animation && 'move_card' in card.animation) {
-                    return <CardSlot ref={setPos(id)} key={id} stretch='out' duration={card.animation.move_card.duration} />
-                } else {
-                    return <CardView ref={setPos(id)} key={id} card={card} onClickCard={onClickCard} />
-                }
+                return <CardView ref={setPos(id)} key={id} card={getCard(table, id)} onClickCard={onClickCard} />
             }
         }) }
     </div>;

@@ -52,7 +52,6 @@ export type CardAnimation =
     { flipping: { cardImage?: CardImage } & Duration } |
     { turning: Duration } |
     { flash: Duration } |
-    { move_card: Duration } |
     { short_pause: Empty };
 
 export interface Card extends Id {

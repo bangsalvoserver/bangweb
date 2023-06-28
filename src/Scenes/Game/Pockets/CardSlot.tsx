@@ -4,7 +4,8 @@ import { CardRef } from "../CardView";
 import { CardId, Milliseconds } from "../Model/GameUpdate";
 import "./Style/CardSlot.css";
 
-export const CARD_SLOT_ID: CardId = -1;
+export const CARD_SLOT_ID_FROM: CardId = -1;
+export const CARD_SLOT_ID_TO: CardId = -2;
 
 export interface CardSlotProps {
     stretch: 'in' | 'out';
