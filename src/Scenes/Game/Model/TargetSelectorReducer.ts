@@ -32,12 +32,18 @@ function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper
             }
         };
     case 'modifier':
-        const lastModifier = selector.selection.modifiers.at(-1)!;
-        const modifiers = selector.selection.modifiers.slice(0, -1)
-            .concat({ modifier: lastModifier.modifier, targets: mapper(lastModifier.targets) });
         return {
             ...selector,
-            selection: { ...selector.selection, modifiers }
+            selection: {
+                ...selector.selection,
+                modifiers: selector.selection.modifiers.map((modifier, index) => {
+                    if (index == selector.selection.modifiers.length - 1) {
+                        return { ...modifier, targets: mapper(modifier.targets) };
+                    } else {
+                        return modifier;
+                    }
+                })
+            }
         };
     default:
         throw new Error('TargetSelector: not in targeting mode');
