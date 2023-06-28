@@ -150,7 +150,12 @@ export function selectorCanUndo(selector: TargetSelector): boolean {
     }
     if (isAutoSelect(selector)) {
         const someTargetNotNone = (targets: CardTarget[]) => {
-            return targets.some(target => !('none' in target));
+            return targets.some(target => {
+                const value = Object.values(target)[0];
+                if (Array.isArray(value) && value.every(num => num === 0)) return false;
+                if (typeof value == 'object' && Object.keys(value).length == 0) return false;
+                return true;
+            });
         };
         if (selector.selection.mode == 'target') {
             return someTargetNotNone(selector.selection.targets);
