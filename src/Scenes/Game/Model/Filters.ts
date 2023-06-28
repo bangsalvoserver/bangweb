@@ -85,7 +85,8 @@ export function countDistance(table: GameTable, from: Player, to: Player): numbe
     return Math.min(countLeft, countRight) + to.status.distance_mod;
 }
 
-export function checkPlayerFilter(table: GameTable, selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
+export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
+    const table = selector.table.current;
     const origin = getPlayer(table, table.self_player!);
     const context = selector.selection.context;
 
@@ -126,7 +127,8 @@ export function checkPlayerFilter(table: GameTable, selector: PlayingSelector, f
     return true;
 }
 
-export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
+export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
+    const table = selector.table.current;
     const origin = getPlayer(table, table.self_player!);
 
     if (!filter.includes('can_repeat') && isCardSelected(selector, target)) return false;

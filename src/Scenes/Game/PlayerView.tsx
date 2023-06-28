@@ -24,19 +24,19 @@ export interface PlayerProps {
     onClickPlayer?: (player: Player) => void;
 }
 
-function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player) {
+function getSelectorPlayerClass(selector: TargetSelector, player: Player) {
     if (isPlayerSelected(selector, player)) {
         return 'player-selected';
     }
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(table, selector as PlayingSelector, player)) {
+        if (isValidPlayerTarget(selector as PlayingSelector, player)) {
             return 'player-targetable';
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(table, selector as PlayingSelector, player)) {
+        if (isValidEquipTarget(selector as PlayingSelector, player)) {
             return 'player-targetable';
         }
         break;
@@ -100,7 +100,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id == table.status.current_turn;
 
-    const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(table, selector, player), [selector]);
+    const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(selector, player), [selector]);
 
     let classes = ['player-view'];
     if (isTurn) {

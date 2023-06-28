@@ -158,7 +158,7 @@ function isAutoConfirmable(selector: PlayingSelector): boolean {
         if (cardHasTag(currentCard, 'auto_confirm')) {
             if (optionals.some(effect => effect.target == 'player'
                 && !table.alive_players.some(target =>
-                    checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))))
+                    checkPlayerFilter(selector, effect.player_filter, getPlayer(table, target)))))
             {
                 return true;
             }
@@ -197,7 +197,7 @@ function appendAutoTarget(selector: PlayingSelector): TargetListMapper | undefin
         }
         break;
     case 'conditional_player': {
-        if (!table.alive_players.some(target => checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))) {
+        if (!table.alive_players.some(target => checkPlayerFilter(selector, effect.player_filter, getPlayer(table, target)))) {
             return appendTarget(effect.target, null);
         }
         break;

@@ -6,14 +6,13 @@ import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
 
 function StationCardView({ card, onClickCard }: CardProps) {
-    const table = useContext(GameTableContext);
     const selector = useContext(TargetSelectorContext);
 
     const cardImage = getCardImage(card);
     if (!cardImage) return null;
     const imageSrc = getCardUrl(card.cardData.deck + '/' + cardImage.image);
     
-    const selectorCardClass = useMemo(() => getSelectorCardClass(table, selector, card), [selector]);
+    const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
 
     return (
         <div className={`station-card ${selectorCardClass ?? ''}`} onClick={onClickCard ? () => onClickCard(card) : undefined}>

@@ -22,15 +22,15 @@ export function getCardUrl(path: string) {
     return `${Env.cardsBaseUrl}/cards/${path}.png`;
 }
 
-export function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
+export function getSelectorCardClass(selector: TargetSelector, card: Card) {
     if (isSelectionPlaying(selector)) {
         if (isCardSelected(selector, card)) {
             return 'card-selected';
         }
         if (selector.selection.mode == 'target' || selector.selection.mode == 'modifier') {
-            if (isValidCubeTarget(table, selector, card)) {
+            if (isValidCubeTarget(selector, card)) {
                 return 'card-targetable-cubes';
-            } else if (isValidCardTarget(table, selector, card)) {
+            } else if (isValidCardTarget(selector, card)) {
                 return 'card-targetable';
             }
         }
@@ -45,7 +45,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
         return 'card-playable';
-    } else if (selectorCanPickCard(table, selector, card)) {
+    } else if (selectorCanPickCard(selector, card)) {
         return 'card-pickable';
     }
     if (isResponse(selector)) {
@@ -60,7 +60,6 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
 }
 
 const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCard }, ref) => {
-    const table = useContext(GameTableContext);
     const selector = useContext(TargetSelectorContext);
 
     const cardRef = useRef<HTMLDivElement>(null);
@@ -69,7 +68,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
         getRect: () => cardRef.current ? getDivRect(cardRef.current) : null
     }));
 
-    const selectorCardClass = useMemo(() => getSelectorCardClass(table, selector, card), [selector]);
+    const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
     const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
     let backfaceSrc = getCardUrl('backface/' + card.cardData.deck);

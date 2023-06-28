@@ -13,7 +13,7 @@ export function handleClickCard(selector: TargetSelector, selectorDispatch: Disp
         if (card.pocket?.name == 'player_character') {
             cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
         }
-        if (isValidCardTarget(table, selector as PlayingSelector, cardTarget)) {
+        if (isValidCardTarget(selector as PlayingSelector, cardTarget)) {
             selectorDispatch({ addCardTarget: cardTarget });
         }
         break;
@@ -21,7 +21,7 @@ export function handleClickCard(selector: TargetSelector, selectorDispatch: Disp
     case 'start': {
         const canPlay = selectorCanPlayCard(selector, card);
         if (isResponse(selector)) {
-            const canPick = selectorCanPickCard(table, selector, card);
+            const canPick = selectorCanPickCard(selector, card);
             if (canPlay && canPick) {
                 selectorDispatch({ setPrompt: { type: 'playpick', card }});
             } else if (canPlay) {
@@ -37,16 +37,15 @@ export function handleClickCard(selector: TargetSelector, selectorDispatch: Disp
 }
 
 export function handleClickPlayer(selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, player: Player) {
-    const table = selector.table.current;
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(table, selector as PlayingSelector, player)) {
+        if (isValidPlayerTarget(selector as PlayingSelector, player)) {
             selectorDispatch({ addPlayerTarget: player });
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(table, selector as PlayingSelector, player)) {
+        if (isValidEquipTarget(selector as PlayingSelector, player)) {
             selectorDispatch({ addEquipTarget: player });
         }
     }

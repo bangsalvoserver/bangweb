@@ -191,8 +191,9 @@ export function selectorCanPlayCard(selector: TargetSelector, card: Card): card 
         && getPlayableCards(selector).includes(card.id);
 }
 
-export function selectorCanPickCard(table: GameTable, selector: TargetSelector, card: Card): boolean {
+export function selectorCanPickCard(selector: TargetSelector, card: Card): boolean {
     if (isResponse(selector)) {
+        const table = selector.table.current;
         switch (card.pocket?.name) {
             case 'main_deck':
             case 'discard_pile':
@@ -291,19 +292,20 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
     return selected;
 }
 
-export function isValidCubeTarget(table: GameTable, selector: PlayingSelector, card: Card): boolean {
+export function isValidCubeTarget(selector: PlayingSelector, card: Card): boolean {
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const table = selector.table.current;
     
     return nextTarget?.target == 'select_cubes'
         && player == table.self_player
         && card.num_cubes > countSelectedCubes(selector, card);
 }
 
-export function isValidCardTarget(table: GameTable, selector: PlayingSelector, card: Card): boolean {
+export function isValidCardTarget(selector: PlayingSelector, card: Card): boolean {
     switch (card.pocket?.name) {
     case 'player_character':
     case 'player_table':
@@ -319,15 +321,16 @@ export function isValidCardTarget(table: GameTable, selector: PlayingSelector, c
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const table = selector.table.current;
 
     switch (nextTarget?.target) {
     case 'card':
     case 'extra_card':
     case 'cards':
-        if (player && !checkPlayerFilter(table, selector, nextTarget.player_filter, getPlayer(table, player))) {
+        if (player && !checkPlayerFilter(selector, nextTarget.player_filter, getPlayer(table, player))) {
             return false;
         }
-        if (!checkCardFilter(table, selector, nextTarget.card_filter, card)) {
+        if (!checkCardFilter(selector, nextTarget.card_filter, card)) {
             return false;
         }
         return true;
@@ -403,7 +406,7 @@ export function getEffectAt([effects, optionals]: EffectsAndOptionals, index: nu
     }
 }
 
-export function isValidPlayerTarget(table: GameTable, selector: PlayingSelector, player: Player): boolean {
+export function isValidPlayerTarget(selector: PlayingSelector, player: Player): boolean {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
@@ -411,14 +414,14 @@ export function isValidPlayerTarget(table: GameTable, selector: PlayingSelector,
     switch (nextTarget?.target) {
     case 'player':
     case 'conditional_player':
-        return checkPlayerFilter(table, selector, nextTarget.player_filter, player);
+        return checkPlayerFilter(selector, nextTarget.player_filter, player);
     default:
         return false;
     }
 }
 
-export function isValidEquipTarget(table: GameTable, selector: PlayingSelector, player: Player): boolean {
+export function isValidEquipTarget(selector: PlayingSelector, player: Player): boolean {
     return selector.selection.playing_card !== null
         && isEquipCard(selector.selection.playing_card)
-        && checkPlayerFilter(table, selector, getEquipTarget(selector.selection.playing_card), player);
+        && checkPlayerFilter(selector, getEquipTarget(selector.selection.playing_card), player);
 }
