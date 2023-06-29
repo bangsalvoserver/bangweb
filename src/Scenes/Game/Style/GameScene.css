@@ -16,7 +16,7 @@
     text-align: center;
     max-width: 100vw;
     transform: translateX(-50%);
-    text-shadow: 1px 1px 4px #000000d0;
+    text-shadow: 1px 1px 4px #00000080;
 }
 
 .status-bar-error {
