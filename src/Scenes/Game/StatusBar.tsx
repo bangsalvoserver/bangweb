@@ -54,9 +54,9 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
         { myUserId == lobbyOwner && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button> }
       </div>
     } else if (gameError) {
-      statusBar = <div className="status-bar font-bold">
+      statusBar = <div className="status-bar status-bar-error">
         <GameStringComponent message={gameError} />
-        <Button color='blue' onClick={handleClearGameError}>{getLabel('ui', 'BUTTON_OK')}</Button>
+        <Button color='red' onClick={handleClearGameError}>{getLabel('ui', 'BUTTON_OK')}</Button>
       </div>
     } else if (statusText || buttonRow.length !== 0 || confirmButton || undoButton ) {
       statusBar = <div className="status-bar">
