@@ -1,9 +1,10 @@
 import { CSSProperties, forwardRef, useContext } from "react";
 import { Card } from "../Model/GameTable";
-import { GameTableContext } from "../GameScene";
+import { GameTableContext, TargetSelectorContext } from "../GameScene";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
 import { PocketPosition } from "../Model/CardTracker";
+import { isSelectionPlaying } from "../Model/TargetSelector";
 
 export interface TrainProps {
     onClickCard?: (card: Card) => void;
@@ -11,6 +12,7 @@ export interface TrainProps {
 
 const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) => {
     const table = useContext(GameTableContext);
+    const selector = useContext(TargetSelectorContext);
 
     let trainPositionStyle = {
         '--train-position': table.status.train_position
@@ -27,6 +29,14 @@ const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) 
                 ...trainPositionStyle,
                 '--train-position-diff': animation.position - table.status.train_position,
                 '--duration': animation.duration + 'ms'
+            } as CSSProperties;
+        }
+    } else if (isSelectionPlaying(selector)) {
+        if (selector.selection.context.train_advance) {
+            classes.push('train-advance-transition');
+            trainPositionStyle = {
+                ...trainPositionStyle,
+                '--train-position-diff': selector.selection.context.train_advance
             } as CSSProperties;
         }
     }

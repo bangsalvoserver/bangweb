@@ -23,6 +23,7 @@ export interface EffectContext {
     repeat_card?: CardId;
     card_choice?: CardId;
     traincost?: CardId;
+    train_advance?: number;
     skipped_player?: PlayerId;
     ignore_distances?: boolean;
 }

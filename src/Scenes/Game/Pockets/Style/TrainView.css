@@ -15,6 +15,15 @@
     position: absolute;
 
     transform: translateX(calc((var(--train-position) + 1) * var(--card-width-plus-margin)));
+
+    transition-property: left;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
+    left: 0;
+}
+
+.train-container.train-advance-transition {
+    left: calc(var(--card-width-plus-margin) * var(--train-position-diff));
 }
 
 .train-container-inner {

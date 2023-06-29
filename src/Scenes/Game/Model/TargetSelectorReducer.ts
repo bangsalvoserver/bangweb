@@ -132,9 +132,11 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
     case 'traincost':
         if (modifier.pocket?.name == 'stations') {
             const traincost = getPlayableCards(selector)[0];
-            return editContext(context => ({ ...context, traincost  }))
+            return editContext(context => ({ ...context, traincost  }));
         }
         break;
+    case 'locomotive':
+        return editContext(context => ({ train_advance: 1 }));
     case 'sgt_blaze':
         for (const [target, effect] of zipCardTargets(targets, getCardEffects(modifier, isResponse(selector)))) {
             if (effect.type == 'ctx_add' && 'player' in target) {
