@@ -110,37 +110,34 @@ function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): Target
 
 function addModifierContext(selector: PlayingSelector): PlayingSelector {
     const [modifier, targets] = getCurrentCardAndTargets(selector);
-    const editContext = (mapper: (context: EffectContext) => EffectContext): PlayingSelector => {
+    const editContext = (source: {}): PlayingSelector => {
         return {
             ...selector,
             selection: {
                 ...selector.selection,
-                context: mapper(selector.selection.context)
+                context: Object.assign(selector.selection.context, source)
             }
         };
     };
     switch (modifier.cardData.modifier.type) {
     case 'belltower':
-        return editContext(context => ({ ...context, ignore_distances: true }));
+        return editContext({ ignore_distances: true });
     case 'card_choice':
-        return editContext(context => ({ ...context, card_choice: modifier.id }));
+        return editContext({ card_choice: modifier.id });
     case 'leevankliff':
-    case 'moneybag': {
-        const repeat_card = getPlayableCards(selector)[0];
-        return editContext(context => ({ ...context, repeat_card }));
-    }
+    case 'moneybag':
+        return editContext({ repeat_card: getPlayableCards(selector)[0] });
     case 'traincost':
         if (modifier.pocket?.name == 'stations') {
-            const traincost = getPlayableCards(selector)[0];
-            return editContext(context => ({ ...context, traincost  }));
+            return editContext({ traincost: getPlayableCards(selector)[0] });
         }
         break;
     case 'locomotive':
-        return editContext(context => ({ train_advance: 1 }));
+        return editContext({ train_advance: 1 });
     case 'sgt_blaze':
         for (const [target, effect] of zipCardTargets(targets, getCardEffects(modifier, isResponse(selector)))) {
             if (effect.type == 'ctx_add' && 'player' in target) {
-                return editContext(context => ({ ...context, skipped_player: target.player }));
+                return editContext({ skipped_player: target.player });
             }
         }
         break;
