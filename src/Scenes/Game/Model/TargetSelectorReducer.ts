@@ -1,5 +1,5 @@
 import { Empty } from "../../../Messages/ServerMessage";
-import { count } from "../../../Utils/ArrayUtils";
+import { countIf } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard } from "./Filters";
@@ -214,7 +214,7 @@ function appendAutoTarget(selector: PlayingSelector): TargetListMapper | undefin
         if (index >= targets.length) {
             const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
             const playerHasCards = (player: Player) => player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack);
-            const numTargetable = count(table.alive_players, target =>
+            const numTargetable = countIf(table.alive_players, target =>
                 target != table.self_player && target != selector.selection.context.skipped_player
                 && playerHasCards(getPlayer(table, target)));
             return reserveTargets(effect.target, numTargetable);

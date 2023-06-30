@@ -6,7 +6,7 @@ import { CardId } from "../Model/GameUpdate";
 import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
 import { PocketPosition } from "../Model/CardTracker";
-import { count } from "../../../Utils/ArrayUtils";
+import { countIf } from "../../../Utils/ArrayUtils";
 
 export interface StackPocketProps {
     cards: CardId[];
@@ -25,7 +25,7 @@ const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onCli
         getCardRect: () => position.current?.getPocketRect() ?? null
     }));
 
-    const numCards = count(cards, id => id !== CARD_SLOT_ID_FROM && id !== CARD_SLOT_ID_TO);
+    const numCards = countIf(cards, id => id !== CARD_SLOT_ID_FROM && id !== CARD_SLOT_ID_TO);
 
     const handleClickLastCard = onClickCard && numCards > 0 ? () => {
         onClickCard(getCard(table, cards.at(-1)!));

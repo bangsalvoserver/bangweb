@@ -1,4 +1,5 @@
 import { Empty } from "../../../Messages/ServerMessage";
+import { count } from "../../../Utils/ArrayUtils";
 import { ReadOnlyRefObject } from "../../../Utils/LazyRef";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
@@ -270,15 +271,9 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
     const doCount = (card: KnownCard, targets: CardTarget[]) => {
         for (const [target, effect] of zipCardTargets(targets, getCardEffects(card, response))) {
             if ('select_cubes' in target) {
-                for (const cube of target.select_cubes) {
-                    if (targetCard.id == cube) {
-                        ++selected;
-                    }
-                }
-            } else if ('self_cubes' in target) {
-                if (targetCard.id == card.id) {
-                    selected += effect.target_value;
-                }
+                selected += count(target.select_cubes, targetCard.id);
+            } else if ('self_cubes' in target && targetCard.id == card.id) {
+                selected += effect.target_value;
             }
         }
     };
@@ -373,20 +368,18 @@ export function getCardEffects(card: KnownCard, isResponse: boolean): EffectsAnd
     return [isResponse ? card.cardData.responses : card.cardData.effects, card.cardData.optionals];
 }
 
-export function zipCardTargets(targets: CardTarget[], [effects, optionals]: EffectsAndOptionals): TargetAndEffect[] {
-    let ret: TargetAndEffect[] = [];
+export function *zipCardTargets(targets: CardTarget[], [effects, optionals]: EffectsAndOptionals): Generator<[CardTarget, CardEffect]> {
     let index = 0;
     for (let effect of effects) {
-        if (index >= targets.length) return ret;
-        ret.push([targets[index++], effect]);
+        if (index >= targets.length) return;
+        yield [targets[index++], effect];
     }
     while (optionals.length != 0) {
         for (let effect of optionals) {
-            if (index >= targets.length) return ret;
-            ret.push([targets[index++], effect]);
+            if (index >= targets.length) return;
+            yield [targets[index++], effect];
         }
     }
-    return ret;
 }
 
 export function getNextTargetIndex(targets: CardTarget[]): number {

@@ -10,7 +10,11 @@ export function subtract<T>(lhs: T[], rhs: T[]): T[] {
     return lhs.filter(value => !rhs.includes(value));
 }
 
-export function count<T>(arr: T[], predicate: (value: T) => boolean) {
+export function count<T>(arr: T[], value: T) {
+    return countIf(arr, x => x === value);
+}
+
+export function countIf<T>(arr: T[], predicate: (value: T) => boolean) {
     return arr.reduce((count, value) => count + +predicate(value), 0);
 }
 
