@@ -120,8 +120,11 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
         const index = getNextTargetIndex(targets);
         if (index < targets.length) {
             const lastTarget = targets.at(-1);
-            if (Array.isArray(lastTarget) && !lastTarget.every(id => id == 0)) {
-                return false;
+            if (lastTarget !== undefined) {
+                const lastTargetValue = Object.values(lastTarget)[0];
+                if (Array.isArray(lastTargetValue) && !lastTargetValue.every(id => id == 0)) {
+                    return false;
+                }
             }
         }
         
