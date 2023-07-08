@@ -118,6 +118,12 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
         const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
         const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
         const index = getNextTargetIndex(targets);
+        if (index < targets.length) {
+            const lastTarget = targets.at(-1);
+            if (Array.isArray(lastTarget) && !lastTarget.every(id => id == 0)) {
+                return false;
+            }
+        }
         
         return optionals.length != 0
             && index >= effects.length
