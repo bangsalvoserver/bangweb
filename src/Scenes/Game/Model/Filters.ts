@@ -49,40 +49,14 @@ export function isBangCard(table: GameTable, origin: Player, card: Card): boolea
         && cardHasTag(card, 'missed');
 }
 
-export function countDistance(table: GameTable, from: Player, to: Player): number {
-    if (from.id == to.id) return 0;
-
-    if (table.status.flags.includes('disable_player_distances')) {
-        return 1 + to.status.distance_mod;
+export function getSelectorDistances(selector: TargetSelector) {
+    if ('distances' in selector.request) {
+        return selector.request.distances;
     }
+}
 
-    const fromIndex = table.alive_players.indexOf(from.id);
-    const toIndex = table.alive_players.indexOf(to.id);
-
-    let countLeft = 0;
-    let countRight = 0;
-
-    let i = fromIndex;
-    while (i != toIndex) {
-        ++i;
-        if (i == table.alive_players.length) {
-            i = 0;
-        }
-        if (isPlayerAlive(getPlayer(table, table.alive_players[i]))) {
-            ++countLeft;
-        }
-    }
-    while (i != fromIndex) {
-        ++i;
-        if (i == table.alive_players.length) {
-            i = 0;
-        }
-        if (isPlayerAlive(getPlayer(table, table.alive_players[i]))) {
-            ++countRight;
-        }
-    }
-
-    return Math.min(countLeft, countRight) + to.status.distance_mod;
+export function getDistance(selector: TargetSelector, from: Player, to: Player): number {
+    return getSelectorDistances(selector)?.distances.find(({ player }) => player == to.id)?.distance ?? 0;
 }
 
 export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
@@ -113,15 +87,15 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length == 0) return false;
 
     if (!context.ignore_distances && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
-        let range = origin.status.range_mod;
+        let range = getSelectorDistances(selector)?.range_mod ?? 0;
         if (filter.includes('reachable')) {
-            range += origin.status.weapon_range;
+            range += getSelectorDistances(selector)?.weapon_range ?? 0;
         } else if (filter.includes('range_1')) {
             ++range;
         } else if (filter.includes('range_2')) {
             range += 2;
         }
-        if (countDistance(table, origin, target) > range) return false;
+        if (getDistance(selector, origin, target) > range) return false;
     }
 
     return true;

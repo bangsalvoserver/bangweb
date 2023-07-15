@@ -112,10 +112,7 @@ export interface Player extends Id {
         role: PlayerRole,
         hp: number,
         gold: number,
-        flags: PlayerFlag[],
-        range_mod: number,
-        weapon_range: number,
-        distance_mod: number
+        flags: PlayerFlag[]
     };
     animation?: PlayerAnimation;
     pockets: PlayerPockets;
@@ -128,10 +125,7 @@ export function newPlayer(id: PlayerId, userid: UserId): Player {
             role: 'unknown',
             hp: 0,
             gold: 0,
-            flags: [],
-            range_mod: 0,
-            weapon_range: 1,
-            distance_mod: 0
+            flags: []
         },
         pockets: {
             player_hand: [],

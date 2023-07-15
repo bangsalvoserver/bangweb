@@ -112,17 +112,20 @@ export interface PlayerShowRoleUpdate {
     role: PlayerRole;
 }
 
-export interface PlayerStatusUpdate {
+export interface PlayerFlagsUpdate {
     player: PlayerId;
     flags: PlayerFlag[];
-    range_mod: number;
-    weapon_range: number;
-    distance_mod: number;
 }
 
 export interface CardNode {
     card: CardId;
     branches: CardNode[];
+}
+
+export interface PlayerDistances {
+    distances: { player: PlayerId, distance: number }[];
+    range_mod: number;
+    weapon_range: number;
 }
 
 export interface RequestStatusArgs {
@@ -134,10 +137,12 @@ export interface RequestStatusArgs {
     respond_cards: CardNode[];
     pick_cards: CardId[];
     highlight_cards: CardId[];
+    distances: PlayerDistances;
 }
 
 export interface StatusReadyArgs {
     play_cards: CardNode[];
+    distances: PlayerDistances;
 }
 
 export interface GameOptions {
@@ -168,7 +173,7 @@ export type GameUpdate =
     { player_gold: PlayerGoldUpdate } |
     { player_show_role: PlayerShowRoleUpdate & Duration } |
     { player_animation_end: PlayerId } |
-    { player_status: PlayerStatusUpdate } |
+    { player_flags: PlayerFlagsUpdate } |
     { switch_turn: PlayerId } |
     { move_card: MoveCardUpdate & Duration } |
     { move_card_end: MoveCardUpdate } |

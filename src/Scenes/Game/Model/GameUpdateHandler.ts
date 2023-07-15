@@ -120,8 +120,8 @@ export class GameUpdateHandler {
             this.setAnimation(update, { player_animation_end: update.player });
         },
 
-        player_status (update) {
-            this.tableDispatch({ player_status: update });
+        player_flags (update) {
+            this.tableDispatch({ player_flags: update });
         },
 
         switch_turn (update) {

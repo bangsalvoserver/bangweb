@@ -116,15 +116,12 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
         }
     },
 
-    // Changes a player's status
-    player_status ({ player, flags, range_mod, weapon_range, distance_mod }) {
+    // Changes a player's flags
+    player_flags ({ player, flags }) {
         return {
             ...this,
             players: editById(this.players, player, p => ({
-                ...p, status: {
-                    ...p.status,
-                    flags, range_mod, weapon_range, distance_mod
-                }
+                ...p, status: { ...p.status, flags }
             }))
         };
     },
