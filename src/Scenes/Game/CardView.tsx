@@ -16,6 +16,7 @@ export interface CardProps {
 
 export interface CardRef {
     getRect: () => Rect | null;
+    getDiv: () => HTMLDivElement | null;
 }
 
 export function getCardUrl(path: string) {
@@ -65,7 +66,8 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     const cardRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
-        getRect: () => cardRef.current ? getDivRect(cardRef.current) : null
+        getRect: () => cardRef.current ? getDivRect(cardRef.current) : null,
+        getDiv: () => cardRef.current
     }));
 
     const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);

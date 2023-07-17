@@ -16,7 +16,8 @@ const CardSlot = forwardRef<CardRef, CardSlotProps>(({ stretch, duration }, ref)
     const slotRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
-        getRect: () => slotRef.current ? getDivRect(slotRef.current) : null
+        getRect: () => slotRef.current ? getDivRect(slotRef.current) : null,
+        getDiv: () => slotRef.current
     }));
 
     const style = {

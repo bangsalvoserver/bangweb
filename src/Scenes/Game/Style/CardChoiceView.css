@@ -1,8 +1,8 @@
 .card-choice {
     position: absolute;
-    left: var(--card-anchor-x);
-    top: var(--card-anchor-y);
-    height: var(--card-height);
+    width: max-content;
+    left: 50%;
+    top: 50%;
     z-index: 20;
 }
 

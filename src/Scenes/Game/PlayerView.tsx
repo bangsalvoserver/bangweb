@@ -70,7 +70,8 @@ function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivEleme
             } else {
                 return null;
             }
-        }
+        },
+        getCardDiv: (card: CardId) => pocket.getCardDiv(card)
     };
 }
 

@@ -19,10 +19,12 @@ const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onCli
     const table = useContext(GameTableContext);
 
     const position = useRef<PocketPosition>(null);
+    const stackRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
         getPocketRect: () => position.current?.getPocketRect() ?? null,
-        getCardRect: () => position.current?.getPocketRect() ?? null
+        getCardRect: () => position.current?.getPocketRect() ?? null,
+        getCardDiv: () => stackRef.current
     }));
 
     const numCards = countIf(cards, id => id !== CARD_SLOT_ID_FROM && id !== CARD_SLOT_ID_TO);
@@ -31,7 +33,7 @@ const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onCli
         onClickCard(getCard(table, cards.at(-1)!));
     } : undefined;
 
-    return (<div className='stack-pocket' onClick={handleClickLastCard}>
+    return (<div className='stack-pocket' ref={stackRef} onClick={handleClickLastCard}>
         <PocketView ref={position} cards={ cards.slice(-(slice ?? 2))} />
         {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
     </div>);

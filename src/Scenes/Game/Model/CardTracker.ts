@@ -7,6 +7,7 @@ import { CardId, PlayerId } from "./GameUpdate";
 export interface PocketPosition {
     getPocketRect: () => Rect | null;
     getCardRect: (card: CardId) => Rect | null;
+    getCardDiv: (card: CardId) => HTMLDivElement | null;
 }
 
 export type PocketPositionMap = MapRef<PocketType, PocketPosition>;
