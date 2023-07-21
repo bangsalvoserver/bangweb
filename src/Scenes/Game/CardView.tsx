@@ -19,7 +19,7 @@ export interface CardRef {
 }
 
 export function getCardUrl(path: string) {
-    return `${Env.cardsBaseUrl}/cards/${path}.png`;
+    return `${window.location.origin}/cards/${path}.png`;
 }
 
 export function getSelectorCardClass(selector: TargetSelector, card: Card) {

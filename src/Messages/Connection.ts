@@ -41,7 +41,7 @@ export class SocketConnection implements Connection {
     }
 
     connect() {
-        this.socket = new WebSocket(Env.bangServerUrl);
+        this.socket = new WebSocket(`ws://${window.location.host}/server`);
         this.socket.onmessage = (event) => {
             this.receiveMessage(JSON.parse(event.data));
         };
