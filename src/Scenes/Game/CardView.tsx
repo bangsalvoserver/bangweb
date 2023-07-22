@@ -18,10 +18,6 @@ export interface CardRef {
     getRect: () => Rect | null;
 }
 
-export function getCardUrl(path: string) {
-    return `${window.location.origin}/cards/${path}.png`;
-}
-
 export function getSelectorCardClass(selector: TargetSelector, card: Card) {
     if (isSelectionPlaying(selector)) {
         if (isCardSelected(selector, card)) {
@@ -71,13 +67,13 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
     const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
-    let backfaceSrc = getCardUrl('backface/' + card.cardData.deck);
+    let backfaceSrc = `/cards/backface/${card.cardData.deck}.png`;
 
     const getImageSrc = (cardImage: CardImage) => {
         if (cardImage.image.includes('/')) {
-            return getCardUrl(cardImage.image);
+            return `/cards/${cardImage.image}.png`;
         } else {
-            return getCardUrl(card.cardData.deck + '/' + cardImage.image);
+            return `/cards/${card.cardData.deck}/${cardImage.image}.png`;
         }
     };
 

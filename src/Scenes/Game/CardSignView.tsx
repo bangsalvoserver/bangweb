@@ -1,4 +1,3 @@
-import { getCardUrl } from "./CardView";
 import { CardSign } from "./Model/CardData";
 
 export interface CardSignProps {
@@ -7,10 +6,9 @@ export interface CardSignProps {
 
 export default function CardSignView({ sign }: CardSignProps) {
     if (sign.rank != 'none' && sign.suit != 'none') {
-        return (<>
-            <img src={getCardUrl('misc/' + sign.rank)}/>
-            <img src={getCardUrl('misc/suit_' + sign.suit)}/>
-        </>);
+        const rankSrc = `/cards/misc/${sign.rank}.png`;
+        const suitSrc = `/cards/misc/suit_${sign.suit}.png`;
+        return <><img src={rankSrc} /><img src={suitSrc} /></>;
     } else {
         return null;
     }
