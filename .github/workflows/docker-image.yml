@@ -15,8 +15,8 @@ env:
   ECS_TASK_DEFINITION: .aws/bangweb-task.json
   CONTAINER_NAME: bangweb-container
   IMAGE_TAG: bangweb
-  BANG_SERVER_URL: http://bang.salvoserver.it:47654
-  BANG_CARDS_BASE_URL: http://bang.salvoserver.it:81/cards/
+  BANG_SERVER_URL: http://ip-172-31-44-51.eu-south-1.compute.internal:47654
+  BANG_CARDS_BASE_URL: http://ip-172-31-44-51.eu-south-1.compute.internal:81/cards/
 
 jobs:
   build:
