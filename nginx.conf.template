@@ -9,14 +9,14 @@ server {
     try_files $uri $uri/ /index.html;
   }
 
-  location /cards {
-    proxy_pass http://bang.salvoserver.it:81/cards;
+  location /cards/ {
+    proxy_pass ${BANG_CARDS_BASE_URL};
     proxy_http_version 1.1;
     proxy_set_header Host $host;
   }
 
   location /server {
-    proxy_pass http://bang.salvoserver.it:47654;
+    proxy_pass ${BANG_SERVER_URL};
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "Upgrade";

@@ -15,6 +15,8 @@ env:
   ECS_TASK_DEFINITION: .aws/bangweb-task.json
   CONTAINER_NAME: bangweb-container
   IMAGE_TAG: bangweb
+  BANG_SERVER_URL: http://bang.salvoserver.it:47654
+  BANG_CARDS_BASE_URL: http://bang.salvoserver.it:81/cards/
 
 jobs:
   build:
@@ -43,7 +45,7 @@ jobs:
       shell: bash
       working-directory: ${{github.workspace}}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build --build-arg BANG_SERVER_URL=${{ env.BANG_SERVER_URL }} --build-arg BANG_CARDS_BASE_URL=${{ env.BANG_CARDS_BASE_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
