@@ -8,6 +8,10 @@ import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import Env from "../../Model/Env";
 
+export function getCardUrl(url: string) {
+    return (Env.bangCardsBaseUrl ?? '') + url;
+}
+
 export interface CardProps {
     card: Card;
     showBackface?: boolean;
@@ -67,13 +71,13 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
     const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
-    let backfaceSrc = `/cards/backface/${card.cardData.deck}.png`;
+    let backfaceSrc = getCardUrl(`/cards/backface/${card.cardData.deck}.png`);
 
     const getImageSrc = (cardImage: CardImage) => {
         if (cardImage.image.includes('/')) {
-            return `/cards/${cardImage.image}.png`;
+            return getCardUrl(`/cards/${cardImage.image}.png`);
         } else {
-            return `/cards/${card.cardData.deck}/${cardImage.image}.png`;
+            return getCardUrl(`/cards/${card.cardData.deck}/${cardImage.image}.png`);
         }
     };
 

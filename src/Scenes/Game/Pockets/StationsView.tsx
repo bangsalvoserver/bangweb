@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { CardProps, getSelectorCardClass } from "../CardView";
+import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameTableContext, TargetSelectorContext } from "../GameScene";
 import { getCard, getCardImage } from "../Model/GameTable";
 import { PocketProps } from "./PocketView";
@@ -10,7 +10,7 @@ function StationCardView({ card, onClickCard }: CardProps) {
 
     const cardImage = getCardImage(card);
     if (!cardImage) return null;
-    const imageSrc = `/cards/${card.cardData.deck}/${cardImage.image}.png`;
+    const imageSrc = getCardUrl(`/cards/${card.cardData.deck}/${cardImage.image}.png`);
     
     const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
 
