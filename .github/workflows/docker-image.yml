@@ -15,12 +15,11 @@ env:
   ECS_TASK_DEFINITION: .aws/bangweb-task.json
   CONTAINER_NAME: bangweb-container
   IMAGE_TAG: bangweb
-  BANG_SERVER_URL: http://ip-172-31-44-51.eu-south-1.compute.internal:47654
-  BANG_CARDS_BASE_URL: http://ip-172-31-44-51.eu-south-1.compute.internal:81/cards/
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: deploy
 
     steps:
     - uses: actions/checkout@v2
@@ -45,7 +44,7 @@ jobs:
       shell: bash
       working-directory: ${{github.workspace}}
       run: |
-        docker build --build-arg BANG_SERVER_URL=${{ env.BANG_SERVER_URL }} --build-arg BANG_CARDS_BASE_URL=${{ env.BANG_CARDS_BASE_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build --build-arg BANG_SERVER_URL=${{ vars.BANG_SERVER_URL }} --build-arg BANG_CARDS_BASE_URL=${{ vars.BANG_CARDS_BASE_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
