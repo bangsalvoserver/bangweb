@@ -66,7 +66,7 @@ export interface Card extends Id {
 
 export function getCardImage(card: Card): CardImage | undefined {
     return isCardKnown(card) ? {
-        image: card.cardData.image,
+        image: card.cardData.image.includes('/') ? card.cardData.image : card.cardData.deck + '/' + card.cardData.image,
         sign: card.cardData.sign.rank != 'none' && card.cardData.sign.suit != 'none' ? card.cardData.sign : undefined
     } : undefined;
 };

@@ -10,7 +10,7 @@ function StationCardView({ card, onClickCard }: CardProps) {
 
     const cardImage = getCardImage(card);
     if (!cardImage) return null;
-    const imageSrc = getCardUrl(`/cards/${card.cardData.deck}/${cardImage.image}.png`);
+    const imageSrc = getCardUrl(`/cards/${cardImage.image}.png`);
     
     const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
 

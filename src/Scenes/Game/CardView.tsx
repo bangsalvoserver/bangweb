@@ -12,6 +12,10 @@ export function getCardUrl(url: string) {
     return (Env.bangCardsBaseUrl ?? '') + url;
 }
 
+export function getCardImageSrc(cardImage: CardImage): string {
+    return getCardUrl(`/cards/${cardImage.image}.png`);
+};
+
 export interface CardProps {
     card: Card;
     showBackface?: boolean;
@@ -73,14 +77,6 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
 
     let backfaceSrc = getCardUrl(`/cards/backface/${card.cardData.deck}.png`);
 
-    const getImageSrc = (cardImage: CardImage) => {
-        if (cardImage.image.includes('/')) {
-            return getCardUrl(`/cards/${cardImage.image}.png`);
-        } else {
-            return getCardUrl(`/cards/${card.cardData.deck}/${cardImage.image}.png`);
-        }
-    };
-
     let cardImage = getCardImage(card);
 
     let style: CSSProperties | undefined;
@@ -128,7 +124,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     return (
         <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard ? () => onClickCard(card) : undefined}>
             <div className="card-front">
-                <img className="card-view-img" src={cardImage ? getImageSrc(cardImage) : backfaceSrc}/>
+                <img className="card-view-img" src={cardImage ? getCardImageSrc(cardImage) : backfaceSrc}/>
                 {cardImage?.sign ? <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div> : null}
