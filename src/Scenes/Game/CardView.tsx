@@ -8,13 +8,9 @@ import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import Env from "../../Model/Env";
 
-export function getCardUrl(url: string) {
-    return (Env.bangCardsBaseUrl ?? '') + url;
+export function getCardUrl(image: string) {
+    return (Env.bangCardsBaseUrl ?? '') + `/cards/${image}.png`;
 }
-
-export function getCardImageSrc(cardImage: CardImage): string {
-    return getCardUrl(`/cards/${cardImage.image}.png`);
-};
 
 export interface CardProps {
     card: Card;
@@ -75,7 +71,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
     const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
-    let backfaceSrc = getCardUrl(`/cards/backface/${card.cardData.deck}.png`);
+    let backfaceSrc = getCardUrl('backface/' + card.cardData.deck);
 
     let cardImage = getCardImage(card);
 
@@ -124,7 +120,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     return (
         <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard ? () => onClickCard(card) : undefined}>
             <div className="card-front">
-                <img className="card-view-img" src={cardImage ? getCardImageSrc(cardImage) : backfaceSrc}/>
+                <img className="card-view-img" src={cardImage ? getCardUrl(cardImage.image) : backfaceSrc}/>
                 {cardImage?.sign ? <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div> : null}

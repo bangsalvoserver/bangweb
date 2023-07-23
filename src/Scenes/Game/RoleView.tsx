@@ -10,8 +10,8 @@ export interface RoleProps {
 }
 
 export default function RoleView({ role, flipDuration }: RoleProps) {
-    const backfaceSrc = getCardUrl('/cards/backface/role.png');
-    const imageSrc = role == 'unknown' ? backfaceSrc : getCardUrl(`/cards/role/${role}.png`);
+    const backfaceSrc = getCardUrl('backface/role');
+    const imageSrc = role == 'unknown' ? backfaceSrc : getCardUrl('role/' + role);
 
     let style: CSSProperties | undefined;
 
