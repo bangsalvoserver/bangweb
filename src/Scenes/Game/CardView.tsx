@@ -7,6 +7,8 @@ import { TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSe
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import Env from "../../Model/Env";
+import ReactDOM, { createPortal } from "react-dom";
+import { createRoot } from "react-dom/client";
 
 export function getCardUrl(url: string) {
     return (Env.bangCardsBaseUrl ?? '') + url;
@@ -21,6 +23,21 @@ export interface CardProps {
 export interface CardRef {
     getRect: () => Rect | null;
 }
+
+function CardOverlay({ card }: { card: Card }) {
+    return createPortal(
+      <>
+        <div className="card-overlay" style={{ pointerEvents: 'none', width: '100%', height: '100%', display: 'flex',position: 'fixed',top: '0' }}>
+          <div className="card-overlay-inner" style={{ margin: 'auto', width: '100%', height: '100%', background: 'black' }}>
+            {/* image */}
+            <div className="card-overlay-img">
+               
+            </div>
+          </div>
+        </div>
+      </>
+    , document.body);
+  }
 
 export function getSelectorCardClass(selector: TargetSelector, card: Card) {
     if (isSelectionPlaying(selector)) {
@@ -125,18 +142,49 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
         }
     }
 
+
+
+
+    const mouseDownHandler = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.preventDefault();
+        if (event.button === 0) {
+          if (onClickCard) {
+            onClickCard(card);
+          }
+        } else if (event.button === 1) {
+          // Render modal
+          const modalContainer = document.createElement('div');
+          document.body.appendChild(modalContainer);
+          const root = createRoot(modalContainer);
+          root.render(<CardOverlay card={card} />);
+      
+          // Add a mouseup event listener to check when the middle mouse button is released
+          const mouseUpHandler = () => {
+            // Remove the modal when the middle mouse button is released
+            root.unmount();
+            document.body.removeChild(modalContainer);
+      
+            // Remove the event listener to avoid any unnecessary actions
+            document.removeEventListener('mouseup', mouseUpHandler);
+          };
+      
+          document.addEventListener('mouseup', mouseUpHandler);
+        }
+      };
+      
+      
     return (
-        <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard ? () => onClickCard(card) : undefined}>
+        <div ref={cardRef} style={style} onMouseDown={mouseDownHandler} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={cardImage ? getImageSrc(cardImage) : backfaceSrc}/>
+                <img className="card-view-img" src={cardImage ? getImageSrc(cardImage) : backfaceSrc} />
                 {cardImage?.sign ? <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div> : null}
             </div>
-            { showBackface ?
-            <div className="card-back">
-                <img className="card-view-img" src={backfaceSrc} />
-            </div> : null}
+            {showBackface ?
+                <div className="card-back">
+                    <img className="card-view-img" src={backfaceSrc} />
+                </div> : null}
             {card.num_cubes > 0 ? <div className="card-cubes">
                 {[...Array(card.num_cubes)].map((item, i) => (
                     <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src='/media/sprite_cube.png' />
