@@ -1,8 +1,9 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, KeyboardEvent } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import './Style/GameOptionsEditor.css';
+import { boolConverter, useLocalStorage } from "../../Utils/UseLocalStorage";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
@@ -78,8 +79,16 @@ function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: Game
 }
 
 export default function GameOptionsEditor(props: GameOptionProps) {
+    const [enableUnofficial, setEnableUnofficial] = useLocalStorage('enable_unofficial', boolConverter);
+
+    const handleKeyDown = (ev: KeyboardEvent<HTMLDivElement>) => {
+        if (ev.key === 'x') {
+            setEnableUnofficial(value => !value);
+        }
+    };
+
     return (<div className="game-options-editor">
-        <div className="expansion-checkboxes">
+        <div className="expansion-checkboxes" tabIndex={0} onKeyDown={handleKeyDown}>
             <div className="expansions-header">{getLabel('GameOptions', 'expansions')}</div>
             <ExpansionCheckbox name='dodgecity' { ...props } />
             <ExpansionCheckbox name='goldrush' { ...props } />
@@ -90,6 +99,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='fistfulofcards' { ...props } />
             <ExpansionCheckbox name='wildwestshow' { ...props } />
             <ExpansionCheckbox name='thebullet' { ...props } />
+            { enableUnofficial && <ExpansionCheckbox name='canyondiablo' {...props} /> }
         </div>
         <OptionCheckbox prop='enable_ghost_cards' { ...props } />
         <OptionCheckbox prop='character_choice' { ...props } />
