@@ -49,16 +49,6 @@ export function isBangCard(table: GameTable, origin: Player, card: Card): boolea
         && cardHasTag(card, 'missed');
 }
 
-export function getSelectorDistances(selector: TargetSelector) {
-    if ('distances' in selector.request) {
-        return selector.request.distances;
-    }
-}
-
-export function getDistance(selector: TargetSelector, from: Player, to: Player): number {
-    return getSelectorDistances(selector)?.distances.find(({ player }) => player == to.id)?.distance ?? 0;
-}
-
 export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
     const table = selector.table.current;
     const origin = getPlayer(table, table.self_player!);
@@ -87,15 +77,17 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length == 0) return false;
 
     if (!context.ignore_distances && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
-        let range = getSelectorDistances(selector)?.range_mod ?? 0;
+        const distances = selector.request.distances;
+        let range = distances.range_mod;
         if (filter.includes('reachable')) {
-            range += getSelectorDistances(selector)?.weapon_range ?? 0;
+            range += distances.weapon_range;
         } else if (filter.includes('range_1')) {
             ++range;
         } else if (filter.includes('range_2')) {
             range += 2;
         }
-        if (getDistance(selector, origin, target) > range) return false;
+        const targetDistance = distances.distances.find(item => item.player == target.id)?.distance ?? 0;
+        if (targetDistance > range) return false;
     }
 
     return true;
