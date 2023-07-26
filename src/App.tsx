@@ -36,7 +36,7 @@ export default function App() {
   const settings = useSettings();
 
   useEffect(() => {
-    if (settings.isConnected && !connection.current.isConnected()) {
+    if (settings.myUserId && !connection.current.isConnected()) {
       connection.current.connect();
     }
   }, []);
@@ -56,13 +56,13 @@ export default function App() {
         connection.current.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
       }
       settings.setMyUserId(user_id);
-      settings.setIsConnected(true);
       connection.current.setLocked(true);
       setScene({ type: 'waiting_area' });
     },
 
     disconnected: () => {
-      settings.setIsConnected(undefined);
+      settings.setMyUserId(undefined);
+      settings.setMyLobbyId(undefined);
       setScene({ type: 'connect' });
     },
 

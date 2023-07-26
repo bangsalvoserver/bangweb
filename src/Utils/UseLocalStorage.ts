@@ -11,19 +11,27 @@ export const floatConverter: Converter<number> = { fromString: parseFloat, toStr
 export const boolConverter: Converter<boolean> = { fromString: str => str == 'true', toString: value => value ? 'true' : 'false' }
 export const jsonConverter: Converter<any> = { fromString: JSON.parse, toString: JSON.stringify };
 
-export function useLocalStorage<T>(key: string, converter: Converter<T>) {
+function useStorage<T>(key: string, converter: Converter<T>, storage: Storage) {
     const [value, setValue] = useState(() => {
-        const stringValue = localStorage.getItem(key);
+        const stringValue = storage.getItem(key);
         if (stringValue) {
             return converter.fromString(stringValue);
         }
     });
     useEffect(() => {
         if (value) {
-            localStorage.setItem(key, converter.toString(value));
+            storage.setItem(key, converter.toString(value));
         } else {
-            localStorage.removeItem(key);
+            storage.removeItem(key);
         }
     }, [value]);
     return [value, setValue] as const;
+}
+
+export function useLocalStorage<T>(key: string, converter: Converter<T>) {
+    return useStorage(key, converter, localStorage);
+}
+
+export function useSessionStorage<T>(key: string, converter: Converter<T>) {
+    return useStorage(key, converter, sessionStorage);
 }
