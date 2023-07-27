@@ -61,8 +61,6 @@ export default function App() {
     },
 
     disconnected: () => {
-      settings.setMyUserId(undefined);
-      settings.setMyLobbyId(undefined);
       setScene({ type: 'connect' });
     },
 

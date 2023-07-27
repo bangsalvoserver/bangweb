@@ -31,6 +31,12 @@ function Header({ scene, settings }: HeaderProps) {
 
   const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
 
+  const handleDisconnect = () => {
+    settings.setMyUserId(undefined);
+    settings.setMyLobbyId(undefined);
+    connection.disconnect();
+  };
+
   const handlePropicChange = function (event: ChangeEvent<HTMLInputElement>) {
     let file = event.target.files ? event.target.files[0] : null;
     if (file) {
@@ -76,7 +82,7 @@ function Header({ scene, settings }: HeaderProps) {
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
               { scene.type == 'lobby'
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
-                : <UserMenuItem onClick={closeMenuAnd(() => connection.disconnect())}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
+                : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
             </UserMenu> }
           </div>}
         </div>
