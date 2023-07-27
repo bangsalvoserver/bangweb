@@ -74,8 +74,9 @@ function Header({ scene, settings }: HeaderProps) {
           </button>
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
-              { scene.type == 'lobby' && <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem> }
-              <UserMenuItem onClick={closeMenuAnd(() => connection.disconnect())}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem>
+              { scene.type == 'lobby'
+                ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
+                : <UserMenuItem onClick={closeMenuAnd(() => connection.disconnect())}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
             </UserMenu> }
           </div>}
         </div>
