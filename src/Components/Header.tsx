@@ -59,7 +59,9 @@ function Header({ scene, settings }: HeaderProps) {
         <div className="flex items-center order-2">
           <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-600">
             <span className="sr-only">Open user menu</span>
-            <img className="w-8 h-8 rounded-full" src={settings.propic ?? DEFAULT_USER_PROPIC} onClick={handleClickPropic} />
+            <div className='w-8 h-8 grid place-items-center' onClick={handleClickPropic}>
+              <img className="max-w-8 max-h-8" src={settings.propic ?? DEFAULT_USER_PROPIC} />
+            </div>
             <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={handlePropicChange} />
           </button>
 
