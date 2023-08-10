@@ -157,6 +157,7 @@ export interface GameOptions {
     escape_timer?: Milliseconds;
     bot_play_timer?: Milliseconds;
     tumbleweed_timer?: Milliseconds;
+    game_seed?: number;
 }
 
 export type GameUpdate =
