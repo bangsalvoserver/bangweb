@@ -111,6 +111,6 @@ export default function GameOptionsEditor(props: GameOptionProps) {
         <OptionNumber prop='escape_timer' max={10000} { ...props } />
         <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
         <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
-        { enableUnofficial && <OptionNumber prop='game_seed' { ...props} /> }
+        <OptionNumber prop='game_seed' { ...props} />
     </div>);
 }

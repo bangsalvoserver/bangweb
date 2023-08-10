@@ -20,6 +20,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         escape_timer:           "Escape Timer",
         bot_play_timer:         "Bot Play Timer",
         tumbleweed_timer:       "Tumbleweed Timer",
+        game_seed:              "Game Seed",
     },
 
     ExpansionType: {
