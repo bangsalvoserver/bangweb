@@ -185,13 +185,13 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
             </div>
             <div className='flex flex-row items-end relative'>
                 <div className='player-propic-self'><LobbyUser user={user} align='vertical' /></div>
-                { characterView } { roleView } { scenarioDecks } { playerIcons } 
+                { characterView }{ roleView }{ scenarioDecks }{ playerIcons } 
             </div>
         </div>
     } else {
         return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
             <div className='player-top-row'>
-                { characterView } { roleView }
+                { characterView }{ roleView }
                 <StackPocket showCount slice={0} ref={setPos('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 { scenarioDecks }
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>

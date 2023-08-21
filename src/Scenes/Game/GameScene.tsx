@@ -143,7 +143,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
         <div className="game-scene">
           <div className="main-deck-row">
             <div>
-              { shopPockets } { tableCubes } { mainDeck } { scenarioCards }
+              { shopPockets }{ tableCubes }{ mainDeck }{ scenarioCards }
             </div>
             { trainPockets }
           </div>
