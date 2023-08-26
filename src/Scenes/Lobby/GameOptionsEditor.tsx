@@ -38,6 +38,14 @@ function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly }: Game
     </div>);
 }
 
+function UnofficialExpansionCheckbox(props: GameOptionProps & { enabled: boolean | undefined } & { name: ExpansionType }) {
+    if (props.gameOptions.expansions.includes(props.name) || props.enabled) {
+        return <ExpansionCheckbox { ...props } />;
+    } else {
+        return null;
+    }
+}
+
 function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<boolean> }) {
     const handleOptionChange = (event: ChangeEvent<HTMLInputElement>) => {
         setGameOptions({
@@ -99,7 +107,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='fistfulofcards' { ...props } />
             <ExpansionCheckbox name='wildwestshow' { ...props } />
             <ExpansionCheckbox name='thebullet' { ...props } />
-            { enableUnofficial && <ExpansionCheckbox name='canyondiablo' {...props} /> }
+            <UnofficialExpansionCheckbox name='canyondiablo' enabled={enableUnofficial} { ...props } />
         </div>
         <OptionCheckbox prop='enable_ghost_cards' { ...props } />
         <OptionCheckbox prop='character_choice' { ...props } />
