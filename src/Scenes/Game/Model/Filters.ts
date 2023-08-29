@@ -80,6 +80,9 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
         const distances = selector.request.distances;
         let range = distances.range_mod;
         if (filter.includes('reachable')) {
+            if (distances.weapon_range == 0) {
+                return false;
+            }
             range += distances.weapon_range;
         } else if (filter.includes('range_1')) {
             ++range;
