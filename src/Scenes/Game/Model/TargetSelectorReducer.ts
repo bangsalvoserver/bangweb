@@ -125,6 +125,7 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
     case 'card_choice':
         return editContext({ card_choice: modifier.id });
     case 'leevankliff':
+    case 'spike_spiezel':
     case 'moneybag':
         return editContext({ repeat_card: getPlayableCards(selector)[0] });
     case 'traincost':
