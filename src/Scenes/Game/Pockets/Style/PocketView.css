@@ -25,3 +25,23 @@
     top: 50%;
     transform: translate(-50%, -50%);
 }
+
+.scenario-pocket-view {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.5);
+    outline: 2px solid rgb(80, 80, 80);
+    border-radius: 0.2em;
+    margin: 0 0.3em;
+}
+
+.scenario-pocket-view .stack-pocket:first-child .card-front::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: var(--card-border);
+}

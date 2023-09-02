@@ -4,7 +4,6 @@ import { getCard, newPocketRef } from "../Model/GameTable";
 import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
-import MoveScenarioDeckAnimation from "./MoveScenarioDeckAnimation";
 import { CardTracker } from "../Model/CardTracker";
 
 export interface AnimationProps {
@@ -39,19 +38,6 @@ export default function AnimationView({ getTracker }: AnimationProps) {
                 pocket={animation.pocket}
                 duration={animation.duration}
             />;
-        } else if ('move_scenario_deck' in table.animation) {
-            const animation = table.animation.move_scenario_deck;
-            const card = animation.cards.at(-1);
-            if (card) {
-                return <MoveScenarioDeckAnimation
-                    tracker={getTracker()}
-                    card={getCard(table, card)}
-                    pocket={animation.pocket}
-                    startPlayer={table.status.scenario_holders[animation.pocket]}
-                    endPlayer={animation.player}
-                    duration={animation.duration}
-                />;
-            }
         }
     }
     return null;

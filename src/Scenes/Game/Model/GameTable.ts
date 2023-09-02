@@ -1,8 +1,8 @@
 import { Empty, UserId } from "../../../Messages/ServerMessage";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, ScenarioDeckPocket, TablePocketType } from "./CardEnums";
-import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveScenarioDeckUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
+import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
+import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
 
 export interface Id {
     id: number
@@ -140,13 +140,10 @@ export interface DeckCards {
     cards: CardId[];
 }
 
-export type ScenarioHolders = Partial<Record<ScenarioDeckPocket, PlayerId>>;
-
 export type TableAnimation =
     { move_card: MoveCardUpdate & Duration } |
     { move_cubes: MoveCubesUpdate & Duration } |
     { deck_shuffle: DeckShuffledUpdate & DeckCards & Duration } |
-    { move_scenario_deck : MoveScenarioDeckUpdate & DeckCards & Duration } |
     { move_train: MoveTrainUpdate & Duration };
 
 export interface GameTable {
@@ -165,7 +162,6 @@ export interface GameTable {
         num_cubes: number;
         train_position: number;
         flags: GameFlag[];
-        scenario_holders: ScenarioHolders;
         current_turn?: PlayerId;
     };
 
@@ -203,7 +199,6 @@ export function newGameTable(myUserId?: UserId): GameTable {
         status: {
             num_cubes: 0,
             train_position: 0,
-            scenario_holders: {},
             flags: [],
         }
     };

@@ -1,6 +1,6 @@
 import { Empty, UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, ScenarioDeckPocket } from "./CardEnums";
+import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -49,11 +49,6 @@ export interface MoveCubesUpdate {
     num_cubes: number;
     origin_card: CardId | null;
     target_card: CardId | null;
-}
-
-export interface MoveScenarioDeckUpdate {
-    player: PlayerId;
-    pocket: ScenarioDeckPocket;
 }
 
 export interface MoveTrainUpdate {
@@ -189,8 +184,6 @@ export type GameUpdate =
     { add_cubes: AddCubesUpdate } |
     { move_cubes: MoveCubesUpdate & Duration } |
     { move_cubes_end: MoveCubesUpdate } |
-    { move_scenario_deck: MoveScenarioDeckUpdate & Duration } |
-    { move_scenario_deck_end: MoveScenarioDeckUpdate } |
     { move_train: MoveTrainUpdate & Duration } |
     { move_train_end: MoveTrainUpdate } |
     { game_flags: GameFlag[] } |

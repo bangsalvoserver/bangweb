@@ -1,14 +1,13 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
-import { MapRef, useMapRef } from "../../../Utils/LazyRef";
+import { useMapRef } from "../../../Utils/LazyRef";
 import { getDivRect } from "../../../Utils/Rect";
 import CardView, { CardRef } from "../CardView";
 import { GameTableContext } from "../GameScene";
-import { PocketType } from "../Model/CardEnums";
+import { PocketPosition } from "../Model/CardTracker";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import CardSlot, { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import "./Style/PocketView.css";
-import { PocketPosition } from "../Model/CardTracker";
 
 export interface PocketProps {
     cards: CardId[];

@@ -172,11 +172,6 @@ export class GameUpdateHandler {
             this.setAnimation(update, { move_cubes_end: update });
         },
 
-        move_scenario_deck (update) {
-            this.tableDispatch({ move_scenario_deck: update });
-            this.setAnimation(update, { move_scenario_deck_end: update });
-        },
-
         move_train (update) {
             this.tableDispatch({ move_train: update });
             this.setAnimation(update, { move_train_end: update });

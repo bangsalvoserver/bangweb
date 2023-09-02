@@ -80,10 +80,6 @@ export type PlayerPocketType =
     'player_character' |
     'player_backup';
 
-export type ScenarioDeckPocket =
-    'scenario_deck' |
-    'wws_scenario_deck';
-
 export type TablePocketType =
     'main_deck' |
     'discard_pile' |
@@ -92,13 +88,14 @@ export type TablePocketType =
     'shop_discard' |
     'shop_selection' |
     'hidden_deck' |
+    'scenario_deck' |
     'scenario_card' |
+    'wws_scenario_deck' |
     'wws_scenario_card' |
     'button_row' |
     'stations' |
     'train_deck' |
-    'train' |
-    ScenarioDeckPocket;
+    'train';
 
 export type PocketType = 'none' | PlayerPocketType | TablePocketType;
 

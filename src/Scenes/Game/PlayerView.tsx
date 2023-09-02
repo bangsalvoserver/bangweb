@@ -10,7 +10,6 @@ import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidE
 import CharacterView from "./Pockets/CharacterView";
 import StackPocket from "./Pockets/StackPocket";
 import PocketView from "./Pockets/PocketView";
-import ScenarioDeckView from "./Pockets/ScenarioDeckView";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
@@ -156,11 +155,6 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         </div>
     );
 
-    const scenarioDecks = (<>
-        <ScenarioDeckView ref={setPos('scenario_deck')} pocket='scenario_deck' player={player.id} />
-        <ScenarioDeckView ref={setPos('wws_scenario_deck')} pocket='wws_scenario_deck' player={player.id} />
-    </>);
-
     const playerIcons = (
         <div className='player-icons'>
             { isGameOver ? <>
@@ -185,7 +179,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
             </div>
             <div className='flex flex-row items-end relative'>
                 <div className='player-propic-self'><LobbyUser user={user} align='vertical' /></div>
-                { characterView }{ roleView }{ scenarioDecks }{ playerIcons } 
+                { characterView }{ roleView }{ playerIcons } 
             </div>
         </div>
     } else {
@@ -193,7 +187,6 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
             <div className='player-top-row'>
                 { characterView }{ roleView }
                 <StackPocket showCount slice={0} ref={setPos('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
-                { scenarioDecks }
                 <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
                 {playerIcons}
             </div>

@@ -308,42 +308,6 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
         };
     },
 
-    move_scenario_deck ({ player, pocket, duration }) {
-        return {
-            ...this,
-            pockets: {
-                ...this.pockets,
-                [pocket]: [],
-            },
-            animation: {
-                move_scenario_deck: {
-                    player, pocket, duration,
-                    cards: this.pockets[pocket]
-                }
-            }
-        }
-    },
-
-    // Changes the scenario_holder field
-    move_scenario_deck_end ({ player, pocket }) {
-        const cards = this.animation && 'move_scenario_deck' in this.animation ? this.animation.move_scenario_deck.cards : [];
-        return {
-            ...this,
-            status: {
-                ...this.status,
-                scenario_holders: {
-                    ...this.status.scenario_holders,
-                    [pocket]: player
-                }
-            },
-            pockets: {
-                ...this.pockets,
-                [pocket]: cards
-            },
-            animation: undefined
-        };
-    },
-
     // Changes the train_position field
     move_train ({ position, duration }) {
         return {
