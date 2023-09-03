@@ -28,7 +28,7 @@ const ScenarioPocketView = forwardRef<ScenarioPocketRef, ScenarioPocketProps>(({
     }
 
     return <div className="scenario-pocket-view">
-        <StackPocket ref={scenarioRef.deckRef} cards={deckCards} slice={2} />
+        <StackPocket ref={scenarioRef.deckRef} cards={deckCards} slice={2} showCount />
         <StackPocket ref={scenarioRef.activeRef} cards={activeCards} slice={2} onClickCard={onClickCard} />
     </div>
 });
