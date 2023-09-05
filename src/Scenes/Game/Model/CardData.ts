@@ -13,6 +13,7 @@ export interface CardEffect {
 export interface CardEquip {
     effect_value: number;
     type: EquipType;
+    nodisable: boolean;
 }
 
 export interface CardTag {
