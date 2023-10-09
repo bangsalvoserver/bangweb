@@ -1,0 +1,41 @@
+name: Build and Deploy to Github Pages
+
+on:
+  push:
+    branches:
+      - release
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Setup Node.Js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.0
+      
+    - name: Install
+      run: npm install
+
+    - name: Build .env file
+      run: npm run build_env -- --BANG_SERVER_URL=${{ vars.BANG_SERVER_URL }}
+
+    - name: Build
+      run: npm run build
+
+    - name: Deploy with gh-pages
+      run: |
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

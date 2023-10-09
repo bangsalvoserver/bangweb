@@ -19,9 +19,14 @@ async function saveToFile(filename, object) {
 }
 
 async function main() {
-    await saveToFile('.env', {
+    let env = {
         VITE_BANG_SERVER_COMMIT_HASH: await getCommitHash('https://api.github.com/repos/salvoilmiosi/banggameserver/branches/release')
-    });
+    };
+    const args = require('yargs').argv;
+    if ('BANG_SERVER_URL' in args) {
+        env['VITE_BANG_SERVER_URL'] = args.BANG_SERVER_URL;
+    }
+    await saveToFile('.env', env);
 }
 
 main().catch(error => { throw error });

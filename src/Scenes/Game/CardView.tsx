@@ -7,9 +7,12 @@ import { TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSe
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import Env from "../../Model/Env";
+import spriteCube from "/media/sprite_cube.png";
+
+export const SPRITE_CUBE = spriteCube;
 
 export function getCardUrl(image: string) {
-    return (Env.bangCardsBaseUrl ?? '') + `/cards/${image}.png`;
+    return `/cards/${image}.png`;
 }
 
 export interface CardProps {
@@ -131,7 +134,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
             </div> : null}
             {card.num_cubes > 0 ? <div className="card-cubes">
                 {[...Array(card.num_cubes)].map((item, i) => (
-                    <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src='/media/sprite_cube.png' />
+                    <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src={SPRITE_CUBE} />
                 ))}
             </div> : null}
         </div>

@@ -2,6 +2,8 @@ import getLabel from "../../Locale/GetLabel";
 import { UserId } from "../../Messages/ServerMessage";
 import { ImageSrc } from "../../Utils/ImageSerial";
 import "./Style/LobbyUser.css"
+import defaultUserPropic from "/media/icon_default_user.png";
+import propicDisconnected from "/media/icon_disconnected.png";
 
 export interface UserValue {
     id: UserId;
@@ -15,8 +17,8 @@ export interface LobbyUserProps {
     align?: 'horizontal' | 'vertical';
 }
 
-export const DEFAULT_USER_PROPIC = "/media/icon_default_user.png";
-export const PROPIC_DISCONNECTED = "/media/icon_disconnected.png";
+export const DEFAULT_USER_PROPIC = defaultUserPropic;
+export const PROPIC_DISCONNECTED = propicDisconnected;
 
 export function getPropic(user?: UserValue) {
   return user? (user.propic ?? DEFAULT_USER_PROPIC) : PROPIC_DISCONNECTED;

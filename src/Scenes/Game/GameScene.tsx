@@ -25,6 +25,7 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import ScenarioPocketView from "./Pockets/ScenarioPocketView";
+import { SPRITE_CUBE } from "./CardView";
 
 export interface GameProps {
   channel: GameChannel;
@@ -103,7 +104,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   const tableCubes = <div className='table-cubes' ref={cubesRef}>
     { table.status.num_cubes > 0 && <>
-      <img src='/media/sprite_cube.png' />
+      <img src={SPRITE_CUBE} />
       <div>x{table.status.num_cubes}</div>
     </> }
   </div>;

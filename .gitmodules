@@ -1,0 +1,3 @@
+[submodule "public/cards"]
+	path = public/cards
+	url = https://github.com/salvoilmiosi/bang-cards

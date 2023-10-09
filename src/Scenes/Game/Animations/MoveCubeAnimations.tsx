@@ -5,6 +5,7 @@ import { CardTracker } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import "./Style/MoveCubeAnimation.css";
+import { SPRITE_CUBE } from "../CardView";
 
 export interface MoveCubeProps {
     tracker: CardTracker;
@@ -44,7 +45,7 @@ export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, ta
                 {[...Array(num_cubes)].map((item, i) => (
                     <div key={i} style={moveCubeIndexStyle(i)}
                         className={`${num_cubes <= 1 ? 'total-delay-0' : ''} move-cubes-animation-inner`} >
-                        <img src='/media/sprite_cube.png' />
+                        <img src={SPRITE_CUBE} />
                     </div>
                 ))}
             </div>
