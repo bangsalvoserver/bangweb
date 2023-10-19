@@ -8,6 +8,7 @@ export interface ClientConnect {
 }
 
 export type ClientMessage =
+    {pong: Empty} |
     {connect: ClientConnect} |
     {user_edit: UserInfo} |
     {lobby_list: Empty } |

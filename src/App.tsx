@@ -64,6 +64,10 @@ export default function App() {
       setScene({ type: 'connect' });
     },
 
+    ping: () => {
+      connection.current.sendMessage({ pong: {} });
+    },
+
     lobby_error: message => console.error('Lobby error: ', getLabel('lobby', message)),
 
     lobby_remove_user: ({ user_id }) => {

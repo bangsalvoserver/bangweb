@@ -67,6 +67,7 @@ export interface ChatMessage {
 }
 
 export type ServerMessage =
+    {ping: Empty} |
     {connected: Empty} |
     {disconnected: Empty} |
     {client_accepted: ClientAccepted} |
