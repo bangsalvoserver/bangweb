@@ -62,6 +62,10 @@
     border-color: #4d7f21;
 }
 
+.player-winner {
+    border-color: #bba14f;
+}
+
 .player-selected {
     border-color: red;
 }
@@ -161,7 +165,7 @@
 
 .icon-winner {
     --icon-url: url('/media/icon_winner.png');
-    --icon-color: #bba14f
+    --icon-color: #bba14f;
 }
 
 .icon-origin {

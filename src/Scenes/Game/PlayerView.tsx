@@ -101,15 +101,17 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(selector, player), [selector]);
 
-    let classes = ['player-view'];
-    if (isTurn) {
-        classes.push('current-turn');
-    }
-
     const isOrigin = isResponse(selector) && selector.request.origin == player.id;
     const isTarget = isResponse(selector) && selector.request.target == player.id;
     const isDead = !isPlayerAlive(player);
     const isWinner = player.status.flags.includes('winner');
+
+    let classes = ['player-view'];
+    if (isWinner) {
+        classes.push('player-winner');
+    } else if (isTurn) {
+        classes.push('current-turn');
+    }
 
     let flipDuration: number | undefined;
     let playerRole = player.status.role;
