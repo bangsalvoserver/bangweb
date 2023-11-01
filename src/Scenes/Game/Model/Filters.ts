@@ -178,7 +178,7 @@ export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], 
     if (filter.includes('origin_card_suit') && isResponse(selector)) {
         if (!selector.request.origin_card) return false;
         const reqOriginCard = getCard(table, selector.request.origin_card);
-        return isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit == sign.suit;
+        if (!(isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit == sign.suit)) return false;
     }
 
     if (filter.includes('selection') && target.pocket?.name != 'selection') return false;
