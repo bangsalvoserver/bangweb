@@ -76,6 +76,12 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
     if (filter.includes('notsheriff') && target.status.role == 'sheriff') return false;
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length == 0) return false;
 
+    if (filter.includes('target_set') && isResponse(selector)) {
+        if (!selector.request.target_set.find(t => 'player' in t && t.player == target.id)) {
+            return false;
+        }
+    }
+
     if (!context.ignore_distances && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
         const distances = selector.request.distances;
         let range = distances.range_mod;

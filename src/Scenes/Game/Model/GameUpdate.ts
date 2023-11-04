@@ -1,6 +1,6 @@
 import { Empty, UserId } from "../../../Messages/ServerMessage";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
+import { CardTarget, DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -133,6 +133,7 @@ export interface RequestStatusArgs {
     pick_cards: CardId[];
     highlight_cards: CardId[];
     distances: PlayerDistances;
+    target_set: CardTarget[];
 }
 
 export interface StatusReadyArgs {
