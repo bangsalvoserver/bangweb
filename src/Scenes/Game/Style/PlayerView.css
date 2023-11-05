@@ -74,6 +74,20 @@
     border-color: #806c00ff;
 }
 
+.player-self-pockets {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 2 * var(--card-width));
+}
+
+.player-self-character {
+    display: flex;
+    flex-direction: row;
+    place-items: flex-end;
+    position: relative;
+    width: max-content;
+}
+
 .player-pocket-scroll {
     width: 100%;
     height: var(--player-row-height);
@@ -95,7 +109,7 @@
 .player-character-row-scroll-self {
     min-width: var(--card-width-plus-margin);
     max-width: calc(3 * var(--card-width));
-    height: var(--card-height-plus-margin);
+    line-height: 0;
     overflow-x: auto;
     overflow-y: hidden;
 }

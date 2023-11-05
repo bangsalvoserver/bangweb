@@ -185,7 +185,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     if (player.id == table.self_player) {
         return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={handleClickPlayer}>
-            <div className='flex-grow player-pockets'>
+            <div className='player-self-pockets'>
                 <div className='player-pocket-scroll' ref={handRef}>
                     <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 </div>
@@ -193,7 +193,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
                 </div>
             </div>
-            <div className='flex flex-row items-end relative'>
+            <div className='player-self-character'>
                 <div className='player-propic-self'><LobbyUser user={user} align='vertical' /></div>
                 { characterView }
                 <div className='player-character-row-scroll-self'>
@@ -217,7 +217,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     {playerIcons}
                 </div>
             </div>
-            <div className='player-pockets player-pocket-scroll' ref={tableRef}>
+            <div className='player-pocket-scroll' ref={tableRef}>
                 <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
             </div>
         </div>

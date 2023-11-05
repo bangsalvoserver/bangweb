@@ -18,7 +18,7 @@
     transition: ease-in;
 }
 
-.player-view.player-animation-death .player-pockets {
+.player-view.player-animation-death .player-pocket-scroll {
     visibility: hidden;
 }
 
