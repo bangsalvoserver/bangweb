@@ -9,11 +9,6 @@
     vertical-align: middle;
 }
 
-.align-slot .pocket-view {
-    min-width: var(--card-width-plus-margin);
-    width: max-content;
-}
-
 .stack-pocket .card-slot {
     margin: unset;
     position: absolute;

@@ -77,7 +77,7 @@
 .player-self-pockets {
     display: flex;
     flex-direction: column;
-    width: calc(100% - 2 * var(--card-width));
+    width: 100%;
 }
 
 .player-self-character {
@@ -85,7 +85,6 @@
     flex-direction: row;
     place-items: flex-end;
     position: relative;
-    width: max-content;
 }
 
 .player-pocket-scroll {
@@ -169,13 +168,6 @@
     left: 50%;
     top: calc(var(--profile-pic-size) * -1);
     transform: translateX(-50%);
-}
-
-.player-propic-self {
-    position: absolute;
-    width: calc(100% - var(--card-width-plus-margin));
-    bottom: calc(var(--card-height-plus-margin) + 0.5em);
-    right: 0;
 }
 
 .player-view .lobby-username {

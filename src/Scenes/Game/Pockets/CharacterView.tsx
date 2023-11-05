@@ -2,6 +2,7 @@ import { MutableRefObject, forwardRef, useImperativeHandle, useRef } from "react
 import { Card, Player } from "../Model/GameTable";
 import PocketView from "../Pockets/PocketView";
 import { PocketPosition } from "../Model/CardTracker";
+import StackPocket from "./StackPocket";
 
 export interface CharacterProps {
     player: Player;
@@ -21,21 +22,19 @@ const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player, onClic
 
     useImperativeHandle(ref, () => characterRef);
 
-    return (<div className='inline-block relative'>
-        <div className="player-backup align-slot">
-            <PocketView ref={characterRef.backupRef} cards={player.pockets.player_backup} />
+    return <div className='inline-block relative'>
+        <div className="player-backup">
+            <StackPocket ref={characterRef.backupRef} cards={player.pockets.player_backup} />
             { player.status.hp > 5 ? 
                 <div className="player-backup-extra">
-                    <PocketView cards={player.pockets.player_backup} />
+                    <StackPocket cards={player.pockets.player_backup} />
                 </div> : null }
         </div>
-        <div className="align-slot">
-            <PocketView ref={characterRef.characterRef} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
-        </div>
+        <StackPocket ref={characterRef.characterRef} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
         { player.status.gold > 0 ?
             <div className="player-gold">{player.status.gold}</div>
         : null }
-    </div>)
+    </div>;
 });
 
 export default CharacterView;
