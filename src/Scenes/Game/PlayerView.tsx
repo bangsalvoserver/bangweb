@@ -210,7 +210,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     { extraCharactersPocket }
                     { roleView }
                     { table.status.flags.includes('hands_shown')
-                        ? <PocketView ref={setPos('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                        ? <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                         : <StackPocket showCount slice={0} ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                     }
                     <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
