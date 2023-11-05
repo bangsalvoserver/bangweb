@@ -26,7 +26,7 @@ export default function RoleView({ role, flipDuration }: RoleProps) {
         if (role != 'unknown') classes.push('card-animation-reverse');
     }
 
-    return (
+    return <div className='pocket-view'>
         <div style={style} className={classes.join(' ')}>
             <div className="card-front">
                 <img className="card-view-img" src={imageSrc} />
@@ -35,5 +35,5 @@ export default function RoleView({ role, flipDuration }: RoleProps) {
                 <img className="card-view-img" src={backfaceSrc} />
             </div> : null}
         </div>
-    );
+    </div>;
 }

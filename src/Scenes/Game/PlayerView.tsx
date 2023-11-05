@@ -4,17 +4,17 @@ import { Rect, getDivRect } from "../../Utils/Rect";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
-import { Card, GameTable, Player } from "./Model/GameTable";
+import { PocketPosition, PocketPositionMap } from "./Model/CardTracker";
+import { isPlayerAlive } from "./Model/Filters";
+import { Card, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 import CharacterView from "./Pockets/CharacterView";
-import StackPocket from "./Pockets/StackPocket";
 import PocketView from "./Pockets/PocketView";
+import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { PocketPosition, PocketPositionMap } from "./Model/CardTracker";
-import { isPlayerAlive } from "./Model/Filters";
 
 export interface PlayerProps {
     user?: UserValue,
@@ -79,6 +79,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const positions = useMapRef<PocketType, PocketPosition>();
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
+    const extraCharacters = useRef<PocketPosition>(null);
 
     const handleClickPlayer = onClickPlayer ? () => onClickPlayer(player) : undefined;
 
@@ -144,18 +145,31 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         classes.push(selectorPlayerClass);
     }
 
+    const buildCharacterRef = (character: PocketPosition | null): PocketPosition | null => {
+        return {
+            getPocketRect: () => null,
+            getCardRect: (card: CardId) => {
+                if (!extraCharacters.current || card == player.pockets.player_character.at(0)) {
+                    return character?.getCardRect(card) ?? null;
+                } else {
+                    return extraCharacters.current.getCardRect(card);
+                }
+            }
+        };
+    };
+
     const characterView = (
         <CharacterView ref={ref => {
-            positions.set('player_character', ref?.characterRef.current ?? null);
+            positions.set('player_character', buildCharacterRef(ref?.characterRef.current ?? null));
             positions.set('player_backup', ref?.backupRef.current ?? null);
         }} player={player} onClickCard={onClickCard} />
     );
 
-    const roleView = (
-        <div className='card-size'>
-            <RoleView flipDuration={flipDuration} role={playerRole} />
-        </div>
+    const extraCharactersPocket = player.pockets.player_character.length <= 1 ? null : (
+        <PocketView ref={extraCharacters} cards={player.pockets.player_character.slice(1)} onClickCard={onClickCard} />
     );
+
+    const roleView = <RoleView flipDuration={flipDuration} role={playerRole} />;
 
     const playerIcons = (
         <div className='player-icons'>
@@ -181,16 +195,27 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
             </div>
             <div className='flex flex-row items-end relative'>
                 <div className='player-propic-self'><LobbyUser user={user} align='vertical' /></div>
-                { characterView }{ roleView }{ playerIcons } 
+                { characterView }
+                <div className='player-character-row-scroll-self'>
+                    { extraCharactersPocket }{ roleView }
+                </div>
+                { playerIcons }
             </div>
         </div>
     } else {
         return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
             <div className='player-top-row'>
-                { characterView }{ roleView }
-                <StackPocket showCount slice={0} ref={setPos('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
-                <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
-                {playerIcons}
+                { characterView }
+                <div className='player-character-row-scroll' ref={handRef}>
+                    { extraCharactersPocket }
+                    { roleView }
+                    { table.status.flags.includes('hands_shown')
+                        ? <PocketView ref={setPos('player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                        : <StackPocket showCount slice={0} ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                    }
+                    <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
+                    {playerIcons}
+                </div>
             </div>
             <div className='player-pockets player-pocket-scroll' ref={tableRef}>
                 <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />

@@ -30,7 +30,7 @@ const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player, onClic
                 </div> : null }
         </div>
         <div className="align-slot">
-            <PocketView ref={characterRef.characterRef} cards={player.pockets.player_character} onClickCard={onClickCard} />
+            <PocketView ref={characterRef.characterRef} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
         </div>
         { player.status.gold > 0 ?
             <div className="player-gold">{player.status.gold}</div>

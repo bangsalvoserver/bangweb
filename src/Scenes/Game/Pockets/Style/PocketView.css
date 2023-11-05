@@ -3,14 +3,10 @@
     --card-height-plus-margin: calc(var(--card-height) + 2 * var(--card-margin));
 }
 
-.pocket-view, .card-size {
+.pocket-view {
     display: inline-block;
     height: var(--card-height-plus-margin);
     vertical-align: middle;
-}
-
-.card-size {
-    width: var(--card-width-plus-margin);
 }
 
 .align-slot .pocket-view {
