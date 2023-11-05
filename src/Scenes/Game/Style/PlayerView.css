@@ -93,6 +93,7 @@
 }
 
 .player-character-row-scroll-self {
+    min-width: var(--card-width-plus-margin);
     height: var(--card-height-plus-margin);
     overflow-x: auto;
     overflow-y: hidden;
