@@ -27,6 +27,11 @@
     overflow-y: unset;
 }
 
+.player-view.player-animation-death .player-character-row-scroll-self {
+    overflow-x: unset;
+    overflow-y: unset;
+}
+
 @keyframes player-death {
     from {
         height: calc(var(--player-row-height) * 2);
