@@ -81,7 +81,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   useEffect(() => handleSendGameAction(channel, selector), [selector]);
 
   const shopPockets = (table.pockets.shop_deck.length != 0 || table.pockets.shop_selection.length != 0) && (
-    <div className="inline-block relative">
+    <div className="pocket-group relative">
       <div className="absolute">
         <StackPocket ref={setPos('shop_discard')} cards={table.pockets.shop_discard} />
       </div>
@@ -109,10 +109,10 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     </> }
   </div>;
 
-  const mainDeck = <>
+  const mainDeck = <div className="pocket-group">
     <StackPocket slice={10} ref={setPos('discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
     <StackPocket showCount ref={setPos('main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
-  </>;
+  </div>;
 
   const getScenarioPocketView = (deck: TablePocketType, active: TablePocketType) => {
     const deckCards = table.pockets[deck];
@@ -156,7 +156,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
           <div className="main-deck-row">
             <div>
               { shopPockets }{ tableCubes }{ mainDeck }
-              { (scenarioCards || wwsScenarioCards) && <div className="scenario-pockets">{ scenarioCards }{ wwsScenarioCards }</div> }
+              { (scenarioCards || wwsScenarioCards) && <div className="pocket-group">{ scenarioCards }{ wwsScenarioCards }</div> }
             </div>
             { trainPockets }
           </div>

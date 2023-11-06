@@ -17,7 +17,7 @@
     transform: translate(-50%, -50%);
 }
 
-.scenario-pockets {
+.pocket-group {
     display: inline-block;
     background-color: rgba(255, 255, 255, 0.5);
     outline: 2px solid rgb(80, 80, 80);
