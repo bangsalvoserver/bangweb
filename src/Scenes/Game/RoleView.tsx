@@ -31,7 +31,7 @@ export default function RoleView({ role, flipDuration }: RoleProps) {
             <div className="card-front">
                 <img className="card-view-img" src={imageSrc} />
             </div>
-            {flipDuration ? <div className="card-back">
+            {flipDuration ? <div className="card-back-flip">
                 <img className="card-view-img" src={backfaceSrc} />
             </div> : null}
         </div>
