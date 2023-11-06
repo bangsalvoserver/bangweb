@@ -1,3 +1,4 @@
+import Env, { Language } from "../Model/Env";
 import { CARDS_ENGLISH } from "./English/Cards";
 import { GAME_STRINGS_ENGLISH } from "./English/GameStrings";
 import { LABELS_ENGLISH } from "./English/Labels";
@@ -16,14 +17,16 @@ export type GameStringRegistry = Record<string, Format<JSX.Element>>;
 
 export type Registry = [CardRegistry, LabelRegistry, GameStringRegistry];
 
-export type Language = 'en' | 'it';
-
 const registries: Record<Language, Registry> = {
     'it': [CARDS_ITALIAN, LABELS_ITALIAN, GAME_STRINGS_ITALIAN],
     'en': [CARDS_ENGLISH, LABELS_ENGLISH, GAME_STRINGS_ENGLISH],
 };
 
 export function getSystemLanguage(): Language {
+    if (Env.language) {
+        return Env.language;
+    }
+
     const locale = navigator.languages
         ? navigator.languages[0] : navigator.language;
         
