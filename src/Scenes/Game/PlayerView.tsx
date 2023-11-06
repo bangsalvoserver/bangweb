@@ -212,9 +212,9 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                         ? <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                         : <StackPocket showCount slice={0} ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                     }
-                    <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
-                    {playerIcons}
                 </div>
+                <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
+                {playerIcons}
             </div>
             <div className='player-pocket-scroll' ref={tableRef}>
                 <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
