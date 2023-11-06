@@ -115,13 +115,16 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   </>;
 
   const getScenarioPocketView = (deck: TablePocketType, active: TablePocketType) => {
+    const deckCards = table.pockets[deck];
+    const activeCards = table.pockets[active];
+    if (deckCards.length == 0 && activeCards.length == 0) {
+      return null;
+    }
     return <ScenarioPocketView ref={ref => {
         pocketPositions.set(deck, ref?.deckRef.current ?? null);
         pocketPositions.set(active, ref?.activeRef.current ?? null);
       }}
-      deckCards={table.pockets[deck]}
-      activeCards={table.pockets[active]}
-      onClickCard={onClickCard}
+      deckCards={deckCards} activeCards={activeCards} onClickCard={onClickCard}
     />
   };
 
@@ -152,7 +155,8 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
         <div className="game-scene">
           <div className="main-deck-row">
             <div>
-              { shopPockets }{ tableCubes }{ mainDeck }{ scenarioCards }{ wwsScenarioCards }
+              { shopPockets }{ tableCubes }{ mainDeck }
+              { (scenarioCards || wwsScenarioCards) && <div className="scenario-pockets">{ scenarioCards }{ wwsScenarioCards }</div> }
             </div>
             { trainPockets }
           </div>

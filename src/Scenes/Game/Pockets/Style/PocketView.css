@@ -17,12 +17,16 @@
     transform: translate(-50%, -50%);
 }
 
-.scenario-pocket-view {
+.scenario-pockets {
     display: inline-block;
     background-color: rgba(255, 255, 255, 0.5);
     outline: 2px solid rgb(80, 80, 80);
     border-radius: 0.2em;
     margin: 0 0.3em;
+}
+
+.scenario-pocket-view {
+    display: inline-block;
 }
 
 .scenario-pocket-view .stack-pocket:first-child .card-front::before {
