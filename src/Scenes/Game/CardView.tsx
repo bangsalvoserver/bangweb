@@ -122,21 +122,22 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
 
     return (
         <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard ? () => onClickCard(card) : undefined}>
-            <div className="card-front">
-                <img className="card-view-img" src={cardImage ? getCardUrl(cardImage.image) : backfaceSrc}/>
-                {cardImage?.sign ? <div className="card-view-inner">
+            { cardImage ? <div className="card-front">
+                <img className="card-view-img" src={getCardUrl(cardImage.image)}/>
+                {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
-                </div> : null}
-            </div>
-            { showBackface ?
-            <div className="card-back">
+                </div>}
+                {card.num_cubes > 0 && <div className="card-cubes">
+                    {[...Array(card.num_cubes)].map((item, i) => (
+                        <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src={SPRITE_CUBE} />
+                    ))}
+                </div>}
+            </div> : <div className="card-back">
                 <img className="card-view-img" src={backfaceSrc} />
-            </div> : null}
-            {card.num_cubes > 0 ? <div className="card-cubes">
-                {[...Array(card.num_cubes)].map((item, i) => (
-                    <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src={SPRITE_CUBE} />
-                ))}
-            </div> : null}
+            </div> }
+            { showBackface && <div className="card-back-flip">
+                <img className="card-view-img" src={backfaceSrc} />
+            </div> }
         </div>
     )
 });

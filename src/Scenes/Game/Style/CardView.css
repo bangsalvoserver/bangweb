@@ -19,13 +19,13 @@
     margin: var(--card-margin);
 }
 
-.card-front, .card-back {
+.card-front, .card-back, .card-back-flip {
     height: min-content;
     position: relative;
     backface-visibility: hidden;
 }
 
-.card-back {
+.card-back-flip {
     position: absolute;
     transform: rotateY(180deg);
 }
