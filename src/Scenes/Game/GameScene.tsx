@@ -24,7 +24,6 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import ScenarioPocketView from "./Pockets/ScenarioPocketView";
 import { SPRITE_CUBE } from "./CardView";
 
 export interface GameProps {
@@ -118,15 +117,10 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const getScenarioPocketView = (deck: TablePocketType, active: TablePocketType) => {
     const deckCards = table.pockets[deck];
     const activeCards = table.pockets[active];
-    if (deckCards.length == 0 && activeCards.length == 0) {
-      return null;
-    }
-    return <ScenarioPocketView ref={ref => {
-        pocketPositions.set(deck, ref?.deckRef.current ?? null);
-        pocketPositions.set(active, ref?.activeRef.current ?? null);
-      }}
-      deckCards={deckCards} activeCards={activeCards} onClickCard={onClickCard}
-    />
+    return (deckCards.length !== 0 || activeCards.length !== 0) && <>
+      <StackPocket ref={setPos(deck)} cards={deckCards} slice={2} showCount faded />
+      <StackPocket ref={setPos(active)} cards={activeCards} slice={2} onClickCard={onClickCard} />
+    </>;
   };
 
   const scenarioCards = getScenarioPocketView('scenario_deck', 'scenario_card');
