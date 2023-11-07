@@ -109,10 +109,11 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     </> }
   </div>;
 
-  const mainDeck = <div className="pocket-group">
-    <StackPocket slice={10} ref={setPos('discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
-    <StackPocket showCount ref={setPos('main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
-  </div>;
+  const mainDeck = (table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0) &&
+    <div className="pocket-group">
+      <StackPocket slice={10} ref={setPos('discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
+      <StackPocket showCount ref={setPos('main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
+    </div>;
 
   const getScenarioPocketView = (deck: TablePocketType, active: TablePocketType) => {
     const deckCards = table.pockets[deck];
