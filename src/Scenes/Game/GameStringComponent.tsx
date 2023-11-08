@@ -64,7 +64,7 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
             return value(...formatArgs.map(arg => {
                 switch (arg.type) {
                 case 'integer':
-                    return <>{arg.value}</>
+                    return arg.value;
                 case 'card':
                     if (arg.value) {
                         return <LocalizedCardName name={arg.value.name} sign={arg.value.sign} />
