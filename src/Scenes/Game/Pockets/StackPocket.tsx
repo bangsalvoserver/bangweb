@@ -13,10 +13,9 @@ export interface StackPocketProps {
     onClickCard?: (card: Card) => void;
     slice?: number;
     showCount?: boolean;
-    faded?: boolean;
 }
 
-const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onClickCard, slice, showCount, faded }, ref) => {
+const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onClickCard, slice, showCount }, ref) => {
     const table = useContext(GameTableContext);
 
     const position = useRef<PocketPosition>(null);
@@ -32,10 +31,10 @@ const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onCli
         onClickCard(getCard(table, cards.at(-1)!));
     } : undefined;
 
-    return (<div className={`stack-pocket ${faded ? 'card-faded' : ''}`} onClick={handleClickLastCard}>
+    return <div className='stack-pocket' onClick={handleClickLastCard}>
         <PocketView ref={position} cards={ cards.slice(-(slice ?? 2))} />
         {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
-    </div>);
+    </div>;
 });
 
 export default StackPocket;
