@@ -23,17 +23,9 @@ const CharacterView = forwardRef<CharacterRef, CharacterProps>(({ player, onClic
     useImperativeHandle(ref, () => characterRef);
 
     return <div className='inline-block relative'>
-        <div className="player-backup">
-            <StackPocket ref={characterRef.backupRef} cards={player.pockets.player_backup} />
-            { player.status.hp > 5 ? 
-                <div className="player-backup-extra">
-                    <StackPocket cards={player.pockets.player_backup} />
-                </div> : null }
-        </div>
+        <div className='absolute'><StackPocket ref={characterRef.backupRef} cards={player.pockets.player_backup} /></div>
         <StackPocket ref={characterRef.characterRef} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
-        { player.status.gold > 0 ?
-            <div className="player-gold">{player.status.gold}</div>
-        : null }
+        { player.status.gold > 0 && <div className="player-gold">{player.status.gold}</div> }
     </div>;
 });
 

@@ -4,6 +4,9 @@
     --player-row-height: calc(var(--card-height) + 1.5em);
     --player-icon-size: 32px;
     --player-gold-size: 32px;
+    --player-lifepoint-size: 2.5em;
+    --player-lifepoint-spacing: 1.5em;
+    --player-icon-position: 0.5em;
 
     --player-gold-bottom-unscaled: 333px;
     --player-gold-bottom: calc(var(--card-scale) * var(--player-gold-bottom-unscaled));
@@ -22,6 +25,9 @@
     :root {
         --player-icon-size: 20px;
         --player-gold-size: 20px;
+        --player-lifepoint-size: 1em;
+        --player-lifepoint-spacing: 0.7em;
+        --player-icon-position: 0.2em;
         --player-row-width: calc(var(--card-width) * 5);
         --player-row-height: calc(var(--card-height) + 0.5em);
         --player-self-width: calc(var(--card-width) * 9.5);
@@ -41,6 +47,7 @@
 .player-view {
     display: inline-flex;
     flex-direction: column;
+    position: relative;
 
     border: 3px;
     border-style: solid;
@@ -82,9 +89,14 @@
 
 .player-self-character {
     display: flex;
-    flex-direction: row;
     place-items: flex-end;
-    position: relative;
+}
+
+.player-self-propic {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
 }
 
 .player-pocket-scroll {
@@ -130,17 +142,6 @@
     height: 100%;
 }
 
-.player-backup {
-    position: absolute;
-    bottom: calc(var(--one-hp-size) * var(--player-hp));
-    left: 0;
-}
-
-.player-backup-extra {
-    position: absolute;
-    top: calc(var(--one-hp-size) * 5);
-}
-
 .player-gold {
     position: absolute;
     bottom: var(--player-gold-bottom);
@@ -155,18 +156,48 @@
     background-size: contain;
 }
 
+.player-lifepoints {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    z-index: 2;
+}
+
+.player-top-row .player-lifepoints {
+    bottom: 0;
+}
+
+.player-self-character .player-lifepoints {
+    flex-direction: column-reverse;
+    right: 0;
+    bottom: 0;
+}
+
+.player-self-character .player-lifepoint-inner {
+    transform: rotate(15deg);
+}
+
+.player-lifepoint {
+    width: var(--player-lifepoint-spacing);
+}
+
+.player-lifepoint-inner {
+    width: var(--player-lifepoint-size);
+    transform: rotate(-60deg);
+    filter: drop-shadow(0px 1px 1px black);
+}
+
 .player-icons {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: var(--player-icon-position);
+    right: var(--player-icon-position);
     width: max-content;
-    z-index: 9;
 }
 
 .player-propic {
     position: absolute;
     left: 50%;
-    top: calc(var(--profile-pic-size) * -1);
+    top: calc(var(--profile-pic-size) * -0.95);
     transform: translateX(-50%);
 }
 

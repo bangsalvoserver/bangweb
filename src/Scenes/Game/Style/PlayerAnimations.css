@@ -1,13 +1,28 @@
-.player-animation-hp .player-backup {
-    animation-name: player-hp;
+.lifepoint-fade-in {
+    animation-name: fade-in-green;
     animation-duration: var(--duration);
     animation-fill-mode: both;
-    transition: ease-in-out;
+    transition: ease-in;
 }
 
-@keyframes player-hp {
+@keyframes fade-in-green {
     from {
-        transform: translateY(calc(var(--one-hp-size) * var(--player-hp-diff)));
+        opacity: 0;
+        filter: hue-rotate(60deg);
+    }
+}
+
+.lifepoint-fade-out {
+    animation-name: fade-out-red;
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    transition: ease-in;
+}
+
+@keyframes fade-out-red {
+    to {
+        opacity: 0;
+        filter: hue-rotate(-60deg);
     }
 }
 
