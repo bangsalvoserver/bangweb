@@ -3,7 +3,7 @@
     left: var(--card-anchor-x);
     top: var(--card-anchor-y);
     height: var(--card-height);
-    z-index: 20;
+    z-index: 5;
 }
 
 .card-choice-inner {
