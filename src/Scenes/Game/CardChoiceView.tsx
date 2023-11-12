@@ -10,7 +10,7 @@ import { getPlayableCards, isSelectionPlaying } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
 
 export interface CardChoiceProps {
-    getTracker: () => CardTracker;
+    tracker: CardTracker;
     onClickCard?: (card: Card) => void;
 }
 
@@ -44,7 +44,7 @@ function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInne
     }
 }
 
-export default function CardChoiceView({ getTracker, onClickCard }: CardChoiceProps) {
+export default function CardChoiceView({ tracker, onClickCard }: CardChoiceProps) {
     const table = useContext(GameTableContext);
     const selector = useContext(TargetSelectorContext);
 
@@ -68,7 +68,7 @@ export default function CardChoiceView({ getTracker, onClickCard }: CardChoicePr
         return <CardChoiceInner
             cards={cards.map(id => getCard(table, id))}
             anchor={getCard(table, anchor)}
-            tracker={getTracker()}
+            tracker={tracker}
             onClickCard={onClickCard}
         />
     } else {

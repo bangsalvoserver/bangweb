@@ -6,8 +6,8 @@ import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
 import GameLogView from "./GameLogView";
 import { PocketType, TablePocketType } from "./Model/CardEnums";
-import { CardTrackerImpl, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
-import { Card, Player, getPlayer, newGameTable } from "./Model/GameTable";
+import { CardTracker, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
+import { Card, Player, PocketRef, getPlayer, newGameTable } from "./Model/GameTable";
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
 import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
@@ -25,6 +25,7 @@ import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 import { SPRITE_CUBE } from "./CardView";
+import { getDivRect } from "../../Utils/Rect";
 
 export interface GameProps {
   channel: GameChannel;
@@ -64,7 +65,29 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     };
   };
   
-  const getTracker = () => new CardTrackerImpl(pocketPositions, playerPositions, cubesRef.current);
+  const tracker: CardTracker = {
+    getPlayerPockets(player: PlayerId) {
+      return playerPositions.get(player);
+    },
+
+    getTablePocket(pocket: PocketRef) {
+      if (!pocket) {
+        return null;
+      } else if ('player' in pocket) {
+        return this.getPlayerPockets(pocket.player)?.get(pocket.name) ?? null;
+      } else {
+        return pocketPositions.get(pocket.name);
+      }
+    },
+    
+    getCubesRect(card: Card | null) {
+      if (card) {
+        return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
+      } else {
+        return cubesRef.current ? getDivRect(cubesRef.current) : null;
+      }
+    }
+  };
 
   const clickIsAllowed = !isGameOver
       && table.self_player !== undefined
@@ -161,8 +184,8 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
           </div>
           { selectionPocket }
           <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
-          <CardChoiceView getTracker={getTracker} onClickCard={onClickCard}/>
-          <AnimationView getTracker={getTracker} />
+          <CardChoiceView tracker={tracker} onClickCard={onClickCard}/>
+          <AnimationView tracker={tracker} />
           <GameLogView logs={gameLogs} />
           <StatusBar
             gameError={gameError}

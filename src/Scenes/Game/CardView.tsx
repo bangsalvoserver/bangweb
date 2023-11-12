@@ -1,12 +1,11 @@
 import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
-import { GameTableContext, TargetSelectorContext } from "./GameScene";
-import { Card, CardImage, GameTable, getCardImage } from "./Model/GameTable";
-import { TargetSelector, countSelectedCubes, isCardCurrent, isCardSelected, isSelectionPlaying, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard, isSelectionPicking, isCardPrompted } from "./Model/TargetSelector";
+import { TargetSelectorContext } from "./GameScene";
+import { Card, getCardImage } from "./Model/GameTable";
+import { TargetSelector, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
-import Env from "../../Model/Env";
 import spriteCube from "/media/sprite_cube.png";
 
 export const SPRITE_CUBE = spriteCube;
@@ -89,7 +88,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
 
             showBackface = true;
 
-            classes.push('card-animation', 'card-overlay', 'card-animation-flip');
+            classes.push('card-animation', 'z-10', 'card-animation-flip');
             if (card.animation.flipping.cardImage) {
                 cardImage = card.animation.flipping.cardImage;
             } else {
@@ -100,16 +99,16 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
                 '--duration': card.animation.turning.duration + 'ms'
             } as CSSProperties;
 
-            classes.push('card-animation', 'card-overlay', 'card-animation-turn');
+            classes.push('card-animation', 'z-10', 'card-animation-turn');
             if (!card.inactive) classes.push('card-animation-reverse');
         } else if ('flash' in card.animation) {
             style = {
                 '--duration': card.animation.flash.duration + 'ms'
             } as CSSProperties;
 
-            classes.push('card-overlay', 'card-animation-flash');
+            classes.push('z-10', 'card-animation-flash');
         } else if ('short_pause' in card.animation) {
-            classes.push('card-overlay')
+            classes.push('z-10')
         }
     } else {
         if (card.inactive) {
@@ -121,7 +120,8 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     }
 
     return (
-        <div ref={cardRef} style={style} className={classes.join(' ')} onClick={onClickCard ? () => onClickCard(card) : undefined}>
+        <div ref={cardRef} style={style} className={classes.join(' ')}
+            onClick={onClickCard ? () => onClickCard(card) : undefined} >
             { cardImage ? <div className="card-front">
                 <img className="card-view-img" src={getCardUrl(cardImage.image)}/>
                 {cardImage.sign && <div className="card-view-inner">

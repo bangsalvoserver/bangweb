@@ -1,5 +1,5 @@
 import { MapRef } from "../../../Utils/LazyRef";
-import { Rect, getDivRect } from "../../../Utils/Rect";
+import { Rect } from "../../../Utils/Rect";
 import { PocketType } from "./CardEnums";
 import { Card, PocketRef } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
@@ -16,43 +16,4 @@ export interface CardTracker {
     getPlayerPockets: (player: PlayerId) => PocketPositionMap | null;
     getTablePocket: (pocket: PocketRef) => PocketPosition | null;
     getCubesRect: (card: Card | null) => Rect | null;
-}
-
-export class CardTrackerImpl implements CardTracker {
-    private pocketPositions: PocketPositionMap;
-    private playerPositions: PlayerPositionMap;
-    private cubesRef: HTMLDivElement | null;
-
-    constructor(
-        pocketPositions: PocketPositionMap,
-        playerPositions: PlayerPositionMap,
-        cubesRef: HTMLDivElement | null
-    ) {
-        this.pocketPositions = pocketPositions;
-        this.playerPositions = playerPositions;
-        this.cubesRef = cubesRef;
-    }
-
-    getPlayerPockets(player: PlayerId) {
-        return this.playerPositions.get(player);
-    }
-
-    getTablePocket(pocket: PocketRef) {
-        if (pocket) {
-            if ('player' in pocket) {
-                return this.getPlayerPockets(pocket.player)?.get(pocket.name) ?? null;
-            } else {
-                return this.pocketPositions.get(pocket.name);
-            }
-        }
-        return null;
-    }
-
-    getCubesRect(card: Card | null) {
-        if (card) {
-            return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
-        } else {
-            return this.cubesRef ? getDivRect(this.cubesRef) : null;
-        }
-    }
 }
