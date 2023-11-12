@@ -8,7 +8,8 @@
 @keyframes fade-in-green {
     from {
         opacity: 0;
-        filter: hue-rotate(60deg);
+        filter: invert(58%) sepia(93%) saturate(2564%) hue-rotate(81deg) brightness(112%) contrast(128%);
+        transform: translateX(1em) rotate(-30deg);
     }
 }
 
@@ -22,7 +23,8 @@
 @keyframes fade-out-red {
     to {
         opacity: 0;
-        filter: hue-rotate(-60deg);
+        filter: invert(11%) sepia(88%) saturate(7478%) hue-rotate(2deg) brightness(107%) contrast(111%);
+        transform: translateX(1em) rotate(30deg);
     }
 }
 
