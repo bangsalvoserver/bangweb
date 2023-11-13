@@ -126,12 +126,6 @@
     overflow-y: hidden;
 }
 
-.player-bottom-row {
-    display: inline-block;
-    text-align: left;
-    height: 100%;
-}
-
 .player-gold {
     position: absolute;
     left: 0.1em;
