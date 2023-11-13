@@ -1,6 +1,7 @@
 .stack-pocket {
     display: inline-block;
     position: relative;
+    height: max-content;
 }
 
 .stack-pocket .pocket-view {

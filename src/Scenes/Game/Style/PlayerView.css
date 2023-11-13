@@ -61,7 +61,6 @@
 }
 
 .player-view-self {
-    flex-direction: row;
     width: var(--player-self-width);
 }
 
@@ -81,59 +80,53 @@
     border-color: #806c00ff;
 }
 
-.player-self-pockets {
+.player-top-row {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    width: 100%;
+    text-align: left;
+    height: var(--player-row-height);
 }
 
-.player-self-character {
+.player-character {
+    position: relative;
     display: flex;
-    place-items: flex-end;
 }
 
-.player-self-propic {
-    position: absolute;
-    left: 50%;
-    bottom: 100%;
-    transform: translateX(-50%);
+.player-role {
+    display: inline-block;
 }
 
-.player-pocket-scroll {
+.player-view-self .player-role {
+    min-width: min-content;
+    max-width: calc(2.5 * var(--card-width));
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.player-hand {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.player-hand-inner {
+    display: inline-block;
+}
+
+.player-view-self .player-hand {
+    display: flex;
+    flex-grow: 1;
+
+    overflow-x: unset;
+    overflow-y: unset;
+}
+
+.player-table, .player-view-self .player-hand-inner {
     width: 100%;
     height: var(--player-row-height);
 
     text-align: center;
     overflow-x: auto;
     overflow-y: hidden;
-}
-
-.player-character-row-scroll {
-    width: calc(100% - var(--card-width-plus-margin));
-    vertical-align: top;
-    display: inline-block;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.player-character-row-scroll-self {
-    min-width: var(--card-width-plus-margin);
-    max-width: calc(3 * var(--card-width));
-    line-height: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.player-character-row-scroll-self .pocket-view {
-    display: inline;
-}
-
-.player-top-row {
-    position: relative;
-    display: inline-block;
-    text-align: left;
-    height: var(--player-row-height);
 }
 
 .player-bottom-row {
@@ -165,16 +158,6 @@
 
 .player-top-row .player-lifepoints {
     bottom: 0;
-}
-
-.player-self-character .player-lifepoints {
-    flex-direction: column-reverse;
-    right: 0;
-    bottom: 0;
-}
-
-.player-self-character .player-lifepoint-inner {
-    transform: rotate(15deg);
 }
 
 .player-lifepoint {

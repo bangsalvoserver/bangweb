@@ -9,7 +9,6 @@ import { isPlayerAlive } from "./Model/Filters";
 import { Card, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
-import CharacterView from "./Pockets/CharacterView";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
@@ -102,6 +101,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(selector, player), [selector]);
 
+    const isPlayerSelf = player.id == table.self_player;
     const isOrigin = isResponse(selector) && selector.request.origin == player.id;
     const isTarget = isResponse(selector) && selector.request.target == player.id;
     const isDead = !isPlayerAlive(player);
@@ -146,8 +146,12 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         classes.push(selectorPlayerClass);
     }
 
-    const buildCharacterRef = (character: PocketPosition | null): PocketPosition | null => {
-        return {
+    if (isPlayerSelf) {
+        classes.push('player-view-self');
+    }
+
+    const buildCharacterRef = (character: PocketPosition | null) => {
+        positions.set('player_character', {
             getPocketRect: () => null,
             getCardRect: (card: CardId) => {
                 if (!extraCharacters.current || card == player.pockets.player_character.at(0)) {
@@ -156,85 +160,58 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     return extraCharacters.current.getCardRect(card);
                 }
             }
-        };
+        });
     };
 
-    const characterView = (
-        <CharacterView ref={ref => {
-            positions.set('player_character', buildCharacterRef(ref?.characterRef.current ?? null));
-            positions.set('player_backup', ref?.backupRef.current ?? null);
-        }} player={player} onClickCard={onClickCard} />
-    );
-
-    const extraCharactersPocket = player.pockets.player_character.length <= 1 ? null : (
-        <PocketView ref={extraCharacters} cards={player.pockets.player_character.slice(1)} onClickCard={onClickCard} />
-    );
-
-    const roleView = <RoleView flipDuration={flipDuration} role={playerRole} />;
-
-    const playerIcons = <div className='player-icons'>
-        { isGameOver ? <>
-            { isWinner && <div className="player-icon icon-winner"/> }
-        </> : <>
-            { isOrigin && <div className="player-icon icon-origin"/> }
-            { isTarget && <div className="player-icon icon-target"/> }
-            { isTurn && <div className="player-icon icon-turn"/> }
-        </>}
-        { isDead && <div className="player-icon icon-dead"/> }
-    </div>;
-
-    const playerLifepoints = <div className='player-lifepoints'>
-        {[...Array(Math.max(0, player.status.hp, fromPlayerHp))].map((_, i) =>
-            <div key={i} className={'player-lifepoint' + (i >= fromPlayerHp ? ' lifepoint-fade-in' : i >= player.status.hp ? ' lifepoint-fade-out' : '')}>
-                <div className='player-lifepoint-inner'><img src='/media/icon_lifepoint.png' /></div>
-            </div>
-        )}
-    </div>;
-
-    if (player.id == table.self_player) {
-        return <div className={classes.concat('player-view-self').join(' ')} style={playerStyle} onClick={handleClickPlayer}>
-            <div className='player-self-pockets'>
-                <div className='player-pocket-scroll' ref={handRef}>
-                    <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+    return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
+        <div className='player-top-row'>
+            <div className='player-character'>
+                <div className='absolute'>
+                    <StackPocket ref={buildCharacterRef} cards={player.pockets.player_backup} />
                 </div>
-                <div className='player-pocket-scroll' ref={tableRef}>
-                    <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
-                </div>
+                <StackPocket ref={setPos('player_backup')} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
+                { player.status.gold > 0 && <div className='player-gold'>{player.status.gold}</div> }
             </div>
-            <div className='player-self-character'>
-                <div className='flex flex-row relative'>
-                    { characterView }
-                    <div className='w-max'>
-                        <div className='player-character-row-scroll-self'>{ extraCharactersPocket }{ roleView }</div>
-                    </div>
-                    <div className='player-self-propic'>
-                        <LobbyUser user={user} align='vertical' />
+            <div className='player-hand' ref={handRef}>
+                <div className='player-role'>
+                    { player.pockets.player_character.length > 1 && 
+                        <PocketView ref={extraCharacters} cards={player.pockets.player_character.slice(1)} onClickCard={onClickCard} /> }
+                    <div className='stack-pocket'>
+                        <RoleView flipDuration={flipDuration} role={playerRole} />
                     </div>
                 </div>
-                { playerLifepoints }
+                { (isPlayerSelf || table.status.flags.includes('hands_shown'))
+                    ? <div className='player-hand-inner'>
+                        <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                      </div>
+                    : <StackPocket showCount slice={0} ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                }
             </div>
-            { playerIcons }
+            <div className='player-lifepoints'>
+                {[...Array(Math.max(0, player.status.hp, fromPlayerHp))].map((_, i) =>
+                    <div key={i} className={'player-lifepoint' + (i >= fromPlayerHp ? ' lifepoint-fade-in' : i >= player.status.hp ? ' lifepoint-fade-out' : '')}>
+                        <div className='player-lifepoint-inner'><img src='/media/icon_lifepoint.png' /></div>
+                    </div>
+                )}
+            </div>
         </div>
-    } else {
-        return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
-            <div className='player-top-row'>
-                { characterView }
-                <div className='player-character-row-scroll' ref={handRef}>
-                    { extraCharactersPocket }{ roleView }
-                    { table.status.flags.includes('hands_shown')
-                        ? <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
-                        : <StackPocket showCount slice={0} ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
-                    }
-                </div>
-                { playerLifepoints }
-            </div>
-            <div className='player-pocket-scroll' ref={tableRef}>
-                <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
-            </div>
-            { playerIcons }
-            <div className='player-propic'><LobbyUser user={user} align='horizontal' /></div>
+        <div className='player-table' ref={tableRef}>
+            <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
         </div>
-    }
+        <div className='player-icons'>
+            { isGameOver ? <>
+                { isWinner && <div className="player-icon icon-winner"/> }
+            </> : <>
+                { isOrigin && <div className="player-icon icon-origin"/> }
+                { isTarget && <div className="player-icon icon-target"/> }
+                { isTurn && <div className="player-icon icon-turn"/> }
+            </>}
+            { isDead && <div className="player-icon icon-dead"/> }
+        </div>
+        <div className='player-propic'>
+            <LobbyUser user={user} align='horizontal' />
+        </div>
+    </div>
 });
 
 export default PlayerView;

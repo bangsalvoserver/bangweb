@@ -35,18 +35,13 @@
     transition: ease-in;
 }
 
-.player-view.player-animation-death .player-pocket-scroll {
+.player-view.player-animation-death .player-hand {
+    overflow-x: unset;
+    overflow-y: unset;
+}
+
+.player-view.player-animation-death .player-table {
     visibility: hidden;
-}
-
-.player-view.player-animation-death .player-character-row-scroll {
-    overflow-x: unset;
-    overflow-y: unset;
-}
-
-.player-view.player-animation-death .player-character-row-scroll-self {
-    overflow-x: unset;
-    overflow-y: unset;
 }
 
 @keyframes player-death {
