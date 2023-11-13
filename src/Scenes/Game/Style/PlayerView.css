@@ -221,3 +221,8 @@
     --icon-url: url('/media/icon_dead.png');
     --icon-color: #dedbd3;
 }
+
+.icon-ghost {
+    --icon-url: url('/media/icon_ghost.png');
+    --icon-color: rgb(169, 189, 196);
+}

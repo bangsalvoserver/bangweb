@@ -5,7 +5,7 @@ import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { PocketPosition, PocketPositionMap } from "./Model/CardTracker";
-import { isPlayerAlive } from "./Model/Filters";
+import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { Card, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
@@ -104,7 +104,8 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const isPlayerSelf = player.id == table.self_player;
     const isOrigin = isResponse(selector) && selector.request.origin == player.id;
     const isTarget = isResponse(selector) && selector.request.target == player.id;
-    const isDead = !isPlayerAlive(player);
+    const isDead = isPlayerDead(player);
+    const isGhost = isPlayerGhost(player);
     const isWinner = player.status.flags.includes('winner');
 
     let classes = ['player-view'];
@@ -206,7 +207,9 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                 { isTarget && <div className="player-icon icon-target"/> }
                 { isTurn && <div className="player-icon icon-turn"/> }
             </>}
-            { isDead && <div className="player-icon icon-dead"/> }
+            { isDead && (isGhost
+                ? <div className="player-icon icon-ghost"/>
+                : <div className="player-icon icon-dead"/> ) }
         </div>
         <div className='player-propic'>
             <LobbyUser user={user} align='horizontal' />

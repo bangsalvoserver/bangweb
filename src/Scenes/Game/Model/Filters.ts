@@ -35,11 +35,14 @@ export function isEquipCard(card: Card): boolean {
     }
 }
 
-export function isPlayerAlive(player: Player): boolean {
-    return !player.status.flags.includes('dead')
-        || player.status.flags.includes('ghost_1')
-        || player.status.flags.includes('ghost_2')
-        || player.status.flags.includes('temp_ghost')
+export function isPlayerDead(player: Player): boolean {
+    return player.status.flags.includes('dead');
+}
+
+export function isPlayerGhost(player: Player): boolean {
+    return player.status.flags.some(flag =>
+        flag == 'ghost_1' || flag == 'ghost_2' || flag == 'temp_ghost'
+    );
 }
 
 export function isBangCard(table: GameTable, origin: Player, card: Card): boolean {
@@ -60,7 +63,7 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
         if (!filter.includes('alive') && !target.status.flags.includes('dead')) {
             return false;
         }
-    } else if (!isPlayerAlive(target)) {
+    } else if (isPlayerDead(target) && !isPlayerGhost(target)) {
         return false;
     }
 
