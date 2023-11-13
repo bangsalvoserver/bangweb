@@ -170,7 +170,6 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     <StackPocket ref={buildCharacterRef} cards={player.pockets.player_backup} />
                 </div>
                 <StackPocket ref={setPos('player_backup')} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
-                { player.status.gold > 0 && <div className='player-gold'>{player.status.gold}</div> }
             </div>
             <div className='player-hand' ref={handRef}>
                 <div className='player-role'>
@@ -194,6 +193,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     </div>
                 )}
             </div>
+            { player.status.gold > 0 && <div className='player-gold'>{player.status.gold}</div> }
         </div>
         <div className='player-table' ref={tableRef}>
             <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
