@@ -123,6 +123,11 @@ export interface PlayerDistances {
     weapon_range: number;
 }
 
+export interface TimerStatusArgs {
+    timer_id: number;
+    duration: Duration;
+}
+
 export interface RequestStatusArgs {
     origin_card: CardId | null;
     origin: PlayerId | null;
@@ -134,6 +139,7 @@ export interface RequestStatusArgs {
     highlight_cards: CardId[];
     distances: PlayerDistances;
     target_set: CardTarget[];
+    timer: TimerStatusArgs | null;
 }
 
 export interface StatusReadyArgs {
