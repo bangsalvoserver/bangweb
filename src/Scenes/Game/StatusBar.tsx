@@ -1,13 +1,14 @@
-import { useContext } from "react";
-import { GameTableContext, TargetSelectorContext } from "./GameScene";
+import { CSSProperties, useContext } from "react";
 import { createPortal } from "react-dom";
-import { LobbyContext } from "../Lobby/Lobby";
-import getLabel from "../../Locale/GetLabel";
 import Button from "../../Components/Button";
-import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
+import getLabel from "../../Locale/GetLabel";
+import { LobbyContext } from "../Lobby/Lobby";
+import { GameTableContext, TargetSelectorContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { Card, getCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
+import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
+import "./Style/TimerAnimation.css";
 
 export interface StatusProps {
     gameError: GameString | undefined;
@@ -42,7 +43,12 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
         return [];
       }
     })
-  
+
+    const timerWidget = isResponse(selector) && selector.request.timer &&
+      <div className="request-timer" style={{
+          '--duration': selector.request.timer.duration + 'ms'
+      } as CSSProperties} />;
+    
     const confirmButton = handleConfirm && <Button color='blue' onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</Button>;
     const undoButton = handleUndo && <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>;
 
@@ -60,7 +66,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
       </div>
     } else if (statusText || buttonRow.length !== 0 || confirmButton || undoButton ) {
       statusBar = <div className="status-bar">
-        { statusText}{ buttonRow }{ confirmButton }{ undoButton }
+        { statusText}{ timerWidget }{ buttonRow }{ confirmButton }{ undoButton }
       </div>
     }
 

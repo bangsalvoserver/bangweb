@@ -1,0 +1,37 @@
+@property --timer-value {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 100%;
+}
+
+@keyframes timer-animation {
+    from {
+        --timer-value: 100%;
+    }
+
+    to {
+        --timer-value: 0%;
+    }
+}
+
+:root {
+    --timer-size: 2em;
+    --timer-color: #404040;
+}
+
+.request-timer {
+    display: inline-block;
+    vertical-align: middle;
+
+    width: var(--timer-size);
+    height: var(--timer-size); 
+    margin: 0 2px;
+    border-radius: 50%;
+
+    background: conic-gradient(var(--timer-color) var(--timer-value), 0, transparent);
+
+    animation-name: timer-animation;
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}

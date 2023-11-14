@@ -134,6 +134,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     STATUS_TRAIN_ROBBERY_CHOOSE_OTH: (player, card, target_card) =>         <>{card} ... {player} deve scegliere se scartare {target_card} o ricevere un Bang</>,
 
     ERROR_INVALID_ACTION: () =>                                             <>Azione non valida</>,
+    ERROR_TIMER_EXPIRED: () =>                                              <>Il tempo è scaduto</>,
     ERROR_NOT_ENOUGH_GOLD: () =>                                            <>Non hai abbastanza pepite</>,
     ERROR_NOT_ENOUGH_CUBES: () =>                                           <>Non ci sono abbastanza cubetti</>,
     ERROR_NOT_ENOUGH_CUBES_ON: (card) =>                                    <>Non ci sono abbastanza cubetti su {card}</>,
