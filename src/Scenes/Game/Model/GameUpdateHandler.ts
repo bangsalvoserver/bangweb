@@ -192,6 +192,10 @@ export class GameUpdateHandler {
         status_clear () {
             this.selectorDispatch({ setRequest: {} });
         },
+
+        clear_logs () {
+            this.setGameLogs([]);
+        }
         
     });
 

@@ -196,4 +196,5 @@ export type GameUpdate =
     { game_flags: GameFlag[] } |
     { request_status: RequestStatusArgs } | 
     { status_ready: StatusReadyArgs } |
-    { status_clear: Empty };
+    { status_clear: Empty } |
+    { clear_logs: Empty };

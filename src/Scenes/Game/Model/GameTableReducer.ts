@@ -3,7 +3,7 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket, rotatePlayers } from "./EditPocketMap";
-import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, sortById } from "./GameTable";
+import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, searchById, sortById } from "./GameTable";
 import { GameUpdate } from "./GameUpdate";
 
 const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
@@ -40,14 +40,24 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
         };
     },
 
-    // Creates new players with specified player_id and user_id
+    // Creates new players or updates existing players with specified player_id and user_id
     player_add ({ players }) {
-        const newPlayers = this.players.concat(players.map(({ player_id, user_id }) => newPlayer(player_id, user_id))).sort(sortById);
+        let newPlayers = this.players;
+        let newAlivePlayers = this.alive_players;
+        for (const { player_id, user_id } of players) {
+            const foundPlayer = searchById(newPlayers, player_id);
+            if (foundPlayer) {
+                newPlayers = editById(newPlayers, player_id, player => ({ ...player, userid: user_id }));
+            } else {
+                newPlayers = newPlayers.concat(newPlayer(player_id, user_id)).sort(sortById);
+                newAlivePlayers = newAlivePlayers.concat(player_id);
+            }
+        }
         const selfPlayer = newPlayers.find(p => p.userid === this.myUserId)?.id;
         return {
             ...this,
             players: newPlayers,
-            alive_players: rotatePlayers(this.alive_players.concat(players.map(player => player.player_id)), selfPlayer),
+            alive_players: rotatePlayers(newAlivePlayers, selfPlayer),
             self_player: selfPlayer
         };
     },
