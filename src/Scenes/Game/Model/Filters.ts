@@ -109,7 +109,7 @@ export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], 
     const table = selector.table.current;
     const origin = getPlayer(table, table.self_player!);
 
-    if (!filter.includes('can_repeat') && isCardSelected(selector, target)) return false;
+    if (!filter.includes('can_repeat') && isCardSelected(selector, target.id)) return false;
 
     if (!filter.includes('can_target_self') && isCardCurrent(selector, target)) return false;
 

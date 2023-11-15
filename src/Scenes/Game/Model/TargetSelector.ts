@@ -197,7 +197,7 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
 
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
     return !isCardCurrent(selector, card)
-        && !isCardSelected(selector, card)
+        && !isCardSelected(selector, card.id)
         && isCardKnown(card)
         && getPlayableCards(selector).includes(card.id);
 }
@@ -226,19 +226,19 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
     return selector.prompt.type == 'playpick' && selector.prompt.card.id == card.id;
 }
 
-export function isCardSelected(selector: TargetSelector, card: Card): boolean {
+export function isCardSelected(selector: TargetSelector, card: CardId): boolean {
     const check = (target: CardTarget) => {
         if ('card' in target) {
-            return target.card == card.id;
+            return target.card == card;
         }
         if ('extra_card' in target) {
-            return target.extra_card == card.id;
+            return target.extra_card == card;
         }
         if ('cards' in target) {
-            return target.cards.includes(card.id);
+            return target.cards.includes(card);
         }
         if ('cards_other_players' in target) {
-            return target.cards_other_players.includes(card.id);
+            return target.cards_other_players.includes(card);
         }
         return false;
     };
@@ -251,6 +251,16 @@ export function isCardSelected(selector: TargetSelector, card: Card): boolean {
         }
     }
     return false;
+}
+
+export function isHandSelected(selector: TargetSelector, card: Card): boolean {
+    const table = selector.table.current;
+    if (card.pocket?.name == 'player_hand' && card.pocket.player != table.self_player && isSelectionPlaying(selector)) {
+        const player = getPlayer(table, card.pocket.player);
+        return player.pockets.player_hand.some(id => isCardSelected(selector, id));
+    } else {
+        return false;
+    }
 }
 
 export function isPlayerSelected(selector: TargetSelector, player: Player): boolean {
