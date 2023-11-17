@@ -124,6 +124,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     JOHNNY_KISCH:               "Johnny Kisch",
     UNCLE_WILL:                 "Uncle Will",
     ANNIE_VERSARY:              "Annie Versary",
+    EMILIANO:                   "Emiliano",
     APACHE_KID:                 "Apache Kid",
     BELLE_STAR:                 "Belle Star",
     BILL_NOFACE:                "Bill Noface",
