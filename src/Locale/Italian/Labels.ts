@@ -24,15 +24,15 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     ExpansionType: {
-        thebullet:              "La Pallottola",
+        thebullet:              "Dynamite Box",
         dodgecity:              "Dodge City",
-        valleyofshadows:        "La Valle Delle Ombre",
+        valleyofshadows:        "Valley Of Shadows",
         greattrainrobbery:      "The Great Train Robbery",
         wildwestshow:           "Wild West Show",
-        goldrush:               "Corsa all'Oro",
-        armedanddangerous:      "Armed And Dangerous",
-        highnoon:               "Mezzogiorno di Fuoco",
-        fistfulofcards:         "Per un Pugno di Carte",
+        goldrush:               "Gold Rush",
+        armedanddangerous:      "Armed & Dangerous",
+        highnoon:               "High Noon",
+        fistfulofcards:         "A Fistful of Cards",
         canyondiablo:           "Canyon Diablo",
     },
 

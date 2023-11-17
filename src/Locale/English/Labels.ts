@@ -24,15 +24,15 @@ export const LABELS_ENGLISH: LabelRegistry = {
     },
 
     ExpansionType: {
-        thebullet:              "The Bullet",
+        thebullet:              "Dynamite Box",
         dodgecity:              "Dodge City",
         valleyofshadows:        "Valley of Shadows",
         greattrainrobbery:      "The Great Train Robbery",
         wildwestshow:           "Wild West Show",
         goldrush:               "Gold Rush",
-        armedanddangerous:      "Armed And Dangerous",
+        armedanddangerous:      "Armed & Dangerous",
         highnoon:               "High Noon",
-        fistfulofcards:         "Fistful of Cards",
+        fistfulofcards:         "A Fistful of Cards",
         canyondiablo:           "Canyon Diablo",
     },
 
