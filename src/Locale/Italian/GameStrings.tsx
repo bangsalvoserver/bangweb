@@ -232,6 +232,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     LOG_PLAYED_CARD_DESTROY_OWN: (card, player, target_card) =>             <>{player} gioca {card} per scartare la sua {target_card}</>,
     LOG_PLAYED_CARD_AS_BANG_ON: (card, player, target) =>                   <>{player} gioca {card} come Bang! su {target}</>,
     LOG_PLAYED_CARD_AS_GATLING: (card, player) =>                           <>{player} gioca {card} come Gatling</>,
+    LOG_PLAYED_CARD_AS_MISSED: (card, player) =>                            <>{player} gioca {card} come Mancato!</>,
     LOG_PLAYED_TABLE_CARD: (card, player) =>                                <>{player} gioca {card} da terra</>,
     LOG_EQUIPPED_CARD: (card, player) =>                                    <>{player} equipaggia {card}</>,
     LOG_EQUIPPED_CARD_TO: (card, player, target) =>                         <>{player} equipaggia {card} a {target}</>,

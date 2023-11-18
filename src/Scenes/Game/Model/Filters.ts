@@ -137,6 +137,7 @@ export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], 
     if (filter.includes('beer') && !cardHasTag(target, 'beer')) return false;
     if (filter.includes('bang') && !isBangCard(table, origin, target)) return false;
     if (filter.includes('bangcard') && !cardHasTag(target, 'bangcard')) return false;
+    if (filter.includes('not_bangcard') && cardHasTag(target, 'bangcard')) return false;
     if (filter.includes('missed') && !cardHasTag(target, 'missed')) return false;
     if (filter.includes('missedcard') && !cardHasTag(target, 'missedcard')) return false;
     if (filter.includes('bronco') && !cardHasTag(target, 'bronco')) return false;
