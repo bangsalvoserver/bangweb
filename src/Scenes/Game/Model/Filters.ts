@@ -137,7 +137,7 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
         }
 
         const distanceMod = distances.distances.find(item => item.player == target.id)?.distance ?? 0;
-        if (calcPlayerDistance(selector, table.self_player!, target.id) + distance mod > range) return false;
+        if (calcPlayerDistance(selector, table.self_player!, target.id) + distanceMod > range) return false;
     }
 
     return true;
