@@ -86,8 +86,7 @@ export function calcPlayerDistance(selector: PlayingSelector, from: PlayerId, to
         --i;
     }
 
-    const distanceMod = selector.request.distances.distances.find(item => item.player == to)?.distance ?? 0;
-    return Math.min(countCw, countCcw) + distanceMod;
+    return Math.min(countCw, countCcw);
 }
 
 export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
@@ -136,7 +135,9 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
         } else if (filter.includes('range_2')) {
             range += 2;
         }
-        if (calcPlayerDistance(selector, table.self_player!, target.id) > range) return false;
+
+        const distanceMod = distances.distances.find(item => item.player == target.id)?.distance ?? 0;
+        if (calcPlayerDistance(selector, table.self_player!, target.id) + distance mod > range) return false;
     }
 
     return true;
