@@ -103,6 +103,8 @@ function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): Target
     case 'player':
     case 'conditional_player':
         return appendTarget(effect.target, player);
+    case 'adjacent_players':
+        return appendMultitarget(effect.target, player);
     default:
         throw new Error('TargetSelector: cannot add player target');
     }
@@ -196,12 +198,16 @@ function appendAutoTarget(selector: PlayingSelector): TargetListMapper | undefin
             return appendTarget(effect.target, null);
         }
         break;
-    case 'conditional_player': {
+    case 'conditional_player':
         if (!table.alive_players.some(target => checkPlayerFilter(selector, effect.player_filter, getPlayer(table, target)))) {
             return appendTarget(effect.target, null);
         }
         break;
-    }
+    case 'adjacent_players':
+        if (index >= targets.length) {
+            return reserveTargets(effect.target, 2);
+        }
+        break;
     case 'cards':
     case 'select_cubes':
         if (index >= targets.length) {

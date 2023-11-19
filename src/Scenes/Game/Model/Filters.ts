@@ -54,9 +54,15 @@ export function isBangCard(table: GameTable, origin: Player, card: Card): boolea
 }
 
 export function calcPlayerDistance(selector: PlayingSelector, from: PlayerId, to: PlayerId): number {
+    if (from == to) {
+        return 0;
+    }
+    
     const table = selector.table.current;
+    const distanceMod = selector.request.distances.distances.find(item => item.player == to)?.distance ?? 0;
+
     if (table.status.flags.includes('disable_player_distances')) {
-        return 1;
+        return 1 + distanceMod;
     }
 
     const fromIndex = table.alive_players.indexOf(from);
@@ -86,7 +92,7 @@ export function calcPlayerDistance(selector: PlayingSelector, from: PlayerId, to
         --i;
     }
 
-    return Math.min(countCw, countCcw);
+    return Math.min(countCw, countCcw) + distanceMod;
 }
 
 export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
@@ -136,8 +142,7 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
             range += 2;
         }
 
-        const distanceMod = distances.distances.find(item => item.player == target.id)?.distance ?? 0;
-        if (calcPlayerDistance(selector, table.self_player!, target.id) + distanceMod > range) return false;
+        if (calcPlayerDistance(selector, table.self_player!, target.id) > range) return false;
     }
 
     return true;

@@ -4,7 +4,7 @@ import { ReadOnlyRefObject } from "../../../Utils/LazyRef";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
-import { checkCardFilter, checkPlayerFilter, getCardColor, getEquipTarget, isEquipCard } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -271,6 +271,9 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
         if ('conditional_player' in target) {
             return target.conditional_player == player.id;
         }
+        if ('adjacent_players' in target) {
+            return target.adjacent_players.includes(player.id);
+        }
         return false;
     };
     if (isSelectionPlaying(selector)) {
@@ -428,6 +431,20 @@ export function isValidPlayerTarget(selector: PlayingSelector, player: Player): 
     case 'player':
     case 'conditional_player':
         return checkPlayerFilter(selector, nextTarget.player_filter, player);
+    case 'adjacent_players': {
+        const checkTargets = (target1: Player, target2: Player) => {
+            return checkPlayerFilter(selector, ['notself'], target2)
+                && calcPlayerDistance(selector, target1.id, target2.id) == 1;
+        };
+        const table = selector.table.current;
+        const firstPlayer = (targets[index] as {adjacent_players: PlayerId[]}).adjacent_players[0];
+        if (firstPlayer == 0) {
+            return checkPlayerFilter(selector, ['notself', 'reachable'], player)
+                && table.alive_players.some(target2 => checkTargets(player, getPlayer(table, target2)));
+        } else {
+            return checkTargets(getPlayer(table, firstPlayer), player);
+        }
+    }
     default:
         return false;
     }

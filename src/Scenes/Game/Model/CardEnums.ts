@@ -6,6 +6,7 @@ export type CardTarget =
     { none: Empty } |
     { player: PlayerId } |
     { conditional_player: PlayerId | null } |
+    { adjacent_players: PlayerId[] } |
     { card: CardId } |
     { extra_card: CardId | null } |
     { players: Empty } |
