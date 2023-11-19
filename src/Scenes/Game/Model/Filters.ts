@@ -1,6 +1,7 @@
 import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
+import { PlayerId } from "./GameUpdate";
 import { PlayingSelector, TargetSelector, isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
@@ -52,6 +53,43 @@ export function isBangCard(table: GameTable, origin: Player, card: Card): boolea
         && cardHasTag(card, 'missed');
 }
 
+export function calcPlayerDistance(selector: PlayingSelector, from: PlayerId, to: PlayerId): number {
+    const table = selector.table.current;
+    if (table.status.flags.includes('disable_player_distances')) {
+        return 1;
+    }
+
+    const fromIndex = table.alive_players.indexOf(from);
+    const toIndex = table.alive_players.indexOf(to);
+
+    let countCw = 0;
+    let countCcw = 0;
+
+    const playersAlive = table.alive_players.map(player => !isPlayerDead(getPlayer(table, player)));
+
+    for (let i = fromIndex; i != toIndex;) {
+        if (playersAlive[i]) {
+            ++countCw;
+        }
+        ++i;
+        if (i == table.alive_players.length) {
+            i = 0;
+        }
+    }
+    for (let i = fromIndex; i != toIndex;) {
+        if (playersAlive[i]) {
+            ++countCcw;
+        }
+        if (i == 0) {
+            i = table.alive_players.length;
+        }
+        --i;
+    }
+
+    const distanceMod = selector.request.distances.distances.find(item => item.player == to)?.distance ?? 0;
+    return Math.min(countCw, countCcw) + distanceMod;
+}
+
 export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
     const table = selector.table.current;
     const origin = getPlayer(table, table.self_player!);
@@ -98,8 +136,7 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
         } else if (filter.includes('range_2')) {
             range += 2;
         }
-        const targetDistance = distances.distances.find(item => item.player == target.id)?.distance ?? 0;
-        if (targetDistance > range) return false;
+        if (calcPlayerDistance(selector, table.self_player!, target.id) > range) return false;
     }
 
     return true;
