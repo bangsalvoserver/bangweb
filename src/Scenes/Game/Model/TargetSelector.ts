@@ -4,7 +4,7 @@ import { ReadOnlyRefObject } from "../../../Utils/LazyRef";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getEquipTarget, isEquipCard } from "./Filters";
+import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -139,8 +139,8 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
 
 export function isAutoSelect(selector: TargetSelector): selector is RequestSelector {
     return isResponse(selector)
-        && selector.request.auto_select
-        && selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0;
+        && selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0
+        && cardHasTag(getCard(selector.table.current, selector.request.respond_cards[0].card), 'auto_select');
 }
 
 export function getAutoSelectCard(selector: TargetSelector): CardId | undefined {

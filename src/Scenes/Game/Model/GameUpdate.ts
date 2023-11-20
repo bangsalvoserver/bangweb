@@ -133,7 +133,6 @@ export interface RequestStatusArgs {
     origin: PlayerId | null;
     target: PlayerId | null;
     status_text: GameString;
-    auto_select: boolean;
     respond_cards: CardNode[];
     pick_cards: CardId[];
     highlight_cards: CardId[];
