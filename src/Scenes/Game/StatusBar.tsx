@@ -45,7 +45,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
     })
 
     const timerWidget = isResponse(selector) && selector.request.timer &&
-      <div className="request-timer" style={{
+      <div key={selector.request.timer.timer_id} className="request-timer" style={{
           '--duration': selector.request.timer.duration + 'ms'
       } as CSSProperties} />;
     
