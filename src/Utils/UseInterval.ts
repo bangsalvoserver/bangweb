@@ -1,4 +1,5 @@
 import { DependencyList, useEffect, useLayoutEffect, useState } from "react";
+import { isMobileDevice } from "./MobileCheck";
 
 export function useInterval(fn: (timeElapsed: number) => void, ms?: number, deps?: DependencyList) {
     useEffect(() => {
@@ -19,7 +20,7 @@ export function useTimeout(fn: () => void, ms?: number, deps?: DependencyList) {
     }, deps);
 }
 
-export const FRAMERATE = 60;
+export const FRAMERATE = isMobileDevice() ? 30 : 60;
 
 export function useUpdateEveryFrame<T>(fn: () => T): T {
     const [value, setValue] = useState(fn);
