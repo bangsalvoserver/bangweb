@@ -44,8 +44,8 @@ const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) 
     }
 
     return (
-        <div key={animationKey} className={classes.join(' ')} style={trainPositionStyle}>
-            <div className="train-container-inner">
+        <div className={classes.join(' ')} style={trainPositionStyle}>
+            <div className="train-container-inner" key={animationKey}>
                 <PocketView ref={ref} cards={table.pockets.train.slice().reverse()} onClickCard={onClickCard} />
             </div>
         </div>
