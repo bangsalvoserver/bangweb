@@ -45,7 +45,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const [gameError, setGameError] = useState<GameString>();
 
   const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs, setGameError));
-  useInterval((timeElapsed: number) => handler.current.tick(timeElapsed), 1000 / FRAMERATE, []);
+  useInterval(handler.current.tick, 1000 / FRAMERATE, []);
 
   useTimeout(() => {
     if (gameError) {

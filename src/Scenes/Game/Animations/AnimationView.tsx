@@ -16,6 +16,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
         if ('move_card' in table.animation) {
             const animation = table.animation.move_card;
             return <MoveCardAnimation
+                key={table.animationKey}
                 tracker={tracker}
                 card={getCard(table, animation.card)}
                 destPocket={newPocketRef(animation.pocket, animation.player)}
@@ -24,6 +25,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
         } else if ('move_cubes' in table.animation) {
             const animation = table.animation.move_cubes;
             return <MoveCubeAnimation
+                key={table.animationKey}
                 tracker={tracker}
                 num_cubes={animation.num_cubes}
                 origin_card={animation.origin_card ? getCard(table, animation.origin_card) : null}
@@ -33,6 +35,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
         } else if ('deck_shuffle' in table.animation) {
             const animation = table.animation.deck_shuffle;
             return <DeckShuffleAnimation
+                key={table.animationKey}
                 tracker={tracker}
                 cards={animation.cards}
                 pocket={animation.pocket}

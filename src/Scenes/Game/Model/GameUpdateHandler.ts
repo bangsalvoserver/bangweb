@@ -9,20 +9,19 @@ export interface GameChannel {
     sendGameAction: (action: GameAction) => void;
 }
 
+interface GameUpdateHandlerContext {
+    tableDispatch: Dispatch<GameUpdate>;
+    selectorDispatch: Dispatch<SelectorUpdate>;
+    setGameLogs: Dispatch<SetStateAction<GameString[]>>;
+    setGameError: Dispatch<GameString>;
+    setAnimation: (update: Duration, endUpdate: GameUpdate | null) => void;
+}
+
 export class GameUpdateHandler {
     
-    private channel: GameChannel;
-    private tableDispatch: Dispatch<GameUpdate>;
-    private selectorDispatch: Dispatch<SelectorUpdate>;
-    private setGameLogs: Dispatch<SetStateAction<GameString[]>>;
-    private setGameError: Dispatch<GameString>;
+    readonly tick: (timeElapsed: Milliseconds) => void;
 
-    private animation?: {
-        timer: Milliseconds;
-        endUpdate?: GameUpdate
-    };
-
-    private remainingTime: Milliseconds = 0;
+    private timeout: number | null = null;
 
     constructor(
         channel: GameChannel,
@@ -31,46 +30,42 @@ export class GameUpdateHandler {
         setGameLogs: Dispatch<SetStateAction<GameString[]>>,
         setGameError: Dispatch<GameString>
     ) {
-        this.channel = channel;
-        this.tableDispatch = tableDispatch;
-        this.selectorDispatch = selectorDispatch;
-        this.setGameLogs = setGameLogs;
-        this.setGameError = setGameError;
-    }
+        this.tick = timeElapsed => {
+            const context: GameUpdateHandlerContext = {
+                tableDispatch, selectorDispatch, setGameLogs, setGameError,
+                setAnimation: (update, endUpdate) => {
+                    const duration = update.duration - timeElapsed;
+                    if (duration <= 0) {
+                        if (endUpdate) {
+                            tableDispatch(endUpdate);
+                        }
+                    } else {
+                        const startTime = Date.now();
+                        this.timeout = setTimeout(() => {
+                            const extraTime = Date.now() - startTime - duration;
 
-    tick(timeElapsed: Milliseconds) {
-        if (this.animation && (this.animation.timer -= timeElapsed) <= 0) {
-            if (this.animation.endUpdate) {
-                this.tableDispatch(this.animation.endUpdate);
-            }
-            this.remainingTime = -this.animation.timer;
-            delete this.animation;
-        } else {
-            while (!this.animation) {
-                const update = this.channel.getNextUpdate();
+                            if (endUpdate) {
+                                tableDispatch(endUpdate);
+                            }
+                            this.timeout = null;
+                            this.tick(extraTime);
+                        }, duration);
+                    }
+                }
+            };
+
+            while (!this.timeout) {
+                const update = channel.getNextUpdate();
                 if (update) {
-                    this.handleUpdate(update);
+                    this.handleUpdate.call(context, update);
                 } else {
-                    this.remainingTime = 0;
                     break;
                 }
             }
-        }
+        };
     }
 
-    private setAnimation(update: Duration, endUpdate?: GameUpdate) {
-        const timer = update.duration - this.remainingTime;
-        if (timer <= 0) {
-            this.remainingTime = -timer;
-            if (endUpdate) {
-                this.tableDispatch(endUpdate);
-            }
-        } else {
-            this.animation = { timer, endUpdate };
-        }
-    }
-
-    private handleUpdate = createUnionFunction<GameUpdateHandler, GameUpdate>({
+    private handleUpdate = createUnionFunction<GameUpdateHandlerContext, GameUpdate>({
 
         game_error (message) {
             this.setGameError(message);
@@ -160,7 +155,7 @@ export class GameUpdateHandler {
 
         short_pause (update) {
             this.tableDispatch({ short_pause: update });
-            this.setAnimation(update, update.card ? { card_animation_end: update.card } : undefined);
+            this.setAnimation(update, update.card ? { card_animation_end: update.card } : null);
         },
 
         add_cubes (update) {

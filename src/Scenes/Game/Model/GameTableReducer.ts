@@ -68,7 +68,11 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
         if (removedPlayers.length !== 0) {
             let newPlayers = this.players;
             for (const player of removedPlayers) {
-                newPlayers = editById(newPlayers, player, player => ({ ...player, animation: { player_death: { duration } } }));
+                newPlayers = editById(newPlayers, player, player => ({
+                    ...player,
+                    animation: { player_death: { duration } },
+                    animationKey: player.animationKey + 1
+                }));
             }
             return { ...this, players: newPlayers };
         } else {
@@ -98,7 +102,8 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
             players: editById(this.players, player, p => ({
                 ...p,
                 status: { ...p.status, hp },
-                animation: { player_hp: { hp: p.status.hp, duration } }
+                animation: { player_hp: { hp: p.status.hp, duration } },
+                animationKey: p.animationKey + 1
             }))
         };
     },
@@ -115,7 +120,12 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
     player_show_role ({ player, role, duration }) {
         return {
             ...this,
-            players: editById(this.players, player, p => ({ ...p, animation: { flipping_role: { role: p.status.role, duration } }, status: { ...p.status, role } }))
+            players: editById(this.players, player, p => ({
+                ...p,
+                animation: { flipping_role: { role: p.status.role, duration } },
+                animationKey: p.animationKey + 1,
+                status: { ...p.status, role }
+            }))
         };
     },
 
@@ -158,7 +168,8 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
         return {
             ...this,
             players, pockets,
-            animation: { move_card: { card, player, pocket, duration } }
+            animation: { move_card: { card, player, pocket, duration } },
+            animationKey: this.animationKey + 1
         };
     },
 
@@ -188,7 +199,8 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
                 [fromPocket]: [],
                 [pocket]: [],
             },
-            animation: { deck_shuffle: { pocket, duration, cards: this.pockets[fromPocket] } }
+            animation: { deck_shuffle: { pocket, duration, cards: this.pockets[fromPocket] } },
+            animationKey: this.animationKey + 1
         };
     },
 
@@ -216,7 +228,12 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
     show_card ({ card, info, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, animation: { flipping: { duration } }, cardData: info }))
+            cards: editById(this.cards, card, card => ({
+                ...card,
+                animation: { flipping: { duration } },
+                animationKey: card.animationKey + 1,
+                cardData: info
+            }))
         };
     },
 
@@ -227,6 +244,7 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
             cards: editById(this.cards, card, card => ({
                 ...card,
                 animation: { flipping: { cardImage: getCardImage(card), duration } },
+                animationKey: card.animationKey + 1,
                 cardData: { deck: card.cardData.deck }
             }))
         };
@@ -236,14 +254,23 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
     tap_card ({ card, inactive, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, inactive, animation: { turning: { duration } } }))
+            cards: editById(this.cards, card, card => ({
+                ...card,
+                inactive,
+                animation: { turning: { duration } },
+                animationKey: card.animationKey + 1
+            }))
         };
     },
 
     flash_card ({ card, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, animation: { flash: { duration } } }))
+            cards: editById(this.cards, card, card => ({
+                ...card,
+                animation: { flash: { duration } },
+                animationKey: card.animationKey + 1
+            }))
         };
     },
 
@@ -251,7 +278,11 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
         if (!card) return this;
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, animation: { short_pause: {} } }))
+            cards: editById(this.cards, card, card => ({
+                ...card,
+                animation: { short_pause: {} },
+                animationKey: card.animationKey + 1
+            }))
         };
     },
 
@@ -295,7 +326,8 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
                 num_cubes: tableCubes
             },
             cards: tableCards,
-            animation: { move_cubes: { num_cubes, origin_card, target_card, duration } }
+            animation: { move_cubes: { num_cubes, origin_card, target_card, duration } },
+            animationKey: this.animationKey + 1
         };
     },
 
@@ -322,7 +354,8 @@ const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
     move_train ({ position, duration }) {
         return {
             ...this,
-            animation: { move_train: { position, duration }}
+            animation: { move_train: { position, duration }},
+            animationKey: this.animationKey + 1
         };
     },
 

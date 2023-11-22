@@ -124,7 +124,10 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     let fromPlayerHp = player.status.hp;
     
+    let animationKey: number | null = null;
     if (player.animation) {
+        animationKey = player.animationKey;
+        
         if ('flipping_role' in player.animation) {
             flipDuration = player.animation.flipping_role.duration;
             if (player.status.role == 'unknown') {
@@ -164,7 +167,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         });
     };
 
-    return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
+    return <div key={animationKey} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
         <div className='player-top-row'>
             <div className='player-character'>
                 <div className='absolute'>

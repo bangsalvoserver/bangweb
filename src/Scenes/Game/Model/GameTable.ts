@@ -58,10 +58,11 @@ export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
     pocket: PocketRef;
 
-    animation?: CardAnimation;
-
     inactive: boolean;
     num_cubes: number;
+    
+    animation?: CardAnimation;
+    animationKey: number;
 }
 
 export function getCardImage(card: Card): CardImage | undefined {
@@ -88,6 +89,7 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketRef): Card {
         pocket,
         inactive: false,
         num_cubes: 0,
+        animationKey: 0
     };
 }
 
@@ -114,8 +116,10 @@ export interface Player extends Id {
         gold: number,
         flags: PlayerFlag[]
     };
-    animation?: PlayerAnimation;
     pockets: PlayerPockets;
+
+    animation?: PlayerAnimation;
+    animationKey: number;
 }
 
 export function newPlayer(id: PlayerId, userid: UserId): Player {
@@ -132,7 +136,8 @@ export function newPlayer(id: PlayerId, userid: UserId): Player {
             player_table: [],
             player_character: [],
             player_backup: []
-        }
+        },
+        animationKey: 0
     };
 }
 
@@ -164,8 +169,9 @@ export interface GameTable {
         flags: GameFlag[];
         current_turn?: PlayerId;
     };
-
+    
     animation?: TableAnimation;
+    animationKey: number;
 }
 
 export function newGameTable(myUserId?: UserId): GameTable {
@@ -200,7 +206,9 @@ export function newGameTable(myUserId?: UserId): GameTable {
             num_cubes: 0,
             train_position: 0,
             flags: [],
-        }
+        },
+
+        animationKey: 0
     };
 }
 

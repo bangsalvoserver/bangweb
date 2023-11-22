@@ -20,8 +20,10 @@ const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) 
 
     let classes = ['train-container'];
 
+    let animationKey: number | null = null;
     if (table.animation) {
         if ('move_train' in table.animation) {
+            animationKey = table.animationKey;
             const animation = table.animation.move_train;
 
             classes.push('train-container-move');
@@ -42,7 +44,7 @@ const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) 
     }
 
     return (
-        <div className={classes.join(' ')} style={trainPositionStyle}>
+        <div key={animationKey} className={classes.join(' ')} style={trainPositionStyle}>
             <div className="train-container-inner">
                 <PocketView ref={ref} cards={table.pockets.train.slice().reverse()} onClickCard={onClickCard} />
             </div>

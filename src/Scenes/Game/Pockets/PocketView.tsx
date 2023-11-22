@@ -34,12 +34,15 @@ const PocketView = forwardRef<PocketPosition, PocketProps>(({ cards, onClickCard
         { cards.map(id => {
             if (id == CARD_SLOT_ID_FROM || id == CARD_SLOT_ID_TO) {
                 if (table.animation && 'move_card' in table.animation) {
-                    return <CardSlot ref={setPos(id)} key={id} stretch={id == CARD_SLOT_ID_FROM ? 'in' : 'out'} duration={table.animation.move_card.duration} />
+                    const key = `${id} ${table.animationKey}`;
+                    return <CardSlot ref={setPos(id)} key={key} stretch={id == CARD_SLOT_ID_FROM ? 'in' : 'out'} duration={table.animation.move_card.duration} />
                 } else {
                     return null;
                 }
             } else {
-                return <CardView ref={setPos(id)} key={id} card={getCard(table, id)} onClickCard={onClickCard} />
+                const card = getCard(table, id);
+                const key = card.animation ? `${id} ${card.animationKey}` : `${id}`;
+                return <CardView ref={setPos(id)} key={key} card={card} onClickCard={onClickCard} />
             }
         }) }
     </div>;
