@@ -1,16 +1,18 @@
 import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import { useMapRef, useReducerRef, useRefLazy } from "../../Utils/LazyRef";
+import { getDivRect } from "../../Utils/Rect";
 import { FRAMERATE, useInterval, useTimeout } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
+import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
-import { PocketType, TablePocketType } from "./Model/CardEnums";
+import { PocketType } from "./Model/CardEnums";
 import { CardTracker, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
 import { Card, Player, PocketRef, getPlayer, newGameTable } from "./Model/GameTable";
 import gameTableReducer from "./Model/GameTableReducer";
 import { GameString, PlayerId } from "./Model/GameUpdate";
-import { GameChannel, GameUpdateHandler } from "./Model/GameUpdateHandler";
+import GameUpdateHandler, { GameChannel } from "./Model/GameUpdateHandler";
 import { TargetSelector, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import targetSelectorReducer from "./Model/TargetSelectorReducer";
@@ -24,8 +26,6 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import { SPRITE_CUBE } from "./CardView";
-import { getDivRect } from "../../Utils/Rect";
 
 export interface GameProps {
   channel: GameChannel;
@@ -44,7 +44,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const [gameLogs, setGameLogs] = useState<GameString[]>([]);
   const [gameError, setGameError] = useState<GameString>();
 
-  const handler = useRefLazy(() => new GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs, setGameError));
+  const handler = useRefLazy(() => GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs, setGameError));
   useInterval(handler.current.tick, 1000 / FRAMERATE, []);
 
   useTimeout(() => {
