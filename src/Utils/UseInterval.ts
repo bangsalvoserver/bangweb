@@ -1,4 +1,4 @@
-import { DependencyList, useEffect, useState } from "react";
+import { DependencyList, useEffect, useLayoutEffect, useState } from "react";
 
 export function useInterval(fn: (timeElapsed: number) => void, ms?: number, deps?: DependencyList) {
     useEffect(() => {
@@ -23,6 +23,10 @@ export const FRAMERATE = 60;
 
 export function useUpdateEveryFrame<T>(fn: () => T): T {
     const [value, setValue] = useState(fn);
-    useInterval(() => setValue(fn()), 1000 / FRAMERATE, []);
+    useLayoutEffect(() => {
+        setValue(fn());
+        const interval = setInterval(() => setValue(fn()), 1000 / FRAMERATE);
+        return () => clearInterval(interval);
+    }, []);
     return value;
 }
