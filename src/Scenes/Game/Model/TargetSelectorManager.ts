@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { GameChannel } from "./GameUpdateHandler";
+import { GameChannel } from "./UseGameState";
 import { PlayingSelector, TargetSelector, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 

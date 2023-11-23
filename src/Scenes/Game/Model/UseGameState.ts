@@ -1,59 +1,67 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { createUnionFunction } from "../../../Utils/UnionUtils";
 import { GameAction } from "./GameAction";
-import { Duration, GameString, GameUpdate, Milliseconds } from "./GameUpdate";
-import { SelectorUpdate } from "./TargetSelectorReducer";
+import { Duration, GameString, GameUpdate, Milliseconds, PlayerId } from "./GameUpdate";
+import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
+import { FRAMERATE, useInterval, useTimeout } from "../../../Utils/UseInterval";
+import { useReducerRef } from "../../../Utils/LazyRef";
+import gameTableReducer from "./GameTableReducer";
+import { newGameTable } from "./GameTable";
+import { newTargetSelector } from "./TargetSelector";
+import { UserId } from "../../../Messages/ServerMessage";
 
 export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
     sendGameAction: (action: GameAction) => void;
 }
 
-export default function GameUpdateHandler(
-    channel: GameChannel,
-    tableDispatch: Dispatch<GameUpdate>,
-    selectorDispatch: Dispatch<SelectorUpdate>,
-    setGameLogs: Dispatch<SetStateAction<GameString[]>>,
-    setGameError: Dispatch<GameString>
-) {
-    let timeout: number | null = null;
-    const tick = (timeElapsed: Milliseconds) => {
-        const context: GameUpdateHandlerContext = {
-            tableDispatch, selectorDispatch, setGameLogs, setGameError,
-            setAnimation: (update, endUpdate) => {
-                const duration = update.duration - timeElapsed;
-                if (duration <= 0) {
-                    if (endUpdate) {
-                        tableDispatch(endUpdate);
-                    }
-                } else {
-                    const startTime = Date.now();
-                    timeout = setTimeout(() => {
-                        const extraTime = Date.now() - startTime - duration;
+export function useGameState(channel: GameChannel, myUserId?: UserId) {
+    const [table, tableDispatch, tableRef] = useReducerRef(gameTableReducer, myUserId, newGameTable);
+    const [selector, selectorDispatch] = useReducer(targetSelectorReducer, tableRef, newTargetSelector);
+    const [gameLogs, setGameLogs] = useState<GameString[]>([]);
+    const [gameError, setGameError] = useState<GameString>();
 
-                        if (endUpdate) {
-                            tableDispatch(endUpdate);
-                        }
-                        timeout = null;
-                        tick(extraTime);
-                    }, duration);
-                }
+    const clearGameError = () => {
+        if (gameError) setGameError(undefined);
+    };
+    useTimeout(clearGameError, 5000, [gameError])
+
+    const updateTimeout = useRef<number>();
+    useEffect(() => () => clearTimeout(updateTimeout.current), []);
+
+    const tick = (timeElapsed: Milliseconds) => {
+        const setAnimation = (update: Duration, endUpdate: GameUpdate | null) => {
+            const duration = update.duration - timeElapsed;
+            if (duration <= 0) {
+                if (endUpdate) tableDispatch(endUpdate);
+            } else {
+                const startTime = Date.now();
+                updateTimeout.current = setTimeout(() => {
+                    const extraTime = Date.now() - startTime - duration;
+                    if (endUpdate) tableDispatch(endUpdate);
+                    updateTimeout.current = undefined;
+                    tick(extraTime);
+                }, duration);
             }
         };
-
-        while (!timeout) {
+        
+        const context: GameUpdateContext = { tableDispatch, selectorDispatch, setGameLogs, setGameError, setAnimation };
+        while (!updateTimeout.current) {
             const update = channel.getNextUpdate();
             if (update) {
-                handleUpdate.call(context, update);
+                handleUpdate(context, update);
             } else {
                 break;
             }
         }
     };
-    return { tick };
+
+    useInterval(tick, 1000 / FRAMERATE, []);
+
+    return { table, selector, selectorDispatch, gameLogs, gameError, clearGameError };
 }
 
-interface GameUpdateHandlerContext {
+interface GameUpdateContext {
     tableDispatch: Dispatch<GameUpdate>;
     selectorDispatch: Dispatch<SelectorUpdate>;
     setGameLogs: Dispatch<SetStateAction<GameString[]>>;
@@ -61,7 +69,7 @@ interface GameUpdateHandlerContext {
     setAnimation: (update: Duration, endUpdate: GameUpdate | null) => void;
 }
 
-const handleUpdate = createUnionFunction<GameUpdateHandlerContext, GameUpdate>({
+const handleUpdate = createUnionFunction<GameUpdateContext, GameUpdate>({
 
     game_error(message) {
         this.setGameError(message);

@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
-import { useMapRef, useReducerRef, useRefLazy } from "../../Utils/LazyRef";
+import { createContext, useContext, useEffect, useRef } from "react";
+import { useMapRef } from "../../Utils/LazyRef";
 import { getDivRect } from "../../Utils/Rect";
-import { FRAMERATE, useInterval, useTimeout } from "../../Utils/UseInterval";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
@@ -10,12 +9,10 @@ import GameLogView from "./GameLogView";
 import { PocketType } from "./Model/CardEnums";
 import { CardTracker, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
 import { Card, Player, PocketRef, getPlayer, newGameTable } from "./Model/GameTable";
-import gameTableReducer from "./Model/GameTableReducer";
-import { GameString, PlayerId } from "./Model/GameUpdate";
-import GameUpdateHandler, { GameChannel } from "./Model/GameUpdateHandler";
+import { PlayerId } from "./Model/GameUpdate";
 import { TargetSelector, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
-import targetSelectorReducer from "./Model/TargetSelectorReducer";
+import { GameChannel, useGameState } from "./Model/UseGameState";
 import PlayerView from "./PlayerView";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
@@ -38,20 +35,7 @@ export const TargetSelectorContext = createContext<TargetSelector>(newTargetSele
 
 export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const { myUserId, users } = useContext(LobbyContext);
-  
-  const [table, tableDispatch, tableRef] = useReducerRef(gameTableReducer, myUserId, newGameTable);
-  const [selector, selectorDispatch] = useReducer(targetSelectorReducer, tableRef, newTargetSelector);
-  const [gameLogs, setGameLogs] = useState<GameString[]>([]);
-  const [gameError, setGameError] = useState<GameString>();
-
-  const handler = useRefLazy(() => GameUpdateHandler(channel, tableDispatch, selectorDispatch, setGameLogs, setGameError));
-  useInterval(handler.current.tick, 1000 / FRAMERATE, []);
-
-  useTimeout(() => {
-    if (gameError) {
-      setGameError(undefined);
-    }
-  }, 5000, [gameError])
+  const { table, selector, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(channel, myUserId);
 
   const pocketPositions = useMapRef<PocketType, PocketPosition>();
   const playerPositions = useMapRef<PlayerId, PocketPositionMap>();
@@ -189,7 +173,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
           <GameLogView logs={gameLogs} />
           <StatusBar
             gameError={gameError}
-            handleClearGameError={() => setGameError(undefined)}
+            handleClearGameError={clearGameError}
             handleReturnLobby={handleReturnLobby}
             handleConfirm={handleConfirm}
             handleUndo={handleUndo}
