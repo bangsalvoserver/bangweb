@@ -29,19 +29,19 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
     
     const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
-    const tick = (timeElapsed: Milliseconds) => {
+    const tick = (extraTime: Milliseconds) => {
         const setAnimation = (update: Duration, endUpdate: TableUpdate | null) => {
-            const duration = update.duration - timeElapsed;
+            const duration = update.duration - extraTime;
             if (duration <= 0) {
                 if (endUpdate) tableDispatch(endUpdate);
-                timeElapsed = -duration;
+                extraTime = -duration;
             } else {
                 const startTime = Date.now();
                 updateTimeout.current = setTimeout(() => {
-                    const extraTime = Date.now() - startTime - duration;
+                    const timeElapsed = Date.now() - startTime;
                     if (endUpdate) tableDispatch(endUpdate);
                     updateTimeout.current = undefined;
-                    tick(extraTime);
+                    tick(timeElapsed - duration);
                 }, duration);
             }
         };
@@ -52,7 +52,8 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
         }
     };
 
-    useInterval(tick, 1000 / FRAMERATE, []);
+    const tickDuration = 1000 / FRAMERATE;
+    useInterval(timeElapsed => tick(timeElapsed - tickDuration), tickDuration, []);
 
     return { table, selectorDispatch, gameLogs, gameError, clearGameError };
 }
