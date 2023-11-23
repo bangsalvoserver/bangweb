@@ -4,9 +4,9 @@ import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket, rotatePlayers } from "./EditPocketMap";
 import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, searchById, sortById } from "./GameTable";
-import { GameUpdate } from "./GameUpdate";
+import { TableUpdate } from "./GameUpdate";
 
-const gameTableReducer = createUnionReducer<GameTable, GameUpdate>({
+const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
     /// Creates new cards and adds them in the specified pocket
     add_cards ({ card_ids, pocket, player }) {

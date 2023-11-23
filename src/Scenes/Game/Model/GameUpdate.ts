@@ -161,39 +161,47 @@ export interface GameOptions {
     game_seed?: number;
 }
 
-export type GameUpdate =
-    { game_error: GameString } |
-    { game_log: GameString } |
-    { game_prompt: GameString } |
-    { play_sound: string } |
+export type GameTableUpdate = 
     { add_cards: AddCardsUpdate } |
     { remove_cards: RemoveCardsUpdate } |
     { player_add: PlayerAddUpdate } |
     { player_order: PlayerOrderUpdate & Duration } |
-    { player_order_end: PlayerOrderUpdate } |
     { player_hp: PlayerHpUpdate & Duration } |
     { player_gold: PlayerGoldUpdate } |
     { player_show_role: PlayerShowRoleUpdate & Duration } |
-    { player_animation_end: PlayerId } |
     { player_flags: PlayerFlagsUpdate } |
     { switch_turn: PlayerId } |
     { move_card: MoveCardUpdate & Duration } |
-    { move_card_end: MoveCardUpdate } |
     { deck_shuffled: DeckShuffledUpdate & Duration } |
-    { deck_shuffled_end: DeckShuffledUpdate } |
     { show_card: ShowCardUpdate & Duration } |
     { hide_card: HideCardUpdate & Duration } |
     { tap_card: TapCardUpdate & Duration } |
     { flash_card: FlashCardUpdate & Duration } |
     { short_pause: ShortPauseUpdate & Duration } |
-    { card_animation_end: CardId } |
     { add_cubes: AddCubesUpdate } |
     { move_cubes: MoveCubesUpdate & Duration } |
-    { move_cubes_end: MoveCubesUpdate } |
     { move_train: MoveTrainUpdate & Duration } |
-    { move_train_end: MoveTrainUpdate } |
-    { game_flags: GameFlag[] } |
+    { game_flags: GameFlag[] };
+
+export type SyntheticTableUpdate =
+    { player_order_end: PlayerOrderUpdate } |
+    { player_animation_end: PlayerId } |
+    { move_card_end: MoveCardUpdate } |
+    { deck_shuffled_end: DeckShuffledUpdate } |
+    { card_animation_end: CardId } |
+    { move_cubes_end: MoveCubesUpdate } |
+    { move_train_end: MoveTrainUpdate };
+
+export type TableUpdate = GameTableUpdate | SyntheticTableUpdate;
+
+export type GameStateUpdate = 
+    { game_error: GameString } |
+    { game_log: GameString } |
+    { game_prompt: GameString } |
+    { play_sound: string } |
     { request_status: RequestStatusArgs } | 
     { status_ready: StatusReadyArgs } |
     { status_clear: Empty } |
     { clear_logs: Empty };
+
+export type GameUpdate = GameTableUpdate | GameStateUpdate;

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { createUnionFunction } from "../../../Utils/UnionUtils";
+import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { GameAction } from "./GameAction";
-import { Duration, GameString, GameUpdate, Milliseconds, PlayerId } from "./GameUpdate";
+import { Duration, GameString, GameUpdate, Milliseconds, PlayerId, TableUpdate } from "./GameUpdate";
 import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
 import { FRAMERATE, useInterval, useTimeout } from "../../../Utils/UseInterval";
 import { useReducerRef } from "../../../Utils/LazyRef";
@@ -30,7 +30,7 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
     useEffect(() => () => clearTimeout(updateTimeout.current), []);
 
     const tick = (timeElapsed: Milliseconds) => {
-        const setAnimation = (update: Duration, endUpdate: GameUpdate | null) => {
+        const setAnimation = (update: Duration, endUpdate: TableUpdate | null) => {
             const duration = update.duration - timeElapsed;
             if (duration <= 0) {
                 if (endUpdate) tableDispatch(endUpdate);
@@ -62,14 +62,14 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
 }
 
 interface GameUpdateContext {
-    tableDispatch: Dispatch<GameUpdate>;
+    tableDispatch: Dispatch<TableUpdate>;
     selectorDispatch: Dispatch<SelectorUpdate>;
     setGameLogs: Dispatch<SetStateAction<GameString[]>>;
     setGameError: Dispatch<GameString>;
-    setAnimation: (update: Duration, endUpdate: GameUpdate | null) => void;
+    setAnimation: (update: Duration, endUpdate: TableUpdate | null) => void;
 }
 
-const handleUpdate = createUnionFunction<GameUpdateContext, GameUpdate>({
+const handleUpdate = createUnionReducer<GameUpdateContext, GameUpdate, void>({
 
     game_error(message) {
         this.setGameError(message);
