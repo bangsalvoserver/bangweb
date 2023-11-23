@@ -125,11 +125,10 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
 
     let fromPlayerHp = player.status.hp;
     
-    let animationKey: number | null = null;
+    let roleKey: number | null = null;
     if (player.animation) {
-        animationKey = player.animationKey;
-        
         if ('flipping_role' in player.animation) {
+            roleKey = player.animationKey;
             flipDuration = player.animation.flipping_role.duration;
             if (player.status.role == 'unknown') {
                 playerRole = player.animation.flipping_role.role;
@@ -168,7 +167,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         });
     };
 
-    return <div key={animationKey} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
+    return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
         <div className='player-top-row'>
             <div className='player-character'>
                 <div className='absolute'>
@@ -181,7 +180,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
                     { player.pockets.player_character.length > 1 && 
                         <PocketView ref={extraCharacters} cards={player.pockets.player_character.slice(1)} onClickCard={onClickCard} /> }
                     <div className='stack-pocket'>
-                        <RoleView flipDuration={flipDuration} role={playerRole} />
+                        <RoleView key={roleKey} flipDuration={flipDuration} role={playerRole} />
                     </div>
                 </div>
                 { (isPlayerSelf || table.status.flags.includes('hands_shown'))
