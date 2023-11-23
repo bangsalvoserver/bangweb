@@ -1,6 +1,5 @@
 import { Empty } from "../../../Messages/ServerMessage";
 import { count } from "../../../Utils/ArrayUtils";
-import { ReadOnlyRefObject } from "../../../Utils/LazyRef";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
@@ -53,7 +52,6 @@ export function newPlayCardSelection(): PlayCardSelection {
 }
 
 export interface TargetSelector {
-    table: ReadOnlyRefObject<GameTable>;
     request: RequestStatusUnion;
     prompt: GamePrompt;
     selection:
@@ -66,6 +64,7 @@ export type RequestSelector = ChangeField<TargetSelector, 'request', RequestStat
 export type StatusReadySelector = ChangeField<TargetSelector, 'request', StatusReadyArgs>;
 export type PlayingSelector = ChangeField<TargetSelector, 'selection', PlayCardSelection>;
 export type PickingSelector = ChangeField<TargetSelector, 'selection', PickCardSelection>;
+export type PlayingSelectorTable = ChangeField<GameTable, 'selector', PlayingSelector>;
 
 export function isResponse(selector: TargetSelector): selector is RequestSelector {
     return 'respond_cards' in selector.request;
@@ -89,9 +88,8 @@ export function checkSelectionPlaying(selector: TargetSelector): asserts selecto
     }
 }
 
-export function newTargetSelector(table: ReadOnlyRefObject<GameTable>, request: RequestStatusUnion = {}): TargetSelector {
+export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelector {
     return {
-        table,
         request,
         prompt: { type: 'none' },
         selection: { mode: 'start' },
@@ -111,7 +109,8 @@ export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard,
     }
 }
 
-export function selectorCanConfirm(selector: TargetSelector): boolean {
+export function selectorCanConfirm(table: GameTable): boolean {
+    const selector = table.selector;
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier': {
@@ -137,29 +136,32 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
     }
 }
 
-export function isAutoSelect(selector: TargetSelector): selector is RequestSelector {
+export function isAutoSelect(table: GameTable): boolean {
+    const selector = table.selector;
     return isResponse(selector)
         && selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0
-        && cardHasTag(getCard(selector.table.current, selector.request.respond_cards[0].card), 'auto_select');
+        && cardHasTag(getCard(table, selector.request.respond_cards[0].card), 'auto_select');
 }
 
-export function getAutoSelectCard(selector: TargetSelector): CardId | undefined {
+export function getAutoSelectCard(table: GameTable): CardId | undefined {
+    const selector = table.selector;
     if (selector.selection.mode == 'start') {
         if (isSelectionPlaying(selector)) {
             const context = selector.selection.context;
             return context.repeat_card || context.traincost;
-        } else if (isAutoSelect(selector)) {
-            return selector.request.respond_cards[0].card;
+        } else if (isAutoSelect(table)) {
+            return (selector as RequestSelector).request.respond_cards[0].card;
         }
     }
 }
 
-export function selectorCanUndo(selector: TargetSelector): boolean {
+export function selectorCanUndo(table: GameTable): boolean {
+    const selector = table.selector;
     if (selector.selection.mode == 'finish') return false;
     if (selector.selection.mode == 'start') {
         return isSelectionPlaying(selector) && !selector.selection.playing_card;
     }
-    if (isAutoSelect(selector)) {
+    if (isAutoSelect(table)) {
         const someTargetNotNone = (targets: CardTarget[]) => {
             return targets.some(target => {
                 const value = Object.values(target)[0];
@@ -202,9 +204,9 @@ export function selectorCanPlayCard(selector: TargetSelector, card: Card): card 
         && getPlayableCards(selector).includes(card.id);
 }
 
-export function selectorCanPickCard(selector: TargetSelector, card: Card): boolean {
+export function selectorCanPickCard(table: GameTable, card: Card): boolean {
+    const selector = table.selector;
     if (isResponse(selector)) {
-        const table = selector.table.current;
         switch (card.pocket?.name) {
             case 'main_deck':
             case 'discard_pile':
@@ -253,8 +255,8 @@ export function isCardSelected(selector: TargetSelector, card: CardId): boolean 
     return false;
 }
 
-export function isHandSelected(selector: TargetSelector, card: Card): boolean {
-    const table = selector.table.current;
+export function isHandSelected(table: GameTable, card: Card): boolean {
+    const selector = table.selector;
     if (card.pocket?.name == 'player_hand' && card.pocket.player != table.self_player && isSelectionPlaying(selector)) {
         const player = getPlayer(table, card.pocket.player);
         return player.pockets.player_hand.some(id => isCardSelected(selector, id));
@@ -310,20 +312,20 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
     return selected;
 }
 
-export function isValidCubeTarget(selector: PlayingSelector, card: Card): boolean {
+export function isValidCubeTarget(table: PlayingSelectorTable, card: Card): boolean {
+    const selector = table.selector;
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
-    const table = selector.table.current;
     
     return nextTarget?.target == 'select_cubes'
         && player == table.self_player
         && card.num_cubes > countSelectedCubes(selector, card);
 }
 
-export function isValidCardTarget(selector: PlayingSelector, card: Card): boolean {
+export function isValidCardTarget(table: PlayingSelectorTable, card: Card): boolean {
     switch (card.pocket?.name) {
     case 'player_character':
     case 'player_table':
@@ -336,19 +338,19 @@ export function isValidCardTarget(selector: PlayingSelector, card: Card): boolea
 
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
+    const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
-    const table = selector.table.current;
 
     switch (nextTarget?.target) {
     case 'card':
     case 'extra_card':
     case 'cards':
-        if (player && !checkPlayerFilter(selector, nextTarget.player_filter, getPlayer(table, player))) {
+        if (player && !checkPlayerFilter(table, nextTarget.player_filter, getPlayer(table, player))) {
             return false;
         }
-        if (!checkCardFilter(selector, nextTarget.card_filter, card)) {
+        if (!checkCardFilter(table, nextTarget.card_filter, card)) {
             return false;
         }
         return true;
@@ -422,7 +424,8 @@ export function getEffectAt([effects, optionals]: EffectsAndOptionals, index: nu
     }
 }
 
-export function isValidPlayerTarget(selector: PlayingSelector, player: Player): boolean {
+export function isValidPlayerTarget(table: PlayingSelectorTable, player: Player): boolean {
+    const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
@@ -430,16 +433,15 @@ export function isValidPlayerTarget(selector: PlayingSelector, player: Player): 
     switch (nextTarget?.target) {
     case 'player':
     case 'conditional_player':
-        return checkPlayerFilter(selector, nextTarget.player_filter, player);
+        return checkPlayerFilter(table, nextTarget.player_filter, player);
     case 'adjacent_players': {
         const checkTargets = (target1: Player, target2: Player) => {
-            return checkPlayerFilter(selector, ['notself'], target2)
-                && calcPlayerDistance(selector, target1.id, target2.id) == 1;
+            return checkPlayerFilter(table, ['notself'], target2)
+                && calcPlayerDistance(table, target1.id, target2.id) == 1;
         };
-        const table = selector.table.current;
         const firstPlayer = (targets[index] as {adjacent_players: PlayerId[]}).adjacent_players[0];
         if (firstPlayer == 0) {
-            return checkPlayerFilter(selector, ['notself', 'reachable'], player)
+            return checkPlayerFilter(table, ['notself', 'reachable'], player)
                 && table.alive_players.some(target2 => checkTargets(player, getPlayer(table, target2)));
         } else {
             return checkTargets(getPlayer(table, firstPlayer), player);
@@ -450,8 +452,9 @@ export function isValidPlayerTarget(selector: PlayingSelector, player: Player): 
     }
 }
 
-export function isValidEquipTarget(selector: PlayingSelector, player: Player): boolean {
+export function isValidEquipTarget(table: PlayingSelectorTable, player: Player): boolean {
+    const selector = table.selector;
     return selector.selection.playing_card !== null
         && isEquipCard(selector.selection.playing_card)
-        && checkPlayerFilter(selector, getEquipTarget(selector.selection.playing_card), player);
+        && checkPlayerFilter(table, getEquipTarget(selector.selection.playing_card), player);
 }

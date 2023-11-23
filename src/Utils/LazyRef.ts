@@ -28,17 +28,3 @@ export function useMapRef<Key, Value>(): MapRef<Key, Value> {
         }
     }
 }
-
-export type ReadOnlyRefObject<T> = {
-    readonly current: T;
-};
-
-export function useReducerRef<T, U, I>(reducer: Reducer<T, U>, initArg: I, init: (arg: I) => T): readonly [T, Dispatch<U>, ReadOnlyRefObject<T>] {
-    const [state, setState] = useState(() => init(initArg));
-    const ref = useRef(state);
-    const dispatch = useCallback((update: U) => {
-        ref.current = reducer(ref.current, update);
-        setState(ref.current);
-    }, []);
-    return [state, dispatch, ref] as const;
-}

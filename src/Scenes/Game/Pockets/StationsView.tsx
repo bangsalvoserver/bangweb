@@ -1,18 +1,18 @@
 import { useContext, useMemo } from "react";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
-import { GameTableContext, TargetSelectorContext } from "../GameScene";
+import { GameTableContext } from "../GameScene";
 import { getCard, getCardImage } from "../Model/GameTable";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
 
 function StationCardView({ card, onClickCard }: CardProps) {
-    const selector = useContext(TargetSelectorContext);
+    const table = useContext(GameTableContext);
 
     const cardImage = getCardImage(card);
     if (!cardImage) return null;
     const imageSrc = getCardUrl(cardImage.image);
     
-    const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
+    const selectorCardClass = useMemo(() => getSelectorCardClass(table, card), [table.selector]);
 
     return (
         <div className={`station-card ${selectorCardClass ?? ''}`} onClick={onClickCard ? () => onClickCard(card) : undefined}>

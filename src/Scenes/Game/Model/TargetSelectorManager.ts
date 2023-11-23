@@ -1,11 +1,11 @@
 import { Dispatch } from "react";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { GameChannel } from "./UseGameState";
-import { PlayingSelector, TargetSelector, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { PlayingSelectorTable, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
+import { GameChannel } from "./UseGameState";
 
-export function handleClickCard(selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
-    const table = selector.table.current;
+export function handleClickCard(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
+    const selector = table.selector;
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier': {
@@ -13,7 +13,7 @@ export function handleClickCard(selector: TargetSelector, selectorDispatch: Disp
         if (card.pocket?.name == 'player_character') {
             cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
         }
-        if (isValidCardTarget(selector as PlayingSelector, cardTarget)) {
+        if (isValidCardTarget(table as PlayingSelectorTable, cardTarget)) {
             selectorDispatch({ addCardTarget: cardTarget });
         }
         break;
@@ -21,7 +21,7 @@ export function handleClickCard(selector: TargetSelector, selectorDispatch: Disp
     case 'start': {
         const canPlay = selectorCanPlayCard(selector, card);
         if (isResponse(selector)) {
-            const canPick = selectorCanPickCard(selector, card);
+            const canPick = selectorCanPickCard(table, card);
             if (canPlay && canPick) {
                 selectorDispatch({ setPrompt: { type: 'playpick', card }});
             } else if (canPlay) {
@@ -36,22 +36,23 @@ export function handleClickCard(selector: TargetSelector, selectorDispatch: Disp
     }
 }
 
-export function handleClickPlayer(selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>, player: Player) {
-    switch (selector.selection.mode) {
+export function handleClickPlayer(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>, player: Player) {
+    switch (table.selector.selection.mode) {
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(selector as PlayingSelector, player)) {
+        if (isValidPlayerTarget(table as PlayingSelectorTable, player)) {
             selectorDispatch({ addPlayerTarget: player });
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(selector as PlayingSelector, player)) {
+        if (isValidEquipTarget(table as PlayingSelectorTable, player)) {
             selectorDispatch({ addEquipTarget: player });
         }
     }
 }
 
-export function handleSendGameAction(channel: GameChannel, selector: TargetSelector) {
+export function handleSendGameAction(table: GameTable, channel: GameChannel) {
+    const selector = table.selector;
     const bypass_prompt = selector.prompt.type == 'yesno' && selector.prompt.response;
     if (selector.selection.mode == 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         const timer_id = isResponse(selector) && selector.request.timer?.timer_id || null;

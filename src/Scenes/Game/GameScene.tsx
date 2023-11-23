@@ -31,11 +31,10 @@ export interface GameProps {
 
 const EMPTY_TABLE = newGameTable();
 export const GameTableContext = createContext(EMPTY_TABLE);
-export const TargetSelectorContext = createContext<TargetSelector>(newTargetSelector({ current: EMPTY_TABLE }));
 
 export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const { myUserId, users } = useContext(LobbyContext);
-  const { table, selector, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(channel, myUserId);
+  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(channel, myUserId);
 
   const pocketPositions = useMapRef<PocketType, PocketPosition>();
   const playerPositions = useMapRef<PlayerId, PocketPositionMap>();
@@ -75,16 +74,16 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   const clickIsAllowed = !isGameOver
       && table.self_player !== undefined
-      && selector.selection.mode != 'finish'
-      && selector.prompt.type == 'none';
+      && table.selector.selection.mode != 'finish'
+      && table.selector.prompt.type == 'none';
 
-  const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(selector, selectorDispatch, card) : undefined;
-  const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(selector, selectorDispatch, player) : undefined;
+  const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selectorDispatch, card) : undefined;
+  const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selectorDispatch, player) : undefined;
   
-  const handleConfirm = (clickIsAllowed && selectorCanConfirm(selector)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
-  const handleUndo = (clickIsAllowed && selectorCanUndo(selector)) ? () => selectorDispatch({ undoSelection: {} }) : undefined;
+  const handleConfirm = (clickIsAllowed && selectorCanConfirm(table)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
+  const handleUndo = (clickIsAllowed && selectorCanUndo(table)) ? () => selectorDispatch({ undoSelection: {} }) : undefined;
   
-  useEffect(() => handleSendGameAction(channel, selector), [selector]);
+  useEffect(() => handleSendGameAction(table, channel), [table.selector]);
 
   const shopPockets = (table.pockets.shop_deck.length != 0 || table.pockets.shop_selection.length != 0) && (
     <div className="pocket-group relative">
@@ -155,32 +154,30 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   return (
     <GameTableContext.Provider value={table}>
-      <TargetSelectorContext.Provider value={selector}>
-        <div className="game-scene">
-          <div className="main-deck-row">
-            <div>
-              { shopPockets }{ tableCubes }{ mainDeck }{ scenarioCards }
-            </div>
-            { trainPockets }
+      <div className="game-scene">
+        <div className="main-deck-row">
+          <div>
+            { shopPockets }{ tableCubes }{ mainDeck }{ scenarioCards }
           </div>
-          <div className="player-grid" num-players={table.alive_players.length}>
-            { playerViews }
-          </div>
-          { selectionPocket }
-          <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
-          <CardChoiceView tracker={tracker} onClickCard={onClickCard}/>
-          <AnimationView tracker={tracker} />
-          <GameLogView logs={gameLogs} />
-          <StatusBar
-            gameError={gameError}
-            handleClearGameError={clearGameError}
-            handleReturnLobby={handleReturnLobby}
-            handleConfirm={handleConfirm}
-            handleUndo={handleUndo}
-            onClickCard={onClickCard}
-          />
+          { trainPockets }
         </div>
-      </TargetSelectorContext.Provider>
+        <div className="player-grid" num-players={table.alive_players.length}>
+          { playerViews }
+        </div>
+        { selectionPocket }
+        <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
+        <CardChoiceView tracker={tracker} onClickCard={onClickCard}/>
+        <AnimationView tracker={tracker} />
+        <GameLogView logs={gameLogs} />
+        <StatusBar
+          gameError={gameError}
+          handleClearGameError={clearGameError}
+          handleReturnLobby={handleReturnLobby}
+          handleConfirm={handleConfirm}
+          handleUndo={handleUndo}
+          onClickCard={onClickCard}
+        />
+      </div>
     </GameTableContext.Provider>
   );
 }

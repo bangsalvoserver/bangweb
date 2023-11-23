@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { LobbyContext } from "../Lobby/Lobby";
-import { GameTableContext, TargetSelectorContext } from "./GameScene";
+import { GameTableContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { Card, getCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
@@ -22,7 +22,7 @@ export interface StatusProps {
 export default function StatusBar({ gameError, handleClearGameError, handleReturnLobby, handleConfirm, handleUndo, onClickCard }: StatusProps) {
     const { myUserId, lobbyOwner } = useContext(LobbyContext);
     const table = useContext(GameTableContext);
-    const selector = useContext(TargetSelectorContext);
+    const selector = table.selector;
 
     const isGameOver = table.status.flags.includes('game_over');
 

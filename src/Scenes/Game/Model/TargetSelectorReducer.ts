@@ -3,9 +3,9 @@ import { countIf } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkPlayerFilter, getCardColor, getTagValue, isEquipCard } from "./Filters";
-import { Card, KnownCard, Player, getCard, getPlayer } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { EffectContext, GamePrompt, PlayingSelector, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
+import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -148,10 +148,10 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
     return selector;
 }
 
-function isAutoConfirmable(selector: PlayingSelector): boolean {
+function isAutoConfirmable(table: PlayingSelectorTable): boolean {
+    const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
-    const table = selector.table.current;
 
     const diff = getNextTargetIndex(targets) - effects.length;
     if (diff < 0) return false;
@@ -160,7 +160,7 @@ function isAutoConfirmable(selector: PlayingSelector): boolean {
         if (cardHasTag(currentCard, 'auto_confirm')) {
             if (optionals.some(effect => effect.target == 'player'
                 && !table.alive_players.some(target =>
-                    checkPlayerFilter(selector, effect.player_filter, getPlayer(table, target)))))
+                    checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)))))
             {
                 return true;
             }
@@ -182,11 +182,11 @@ function isAutoConfirmable(selector: PlayingSelector): boolean {
     return repeatCount > 0 && diff == optionals.length * repeatCount;
 }
 
-function appendAutoTarget(selector: PlayingSelector): TargetListMapper | undefined {
+function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undefined {
+    const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
-    const table = selector.table.current;
 
     switch (effect?.target) {
     case 'none':
@@ -199,7 +199,7 @@ function appendAutoTarget(selector: PlayingSelector): TargetListMapper | undefin
         }
         break;
     case 'conditional_player':
-        if (!table.alive_players.some(target => checkPlayerFilter(selector, effect.player_filter, getPlayer(table, target)))) {
+        if (!table.alive_players.some(target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)))) {
             return appendTarget(effect.target, null);
         }
         break;
@@ -236,25 +236,27 @@ function setSelectorMode(selector: PlayingSelector, mode: 'start' | 'finish'): P
         }
     };
 }
-function handleAutoTargets(selector: PlayingSelector): TargetSelector {
-    if (isAutoConfirmable(selector)) {
+function handleAutoTargets(table: PlayingSelectorTable): TargetSelector {
+    const selector = table.selector;
+    if (isAutoConfirmable(table)) {
         if (selector.selection.mode == 'modifier') {
-            return handleAutoSelect(setSelectorMode(addModifierContext(selector), 'start'));
+            return handleAutoSelect({ ...table, selector: setSelectorMode(addModifierContext(selector), 'start')});
         } else {
             return setSelectorMode(selector, 'finish');
         }
     }
 
-    const mapper = appendAutoTarget(selector);
+    const mapper = appendAutoTarget(table);
     if (mapper) {
-        return handleAutoTargets(editSelectorTargets(selector, mapper));
+        return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, mapper) });
     } else {
         return selector;
     }
 }
 
-function handleSelectPlayingCard(selector: TargetSelector, card: KnownCard): TargetSelector {
-    const selection = isSelectionPlaying(selector) ? selector.selection : newPlayCardSelection();
+function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelector {
+    const selector = table.selector;
+    const selection = isSelectionPlaying(table.selector) ? table.selector.selection : newPlayCardSelection();
 
     if (isEquipCard(card)) {
         return {
@@ -268,7 +270,7 @@ function handleSelectPlayingCard(selector: TargetSelector, card: KnownCard): Tar
             prompt: { type: 'none' }
         };
     } else if (card.cardData.modifier.type == 'none') {
-        return handleAutoTargets({
+        return handleAutoTargets({ ...table, selector: {
             ...selector,
             selection: {
                 ...selection,
@@ -276,9 +278,9 @@ function handleSelectPlayingCard(selector: TargetSelector, card: KnownCard): Tar
                 mode: 'target'
             },
             prompt: { type: 'none' }
-        });
+        }});
     } else {
-        return handleAutoTargets({
+        return handleAutoTargets({ ...table, selector: {
             ...selector,
             selection: {
                 ...selection,
@@ -286,41 +288,44 @@ function handleSelectPlayingCard(selector: TargetSelector, card: KnownCard): Tar
                 mode: 'modifier'
             },
             prompt: { type: 'none' }
-        });
+        }});
     }
 }
 
-function handleAutoSelect(selector: TargetSelector): TargetSelector {
-    const cardId = getAutoSelectCard(selector);
-    const table = selector.table.current;
+function handleAutoSelect(table: GameTable): TargetSelector {
+    const selector = table.selector;
+    const cardId = getAutoSelectCard(table);
     if (cardId) {
       const card = getCard(table, cardId);
       if (selectorCanPlayCard(selector, card)) {
-        return handleSelectPlayingCard(selector, card);
+        return handleSelectPlayingCard(table, card);
       }
     }
     return selector;
 }
 
-const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>({
+const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, TargetSelector>({
     setRequest (request) {
-        return handleAutoSelect(newTargetSelector(this.table, request));
+        return handleAutoSelect({ ...this, selector: newTargetSelector(request) });
     },
 
     setPrompt (prompt) {
-        return { ...this, prompt };
+        return { ...this.selector, prompt };
     },
 
     confirmPlay () {
-        checkSelectionPlaying(this);
-        return setSelectorMode(editSelectorTargets(this, targets => targets.slice(0, getNextTargetIndex(targets))), 'finish');
+        checkSelectionPlaying(this.selector);
+        return setSelectorMode(editSelectorTargets(this.selector, targets => targets.slice(0, getNextTargetIndex(targets))), 'finish');
     },
 
     undoSelection () {
         return handleAutoSelect({
             ...this,
-            prompt: { type: 'none' },
-            selection: { mode: 'start' }
+            selector: {
+                ...this.selector,
+                prompt: { type: 'none' },
+                selection: { mode: 'start' }
+            }
         });
     },
 
@@ -330,7 +335,7 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
 
     selectPickCard (card) {
         return {
-            ...this,
+            ...this.selector,
             selection: {
                 picked_card: card.id,
                 mode: 'finish'
@@ -339,23 +344,23 @@ const targetSelectorReducer = createUnionReducer<TargetSelector, SelectorUpdate>
     },
 
     addCardTarget (card) {
-        checkSelectionPlaying(this);
-        return handleAutoTargets(editSelectorTargets(this, appendCardTarget(this, card.id)));
+        checkSelectionPlaying(this.selector);
+        return handleAutoTargets({ ...this, selector: editSelectorTargets(this.selector, appendCardTarget(this.selector, card.id))});
     },
 
     addPlayerTarget (player) {
-        checkSelectionPlaying(this);
-        return handleAutoTargets(editSelectorTargets(this, appendPlayerTarget(this, player.id)));
+        checkSelectionPlaying(this.selector);
+        return handleAutoTargets({...this, selector: editSelectorTargets(this.selector, appendPlayerTarget(this.selector, player.id))});
     },
 
     addEquipTarget (player) {
-        if (this.selection.mode != 'equip') {
+        if (this.selector.selection.mode != 'equip') {
             throw new Error('TargetSelector: not in equipping mode');
         }
         return {
-            ...this,
+            ...this.selector,
             selection: {
-                ...this.selection,
+                ...this.selector.selection,
                 targets: [{ player: player.id }],
                 mode: 'finish'
             },

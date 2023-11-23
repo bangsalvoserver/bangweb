@@ -1,14 +1,12 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { createUnionReducer } from "../../../Utils/UnionUtils";
-import { GameAction } from "./GameAction";
-import { Duration, GameString, GameUpdate, Milliseconds, PlayerId, TableUpdate } from "./GameUpdate";
-import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
-import { FRAMERATE, useInterval, useTimeout } from "../../../Utils/UseInterval";
-import { useReducerRef } from "../../../Utils/LazyRef";
-import gameTableReducer from "./GameTableReducer";
-import { newGameTable } from "./GameTable";
-import { newTargetSelector } from "./TargetSelector";
+import { Dispatch, SetStateAction, useEffect, useReducer, useRef, useState } from "react";
 import { UserId } from "../../../Messages/ServerMessage";
+import { createUnionReducer } from "../../../Utils/UnionUtils";
+import { FRAMERATE, useInterval, useTimeout } from "../../../Utils/UseInterval";
+import { GameAction } from "./GameAction";
+import { newGameTable } from "./GameTable";
+import gameTableReducer from "./GameTableReducer";
+import { Duration, GameString, GameUpdate, Milliseconds, TableUpdate } from "./GameUpdate";
+import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export interface GameChannel {
     getNextUpdate: () => GameUpdate | undefined;
@@ -16,8 +14,7 @@ export interface GameChannel {
 }
 
 export function useGameState(channel: GameChannel, myUserId?: UserId) {
-    const [table, tableDispatch, tableRef] = useReducerRef(gameTableReducer, myUserId, newGameTable);
-    const [selector, selectorDispatch] = useReducer(targetSelectorReducer, tableRef, newTargetSelector);
+    const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
 
@@ -28,6 +25,8 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
 
     const updateTimeout = useRef<number>();
     useEffect(() => () => clearTimeout(updateTimeout.current), []);
+    
+    const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
     const tick = (timeElapsed: Milliseconds) => {
         const setAnimation = (update: Duration, endUpdate: TableUpdate | null) => {
@@ -58,7 +57,7 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
 
     useInterval(tick, 1000 / FRAMERATE, []);
 
-    return { table, selector, selectorDispatch, gameLogs, gameError, clearGameError };
+    return { table, selectorDispatch, gameLogs, gameError, clearGameError };
 }
 
 interface GameUpdateContext {

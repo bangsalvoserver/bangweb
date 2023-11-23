@@ -2,13 +2,13 @@ import { CSSProperties, RefObject, forwardRef, useContext, useImperativeHandle, 
 import { useMapRef } from "../../Utils/LazyRef";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
-import { GameTableContext, TargetSelectorContext } from "./GameScene";
+import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { PocketPosition, PocketPositionMap } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
-import { Card, Player } from "./Model/GameTable";
+import { Card, GameTable, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
-import { PlayingSelector, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import { PlayingSelector, PlayingSelectorTable, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
@@ -22,19 +22,20 @@ export interface PlayerProps {
     onClickPlayer?: (player: Player) => void;
 }
 
-function getSelectorPlayerClass(selector: TargetSelector, player: Player) {
+function getSelectorPlayerClass(table: GameTable, player: Player) {
+    const selector = table.selector;
     if (isPlayerSelected(selector, player)) {
         return 'player-selected';
     }
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(selector as PlayingSelector, player)) {
+        if (isValidPlayerTarget(table as PlayingSelectorTable, player)) {
             return 'player-targetable';
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(selector as PlayingSelector, player)) {
+        if (isValidEquipTarget(table as PlayingSelectorTable, player)) {
             return 'player-targetable';
         }
         break;
@@ -74,7 +75,7 @@ function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivEleme
 
 const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
     const table = useContext(GameTableContext);
-    const selector = useContext(TargetSelectorContext);
+    const selector = table.selector;
     const positions = useMapRef<PocketType, PocketPosition>();
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
@@ -99,7 +100,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id == table.status.current_turn;
 
-    const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(selector, player), [selector]);
+    const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(table, player), [selector]);
 
     const isPlayerSelf = player.id == table.self_player;
     const isOrigin = isResponse(selector) && selector.request.origin == player.id;

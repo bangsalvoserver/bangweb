@@ -1,9 +1,9 @@
 import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
-import { TargetSelectorContext } from "./GameScene";
-import { Card, getCardImage } from "./Model/GameTable";
-import { TargetSelector, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
+import { GameTableContext } from "./GameScene";
+import { Card, GameTable, getCardImage } from "./Model/GameTable";
+import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
@@ -24,15 +24,16 @@ export interface CardRef {
     getRect: () => Rect | null;
 }
 
-export function getSelectorCardClass(selector: TargetSelector, card: Card) {
+export function getSelectorCardClass(table: GameTable, card: Card) {
+    const selector = table.selector;
     if (isSelectionPlaying(selector)) {
-        if (isHandSelected(selector, card) || isCardSelected(selector, card.id)) {
+        if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
             return 'card-selected';
         }
         if (selector.selection.mode == 'target' || selector.selection.mode == 'modifier') {
-            if (isValidCubeTarget(selector, card)) {
+            if (isValidCubeTarget(table as PlayingSelectorTable, card)) {
                 return 'card-targetable-cubes';
-            } else if (isValidCardTarget(selector, card)) {
+            } else if (isValidCardTarget(table as PlayingSelectorTable, card)) {
                 return 'card-targetable';
             }
         }
@@ -47,7 +48,7 @@ export function getSelectorCardClass(selector: TargetSelector, card: Card) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
         return 'card-playable';
-    } else if (selectorCanPickCard(selector, card)) {
+    } else if (selectorCanPickCard(table, card)) {
         return 'card-pickable';
     }
     if (isResponse(selector)) {
@@ -62,7 +63,8 @@ export function getSelectorCardClass(selector: TargetSelector, card: Card) {
 }
 
 const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCard }, ref) => {
-    const selector = useContext(TargetSelectorContext);
+    const table = useContext(GameTableContext);
+    const selector = table.selector;
 
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +72,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
         getRect: () => cardRef.current ? getDivRect(cardRef.current) : null
     }));
 
-    const selectorCardClass = useMemo(() => getSelectorCardClass(selector, card), [selector]);
+    const selectorCardClass = useMemo(() => getSelectorCardClass(table, card), [selector]);
     const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
     let backfaceSrc = getCardUrl('backface/' + card.cardData.deck);

@@ -1,8 +1,8 @@
 import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
-import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
+import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
-import { PlayingSelector, TargetSelector, isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
+import { PlayingSelectorTable, isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     return isCardKnown(card) ? card.cardData.tags.find(tag => tag.type == tagType)?.tag_value : undefined;
@@ -53,12 +53,12 @@ export function isBangCard(table: GameTable, origin: Player, card: Card): boolea
         && cardHasTag(card, 'missed');
 }
 
-export function calcPlayerDistance(selector: PlayingSelector, from: PlayerId, to: PlayerId): number {
+export function calcPlayerDistance(table: PlayingSelectorTable, from: PlayerId, to: PlayerId): number {
     if (from == to) {
         return 0;
     }
     
-    const table = selector.table.current;
+    const selector = table.selector;
     const distanceMod = selector.request.distances.distances.find(item => item.player == to)?.distance ?? 0;
 
     if (table.status.flags.includes('disable_player_distances')) {
@@ -95,8 +95,8 @@ export function calcPlayerDistance(selector: PlayingSelector, from: PlayerId, to
     return Math.min(countCw, countCcw) + distanceMod;
 }
 
-export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilter[], target: Player): boolean {
-    const table = selector.table.current;
+export function checkPlayerFilter(table: PlayingSelectorTable, filter: PlayerFilter[], target: Player): boolean {
+    const selector = table.selector;
     const origin = getPlayer(table, table.self_player!);
     const context = selector.selection.context;
 
@@ -142,14 +142,14 @@ export function checkPlayerFilter(selector: PlayingSelector, filter: PlayerFilte
             range += 2;
         }
 
-        if (calcPlayerDistance(selector, table.self_player!, target.id) > range) return false;
+        if (calcPlayerDistance(table, table.self_player!, target.id) > range) return false;
     }
 
     return true;
 }
 
-export function checkCardFilter(selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
-    const table = selector.table.current;
+export function checkCardFilter(table: GameTable, filter: CardFilter[], target: Card): boolean {
+    const selector = table.selector;
     const origin = getPlayer(table, table.self_player!);
 
     if (!filter.includes('can_repeat') && isCardSelected(selector, target.id)) return false;

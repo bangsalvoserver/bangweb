@@ -5,6 +5,7 @@ import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket, rotatePlayers } from "./EditPocketMap";
 import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, searchById, sortById } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
+import targetSelectorReducer from "./TargetSelectorReducer";
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
@@ -380,6 +381,13 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             }
         };
     },
+
+    selector_update(update) {
+        return {
+            ...this,
+            selector: targetSelectorReducer(this, update)
+        };
+    }
 
 });
 
