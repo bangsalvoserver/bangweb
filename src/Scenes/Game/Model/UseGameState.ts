@@ -9,6 +9,7 @@ import { Duration, GameString, GameUpdate, Milliseconds, TableUpdate } from "./G
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export interface GameChannel {
+    hasUpdates: () => boolean;
     getNextUpdate: () => GameUpdate | undefined;
     sendGameAction: (action: GameAction) => void;
 }
@@ -21,7 +22,7 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
     const clearGameError = () => {
         if (gameError) setGameError(undefined);
     };
-    useTimeout(clearGameError, 5000, [gameError])
+    useTimeout(clearGameError, 5000, [gameError]);
 
     const updateTimeout = useRef<number>();
     useEffect(() => () => clearTimeout(updateTimeout.current), []);
@@ -33,6 +34,7 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
             const duration = update.duration - timeElapsed;
             if (duration <= 0) {
                 if (endUpdate) tableDispatch(endUpdate);
+                timeElapsed = -duration;
             } else {
                 const startTime = Date.now();
                 updateTimeout.current = setTimeout(() => {
@@ -45,13 +47,8 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
         };
         
         const context: GameUpdateContext = { tableDispatch, selectorDispatch, setGameLogs, setGameError, setAnimation };
-        while (!updateTimeout.current) {
-            const update = channel.getNextUpdate();
-            if (update) {
-                handleUpdate(context, update);
-            } else {
-                break;
-            }
+        while (!updateTimeout.current && channel.hasUpdates()) {
+            handleUpdate(context, channel.getNextUpdate()!);
         }
     };
 
