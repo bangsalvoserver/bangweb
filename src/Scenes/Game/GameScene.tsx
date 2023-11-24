@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef } from "react";
-import { useMapRef } from "../../Utils/LazyRef";
+import useMapRef from "../../Utils/UseMapRef";
 import { getDivRect } from "../../Utils/Rect";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";

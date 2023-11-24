@@ -1,4 +1,4 @@
-import { DependencyList, useEffect } from "react";
+import { DependencyList, useEffect, useRef } from "react";
 import { ClientMessage } from "./ClientMessage";
 import { ServerMessage } from "./ServerMessage";
 import Env from "../Model/Env";
@@ -18,91 +18,97 @@ export interface Connection {
     sendMessage: (message: ClientMessage) => void;
 }
 
-export class SocketConnection implements Connection {
-    private socket?: WebSocket;
-    private messageHandlers = new Set<MessageHandler>();
-    private queuedMessages: ServerMessage[] = [];
+interface SocketConnectionState {
+    socket: WebSocket;
+    queuedMessages: ServerMessage[];
+    locked: boolean;
+}
 
-    private locked = false;
+function getServerUrl(): string {
+    return Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`;
+}
 
-    isConnected(): boolean {
-        return this.socket != undefined;
-    }
+export function useSocketConnection(): Connection {
+    const state = useRef<SocketConnectionState>();
+    const messageHandlers = useRef(new Set<MessageHandler>());
 
-    isLocked(): boolean {
-        return this.locked;
-    }
+    const isConnected = () => state.current !== undefined;
 
-    setLocked(locked: boolean) {
-        this.locked = locked;
-        if (!locked) {
-            this.processMessages();
-        }
-    }
+    const isLocked = () => state.current?.locked ?? false;
 
-    connect() {
-        this.socket = new WebSocket(Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`);
-        this.socket.onmessage = (event) => {
-            this.receiveMessage(JSON.parse(event.data));
-        };
-        this.socket.onopen = () => {
-            console.log('WebSocket connection established');
-            this.receiveMessage({ connected: {}});
-        };
-        this.socket.onclose = () => {
-            console.log('WebSocket connection closed');
-            this.receiveMessage({ disconnected: {}});
-            delete this.socket;
-        };
-        this.socket.onerror = () => {
-            console.log('WebSocket connection error');
-            this.receiveMessage({ disconnected: {}});
-            delete this.socket;
-        };
-    }
-
-    disconnect() {
-        this.socket?.close();
-    }
-
-    addHandler(handler: MessageHandler) {
-        this.messageHandlers.add(handler);
-    }
-    
-    removeHandler(handler: MessageHandler) {
-        this.messageHandlers.delete(handler);
-    }
-
-    sendMessage(message: ClientMessage) {
-        if (this.socket?.readyState == WebSocket.OPEN) {
-            this.socket.send(JSON.stringify(message));
-        }
-    }
-
-    private receiveMessage(message: ServerMessage) {
-        this.queuedMessages.push(message);
-        if (!this.locked) {
-            this.processMessages();
-        }
-    }
-
-    private processMessage(message: ServerMessage) {
-        const [messageType, messageValue] = Object.entries(message)[0];
-        this.messageHandlers.forEach(handler => {
-            if (messageType in handler) {
-                const fn = handler[messageType as keyof typeof handler];
-                (fn as (message: unknown) => void)(messageValue);
+    const setLocked = (locked: boolean) => {
+        if (state.current) {
+            state.current.locked = locked;
+            if (!locked) {
+                processMessages();
             }
-        });
-    }
+        }
+    };
 
-    private processMessages() {
-        this.locked = false;
-        this.queuedMessages.forEach(message => {
-            this.processMessage(message);
-        });
-        this.queuedMessages = [];
-    }
+    const connect = () => {
+        const socket = new WebSocket(getServerUrl());
+        socket.onmessage = (event) => {
+            receiveMessage(JSON.parse(event.data));
+        };
+        socket.onopen = () => {
+            console.log('WebSocket connection established');
+            receiveMessage({ connected: {}});
+        };
+        socket.onclose = () => {
+            console.log('WebSocket connection closed');
+            receiveMessage({ disconnected: {}});
+            state.current = undefined;
+        };
+        socket.onerror = () => {
+            console.log('WebSocket connection error');
+            receiveMessage({ disconnected: {}});
+            state.current = undefined;
+        };
+        state.current = {
+            socket,
+            queuedMessages: [],
+            locked: false
+        };
+    };
+
+    const disconnect = () => state.current?.socket.close();
+
+    const addHandler = (handler: MessageHandler) => messageHandlers.current.add(handler);
+
+    const removeHandler = (handler: MessageHandler) => messageHandlers.current.delete(handler);
+
+    const sendMessage = (message: ClientMessage) => {
+        if (state.current?.socket.readyState == WebSocket.OPEN) {
+            state.current.socket.send(JSON.stringify(message));
+        }
+    };
+
+    const receiveMessage = (message: ServerMessage) => {
+        if (state.current) {
+            state.current.queuedMessages.push(message);
+            if (!state.current.locked) {
+                processMessages();
+            }
+        }
+    };
+
+    const processMessages = () => {
+        if (state.current) {
+            state.current.locked = false;
+            for (const message of state.current.queuedMessages) {
+                const [messageType, messageValue] = Object.entries(message)[0];
+                for (const handler of messageHandlers.current) {
+                    if (messageType in handler) {
+                        const fn = handler[messageType as keyof typeof handler];
+                        (fn as (message: unknown) => void)(messageValue);
+                    }
+                }
+            }
+            state.current.queuedMessages = [];
+        }
+    };
+
+    return { isConnected, isLocked, setLocked, connect, disconnect, addHandler, removeHandler, sendMessage };
 }
 
 export function useHandler(connection: Connection, handler: MessageHandler, deps?: DependencyList) {

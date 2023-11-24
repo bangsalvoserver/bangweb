@@ -1,5 +1,5 @@
 import { CSSProperties, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
-import { useMapRef } from "../../Utils/LazyRef";
+import useMapRef from "../../Utils/UseMapRef";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTableContext } from "./GameScene";

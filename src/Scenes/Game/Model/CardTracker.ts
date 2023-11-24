@@ -1,4 +1,4 @@
-import { MapRef } from "../../../Utils/LazyRef";
+import { MapRef } from "../../../Utils/UseMapRef";
 import { Rect } from "../../../Utils/Rect";
 import { PocketType } from "./CardEnums";
 import { Card, PocketRef } from "./GameTable";

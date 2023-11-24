@@ -2,13 +2,12 @@ import { createContext, useEffect, useState } from 'react';
 import './App.css';
 import Header from './Components/Header';
 import getLabel from './Locale/GetLabel';
-import { Connection, SocketConnection, useHandler } from './Messages/Connection';
+import { Connection, useHandler, useSocketConnection } from './Messages/Connection';
 import { UserInfo } from './Messages/ServerMessage';
 import { useSettings } from './Model/AppSettings';
 import Env from './Model/Env';
 import CurrentScene, { SceneType } from './Scenes/CurrentScene';
 import { ImageSrc, serializeImage } from './Utils/ImageSerial';
-import { useRefLazy } from './Utils/LazyRef';
 
 export const ConnectionContext = createContext<Connection>({
   isConnected: () => false,
@@ -29,22 +28,21 @@ export async function makeUserInfo (username?: string, propic?: ImageSrc): Promi
 }
 
 export default function App() {
-  const connection = useRefLazy<Connection>(() => new SocketConnection());
-
   const [scene, setScene] = useState<SceneType>({ type: 'connect' });
-  
   const settings = useSettings();
+  
+  const connection = useSocketConnection();
 
   useEffect(() => {
-    if (settings.myUserId && !connection.current.isConnected()) {
-      connection.current.connect();
+    if (settings.myUserId && !connection.isConnected()) {
+      connection.connect();
     }
   }, []);
 
-  useHandler(connection.current, {
+  useHandler(connection, {
 
     connected: async () => {
-      connection.current.sendMessage({connect: {
+      connection.sendMessage({connect: {
         user: await makeUserInfo(settings.username, settings.propic),
         user_id: settings.myUserId,
         commit_hash: Env.commitHash
@@ -53,10 +51,10 @@ export default function App() {
 
     client_accepted: ({ user_id }) => {
       if (settings.myLobbyId) {
-        connection.current.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
+        connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
       }
       settings.setMyUserId(user_id);
-      connection.current.setLocked(true);
+      connection.setLocked(true);
       setScene({ type: 'waiting_area' });
     },
 
@@ -65,7 +63,7 @@ export default function App() {
     },
 
     ping: () => {
-      connection.current.sendMessage({ pong: {} });
+      connection.sendMessage({ pong: {} });
     },
 
     lobby_error: message => console.error('Lobby error: ', getLabel('lobby', message)),
@@ -73,14 +71,14 @@ export default function App() {
     lobby_remove_user: ({ user_id }) => {
       if (user_id === settings.myUserId) {
         settings.setMyLobbyId(undefined);
-        connection.current.setLocked(true);
+        connection.setLocked(true);
         setScene({ type: 'waiting_area' });
       }
     },
     
     lobby_entered: ({ lobby_id, name, options }) => {
       if (scene.type != 'lobby' || (settings.myLobbyId != lobby_id)) {
-        connection.current.setLocked(true);
+        connection.setLocked(true);
         settings.setMyLobbyId(lobby_id);
         setScene({ type: 'lobby', lobbyInfo: { name, options } });
       }
@@ -96,7 +94,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <ConnectionContext.Provider value={connection.current}>
+      <ConnectionContext.Provider value={connection}>
         <Header scene={scene} settings={settings} />
         <div className="current-scene">
           <CurrentScene scene={scene} setScene={setScene} settings={settings} />

@@ -1,20 +1,12 @@
-import { Dispatch, MutableRefObject, Reducer, useCallback, useRef, useState } from "react";
-
-export function useRefLazy<T>(init: () => T) {
-    const ref = useRef() as MutableRefObject<T>;
-    if (!ref.current) {
-        ref.current = init();
-    }
-    return ref;
-}
+import { useRef } from "react";
 
 export interface MapRef<Key, Value> {
     get: (key: Key) => Value | null,
     set: (key: Key, value: Value | null) => void
 };
 
-export function useMapRef<Key, Value>(): MapRef<Key, Value> {
-    const mapRef = useRefLazy(() => new Map<Key, Value>());
+export default function useMapRef<Key, Value>(): MapRef<Key, Value> {
+    const mapRef = useRef(new Map<Key, Value>());
 
     return {
         get: key => mapRef.current.get(key) ?? null,
