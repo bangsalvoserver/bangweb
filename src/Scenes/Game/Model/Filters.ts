@@ -183,6 +183,7 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
     if (filter.includes('not_bangcard') && cardHasTag(target, 'bangcard')) return false;
     if (filter.includes('missed') && !cardHasTag(target, 'missed')) return false;
     if (filter.includes('missedcard') && !cardHasTag(target, 'missedcard')) return false;
+    if (filter.includes('not_missedcard') && cardHasTag(target, 'missedcard')) return false;
     if (filter.includes('bronco') && !cardHasTag(target, 'bronco')) return false;
     if (filter.includes('catbalou_panic') && !cardHasTag(target, 'cat_balou') && !cardHasTag(target, 'panic')) return false;
 
