@@ -7,15 +7,55 @@ export type MessageHandler = {
     [K in ServerMessage as keyof K]?: (message: K[keyof K]) => void;
 };
 
+export interface MessageHandlerSet {
+    addHandler: (handler: MessageHandler) => void;
+    removeHandler: (handler: MessageHandler) => void;
+    processMessage: (message: ServerMessage) => void;
+}
+
 export interface Connection {
+    addHandler: (handler: MessageHandler) => void;
+    removeHandler: (handler: MessageHandler) => void;
     isConnected: () => boolean;
     isLocked: () => boolean;
     setLocked: (locked: boolean) => void;
     connect: () => void;
     disconnect: () => void;
-    addHandler: (handler: MessageHandler) => void;
-    removeHandler: (handler: MessageHandler) => void;
     sendMessage: (message: ClientMessage) => void;
+}
+
+function getServerUrl(): string {
+    return Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`;
+}
+
+export function useMessageHandlerSet(): MessageHandlerSet {
+    const handlers = useRef<Set<MessageHandler>>();
+
+    const addHandler = (handler: MessageHandler) => {
+        if (!handlers.current) {
+            handlers.current = new Set<MessageHandler>();
+        }
+        handlers.current.add(handler);
+    };
+
+    const removeHandler = (handler: MessageHandler) => {
+        handlers.current?.delete(handler);
+        if (handlers.current?.size === 0) {
+            handlers.current = undefined;
+        }
+    };
+
+    const processMessage = (message: ServerMessage) => {
+        const [messageType, messageValue] = Object.entries(message)[0];
+        handlers.current?.forEach(handler => {
+            if (messageType in handler) {
+                const fn = handler[messageType as keyof typeof handler];
+                (fn as (message: unknown) => void)(messageValue);
+            }
+        });
+    };
+
+    return { addHandler, removeHandler, processMessage };
 }
 
 interface SocketConnectionState {
@@ -24,13 +64,9 @@ interface SocketConnectionState {
     locked: boolean;
 }
 
-function getServerUrl(): string {
-    return Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`;
-}
-
 export function useSocketConnection(): Connection {
     const state = useRef<SocketConnectionState>();
-    const messageHandlers = useRef(new Set<MessageHandler>());
+    const messageHandlers = useMessageHandlerSet();
 
     const isConnected = () => state.current !== undefined;
 
@@ -73,10 +109,6 @@ export function useSocketConnection(): Connection {
 
     const disconnect = () => state.current?.socket.close();
 
-    const addHandler = (handler: MessageHandler) => messageHandlers.current.add(handler);
-
-    const removeHandler = (handler: MessageHandler) => messageHandlers.current.delete(handler);
-
     const sendMessage = (message: ClientMessage) => {
         if (state.current?.socket.readyState == WebSocket.OPEN) {
             state.current.socket.send(JSON.stringify(message));
@@ -96,19 +128,13 @@ export function useSocketConnection(): Connection {
         if (state.current) {
             state.current.locked = false;
             for (const message of state.current.queuedMessages) {
-                const [messageType, messageValue] = Object.entries(message)[0];
-                for (const handler of messageHandlers.current) {
-                    if (messageType in handler) {
-                        const fn = handler[messageType as keyof typeof handler];
-                        (fn as (message: unknown) => void)(messageValue);
-                    }
-                }
+                messageHandlers.processMessage(message);
             }
             state.current.queuedMessages = [];
         }
     };
 
-    return { isConnected, isLocked, setLocked, connect, disconnect, addHandler, removeHandler, sendMessage };
+    return { ...messageHandlers, isConnected, isLocked, setLocked, connect, disconnect, sendMessage };
 }
 
 export function useHandler(connection: Connection, handler: MessageHandler, deps?: DependencyList) {
