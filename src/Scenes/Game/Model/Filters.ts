@@ -46,6 +46,10 @@ export function isPlayerGhost(player: Player): boolean {
     );
 }
 
+export function isPlayerInGame(player: Player): boolean {
+    return !isPlayerDead(player) || isPlayerGhost(player);
+}
+
 export function isBangCard(table: GameTable, origin: Player, card: Card): boolean {
     return table.status.flags.includes('treat_any_as_bang')
         || cardHasTag(card, 'bangcard')
@@ -71,10 +75,10 @@ export function calcPlayerDistance(table: PlayingSelectorTable, from: PlayerId, 
     let countCw = 0;
     let countCcw = 0;
 
-    const playersAlive = table.alive_players.map(player => !isPlayerDead(getPlayer(table, player)));
+    const playersInGame = table.alive_players.map(player => isPlayerInGame(getPlayer(table, player)));
 
     for (let i = fromIndex; i != toIndex;) {
-        if (playersAlive[i]) {
+        if (playersInGame[i]) {
             ++countCw;
         }
         ++i;
@@ -83,7 +87,7 @@ export function calcPlayerDistance(table: PlayingSelectorTable, from: PlayerId, 
         }
     }
     for (let i = fromIndex; i != toIndex;) {
-        if (playersAlive[i]) {
+        if (playersInGame[i]) {
             ++countCcw;
         }
         if (i == 0) {
@@ -106,7 +110,7 @@ export function checkPlayerFilter(table: PlayingSelectorTable, filter: PlayerFil
         if (!filter.includes('alive') && !target.status.flags.includes('dead')) {
             return false;
         }
-    } else if (isPlayerDead(target) && !isPlayerGhost(target)) {
+    } else if (!isPlayerInGame(target)) {
         return false;
     }
 
