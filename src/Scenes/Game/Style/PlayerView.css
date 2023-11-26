@@ -1,7 +1,7 @@
 :root {
     --player-width: calc(var(--card-width) * 6.5);
     --player-self-width: calc(var(--card-width) * 11);
-    --player-height: calc(var(--card-height) * 2 + 4em);
+    --player-height: calc(var(--card-height) * 2 + 4.5em);
     --player-icon-size: 32px;
     --player-gold-size: 32px;
     --player-lifepoint-size: 2.5em;
