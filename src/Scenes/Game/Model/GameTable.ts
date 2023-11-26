@@ -146,11 +146,21 @@ export interface DeckCards {
     cards: CardId[];
 }
 
+export interface PlayerMoveId {
+    from: PlayerId,
+    to: PlayerId
+};
+
+export interface MovePlayersUpdate {
+    players: PlayerMoveId[];
+}
+
 export type TableAnimation =
     { move_card: MoveCardUpdate & Duration } |
     { move_cubes: MoveCubesUpdate & Duration } |
     { deck_shuffle: DeckShuffledUpdate & DeckCards & Duration } |
-    { move_train: MoveTrainUpdate & Duration };
+    { move_train: MoveTrainUpdate & Duration } |
+    { move_players: MovePlayersUpdate & Duration };
 
 export interface GameTable {
     myUserId?: UserId;

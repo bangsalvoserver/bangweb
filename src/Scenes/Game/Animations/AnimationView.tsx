@@ -5,6 +5,7 @@ import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
 import { CardTracker } from "../Model/CardTracker";
+import MovePlayersAnimation from "./MovePlayersAnimation";
 
 export interface AnimationProps {
     tracker: CardTracker;
@@ -39,6 +40,14 @@ export default function AnimationView({ tracker }: AnimationProps) {
                 tracker={tracker}
                 cards={animation.cards}
                 pocket={animation.pocket}
+                duration={animation.duration}
+            />;
+        } else if ('move_players' in table.animation) {
+            const animation = table.animation.move_players;
+            return <MovePlayersAnimation
+                key={table.animationKey}
+                tracker={tracker}
+                players={animation.players}
                 duration={animation.duration}
             />;
         }

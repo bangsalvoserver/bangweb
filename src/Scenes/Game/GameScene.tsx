@@ -1,18 +1,19 @@
 import { createContext, useContext, useEffect, useRef } from "react";
-import useMapRef from "../../Utils/UseMapRef";
 import { getDivRect } from "../../Utils/Rect";
+import useMapRef from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
 import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
 import { PocketType } from "./Model/CardEnums";
-import { CardTracker, PocketPosition, PocketPositionMap } from "./Model/CardTracker";
+import { CardTracker, PlayerRef, PocketPosition } from "./Model/CardTracker";
 import { Card, Player, PocketRef, getPlayer, newGameTable } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
-import { TargetSelector, newTargetSelector, selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
+import { selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import { GameChannel, useGameState } from "./Model/UseGameState";
+import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
@@ -37,7 +38,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(channel, myUserId);
 
   const pocketPositions = useMapRef<PocketType, PocketPosition>();
-  const playerPositions = useMapRef<PlayerId, PocketPositionMap>();
+  const playerPositions = useMapRef<PlayerId, PlayerRef>();
   const cubesRef = useRef<HTMLDivElement>(null);
 
   const isGameOver = table.status.flags.includes('game_over');
@@ -57,7 +58,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
       if (!pocket) {
         return null;
       } else if ('player' in pocket) {
-        return this.getPlayerPockets(pocket.player)?.get(pocket.name) ?? null;
+        return this.getPlayerPockets(pocket.player)?.getPocket(pocket.name) ?? null;
       } else {
         return pocketPositions.get(pocket.name);
       }
@@ -140,15 +141,18 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     </div>
   );
 
-  const playerViews = table.alive_players.map((player_id, index) => {
+  const movingPlayers = (table.animation && 'move_players' in table.animation) ?
+    table.animation.move_players.players.map(p => p.from) : [];
+
+  const playerViews = table.alive_players.map(( player_id, index) => {
     const player = getPlayer(table, player_id);
     const user = getUser(users, player.userid);
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
-      <PlayerView ref={value => playerPositions.set(player_id, value)} user={user} player={player}
-        onClickPlayer={onClickPlayer}
-        onClickCard={onClickCard}
-      />
+      { movingPlayers.includes(player_id)
+        ? <PlayerSlotView ref={value => playerPositions.set(player_id, value)} />
+        : <PlayerView ref={value => playerPositions.set(player_id, value)} user={user} player={player}
+            onClickPlayer={onClickPlayer} onClickCard={onClickCard} /> }
     </div>;
   });
 

@@ -1,0 +1,34 @@
+.player-slot {
+    display: inline-block;
+    width: var(--player-row-width);
+    height: calc(var(--player-row-height) * 2 + 6px);
+}
+
+.move-player-animation {
+    position: absolute;
+    left: var(--startX);
+    top: var(--startY);
+    animation-name: move-player;
+    animation-duration: var(--duration);
+    animation-fill-mode: both;
+    transition: ease-in-out;
+    z-index: 15;
+
+    width: 0;
+    height: 0;
+}
+
+.move-player-inner {
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    left: 0;
+    right: 0;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes move-player {
+    to {
+        transform: translate(var(--diffX), var(--diffY));
+    }
+}

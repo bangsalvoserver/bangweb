@@ -10,10 +10,14 @@ export interface PocketPosition {
 }
 
 export type PocketPositionMap = MapRef<PocketType, PocketPosition>;
-export type PlayerPositionMap = MapRef<PlayerId, PocketPositionMap>;
+
+export type PlayerRef = {
+    getPlayerRect: () => Rect | null
+    getPocket: (pocket: PocketType) => PocketPosition | null,
+};
 
 export interface CardTracker {
-    getPlayerPockets: (player: PlayerId) => PocketPositionMap | null;
+    getPlayerPockets: (player: PlayerId) => PlayerRef | null;
     getTablePocket: (pocket: PocketRef) => PocketPosition | null;
     getCubesRect: (card: Card | null) => Rect | null;
 }

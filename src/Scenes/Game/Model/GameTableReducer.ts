@@ -4,7 +4,7 @@ import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket, rotatePlayers } from "./EditPocketMap";
 import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, searchById, sortById } from "./GameTable";
-import { TableUpdate } from "./GameUpdate";
+import { PlayerId, TableUpdate } from "./GameUpdate";
 import targetSelectorReducer from "./TargetSelectorReducer";
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
@@ -63,22 +63,39 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         };
     },
 
-    // Adds the removed players to the dead_players array, sets the player_death animation
+    // Adds the removed players to the dead_players array, sets the player_death animation and/or the player_move animation
     player_order ({ players, duration }) {
-        const removedPlayers = subtract(this.alive_players, players);
-        if (removedPlayers.length !== 0) {
-            let newPlayers = this.players;
-            for (const player of removedPlayers) {
-                newPlayers = editById(newPlayers, player, player => ({
-                    ...player,
-                    animation: { player_death: { duration } },
-                    animationKey: player.animationKey + 1
-                }));
+        const newPlayers = players.length == this.alive_players.length
+            ? this.players : this.players.map(player => {
+                if (players.includes(player.id)) {
+                    return player;
+                } else {
+                    return {
+                        ...player,
+                        animation: { player_death: { duration }},
+                        animationKey: player.animationKey + 1,
+                    }
+                }
+            });
+
+        const rotatedPlayers = rotatePlayers(players, this.self_player, this.alive_players.at(0));
+        const filteredPlayers = this.alive_players.filter(p => players.includes(p));
+
+        const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
+            if (rotatedPlayers[i] == player_id) {
+                return [];
+            } else {
+                const rotatedIndex = rotatedPlayers.indexOf(player_id);
+                return [{ from: player_id, to: filteredPlayers[rotatedIndex] }];
             }
-            return { ...this, players: newPlayers };
-        } else {
-            return this;
-        }
+        });
+
+        return {
+            ...this,
+            players: newPlayers,
+            animation: movedPlayers.length == 0 ? undefined : { move_players: { players: movedPlayers, duration } },
+            animationKey: this.animationKey + +(movedPlayers.length != 0)
+        };
     },
     
     // Changes the order of how players are seated
@@ -92,7 +109,8 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             ...this,
             players: newPlayers,
             alive_players: rotatePlayers(players, this.self_player, this.alive_players.at(0)),
-            dead_players: removedPlayers.length == 0 ? this.dead_players : this.dead_players.concat(removedPlayers)
+            dead_players: removedPlayers.length == 0 ? this.dead_players : this.dead_players.concat(removedPlayers),
+            animation: undefined
         };
     },
 

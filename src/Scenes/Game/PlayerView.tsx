@@ -1,14 +1,14 @@
 import { CSSProperties, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
-import useMapRef from "../../Utils/UseMapRef";
 import { Rect, getDivRect } from "../../Utils/Rect";
+import useMapRef from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
-import { PocketPosition, PocketPositionMap } from "./Model/CardTracker";
+import { PlayerRef, PocketPosition } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { Card, GameTable, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
-import { PlayingSelector, PlayingSelectorTable, TargetSelector, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import { PlayingSelectorTable, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
@@ -73,17 +73,21 @@ function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivEleme
     };
 }
 
-const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
+const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
     const table = useContext(GameTableContext);
     const selector = table.selector;
     const positions = useMapRef<PocketType, PocketPosition>();
+    const playerDivRef = useRef<HTMLDivElement>(null);
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
     const extraCharacters = useRef<PocketPosition>(null);
 
     const handleClickPlayer = onClickPlayer ? () => onClickPlayer(player) : undefined;
 
-    useImperativeHandle(ref, () => positions);
+    useImperativeHandle(ref, () => ({
+        getPlayerRect: () => playerDivRef.current ? getDivRect(playerDivRef.current) : null,
+        getPocket: pocket => positions.get(pocket)
+    }));
 
     const setPos = (pocket: PocketType) => {
         return (value: PocketPosition | null) => {
@@ -167,7 +171,7 @@ const PlayerView = forwardRef<PocketPositionMap, PlayerProps>(({ user, player, o
         });
     };
 
-    return <div className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
+    return <div ref={playerDivRef} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
         <div className='player-top-row'>
             <div className='player-character'>
                 <div className='absolute'>
