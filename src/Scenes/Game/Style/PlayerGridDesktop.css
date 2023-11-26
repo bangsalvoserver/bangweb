@@ -16,7 +16,7 @@
     }
 
     .player-grid[num-players="8"] {
-        --player-row-width: calc(var(--card-width) * 5);
+        --player-width: calc(var(--card-width) * 5);
     }
     
     .player-grid-item {

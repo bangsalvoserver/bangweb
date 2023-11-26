@@ -46,10 +46,10 @@
 
 @keyframes player-death {
     from {
-        height: calc(var(--player-row-height) * 2);
+        height: var(--player-height)
     }
     to {
         width: calc(var(--card-width-plus-margin) * 2.5);
-        height: calc(var(--player-row-height) + 1em);
+        height: calc(var(--player-height) * 0.5);
     }
 }

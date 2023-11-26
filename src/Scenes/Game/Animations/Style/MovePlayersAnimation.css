@@ -1,7 +1,8 @@
 .player-slot {
     display: inline-block;
-    width: var(--player-row-width);
-    height: calc(var(--player-row-height) * 2 + 6px);
+    width: var(--player-width);
+    height: var(--player-height);
+    vertical-align: middle;
 }
 
 .move-player-animation {
