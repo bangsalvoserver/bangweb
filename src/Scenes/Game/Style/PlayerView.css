@@ -227,3 +227,8 @@
     --icon-url: url('/media/icon_ghost.png');
     --icon-color: rgb(169, 189, 196);
 }
+
+.icon-skip-turn {
+    --icon-url: url('/media/icon_skip_turn.png');
+    --icon-color: #ff0000ff;
+}

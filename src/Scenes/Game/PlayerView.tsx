@@ -112,6 +112,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
     const isDead = isPlayerDead(player);
     const isGhost = isPlayerGhost(player);
     const isWinner = player.status.flags.includes('winner');
+    const isSkipTurn = player.status.flags.includes('skip_turn');
 
     let classes = ['player-view'];
     if (isWinner) {
@@ -213,6 +214,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
                 { isOrigin && <div className="player-icon icon-origin"/> }
                 { isTarget && <div className="player-icon icon-target"/> }
                 { isTurn && <div className="player-icon icon-turn"/> }
+                { isSkipTurn && <div className="player-icon icon-skip-turn"/> }
             </>}
             { isDead && (isGhost
                 ? <div className="player-icon icon-ghost"/>
