@@ -124,10 +124,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
     let flipDuration: number | undefined;
     let playerRole = player.status.role;
 
-    let playerStyle = {
-        '--player-hp': player.status.hp
-    } as CSSProperties;
-
+    let playerStyle: CSSProperties | undefined = undefined;
     let fromPlayerHp = player.status.hp;
     
     let roleKey: number | null = null;
@@ -141,12 +138,10 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
         } else if ('player_hp' in player.animation) {
             fromPlayerHp = player.animation.player_hp.hp;
             playerStyle = {
-                ...playerStyle,
                 '--duration': player.animation.player_hp.duration + 'ms'
             } as CSSProperties;
         } else if ('player_death' in player.animation) {
             playerStyle = {
-                ...playerStyle,
                 '--duration': player.animation.player_death.duration + 'ms'
             } as CSSProperties;
             classes.push('player-animation-death');

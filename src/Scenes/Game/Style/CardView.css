@@ -46,7 +46,7 @@
     margin: 0 1px;
 }
 
-@media (max-width:960px) {
+@media (max-width:1200px) {
     .card-cubes {
         width: 100%
     }

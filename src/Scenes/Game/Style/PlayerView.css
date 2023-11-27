@@ -7,12 +7,13 @@
     --player-lifepoint-size: 2.5em;
     --player-lifepoint-spacing: 1.5em;
     --player-icon-position: 0.5em;
+    --player-padding: 0.5em;
 }
 
 @media (max-width:1200px) {
     .player-view {
         --profile-pic-size: 25px;
-        padding: 0.1em !important;
+        --player-padding: 0.1em;
     }
 
     .player-view .lobby-user {
@@ -46,16 +47,16 @@
     flex-direction: column;
     position: relative;
 
-    border: 3px;
-    border-style: solid;
-    border-color: #2d1000ff;
+    --player-border-color: #2d1000ff;
+
+    outline: 3px solid var(--player-border-color);
     background-color: #ffffff38;
     
     border-radius: 0.8em;
-    padding: 0.5em;
     white-space: nowrap;
     width: var(--player-width);
     height: var(--player-height);
+    padding: var(--player-padding);
 }
 
 .player-view-self {
@@ -63,19 +64,19 @@
 }
 
 .current-turn {
-    border-color: #4d7f21;
+    --player-border-color: #4d7f21;
 }
 
 .player-winner {
-    border-color: #bba14f;
+    --player-border-color: #bba14f;
 }
 
 .player-selected {
-    border-color: red;
+    --player-border-color: red;
 }
 
 .player-targetable {
-    border-color: #806c00ff;
+    --player-border-color: #806c00ff;
 }
 
 .player-top-row {

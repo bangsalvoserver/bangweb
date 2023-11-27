@@ -41,15 +41,15 @@
 }
 
 .player-view.player-animation-death .player-table {
-    visibility: hidden;
+    display: none;
 }
 
 @keyframes player-death {
     from {
-        height: var(--player-height)
+        height: var(--player-height);
     }
     to {
-        width: calc(var(--card-width-plus-margin) * 2.5);
-        height: calc(var(--card-height-plus-margin) + 2em);
+        width: calc(2 * (var(--card-width-plus-margin) + var(--player-padding)));
+        height: calc(var(--card-height-plus-margin) + 2 * var(--player-padding));
     }
 }

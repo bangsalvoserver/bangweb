@@ -13,7 +13,7 @@
     }
 
     .player-grid-item {
-        margin: 0.8em 0.3em;
+        margin: 0.9em 0.3em;
     }
 
     .player-grid-item[player-index="0"] { grid-column: 1 / span 2; grid-row: 1; text-align: center; }
