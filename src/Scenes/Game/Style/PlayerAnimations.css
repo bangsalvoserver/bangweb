@@ -50,6 +50,6 @@
     }
     to {
         width: calc(var(--card-width-plus-margin) * 2.5);
-        height: calc(var(--player-height) * 0.5);
+        height: calc(var(--card-height-plus-margin) + 2em);
     }
 }
