@@ -32,9 +32,9 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
 /// Takes as arguments an array of values, an id and a mapping function
 /// This function finds the element with the specified id and returns a new array of values
 /// with the found object modified according to the mapper function
-export function editById<T extends Id>(values: T[], id: number, mapper: (value: T) => T): T[] {
+export function editById<T extends Id>(values: T[], id: number | number[], mapper: (value: T) => T): T[] {
     return values.map(value => {
-        if (value.id === id) {
+        if (typeof(id) == 'number' ? value.id === id : id.includes(value.id)) {
             return mapper(value);
         } else {
             return value;

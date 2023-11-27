@@ -101,10 +101,8 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Changes the order of how players are seated
     player_order_end ({ players }) {
         const removedPlayers = subtract(this.alive_players, players);
-        let newPlayers = this.players;
-        for (const player of removedPlayers) {
-            newPlayers = editById(newPlayers, player, player => ({ ...player, animation: undefined }));
-        }
+        const newPlayers = removedPlayers.length == 0
+            ? this.players : editById(this.players, removedPlayers, player => ({ ...player, animation: undefined }));
         return {
             ...this,
             players: newPlayers,
