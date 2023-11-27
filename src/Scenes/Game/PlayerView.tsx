@@ -1,6 +1,6 @@
 import { CSSProperties, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
-import useMapRef from "../../Utils/UseMapRef";
+import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";

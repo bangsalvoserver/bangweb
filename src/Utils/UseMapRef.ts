@@ -5,18 +5,54 @@ export interface MapRef<Key, Value> {
     set: (key: Key, value: Value | null) => void
 };
 
-export default function useMapRef<Key, Value>(): MapRef<Key, Value> {
-    const mapRef = useRef(new Map<Key, Value>());
+export function useMapRef<Key, Value>(): MapRef<Key, Value> {
+    const ref = useRef<Map<Key, Value>>();
 
     return {
-        get: key => mapRef.current.get(key) ?? null,
+        get: key => ref.current?.get(key) ?? null,
 
         set: (key, value) => {
             if (value) {
-                mapRef.current.set(key, value);
-            } else {
-                mapRef.current.delete(key);
+                if (!ref.current) {
+                    ref.current = new Map<Key, Value>();
+                }
+                ref.current.set(key, value);
+            } else if (ref.current) {
+                ref.current.delete(key);
+                if (ref.current.size == 0) {
+                    ref.current = undefined;
+                }
             }
         }
-    }
+    };
+}
+
+export interface SetRef<Value> {
+    add: (value: Value) => void,
+    delete: (value: Value) => void,
+    forEach: (fn: (value: Value) => void) => void
+}
+
+export function useSetRef<Value>(): SetRef<Value> {
+    const ref = useRef<Set<Value>>();
+
+    return {
+        add: value => {
+            if (!ref.current) {
+                ref.current = new Set<Value>();
+            }
+            ref.current.add(value);
+        },
+
+        delete: value => {
+            if (ref.current) {
+                ref.current.delete(value);
+                if (ref.current.size == 0) {
+                    ref.current = undefined;
+                }
+            }
+        },
+
+        forEach: fn => ref.current?.forEach(fn)
+    };
 }

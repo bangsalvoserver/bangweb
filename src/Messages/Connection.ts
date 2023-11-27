@@ -2,6 +2,7 @@ import { DependencyList, useEffect, useRef } from "react";
 import { ClientMessage } from "./ClientMessage";
 import { ServerMessage } from "./ServerMessage";
 import Env from "../Model/Env";
+import { useSetRef } from "../Utils/UseMapRef";
 
 export type MessageHandler = {
     [K in ServerMessage as keyof K]?: (message: K[keyof K]) => void;
@@ -29,33 +30,21 @@ function getServerUrl(): string {
 }
 
 export function useMessageHandlerSet(): MessageHandlerSet {
-    const handlers = useRef<Set<MessageHandler>>();
+    const handlers = useSetRef<MessageHandler>();
 
-    const addHandler = (handler: MessageHandler) => {
-        if (!handlers.current) {
-            handlers.current = new Set<MessageHandler>();
+    return {
+        addHandler: handlers.add,
+        removeHandler: handlers.delete,
+        processMessage: message => {
+            const [messageType, messageValue] = Object.entries(message)[0];
+            handlers.forEach(handler => {
+                if (messageType in handler) {
+                    const fn = handler[messageType as keyof typeof handler];
+                    (fn as (message: unknown) => void)(messageValue);
+                }
+            });
         }
-        handlers.current.add(handler);
     };
-
-    const removeHandler = (handler: MessageHandler) => {
-        handlers.current?.delete(handler);
-        if (handlers.current?.size === 0) {
-            handlers.current = undefined;
-        }
-    };
-
-    const processMessage = (message: ServerMessage) => {
-        const [messageType, messageValue] = Object.entries(message)[0];
-        handlers.current?.forEach(handler => {
-            if (messageType in handler) {
-                const fn = handler[messageType as keyof typeof handler];
-                (fn as (message: unknown) => void)(messageValue);
-            }
-        });
-    };
-
-    return { addHandler, removeHandler, processMessage };
 }
 
 interface SocketConnectionState {

@@ -1,5 +1,5 @@
 import { forwardRef, useContext, useImperativeHandle, useRef } from "react";
-import useMapRef from "../../../Utils/UseMapRef";
+import { useMapRef } from "../../../Utils/UseMapRef";
 import { getDivRect } from "../../../Utils/Rect";
 import CardView, { CardRef } from "../CardView";
 import { GameTableContext } from "../GameScene";
