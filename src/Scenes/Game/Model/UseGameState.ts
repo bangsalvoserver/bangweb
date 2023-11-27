@@ -29,31 +29,31 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
     
     const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
-    const tick = (extraTime: Milliseconds) => {
-        const setAnimation = (update: Duration, endUpdate: TableUpdate | null) => {
-            const duration = update.duration - extraTime;
-            if (duration <= 0) {
-                if (endUpdate) tableDispatch(endUpdate);
-                extraTime = -duration;
-            } else {
-                const startTime = Date.now();
-                updateTimeout.current = setTimeout(() => {
-                    const timeElapsed = Date.now() - startTime;
-                    if (endUpdate) tableDispatch(endUpdate);
-                    updateTimeout.current = undefined;
-                    tick(timeElapsed - duration);
-                }, duration);
-            }
-        };
-        
-        const context: GameUpdateContext = { tableDispatch, selectorDispatch, setGameLogs, setGameError, setAnimation };
+    const handleNextUpdate = (extraTime: Milliseconds) => {
         while (!updateTimeout.current && channel.hasUpdates()) {
-            handleUpdate(context, channel.getNextUpdate()!);
+            handleUpdate({
+                tableDispatch, selectorDispatch, setGameLogs, setGameError,
+                setAnimation: (update, endUpdate) => {
+                    const duration = update.duration - extraTime;
+                    if (duration <= 0) {
+                        if (endUpdate) tableDispatch(endUpdate);
+                        extraTime = -duration;
+                    } else {
+                        const startTime = Date.now();
+                        updateTimeout.current = setTimeout(() => {
+                            const timeElapsed = Date.now() - startTime;
+                            if (endUpdate) tableDispatch(endUpdate);
+                            updateTimeout.current = undefined;
+                            handleNextUpdate(timeElapsed - duration);
+                        }, duration);
+                    }
+                }
+            }, channel.getNextUpdate()!);
         }
     };
 
     const tickDuration = 1000 / FRAMERATE;
-    useInterval(timeElapsed => tick(timeElapsed - tickDuration), tickDuration, []);
+    useInterval(timeElapsed => handleNextUpdate(timeElapsed - tickDuration), tickDuration, []);
 
     return { table, selectorDispatch, gameLogs, gameError, clearGameError };
 }
