@@ -1,4 +1,4 @@
-import { group, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
+import { group, intersect, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
@@ -65,21 +65,16 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Adds the removed players to the dead_players array, sets the player_death animation and/or the player_move animation
     player_order ({ players, duration }) {
-        const newPlayers = players.length == this.alive_players.length
-            ? this.players : this.players.map(player => {
-                if (players.includes(player.id)) {
-                    return player;
-                } else {
-                    return {
-                        ...player,
-                        animation: { player_death: { duration }},
-                        animationKey: player.animationKey + 1,
-                    }
-                }
-            });
+        const filteredPlayers = intersect(this.alive_players, players);
+        const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
+        const removedPlayers = subtract(this.alive_players, players);
 
-        const rotatedPlayers = rotateToFirstOf(players, this.self_player, this.alive_players.at(0));
-        const filteredPlayers = this.alive_players.filter(p => players.includes(p));
+        const newPlayers = removedPlayers.length == 0
+            ? this.players : editById(this.players, removedPlayers, player => ({
+                ...player,
+                animation: { player_death: { duration }},
+                animationKey: player.animationKey + 1
+            }));
 
         const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
             if (rotatedPlayers[i] == player_id) {
@@ -100,13 +95,20 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
     // Changes the order of how players are seated
     player_order_end ({ players }) {
+        const filteredPlayers = intersect(this.alive_players, players);
+        const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, players);
+
         const newPlayers = removedPlayers.length == 0
-            ? this.players : editById(this.players, removedPlayers, player => ({ ...player, animation: undefined }));
+            ? this.players : editById(this.players, removedPlayers, player => ({
+                ...player,
+                animation: undefined
+            }));
+
         return {
             ...this,
             players: newPlayers,
-            alive_players: rotateToFirstOf(players, this.self_player, this.alive_players.at(0)),
+            alive_players: rotatedPlayers,
             dead_players: removedPlayers.length == 0 ? this.dead_players : this.dead_players.concat(removedPlayers),
             animation: undefined
         };

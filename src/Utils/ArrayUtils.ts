@@ -6,6 +6,10 @@ export function repeat<T>(arr: T[], n: number) {
     return ret;
 }
 
+export function intersect<T>(lhs: T[], rhs: T[]): T[] {
+    return lhs.filter(value => rhs.includes(value));
+}
+
 export function subtract<T>(lhs: T[], rhs: T[]): T[] {
     return lhs.filter(value => !rhs.includes(value));
 }
@@ -34,12 +38,10 @@ export function rotate<T>(arr: T[], index: number): T[] {
 
 export function rotateToFirstOf<T>(arr: T[], ...values: (T | undefined)[]): T[] {
     return rotate(arr, values.reduce((prevIndex, value) => {
-        if (prevIndex >= 0) {
-            return prevIndex;
-        } else if (value) {
-            return arr.indexOf(value);
-        } else {
-            return -1;
+        if (prevIndex < 0 && value) {
+            const index = arr.indexOf(value);
+            if (index >= 0) return index;
         }
+        return prevIndex;
     }, -1));
 }
