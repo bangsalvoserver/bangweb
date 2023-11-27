@@ -27,15 +27,19 @@ export function group<Key, Value>(values: Value[], mapper: (value: Value) => Key
     return map;
 }
 
-export function maybeIndexOf<T>(arr: T[], value?: T, fromIndex?: number): number | undefined {
-    if (value) {
-        const index = arr.indexOf(value, fromIndex);
-        if (index >= 0) return index;
-    }
-    return undefined;
-}
-
 export function rotate<T>(arr: T[], index: number): T[] {
     if (index <= 0) return arr;
     return arr.slice(index, arr.length).concat(arr.slice(0, index));
+}
+
+export function rotateToFirstOf<T>(arr: T[], ...values: (T | undefined)[]): T[] {
+    return rotate(arr, values.reduce((prevIndex, value) => {
+        if (prevIndex >= 0) {
+            return prevIndex;
+        } else if (value) {
+            return arr.indexOf(value);
+        } else {
+            return -1;
+        }
+    }, -1));
 }

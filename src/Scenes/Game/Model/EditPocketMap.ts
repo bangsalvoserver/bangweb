@@ -1,7 +1,6 @@
-import { maybeIndexOf, rotate } from "../../../Utils/ArrayUtils";
 import { PocketType } from "./CardEnums";
 import { Player, PocketRef, TablePockets, editById } from "./GameTable";
-import { CardId, PlayerId } from "./GameUpdate";
+import { CardId } from "./GameUpdate";
 
 export function editPocketMap(
     pockets: TablePockets, players: Player[], pocket: PocketRef,
@@ -28,9 +27,4 @@ export function addToPocket(pockets: TablePockets, players: Player[], pocket: Po
 /// Removes a list of cards from a pocket
 export function removeFromPocket(pockets: TablePockets, players: Player[], pocket: PocketRef, cardsToRemove: CardId[]) {
     return editPocketMap(pockets, players, pocket, cards => cards.filter(id => !cardsToRemove.includes(id)));
-}
-
-// Moves the player which the user is controlling to the first element of the array
-export function rotatePlayers(players: PlayerId[], selfPlayer?: PlayerId, firstPlayer?: PlayerId) {
-    return rotate(players, maybeIndexOf(players, selfPlayer) ?? maybeIndexOf(players, firstPlayer) ?? 0);
 }

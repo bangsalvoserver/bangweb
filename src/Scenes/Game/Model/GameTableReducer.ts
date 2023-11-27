@@ -1,8 +1,8 @@
-import { group, subtract } from "../../../Utils/ArrayUtils";
+import { group, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
-import { addToPocket, editPocketMap, removeFromPocket, rotatePlayers } from "./EditPocketMap";
+import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { GameTable, editById, getCard, getCardImage, newCard, newPlayer, newPocketRef, searchById, sortById } from "./GameTable";
 import { PlayerId, TableUpdate } from "./GameUpdate";
 import targetSelectorReducer from "./TargetSelectorReducer";
@@ -58,7 +58,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             players: newPlayers,
-            alive_players: rotatePlayers(newAlivePlayers, selfPlayer),
+            alive_players: rotateToFirstOf(newAlivePlayers, selfPlayer),
             self_player: selfPlayer
         };
     },
@@ -78,7 +78,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
                 }
             });
 
-        const rotatedPlayers = rotatePlayers(players, this.self_player, this.alive_players.at(0));
+        const rotatedPlayers = rotateToFirstOf(players, this.self_player, this.alive_players.at(0));
         const filteredPlayers = this.alive_players.filter(p => players.includes(p));
 
         const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
@@ -108,7 +108,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             players: newPlayers,
-            alive_players: rotatePlayers(players, this.self_player, this.alive_players.at(0)),
+            alive_players: rotateToFirstOf(players, this.self_player, this.alive_players.at(0)),
             dead_players: removedPlayers.length == 0 ? this.dead_players : this.dead_players.concat(removedPlayers),
             animation: undefined
         };
