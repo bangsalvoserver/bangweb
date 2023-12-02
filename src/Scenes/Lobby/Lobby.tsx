@@ -116,10 +116,10 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
       :
         (
           <div className='flex flex-col'>
-            <div className='flex flex-row justify-center m-2'>
-              { myUserId == lobbyOwner && <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button> }
-            </div>
-            <div className='flex flex-col md:flex-row items-center md:items-start'>
+            { myUserId == lobbyOwner && <div className='status-bar'>
+              <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button>
+            </div> }
+            <div className='flex flex-col md:flex-row items-center md:items-start mb-24'>
               <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
               <div className='flex flex-col -order-1 md:order-none'>
                 {users.map(user => (
