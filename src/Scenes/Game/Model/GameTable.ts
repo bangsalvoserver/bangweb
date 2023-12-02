@@ -50,7 +50,7 @@ export interface CardImage {
 }
 
 export type CardAnimation =
-    { flipping: { cardImage?: CardImage } & Duration } |
+    { flipping: { cardImage?: CardImage, backface?: string } & Duration } |
     { turning: Duration } |
     { flash: Duration } |
     { short_pause: Empty };
@@ -66,12 +66,33 @@ export interface Card extends Id {
     animationKey: number;
 }
 
+function parseCardImage(image: string, deck: string): string {
+    return image.includes('/') ? image : `${deck}/${image}`;
+}
+
 export function getCardImage(card: Card): CardImage | undefined {
-    return isCardKnown(card) ? {
-        image: card.cardData.image.includes('/') ? card.cardData.image : card.cardData.deck + '/' + card.cardData.image,
-        sign: card.cardData.sign.rank != 'none' && card.cardData.sign.suit != 'none' ? card.cardData.sign : undefined
-    } : undefined;
+    if (isCardKnown(card)) {
+        const cardData = card.cardData;
+        const colonIndex = cardData.image.indexOf(':');
+        const imageFront = colonIndex >= 0 ? cardData.image.substring(0, colonIndex) : cardData.image;
+        return {
+            image: parseCardImage(imageFront, cardData.deck),
+            sign: cardData.sign.rank != 'none' && cardData.sign.suit != 'none' ? cardData.sign : undefined
+        };
+    }
+    return undefined;
 };
+
+export function getCardBackface(card: Card): string {
+    if (isCardKnown(card)) {
+        const cardData = card.cardData;
+        const colonIndex = cardData.image.indexOf(':');
+        if (colonIndex >= 0) {
+            return parseCardImage(cardData.image.substring(colonIndex + 1), cardData.deck);
+        }
+    }
+    return 'backface/' + card.cardData.deck;
+}
 
 export function newPocketRef(pocketName: PocketType, player: PlayerId | null = null): PocketRef {
     if (pocketName == 'none') {

@@ -2,7 +2,7 @@ import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo, us
 import { Rect, getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
-import { Card, GameTable, getCardImage } from "./Model/GameTable";
+import { Card, GameTable, getCardBackface, getCardImage } from "./Model/GameTable";
 import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
@@ -75,7 +75,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     const selectorCardClass = useMemo(() => getSelectorCardClass(table, card), [selector]);
     const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
 
-    let backfaceSrc = getCardUrl('backface/' + card.cardData.deck);
+    let backfaceSrc = getCardUrl(getCardBackface(card));
 
     let cardImage = getCardImage(card);
 
@@ -91,6 +91,9 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
             showBackface = true;
 
             classes.push('card-animation', 'z-10', 'card-animation-flip');
+            if (card.animation.flipping.backface) {
+                backfaceSrc = getCardUrl(card.animation.flipping.backface);
+            }
             if (card.animation.flipping.cardImage) {
                 cardImage = card.animation.flipping.cardImage;
             } else {
