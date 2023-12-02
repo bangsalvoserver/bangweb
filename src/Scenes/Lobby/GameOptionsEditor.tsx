@@ -111,7 +111,6 @@ export default function GameOptionsEditor(props: GameOptionProps) {
         </div>
         <OptionCheckbox prop='enable_ghost_cards' { ...props } />
         <OptionCheckbox prop='character_choice' { ...props } />
-        <OptionCheckbox prop='allow_beer_in_duel' { ...props } />
         <OptionCheckbox prop='quick_discard_all' { ...props } />
         <OptionNumber prop='num_bots' max={8} { ...props } />
         <OptionNumber prop='scenario_deck_size' max={100} { ...props } />

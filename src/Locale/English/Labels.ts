@@ -12,7 +12,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
         expansions:             "Expansions",
         character_choice:       "Character Choice",
         enable_ghost_cards:     "Enable Ghost cards",
-        allow_beer_in_duel:     "Allow Beer in duel",
         quick_discard_all:      "Quick Discard All",
         scenario_deck_size:     "Scenario Cards",
         num_bots:               "Number of Bots",

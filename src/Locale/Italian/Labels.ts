@@ -12,7 +12,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
         expansions:             "Espansioni",
         character_choice:       "Scelta Dei Personaggi",
         enable_ghost_cards:     "Abilita Carte Fantasma",
-        allow_beer_in_duel:     "Permetti Birra in duello",
         quick_discard_all:      "Scarta Tutto Veloce",
         scenario_deck_size:     "Carte Scenario",
         num_bots:               "Numero di Bot",
