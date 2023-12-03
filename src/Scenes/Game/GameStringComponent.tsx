@@ -18,7 +18,7 @@ export interface CardNameProps {
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
     const localizedName = name in cardRegistry ? cardRegistry[name] : name;
     if (sign && sign.rank != 'none' && sign.suit != 'none') {
-        return (<span className="card-name">{localizedName} (<CardSignView sign={sign} />)</span>);
+        return (<span className="card-name">{localizedName} <span className="inline-block">(<CardSignView sign={sign} />)</span></span>);
     } else {
         return (<span className="card-name">{localizedName}</span>);
     }
