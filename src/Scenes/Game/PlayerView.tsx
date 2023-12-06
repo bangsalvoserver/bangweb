@@ -1,4 +1,4 @@
-import { CSSProperties, RefObject, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
@@ -16,6 +16,7 @@ import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 
 export interface PlayerProps {
+    playerRef?: Ref<PlayerRef>;
     user?: UserValue,
     player: Player,
     onClickCard?: (card: Card) => void;
@@ -73,7 +74,7 @@ function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivEleme
     };
 }
 
-const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCard, onClickPlayer }, ref) => {
+export default function PlayerView({ playerRef, user, player, onClickCard, onClickPlayer }: PlayerProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
     const positions = useMapRef<PocketType, PocketPosition>();
@@ -84,7 +85,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
 
     const handleClickPlayer = onClickPlayer ? () => onClickPlayer(player) : undefined;
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(playerRef, () => ({
         getPlayerRect: () => playerDivRef.current ? getDivRect(playerDivRef.current) : null,
         getPocket: pocket => positions.get(pocket)
     }));
@@ -171,23 +172,23 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
         <div className='player-top-row'>
             <div className='player-character'>
                 <div className='absolute'>
-                    <StackPocket ref={buildCharacterRef} cards={player.pockets.player_backup} />
+                    <StackPocket pocketRef={buildCharacterRef} cards={player.pockets.player_backup} />
                 </div>
-                <StackPocket ref={setPos('player_backup')} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
+                <StackPocket pocketRef={setPos('player_backup')} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
             </div>
             <div className='player-hand' ref={handRef}>
                 <div className='player-role'>
                     { player.pockets.player_character.length > 1 && 
-                        <PocketView ref={extraCharacters} cards={player.pockets.player_character.slice(1)} onClickCard={onClickCard} /> }
+                        <PocketView pocketRef={extraCharacters} cards={player.pockets.player_character.slice(1)} onClickCard={onClickCard} /> }
                     <div className='stack-pocket'>
                         <RoleView key={roleKey} flipDuration={flipDuration} role={playerRole} />
                     </div>
                 </div>
                 { (isPlayerSelf || table.status.flags.includes('hands_shown'))
                     ? <div className='player-hand-inner'>
-                        <PocketView ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                        <PocketView pocketRef={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                       </div>
-                    : <StackPocket showCount slice={0} ref={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                    : <StackPocket showCount slice={0} pocketRef={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 }
             </div>
             <div className='player-lifepoints'>
@@ -200,7 +201,7 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
             { player.status.gold > 0 && <div className='player-gold'>{player.status.gold}</div> }
         </div>
         <div className='player-table' ref={tableRef}>
-            <PocketView ref={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
+            <PocketView pocketRef={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
         </div>
         <div className='player-icons'>
             { isGameOver ? <>
@@ -219,6 +220,4 @@ const PlayerView = forwardRef<PlayerRef, PlayerProps>(({ user, player, onClickCa
             <LobbyUser user={user} align='horizontal' />
         </div>
     </div>
-});
-
-export default PlayerView;
+}

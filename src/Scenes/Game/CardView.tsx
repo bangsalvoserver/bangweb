@@ -1,7 +1,8 @@
-import { CSSProperties, forwardRef, useContext, useImperativeHandle, useMemo, useRef } from "react";
-import { Rect, getDivRect } from "../../Utils/Rect";
+import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
+import { CardRef } from "./Model/CardTracker";
 import { Card, GameTable, getCardBackface, getCardImage } from "./Model/GameTable";
 import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
@@ -15,13 +16,10 @@ export function getCardUrl(image: string) {
 }
 
 export interface CardProps {
+    cardRef?: Ref<CardRef>;
     card: Card;
     showBackface?: boolean;
     onClickCard?: (card: Card) => void;
-}
-
-export interface CardRef {
-    getRect: () => Rect | null;
 }
 
 export function getSelectorCardClass(table: GameTable, card: Card) {
@@ -62,14 +60,14 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     return null;
 }
 
-const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCard }, ref) => {
+export default function CardView({ cardRef, card, showBackface, onClickCard }: CardProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
 
-    const cardRef = useRef<HTMLDivElement>(null);
+    const divRef = useRef<HTMLDivElement>(null);
 
-    useImperativeHandle(ref, () => ({
-        getRect: () => cardRef.current ? getDivRect(cardRef.current) : null
+    useImperativeHandle(cardRef, () => ({
+        getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
     const selectorCardClass = useMemo(() => getSelectorCardClass(table, card), [selector]);
@@ -125,7 +123,7 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
     }
 
     return (
-        <div ref={cardRef} style={style} className={classes.join(' ')}
+        <div ref={divRef} style={style} className={classes.join(' ')}
             onClick={onClickCard ? () => onClickCard(card) : undefined} >
             { cardImage ? <div className="card-front">
                 <img className="card-view-img" src={getCardUrl(cardImage.image)}/>
@@ -145,6 +143,4 @@ const CardView = forwardRef<CardRef, CardProps>(({ card, showBackface, onClickCa
             </div> }
         </div>
     )
-});
-
-export default CardView;
+}

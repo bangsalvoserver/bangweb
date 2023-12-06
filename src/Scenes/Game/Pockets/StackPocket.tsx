@@ -1,26 +1,27 @@
-import { forwardRef, useContext, useRef, useImperativeHandle } from "react";
-import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
+import { Ref, useContext, useImperativeHandle, useRef } from "react";
+import { countIf } from "../../../Utils/ArrayUtils";
 import { GameTableContext } from "../GameScene";
+import { PocketPosition } from "../Model/CardTracker";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
+import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
-import { PocketPosition } from "../Model/CardTracker";
-import { countIf } from "../../../Utils/ArrayUtils";
 
 export interface StackPocketProps {
+    pocketRef?: Ref<PocketPosition>;
     cards: CardId[];
     onClickCard?: (card: Card) => void;
     slice?: number;
     showCount?: boolean;
 }
 
-const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onClickCard, slice, showCount }, ref) => {
+export default function StackPocket({ pocketRef, cards, onClickCard, slice, showCount }: StackPocketProps) {
     const table = useContext(GameTableContext);
 
     const position = useRef<PocketPosition>(null);
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(pocketRef, () => ({
         getPocketRect: () => position.current?.getPocketRect() ?? null,
         getCardRect: () => position.current?.getPocketRect() ?? null
     }));
@@ -32,9 +33,7 @@ const StackPocket = forwardRef<PocketPosition, StackPocketProps>(({ cards, onCli
     } : undefined;
 
     return <div className='stack-pocket' onClick={handleClickLastCard}>
-        <PocketView ref={position} cards={ cards.slice(-(slice ?? 2))} />
+        <PocketView pocketRef={position} cards={ cards.slice(-(slice ?? 2))} />
         {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
     </div>;
-});
-
-export default StackPocket;
+}

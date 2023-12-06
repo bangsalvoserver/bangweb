@@ -1,16 +1,18 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import { PlayerRef } from "./Model/CardTracker";
+import { Ref, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../Utils/Rect";
+import { PlayerRef } from "./Model/CardTracker";
 
-const PlayerSlotView = forwardRef<PlayerRef>((_, ref) => {
-    const playerRef = useRef<HTMLDivElement>(null);
+export interface PlayerSlotProps {
+    playerRef?: Ref<PlayerRef>;
+}
 
-    useImperativeHandle(ref, () => ({
+export default function PlayerSlotView({ playerRef }: PlayerSlotProps) {
+    const divRef = useRef<HTMLDivElement>(null);
+
+    useImperativeHandle(playerRef, () => ({
         getPocket: pocket => null,
-        getPlayerRect: () => playerRef.current ? getDivRect(playerRef.current) : null
+        getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    return <div ref={playerRef} className="player-slot" />;
-})
-
-export default PlayerSlotView;
+    return <div ref={divRef} className="player-slot" />;
+}

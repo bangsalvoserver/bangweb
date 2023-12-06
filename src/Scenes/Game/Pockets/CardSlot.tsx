@@ -1,6 +1,6 @@
-import { CSSProperties, forwardRef, useImperativeHandle, useRef } from "react";
+import { CSSProperties, Ref, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../../Utils/Rect";
-import { CardRef } from "../CardView";
+import { CardRef } from "../Model/CardTracker";
 import { CardId, Milliseconds } from "../Model/GameUpdate";
 import "./Style/CardSlot.css";
 
@@ -8,14 +8,15 @@ export const CARD_SLOT_ID_FROM: CardId = -1;
 export const CARD_SLOT_ID_TO: CardId = -2;
 
 export interface CardSlotProps {
+    cardRef?: Ref<CardRef>;
     stretch: 'in' | 'out';
     duration: Milliseconds;
 }
 
-const CardSlot = forwardRef<CardRef, CardSlotProps>(({ stretch, duration }, ref) => {
+export default function CardSlot({ cardRef, stretch, duration }: CardSlotProps) {
     const slotRef = useRef<HTMLDivElement>(null);
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(cardRef, () => ({
         getRect: () => slotRef.current ? getDivRect(slotRef.current) : null
     }));
 
@@ -30,6 +31,4 @@ const CardSlot = forwardRef<CardRef, CardSlotProps>(({ stretch, duration }, ref)
     }
 
     return <div className={classes.join(' ')} style={style} ref={slotRef} />
-});
-
-export default CardSlot;
+}

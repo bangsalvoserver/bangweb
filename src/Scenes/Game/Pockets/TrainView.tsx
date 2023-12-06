@@ -1,16 +1,17 @@
-import { CSSProperties, forwardRef, useContext } from "react";
-import { Card } from "../Model/GameTable";
+import { CSSProperties, Ref, useContext } from "react";
 import { GameTableContext } from "../GameScene";
+import { PocketPosition } from "../Model/CardTracker";
+import { Card } from "../Model/GameTable";
+import { isSelectionPlaying } from "../Model/TargetSelector";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
-import { PocketPosition } from "../Model/CardTracker";
-import { isSelectionPlaying } from "../Model/TargetSelector";
 
 export interface TrainProps {
+    pocketRef?: Ref<PocketPosition>;
     onClickCard?: (card: Card) => void;
 }
 
-const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) => {
+export default function TrainView({ pocketRef, onClickCard }: TrainProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
 
@@ -46,10 +47,8 @@ const TrainView = forwardRef<PocketPosition, TrainProps>(({ onClickCard }, ref) 
     return (
         <div className={classes.join(' ')} style={trainPositionStyle}>
             <div className="train-container-inner" key={animationKey}>
-                <PocketView ref={ref} cards={table.pockets.train.slice().reverse()} onClickCard={onClickCard} />
+                <PocketView pocketRef={pocketRef} cards={table.pockets.train.slice().reverse()} onClickCard={onClickCard} />
             </div>
         </div>
     );
-});
-
-export default TrainView;
+}
