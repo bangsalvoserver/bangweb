@@ -197,6 +197,7 @@
     background-repeat: no-repeat;
     background-blend-mode: multiply;
     background-color: var(--icon-color);
+    pointer-events: none;
 }
 
 .icon-winner {
