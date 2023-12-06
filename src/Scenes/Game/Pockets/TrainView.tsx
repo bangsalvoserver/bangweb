@@ -1,13 +1,13 @@
 import { CSSProperties, Ref, useContext } from "react";
 import { GameTableContext } from "../GameScene";
-import { PocketPosition } from "../Model/CardTracker";
+import { PocketRef } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
 import { isSelectionPlaying } from "../Model/TargetSelector";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
 
 export interface TrainProps {
-    pocketRef?: Ref<PocketPosition>;
+    pocketRef?: Ref<PocketRef>;
     onClickCard?: (card: Card) => void;
 }
 

@@ -3,7 +3,7 @@ import { getRectCenter } from "../../../Utils/Rect";
 import { useUpdateEveryFrame } from "../../../Utils/UseInterval";
 import CardView from "../CardView";
 import { CardTracker } from "../Model/CardTracker";
-import { Card, PocketRef } from "../Model/GameTable";
+import { Card, PocketId } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import "./Style/MoveCardAnimation.css";
@@ -11,7 +11,7 @@ import "./Style/MoveCardAnimation.css";
 export interface MoveCardProps {
     tracker: CardTracker;
     card: Card;
-    destPocket: PocketRef;
+    destPocket: PocketId;
     duration: Milliseconds;
 }
 

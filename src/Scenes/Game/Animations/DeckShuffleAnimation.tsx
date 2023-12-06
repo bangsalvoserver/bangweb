@@ -4,7 +4,7 @@ import { isMobileDevice } from "../../../Utils/MobileCheck";
 import { getRectCenter } from "../../../Utils/Rect";
 import CardView from "../CardView";
 import { GameTableContext } from "../GameScene";
-import { getCard, newPocketRef } from "../Model/GameTable";
+import { getCard, newPocketId } from "../Model/GameTable";
 import "./Style/DeckShuffleAnimation.css";
 import { CardTracker } from "../Model/CardTracker";
 
@@ -22,8 +22,8 @@ export default function DeckShuffleAnimation({ tracker, pocket, cards, duration 
     
     const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
 
-    const startRect = tracker.getTablePocket(newPocketRef(fromPocket))?.getPocketRect();
-    const endRect = tracker.getTablePocket(newPocketRef(pocket))?.getPocketRect();
+    const startRect = tracker.getTablePocket(newPocketId(fromPocket))?.getPocketRect();
+    const endRect = tracker.getTablePocket(newPocketId(pocket))?.getPocketRect();
 
     if (startRect && endRect) {
         cards = cards.slice(-MAX_CARDS);

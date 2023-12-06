@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GameTableContext } from "../GameScene";
-import { getCard, newPocketRef } from "../Model/GameTable";
+import { getCard, newPocketId } from "../Model/GameTable";
 import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveCubeAnimation from "./MoveCubeAnimations";
@@ -20,7 +20,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
                 key={table.animationKey}
                 tracker={tracker}
                 card={getCard(table, animation.card)}
-                destPocket={newPocketRef(animation.pocket, animation.player)}
+                destPocket={newPocketId(animation.pocket, animation.player)}
                 duration={animation.duration}
             />;
         } else if ('move_cubes' in table.animation) {

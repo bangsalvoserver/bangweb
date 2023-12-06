@@ -1,7 +1,7 @@
 import { Ref, useContext, useImperativeHandle, useRef } from "react";
 import { countIf } from "../../../Utils/ArrayUtils";
 import { GameTableContext } from "../GameScene";
-import { PocketPosition } from "../Model/CardTracker";
+import { PocketRef } from "../Model/CardTracker";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
@@ -9,7 +9,7 @@ import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
 
 export interface StackPocketProps {
-    pocketRef?: Ref<PocketPosition>;
+    pocketRef?: Ref<PocketRef>;
     cards: CardId[];
     onClickCard?: (card: Card) => void;
     slice?: number;
@@ -19,7 +19,7 @@ export interface StackPocketProps {
 export default function StackPocket({ pocketRef, cards, onClickCard, slice, showCount }: StackPocketProps) {
     const table = useContext(GameTableContext);
 
-    const position = useRef<PocketPosition>(null);
+    const position = useRef<PocketRef>(null);
 
     useImperativeHandle(pocketRef, () => ({
         getPocketRect: () => position.current?.getPocketRect() ?? null,

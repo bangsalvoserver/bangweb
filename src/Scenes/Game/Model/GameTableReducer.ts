@@ -3,7 +3,7 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
-import { GameTable, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketRef, searchById, sortById } from "./GameTable";
+import { GameTable, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchById, sortById } from "./GameTable";
 import { PlayerId, TableUpdate } from "./GameUpdate";
 import targetSelectorReducer from "./TargetSelectorReducer";
 
@@ -11,7 +11,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
     /// Creates new cards and adds them in the specified pocket
     add_cards ({ card_ids, pocket, player }) {
-        const pocketRef = newPocketRef(pocket, player);
+        const pocketRef = newPocketId(pocket, player);
         const [pockets, players] = addToPocket(this.pockets, this.players, pocketRef, card_ids.map(card => card.id));
         return {
             ...this,
@@ -181,7 +181,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const fromPocket = getCard(this, card).pocket;
         let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id == card ? CARD_SLOT_ID_FROM : id));
 
-        const toPocket = newPocketRef(pocket, player);
+        const toPocket = newPocketId(pocket, player);
         [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO]);
 
         return {
@@ -197,7 +197,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const fromPocket = getCard(this, card).pocket;
         let [pockets, players] = removeFromPocket(this.pockets, this.players, fromPocket, [CARD_SLOT_ID_FROM]);
 
-        const toPocket = newPocketRef(pocket, player);
+        const toPocket = newPocketId(pocket, player);
         [pockets, players] = editPocketMap(pockets, players, toPocket, cards => cards.map(id => id == CARD_SLOT_ID_TO ? card: id));
 
         return {

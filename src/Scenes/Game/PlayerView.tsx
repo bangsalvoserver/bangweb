@@ -4,7 +4,7 @@ import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
-import { PlayerRef, PocketPosition } from "./Model/CardTracker";
+import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { Card, GameTable, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
@@ -59,7 +59,7 @@ function clampCardRect(cardRect: Rect, pocketRect: Rect | null): Rect {
     return cardRect;
 }
 
-function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivElement>): PocketPosition {
+function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>): PocketRef {
     const getScrollRect = () => scrollRef.current ? getDivRect(scrollRef.current) : null;
     return {
         getPocketRect: getScrollRect,
@@ -77,28 +77,28 @@ function clampedPocket(pocket: PocketPosition, scrollRef: RefObject<HTMLDivEleme
 export default function PlayerView({ playerRef, user, player, onClickCard, onClickPlayer }: PlayerProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
-    const positions = useMapRef<PocketType, PocketPosition>();
-    const playerDivRef = useRef<HTMLDivElement>(null);
+    const pocketRefs = useMapRef<PocketType, PocketRef>();
+    const divRef = useRef<HTMLDivElement>(null);
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
-    const extraCharacters = useRef<PocketPosition>(null);
+    const extraCharacters = useRef<PocketRef>(null);
 
     const handleClickPlayer = onClickPlayer ? () => onClickPlayer(player) : undefined;
 
     useImperativeHandle(playerRef, () => ({
-        getPlayerRect: () => playerDivRef.current ? getDivRect(playerDivRef.current) : null,
-        getPocket: pocket => positions.get(pocket)
+        getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null,
+        getPocket: pocket => pocketRefs.get(pocket)
     }));
 
-    const setPos = (pocket: PocketType) => {
-        return (value: PocketPosition | null) => {
-            positions.set(pocket, value);
+    const setRef = (pocket: PocketType) => {
+        return (value: PocketRef | null) => {
+            pocketRefs.set(pocket, value);
         };
     };
 
-    const setScrollPositions = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
-        return (pocket: PocketPosition | null) => {
-            positions.set(key, pocket ? clampedPocket(pocket, scrollRef) : null);
+    const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
+        return (pocket: PocketRef | null) => {
+            pocketRefs.set(key, pocket ? clampedPocket(pocket, scrollRef) : null);
         }
     };
 
@@ -155,8 +155,8 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
         classes.push('player-view-self');
     }
 
-    const buildCharacterRef = (character: PocketPosition | null) => {
-        positions.set('player_character', {
+    const buildCharacterRef = (character: PocketRef | null) => {
+        pocketRefs.set('player_character', {
             getPocketRect: () => null,
             getCardRect: (card: CardId) => {
                 if (!extraCharacters.current || card == player.pockets.player_character.at(0)) {
@@ -168,13 +168,13 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
         });
     };
 
-    return <div ref={playerDivRef} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
+    return <div ref={divRef} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer}>
         <div className='player-top-row'>
             <div className='player-character'>
                 <div className='absolute'>
                     <StackPocket pocketRef={buildCharacterRef} cards={player.pockets.player_backup} />
                 </div>
-                <StackPocket pocketRef={setPos('player_backup')} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
+                <StackPocket pocketRef={setRef('player_backup')} cards={player.pockets.player_character.slice(0, 1)} onClickCard={onClickCard} />
             </div>
             <div className='player-hand' ref={handRef}>
                 <div className='player-role'>
@@ -186,9 +186,9 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
                 </div>
                 { (isPlayerSelf || table.status.flags.includes('hands_shown'))
                     ? <div className='player-hand-inner'>
-                        <PocketView pocketRef={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                        <PocketView pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                       </div>
-                    : <StackPocket showCount slice={0} pocketRef={setScrollPositions(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
+                    : <StackPocket showCount slice={0} pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} onClickCard={onClickCard} />
                 }
             </div>
             <div className='player-lifepoints'>
@@ -201,7 +201,7 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
             { player.status.gold > 0 && <div className='player-gold'>{player.status.gold}</div> }
         </div>
         <div className='player-table' ref={tableRef}>
-            <PocketView pocketRef={setScrollPositions(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
+            <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} onClickCard={onClickCard} />
         </div>
         <div className='player-icons'>
             { isGameOver ? <>

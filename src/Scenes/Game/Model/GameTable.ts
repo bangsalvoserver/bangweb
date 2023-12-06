@@ -42,7 +42,7 @@ export function editById<T extends Id>(values: T[], id: number | number[], mappe
     });
 }
 
-export type PocketRef = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
+export type PocketId = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
 
 export interface CardImage {
     image: string;
@@ -57,7 +57,7 @@ export type CardAnimation =
 
 export interface Card extends Id {
     cardData: { deck: DeckType } | CardData;
-    pocket: PocketRef;
+    pocket: PocketId;
 
     inactive: boolean;
     num_cubes: number;
@@ -94,7 +94,7 @@ export function getCardBackface(card: Card): string {
     return 'backface/' + card.cardData.deck;
 }
 
-export function newPocketRef(pocketName: PocketType, player: PlayerId | null = null): PocketRef {
+export function newPocketId(pocketName: PocketType, player: PlayerId | null = null): PocketId {
     if (pocketName == 'none') {
         return null;
     } else if (player && pocketName.startsWith('player_')) {
@@ -104,7 +104,7 @@ export function newPocketRef(pocketName: PocketType, player: PlayerId | null = n
     }
 }
 
-export function newCard(id: CardId, deck: DeckType, pocket: PocketRef): Card {
+export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
     return {
         id,
         cardData: { deck },

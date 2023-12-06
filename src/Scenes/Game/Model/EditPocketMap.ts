@@ -1,9 +1,9 @@
 import { PocketType } from "./CardEnums";
-import { Player, PocketRef, TablePockets, editById } from "./GameTable";
+import { Player, PocketId, TablePockets, editById } from "./GameTable";
 import { CardId } from "./GameUpdate";
 
 export function editPocketMap(
-    pockets: TablePockets, players: Player[], pocket: PocketRef,
+    pockets: TablePockets, players: Player[], pocket: PocketId,
     cardMapper: (cards: CardId[]) => CardId[]): [TablePockets, Player[]]
 {
     const mapper = <Key extends PocketType, T extends Record<Key, CardId[]>>(pocketMap: T, pocketName: Key): T => {
@@ -20,11 +20,11 @@ export function editPocketMap(
 }
 
 /// Adds a list of cards to a pocket
-export function addToPocket(pockets: TablePockets, players: Player[], pocket: PocketRef, cardsToAdd: CardId[]) {
+export function addToPocket(pockets: TablePockets, players: Player[], pocket: PocketId, cardsToAdd: CardId[]) {
     return editPocketMap(pockets, players, pocket, cards => cards.concat(cardsToAdd));
 }
 
 /// Removes a list of cards from a pocket
-export function removeFromPocket(pockets: TablePockets, players: Player[], pocket: PocketRef, cardsToRemove: CardId[]) {
+export function removeFromPocket(pockets: TablePockets, players: Player[], pocket: PocketId, cardsToRemove: CardId[]) {
     return editPocketMap(pockets, players, pocket, cards => cards.filter(id => !cardsToRemove.includes(id)));
 }

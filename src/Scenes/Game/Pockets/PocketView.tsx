@@ -3,14 +3,14 @@ import { getDivRect } from "../../../Utils/Rect";
 import { useMapRef } from "../../../Utils/UseMapRef";
 import CardView from "../CardView";
 import { GameTableContext } from "../GameScene";
-import { CardRef, PocketPosition } from "../Model/CardTracker";
+import { CardRef, PocketRef } from "../Model/CardTracker";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import CardSlot, { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import "./Style/PocketView.css";
 
 export interface PocketProps {
-    pocketRef?: Ref<PocketPosition>;
+    pocketRef?: Ref<PocketRef>;
     cards: CardId[];
     onClickCard?: (card: Card) => void;
 }
