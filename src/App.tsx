@@ -77,12 +77,12 @@ export default function App() {
     }, [connection, settings]),
     
     lobby_entered: useCallback(({ lobby_id, name, options }: LobbyEntered) => {
-      if (settings.myLobbyId !== lobby_id) {
+      if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
         connection.setLocked(true);
         settings.setMyLobbyId(lobby_id);
         setScene({ type: 'lobby', lobbyInfo: { name, options } });
       }
-    }, [connection, settings]),
+    }, [scene.type, connection, settings]),
 
     lobby_edited: useCallback((lobbyInfo: LobbyInfo) => {
       setScene(scene => {
