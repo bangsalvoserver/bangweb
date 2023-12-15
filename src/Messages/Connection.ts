@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import Env from "../Model/Env";
 import { useSetRef } from "../Utils/UseMapRef";
 import { ClientMessage } from "./ClientMessage";
@@ -129,7 +129,7 @@ export function useSocketConnection(): Connection {
 }
 
 export function useHandler(connection: Connection, handler: MessageHandler) {
-    useEffect(() => {
+    useLayoutEffect(() => {
         connection.addHandler(handler);
         connection.setLocked(false);
         return () => connection.removeHandler(handler);
