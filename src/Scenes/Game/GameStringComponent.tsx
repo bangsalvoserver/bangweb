@@ -1,14 +1,14 @@
 import { useContext, useMemo } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
-import { CardSign } from "./Model/CardData";
-import { FormatCardName, GameString } from "./Model/GameUpdate";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import { getUsername } from "../Lobby/LobbyUser";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
-import { getPlayer } from "./Model/GameTable";
-import "./Style/GameStringComponent.css"
+import { CardSign } from "./Model/CardData";
+import { findPlayer } from "./Model/GameTable";
+import { FormatCardName, GameString } from "./Model/GameUpdate";
+import "./Style/GameStringComponent.css";
 
 export interface CardNameProps {
     name: string;
@@ -48,7 +48,7 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
             }
         } else if ('player' in arg) {
             if (arg.player) {
-                const player = getPlayer(table, arg.player);
+                const player = findPlayer(table.players, arg.player);
                 const user = getUser(users, player.userid);
                 return { type: 'player', value: getUsername(user) };
             } else {

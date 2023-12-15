@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { PlayingSelectorTable, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
+import { PlayingSelectorTable, TargetSelector, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 import { GameChannel } from "./UseGameState";
 
@@ -51,8 +51,7 @@ export function handleClickPlayer(table: GameTable, selectorDispatch: Dispatch<S
     }
 }
 
-export function handleSendGameAction(table: GameTable, channel: GameChannel) {
-    const selector = table.selector;
+export function handleSendGameAction(selector: TargetSelector, channel: GameChannel) {
     const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
     if (selector.selection.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         const timer_id = (isResponse(selector) && selector.request.timer?.timer_id) || null;

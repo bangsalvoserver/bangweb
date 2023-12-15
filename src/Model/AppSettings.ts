@@ -16,7 +16,7 @@ export function useSettings() {
         propic, setPropic,
         lobbyName, setLobbyName,
         gameOptions, setGameOptions
-    };
+    } as const;
 }
 
 type AppSettings = ReturnType<typeof useSettings>;

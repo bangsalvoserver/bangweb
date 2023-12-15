@@ -1,4 +1,4 @@
-import { CSSProperties, useContext, useMemo } from "react";
+import { CSSProperties, useCallback, useContext, useMemo } from "react";
 import { getRectCenter } from "../../Utils/Rect";
 import { useUpdateEveryFrame } from "../../Utils/UseInterval";
 import CardView from "./CardView";
@@ -22,7 +22,8 @@ interface CardChoiceInnerProps {
 }
 
 function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInnerProps) {
-    const anchorRect = useUpdateEveryFrame(() => tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id));
+    const anchorRect = useUpdateEveryFrame(useCallback(() =>
+        tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id), [anchor, tracker]));
 
     if (anchorRect) {
         const anchorCenter = getRectCenter(anchorRect);

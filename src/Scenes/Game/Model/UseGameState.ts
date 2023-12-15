@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useReducer, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { UserId } from "../../../Messages/ServerMessage";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { FRAMERATE, useInterval, useTimeout } from "../../../Utils/UseInterval";
@@ -14,22 +14,24 @@ export interface GameChannel {
     sendGameAction: (action: GameAction) => void;
 }
 
+const tickDuration = 1000 / FRAMERATE;
+
 export function useGameState(channel: GameChannel, myUserId?: UserId) {
     const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
 
-    const clearGameError = () => {
+    const clearGameError = useCallback(() => {
         if (gameError) setGameError(undefined);
-    };
-    useTimeout(clearGameError, 5000, [gameError]);
+    }, [gameError]);
+    useTimeout(clearGameError, 5000);
 
     const updateTimeout = useRef<number>();
     useEffect(() => () => clearTimeout(updateTimeout.current), []);
     
     const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
-    const handleNextUpdate = (extraTime: Milliseconds) => {
+    const handleNextUpdate = useCallback((extraTime: Milliseconds) => {
         const context: GameUpdateContext = {
             tableDispatch, selectorDispatch, setGameLogs, setGameError,
             setAnimation: (update, endUpdate) => {
@@ -52,12 +54,11 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
         while (!updateTimeout.current && channel.hasUpdates()) {
             handleUpdate(context, channel.getNextUpdate()!);
         }
-    };
+    }, [channel]);
 
-    const tickDuration = 1000 / FRAMERATE;
-    useInterval(timeElapsed => handleNextUpdate(timeElapsed - tickDuration), tickDuration, []);
+    useInterval(useCallback(timeElapsed => handleNextUpdate(timeElapsed - tickDuration), [handleNextUpdate]), tickDuration);
 
-    return { table, selectorDispatch, gameLogs, gameError, clearGameError };
+    return { table, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }
 
 interface GameUpdateContext {

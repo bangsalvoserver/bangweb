@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef } from "react";
 import { getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
@@ -49,7 +49,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
     };
   };
   
-  const tracker: CardTracker = {
+  const tracker: CardTracker = useMemo(() => ({
     getPlayerPockets(player: PlayerId) {
       return playerRefs.get(player);
     },
@@ -71,7 +71,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
         return cubesRef.current ? getDivRect(cubesRef.current) : null;
       }
     }
-  };
+  }), [playerRefs, pocketRefs]);
 
   const clickIsAllowed = !isGameOver
       && table.self_player !== undefined
@@ -84,7 +84,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const handleConfirm = (clickIsAllowed && selectorCanConfirm(table)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
   const handleUndo = (clickIsAllowed && selectorCanUndo(table)) ? () => selectorDispatch({ undoSelection: {} }) : undefined;
   
-  useEffect(() => handleSendGameAction(table, channel), [table.selector]);
+  useEffect(() => handleSendGameAction(table.selector, channel), [table.selector, channel]);
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
     <div className="pocket-group relative">

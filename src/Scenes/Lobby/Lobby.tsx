@@ -1,9 +1,9 @@
-import { createContext, useContext, useMemo, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { ConnectionContext } from '../../App';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
 import { useHandler } from '../../Messages/Connection';
-import { ChatMessage, LobbyId, LobbyInfo, UserId } from '../../Messages/ServerMessage';
+import { ChatMessage, LobbyAddUser, LobbyEntered, LobbyId, LobbyInfo, LobbyOwner, LobbyRemoveUser, UserId } from '../../Messages/ServerMessage';
 import { deserializeImage } from '../../Utils/ImageSerial';
 import GameScene from '../Game/GameScene';
 import { GameAction } from '../Game/Model/GameAction';
@@ -44,7 +44,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
 
   useHandler(connection, {
 
-    lobby_add_user: ({ user_id, user: { name, profile_image }, is_read }) => {
+    lobby_add_user: useCallback(({ user_id, user: { name, profile_image }, is_read }: LobbyAddUser) => {
       setUsers(users => {
         let copy = [...users];
         const newUser: UserValue = { id: user_id, name, propic: deserializeImage(profile_image) };
@@ -61,9 +61,9 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
         }
         return copy;
       });
-    },
+    }, [myUserId]),
 
-    lobby_remove_user: ({ user_id }) => {
+    lobby_remove_user: useCallback(({ user_id }: LobbyRemoveUser) => {
       const user = getUser(users, user_id);
       if (user) {
         setChatMessages(chatMessages => chatMessages.concat({
@@ -73,24 +73,24 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
         }));
       }
       setUsers(users => users.filter(user => user.id !== user_id));
-    },
+    }, [users]),
 
-    lobby_owner: ({ user_id }) => setLobbyOwner(user_id),
+    lobby_owner: useCallback(({ user_id }: LobbyOwner) => setLobbyOwner(user_id), []),
 
-    lobby_chat: message => setChatMessages(messages => messages.concat(message)),
+    lobby_chat: useCallback((message: ChatMessage) => setChatMessages(messages => messages.concat(message)), []),
 
-    lobby_entered: ({ lobby_id }) => {
+    lobby_entered: useCallback(({ lobby_id }: LobbyEntered) => {
       if (lobby_id === myLobbyId) {
         gameUpdates.current = [];
         setIsGameStarted(false);
         setUsers([]);
       }
-    },
+    }, [myLobbyId]),
     
-    game_started: () => setIsGameStarted(true),
-    game_update: (update) => gameUpdates.current.push(update),
+    game_started: useCallback(() => setIsGameStarted(true), []),
+    game_update: useCallback((update: GameUpdate) => gameUpdates.current.push(update), [])
   
-  }, [users]);
+  });
 
   const channel = useMemo(() => ({
     hasUpdates: () => gameUpdates.current.length !== 0,
@@ -98,12 +98,12 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
     sendGameAction: (action: GameAction) => connection.sendMessage({ game_action: action })
   }), [connection]);
 
-  const handleStartGame = () => connection.sendMessage({game_start: {}});
+  const handleStartGame = useCallback(() => connection.sendMessage({game_start: {}}), [connection]);
 
-  const handleEditGameOptions = (gameOptions: GameOptions) => {
+  const handleEditGameOptions = useCallback((gameOptions: GameOptions) => {
     connection.sendMessage({ lobby_edit: { name: lobbyInfo.name, options: gameOptions }});
     setGameOptions(gameOptions);
-  };
+  }, [connection, lobbyInfo.name, setGameOptions]);
 
   return (
     <LobbyContext.Provider value={{ myUserId, users, lobbyOwner }}>

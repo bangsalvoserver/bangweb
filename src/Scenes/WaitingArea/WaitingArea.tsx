@@ -1,9 +1,9 @@
-import { SyntheticEvent, useContext, useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useContext, useEffect, useState } from "react";
 import { ConnectionContext } from "../../App";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import { useHandler } from "../../Messages/Connection";
-import { LobbyId } from "../../Messages/ServerMessage";
+import { LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
 import { GameOptions } from "../Game/Model/GameUpdate";
@@ -22,7 +22,7 @@ function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps)
 
   useHandler(connection, {
 
-    lobby_update: ({ lobby_id, name, num_players, state }) => {
+    lobby_update: useCallback(({ lobby_id, name, num_players, state }: LobbyUpdate) => {
       setLobbies(lobbies => {
         let copy = [...lobbies];
         const newLobby = { id: lobby_id, name, num_players, state };
@@ -34,11 +34,11 @@ function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps)
         }
         return copy;
       });
-    },
+    }, []),
 
-    lobby_removed: ({ lobby_id }) => setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id)),
+    lobby_removed: useCallback(({ lobby_id }: LobbyRemoved) => setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id)), [])
 
-  }, []);
+  });
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();

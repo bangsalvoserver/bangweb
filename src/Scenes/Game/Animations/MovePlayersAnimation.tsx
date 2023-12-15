@@ -1,4 +1,4 @@
-import { CSSProperties, useContext } from "react";
+import { CSSProperties, useCallback, useContext } from "react";
 import { getRectCenter } from "../../../Utils/Rect";
 import { useUpdateEveryFrame } from "../../../Utils/UseInterval";
 import { CardTracker } from "../Model/CardTracker"
@@ -20,10 +20,10 @@ function MovePlayerAnimation({ tracker, from, to, duration }: MovePlayerProps) {
     const table = useContext(GameTableContext);
     const { users } = useContext(LobbyContext);
 
-    const [startRect, endRect] = useUpdateEveryFrame(() => [
+    const [startRect, endRect] = useUpdateEveryFrame(useCallback(() => [
         tracker.getPlayerPockets(from)?.getPlayerRect(),
         tracker.getPlayerPockets(to)?.getPlayerRect()
-    ]);
+    ], [tracker, from, to]));
 
     if (startRect) {
         const startPoint = getRectCenter(startRect);

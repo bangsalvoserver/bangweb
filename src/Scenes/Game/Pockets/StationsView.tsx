@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameTableContext } from "../GameScene";
 import { getCard, getCardImage, isCardKnown } from "../Model/GameTable";
@@ -9,7 +9,7 @@ function StationCardView({ card, onClickCard }: CardProps) {
     const table = useContext(GameTableContext);
 
     const cardImage = getCardImage(card);
-    const selectorCardClass = useMemo(() => getSelectorCardClass(table, card), [table.selector]);
+    const selectorCardClass = getSelectorCardClass(table, card);
 
     if (!cardImage) return null;
     const imageSrc = getCardUrl(cardImage.image);

@@ -1,4 +1,4 @@
-import { DependencyList, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Env from "../Model/Env";
 import { useSetRef } from "../Utils/UseMapRef";
 import { ClientMessage } from "./ClientMessage";
@@ -44,7 +44,7 @@ export function useMessageHandlerSet(): MessageHandlerSet {
                 }
             });
         }
-    }), [handlers]);
+    }) as const, [handlers]);
 }
 
 interface SocketConnectionState {
@@ -124,16 +124,16 @@ export function useSocketConnection(): Connection {
             }
         };
     
-        return {...messageHandlers, isConnected, isLocked, setLocked, connect, disconnect, sendMessage };
+        return {...messageHandlers, isConnected, isLocked, setLocked, connect, disconnect, sendMessage } as const;
     }, [messageHandlers]);
 }
 
-export function useHandler(connection: Connection, handler: MessageHandler, deps: DependencyList = []) {
+export function useHandler(connection: Connection, handler: MessageHandler) {
     useEffect(() => {
         connection.addHandler(handler);
         connection.setLocked(false);
         return () => connection.removeHandler(handler);
-    }, [connection, handler, ...deps]);
+    }, [connection, handler]);
 }
 
 

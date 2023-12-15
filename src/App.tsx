@@ -1,9 +1,9 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import './App.css';
 import Header from './Components/Header';
 import getLabel from './Locale/GetLabel';
 import { Connection, useHandler, useSocketConnection } from './Messages/Connection';
-import { UserInfo } from './Messages/ServerMessage';
+import { ClientAccepted, LobbyEntered, LobbyInfo, LobbyRemoveUser, UserInfo } from './Messages/ServerMessage';
 import { useSettings } from './Model/AppSettings';
 import Env from './Model/Env';
 import CurrentScene, { SceneType } from './Scenes/CurrentScene';
@@ -41,56 +41,60 @@ export default function App() {
 
   useHandler(connection, {
 
-    connected: async () => {
+    connected: useCallback(async () => {
       connection.sendMessage({connect: {
         user: await makeUserInfo(settings.username, settings.propic),
         user_id: settings.myUserId,
         commit_hash: Env.commitHash
       }});
-    },
+    }, [connection, settings]),
 
-    client_accepted: ({ user_id }) => {
+    client_accepted: useCallback(({ user_id }: ClientAccepted) => {
       if (settings.myLobbyId) {
         connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
       }
       settings.setMyUserId(user_id);
       connection.setLocked(true);
       setScene({ type: 'waiting_area' });
-    },
+    }, [connection, settings]),
 
-    disconnected: () => {
+    disconnected: useCallback(() => {
       setScene({ type: 'connect' });
-    },
+    }, []),
 
-    ping: () => {
+    ping: useCallback(() => {
       connection.sendMessage({ pong: {} });
-    },
+    }, [connection]),
 
-    lobby_error: message => console.error('Lobby error: ', getLabel('lobby', message)),
+    lobby_error: useCallback((message: string) => console.error('Lobby error: ', getLabel('lobby', message)), []),
 
-    lobby_remove_user: ({ user_id }) => {
+    lobby_remove_user: useCallback(({ user_id }: LobbyRemoveUser) => {
       if (user_id === settings.myUserId) {
         settings.setMyLobbyId(undefined);
         connection.setLocked(true);
         setScene({ type: 'waiting_area' });
       }
-    },
+    }, [connection, settings]),
     
-    lobby_entered: ({ lobby_id, name, options }) => {
-      if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
+    lobby_entered: useCallback(({ lobby_id, name, options }: LobbyEntered) => {
+      if (settings.myLobbyId !== lobby_id) {
         connection.setLocked(true);
         settings.setMyLobbyId(lobby_id);
         setScene({ type: 'lobby', lobbyInfo: { name, options } });
       }
-    },
+    }, [connection, settings]),
 
-    lobby_edited: lobbyInfo => {
-      if (scene.type === 'lobby') {
-        setScene({ type: 'lobby', lobbyInfo });
-      }
-    }
+    lobby_edited: useCallback((lobbyInfo: LobbyInfo) => {
+      setScene(scene => {
+        if (scene.type === 'lobby') {
+          return { ...scene, lobbyInfo };
+        } else {
+          return scene;
+        }
+      });
+    }, [])
 
-  }, [settings, scene]);
+  });
 
   return (
     <div className="flex flex-col min-h-screen">

@@ -1,4 +1,4 @@
-import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import { CSSProperties, Ref, useContext, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
@@ -70,8 +70,8 @@ export default function CardView({ cardRef, card, showBackface, onClickCard }: C
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    const selectorCardClass = useMemo(() => getSelectorCardClass(table, card), [selector]);
-    const selectedCubes = useMemo(() => countSelectedCubes(selector, card), [selector]);
+    const selectorCardClass = getSelectorCardClass(table, card);
+    const selectedCubes = countSelectedCubes(selector, card);
 
     let backfaceSrc = getCardUrl(getCardBackface(card));
 

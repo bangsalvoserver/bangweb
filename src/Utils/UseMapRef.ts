@@ -24,7 +24,7 @@ export function useMapRef<Key, Value>(): MapRef<Key, Value> {
                 }
             }
         }
-    }), []);
+    }) as const, []);
 }
 
 export interface SetRef<Value> {
@@ -54,5 +54,5 @@ export function useSetRef<Value>(): SetRef<Value> {
         },
 
         forEach: fn => ref.current?.forEach(fn)
-    }), []);
+    }) as const, []);
 }

@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useCallback } from "react";
 import { getRectCenter } from "../../../Utils/Rect";
 import { useUpdateEveryFrame } from "../../../Utils/UseInterval";
 import { CardTracker } from "../Model/CardTracker";
@@ -16,10 +16,10 @@ export interface MoveCubeProps {
 }
 
 export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, target_card, duration }: MoveCubeProps) {
-    const [startRect, endRect] = useUpdateEveryFrame(() => ([
+    const [startRect, endRect] = useUpdateEveryFrame(useCallback(() => ([
         tracker.getCubesRect(origin_card),
         tracker.getCubesRect(target_card)
-    ]));
+    ]), [tracker, origin_card, target_card]));
     
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);
@@ -45,7 +45,7 @@ export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, ta
                 {[...Array(num_cubes)].map((item, i) => (
                     <div key={i} style={moveCubeIndexStyle(i)}
                         className={`${num_cubes <= 1 ? 'total-delay-0' : ''} move-cubes-animation-inner`} >
-                        <img src={SPRITE_CUBE} />
+                        <img src={SPRITE_CUBE} alt="" />
                     </div>
                 ))}
             </div>

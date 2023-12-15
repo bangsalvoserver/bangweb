@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useCallback } from "react";
 import { getRectCenter } from "../../../Utils/Rect";
 import { useUpdateEveryFrame } from "../../../Utils/UseInterval";
 import CardView from "../CardView";
@@ -16,10 +16,10 @@ export interface MoveCardProps {
 }
 
 export default function MoveCardAnimation({ tracker, card, destPocket, duration }: MoveCardProps) {
-    const [startRect, endRect] = useUpdateEveryFrame(() => ([
+    const [startRect, endRect] = useUpdateEveryFrame(useCallback(() => ([
         tracker.getTablePocket(card.pocket)?.getCardRect(CARD_SLOT_ID_FROM),
         tracker.getTablePocket(destPocket)?.getCardRect(CARD_SLOT_ID_TO)
-    ]));
+    ]), [tracker, card, destPocket]));
 
     if (startRect) {
         const startPoint = getRectCenter(startRect);

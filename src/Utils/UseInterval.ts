@@ -1,7 +1,7 @@
-import { DependencyList, useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { isMobileDevice } from "./MobileCheck";
 
-export function useInterval(fn: (timeElapsed: number) => void, ms?: number, deps?: DependencyList) {
+export function useInterval(fn: (timeElapsed: number) => void, ms?: number) {
     useEffect(() => {
         let startTime = Date.now();
         const interval = setInterval(() => {
@@ -10,14 +10,14 @@ export function useInterval(fn: (timeElapsed: number) => void, ms?: number, deps
             startTime = endTime;
         }, ms);
         return () => clearInterval(interval);
-    }, deps);
+    }, [fn, ms]);
 }
 
-export function useTimeout(fn: () => void, ms?: number, deps?: DependencyList) {
+export function useTimeout(fn: () => void, ms?: number) {
     useEffect(() => {
         const timeout = setTimeout(fn, ms);
         return () => clearTimeout(timeout);
-    }, deps);
+    }, [fn, ms]);
 }
 
 export const FRAMERATE = isMobileDevice() ? 30 : 60;
@@ -28,6 +28,6 @@ export function useUpdateEveryFrame<T>(fn: () => T): T {
         setValue(fn());
         const interval = setInterval(() => setValue(fn()), 1000 / FRAMERATE);
         return () => clearInterval(interval);
-    }, []);
+    }, [fn]);
     return value;
 }

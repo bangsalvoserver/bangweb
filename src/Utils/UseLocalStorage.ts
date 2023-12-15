@@ -8,7 +8,7 @@ export interface Converter<T> {
 export const stringConverter: Converter<string> = { fromString: str => str, toString : str => str };
 export const intConverter: Converter<number> = { fromString: parseInt, toString: value => value.toString() };
 export const floatConverter: Converter<number> = { fromString: parseFloat, toString: value => value.toString() };
-export const boolConverter: Converter<boolean> = { fromString: str => str == 'true', toString: value => value ? 'true' : 'false' }
+export const boolConverter: Converter<boolean> = { fromString: str => str === 'true', toString: value => value ? 'true' : 'false' }
 export const jsonConverter: Converter<any> = { fromString: JSON.parse, toString: JSON.stringify };
 
 function useStorage<T>(key: string, converter: Converter<T>, storage: Storage) {
@@ -24,7 +24,7 @@ function useStorage<T>(key: string, converter: Converter<T>, storage: Storage) {
         } else {
             storage.removeItem(key);
         }
-    }, [value]);
+    }, [key, converter, storage, value]);
     return [value, setValue] as const;
 }
 

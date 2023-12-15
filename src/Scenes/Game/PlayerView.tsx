@@ -1,4 +1,4 @@
-import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
@@ -105,7 +105,7 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id === table.status.current_turn;
 
-    const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(table, player), [selector]);
+    const selectorPlayerClass = getSelectorPlayerClass(table, player);
 
     const isPlayerSelf = player.id === table.self_player;
     const isOrigin = isResponse(selector) && selector.request.origin === player.id;
