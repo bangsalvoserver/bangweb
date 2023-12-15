@@ -1,5 +1,4 @@
-import { CardColor, CardFilter, CardRank, CardSuit, CardTarget, DeckType, EffectType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType, TargetType } from "./CardEnums";
-import { Card } from "./GameTable";
+import { CardColor, CardFilter, CardRank, CardSuit, DeckType, EffectType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType, TargetType } from "./CardEnums";
 
 export interface CardEffect {
     target: TargetType;

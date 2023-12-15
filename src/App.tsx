@@ -37,7 +37,7 @@ export default function App() {
     if (settings.myUserId && !connection.isConnected()) {
       connection.connect();
     }
-  }, []);
+  }, [settings.myUserId, connection]);
 
   useHandler(connection, {
 
@@ -77,7 +77,7 @@ export default function App() {
     },
     
     lobby_entered: ({ lobby_id, name, options }) => {
-      if (scene.type != 'lobby' || (settings.myLobbyId != lobby_id)) {
+      if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
         connection.setLocked(true);
         settings.setMyLobbyId(lobby_id);
         setScene({ type: 'lobby', lobbyInfo: { name, options } });
@@ -85,7 +85,7 @@ export default function App() {
     },
 
     lobby_edited: lobbyInfo => {
-      if (scene.type == 'lobby') {
+      if (scene.type === 'lobby') {
         setScene({ type: 'lobby', lobbyInfo });
       }
     }

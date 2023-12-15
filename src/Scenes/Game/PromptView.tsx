@@ -13,7 +13,7 @@ export interface PromptProps {
 }
 
 export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
-    if (prompt.type == 'yesno') {
+    if (prompt.type === 'yesno') {
         const handleYes = () => selectorDispatch({ setPrompt: { ...prompt, response: true }});
         const handleNo = () => selectorDispatch({ undoSelection: {} });
 
@@ -29,7 +29,7 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
             </div>,
             document.body
         );
-    } else if (prompt.type == 'playpick') {
+    } else if (prompt.type === 'playpick') {
         const card = prompt.card;
 
         const message = {

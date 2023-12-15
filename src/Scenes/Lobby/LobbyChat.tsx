@@ -1,4 +1,4 @@
-import { SyntheticEvent, useContext, useEffect, useRef, useState } from "react";
+import { SyntheticEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ConnectionContext } from "../../App";
 import getLabel from "../../Locale/GetLabel";
@@ -23,14 +23,14 @@ export default function LobbyChat({ messages }: ChatProps) {
     const [isChatOpen, setIsChatOpen] = useFocusRefState(chatRef);
     const [numReadMessages, setNumReadMessages] = useState(0);
 
-    const numUnreadMessages = messages.reduce((prev, { is_read }) => prev + +(!is_read), 0);
+    const numUnreadMessages = useMemo(() => messages.reduce((prev, { is_read }) => prev + +(!is_read), 0), [messages]);
 
     useEffect(() => {
         if (isChatOpen) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             setNumReadMessages(numUnreadMessages);
         }
-    }, [isChatOpen, messages]);
+    }, [isChatOpen, messages, numUnreadMessages]);
 
     useEffect(() => {
         if (isChatOpen) {
@@ -50,7 +50,7 @@ export default function LobbyChat({ messages }: ChatProps) {
     const newMessageTag = (user_id: UserId, message: string, index: number) => {
         if (user_id) {
             const user = getUser(users, user_id);
-            const pClass = user_id == myUserId ? 'text-right' : '';
+            const pClass = user_id === myUserId ? 'text-right' : '';
             return (<p key={index} className={pClass}><span className='username'>{getUsername(user)}</span> : {message}</p>);
         } else {
             return (<p key={index} className='server-message'>{message}</p>);
@@ -81,7 +81,7 @@ export default function LobbyChat({ messages }: ChatProps) {
                     </div>}
             </button>
             <div className='lobby-chat-box'>
-                {messages.length != 0 && <div className="lobby-chat-messages">
+                {messages.length !== 0 && <div className="lobby-chat-messages">
                     {messages.map(({ user_id, message }, index) => newMessageTag(user_id, message, index))}
                     <div ref={messagesEnd} />
                 </div>}

@@ -10,7 +10,7 @@ export function handleClickCard(table: GameTable, selectorDispatch: Dispatch<Sel
     case 'target':
     case 'modifier': {
         let cardTarget = card;
-        if (card.pocket?.name == 'player_character') {
+        if (card.pocket?.name === 'player_character') {
             cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
         }
         if (isValidCardTarget(table as PlayingSelectorTable, cardTarget)) {
@@ -53,9 +53,9 @@ export function handleClickPlayer(table: GameTable, selectorDispatch: Dispatch<S
 
 export function handleSendGameAction(table: GameTable, channel: GameChannel) {
     const selector = table.selector;
-    const bypass_prompt = selector.prompt.type == 'yesno' && selector.prompt.response;
-    if (selector.selection.mode == 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
-        const timer_id = isResponse(selector) && selector.request.timer?.timer_id || null;
+    const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
+    if (selector.selection.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
+        const timer_id = (isResponse(selector) && selector.request.timer?.timer_id) || null;
         if (isSelectionPicking(selector)) {
             const card = selector.selection.picked_card;
             channel.sendGameAction({ pick_card: { card, bypass_prompt, timer_id }});

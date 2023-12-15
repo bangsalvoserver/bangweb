@@ -3,7 +3,7 @@ import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
 import { CardRef } from "./Model/CardTracker";
-import { Card, GameTable, getCardBackface, getCardImage } from "./Model/GameTable";
+import { Card, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
 import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
@@ -28,7 +28,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
         if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
             return 'card-selected';
         }
-        if (selector.selection.mode == 'target' || selector.selection.mode == 'modifier') {
+        if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
             if (isValidCubeTarget(table as PlayingSelectorTable, card)) {
                 return 'card-targetable-cubes';
             } else if (isValidCardTarget(table as PlayingSelectorTable, card)) {
@@ -36,7 +36,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
             }
         }
     } else if (isSelectionPicking(selector)) {
-        if (selector.selection.picked_card == card.id) {
+        if (selector.selection.picked_card === card.id) {
             return 'card-picked';
         }
     }
@@ -53,7 +53,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
         if (selector.request.highlight_cards.includes(card.id)) {
             return 'card-highlight';
         }
-        if (selector.request.origin_card == card.id) {
+        if (selector.request.origin_card === card.id) {
             return 'card-origin';
         }
     }
@@ -126,20 +126,20 @@ export default function CardView({ cardRef, card, showBackface, onClickCard }: C
         <div ref={divRef} style={style} className={classes.join(' ')}
             onClick={onClickCard ? () => onClickCard(card) : undefined} >
             { cardImage ? <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(cardImage.image)}/>
+                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={isCardKnown(card) ? card.cardData.name : ""} />
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}
                 {card.num_cubes > 0 && <div className="card-cubes">
                     {[...Array(card.num_cubes)].map((item, i) => (
-                        <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src={SPRITE_CUBE} />
+                        <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src={SPRITE_CUBE} alt=""  />
                     ))}
                 </div>}
             </div> : <div className="card-back">
-                <img className="card-view-img" src={backfaceSrc} />
+                <img className="card-view-img" src={backfaceSrc} alt="" />
             </div> }
             { showBackface && <div className="card-back-flip">
-                <img className="card-view-img" src={backfaceSrc} />
+                <img className="card-view-img" src={backfaceSrc} alt=""  />
             </div> }
         </div>
     )

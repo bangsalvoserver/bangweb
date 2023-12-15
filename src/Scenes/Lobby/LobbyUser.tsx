@@ -30,9 +30,9 @@ export function getUsername(user?: UserValue) {
 
 export default function LobbyUser({ user, align }: LobbyUserProps) {
   return (
-    <div className={`lobby-user ${align == 'vertical' ? 'flex-col' : 'flex-row'}`}>
+    <div className={`lobby-user ${align === 'vertical' ? 'flex-col' : 'flex-row'}`}>
       <div className='lobby-user-inner'>
-        <img src={getPropic(user)} />
+        <img src={getPropic(user)} alt="" />
       </div>
       <div className='lobby-username'>
         {getUsername(user)}

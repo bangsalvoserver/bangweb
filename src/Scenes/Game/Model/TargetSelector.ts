@@ -121,15 +121,15 @@ export function selectorCanConfirm(table: GameTable): boolean {
             const lastTarget = targets.at(-1);
             if (lastTarget !== undefined) {
                 const lastTargetValue = Object.values(lastTarget)[0];
-                if (Array.isArray(lastTargetValue) && !lastTargetValue.every(id => id == 0)) {
+                if (Array.isArray(lastTargetValue) && !lastTargetValue.every(id => id === 0)) {
                     return false;
                 }
             }
         }
         
-        return optionals.length != 0
+        return optionals.length !== 0
             && index >= effects.length
-            && (index - effects.length) % optionals.length == 0;
+            && (index - effects.length) % optionals.length === 0;
     }
     default:
         return false;
@@ -139,13 +139,13 @@ export function selectorCanConfirm(table: GameTable): boolean {
 export function isAutoSelect(table: GameTable): boolean {
     const selector = table.selector;
     return isResponse(selector)
-        && selector.request.respond_cards.length == 1 && selector.request.pick_cards.length == 0
+        && selector.request.respond_cards.length === 1 && selector.request.pick_cards.length === 0
         && cardHasTag(getCard(table, selector.request.respond_cards[0].card), 'auto_select');
 }
 
 export function getAutoSelectCard(table: GameTable): CardId | undefined {
     const selector = table.selector;
-    if (selector.selection.mode == 'start') {
+    if (selector.selection.mode === 'start') {
         if (isSelectionPlaying(selector)) {
             const context = selector.selection.context;
             return context.repeat_card || context.traincost;
@@ -157,8 +157,8 @@ export function getAutoSelectCard(table: GameTable): CardId | undefined {
 
 export function selectorCanUndo(table: GameTable): boolean {
     const selector = table.selector;
-    if (selector.selection.mode == 'finish') return false;
-    if (selector.selection.mode == 'start') {
+    if (selector.selection.mode === 'finish') return false;
+    if (selector.selection.mode === 'start') {
         return isSelectionPlaying(selector) && !selector.selection.playing_card;
     }
     if (isAutoSelect(table)) {
@@ -166,14 +166,14 @@ export function selectorCanUndo(table: GameTable): boolean {
             return targets.some(target => {
                 const value = Object.values(target)[0];
                 if (Array.isArray(value) && value.every(num => num === 0)) return false;
-                if (typeof value == 'object' && Object.keys(value).length == 0) return false;
+                if (typeof value == 'object' && Object.keys(value).length === 0) return false;
                 return true;
             });
         };
-        if (selector.selection.mode == 'target') {
+        if (selector.selection.mode === 'target') {
             return someTargetNotNone(selector.selection.targets);
-        } else if (selector.selection.mode == 'modifier') {
-            return selector.selection.modifiers.length != 1 || someTargetNotNone(selector.selection.modifiers[0].targets);
+        } else if (selector.selection.mode === 'modifier') {
+            return selector.selection.modifiers.length !== 1 || someTargetNotNone(selector.selection.modifiers[0].targets);
         }
     }
     return true;
@@ -191,7 +191,7 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
             return [];
         }
         tree = selector.selection.modifiers.reduce((tree: CardNode[], { modifier }) => {
-            return tree.find(leaf => leaf.card == modifier.id)!.branches;
+            return tree.find(leaf => leaf.card === modifier.id)!.branches;
         }, tree);
     }
     return tree.map(node => node.card);
@@ -210,7 +210,7 @@ export function selectorCanPickCard(table: GameTable, card: Card): boolean {
         switch (card.pocket?.name) {
             case 'main_deck':
             case 'discard_pile':
-                return selector.request.pick_cards.some(pickCard => getCard(table, pickCard).pocket?.name == card.pocket?.name);
+                return selector.request.pick_cards.some(pickCard => getCard(table, pickCard).pocket?.name === card.pocket?.name);
             default:
                 return selector.request.pick_cards.includes(card.id);
         }
@@ -220,21 +220,21 @@ export function selectorCanPickCard(table: GameTable, card: Card): boolean {
 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
     return isSelectionPlaying(selector)
-        && (selector.selection.playing_card?.id == card.id
-        || selector.selection.modifiers.some(({modifier}) => modifier.id == card.id));
+        && (selector.selection.playing_card?.id === card.id
+        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id));
 }
 
 export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
-    return selector.prompt.type == 'playpick' && selector.prompt.card.id == card.id;
+    return selector.prompt.type === 'playpick' && selector.prompt.card.id === card.id;
 }
 
 export function isCardSelected(selector: TargetSelector, card: CardId): boolean {
     const check = (target: CardTarget) => {
         if ('card' in target) {
-            return target.card == card;
+            return target.card === card;
         }
         if ('extra_card' in target) {
-            return target.extra_card == card;
+            return target.extra_card === card;
         }
         if ('cards' in target) {
             return target.cards.includes(card);
@@ -257,7 +257,7 @@ export function isCardSelected(selector: TargetSelector, card: CardId): boolean 
 
 export function isHandSelected(table: GameTable, card: Card): boolean {
     const selector = table.selector;
-    if (card.pocket?.name == 'player_hand' && card.pocket.player != table.self_player && isSelectionPlaying(selector)) {
+    if (card.pocket?.name === 'player_hand' && card.pocket.player !== table.self_player && isSelectionPlaying(selector)) {
         const player = getPlayer(table, card.pocket.player);
         return player.pockets.player_hand.some(id => isCardSelected(selector, id));
     } else {
@@ -268,10 +268,10 @@ export function isHandSelected(table: GameTable, card: Card): boolean {
 export function isPlayerSelected(selector: TargetSelector, player: Player): boolean {
     const check = (target: CardTarget) => {
         if ('player' in target) {
-            return target.player == player.id;
+            return target.player === player.id;
         }
         if ('conditional_player' in target) {
-            return target.conditional_player == player.id;
+            return target.conditional_player === player.id;
         }
         if ('adjacent_players' in target) {
             return target.adjacent_players.includes(player.id);
@@ -296,7 +296,7 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
         for (const [target, effect] of zipCardTargets(targets, getCardEffects(card, response))) {
             if ('select_cubes' in target) {
                 selected += count(target.select_cubes, targetCard.id);
-            } else if ('self_cubes' in target && targetCard.id == card.id) {
+            } else if ('self_cubes' in target && targetCard.id === card.id) {
                 selected += effect.target_value;
             }
         }
@@ -320,8 +320,8 @@ export function isValidCubeTarget(table: PlayingSelectorTable, card: Card): bool
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
     
-    return nextTarget?.target == 'select_cubes'
-        && player == table.self_player
+    return nextTarget?.target === 'select_cubes'
+        && player === table.self_player
         && card.num_cubes > countSelectedCubes(selector, card);
 }
 
@@ -355,10 +355,10 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
         }
         return true;
     case 'cards_other_players': {
-        if (getCardColor(card) == 'black' || card.cardData.deck == 'character') {
+        if (getCardColor(card) === 'black' || card.cardData.deck === 'character') {
             return false;
         }
-        if (!player || player == table.self_player || player == selector.selection.context.skipped_player) {
+        if (!player || player === table.self_player || player === selector.selection.context.skipped_player) {
             return false;
         }
         const lastTarget = selector.selection.targets.at(index);
@@ -367,7 +367,7 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
                 if (targetCard <= 0) return false;
                 const selectedCard = getCard(table, targetCard);
                 if (selectedCard.pocket && 'player' in selectedCard.pocket) {
-                    return selectedCard.pocket.player == player;
+                    return selectedCard.pocket.player === player;
                 } else {
                     return false;
                 }
@@ -378,7 +378,7 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
         return true;
     }
     case 'select_cubes':
-        return player == table.self_player
+        return player === table.self_player
             && card.num_cubes > countSelectedCubes(selector, card);
     default:
         return false;
@@ -398,7 +398,7 @@ export function *zipCardTargets(targets: CardTarget[], [effects, optionals]: Eff
         if (index >= targets.length) return;
         yield [targets[index++], effect];
     }
-    while (optionals.length != 0) {
+    while (optionals.length !== 0) {
         for (let effect of optionals) {
             if (index >= targets.length) return;
             yield [targets[index++], effect];
@@ -407,7 +407,7 @@ export function *zipCardTargets(targets: CardTarget[], [effects, optionals]: Eff
 }
 
 export function getNextTargetIndex(targets: CardTarget[]): number {
-    if (targets.length != 0) {
+    if (targets.length !== 0) {
         let lastTarget = Object.values(targets.at(-1)!)[0];
         if (Array.isArray(lastTarget) && lastTarget.includes(0)) {
             return targets.length - 1;
@@ -419,7 +419,7 @@ export function getNextTargetIndex(targets: CardTarget[]): number {
 export function getEffectAt([effects, optionals]: EffectsAndOptionals, index: number): CardEffect | undefined {
     if (index < effects.length) {
         return effects[index];
-    } else if (optionals.length != 0) {
+    } else if (optionals.length !== 0) {
         return optionals[(index - effects.length) % optionals.length];
     }
 }
@@ -437,10 +437,10 @@ export function isValidPlayerTarget(table: PlayingSelectorTable, player: Player)
     case 'adjacent_players': {
         const checkTargets = (target1: Player, target2: Player) => {
             return checkPlayerFilter(table, ['notself'], target2)
-                && calcPlayerDistance(table, target1.id, target2.id) == 1;
+                && calcPlayerDistance(table, target1.id, target2.id) === 1;
         };
         const firstPlayer = (targets[index] as {adjacent_players: PlayerId[]}).adjacent_players[0];
-        if (firstPlayer == 0) {
+        if (firstPlayer === 0) {
             return checkPlayerFilter(table, ['notself', 'reachable'], player)
                 && table.alive_players.some(target2 => checkTargets(player, getPlayer(table, target2)));
         } else {

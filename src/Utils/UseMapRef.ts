@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 export interface MapRef<Key, Value> {
     get: (key: Key) => Value | null,
@@ -8,7 +8,7 @@ export interface MapRef<Key, Value> {
 export function useMapRef<Key, Value>(): MapRef<Key, Value> {
     const ref = useRef<Map<Key, Value>>();
 
-    return {
+    return useMemo(() => ({
         get: key => ref.current?.get(key) ?? null,
 
         set: (key, value) => {
@@ -19,12 +19,12 @@ export function useMapRef<Key, Value>(): MapRef<Key, Value> {
                 ref.current.set(key, value);
             } else if (ref.current) {
                 ref.current.delete(key);
-                if (ref.current.size == 0) {
+                if (ref.current.size === 0) {
                     ref.current = undefined;
                 }
             }
         }
-    };
+    }), []);
 }
 
 export interface SetRef<Value> {
@@ -36,7 +36,7 @@ export interface SetRef<Value> {
 export function useSetRef<Value>(): SetRef<Value> {
     const ref = useRef<Set<Value>>();
 
-    return {
+    return useMemo(() => ({
         add: value => {
             if (!ref.current) {
                 ref.current = new Set<Value>();
@@ -47,12 +47,12 @@ export function useSetRef<Value>(): SetRef<Value> {
         delete: value => {
             if (ref.current) {
                 ref.current.delete(value);
-                if (ref.current.size == 0) {
+                if (ref.current.size === 0) {
                     ref.current = undefined;
                 }
             }
         },
 
         forEach: fn => ref.current?.forEach(fn)
-    };
+    }), []);
 }

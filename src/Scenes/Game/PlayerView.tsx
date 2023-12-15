@@ -103,13 +103,13 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
     };
 
     const isGameOver = table.status.flags.includes('game_over');
-    const isTurn = player.id == table.status.current_turn;
+    const isTurn = player.id === table.status.current_turn;
 
     const selectorPlayerClass = useMemo(() => getSelectorPlayerClass(table, player), [selector]);
 
-    const isPlayerSelf = player.id == table.self_player;
-    const isOrigin = isResponse(selector) && selector.request.origin == player.id;
-    const isTarget = isResponse(selector) && selector.request.target == player.id;
+    const isPlayerSelf = player.id === table.self_player;
+    const isOrigin = isResponse(selector) && selector.request.origin === player.id;
+    const isTarget = isResponse(selector) && selector.request.target === player.id;
     const isDead = isPlayerDead(player);
     const isGhost = isPlayerGhost(player);
     const isWinner = player.status.flags.includes('winner');
@@ -133,7 +133,7 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
         if ('flipping_role' in player.animation) {
             roleKey = player.animationKey;
             flipDuration = player.animation.flipping_role.duration;
-            if (player.status.role == 'unknown') {
+            if (player.status.role === 'unknown') {
                 playerRole = player.animation.flipping_role.role;
             }
         } else if ('player_hp' in player.animation) {
@@ -159,7 +159,7 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
         pocketRefs.set('player_character', {
             getPocketRect: () => null,
             getCardRect: (card: CardId) => {
-                if (!extraCharacters.current || card == player.pockets.player_character.at(0)) {
+                if (!extraCharacters.current || card === player.pockets.player_character.at(0)) {
                     return character?.getCardRect(card) ?? null;
                 } else {
                     return extraCharacters.current.getCardRect(card);
@@ -194,7 +194,7 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
             <div className='player-lifepoints'>
                 {[...Array(Math.max(0, player.status.hp, fromPlayerHp))].map((_, i) =>
                     <div key={i} className={'player-lifepoint' + (i >= fromPlayerHp ? ' lifepoint-fade-in' : i >= player.status.hp ? ' lifepoint-fade-out' : '')}>
-                        <div className='player-lifepoint-inner'><img src='/media/icon_lifepoint.png' /></div>
+                        <div className='player-lifepoint-inner'><img src='/media/icon_lifepoint.png' alt="" /></div>
                     </div>
                 )}
             </div>

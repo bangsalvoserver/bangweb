@@ -30,25 +30,27 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
     const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
     const handleNextUpdate = (extraTime: Milliseconds) => {
-        while (!updateTimeout.current && channel.hasUpdates()) {
-            handleUpdate({
-                tableDispatch, selectorDispatch, setGameLogs, setGameError,
-                setAnimation: (update, endUpdate) => {
-                    const duration = update.duration - extraTime;
-                    if (duration <= 0) {
+        const context: GameUpdateContext = {
+            tableDispatch, selectorDispatch, setGameLogs, setGameError,
+            setAnimation: (update, endUpdate) => {
+                const duration = update.duration - extraTime;
+                if (duration <= 0) {
+                    if (endUpdate) tableDispatch(endUpdate);
+                    extraTime = -duration;
+                } else {
+                    const startTime = Date.now();
+                    updateTimeout.current = setTimeout(() => {
+                        const timeElapsed = Date.now() - startTime;
                         if (endUpdate) tableDispatch(endUpdate);
-                        extraTime = -duration;
-                    } else {
-                        const startTime = Date.now();
-                        updateTimeout.current = setTimeout(() => {
-                            const timeElapsed = Date.now() - startTime;
-                            if (endUpdate) tableDispatch(endUpdate);
-                            updateTimeout.current = undefined;
-                            handleNextUpdate(timeElapsed - duration);
-                        }, duration);
-                    }
+                        updateTimeout.current = undefined;
+                        handleNextUpdate(timeElapsed - duration);
+                    }, duration);
                 }
-            }, channel.getNextUpdate()!);
+            }
+        };
+
+        while (!updateTimeout.current && channel.hasUpdates()) {
+            handleUpdate(context, channel.getNextUpdate()!);
         }
     };
 

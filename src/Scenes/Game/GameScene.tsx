@@ -75,8 +75,8 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   const clickIsAllowed = !isGameOver
       && table.self_player !== undefined
-      && table.selector.selection.mode != 'finish'
-      && table.selector.prompt.type == 'none';
+      && table.selector.selection.mode !== 'finish'
+      && table.selector.prompt.type === 'none';
 
   const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selectorDispatch, card) : undefined;
   const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selectorDispatch, player) : undefined;
@@ -86,7 +86,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   
   useEffect(() => handleSendGameAction(table, channel), [table.selector]);
 
-  const shopPockets = (table.pockets.shop_deck.length != 0 || table.pockets.shop_selection.length != 0) && (
+  const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
     <div className="pocket-group relative">
       <div className="absolute">
         <StackPocket pocketRef={setRef('shop_discard')} cards={table.pockets.shop_discard} />
@@ -110,7 +110,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
 
   const tableCubes = <div className='table-cubes' ref={cubesRef}>
     { table.status.num_cubes > 0 && <>
-      <img src={SPRITE_CUBE} />
+      <img src={SPRITE_CUBE} alt="" />
       <div>x{table.status.num_cubes}</div>
     </> }
   </div>;
@@ -135,7 +135,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
         </>}
     </div>;
 
-  const selectionPocket = table.pockets.selection.length != 0 && (
+  const selectionPocket = table.pockets.selection.length !== 0 && (
     <div className="selection-view whitespace-nowrap">
       <PocketView pocketRef={setRef('selection')} cards={table.pockets.selection} onClickCard={onClickCard} />
     </div>

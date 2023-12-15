@@ -37,7 +37,7 @@ function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper
             selection: {
                 ...selector.selection,
                 modifiers: selector.selection.modifiers.map((modifier, index) => {
-                    if (index == selector.selection.modifiers.length - 1) {
+                    if (index === selector.selection.modifiers.length - 1) {
                         return { ...modifier, targets: mapper(modifier.targets) };
                     } else {
                         return modifier;
@@ -131,7 +131,7 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
     case 'moneybag':
         return editContext({ repeat_card: getPlayableCards(selector)[0] });
     case 'traincost':
-        if (modifier.pocket?.name == 'stations') {
+        if (modifier.pocket?.name === 'stations') {
             return editContext({ traincost: getPlayableCards(selector)[0] });
         }
         break;
@@ -139,7 +139,7 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
         return editContext({ train_advance: 1 });
     case 'sgt_blaze':
         for (const [target, effect] of zipCardTargets(targets, getCardEffects(modifier, isResponse(selector)))) {
-            if (effect.type == 'ctx_add' && 'player' in target) {
+            if (effect.type === 'ctx_add' && 'player' in target) {
                 return editContext({ skipped_player: target.player });
             }
         }
@@ -156,9 +156,9 @@ function isAutoConfirmable(table: PlayingSelectorTable): boolean {
     const diff = getNextTargetIndex(targets) - effects.length;
     if (diff < 0) return false;
 
-    if (optionals.length != 0 && diff % optionals.length == 0) {
+    if (optionals.length !== 0 && diff % optionals.length === 0) {
         if (cardHasTag(currentCard, 'auto_confirm')) {
-            if (optionals.some(effect => effect.target == 'player'
+            if (optionals.some(effect => effect.target === 'player'
                 && !table.alive_players.some(target =>
                     checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)))))
             {
@@ -168,7 +168,7 @@ function isAutoConfirmable(table: PlayingSelectorTable): boolean {
             let cubeSlots = 0;
             for (const cardId of getPlayer(table, table.self_player!).pockets.player_table) {
                 const card = getCard(table, cardId);
-                if (getCardColor(card) == 'orange') {
+                if (getCardColor(card) === 'orange') {
                     cubeSlots += 4 - card.num_cubes;
                 }
             }
@@ -179,7 +179,7 @@ function isAutoConfirmable(table: PlayingSelectorTable): boolean {
     }
 
     const repeatCount = getTagValue(currentCard, 'repeatable') ?? 1;
-    return repeatCount > 0 && diff == optionals.length * repeatCount;
+    return repeatCount > 0 && diff === optionals.length * repeatCount;
 }
 
 function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undefined {
@@ -216,10 +216,10 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
         break;
     case 'cards_other_players':
         if (index >= targets.length) {
-            const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) != 'black';
-            const playerHasCards = (player: Player) => player.pockets.player_hand.length != 0 || player.pockets.player_table.some(cardIsNotBlack);
+            const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) !== 'black';
+            const playerHasCards = (player: Player) => player.pockets.player_hand.length !== 0 || player.pockets.player_table.some(cardIsNotBlack);
             const numTargetable = countIf(table.alive_players, target =>
-                target != table.self_player && target != selector.selection.context.skipped_player
+                target !== table.self_player && target !== selector.selection.context.skipped_player
                 && playerHasCards(getPlayer(table, target)));
             return reserveTargets(effect.target, numTargetable);
         }
@@ -239,7 +239,7 @@ function setSelectorMode(selector: PlayingSelector, mode: 'start' | 'finish'): P
 function handleAutoTargets(table: PlayingSelectorTable): TargetSelector {
     const selector = table.selector;
     if (isAutoConfirmable(table)) {
-        if (selector.selection.mode == 'modifier') {
+        if (selector.selection.mode === 'modifier') {
             return handleAutoSelect({ ...table, selector: setSelectorMode(addModifierContext(selector), 'start')});
         } else {
             return setSelectorMode(selector, 'finish');
@@ -264,12 +264,12 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             selection: {
                 ...selection,
                 playing_card: card,
-                mode: card.cardData.equip_target.length == 0
+                mode: card.cardData.equip_target.length === 0
                     ? 'finish' : 'equip'
             },
             prompt: { type: 'none' }
         };
-    } else if (card.cardData.modifier.type == 'none') {
+    } else if (card.cardData.modifier.type === 'none') {
         return handleAutoTargets({ ...table, selector: {
             ...selector,
             selection: {
@@ -354,7 +354,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     addEquipTarget (player) {
-        if (this.selector.selection.mode != 'equip') {
+        if (this.selector.selection.mode !== 'equip') {
             throw new Error('TargetSelector: not in equipping mode');
         }
         return {

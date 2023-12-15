@@ -33,10 +33,10 @@ export default function PocketView({ pocketRef, cards, onClickCard }: PocketProp
 
     return <div ref={divRef} className='pocket-view'>
         { cards.map(id => {
-            if (id == CARD_SLOT_ID_FROM || id == CARD_SLOT_ID_TO) {
+            if (id === CARD_SLOT_ID_FROM || id === CARD_SLOT_ID_TO) {
                 if (table.animation && 'move_card' in table.animation) {
                     const key = `${id} ${table.animationKey}`;
-                    return <CardSlot cardRef={setPos(id)} key={key} stretch={id == CARD_SLOT_ID_FROM ? 'in' : 'out'} duration={table.animation.move_card.duration} />
+                    return <CardSlot cardRef={setPos(id)} key={key} stretch={id === CARD_SLOT_ID_FROM ? 'in' : 'out'} duration={table.animation.move_card.duration} />
                 } else {
                     return null;
                 }

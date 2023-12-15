@@ -17,7 +17,7 @@ export interface CardNameProps {
 
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
     const localizedName = name in cardRegistry ? cardRegistry[name] : name;
-    if (sign && sign.rank != 'none' && sign.suit != 'none') {
+    if (sign && sign.rank !== 'none' && sign.suit !== 'none') {
         return (<span className="card-name">{localizedName} <span className="inline-block">(<CardSignView sign={sign} />)</span></span>);
     } else {
         return (<span className="card-name">{localizedName}</span>);
@@ -77,6 +77,8 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
                     } else {
                         return <span className="player-name unknown-name">{getLabel('ui', 'UNKNOWN_PLAYER')}</span>
                     }
+                default:
+                    throw Error('Invalid formatArg type');
                 }
             }));
         } else {

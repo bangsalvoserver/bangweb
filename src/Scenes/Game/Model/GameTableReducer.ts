@@ -3,8 +3,8 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
-import { GameTable, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchById, sortById } from "./GameTable";
-import { PlayerId, TableUpdate } from "./GameUpdate";
+import { GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchById, sortById } from "./GameTable";
+import { TableUpdate } from "./GameUpdate";
 import targetSelectorReducer from "./TargetSelectorReducer";
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
@@ -43,7 +43,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Creates new players or updates existing players with specified player_id and user_id
     player_add ({ players }) {
-        let newPlayers = this.players;
+        let newPlayers: Player[] = this.players;
         let newAlivePlayers = this.alive_players;
         for (const { player_id, user_id } of players) {
             const foundPlayer = searchById(newPlayers, player_id);
@@ -69,7 +69,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, players);
 
-        const newPlayers = removedPlayers.length == 0
+        const newPlayers = removedPlayers.length === 0
             ? this.players : editById(this.players, removedPlayers, player => ({
                 ...player,
                 animation: { player_death: { duration }},
@@ -77,7 +77,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             }));
 
         const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
-            if (rotatedPlayers[i] == player_id) {
+            if (rotatedPlayers[i] === player_id) {
                 return [];
             } else {
                 const rotatedIndex = rotatedPlayers.indexOf(player_id);
@@ -88,8 +88,8 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             players: newPlayers,
-            animation: movedPlayers.length == 0 ? undefined : { move_players: { players: movedPlayers, duration } },
-            animationKey: this.animationKey + +(movedPlayers.length != 0)
+            animation: movedPlayers.length === 0 ? undefined : { move_players: { players: movedPlayers, duration } },
+            animationKey: this.animationKey + +(movedPlayers.length !== 0)
         };
     },
     
@@ -99,7 +99,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, players);
 
-        const newPlayers = removedPlayers.length == 0
+        const newPlayers = removedPlayers.length === 0
             ? this.players : editById(this.players, removedPlayers, player => ({
                 ...player,
                 animation: undefined
@@ -109,7 +109,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             ...this,
             players: newPlayers,
             alive_players: rotatedPlayers,
-            dead_players: removedPlayers.length == 0 ? this.dead_players : this.dead_players.concat(removedPlayers),
+            dead_players: removedPlayers.length === 0 ? this.dead_players : this.dead_players.concat(removedPlayers),
             animation: undefined
         };
     },
@@ -179,7 +179,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Adds a card to another pocket
     move_card ({ card, player, pocket, duration }) {
         const fromPocket = getCard(this, card).pocket;
-        let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id == card ? CARD_SLOT_ID_FROM : id));
+        let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id === card ? CARD_SLOT_ID_FROM : id));
 
         const toPocket = newPocketId(pocket, player);
         [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO]);
@@ -198,7 +198,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         let [pockets, players] = removeFromPocket(this.pockets, this.players, fromPocket, [CARD_SLOT_ID_FROM]);
 
         const toPocket = newPocketId(pocket, player);
-        [pockets, players] = editPocketMap(pockets, players, toPocket, cards => cards.map(id => id == CARD_SLOT_ID_TO ? card: id));
+        [pockets, players] = editPocketMap(pockets, players, toPocket, cards => cards.map(id => id === CARD_SLOT_ID_TO ? card: id));
 
         return {
             ...this,

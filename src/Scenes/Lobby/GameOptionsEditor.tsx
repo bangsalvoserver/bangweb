@@ -18,12 +18,12 @@ function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly }: Game
     const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
         const oldValue = gameOptions.expansions.includes(name);
         const newValue = event.target.checked;
-        if (oldValue != newValue) {
+        if (oldValue !== newValue) {
             setGameOptions({
                 ...gameOptions,
                 expansions: newValue
                     ? gameOptions.expansions.concat(name)
-                    : gameOptions.expansions.filter(e => e != name)
+                    : gameOptions.expansions.filter(e => e !== name)
             });
         }
     };
@@ -65,7 +65,7 @@ function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: GameOpt
 
 function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<number>, max?: number }) {
     const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value.length == 0) {
+        if (event.target.value.length === 0) {
             setGameOptions({ ...gameOptions, [prop]: undefined });
         } else if (event.target.validity.valid) {
             const value = event.target.valueAsNumber;

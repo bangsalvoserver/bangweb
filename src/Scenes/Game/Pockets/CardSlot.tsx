@@ -26,7 +26,7 @@ export default function CardSlot({ cardRef, stretch, duration }: CardSlotProps) 
 
     let classes = ['card-slot', 'card-slot-stretch'];
 
-    if (stretch == 'in') {
+    if (stretch === 'in') {
         classes.push('card-slot-stretch-in');
     }
 

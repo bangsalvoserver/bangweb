@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useContext, useRef, useState } from 'react';
+import { createContext, useContext, useMemo, useRef, useState } from 'react';
 import { ConnectionContext } from '../../App';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
@@ -7,11 +7,10 @@ import { ChatMessage, LobbyId, LobbyInfo, UserId } from '../../Messages/ServerMe
 import { deserializeImage } from '../../Utils/ImageSerial';
 import GameScene from '../Game/GameScene';
 import { GameAction } from '../Game/Model/GameAction';
-import { GameOptions, GameUpdate, PlayerId } from '../Game/Model/GameUpdate';
+import { GameOptions, GameUpdate } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
-import { GameTable, getPlayer } from '../Game/Model/GameTable';
 
 export interface LobbyState {
   myUserId?: UserId;
@@ -56,7 +55,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
           setChatMessages(chatMessages => chatMessages.concat({
             user_id: 0,
             message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
-            is_read: is_read || user_id == myUserId
+            is_read: is_read || user_id === myUserId
           }));
           copy.push(newUser);
         }
@@ -81,7 +80,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
     lobby_chat: message => setChatMessages(messages => messages.concat(message)),
 
     lobby_entered: ({ lobby_id }) => {
-      if (lobby_id == myLobbyId) {
+      if (lobby_id === myLobbyId) {
         gameUpdates.current = [];
         setIsGameStarted(false);
         setUsers([]);
@@ -92,6 +91,12 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
     game_update: (update) => gameUpdates.current.push(update),
   
   }, [users]);
+
+  const channel = useMemo(() => ({
+    hasUpdates: () => gameUpdates.current.length !== 0,
+    getNextUpdate: () => gameUpdates.current.shift(),
+    sendGameAction: (action: GameAction) => connection.sendMessage({ game_action: action })
+  }), [connection]);
 
   const handleStartGame = () => connection.sendMessage({game_start: {}});
 
@@ -105,22 +110,18 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
       { isGameStarted ?
         (
           <GameScene
-            channel={{
-              hasUpdates: () => gameUpdates.current.length != 0,
-              getNextUpdate: () => gameUpdates.current.shift(),
-              sendGameAction: (action: GameAction) => connection.sendMessage({ game_action: action })
-            }}
+            channel={channel}
             handleReturnLobby={() => connection.sendMessage({ lobby_return: {}})}
           />
         )
       :
         (
           <div className='flex flex-col'>
-            { myUserId == lobbyOwner && <div className='status-bar'>
+            { myUserId === lobbyOwner && <div className='status-bar'>
               <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button>
             </div> }
             <div className='flex flex-col md:flex-row items-center md:items-start mb-24'>
-              <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={handleEditGameOptions} readOnly={myUserId != lobbyOwner} />
+              <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={handleEditGameOptions} readOnly={myUserId !== lobbyOwner} />
               <div className='flex flex-col -order-1 md:order-none'>
                 {users.map(user => (
                   <LobbyUser align='vertical' key={user.id} user={user} isOwner={user.id === lobbyOwner} />

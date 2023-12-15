@@ -23,7 +23,7 @@ export async function serializeImage(src: ImageSrc | undefined, scale?: number):
     let canvas = document.createElement('canvas');
     canvas.width = image.width;
     canvas.height = image.height;
-    if (scale != undefined) {
+    if (scale !== undefined) {
         if (canvas.width > canvas.height) {
             canvas.height = scale * canvas.height / canvas.width;
             canvas.width = scale;
@@ -48,7 +48,7 @@ export async function serializeImage(src: ImageSrc | undefined, scale?: number):
 }
 
 export function deserializeImage(data: ImagePixels | undefined): ImageSrc | undefined {
-    if (!data || data.width == 0 || data.height == 0) {
+    if (!data || data.width === 0 || data.height === 0) {
         return undefined;
     }
 

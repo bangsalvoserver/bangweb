@@ -57,7 +57,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
     if (isGameOver) {
       statusBar = <div className="status-bar">
         { getLabel('ui', 'STATUS_GAME_OVER') }
-        { myUserId == lobbyOwner && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button> }
+        { myUserId === lobbyOwner && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button> }
       </div>
     } else if (gameError) {
       statusBar = <div className="status-bar status-bar-error">

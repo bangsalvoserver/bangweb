@@ -6,10 +6,10 @@ export interface CardSignProps {
 }
 
 export default function CardSignView({ sign }: CardSignProps) {
-    if (sign.rank != 'none' && sign.suit != 'none') {
+    if (sign.rank !== 'none' && sign.suit !== 'none') {
         const rankSrc = getCardUrl('misc/' + sign.rank);
         const suitSrc = getCardUrl('misc/suit_' + sign.suit);
-        return <><img src={rankSrc} /><img src={suitSrc} /></>;
+        return <><img src={rankSrc} alt="" /><img src={suitSrc} alt="" /></>;
     } else {
         return null;
     }

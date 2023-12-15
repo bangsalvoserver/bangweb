@@ -1,5 +1,5 @@
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
-import { boolConverter, intConverter, jsonConverter, stringConverter, useLocalStorage, useSessionStorage } from "../Utils/UseLocalStorage";
+import { intConverter, jsonConverter, stringConverter, useLocalStorage, useSessionStorage } from "../Utils/UseLocalStorage";
 
 export function useSettings() {
     const [myUserId, setMyUserId] = useSessionStorage('user_id', intConverter);

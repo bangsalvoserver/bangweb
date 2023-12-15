@@ -18,7 +18,7 @@ function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps)
   const connection = useContext(ConnectionContext);
   const [lobbies, setLobbies] = useState<LobbyValue[]>([]);
 
-  useEffect(() => connection.sendMessage({ lobby_list: {}}), []);
+  useEffect(() => connection.sendMessage({ lobby_list: {}}), [connection]);
 
   useHandler(connection, {
 

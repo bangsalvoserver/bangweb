@@ -77,7 +77,7 @@ export function getCardImage(card: Card): CardImage | undefined {
         const imageFront = colonIndex >= 0 ? cardData.image.substring(0, colonIndex) : cardData.image;
         return {
             image: parseCardImage(imageFront, cardData.deck),
-            sign: cardData.sign.rank != 'none' && cardData.sign.suit != 'none' ? cardData.sign : undefined
+            sign: cardData.sign.rank !== 'none' && cardData.sign.suit !== 'none' ? cardData.sign : undefined
         };
     }
     return undefined;
@@ -95,7 +95,7 @@ export function getCardBackface(card: Card): string {
 }
 
 export function newPocketId(pocketName: PocketType, player: PlayerId | null = null): PocketId {
-    if (pocketName == 'none') {
+    if (pocketName === 'none') {
         return null;
     } else if (player && pocketName.startsWith('player_')) {
         return { name: pocketName as PlayerPocketType, player };
