@@ -70,7 +70,7 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
         is_read: false
       }));
     }
-    setUsers(users => users.filter(user => user.id !== user_id));
+    setUsers(users.filter(user => user.id !== user_id));
   }, [users]));
 
   useHandler(connection, 'lobby_owner', useCallback(({ user_id }: LobbyOwner) => {

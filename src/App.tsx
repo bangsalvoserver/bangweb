@@ -85,14 +85,10 @@ export default function App() {
   }, [connection, settings, scene.type]));
 
   useHandler(connection, 'lobby_edited', useCallback((lobbyInfo: LobbyInfo) => {
-    setScene(scene => {
-      if (scene.type === 'lobby') {
-        return { ...scene, lobbyInfo };
-      } else {
-        return scene;
-      }
-    });
-  }, []));
+    if (scene.type === 'lobby') {
+      setScene({ type: 'lobby', lobbyInfo });
+    }
+  }, [scene.type]));
   
   return (
     <div className="flex flex-col min-h-screen">
