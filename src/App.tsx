@@ -11,8 +11,6 @@ import { ImageSrc, serializeImage } from './Utils/ImageSerial';
 
 export const ConnectionContext = createContext<Connection>({
   isConnected: () => false,
-  isLocked: () => true,
-  setLocked: () => {},
   connect: () => {},
   disconnect: () => {},
   addHandler: () => {},
@@ -52,7 +50,6 @@ export default function App() {
       connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
     }
     settings.setMyUserId(user_id);
-    connection.setLocked(true);
     setScene({ type: 'waiting_area' });
   }, [connection, settings]));
 
@@ -71,18 +68,16 @@ export default function App() {
   useHandler(connection, 'lobby_remove_user', useCallback(({ user_id }: LobbyRemoveUser) => {
     if (user_id === settings.myUserId) {
       settings.setMyLobbyId(undefined);
-      connection.setLocked(true);
       setScene({ type: 'waiting_area' });
     }
-  }, [connection, settings]));
+  }, [settings]));
   
   useHandler(connection, 'lobby_entered', useCallback(({ lobby_id, name, options }: LobbyEntered) => {
     if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
-      connection.setLocked(true);
       settings.setMyLobbyId(lobby_id);
       setScene({ type: 'lobby', lobbyInfo: { name, options } });
     }
-  }, [connection, settings, scene.type]));
+  }, [settings, scene.type]));
 
   useHandler(connection, 'lobby_edited', useCallback((lobbyInfo: LobbyInfo) => {
     if (scene.type === 'lobby') {

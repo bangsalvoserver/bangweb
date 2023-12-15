@@ -18,8 +18,6 @@ export interface Connection {
     addHandler: (handler: MessageHandler) => void;
     removeHandler: (handler: MessageHandler) => void;
     isConnected: () => boolean;
-    isLocked: () => boolean;
-    setLocked: (locked: boolean) => void;
     connect: () => void;
     disconnect: () => void;
     sendMessage: (message: ClientMessage) => void;
@@ -50,7 +48,6 @@ export function useMessageHandlerSet(): MessageHandlerSet {
 interface SocketConnectionState {
     socket: WebSocket;
     queuedMessages: ServerMessage[];
-    locked: boolean;
 }
 
 export function useSocketConnection(): Connection {
@@ -59,17 +56,6 @@ export function useSocketConnection(): Connection {
 
     return useMemo(() => {
         const isConnected = () => state.current !== undefined;
-
-        const isLocked = () => state.current?.locked ?? false;
-
-        const setLocked = (locked: boolean) => {
-            if (state.current) {
-                state.current.locked = locked;
-                if (!locked) {
-                    processMessages();
-                }
-            }
-        };
 
         const connect = () => {
             const socket = new WebSocket(getServerUrl());
@@ -92,8 +78,7 @@ export function useSocketConnection(): Connection {
             };
             state.current = {
                 socket,
-                queuedMessages: [],
-                locked: false
+                queuedMessages: []
             };
         };
 
@@ -108,15 +93,12 @@ export function useSocketConnection(): Connection {
         const receiveMessage = (message: ServerMessage) => {
             if (state.current) {
                 state.current.queuedMessages.push(message);
-                if (!state.current.locked) {
-                    processMessages();
-                }
+                processMessages();
             }
         };
 
         const processMessages = () => {
             if (state.current) {
-                state.current.locked = false;
                 for (const message of state.current.queuedMessages) {
                     messageHandlers.processMessage(message);
                 }
@@ -124,7 +106,7 @@ export function useSocketConnection(): Connection {
             }
         };
     
-        return {...messageHandlers, isConnected, isLocked, setLocked, connect, disconnect, sendMessage } as const;
+        return {...messageHandlers, isConnected, connect, disconnect, sendMessage } as const;
     }, [messageHandlers]);
 }
 
@@ -132,7 +114,6 @@ export function useHandler<K extends keyof MessageHandler>(connection: Connectio
     useLayoutEffect(() => {
         const handler = { [key]: fn };
         connection.addHandler(handler);
-        connection.setLocked(false);
         return () => connection.removeHandler(handler);
     }, [connection, key, fn]);
 }

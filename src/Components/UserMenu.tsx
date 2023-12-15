@@ -8,7 +8,7 @@ export interface UserMenuItemProps {
 }
 
 export function UserMenuItem({ onClick, children }: UserMenuItemProps) {
-  return <li><a href="/" onClick={onClick} className="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">{children}</a></li>;
+  return <li><button onClick={onClick} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">{children}</button></li>;
 }
 
 export interface UserMenuProps {
