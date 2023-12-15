@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import Env from "../Model/Env";
 import { useSetRef } from "../Utils/UseMapRef";
 import { ClientMessage } from "./ClientMessage";
@@ -128,12 +128,13 @@ export function useSocketConnection(): Connection {
     }, [messageHandlers]);
 }
 
-export function useHandler(connection: Connection, handler: MessageHandler) {
+export function useHandler<K extends keyof MessageHandler>(connection: Connection, key: K, fn: MessageHandler[K]) {
     useLayoutEffect(() => {
+        const handler = { [key]: fn };
         connection.addHandler(handler);
         connection.setLocked(false);
         return () => connection.removeHandler(handler);
-    }, [connection, handler]);
+    }, [connection, key, fn]);
 }
 
 

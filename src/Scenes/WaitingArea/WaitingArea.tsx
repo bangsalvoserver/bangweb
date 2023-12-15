@@ -20,25 +20,23 @@ function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps)
 
   useEffect(() => connection.sendMessage({ lobby_list: {}}), [connection]);
 
-  useHandler(connection, {
+  useHandler(connection, 'lobby_update', useCallback(({ lobby_id, name, num_players, state }: LobbyUpdate) => {
+    setLobbies(lobbies => {
+      let copy = [...lobbies];
+      const newLobby = { id: lobby_id, name, num_players, state };
+      let index = copy.findIndex(lobby => lobby.id === lobby_id);
+      if (index >= 0) {
+        copy[index] = newLobby;
+      } else {
+        copy.push(newLobby);
+      }
+      return copy;
+    });
+  }, []));
 
-    lobby_update: useCallback(({ lobby_id, name, num_players, state }: LobbyUpdate) => {
-      setLobbies(lobbies => {
-        let copy = [...lobbies];
-        const newLobby = { id: lobby_id, name, num_players, state };
-        let index = copy.findIndex(lobby => lobby.id === lobby_id);
-        if (index >= 0) {
-          copy[index] = newLobby;
-        } else {
-          copy.push(newLobby);
-        }
-        return copy;
-      });
-    }, []),
-
-    lobby_removed: useCallback(({ lobby_id }: LobbyRemoved) => setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id)), [])
-
-  });
+  useHandler(connection, 'lobby_removed', useCallback(({ lobby_id }: LobbyRemoved) => {
+    setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id));
+  }, []));
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();

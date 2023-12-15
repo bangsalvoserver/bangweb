@@ -39,63 +39,61 @@ export default function App() {
     }
   }, [settings.myUserId, connection]);
 
-  useHandler(connection, {
+  useHandler(connection, 'connected', useCallback(async () => {
+    connection.sendMessage({connect: {
+      user: await makeUserInfo(settings.username, settings.propic),
+      user_id: settings.myUserId,
+      commit_hash: Env.commitHash
+    }});
+  }, [connection, settings]));
 
-    connected: useCallback(async () => {
-      connection.sendMessage({connect: {
-        user: await makeUserInfo(settings.username, settings.propic),
-        user_id: settings.myUserId,
-        commit_hash: Env.commitHash
-      }});
-    }, [connection, settings]),
+  useHandler(connection, 'client_accepted', useCallback(({ user_id }: ClientAccepted) => {
+    if (settings.myLobbyId) {
+      connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
+    }
+    settings.setMyUserId(user_id);
+    connection.setLocked(true);
+    setScene({ type: 'waiting_area' });
+  }, [connection, settings]));
 
-    client_accepted: useCallback(({ user_id }: ClientAccepted) => {
-      if (settings.myLobbyId) {
-        connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
-      }
-      settings.setMyUserId(user_id);
+  useHandler(connection, 'disconnected', useCallback(() => {
+    setScene({ type: 'connect' });
+  }, []));
+
+  useHandler(connection, 'ping', useCallback(() => {
+    connection.sendMessage({ pong: {} });
+  }, [connection]));
+
+  useHandler(connection, 'lobby_error', useCallback((message: string) => {
+    console.error('Lobby error: ', getLabel('lobby', message));
+  }, []));
+
+  useHandler(connection, 'lobby_remove_user', useCallback(({ user_id }: LobbyRemoveUser) => {
+    if (user_id === settings.myUserId) {
+      settings.setMyLobbyId(undefined);
       connection.setLocked(true);
       setScene({ type: 'waiting_area' });
-    }, [connection, settings]),
+    }
+  }, [connection, settings]));
+  
+  useHandler(connection, 'lobby_entered', useCallback(({ lobby_id, name, options }: LobbyEntered) => {
+    if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
+      connection.setLocked(true);
+      settings.setMyLobbyId(lobby_id);
+      setScene({ type: 'lobby', lobbyInfo: { name, options } });
+    }
+  }, [connection, settings, scene.type]));
 
-    disconnected: useCallback(() => {
-      setScene({ type: 'connect' });
-    }, []),
-
-    ping: useCallback(() => {
-      connection.sendMessage({ pong: {} });
-    }, [connection]),
-
-    lobby_error: useCallback((message: string) => console.error('Lobby error: ', getLabel('lobby', message)), []),
-
-    lobby_remove_user: useCallback(({ user_id }: LobbyRemoveUser) => {
-      if (user_id === settings.myUserId) {
-        settings.setMyLobbyId(undefined);
-        connection.setLocked(true);
-        setScene({ type: 'waiting_area' });
+  useHandler(connection, 'lobby_edited', useCallback((lobbyInfo: LobbyInfo) => {
+    setScene(scene => {
+      if (scene.type === 'lobby') {
+        return { ...scene, lobbyInfo };
+      } else {
+        return scene;
       }
-    }, [connection, settings]),
-    
-    lobby_entered: useCallback(({ lobby_id, name, options }: LobbyEntered) => {
-      if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
-        connection.setLocked(true);
-        settings.setMyLobbyId(lobby_id);
-        setScene({ type: 'lobby', lobbyInfo: { name, options } });
-      }
-    }, [scene.type, connection, settings]),
-
-    lobby_edited: useCallback((lobbyInfo: LobbyInfo) => {
-      setScene(scene => {
-        if (scene.type === 'lobby') {
-          return { ...scene, lobbyInfo };
-        } else {
-          return scene;
-        }
-      });
-    }, [])
-
-  });
-
+    });
+  }, []));
+  
   return (
     <div className="flex flex-col min-h-screen">
       <ConnectionContext.Provider value={connection}>

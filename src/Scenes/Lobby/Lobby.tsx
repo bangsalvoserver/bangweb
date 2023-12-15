@@ -42,55 +42,60 @@ export default function LobbyScene({ myUserId, myLobbyId, lobbyInfo, setGameOpti
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
-  useHandler(connection, {
-
-    lobby_add_user: useCallback(({ user_id, user: { name, profile_image }, is_read }: LobbyAddUser) => {
-      setUsers(users => {
-        let copy = [...users];
-        const newUser: UserValue = { id: user_id, name, propic: deserializeImage(profile_image) };
-        let index = copy.findIndex(user => user.id === user_id);
-        if (index >= 0) {
-          copy[index] = newUser;
-        } else {
-          setChatMessages(chatMessages => chatMessages.concat({
-            user_id: 0,
-            message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
-            is_read: is_read || user_id === myUserId
-          }));
-          copy.push(newUser);
-        }
-        return copy;
-      });
-    }, [myUserId]),
-
-    lobby_remove_user: useCallback(({ user_id }: LobbyRemoveUser) => {
-      const user = getUser(users, user_id);
-      if (user) {
+  useHandler(connection, 'lobby_add_user', useCallback(({ user_id, user: { name, profile_image }, is_read }: LobbyAddUser) => {
+    setUsers(users => {
+      let copy = [...users];
+      const newUser: UserValue = { id: user_id, name, propic: deserializeImage(profile_image) };
+      let index = copy.findIndex(user => user.id === user_id);
+      if (index >= 0) {
+        copy[index] = newUser;
+      } else {
         setChatMessages(chatMessages => chatMessages.concat({
           user_id: 0,
-          message: getLabel('lobby', 'USER_LEFT_LOBBY', user.name),
-          is_read: false
+          message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
+          is_read: is_read || user_id === myUserId
         }));
+        copy.push(newUser);
       }
-      setUsers(users => users.filter(user => user.id !== user_id));
-    }, [users]),
+      return copy;
+    });
+  }, [myUserId]));
 
-    lobby_owner: useCallback(({ user_id }: LobbyOwner) => setLobbyOwner(user_id), []),
+  useHandler(connection, 'lobby_remove_user', useCallback(({ user_id }: LobbyRemoveUser) => {
+    const user = getUser(users, user_id);
+    if (user) {
+      setChatMessages(chatMessages => chatMessages.concat({
+        user_id: 0,
+        message: getLabel('lobby', 'USER_LEFT_LOBBY', user.name),
+        is_read: false
+      }));
+    }
+    setUsers(users => users.filter(user => user.id !== user_id));
+  }, [users]));
 
-    lobby_chat: useCallback((message: ChatMessage) => setChatMessages(messages => messages.concat(message)), []),
+  useHandler(connection, 'lobby_owner', useCallback(({ user_id }: LobbyOwner) => {
+    setLobbyOwner(user_id);
+  }, []));
 
-    lobby_entered: useCallback(({ lobby_id }: LobbyEntered) => {
-      if (lobby_id === myLobbyId) {
-        gameUpdates.current = [];
-        setIsGameStarted(false);
-        setUsers([]);
-      }
-    }, [myLobbyId]),
-    
-    game_started: useCallback(() => setIsGameStarted(true), []),
-    game_update: useCallback((update: GameUpdate) => gameUpdates.current.push(update), [])
+  useHandler(connection, 'lobby_chat', useCallback((message: ChatMessage) => {
+    setChatMessages(messages => messages.concat(message));
+  }, []));
+
+  useHandler(connection, 'lobby_entered', useCallback(({ lobby_id }: LobbyEntered) => {
+    if (lobby_id === myLobbyId) {
+      gameUpdates.current = [];
+      setIsGameStarted(false);
+      setUsers([]);
+    }
+  }, [myLobbyId]));
   
-  });
+  useHandler(connection, 'game_started', useCallback(() => {
+    setIsGameStarted(true);
+  }, []));
+
+  useHandler(connection, 'game_update', useCallback((update: GameUpdate) => {
+    gameUpdates.current.push(update);
+  }, []));
 
   const channel = useMemo(() => ({
     hasUpdates: () => gameUpdates.current.length !== 0,
