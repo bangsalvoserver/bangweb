@@ -5,6 +5,7 @@ function playerItemString(numPlayers, playerIndex, gridColumn, gridRow) {
     case 0: gridColumnValue = '1 / span 2'; textAlignValue = 'center'; break;
     case 1: gridColumnValue = '1 / span 1'; textAlignValue = 'right'; break;
     case 2: gridColumnValue = '2 / span 1'; textAlignValue = 'left'; break;
+    default: break;
     }
     return `.player-grid[num-players="${numPlayers}"] `
         + `.player-grid-item[player-index="${playerIndex}"] { `
@@ -25,7 +26,7 @@ for (let numPlayers = 1; numPlayers <= 8; ++numPlayers) {
         if (y >= grid.length) {
             y = grid.length * 2 - y - 1;
             x = 0;
-            if (numPlayers % 2 == 0) {
+            if (numPlayers % 2 === 0) {
                 --y;
             }
         }

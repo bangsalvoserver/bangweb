@@ -60,7 +60,7 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
 
     if (message.format_str in gameStringRegistry) {
         const value = gameStringRegistry[message.format_str];
-        if (typeof value == 'function') {
+        if (typeof value === 'function') {
             return value(...formatArgs.map(arg => {
                 switch (arg.type) {
                 case 'integer':

@@ -34,7 +34,7 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
 /// with the found object modified according to the mapper function
 export function editById<T extends Id>(values: T[], id: number | number[], mapper: (value: T) => T): T[] {
     return values.map(value => {
-        if (typeof(id) == 'number' ? value.id === id : id.includes(value.id)) {
+        if (typeof(id) === 'number' ? value.id === id : id.includes(value.id)) {
             return mapper(value);
         } else {
             return value;

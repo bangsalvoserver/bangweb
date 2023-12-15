@@ -166,7 +166,7 @@ export function selectorCanUndo(table: GameTable): boolean {
             return targets.some(target => {
                 const value = Object.values(target)[0];
                 if (Array.isArray(value) && value.every(num => num === 0)) return false;
-                if (typeof value == 'object' && Object.keys(value).length === 0) return false;
+                if (typeof value === 'object' && Object.keys(value).length === 0) return false;
                 return true;
             });
         };
