@@ -1,22 +1,14 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import './App.css';
 import Header from './Components/Header';
 import getLabel from './Locale/GetLabel';
-import { Connection, useHandler, useSocketConnection } from './Messages/Connection';
-import { ClientAccepted, LobbyEntered, LobbyInfo, LobbyRemoveUser, UserInfo } from './Messages/ServerMessage';
+import { ServerMessage, UserInfo } from './Messages/ServerMessage';
 import { useSettings } from './Model/AppSettings';
 import Env from './Model/Env';
 import CurrentScene, { SceneType } from './Scenes/CurrentScene';
 import { ImageSrc, serializeImage } from './Utils/ImageSerial';
-
-export const ConnectionContext = createContext<Connection>({
-  isConnected: () => false,
-  connect: () => {},
-  disconnect: () => {},
-  addHandler: () => {},
-  removeHandler: () => {},
-  sendMessage: () => {},
-});
+import { ClientMessage } from './Messages/ClientMessage';
 
 export async function makeUserInfo (username?: string, propic?: ImageSrc): Promise<UserInfo> {
   return {
@@ -29,70 +21,89 @@ export default function App() {
   const [scene, setScene] = useState<SceneType>({ type: 'connect' });
   const settings = useSettings();
   
-  const connection = useSocketConnection();
+  const [socketUrl, setSocketUrl] = useState<string | null>(null);
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(socketUrl);
+
+  const sendMessage = useCallback((message: ClientMessage) => sendJsonMessage(message), [sendJsonMessage]);
+  const lastMessage = useMemo(() => lastJsonMessage ? lastJsonMessage as ServerMessage : null, [lastJsonMessage]);
+
+  const connect = useCallback(() => {
+    if (readyState !== ReadyState.OPEN) {
+      setSocketUrl(Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`);
+    }
+  }, [readyState]);
 
   useEffect(() => {
-    if (settings.myUserId && !connection.isConnected()) {
-      connection.connect();
+    if (settings.myUserId) {
+      connect();
     }
-  }, [settings.myUserId, connection]);
+  }, [settings.myUserId, connect]);
 
-  useHandler(connection, 'connected', useCallback(async () => {
-    connection.sendMessage({connect: {
-      user: await makeUserInfo(settings.username, settings.propic),
-      user_id: settings.myUserId,
-      commit_hash: Env.commitHash
-    }});
-  }, [connection, settings]));
+  const disconnect = useCallback(() => {
+    settings.setMyUserId(undefined);
+    settings.setMyLobbyId(undefined);
+    setSocketUrl(null);
+  }, [settings]);
 
-  useHandler(connection, 'client_accepted', useCallback(({ user_id }: ClientAccepted) => {
-    if (settings.myLobbyId) {
-      connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      (async () => {
+        sendMessage({connect: {
+          user: await makeUserInfo(settings.username, settings.propic),
+          user_id: settings.myUserId,
+          commit_hash: Env.commitHash
+        }});
+      })();
+    } else if (scene.type !== 'connect') {
+      setScene({ type:'connect' });
     }
-    settings.setMyUserId(user_id);
-    setScene({ type: 'waiting_area' });
-  }, [connection, settings]));
+  }, [settings.myUserId, settings.username, settings.propic, scene.type, sendMessage, readyState]);
 
-  useHandler(connection, 'disconnected', useCallback(() => {
-    setScene({ type: 'connect' });
-  }, []));
+  useEffect(() => {
+    if (!lastMessage) return;
 
-  useHandler(connection, 'ping', useCallback(() => {
-    connection.sendMessage({ pong: {} });
-  }, [connection]));
+    if ('client_accepted' in lastMessage) {
+      if (settings.myLobbyId) {
+        sendMessage({ lobby_join: { lobby_id: settings.myLobbyId }});
+      }
+      settings.setMyUserId(lastMessage.client_accepted.user_id);
+      setScene({ type: 'waiting_area' });
+    }
+    
+    if ('ping' in lastMessage) {
+      sendMessage({ pong: {} });
+    }
 
-  useHandler(connection, 'lobby_error', useCallback((message: string) => {
-    console.error('Lobby error: ', getLabel('lobby', message));
-  }, []));
+    if ('lobby_error' in lastMessage) {
+      console.error('Lobby error: ', getLabel('lobby', lastMessage.lobby_error));
+    }
 
-  useHandler(connection, 'lobby_remove_user', useCallback(({ user_id }: LobbyRemoveUser) => {
-    if (user_id === settings.myUserId) {
+    if ('lobby_remove_user' in lastMessage) {
       settings.setMyLobbyId(undefined);
       setScene({ type: 'waiting_area' });
     }
-  }, [settings]));
-  
-  useHandler(connection, 'lobby_entered', useCallback(({ lobby_id, name, options }: LobbyEntered) => {
-    if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
-      settings.setMyLobbyId(lobby_id);
-      setScene({ type: 'lobby', lobbyInfo: { name, options } });
-    }
-  }, [settings, scene.type]));
 
-  useHandler(connection, 'lobby_edited', useCallback((lobbyInfo: LobbyInfo) => {
-    if (scene.type === 'lobby') {
-      setScene({ type: 'lobby', lobbyInfo });
+    if ('lobby_entered' in lastMessage) {
+      const { lobby_id, name, options } = lastMessage.lobby_entered;
+      if (scene.type !== 'lobby' || (settings.myLobbyId !== lobby_id)) {
+        settings.setMyLobbyId(lobby_id);
+        setScene({ type: 'lobby', lobbyInfo: { name, options } });
+      }
     }
-  }, [scene.type]));
+    
+    if ('lobby_edited' in lastMessage) {
+      if (scene.type === 'lobby') {
+        setScene({ type: 'lobby', lobbyInfo: lastMessage.lobby_edited });
+      }
+    }
+  }, [settings, scene.type, lastMessage, sendMessage]);
   
   return (
     <div className="flex flex-col min-h-screen">
-      <ConnectionContext.Provider value={connection}>
-        <Header scene={scene} settings={settings} />
-        <div className="current-scene">
-          <CurrentScene scene={scene} setScene={setScene} settings={settings} />
-        </div>
-      </ConnectionContext.Provider>
+      <Header scene={scene} settings={settings} sendMessage={sendMessage} disconnect={disconnect} />
+      <div className="current-scene">
+        <CurrentScene scene={scene} setScene={setScene} settings={settings} lastMessage={lastMessage} sendMessage={sendMessage} connect={connect} />
+      </div>
     </div>
   );
 }

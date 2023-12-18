@@ -1,20 +1,20 @@
 import { SyntheticEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ConnectionContext } from "../../App";
 import getLabel from "../../Locale/GetLabel";
 import { ChatMessage, UserId } from "../../Messages/ServerMessage";
 import { useFocusRefState } from "../../Utils/UseEventListener";
 import { LobbyContext, getUser } from "./Lobby";
 import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
+import { ClientMessage } from "../../Messages/ClientMessage";
 
 export interface ChatProps {
     messages: ChatMessage[];
+    sendMessage: (message: ClientMessage) => void;
 }
 
-export default function LobbyChat({ messages }: ChatProps) {
+export default function LobbyChat({ messages, sendMessage }: ChatProps) {
     const { myUserId, users } = useContext(LobbyContext);
-    const connection = useContext(ConnectionContext);
 
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);
@@ -41,7 +41,7 @@ export default function LobbyChat({ messages }: ChatProps) {
     const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
         if (inputMessage.current?.value) {
-            connection.sendMessage({ lobby_chat: { message: inputMessage.current.value } });
+            sendMessage({ lobby_chat: { message: inputMessage.current.value } });
             inputMessage.current.value = '';
             inputMessage.current.focus();
         }

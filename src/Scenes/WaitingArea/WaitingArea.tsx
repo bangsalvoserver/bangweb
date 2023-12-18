@@ -1,53 +1,58 @@
-import { SyntheticEvent, useCallback, useContext, useEffect, useState } from "react";
-import { ConnectionContext } from "../../App";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { useHandler } from "../../Messages/Connection";
-import { LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
+import { ClientMessage } from "../../Messages/ClientMessage";
+import { LobbyId, ServerMessage } from "../../Messages/ServerMessage";
+import { GameOptions } from "../Game/Model/GameUpdate";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
-import { GameOptions } from "../Game/Model/GameUpdate";
 
 export interface WaitingAreaProps {
   lobbyName?: string;
   setLobbyName: (value: string) => void;
   gameOptions?: GameOptions;
+  lastMessage: ServerMessage | null;
+  sendMessage: (message: ClientMessage) => void;
 }
 
-function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps) {
-  const connection = useContext(ConnectionContext);
+function WaitingArea({ lobbyName, setLobbyName, gameOptions, lastMessage, sendMessage }: WaitingAreaProps) {
   const [lobbies, setLobbies] = useState<LobbyValue[]>([]);
 
-  useEffect(() => connection.sendMessage({ lobby_list: {}}), [connection]);
+  useEffect(() => sendMessage({ lobby_list: {}}), [sendMessage]);
 
-  useHandler(connection, 'lobby_update', useCallback(({ lobby_id, name, num_players, state }: LobbyUpdate) => {
-    setLobbies(lobbies => {
-      let copy = [...lobbies];
-      const newLobby = { id: lobby_id, name, num_players, state };
-      let index = copy.findIndex(lobby => lobby.id === lobby_id);
-      if (index >= 0) {
-        copy[index] = newLobby;
-      } else {
-        copy.push(newLobby);
-      }
-      return copy;
-    });
-  }, []));
+  useEffect(() => {
+    if (!lastMessage) return;
 
-  useHandler(connection, 'lobby_removed', useCallback(({ lobby_id }: LobbyRemoved) => {
-    setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id));
-  }, []));
+    if ('lobby_update' in lastMessage) {
+      const { lobby_id, name, num_players, state } = lastMessage.lobby_update;
+      setLobbies(lobbies => {
+        let copy = [...lobbies];
+        const newLobby = { id: lobby_id, name, num_players, state };
+        let index = copy.findIndex(lobby => lobby.id === lobby_id);
+        if (index >= 0) {
+          copy[index] = newLobby;
+        } else {
+          copy.push(newLobby);
+        }
+        return copy;
+      });
+    }
 
-  const handleCreateLobby = function (event: SyntheticEvent) {
+    if ('lobby_removed' in lastMessage) {
+      setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lastMessage.lobby_removed.lobby_id));
+    }
+  }, [lastMessage]);
+
+  const handleCreateLobby = useCallback((event: SyntheticEvent) => {
     event.preventDefault();
     if (lobbyName) {
-      connection.sendMessage({ lobby_make: { name: lobbyName, options: gameOptions }});
+      sendMessage({ lobby_make: { name: lobbyName, options: gameOptions }});
     }
-  };
+  }, [sendMessage, gameOptions, lobbyName]);
 
-  const handleClickJoin = (lobby_id: LobbyId) => {
-    connection.sendMessage({ lobby_join: { lobby_id }});
-  };
+  const handleClickJoin = useCallback((lobby_id: LobbyId) => {
+    sendMessage({ lobby_join: { lobby_id }});
+  }, [sendMessage]);
 
   return (
     <div className="w-full">

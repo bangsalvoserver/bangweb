@@ -1,20 +1,18 @@
-import { SyntheticEvent, useContext } from 'react';
-import { ConnectionContext } from '../../App';
+import { SyntheticEvent } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
 
 export interface ConnectProps {
   username?: string;
   setUsername: (value: string) => void;
+  connect: () => void;
 }
 
-export default function ConnectScene({ username, setUsername }: ConnectProps) {
-  const connection = useContext(ConnectionContext);
-
-  const handleConnect = function(event: SyntheticEvent) {
+export default function ConnectScene({ username, setUsername, connect }: ConnectProps) {
+  const handleConnect = (event: SyntheticEvent) => {
     event.preventDefault();
-    if (!connection.isConnected() && username) {
-      connection.connect();
+    if (username) {
+      connect();
     }
   };
 

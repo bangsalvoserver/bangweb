@@ -1,21 +1,22 @@
-import { ChangeEvent, useContext, useRef } from 'react';
-import { ConnectionContext, makeUserInfo } from '../App';
+import { ChangeEvent, useRef } from 'react';
+import { makeUserInfo } from '../App';
 import getLabel from '../Locale/GetLabel';
+import { ClientMessage } from '../Messages/ClientMessage';
 import AppSettings from '../Model/AppSettings';
 import { SceneType } from '../Scenes/CurrentScene';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { ImageSrc } from '../Utils/ImageSerial';
-import UserMenu, { UserMenuItem } from './UserMenu';
 import { useFocusRefState } from '../Utils/UseEventListener';
+import UserMenu, { UserMenuItem } from './UserMenu';
 
 export interface HeaderProps {
   scene: SceneType;
   settings: AppSettings;
+  sendMessage: (message: ClientMessage) => void;
+  disconnect: () => void;
 }
 
-function Header({ scene, settings }: HeaderProps) {
-  const connection = useContext(ConnectionContext);
-
+function Header({ scene, settings, sendMessage, disconnect }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   
   const menuRef = useRef<HTMLDivElement>(null);
@@ -24,18 +25,12 @@ function Header({ scene, settings }: HeaderProps) {
   const handleEditUser = async (username?: string, propic?: ImageSrc) => {
     settings.setUsername(username);
     settings.setPropic(propic);
-    connection.sendMessage({ user_edit: await makeUserInfo(username, propic) });
+    sendMessage({ user_edit: await makeUserInfo(username, propic) });
   };
 
   const handleClickPropic = () => inputFile.current?.click();
 
-  const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
-
-  const handleDisconnect = () => {
-    settings.setMyUserId(undefined);
-    settings.setMyLobbyId(undefined);
-    connection.disconnect();
-  };
+  const handleLeaveLobby = () => sendMessage({ lobby_leave: {}});
 
   const handlePropicChange = function (event: ChangeEvent<HTMLInputElement>) {
     let file = event.target.files ? event.target.files[0] : null;
@@ -82,7 +77,7 @@ function Header({ scene, settings }: HeaderProps) {
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
               { scene.type === 'lobby'
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
-                : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
+                : <UserMenuItem onClick={closeMenuAnd(disconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
             </UserMenu> }
           </div>}
         </div>
