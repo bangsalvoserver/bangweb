@@ -124,14 +124,14 @@ export default function useBangConnection() {
                     chatMessages = chatMessages.concat({
                         user_id: 0,
                         message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
-                        is_read: is_read || user_id === settings.myUserId
+                        is_read: is_read || user_id === lobbyState.myUserId
                     });
                     users.push(newUser);
                 }
                 return { ...lobbyState, users, chatMessages };
             }
         });
-    }, [settings.myUserId]));
+    }, []));
 
     useHandler('lobby_owner', useCallback(({ user_id }: LobbyOwner) => {
         sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, lobbyOwner: user_id }) });
