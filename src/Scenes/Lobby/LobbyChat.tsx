@@ -1,7 +1,7 @@
 import { SyntheticEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ConnectionContext } from "../../App";
 import getLabel from "../../Locale/GetLabel";
+import { Connection } from "../../Messages/Connection";
 import { ChatMessage, UserId } from "../../Messages/ServerMessage";
 import { useFocusRefState } from "../../Utils/UseEventListener";
 import { LobbyContext, getUser } from "./Lobby";
@@ -10,11 +10,11 @@ import "./Style/LobbyChat.css";
 
 export interface ChatProps {
     messages: ChatMessage[];
+    connection: Connection;
 }
 
-export default function LobbyChat({ messages }: ChatProps) {
+export default function LobbyChat({ messages, connection }: ChatProps) {
     const { myUserId, users } = useContext(LobbyContext);
-    const connection = useContext(ConnectionContext);
 
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);

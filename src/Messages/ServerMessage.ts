@@ -10,13 +10,13 @@ export interface ClientAccepted {
     user_id: UserId;
 }
 
-export type LobbyState = 'waiting' | 'playing' | 'finished';
+export type LobbyStateEnum = 'waiting' | 'playing' | 'finished';
 
 export interface LobbyUpdate {
     lobby_id: LobbyId;
     name: string;
     num_players: number;
-    state: LobbyState;
+    state: LobbyStateEnum;
 }
 
 export interface LobbyMakeArgs {

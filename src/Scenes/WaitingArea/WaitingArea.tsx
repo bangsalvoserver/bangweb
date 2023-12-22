@@ -1,42 +1,22 @@
-import { SyntheticEvent, useCallback, useContext, useEffect, useState } from "react";
-import { ConnectionContext } from "../../App";
+import { SyntheticEvent, useEffect } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { useHandler } from "../../Messages/Connection";
-import { LobbyId, LobbyRemoved, LobbyUpdate } from "../../Messages/ServerMessage";
+import { Connection } from "../../Messages/Connection";
+import { LobbyId } from "../../Messages/ServerMessage";
+import { GameOptions } from "../Game/Model/GameUpdate";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
-import { GameOptions } from "../Game/Model/GameUpdate";
 
 export interface WaitingAreaProps {
+  lobbies: LobbyValue[];
+  connection: Connection;
   lobbyName?: string;
   setLobbyName: (value: string) => void;
   gameOptions?: GameOptions;
 }
 
-function WaitingArea({ lobbyName, setLobbyName, gameOptions }: WaitingAreaProps) {
-  const connection = useContext(ConnectionContext);
-  const [lobbies, setLobbies] = useState<LobbyValue[]>([]);
-
+function WaitingArea({ lobbies, connection, lobbyName, setLobbyName, gameOptions }: WaitingAreaProps) {
   useEffect(() => connection.sendMessage({ lobby_list: {}}), [connection]);
-
-  useHandler(connection, 'lobby_update', useCallback(({ lobby_id, name, num_players, state }: LobbyUpdate) => {
-    setLobbies(lobbies => {
-      let copy = [...lobbies];
-      const newLobby = { id: lobby_id, name, num_players, state };
-      let index = copy.findIndex(lobby => lobby.id === lobby_id);
-      if (index >= 0) {
-        copy[index] = newLobby;
-      } else {
-        copy.push(newLobby);
-      }
-      return copy;
-    });
-  }, []));
-
-  useHandler(connection, 'lobby_removed', useCallback(({ lobby_id }: LobbyRemoved) => {
-    setLobbies(lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id));
-  }, []));
 
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();

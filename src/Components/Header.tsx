@@ -1,21 +1,21 @@
-import { ChangeEvent, useContext, useRef } from 'react';
-import { ConnectionContext, makeUserInfo } from '../App';
+import { ChangeEvent, useRef } from 'react';
 import getLabel from '../Locale/GetLabel';
+import { Connection } from '../Messages/Connection';
 import AppSettings from '../Model/AppSettings';
-import { SceneType } from '../Scenes/CurrentScene';
+import { SceneState } from '../Model/SceneState';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { ImageSrc } from '../Utils/ImageSerial';
-import UserMenu, { UserMenuItem } from './UserMenu';
 import { useFocusRefState } from '../Utils/UseEventListener';
+import UserMenu, { UserMenuItem } from './UserMenu';
+import { makeUserInfo } from '../Messages/UseBangConnection';
 
 export interface HeaderProps {
-  scene: SceneType;
+  scene: SceneState;
   settings: AppSettings;
+  connection: Connection;
 }
 
-function Header({ scene, settings }: HeaderProps) {
-  const connection = useContext(ConnectionContext);
-
+function Header({ scene, settings, connection }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   
   const menuRef = useRef<HTMLDivElement>(null);
