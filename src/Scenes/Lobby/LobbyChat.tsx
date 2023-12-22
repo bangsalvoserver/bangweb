@@ -9,12 +9,13 @@ import { getUsername } from "./LobbyUser";
 import "./Style/LobbyChat.css";
 
 export interface ChatProps {
+    myUserId?: UserId;
     messages: ChatMessage[];
     connection: Connection;
 }
 
-export default function LobbyChat({ messages, connection }: ChatProps) {
-    const { myUserId, users } = useContext(LobbyContext);
+export default function LobbyChat({ myUserId, messages, connection }: ChatProps) {
+    const { users } = useContext(LobbyContext);
 
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);
@@ -75,7 +76,7 @@ export default function LobbyChat({ messages, connection }: ChatProps) {
                         c0.192-0.385,0.116-0.849-0.188-1.153C57.753,46.753,56.403,42.619,55.894,37.042z"/>
                     </g>
                 </svg>
-                { numReadMessages < numUnreadMessages &&
+                {numReadMessages < numUnreadMessages &&
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-white font-bold bg-red-600 rounded-full w-5 h-5">
                         {numUnreadMessages - numReadMessages}
                     </div>}

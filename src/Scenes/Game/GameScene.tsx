@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef } from "react";
+import { UserId } from "../../Messages/ServerMessage";
 import { getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
@@ -26,6 +27,7 @@ import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 
 export interface GameProps {
+  myUserId?: UserId;
   channel: GameChannel;
   handleReturnLobby: () => void;
 }
@@ -33,8 +35,8 @@ export interface GameProps {
 const EMPTY_TABLE = newGameTable();
 export const GameTableContext = createContext(EMPTY_TABLE);
 
-export default function GameScene({ channel, handleReturnLobby }: GameProps) {
-  const { myUserId, users } = useContext(LobbyContext);
+export default function GameScene({ myUserId, channel, handleReturnLobby }: GameProps) {
+  const { users } = useContext(LobbyContext);
   const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(channel, myUserId);
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
@@ -48,7 +50,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
       pocketRefs.set(pocket, value);
     };
   };
-  
+
   const tracker: CardTracker = useMemo(() => ({
     getPlayerPockets(player: PlayerId) {
       return playerRefs.get(player);
@@ -63,7 +65,7 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
         return pocketRefs.get(pocket.name);
       }
     },
-    
+
     getCubesRect(card: Card | null) {
       if (card) {
         return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
@@ -74,16 +76,16 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   }), [playerRefs, pocketRefs]);
 
   const clickIsAllowed = !isGameOver
-      && table.self_player !== undefined
-      && table.selector.selection.mode !== 'finish'
-      && table.selector.prompt.type === 'none';
+    && table.self_player !== undefined
+    && table.selector.selection.mode !== 'finish'
+    && table.selector.prompt.type === 'none';
 
   const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selectorDispatch, card) : undefined;
   const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selectorDispatch, player) : undefined;
-  
+
   const handleConfirm = (clickIsAllowed && selectorCanConfirm(table)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
   const handleUndo = (clickIsAllowed && selectorCanUndo(table)) ? () => selectorDispatch({ undoSelection: {} }) : undefined;
-  
+
   useEffect(() => handleSendGameAction(table.selector, channel), [table.selector, channel]);
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
@@ -109,10 +111,10 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   );
 
   const tableCubes = <div className='table-cubes' ref={cubesRef}>
-    { table.status.num_cubes > 0 && <>
+    {table.status.num_cubes > 0 && <>
       <img src={SPRITE_CUBE} alt="" />
       <div>x{table.status.num_cubes}</div>
-    </> }
+    </>}
   </div>;
 
   const mainDeck = (table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0 || table.animation) &&
@@ -121,18 +123,18 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
       <StackPocket showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
     </div>;
 
-  const scenarioCards = 
+  const scenarioCards =
     (table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0
-    || table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0)
-      && <div className="pocket-group">
-        {(table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0) && <>
-          <div className="inline-block card-faded"><StackPocket pocketRef={setRef('scenario_deck')} cards={table.pockets.scenario_deck} slice={2} showCount /></div>
-          <StackPocket pocketRef={setRef('scenario_card')} cards={table.pockets.scenario_card} slice={2} onClickCard={onClickCard} />
-        </>}
-        {(table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0) && <>
-          <StackPocket pocketRef={setRef('wws_scenario_deck')} cards={table.pockets.wws_scenario_deck} slice={2} showCount />
-          <StackPocket pocketRef={setRef('wws_scenario_card')} cards={table.pockets.wws_scenario_card} slice={2} onClickCard={onClickCard} />
-        </>}
+      || table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0)
+    && <div className="pocket-group">
+      {(table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0) && <>
+        <div className="inline-block card-faded"><StackPocket pocketRef={setRef('scenario_deck')} cards={table.pockets.scenario_deck} slice={2} showCount /></div>
+        <StackPocket pocketRef={setRef('scenario_card')} cards={table.pockets.scenario_card} slice={2} onClickCard={onClickCard} />
+      </>}
+      {(table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0) && <>
+        <StackPocket pocketRef={setRef('wws_scenario_deck')} cards={table.pockets.wws_scenario_deck} slice={2} showCount />
+        <StackPocket pocketRef={setRef('wws_scenario_card')} cards={table.pockets.wws_scenario_card} slice={2} onClickCard={onClickCard} />
+      </>}
     </div>;
 
   const selectionPocket = table.pockets.selection.length !== 0 && (
@@ -144,15 +146,15 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
   const movingPlayers = (table.animation && 'move_players' in table.animation) ?
     table.animation.move_players.players.map(p => p.from) : [];
 
-  const playerViews = table.alive_players.map(( player_id, index) => {
+  const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
     const user = getUser(users, player.userid);
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
-      { movingPlayers.includes(player_id)
+      {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
         : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player}
-            onClickPlayer={onClickPlayer} onClickCard={onClickCard} /> }
+          onClickPlayer={onClickPlayer} onClickCard={onClickCard} />}
     </div>;
   });
 
@@ -161,19 +163,20 @@ export default function GameScene({ channel, handleReturnLobby }: GameProps) {
       <div className="game-scene">
         <div className="main-deck-row">
           <div>
-            { shopPockets }{ tableCubes }{ mainDeck }{ scenarioCards }
+            {shopPockets}{tableCubes}{mainDeck}{scenarioCards}
           </div>
-          { trainPockets }
+          {trainPockets}
         </div>
         <div className="player-grid" num-players={table.alive_players.length}>
-          { playerViews }
+          {playerViews}
         </div>
-        { selectionPocket }
+        {selectionPocket}
         <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
-        <CardChoiceView tracker={tracker} onClickCard={onClickCard}/>
+        <CardChoiceView tracker={tracker} onClickCard={onClickCard} />
         <AnimationView tracker={tracker} />
         <GameLogView logs={gameLogs} />
         <StatusBar
+          myUserId={myUserId}
           gameError={gameError}
           handleClearGameError={clearGameError}
           handleReturnLobby={handleReturnLobby}

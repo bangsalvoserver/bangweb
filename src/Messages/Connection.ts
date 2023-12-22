@@ -1,22 +1,14 @@
 import { useMemo, useRef } from "react";
 import Env from "../Model/Env";
-import { useSetRef } from "../Utils/UseMapRef";
 import { ClientMessage } from "./ClientMessage";
 import { ServerMessage } from "./ServerMessage";
 
 export type MessageHandler = {
-    [K in ServerMessage as keyof K]?: (message: K[keyof K]) => void;
+    [K in ServerMessage as keyof K]: (message: K[keyof K]) => void;
 };
 
-export interface MessageHandlerSet {
-    addHandler: (handler: MessageHandler) => void;
-    removeHandler: (handler: MessageHandler) => void;
-    processMessage: (message: ServerMessage) => void;
-}
-
 export interface Connection {
-    addHandler: (handler: MessageHandler) => void;
-    removeHandler: (handler: MessageHandler) => void;
+    setHandler: (handler: MessageHandler | undefined) => void;
     isConnected: () => boolean;
     connect: () => void;
     disconnect: () => void;
@@ -27,24 +19,6 @@ function getServerUrl(): string {
     return Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`;
 }
 
-export function useMessageHandlerSet(): MessageHandlerSet {
-    const handlers = useSetRef<MessageHandler>();
-
-    return useMemo(() => ({
-        addHandler: handlers.add,
-        removeHandler: handlers.delete,
-        processMessage: message => {
-            const [messageType, messageValue] = Object.entries(message)[0];
-            handlers.forEach(handler => {
-                if (messageType in handler) {
-                    const fn = handler[messageType as keyof typeof handler];
-                    (fn as (message: unknown) => void)(messageValue);
-                }
-            });
-        }
-    }) as const, [handlers]);
-}
-
 interface SocketConnectionState {
     socket: WebSocket;
     queuedMessages: ServerMessage[];
@@ -52,9 +26,43 @@ interface SocketConnectionState {
 
 export function useSocketConnection(): Connection {
     const state = useRef<SocketConnectionState>();
-    const messageHandlers = useMessageHandlerSet();
+    const messageHandler = useRef<MessageHandler>();
 
     return useMemo(() => {
+        const processMessages = () => {
+            if (!messageHandler.current) {
+                throw new Error("No message handler");
+            }
+            if (state.current) {
+                for (const message of state.current.queuedMessages) {
+                    const [messageType, messageValue] = Object.entries(message)[0];
+                    if (messageType in messageHandler.current) {
+                        const fn = messageHandler.current[messageType as keyof MessageHandler];
+                        (fn as (message: unknown) => void)(messageValue);
+                    } else {
+                        throw new Error(`No message handler for messageType ${messageType}`);
+                    }
+                }
+                state.current.queuedMessages = [];
+            }
+        };
+
+        const setHandler = (handler: MessageHandler | undefined) => {
+            messageHandler.current = handler;
+            if (messageHandler.current) {
+                processMessages();
+            }
+        };
+
+        const receiveMessage = (message: ServerMessage) => {
+            if (state.current) {
+                state.current.queuedMessages.push(message);
+                if (messageHandler.current) {
+                    processMessages();
+                }
+            }
+        };
+
         const isConnected = () => state.current !== undefined;
 
         const connect = () => {
@@ -89,25 +97,9 @@ export function useSocketConnection(): Connection {
                 state.current.socket.send(JSON.stringify(message));
             }
         };
-
-        const receiveMessage = (message: ServerMessage) => {
-            if (state.current) {
-                state.current.queuedMessages.push(message);
-                processMessages();
-            }
-        };
-
-        const processMessages = () => {
-            if (state.current) {
-                for (const message of state.current.queuedMessages) {
-                    messageHandlers.processMessage(message);
-                }
-                state.current.queuedMessages = [];
-            }
-        };
     
-        return {...messageHandlers, isConnected, connect, disconnect, sendMessage } as const;
-    }, [messageHandlers]);
+        return { setHandler, isConnected, connect, disconnect, sendMessage } as const;
+    }, []);
 }
 
 

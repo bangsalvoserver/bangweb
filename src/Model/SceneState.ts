@@ -1,19 +1,19 @@
-import { ChatMessage, Empty, LobbyInfo, UserId } from "../Messages/ServerMessage";
+import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyInfo, UserId } from "../Messages/ServerMessage";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { createUnionReducer } from "../Utils/UnionUtils";
 
 export interface LobbyState {
-    myUserId?: UserId;
+    lobbyId?: LobbyId;
     isGameStarted: boolean;
     users: UserValue[];
     lobbyOwner?: UserId;
     chatMessages: ChatMessage[];
 }
 
-export function newLobbyState(myUserId?: UserId): LobbyState {
+export function newLobbyState(lobbyId?: LobbyId): LobbyState {
     return {
-        myUserId,
+        lobbyId,
         isGameStarted: false,
         users: [],
         chatMessages: []
@@ -26,14 +26,14 @@ export type SceneState =
     { type: 'lobby', lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
 export type UpdateFunction<T> = (value: T) => T;
-    
+
 export type SceneUpdate =
     { reset: Empty } |
     { gotoWaitingArea: Empty } |
-    { gotoLobby: { myUserId?: UserId, lobbyInfo: LobbyInfo } } |
     { updateWaitingArea: UpdateFunction<LobbyValue[]> } |
     { updateLobbyInfo: UpdateFunction<LobbyInfo> } |
-    { updateLobbyState: UpdateFunction<LobbyState> };
+    { updateLobbyState: UpdateFunction<LobbyState> } |
+    { handleLobbyEntered: LobbyEntered };
 
 export function defaultCurrentScene(): SceneState {
     return { type: 'connect' }
@@ -45,9 +45,6 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     },
     gotoWaitingArea() {
         return { type: 'waiting_area', lobbies: [] };
-    },
-    gotoLobby({ myUserId, lobbyInfo }) {
-        return { type: 'lobby', lobbyInfo, lobbyState: newLobbyState(myUserId)};
     },
     updateWaitingArea(reducer) {
         if (this.type === 'waiting_area') {
@@ -68,6 +65,13 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
             return { ...this, lobbyState: reducer(this.lobbyState) };
         } else {
             return this;
+        }
+    },
+    handleLobbyEntered({ lobby_id, name, options }) {
+        if (this.type === 'lobby' && this.lobbyState.lobbyId === lobby_id) {
+            return { ...this, lobbyState: { ...this.lobbyState, isGameStarted: false, users: [] } };
+        } else {
+            return { type: 'lobby', lobbyInfo: { name, options }, lobbyState: newLobbyState(lobby_id) };
         }
     }
 });
