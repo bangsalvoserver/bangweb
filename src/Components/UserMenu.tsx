@@ -1,6 +1,6 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import "./Style/UserMenu.css"
+import { ReactNode, useLayoutEffect, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
+import "./Style/UserMenu.css";
 
 export interface UserMenuItemProps {
   onClick: () => void;
@@ -21,7 +21,7 @@ export default function UserMenu({ username, setUsername, children }: UserMenuPr
   const usernameRef = useRef<HTMLInputElement>(null);
   const [showInput, setShowInput] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (showInput) {
       usernameRef.current?.focus();
     }

@@ -16,8 +16,6 @@ export interface WaitingAreaProps {
 }
 
 function WaitingArea({ lobbies, connection, lobbyName, setLobbyName, gameOptions }: WaitingAreaProps) {
-  useEffect(() => connection.sendMessage({ lobby_list: {}}), [connection]);
-
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
     if (lobbyName) {

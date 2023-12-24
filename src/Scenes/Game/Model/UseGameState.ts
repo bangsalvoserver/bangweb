@@ -1,22 +1,27 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { Dispatch, MutableRefObject, SetStateAction, useCallback, useEffect, useReducer, useState } from "react";
 import { UserId } from "../../../Messages/ServerMessage";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
-import { FRAMERATE, useInterval, useTimeout } from "../../../Utils/UseInterval";
+import { FRAMERATE } from "../../../Utils/UseUpdateEveryFrame";
 import { GameAction } from "./GameAction";
 import { newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
 import { Duration, GameString, GameUpdate, Milliseconds, TableUpdate } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
-export interface GameChannel {
+export interface ReceiveGameUpdate {
     hasUpdates: () => boolean;
     getNextUpdate: () => GameUpdate | undefined;
+}
+
+export interface SendGameAction {
     sendGameAction: (action: GameAction) => void;
 }
 
+export interface GameChannel extends ReceiveGameUpdate, SendGameAction {}
+
 const tickDuration = 1000 / FRAMERATE;
 
-export function useGameState(channel: GameChannel, myUserId?: UserId) {
+export function useGameState(channel: ReceiveGameUpdate, myUserId?: UserId) {
     const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
@@ -24,14 +29,15 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
     const clearGameError = useCallback(() => {
         if (gameError) setGameError(undefined);
     }, [gameError]);
-    useTimeout(clearGameError, 5000);
 
-    const updateTimeout = useRef<number>();
-    useEffect(() => () => clearTimeout(updateTimeout.current), []);
+    useEffect(() => {
+        const timeout = setTimeout(clearGameError, 5000);
+        return () => clearTimeout(timeout);
+    }, [clearGameError]);
     
     const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
-    const handleNextUpdate = useCallback((extraTime: Milliseconds) => {
+    const handleNextUpdate = useCallback((extraTime: Milliseconds, updateTimeout: MutableRefObject<number | undefined>) => {
         const context: GameUpdateContext = {
             tableDispatch, selectorDispatch, setGameLogs, setGameError,
             setAnimation: (update, endUpdate) => {
@@ -45,7 +51,7 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
                         const timeElapsed = Date.now() - startTime;
                         if (endUpdate) tableDispatch(endUpdate);
                         updateTimeout.current = undefined;
-                        handleNextUpdate(timeElapsed - duration);
+                        handleNextUpdate(timeElapsed - duration, updateTimeout);
                     }, duration);
                 }
             }
@@ -56,7 +62,19 @@ export function useGameState(channel: GameChannel, myUserId?: UserId) {
         }
     }, [channel]);
 
-    useInterval(useCallback(timeElapsed => handleNextUpdate(timeElapsed - tickDuration), [handleNextUpdate]), tickDuration);
+    useEffect(() => {
+        let startTime = Date.now();
+        let updateTimeout = { current: undefined };
+        const interval = setInterval(() => {
+            const endTime = Date.now();
+            handleNextUpdate(endTime - startTime - tickDuration, updateTimeout);
+            startTime = endTime;
+        }, tickDuration);
+        return () => {
+            clearTimeout(updateTimeout.current);
+            clearInterval(interval);
+        };
+    }, [handleNextUpdate]);
 
     return { table, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }

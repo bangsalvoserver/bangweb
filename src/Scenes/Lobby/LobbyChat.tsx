@@ -1,4 +1,4 @@
-import { SyntheticEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { SyntheticEvent, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import getLabel from "../../Locale/GetLabel";
 import { Connection } from "../../Messages/Connection";
@@ -33,9 +33,9 @@ export default function LobbyChat({ myUserId, messages, connection }: ChatProps)
         }
     }, [isChatOpen, messages, numUnreadMessages]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (isChatOpen) {
-            setTimeout(() => inputMessage.current?.focus());
+            inputMessage.current?.focus();
         }
     }, [isChatOpen]);
 

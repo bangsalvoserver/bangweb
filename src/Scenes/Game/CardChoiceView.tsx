@@ -1,6 +1,6 @@
 import { CSSProperties, useCallback, useContext, useMemo } from "react";
 import { getRectCenter } from "../../Utils/Rect";
-import { useUpdateEveryFrame } from "../../Utils/UseInterval";
+import { useUpdateEveryFrame } from "../../Utils/UseUpdateEveryFrame";
 import CardView from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";

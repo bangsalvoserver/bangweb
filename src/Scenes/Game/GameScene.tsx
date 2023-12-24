@@ -86,7 +86,20 @@ export default function GameScene({ myUserId, channel, handleReturnLobby }: Game
   const handleConfirm = (clickIsAllowed && selectorCanConfirm(table)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
   const handleUndo = (clickIsAllowed && selectorCanUndo(table)) ? () => selectorDispatch({ undoSelection: {} }) : undefined;
 
-  useEffect(() => handleSendGameAction(table.selector, channel), [table.selector, channel]);
+  const gameActionSent = useRef(false);
+  
+  useEffect(() => {
+    if (gameActionSent.current) {
+      gameActionSent.current = false;
+    } else {
+      handleSendGameAction(table.selector, {
+        sendGameAction: action => {
+          channel.sendGameAction(action);
+          gameActionSent.current = true;
+        }
+      });
+    }
+  }, [table.selector, channel]);
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
     <div className="pocket-group relative">

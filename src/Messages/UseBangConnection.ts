@@ -104,6 +104,7 @@ export default function useBangConnection() {
                 }
                 settings.setMyUserId(user_id);
                 sceneDispatch({ gotoWaitingArea: {} });
+                connection.sendMessage({ lobby_list: {} });
             },
             lobby_error: (message) => {
                 // TODO add gui element for lobby error
@@ -133,6 +134,7 @@ export default function useBangConnection() {
                 if (user_id === settings.myUserId) {
                     settings.setMyLobbyId(undefined);
                     sceneDispatch({ gotoWaitingArea: {} });
+                    connection.sendMessage({ lobby_list: {} });
                 } else {
                     sceneDispatch({ updateLobbyState: handleLobbyRemoveUser({ user_id }) });
                 }
