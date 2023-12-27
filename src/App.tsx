@@ -7,7 +7,7 @@ import LobbyScene from './Scenes/Lobby/Lobby';
 import WaitingArea from './Scenes/WaitingArea/WaitingArea';
 
 export default function App() {
-  const { scene, sceneDispatch, settings, connection, getNextUpdate } = useBangConnection();
+  const { scene, settings, connection, getNextUpdate, setGameOptions } = useBangConnection();
 
   const currentScene = () => {
     switch (scene.type) {
@@ -31,11 +31,7 @@ export default function App() {
           lobbyInfo={scene.lobbyInfo}
           lobbyState={scene.lobbyState}
           connection={connection}
-          setGameOptions={gameOptions => {
-            connection.sendMessage({ lobby_edit: { name: scene.lobbyInfo.name, options: gameOptions } });
-            sceneDispatch({ updateLobbyInfo: lobbyInfo => ({ ...lobbyInfo, options: gameOptions }) });
-            settings.setGameOptions(gameOptions);
-          }}
+          setGameOptions={setGameOptions}
         />;
       case 'game':
         return <GameScene

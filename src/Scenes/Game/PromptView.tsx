@@ -54,5 +54,7 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
                 <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>
             </div>
         </div>;
+    } else {
+        return null;
     }
 }

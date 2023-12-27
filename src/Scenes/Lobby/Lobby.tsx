@@ -13,10 +13,12 @@ export function getUser(users: UserValue[], id: UserId): UserValue | undefined {
   return users.find(user => user.id === id);
 }
 
+export type SetGameOptions = (value: GameOptions) => void;
+
 export interface LobbyProps {
   myUserId?: UserId;
   lobbyInfo: LobbyInfo;
-  setGameOptions: (value: GameOptions) => void;
+  setGameOptions: SetGameOptions;
   connection: Connection;
   lobbyState: LobbyState;
 }

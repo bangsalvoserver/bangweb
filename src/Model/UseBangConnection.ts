@@ -2,7 +2,7 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { GetNextUpdate } from "../Scenes/Game/Model/UseGameState";
-import { getUser } from "../Scenes/Lobby/Lobby";
+import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
@@ -126,7 +126,7 @@ export default function useBangConnection() {
                 sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, lobbyOwner: user_id }) });
             },
             lobby_add_user: (message) => {
-                sceneDispatch({ updateLobbyState: handleLobbyAddUser(message, settings.myUserId ) });
+                sceneDispatch({ updateLobbyState: handleLobbyAddUser(message, settings.myUserId) });
             },
             lobby_remove_user: ({ user_id }) => {
                 if (user_id === settings.myUserId) {
@@ -158,5 +158,14 @@ export default function useBangConnection() {
 
     const getNextUpdate: GetNextUpdate = useCallback(() => gameUpdates.current.shift(), []);
 
-    return { scene, sceneDispatch, settings, connection, getNextUpdate } as const;
+    const setGameOptions: SetGameOptions = useCallback(gameOptions => {
+        if (scene.type !== 'lobby') {
+            throw new Error('Invalid scene type: ' + scene.type);
+        }
+        connection.sendMessage({ lobby_edit: { name: scene.lobbyInfo.name, options: gameOptions } });
+        sceneDispatch({ updateLobbyInfo: lobbyInfo => ({ ...lobbyInfo, options: gameOptions }) });
+        settings.setGameOptions(gameOptions);
+    }, [scene, connection, settings]);
+
+    return { scene, settings, connection, getNextUpdate, setGameOptions } as const;
 }

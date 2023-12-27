@@ -67,5 +67,7 @@ export default function StatusBar({ myUserId, gameError, handleClearGameError, h
     return <div className="status-bar">
       {statusText}{timerWidget}{buttonRow}{confirmButton}{undoButton}
     </div>
+  } else {
+    return null;
   }
 }
