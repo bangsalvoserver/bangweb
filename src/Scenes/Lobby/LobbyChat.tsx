@@ -1,7 +1,7 @@
 import { SyntheticEvent, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { Connection } from "../../Model/Connection";
-import { ChatMessage, UserId } from "../../Model/ServerMessage";
+import { UserId } from "../../Model/ServerMessage";
 import { useFocusRefState } from "../../Utils/UseEventListener";
 import { LobbyContext, getUser } from "./Lobby";
 import { getUsername } from "./LobbyUser";
@@ -9,12 +9,11 @@ import "./Style/LobbyChat.css";
 
 export interface ChatProps {
     myUserId?: UserId;
-    messages: ChatMessage[];
     connection: Connection;
 }
 
-export default function LobbyChat({ myUserId, messages, connection }: ChatProps) {
-    const { users } = useContext(LobbyContext);
+export default function LobbyChat({ myUserId, connection }: ChatProps) {
+    const { users, chatMessages: messages } = useContext(LobbyContext);
 
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);

@@ -44,7 +44,7 @@ export default function LobbyScene({ myUserId, lobbyInfo, setGameOptions, connec
         </div>
       </div>
       <div className='overlay-buttons'>
-        <LobbyChat messages={lobbyState.chatMessages} connection={connection} />
+        <LobbyChat connection={connection} />
       </div>
     </LobbyContext.Provider>
   );

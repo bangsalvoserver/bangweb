@@ -81,7 +81,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
           </button>
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
-              { scene.type === 'game' &&
+              { scene.type === 'game' && settings.myUserId === scene.lobbyState.lobbyOwner &&
                 <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
               { scene.type === 'lobby' || scene.type === 'game'
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>

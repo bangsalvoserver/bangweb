@@ -192,7 +192,7 @@ export default function GameScene({ myUserId, connection, lobbyState, getNextUpd
         <AnimationView tracker={tracker} />
         <div className="overlay-buttons">
           <GameLogView logs={gameLogs} />
-          <LobbyChat messages={lobbyState.chatMessages} connection={connection} />
+          <LobbyChat connection={connection} />
         </div>
         <StatusBar
           myUserId={myUserId}
