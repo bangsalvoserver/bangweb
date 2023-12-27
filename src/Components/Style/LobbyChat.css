@@ -1,21 +1,3 @@
-.overlay-buttons {
-    position: fixed;
-    right: 1em;
-    bottom: 1em;
-
-    z-index: 20;
-
-    display: flex;
-    flex-direction: row;
-}
-
-@media (max-width: 768px) {
-    .overlay-buttons {
-        right: 0.5em;
-        bottom: 0.5em;
-    }
-}
-
 .lobby-chat-box {
     display: flex;
 

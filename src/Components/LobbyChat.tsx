@@ -1,27 +1,28 @@
-import { SyntheticEvent, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import getLabel from "../../Locale/GetLabel";
-import { Connection } from "../../Model/Connection";
-import { UserId } from "../../Model/ServerMessage";
-import { useFocusRefState } from "../../Utils/UseEventListener";
-import { LobbyContext, getUser } from "./Lobby";
-import { getUsername } from "./LobbyUser";
+import { SyntheticEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import getLabel from "../Locale/GetLabel";
+import { Connection } from "../Model/Connection";
+import { LobbyState } from "../Model/SceneState";
+import { UserId } from "../Model/ServerMessage";
+import { useFocusRefState } from "../Utils/UseEventListener";
+import { getUser } from "../Scenes/Lobby/Lobby";
+import { getUsername } from "../Scenes/Lobby/LobbyUser";
 import "./Style/LobbyChat.css";
 
 export interface ChatProps {
     myUserId?: UserId;
     connection: Connection;
+    lobbyState: LobbyState;
 }
 
-export default function LobbyChat({ myUserId, connection }: ChatProps) {
-    const { users, chatMessages: messages } = useContext(LobbyContext);
-
+export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProps) {
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
-
+    
     const [isChatOpen, setIsChatOpen] = useFocusRefState(chatRef);
     const [numReadMessages, setNumReadMessages] = useState(0);
-
+    
+    const messages = lobbyState.chatMessages;
     const numUnreadMessages = useMemo(() => messages.reduce((prev, { is_read }) => prev + +(!is_read), 0), [messages]);
 
     useEffect(() => {
@@ -48,7 +49,7 @@ export default function LobbyChat({ myUserId, connection }: ChatProps) {
 
     const newMessageTag = (user_id: UserId, message: string, index: number) => {
         if (user_id) {
-            const user = getUser(users, user_id);
+            const user = getUser(lobbyState.users, user_id);
             const pClass = user_id === myUserId ? 'text-right' : '';
             return (<p key={index} className={pClass}><span className='username'>{getUsername(user)}</span> : {message}</p>);
         } else {

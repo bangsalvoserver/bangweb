@@ -1,5 +1,7 @@
+import { useRef } from 'react';
 import './App.css';
 import Header from './Components/Header';
+import OverlayButtons from './Components/OverlayButtons';
 import useBangConnection from './Model/UseBangConnection';
 import ConnectScene from './Scenes/Connect/Connect';
 import GameScene from './Scenes/Game/GameScene';
@@ -8,6 +10,8 @@ import WaitingArea from './Scenes/WaitingArea/WaitingArea';
 
 export default function App() {
   const { scene, settings, connection, getNextUpdate, setGameOptions } = useBangConnection();
+
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const currentScene = () => {
     switch (scene.type) {
@@ -39,6 +43,7 @@ export default function App() {
           connection={connection}
           lobbyState={scene.lobbyState}
           getNextUpdate={getNextUpdate}
+          overlayRef={overlayRef}
         />
     }
   };
@@ -47,6 +52,7 @@ export default function App() {
     <div className="flex flex-col min-h-screen">
       <Header scene={scene} settings={settings} connection={connection} />
       <div className="current-scene">{currentScene()}</div>
+      <OverlayButtons scene={scene} settings={settings} connection={connection} overlayRef={overlayRef} />
     </div>
   );
 }

@@ -6,7 +6,6 @@ import { LobbyState, newLobbyState } from '../../Model/SceneState';
 import { LobbyInfo, UserId } from '../../Model/ServerMessage';
 import { GameOptions } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
-import LobbyChat from './LobbyChat';
 import LobbyUser, { UserValue } from './LobbyUser';
 
 export function getUser(users: UserValue[], id: UserId): UserValue | undefined {
@@ -42,9 +41,6 @@ export default function LobbyScene({ myUserId, lobbyInfo, setGameOptions, connec
             ))}
           </div>
         </div>
-      </div>
-      <div className='overlay-buttons'>
-        <LobbyChat connection={connection} />
       </div>
     </LobbyContext.Provider>
   );

@@ -1,11 +1,11 @@
-import { createContext, useCallback, useEffect, useMemo, useRef } from "react";
+import { RefObject, createContext, useCallback, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Connection } from "../../Model/Connection";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
 import { getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
-import LobbyChat from "../Lobby/LobbyChat";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
 import { SPRITE_CUBE } from "./CardView";
@@ -34,12 +34,13 @@ export interface GameProps {
   connection: Connection;
   lobbyState: LobbyState;
   getNextUpdate: GetNextUpdate;
+  overlayRef: RefObject<HTMLDivElement>;
 }
 
 const EMPTY_TABLE = newGameTable();
 export const GameTableContext = createContext(EMPTY_TABLE);
 
-export default function GameScene({ myUserId, connection, lobbyState, getNextUpdate }: GameProps) {
+export default function GameScene({ myUserId, connection, lobbyState, getNextUpdate, overlayRef }: GameProps) {
   const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(getNextUpdate, myUserId);
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
@@ -190,10 +191,6 @@ export default function GameScene({ myUserId, connection, lobbyState, getNextUpd
         <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
         <CardChoiceView tracker={tracker} onClickCard={onClickCard} />
         <AnimationView tracker={tracker} />
-        <div className="overlay-buttons">
-          <GameLogView logs={gameLogs} />
-          <LobbyChat connection={connection} />
-        </div>
         <StatusBar
           myUserId={myUserId}
           gameError={gameError}
@@ -204,6 +201,7 @@ export default function GameScene({ myUserId, connection, lobbyState, getNextUpd
           onClickCard={onClickCard}
         />
       </div>
+      { overlayRef.current && createPortal(<GameLogView logs={gameLogs} />, overlayRef.current) }
     </GameTableContext.Provider>
   </LobbyContext.Provider>;
 }
