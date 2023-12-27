@@ -22,47 +22,45 @@ export function newLobbyState(lobbyId?: LobbyId): LobbyState {
 
 export type SceneState =
     { type: 'connect' } |
-    { type: 'waiting_area', lobbies: LobbyValue[] } |
+    { type: 'waiting_area' } |
     { type: 'lobby', lobbyInfo: LobbyInfo, lobbyState: LobbyState };
+
+export type AppState = SceneState & { lobbies: LobbyValue[] };
 
 export type UpdateFunction<T> = (value: T) => T;
 
 export type SceneUpdate =
     { reset: Empty } |
     { gotoWaitingArea: Empty } |
-    { updateWaitingArea: UpdateFunction<LobbyValue[]> } |
+    { updateLobbies: UpdateFunction<LobbyValue[]> } |
     { updateLobbyInfo: UpdateFunction<LobbyInfo> } |
     { updateLobbyState: UpdateFunction<LobbyState> } |
     { handleLobbyEntered: LobbyEntered };
 
-export function defaultCurrentScene(): SceneState {
-    return { type: 'connect' }
+export function defaultCurrentScene(): AppState {
+    return { type: 'connect', lobbies: [] };
 }
 
-export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
+export const sceneReducer = createUnionReducer<AppState, SceneUpdate>({
     reset() {
         return defaultCurrentScene();
     },
     gotoWaitingArea() {
-        return { type: 'waiting_area', lobbies: [] };
+        return { ...this, type: 'waiting_area' };
     },
-    updateWaitingArea(reducer) {
-        if (this.type === 'waiting_area') {
-            return { ...this, lobbies: reducer(this.lobbies) };
+    updateLobbies(mapper) {
+        return { ...this, lobbies: mapper(this.lobbies) };
+    },
+    updateLobbyInfo(mapper) {
+        if (this.type === 'lobby') {
+            return { ...this, lobbyInfo: mapper(this.lobbyInfo) };
         } else {
             return this;
         }
     },
-    updateLobbyInfo(reducer) {
+    updateLobbyState(mapper) {
         if (this.type === 'lobby') {
-            return { ...this, lobbyInfo: reducer(this.lobbyInfo) };
-        } else {
-            return this;
-        }
-    },
-    updateLobbyState(reducer) {
-        if (this.type === 'lobby') {
-            return { ...this, lobbyState: reducer(this.lobbyState) };
+            return { ...this, lobbyState: mapper(this.lobbyState) };
         } else {
             return this;
         }
@@ -71,7 +69,7 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         if (this.type === 'lobby' && this.lobbyState.lobbyId === lobby_id) {
             return { ...this, lobbyState: { ...this.lobbyState, isGameStarted: false, users: [] } };
         } else {
-            return { type: 'lobby', lobbyInfo: { name, options }, lobbyState: newLobbyState(lobby_id) };
+            return { ...this, type: 'lobby', lobbyInfo: { name, options }, lobbyState: newLobbyState(lobby_id) };
         }
     }
 });

@@ -11,7 +11,6 @@ export type ClientMessage =
     {pong: Empty} |
     {connect: ClientConnect} |
     {user_edit: UserInfo} |
-    {lobby_list: Empty } |
     {lobby_make: LobbyMakeArgs} |
     {lobby_edit: LobbyInfo} |
     {lobby_join: { lobby_id: LobbyId }} |

@@ -1,4 +1,5 @@
 import { Empty } from "../../../Messages/ServerMessage";
+import { UpdateFunction } from "../../../Model/SceneState";
 import { countIf } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
@@ -19,7 +20,7 @@ export type SelectorUpdate =
     { addEquipTarget: Player }
 ;
 
-type TargetListMapper = (targets: CardTarget[]) => CardTarget[];
+type TargetListMapper = UpdateFunction<CardTarget[]>;
 
 function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper): PlayingSelector {
     switch (selector.selection.mode) {

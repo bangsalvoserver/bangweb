@@ -1,4 +1,5 @@
 import { Empty, UserId } from "../../../Messages/ServerMessage";
+import { UpdateFunction } from "../../../Model/SceneState";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
@@ -32,7 +33,7 @@ export function searchById<T extends Id>(values: T[], target: number): T | null 
 /// Takes as arguments an array of values, an id and a mapping function
 /// This function finds the element with the specified id and returns a new array of values
 /// with the found object modified according to the mapper function
-export function editById<T extends Id>(values: T[], id: number | number[], mapper: (value: T) => T): T[] {
+export function editById<T extends Id>(values: T[], id: number | number[], mapper: UpdateFunction<T>): T[] {
     return values.map(value => {
         if (typeof(id) === 'number' ? value.id === id : id.includes(value.id)) {
             return mapper(value);

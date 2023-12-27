@@ -104,14 +104,13 @@ export default function useBangConnection() {
                 }
                 settings.setMyUserId(user_id);
                 sceneDispatch({ gotoWaitingArea: {} });
-                connection.sendMessage({ lobby_list: {} });
             },
             lobby_error: (message) => {
                 // TODO add gui element for lobby error
                 console.error('Lobby error: ', getLabel('lobby', message));
             },
             lobby_update: (message: LobbyUpdate) => {
-                sceneDispatch({ updateWaitingArea: handleUpdateLobbies(message) });
+                sceneDispatch({ updateLobbies: handleUpdateLobbies(message) });
             },
             lobby_entered: (message) => {
                 gameUpdates.current = [];
@@ -122,7 +121,7 @@ export default function useBangConnection() {
                 sceneDispatch({ updateLobbyInfo: _ => lobbyInfo });
             },
             lobby_removed: ({ lobby_id }) => {
-                sceneDispatch({ updateWaitingArea: lobbies => lobbies.filter((lobby) => lobby.id !== lobby_id) });
+                sceneDispatch({ updateLobbies: lobbies => lobbies.filter(lobby => lobby.id !== lobby_id) });
             },
             lobby_owner: ({ user_id }) => {
                 sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, lobbyOwner: user_id }) });
@@ -134,7 +133,6 @@ export default function useBangConnection() {
                 if (user_id === settings.myUserId) {
                     settings.setMyLobbyId(undefined);
                     sceneDispatch({ gotoWaitingArea: {} });
-                    connection.sendMessage({ lobby_list: {} });
                 } else {
                     sceneDispatch({ updateLobbyState: handleLobbyRemoveUser({ user_id }) });
                 }
