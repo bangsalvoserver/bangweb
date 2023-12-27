@@ -1,4 +1,4 @@
-import { Empty } from "../../../Messages/ServerMessage";
+import { Empty } from "../../../Model/ServerMessage";
 import { count } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";

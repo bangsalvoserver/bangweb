@@ -1,7 +1,7 @@
 import { SyntheticEvent } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
-import { Connection } from '../../Messages/Connection';
+import { Connection } from '../../Model/Connection';
 
 export interface ConnectProps {
   username?: string;

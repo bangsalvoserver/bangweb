@@ -1,8 +1,8 @@
-import { SyntheticEvent, useEffect } from "react";
+import { SyntheticEvent } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { Connection } from "../../Messages/Connection";
-import { LobbyId } from "../../Messages/ServerMessage";
+import { Connection } from "../../Model/Connection";
+import { LobbyId } from "../../Model/ServerMessage";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';

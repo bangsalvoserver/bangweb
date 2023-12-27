@@ -1,28 +1,5 @@
-.game-log-view {
-    position: fixed;
-    right: 4.5em;
-    bottom: 1em;
-
-    z-index: 20;
-}
-
-@media (max-width: 768px) {
-    .game-log-view {
-        right: 3em;
-        bottom: 0.5em;
-    }
-}
-
-.game-log-open {
-    z-index: 21;
-}
-
-.game-log-open .game-log-box {
-    display: block;
-}
-
 .game-log-box {
-    display: none;
+    display: block;
     
     position: fixed;
     right: 1em;

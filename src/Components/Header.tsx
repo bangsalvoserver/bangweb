@@ -1,13 +1,13 @@
 import { ChangeEvent, useRef } from 'react';
 import getLabel from '../Locale/GetLabel';
-import { Connection } from '../Messages/Connection';
+import { Connection } from '../Model/Connection';
 import AppSettings from '../Model/AppSettings';
 import { SceneState } from '../Model/SceneState';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { ImageSrc } from '../Utils/ImageSerial';
 import { useFocusRefState } from '../Utils/UseEventListener';
 import UserMenu, { UserMenuItem } from './UserMenu';
-import { makeUserInfo } from '../Messages/UseBangConnection';
+import { makeUserInfo } from '../Model/UseBangConnection';
 
 export interface HeaderProps {
   scene: SceneState;
@@ -30,6 +30,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const handleClickPropic = () => inputFile.current?.click();
 
   const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
+  const handleReturnLobby = () => connection.sendMessage({ lobby_return: {}});
 
   const handleDisconnect = () => {
     settings.setMyUserId(undefined);
@@ -80,7 +81,9 @@ function Header({ scene, settings, connection }: HeaderProps) {
           </button>
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
-              { scene.type === 'lobby'
+              { scene.type === 'game' &&
+                <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
+              { scene.type === 'lobby' || scene.type === 'game'
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
                 : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
             </UserMenu> }

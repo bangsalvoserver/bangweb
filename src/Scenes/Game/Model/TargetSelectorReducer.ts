@@ -1,4 +1,4 @@
-import { Empty } from "../../../Messages/ServerMessage";
+import { Empty } from "../../../Model/ServerMessage";
 import { UpdateFunction } from "../../../Model/SceneState";
 import { countIf } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";

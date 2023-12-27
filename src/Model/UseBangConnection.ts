@@ -1,17 +1,16 @@
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import getLabel from "../Locale/GetLabel";
-import { useSettings } from "../Model/AppSettings";
-import Env from "../Model/Env";
-import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "../Model/SceneState";
-import { GameAction } from "../Scenes/Game/Model/GameAction";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
-import { GameChannel } from "../Scenes/Game/Model/UseGameState";
+import { GetNextUpdate } from "../Scenes/Game/Model/UseGameState";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
-import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
-import { useSocketConnection } from "./Connection";
-import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, UserId, UserInfo } from "./ServerMessage";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
+import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
+import { useSettings } from "./AppSettings";
+import { useSocketConnection } from "./Connection";
+import Env from "./Env";
+import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
+import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, UserId, UserInfo } from "./ServerMessage";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
@@ -144,7 +143,7 @@ export default function useBangConnection() {
                 gameUpdates.current.push(update);
             },
             game_started: () => {
-                sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, isGameStarted: true }) });
+                sceneDispatch({ gotoGame: {} });
             },
         });
 
@@ -157,11 +156,7 @@ export default function useBangConnection() {
         }
     }, [connection, settings.myUserId]);
 
-    const channel: GameChannel = useMemo(() => ({
-        hasUpdates: () => gameUpdates.current.length !== 0,
-        getNextUpdate: () => gameUpdates.current.shift(),
-        sendGameAction: (action: GameAction) => connection.sendMessage({ game_action: action })
-    }), [connection]);
+    const getNextUpdate: GetNextUpdate = useCallback(() => gameUpdates.current.shift(), []);
 
-    return { scene, sceneDispatch, settings, connection, channel } as const;
+    return { scene, sceneDispatch, settings, connection, getNextUpdate } as const;
 }

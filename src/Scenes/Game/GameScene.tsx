@@ -1,8 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useRef } from "react";
-import { UserId } from "../../Messages/ServerMessage";
+import { createContext, useCallback, useEffect, useMemo, useRef } from "react";
+import { Connection } from "../../Model/Connection";
+import { LobbyState } from "../../Model/SceneState";
+import { UserId } from "../../Model/ServerMessage";
 import { getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
+import LobbyChat from "../Lobby/LobbyChat";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
 import { SPRITE_CUBE } from "./CardView";
@@ -13,7 +16,7 @@ import { Card, Player, PocketId, getPlayer, newGameTable } from "./Model/GameTab
 import { PlayerId } from "./Model/GameUpdate";
 import { selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
-import { GameChannel, useGameState } from "./Model/UseGameState";
+import { GetNextUpdate, useGameState } from "./Model/UseGameState";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import PocketView from "./Pockets/PocketView";
@@ -28,22 +31,24 @@ import "./Style/PlayerGridMobile.css";
 
 export interface GameProps {
   myUserId?: UserId;
-  channel: GameChannel;
-  handleReturnLobby: () => void;
+  connection: Connection;
+  lobbyState: LobbyState;
+  getNextUpdate: GetNextUpdate;
 }
 
 const EMPTY_TABLE = newGameTable();
 export const GameTableContext = createContext(EMPTY_TABLE);
 
-export default function GameScene({ myUserId, channel, handleReturnLobby }: GameProps) {
-  const { users } = useContext(LobbyContext);
-  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(channel, myUserId);
+export default function GameScene({ myUserId, connection, lobbyState, getNextUpdate }: GameProps) {
+  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(getNextUpdate, myUserId);
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
   const playerRefs = useMapRef<PlayerId, PlayerRef>();
   const cubesRef = useRef<HTMLDivElement>(null);
 
   const isGameOver = table.status.flags.includes('game_over');
+  
+  const handleReturnLobby = useCallback(() => connection.sendMessage({ lobby_return: {} }), [connection]);
 
   const setRef = (pocket: PocketType) => {
     return (value: PocketRef | null) => {
@@ -92,14 +97,12 @@ export default function GameScene({ myUserId, channel, handleReturnLobby }: Game
     if (gameActionSent.current) {
       gameActionSent.current = false;
     } else {
-      handleSendGameAction(table.selector, {
-        sendGameAction: action => {
-          channel.sendGameAction(action);
-          gameActionSent.current = true;
-        }
+      handleSendGameAction(table.selector, action => {
+        connection.sendMessage({ game_action: action });
+        gameActionSent.current = true;
       });
     }
-  }, [table.selector, channel]);
+  }, [table.selector, connection]);
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
     <div className="pocket-group relative">
@@ -161,7 +164,7 @@ export default function GameScene({ myUserId, channel, handleReturnLobby }: Game
 
   const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
-    const user = getUser(users, player.userid);
+    const user = getUser(lobbyState.users, player.userid);
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
       {movingPlayers.includes(player_id)
@@ -171,7 +174,7 @@ export default function GameScene({ myUserId, channel, handleReturnLobby }: Game
     </div>;
   });
 
-  return (
+  return <LobbyContext.Provider value={lobbyState}>
     <GameTableContext.Provider value={table}>
       <div className="game-scene">
         <div className="main-deck-row">
@@ -187,7 +190,10 @@ export default function GameScene({ myUserId, channel, handleReturnLobby }: Game
         <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
         <CardChoiceView tracker={tracker} onClickCard={onClickCard} />
         <AnimationView tracker={tracker} />
-        <GameLogView logs={gameLogs} />
+        <div className="overlay-buttons">
+          <GameLogView logs={gameLogs} />
+          <LobbyChat messages={lobbyState.chatMessages} connection={connection} />
+        </div>
         <StatusBar
           myUserId={myUserId}
           gameError={gameError}
@@ -199,5 +205,5 @@ export default function GameScene({ myUserId, channel, handleReturnLobby }: Game
         />
       </div>
     </GameTableContext.Provider>
-  );
+  </LobbyContext.Provider>;
 }

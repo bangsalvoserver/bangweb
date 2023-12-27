@@ -1,4 +1,4 @@
-import { Empty } from "../../../Messages/ServerMessage";
+import { Empty } from "../../../Model/ServerMessage";
 import { KeysOfUnion } from "../../../Utils/UnionUtils";
 import { CardId, PlayerId } from "./GameUpdate";
 

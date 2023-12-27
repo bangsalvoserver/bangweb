@@ -51,18 +51,18 @@ export function handleClickPlayer(table: GameTable, selectorDispatch: Dispatch<S
     }
 }
 
-export function handleSendGameAction(selector: TargetSelector, channel: SendGameAction) {
+export function handleSendGameAction(selector: TargetSelector, sendGameAction: SendGameAction) {
     const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
     if (selector.selection.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         const timer_id = (isResponse(selector) && selector.request.timer?.timer_id) || null;
         if (isSelectionPicking(selector)) {
             const card = selector.selection.picked_card;
-            channel.sendGameAction({ pick_card: { card, bypass_prompt, timer_id }});
+            sendGameAction({ pick_card: { card, bypass_prompt, timer_id }});
         } else if (isSelectionPlaying(selector) && selector.selection.playing_card) {
             const card = selector.selection.playing_card.id;
             const modifiers = selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets }));
             const targets = selector.selection.targets;
-            channel.sendGameAction({ play_card: { card, modifiers, targets, bypass_prompt, timer_id }});
+            sendGameAction({ play_card: { card, modifiers, targets, bypass_prompt, timer_id }});
         }
     }
 }

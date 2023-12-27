@@ -1,12 +1,13 @@
 import './App.css';
 import Header from './Components/Header';
-import useBangConnection from './Messages/UseBangConnection';
+import useBangConnection from './Model/UseBangConnection';
 import ConnectScene from './Scenes/Connect/Connect';
+import GameScene from './Scenes/Game/GameScene';
 import LobbyScene from './Scenes/Lobby/Lobby';
 import WaitingArea from './Scenes/WaitingArea/WaitingArea';
 
 export default function App() {
-  const { scene, sceneDispatch, settings, connection, channel } = useBangConnection();
+  const { scene, sceneDispatch, settings, connection, getNextUpdate } = useBangConnection();
 
   const currentScene = () => {
     switch (scene.type) {
@@ -30,13 +31,19 @@ export default function App() {
           lobbyInfo={scene.lobbyInfo}
           lobbyState={scene.lobbyState}
           connection={connection}
-          channel={channel}
           setGameOptions={gameOptions => {
             connection.sendMessage({ lobby_edit: { name: scene.lobbyInfo.name, options: gameOptions } });
             sceneDispatch({ updateLobbyInfo: lobbyInfo => ({ ...lobbyInfo, options: gameOptions }) });
             settings.setGameOptions(gameOptions);
           }}
         />;
+      case 'game':
+        return <GameScene
+          myUserId={settings.myUserId}
+          connection={connection}
+          lobbyState={scene.lobbyState}
+          getNextUpdate={getNextUpdate}
+        />
     }
   };
 

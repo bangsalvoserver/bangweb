@@ -1,5 +1,5 @@
 import getLabel from "../../Locale/GetLabel";
-import { UserId } from "../../Messages/ServerMessage";
+import { UserId } from "../../Model/ServerMessage";
 import { ImageSrc } from "../../Utils/ImageSerial";
 import "./Style/LobbyUser.css"
 import defaultUserPropic from "/media/icon_default_user.png";

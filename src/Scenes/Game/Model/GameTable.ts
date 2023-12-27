@@ -1,4 +1,4 @@
-import { Empty, UserId } from "../../../Messages/ServerMessage";
+import { Empty, UserId } from "../../../Model/ServerMessage";
 import { UpdateFunction } from "../../../Model/SceneState";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";

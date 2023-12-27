@@ -1,5 +1,5 @@
 import { Dispatch, MutableRefObject, SetStateAction, useCallback, useEffect, useReducer, useState } from "react";
-import { UserId } from "../../../Messages/ServerMessage";
+import { UserId } from "../../../Model/ServerMessage";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { FRAMERATE } from "../../../Utils/UseUpdateEveryFrame";
 import { GameAction } from "./GameAction";
@@ -8,20 +8,12 @@ import gameTableReducer from "./GameTableReducer";
 import { Duration, GameString, GameUpdate, Milliseconds, TableUpdate } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
-export interface ReceiveGameUpdate {
-    hasUpdates: () => boolean;
-    getNextUpdate: () => GameUpdate | undefined;
-}
-
-export interface SendGameAction {
-    sendGameAction: (action: GameAction) => void;
-}
-
-export interface GameChannel extends ReceiveGameUpdate, SendGameAction {}
+export type GetNextUpdate = () => GameUpdate | undefined;
+export type SendGameAction = (action: GameAction) => void;
 
 const tickDuration = 1000 / FRAMERATE;
 
-export function useGameState(channel: ReceiveGameUpdate, myUserId?: UserId) {
+export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
     const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
@@ -57,10 +49,12 @@ export function useGameState(channel: ReceiveGameUpdate, myUserId?: UserId) {
             }
         };
 
-        while (!updateTimeout.current && channel.hasUpdates()) {
-            handleUpdate(context, channel.getNextUpdate()!);
+        while (!updateTimeout.current) {
+            const update = getNextUpdate();
+            if (!update) break;
+            handleUpdate(context, update);
         }
-    }, [channel]);
+    }, [getNextUpdate]);
 
     useEffect(() => {
         let startTime = Date.now();

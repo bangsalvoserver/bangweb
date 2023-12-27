@@ -1,6 +1,6 @@
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { LobbyId } from "../../Messages/ServerMessage";
+import { LobbyId } from "../../Model/ServerMessage";
 
 export interface LobbyValue {
   id: LobbyId;

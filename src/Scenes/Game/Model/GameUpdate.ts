@@ -1,4 +1,4 @@
-import { Empty, UserId } from "../../../Messages/ServerMessage";
+import { Empty, UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { CardTarget, DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
 import { SelectorUpdate } from "./TargetSelectorReducer";
