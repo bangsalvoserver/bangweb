@@ -76,7 +76,7 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     },
     handleLobbyEntered({ lobby_id, name, options }) {
         if (this.type === 'game') {
-            return { ...this, type: 'lobby', lobbyInfo: { name, options } };
+            return { ...this, type: 'lobby', lobbyInfo: { name, options }, lobbyState: { ...this.lobbyState, users: [] }};
         } else if ('lobbies' in this) {
             return { ...this, type: 'lobby', lobbyInfo: { name, options }, lobbyState: newLobbyState(lobby_id) };
         }
