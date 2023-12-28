@@ -28,7 +28,7 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
     const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
     useEffect(() => {
-        let animationTimeout : number | undefined;
+        let timeout : number | undefined;
 
         const handleNextUpdate = (extraTime: Milliseconds) => {
             const context: GameUpdateContext = {
@@ -40,36 +40,38 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
                         extraTime = -duration;
                     } else {
                         const startTime = Date.now();
-                        animationTimeout = setTimeout(() => {
+                        timeout = setTimeout(() => {
                             const timeElapsed = Date.now() - startTime;
                             if (endUpdate) tableDispatch(endUpdate);
-                            animationTimeout = undefined;
                             handleNextUpdate(timeElapsed - duration);
                         }, duration);
                     }
                 }
             };
 
-            while (!animationTimeout) {
+            timeout = undefined;
+            while (!timeout) {
                 const update = getNextUpdate();
                 if (!update) break;
                 handleUpdate(context, update);
             }
+
+            pollNextUpdate();
         };
 
-        let startTime = Date.now();
-
-        const tickDuration = 1000 / FRAMERATE;
-        const updateInterval = setInterval(() => {
-            const endTime = Date.now();
-            handleNextUpdate(endTime - startTime - tickDuration);
-            startTime = endTime;
-        }, tickDuration);
-
-        return () => {
-            clearTimeout(animationTimeout);
-            clearInterval(updateInterval);
+        const pollNextUpdate = () => {
+            if (!timeout) {
+                const tickDuration = 1000 / FRAMERATE;
+                const startTime = Date.now();
+                timeout = setTimeout(() => {
+                    const timeElapsed = Date.now() - startTime;
+                    handleNextUpdate(timeElapsed - tickDuration);
+                }, tickDuration);
+            }
         };
+
+        pollNextUpdate();
+        return () => clearTimeout(timeout);
     }, [getNextUpdate]);
 
     return { table, selectorDispatch, gameLogs, gameError, clearGameError } as const;
