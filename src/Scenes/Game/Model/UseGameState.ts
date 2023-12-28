@@ -1,4 +1,4 @@
-import { Dispatch, MutableRefObject, SetStateAction, useCallback, useEffect, useReducer, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState } from "react";
 import { UserId } from "../../../Model/ServerMessage";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { FRAMERATE } from "../../../Utils/UseUpdateEveryFrame";
@@ -10,8 +10,6 @@ import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export type GetNextUpdate = () => GameUpdate | undefined;
 export type SendGameAction = (action: GameAction) => void;
-
-const tickDuration = 1000 / FRAMERATE;
 
 export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
     const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
@@ -29,46 +27,50 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
     
     const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
 
-    const handleNextUpdate = useCallback((extraTime: Milliseconds, updateTimeout: MutableRefObject<number | undefined>) => {
-        const context: GameUpdateContext = {
-            tableDispatch, selectorDispatch, setGameLogs, setGameError,
-            setAnimation: (update, endUpdate) => {
-                const duration = update.duration - extraTime;
-                if (duration <= 0) {
-                    if (endUpdate) tableDispatch(endUpdate);
-                    extraTime = -duration;
-                } else {
-                    const startTime = Date.now();
-                    updateTimeout.current = setTimeout(() => {
-                        const timeElapsed = Date.now() - startTime;
+    useEffect(() => {
+        let animationTimeout : number | undefined;
+
+        const handleNextUpdate = (extraTime: Milliseconds) => {
+            const context: GameUpdateContext = {
+                tableDispatch, selectorDispatch, setGameLogs, setGameError,
+                setAnimation: (update, endUpdate) => {
+                    const duration = update.duration - extraTime;
+                    if (duration <= 0) {
                         if (endUpdate) tableDispatch(endUpdate);
-                        updateTimeout.current = undefined;
-                        handleNextUpdate(timeElapsed - duration, updateTimeout);
-                    }, duration);
+                        extraTime = -duration;
+                    } else {
+                        const startTime = Date.now();
+                        animationTimeout = setTimeout(() => {
+                            const timeElapsed = Date.now() - startTime;
+                            if (endUpdate) tableDispatch(endUpdate);
+                            animationTimeout = undefined;
+                            handleNextUpdate(timeElapsed - duration);
+                        }, duration);
+                    }
                 }
+            };
+
+            while (!animationTimeout) {
+                const update = getNextUpdate();
+                if (!update) break;
+                handleUpdate(context, update);
             }
         };
 
-        while (!updateTimeout.current) {
-            const update = getNextUpdate();
-            if (!update) break;
-            handleUpdate(context, update);
-        }
-    }, [getNextUpdate]);
-
-    useEffect(() => {
         let startTime = Date.now();
-        let updateTimeout = { current: undefined };
-        const interval = setInterval(() => {
+
+        const tickDuration = 1000 / FRAMERATE;
+        const updateInterval = setInterval(() => {
             const endTime = Date.now();
-            handleNextUpdate(endTime - startTime - tickDuration, updateTimeout);
+            handleNextUpdate(endTime - startTime - tickDuration);
             startTime = endTime;
         }, tickDuration);
+
         return () => {
-            clearTimeout(updateTimeout.current);
-            clearInterval(interval);
+            clearTimeout(animationTimeout);
+            clearInterval(updateInterval);
         };
-    }, [handleNextUpdate]);
+    }, [getNextUpdate]);
 
     return { table, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }
