@@ -2,7 +2,9 @@ import { Dispatch } from "react";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { PlayingSelectorTable, TargetSelector, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanPickCard, selectorCanPlayCard } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
-import { SendGameAction } from "./UseGameState";
+import { GameAction } from "./GameAction";
+
+export type SendGameAction = (action: GameAction) => void;
 
 export function handleClickCard(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>, card: Card) {
     const selector = table.selector;

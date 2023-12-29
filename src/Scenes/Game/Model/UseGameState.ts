@@ -1,20 +1,17 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { UserId } from "../../../Model/ServerMessage";
+import { GameUpdateObserver } from "../../../Model/UseBangConnection";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
-import { FRAMERATE } from "../../../Utils/UseUpdateEveryFrame";
-import { GameAction } from "./GameAction";
 import { newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
 import { Duration, GameString, GameUpdate, Milliseconds, TableUpdate } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
-export type GetNextUpdate = () => GameUpdate | undefined;
-export type SendGameAction = (action: GameAction) => void;
-
-export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
+export function useGameState(observer: GameUpdateObserver, myUserId?: UserId) {
     const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
+    const gameUpdates = useRef<GameUpdate[]>([]);
 
     const clearGameError = useCallback(() => {
         if (gameError) setGameError(undefined);
@@ -29,16 +26,6 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
 
     useEffect(() => {
         let timeout : number | undefined;
-        const pollDuration = 1000 / FRAMERATE;
-
-        const startTimeout = (duration: Milliseconds, fn?: () => void) => {
-            const startTime = Date.now();
-            timeout = setTimeout(() => {
-                const timeElapsed = Date.now() - startTime;
-                if (fn) fn();
-                handleNextUpdate(timeElapsed - duration);
-            }, duration);
-        };
 
         const handleNextUpdate = (extraTime: Milliseconds) => {
             const context: GameUpdateContext = {
@@ -49,26 +36,34 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
                         if (endUpdate) tableDispatch(endUpdate);
                         extraTime = -duration;
                     } else {
-                        startTimeout(duration, endUpdate ? () => tableDispatch(endUpdate) : undefined);
+                        const startTime = Date.now();
+                        timeout = setTimeout(() => {
+                            const timeElapsed = Date.now() - startTime;
+                            timeout = undefined;
+                            if (endUpdate) tableDispatch(endUpdate);
+                            handleNextUpdate(timeElapsed - duration);
+                        }, duration);
                     }
                 }
             };
 
-            timeout = undefined;
             while (!timeout) {
-                const update = getNextUpdate();
+                const update = gameUpdates.current.shift();
                 if (!update) break;
                 handleUpdate(context, update);
             }
-
-            if (!timeout) {
-                startTimeout(pollDuration);
-            }
         };
 
-        startTimeout(pollDuration);
-        return () => clearTimeout(timeout);
-    }, [getNextUpdate]);
+        observer.subscribe(update => {
+            gameUpdates.current.push(update);
+            handleNextUpdate(0);
+        });
+
+        return () => {
+            clearTimeout(timeout);
+            observer.unsubscribe();
+        }
+    }, [observer]);
 
     return { table, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }

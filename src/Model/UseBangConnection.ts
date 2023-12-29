@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
-import { GetNextUpdate } from "../Scenes/Game/Model/UseGameState";
 import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
@@ -73,9 +72,24 @@ function handleLobbyRemoveUser({ user_id }: LobbyRemoveUser): UpdateFunction<Lob
     };
 }
 
+export type GameUpdateSubscriber = (update: GameUpdate) => void;
+
+export interface GameUpdateObserver {
+    subscribe: (fn: GameUpdateSubscriber) => void;
+    unsubscribe: () => void;
+};
+
 export default function useBangConnection() {
     const [scene, sceneDispatch] = useReducer(sceneReducer, null, defaultCurrentScene);
     const gameUpdates = useRef<GameUpdate[]>([]);
+    const subscriber = useRef<GameUpdateSubscriber>();
+
+    const handleUpdates = useCallback(() => {
+        if (subscriber.current) {
+            gameUpdates.current.forEach(subscriber.current);
+            gameUpdates.current = [];
+        }
+    }, []);
 
     const settings = useSettings();
     const connection = useSocketConnection();
@@ -141,6 +155,7 @@ export default function useBangConnection() {
             },
             game_update: update => {
                 gameUpdates.current.push(update);
+                handleUpdates();
             },
             game_started: () => {
                 sceneDispatch({ gotoGame: {} });
@@ -148,7 +163,7 @@ export default function useBangConnection() {
         });
 
         return () => connection.setHandler(undefined);
-    }, [connection, settings]);
+    }, [connection, settings, handleUpdates]);
 
     useEffect(() => {
         if (settings.myUserId && !connection.isConnected()) {
@@ -156,7 +171,15 @@ export default function useBangConnection() {
         }
     }, [connection, settings.myUserId]);
 
-    const getNextUpdate: GetNextUpdate = useCallback(() => gameUpdates.current.shift(), []);
+    const observer: GameUpdateObserver = useMemo(() => ({
+        subscribe: (fn: GameUpdateSubscriber) => {
+            subscriber.current = fn;
+            handleUpdates();
+        },
+        unsubscribe: () => {
+            subscriber.current = undefined;
+        }
+    }), [handleUpdates]);
 
     const setGameOptions: SetGameOptions = useCallback(gameOptions => {
         if (scene.type !== 'lobby') {
@@ -167,5 +190,5 @@ export default function useBangConnection() {
         settings.setGameOptions(gameOptions);
     }, [scene, connection, settings]);
 
-    return { scene, settings, connection, getNextUpdate, setGameOptions } as const;
+    return { scene, settings, connection, observer, setGameOptions } as const;
 }

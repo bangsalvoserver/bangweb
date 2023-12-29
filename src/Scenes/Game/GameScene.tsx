@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Connection } from "../../Model/Connection";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
+import { GameUpdateObserver } from "../../Model/UseBangConnection";
 import { getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
@@ -16,7 +17,7 @@ import { Card, Player, PocketId, getPlayer, newGameTable } from "./Model/GameTab
 import { PlayerId } from "./Model/GameUpdate";
 import { selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
-import { GetNextUpdate, useGameState } from "./Model/UseGameState";
+import { useGameState } from "./Model/UseGameState";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import PocketView from "./Pockets/PocketView";
@@ -33,15 +34,15 @@ export interface GameProps {
   myUserId?: UserId;
   connection: Connection;
   lobbyState: LobbyState;
-  getNextUpdate: GetNextUpdate;
+  observer: GameUpdateObserver;
   overlayRef: RefObject<HTMLDivElement>;
 }
 
 const EMPTY_TABLE = newGameTable();
 export const GameTableContext = createContext(EMPTY_TABLE);
 
-export default function GameScene({ myUserId, connection, lobbyState, getNextUpdate, overlayRef }: GameProps) {
-  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(getNextUpdate, myUserId);
+export default function GameScene({ myUserId, connection, lobbyState, observer, overlayRef }: GameProps) {
+  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(observer, myUserId);
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
   const playerRefs = useMapRef<PlayerId, PlayerRef>();
