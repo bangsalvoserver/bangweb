@@ -29,6 +29,16 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
 
     useEffect(() => {
         let timeout : number | undefined;
+        const pollDuration = 1000 / FRAMERATE;
+
+        const startTimeout = (duration: Milliseconds, fn?: () => void) => {
+            const startTime = Date.now();
+            timeout = setTimeout(() => {
+                const timeElapsed = Date.now() - startTime;
+                if (fn) fn();
+                handleNextUpdate(timeElapsed - duration);
+            }, duration);
+        };
 
         const handleNextUpdate = (extraTime: Milliseconds) => {
             const context: GameUpdateContext = {
@@ -39,12 +49,7 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
                         if (endUpdate) tableDispatch(endUpdate);
                         extraTime = -duration;
                     } else {
-                        const startTime = Date.now();
-                        timeout = setTimeout(() => {
-                            const timeElapsed = Date.now() - startTime;
-                            if (endUpdate) tableDispatch(endUpdate);
-                            handleNextUpdate(timeElapsed - duration);
-                        }, duration);
+                        startTimeout(duration, endUpdate ? () => tableDispatch(endUpdate) : undefined);
                     }
                 }
             };
@@ -56,21 +61,12 @@ export function useGameState(getNextUpdate: GetNextUpdate, myUserId?: UserId) {
                 handleUpdate(context, update);
             }
 
-            pollNextUpdate();
-        };
-
-        const pollNextUpdate = () => {
             if (!timeout) {
-                const tickDuration = 1000 / FRAMERATE;
-                const startTime = Date.now();
-                timeout = setTimeout(() => {
-                    const timeElapsed = Date.now() - startTime;
-                    handleNextUpdate(timeElapsed - tickDuration);
-                }, tickDuration);
+                startTimeout(pollDuration);
             }
         };
 
-        pollNextUpdate();
+        startTimeout(pollDuration);
         return () => clearTimeout(timeout);
     }, [getNextUpdate]);
 
