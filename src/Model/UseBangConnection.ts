@@ -42,11 +42,13 @@ function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read }:
         if (index >= 0) {
             users[index] = newUser;
         } else {
-            chatMessages = chatMessages.concat({
-                user_id: 0,
-                message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
-                is_read: is_read || user_id === myUserId
-            });
+            if (user_id >= 0) {
+                chatMessages = chatMessages.concat({
+                    user_id: 0,
+                    message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
+                    is_read: is_read || user_id === myUserId
+                });
+            }
             users.push(newUser);
         }
         return { ...lobbyState, users, chatMessages };
@@ -58,13 +60,15 @@ function handleLobbyRemoveUser({ user_id }: LobbyRemoveUser): UpdateFunction<Lob
         let users = lobbyState.users;
         let chatMessages = lobbyState.chatMessages;
 
-        const user = getUser(users, user_id);
-        if (user) {
-            chatMessages = chatMessages.concat({
-                user_id: 0,
-                message: getLabel('lobby', 'USER_LEFT_LOBBY', user.name),
-                is_read: false
-            });
+        if (user_id >= 0) {
+            const user = getUser(users, user_id);
+            if (user) {
+                chatMessages = chatMessages.concat({
+                    user_id: 0,
+                    message: getLabel('lobby', 'USER_LEFT_LOBBY', user.name),
+                    is_read: false
+                });
+            }
         }
 
         users = users.filter(user => user.id !== user_id);
