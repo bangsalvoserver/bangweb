@@ -1,18 +1,18 @@
 import { SyntheticEvent } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
-import { Connection } from '../../Model/UseConnection';
+import { BangConnection } from '../../Model/UseBangConnection';
 
 export interface ConnectProps {
   username?: string;
   setUsername: (value: string) => void;
-  connection: Connection;
+  connection: BangConnection;
 }
 
 export default function ConnectScene({ username, setUsername, connection }: ConnectProps) {
   const handleConnect = function(event: SyntheticEvent) {
     event.preventDefault();
-    if (!connection.isConnected() && username) {
+    if (!connection.isConnected && username) {
       connection.connect();
     }
   };

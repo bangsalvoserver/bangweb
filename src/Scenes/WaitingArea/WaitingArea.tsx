@@ -1,15 +1,15 @@
 import { SyntheticEvent } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { Connection } from "../../Model/UseConnection";
 import { LobbyId } from "../../Model/ServerMessage";
+import { BangConnection } from "../../Model/UseBangConnection";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
 
 export interface WaitingAreaProps {
   lobbies: LobbyValue[];
-  connection: Connection;
+  connection: BangConnection;
   lobbyName?: string;
   setLobbyName: (value: string) => void;
   gameOptions?: GameOptions;

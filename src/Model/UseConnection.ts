@@ -1,27 +1,24 @@
-import { Dispatch, useMemo, useRef } from "react";
-import { ClientMessage } from "./ClientMessage";
-import { ServerMessage } from "./ServerMessage";
+import { Dispatch, useMemo, useRef, useState } from "react";
 import useObserver from "./UseObserver";
 
-export interface Connection {
+export interface Connection<ServerMessage, ClientMessage> {
     subscribe: (handler: Dispatch<ServerMessage>) => void;
     unsubscribe: () => void;
-    isConnected: () => boolean;
+    isConnected: boolean;
     connect: () => void;
     disconnect: () => void;
     sendMessage: (message: ClientMessage) => void;
 }
 
-export default function useConnection(url: string): Connection {
+export default function useConnection<ServerMessage, ClientMessage>(url: string): Connection<ServerMessage, ClientMessage> {
     const observer = useObserver<ServerMessage>();
+    const [isConnected, setIsConnected] = useState(false);
     const socket = useRef<WebSocket>();
 
     return useMemo(() => {
-        const isConnected = () => {
-            return socket.current !== undefined;
-        };
-    
         const connect = () => {
+            if (socket.current) return;
+            
             observer.clear();
             socket.current = new WebSocket(url);
             socket.current.onmessage = (event) => {
@@ -29,16 +26,16 @@ export default function useConnection(url: string): Connection {
             };
             socket.current.onopen = () => {
                 console.log('WebSocket connection established');
-                observer.update({ connected: {}});
+                setIsConnected(true);
             };
             socket.current.onclose = () => {
                 console.log('WebSocket connection closed');
-                observer.update({ disconnected: {}});
+                setIsConnected(false);
                 socket.current = undefined;
             };
             socket.current.onerror = () => {
                 console.log('WebSocket connection error');
-                observer.update({ disconnected: {}});
+                setIsConnected(false);
                 socket.current = undefined;
             };
         };
@@ -53,8 +50,12 @@ export default function useConnection(url: string): Connection {
             }
         };
         
-        return { subscribe: observer.subscribe, unsubscribe: observer.unsubscribe, isConnected, connect, disconnect, sendMessage } as const;
-    }, [url, observer]);
+        return {
+            subscribe: observer.subscribe,
+            unsubscribe: observer.unsubscribe,
+            isConnected, connect, disconnect, sendMessage
+        } as const;
+    }, [url, observer, isConnected]);
 }
 
 

@@ -1,9 +1,9 @@
 import { createContext, useCallback } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
-import { Connection } from '../../Model/UseConnection';
 import { LobbyState, newLobbyState } from '../../Model/SceneState';
 import { LobbyInfo, UserId } from '../../Model/ServerMessage';
+import { BangConnection } from '../../Model/UseBangConnection';
 import { GameOptions } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyUser, { UserValue } from './LobbyUser';
@@ -18,7 +18,7 @@ export interface LobbyProps {
   myUserId?: UserId;
   lobbyInfo: LobbyInfo;
   setGameOptions: SetGameOptions;
-  connection: Connection;
+  connection: BangConnection;
   lobbyState: LobbyState;
 }
 

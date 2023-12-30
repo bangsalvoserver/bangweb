@@ -1,9 +1,8 @@
 import { RefObject, createContext, useCallback, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Connection } from "../../Model/UseConnection";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
-import { GameUpdateObserver } from "../../Model/UseBangConnection";
+import { BangConnection, GameUpdateObserver } from "../../Model/UseBangConnection";
 import { getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
@@ -32,7 +31,7 @@ import "./Style/PlayerGridMobile.css";
 
 export interface GameProps {
   myUserId?: UserId;
-  connection: Connection;
+  connection: BangConnection;
   lobbyState: LobbyState;
   observer: GameUpdateObserver;
   overlayRef: RefObject<HTMLDivElement>;

@@ -1,14 +1,14 @@
 import { RefObject } from "react";
 import AppSettings from "../Model/AppSettings";
-import { Connection } from "../Model/UseConnection";
 import { SceneState } from "../Model/SceneState";
+import { BangConnection } from "../Model/UseBangConnection";
 import LobbyChat from "./LobbyChat";
 import "./Style/OverlayButtons.css";
 
 export interface OverlayProps {
     scene: SceneState;
     settings: AppSettings;
-    connection: Connection;
+    connection: BangConnection;
     overlayRef?: RefObject<HTMLDivElement>;
 }
 

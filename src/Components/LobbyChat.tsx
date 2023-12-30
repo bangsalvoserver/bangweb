@@ -1,16 +1,16 @@
 import { SyntheticEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
-import { Connection } from "../Model/UseConnection";
 import { LobbyState } from "../Model/SceneState";
 import { UserId } from "../Model/ServerMessage";
-import { useFocusRefState } from "../Utils/UseEventListener";
+import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { getUsername } from "../Scenes/Lobby/LobbyUser";
+import { useFocusRefState } from "../Utils/UseEventListener";
 import "./Style/LobbyChat.css";
 
 export interface ChatProps {
     myUserId?: UserId;
-    connection: Connection;
+    connection: BangConnection;
     lobbyState: LobbyState;
 }
 

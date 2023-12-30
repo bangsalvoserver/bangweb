@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
@@ -7,10 +7,11 @@ import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
 import { createUnionReducer } from "../Utils/UnionUtils";
 import { useSettings } from "./AppSettings";
+import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
 import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserId, UserInfo } from "./ServerMessage";
-import useConnection from "./UseConnection";
+import useConnection, { Connection } from "./UseConnection";
 import useObserver, { Observer } from "./UseObserver";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
@@ -84,29 +85,42 @@ function getServerUrl(): string {
     return Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`;
 }
 
+export type BangConnection = Connection<ServerMessage, ClientMessage>;
+
 export default function useBangConnection() {
     const [scene, sceneDispatch] = useReducer(sceneReducer, null, defaultCurrentScene);
     const observer: GameUpdateObserver = useObserver<GameUpdate>();
 
     const settings = useSettings();
-    const connection = useConnection(getServerUrl());
+    const connection = useConnection<ServerMessage, ClientMessage>(getServerUrl());
+    const connectedRef = useRef(false);
+
+    useEffect(() => {
+        if (connection.isConnected) {
+            if (!connectedRef.current) {
+                connectedRef.current = true;
+                (async () => {
+                    connection.sendMessage({
+                        connect: {
+                            user: await makeUserInfo(settings.username, settings.propic),
+                            user_id: settings.myUserId,
+                            commit_hash: Env.commitHash
+                        }
+                    });
+                })();
+            }
+        } else if (connectedRef.current) {
+            connectedRef.current = false;
+            sceneDispatch({ reset: {} });
+        } else if (settings.myUserId) {
+            connection.connect();
+        }
+    }, [settings, connection]);
 
     useEffect(() => {
         const handler = createUnionReducer<undefined, ServerMessage, void>({
             ping() {
                 connection.sendMessage({ pong: {} });
-            },
-            async connected () {
-                connection.sendMessage({
-                    connect: {
-                        user: await makeUserInfo(settings.username, settings.propic),
-                        user_id: settings.myUserId,
-                        commit_hash: Env.commitHash
-                    }
-                });
-            },
-            disconnected() {
-                sceneDispatch({ reset: {} });
             },
             client_accepted({ user_id }) {
                 if (settings.myLobbyId) {
@@ -159,15 +173,8 @@ export default function useBangConnection() {
         })
 
         connection.subscribe(update => handler(undefined, update));
-
-        return () => connection.unsubscribe();
+        return connection.unsubscribe;
     }, [connection, settings, observer]);
-
-    useEffect(() => {
-        if (settings.myUserId && !connection.isConnected()) {
-            connection.connect();
-        }
-    }, [connection, settings.myUserId]);
 
     const setGameOptions: SetGameOptions = useCallback(gameOptions => {
         if (scene.type !== 'lobby') {

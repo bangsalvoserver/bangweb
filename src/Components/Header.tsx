@@ -1,18 +1,17 @@
 import { ChangeEvent, useRef } from 'react';
 import getLabel from '../Locale/GetLabel';
-import { Connection } from '../Model/UseConnection';
 import AppSettings from '../Model/AppSettings';
 import { SceneState } from '../Model/SceneState';
+import { BangConnection, makeUserInfo } from '../Model/UseBangConnection';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { ImageSrc } from '../Utils/ImageSerial';
 import { useFocusRefState } from '../Utils/UseEventListener';
 import UserMenu, { UserMenuItem } from './UserMenu';
-import { makeUserInfo } from '../Model/UseBangConnection';
 
 export interface HeaderProps {
   scene: SceneState;
   settings: AppSettings;
-  connection: Connection;
+  connection: BangConnection;
 }
 
 function Header({ scene, settings, connection }: HeaderProps) {
