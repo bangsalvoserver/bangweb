@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
@@ -81,10 +81,6 @@ function handleLobbyRemoveUser({ user_id }: LobbyRemoveUser): UpdateFunction<Lob
 
 export type GameUpdateObserver = Observer<GameUpdate>;
 
-function getServerUrl(): string {
-    return Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`;
-}
-
 export type BangConnection = Connection<ServerMessage, ClientMessage>;
 
 export default function useBangConnection() {
@@ -92,22 +88,26 @@ export default function useBangConnection() {
     const observer: GameUpdateObserver = useObserver<GameUpdate>();
 
     const settings = useSettings();
-    const connection = useConnection<ServerMessage, ClientMessage>(getServerUrl());
+
+    const bangServerUrl = useMemo(() => {
+        if (!Env.bangServerUrl) {
+            throw new Error('missing BANG_SERVER_URL environment variable');
+        }
+        return Env.bangServerUrl;
+    }, []);
+
+    const connection = useConnection<ServerMessage, ClientMessage>(bangServerUrl);
     const connectedRef = useRef(false);
 
     useEffect(() => {
         if (connection.isConnected) {
             if (!connectedRef.current) {
                 connectedRef.current = true;
-                (async () => {
-                    connection.sendMessage({
-                        connect: {
-                            user: await makeUserInfo(settings.username, settings.propic),
-                            user_id: settings.myUserId,
-                            commit_hash: Env.commitHash
-                        }
-                    });
-                })();
+                (async () => connection.sendMessage({ connect: {
+                    user: await makeUserInfo(settings.username, settings.propic),
+                    user_id: settings.myUserId,
+                    commit_hash: Env.commitHash
+                }}))();
             }
         } else if (connectedRef.current) {
             connectedRef.current = false;
