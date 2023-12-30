@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
+import { createUnionReducer } from "../Utils/UnionUtils";
 import { useSettings } from "./AppSettings";
-import { useSocketConnection } from "./Connection";
 import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
-import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, UserId, UserInfo } from "./ServerMessage";
+import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserId, UserInfo } from "./ServerMessage";
+import useConnection from "./UseConnection";
+import useObserver, { Observer } from "./UseObserver";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
@@ -76,34 +78,25 @@ function handleLobbyRemoveUser({ user_id }: LobbyRemoveUser): UpdateFunction<Lob
     };
 }
 
-export type GameUpdateSubscriber = (update: GameUpdate) => void;
+export type GameUpdateObserver = Observer<GameUpdate>;
 
-export interface GameUpdateObserver {
-    subscribe: (fn: GameUpdateSubscriber) => void;
-    unsubscribe: () => void;
-};
+function getServerUrl(): string {
+    return Env.bangServerUrl ?? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/server`;
+}
 
 export default function useBangConnection() {
     const [scene, sceneDispatch] = useReducer(sceneReducer, null, defaultCurrentScene);
-    const gameUpdates = useRef<GameUpdate[]>([]);
-    const subscriber = useRef<GameUpdateSubscriber>();
-
-    const handleUpdates = useCallback(() => {
-        if (subscriber.current) {
-            gameUpdates.current.forEach(subscriber.current);
-            gameUpdates.current = [];
-        }
-    }, []);
+    const observer: GameUpdateObserver = useObserver<GameUpdate>();
 
     const settings = useSettings();
-    const connection = useSocketConnection();
+    const connection = useConnection(getServerUrl());
 
     useEffect(() => {
-        connection.setHandler({
-            ping: () => {
+        const handler = createUnionReducer<undefined, ServerMessage, void>({
+            ping() {
                 connection.sendMessage({ pong: {} });
             },
-            connected: async () => {
+            async connected () {
                 connection.sendMessage({
                     connect: {
                         user: await makeUserInfo(settings.username, settings.propic),
@@ -112,41 +105,41 @@ export default function useBangConnection() {
                     }
                 });
             },
-            disconnected: () => {
+            disconnected() {
                 sceneDispatch({ reset: {} });
             },
-            client_accepted: ({ user_id }) => {
+            client_accepted({ user_id }) {
                 if (settings.myLobbyId) {
                     connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId } });
                 }
                 settings.setMyUserId(user_id);
                 sceneDispatch({ gotoWaitingArea: {} });
             },
-            lobby_error: (message) => {
+            lobby_error(message) {
                 // TODO add gui element for lobby error
                 console.error('Lobby error: ', getLabel('lobby', message));
             },
-            lobby_update: (message: LobbyUpdate) => {
+            lobby_update(message: LobbyUpdate) {
                 sceneDispatch({ updateLobbies: handleUpdateLobbies(message) });
             },
-            lobby_entered: (message) => {
-                gameUpdates.current = [];
+            lobby_entered(message) {
+                observer.clear();
                 settings.setMyLobbyId(message.lobby_id);
                 sceneDispatch({ handleLobbyEntered: message });
             },
-            lobby_edited: (lobbyInfo) => {
+            lobby_edited(lobbyInfo) {
                 sceneDispatch({ updateLobbyInfo: _ => lobbyInfo });
             },
-            lobby_removed: ({ lobby_id }) => {
+            lobby_removed({ lobby_id }) {
                 sceneDispatch({ updateLobbies: lobbies => lobbies.filter(lobby => lobby.id !== lobby_id) });
             },
-            lobby_owner: ({ user_id }) => {
+            lobby_owner({ user_id }) {
                 sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, lobbyOwner: user_id }) });
             },
-            lobby_add_user: (message) => {
+            lobby_add_user(message) {
                 sceneDispatch({ updateLobbyState: handleLobbyAddUser(message, settings.myUserId) });
             },
-            lobby_remove_user: ({ user_id }) => {
+            lobby_remove_user({ user_id }) {
                 if (user_id === settings.myUserId) {
                     settings.setMyLobbyId(undefined);
                     sceneDispatch({ gotoWaitingArea: {} });
@@ -154,36 +147,27 @@ export default function useBangConnection() {
                     sceneDispatch({ updateLobbyState: handleLobbyRemoveUser({ user_id }) });
                 }
             },
-            lobby_chat: (message) => {
+            lobby_chat(message) {
                 sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, chatMessages: lobbyState.chatMessages.concat(message) }) });
             },
-            game_update: update => {
-                gameUpdates.current.push(update);
-                handleUpdates();
+            game_update(update) {
+                observer.update(update);
             },
-            game_started: () => {
+            game_started() {
                 sceneDispatch({ gotoGame: {} });
             },
-        });
+        })
 
-        return () => connection.setHandler(undefined);
-    }, [connection, settings, handleUpdates]);
+        connection.subscribe(update => handler(undefined, update));
+
+        return () => connection.unsubscribe();
+    }, [connection, settings, observer]);
 
     useEffect(() => {
         if (settings.myUserId && !connection.isConnected()) {
             connection.connect();
         }
     }, [connection, settings.myUserId]);
-
-    const observer: GameUpdateObserver = useMemo(() => ({
-        subscribe: (fn: GameUpdateSubscriber) => {
-            subscriber.current = fn;
-            handleUpdates();
-        },
-        unsubscribe: () => {
-            subscriber.current = undefined;
-        }
-    }), [handleUpdates]);
 
     const setGameOptions: SetGameOptions = useCallback(gameOptions => {
         if (scene.type !== 'lobby') {

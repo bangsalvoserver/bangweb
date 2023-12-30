@@ -1,7 +1,7 @@
 import { createContext, useCallback } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
-import { Connection } from '../../Model/Connection';
+import { Connection } from '../../Model/UseConnection';
 import { LobbyState, newLobbyState } from '../../Model/SceneState';
 import { LobbyInfo, UserId } from '../../Model/ServerMessage';
 import { GameOptions } from '../Game/Model/GameUpdate';

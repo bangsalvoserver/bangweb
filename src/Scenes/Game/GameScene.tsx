@@ -1,6 +1,6 @@
 import { RefObject, createContext, useCallback, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Connection } from "../../Model/Connection";
+import { Connection } from "../../Model/UseConnection";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
 import { GameUpdateObserver } from "../../Model/UseBangConnection";

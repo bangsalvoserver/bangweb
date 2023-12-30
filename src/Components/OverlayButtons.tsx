@@ -1,6 +1,6 @@
 import { RefObject } from "react";
 import AppSettings from "../Model/AppSettings";
-import { Connection } from "../Model/Connection";
+import { Connection } from "../Model/UseConnection";
 import { SceneState } from "../Model/SceneState";
 import LobbyChat from "./LobbyChat";
 import "./Style/OverlayButtons.css";

@@ -1,6 +1,6 @@
 import { SyntheticEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
-import { Connection } from "../Model/Connection";
+import { Connection } from "../Model/UseConnection";
 import { LobbyState } from "../Model/SceneState";
 import { UserId } from "../Model/ServerMessage";
 import { useFocusRefState } from "../Utils/UseEventListener";

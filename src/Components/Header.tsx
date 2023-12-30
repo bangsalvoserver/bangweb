@@ -1,6 +1,6 @@
 import { ChangeEvent, useRef } from 'react';
 import getLabel from '../Locale/GetLabel';
-import { Connection } from '../Model/Connection';
+import { Connection } from '../Model/UseConnection';
 import AppSettings from '../Model/AppSettings';
 import { SceneState } from '../Model/SceneState';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
