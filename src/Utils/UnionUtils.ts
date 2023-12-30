@@ -15,3 +15,15 @@ export function createUnionReducer<State, Update extends object, RetType = State
         return (fn as (this: State, update: unknown) => RetType).call(state, updateValue);
     };
 }
+
+export function createUnionDispatch<Update extends Object>(functions: {
+    [K in Update as keyof K]: (value: K[keyof K]) => void;
+}) {
+    return (update: Update) => {
+        const [updateType, updateValue] = Object.entries(update)[0];
+        if (!(updateType in functions)) throw new Error("Invalid updateType: " + updateType);
+
+        const fn = functions[updateType as keyof typeof functions];
+        (fn as (update: unknown) => void)(updateValue);
+    };
+}

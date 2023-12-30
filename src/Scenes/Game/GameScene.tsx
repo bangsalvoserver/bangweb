@@ -16,7 +16,7 @@ import { Card, Player, PocketId, getPlayer, newGameTable } from "./Model/GameTab
 import { PlayerId } from "./Model/GameUpdate";
 import { selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
-import { useGameState } from "./Model/UseGameState";
+import useGameState from "./Model/UseGameState";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import PocketView from "./Pockets/PocketView";

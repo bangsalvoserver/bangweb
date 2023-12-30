@@ -5,7 +5,7 @@ import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
-import { createUnionReducer } from "../Utils/UnionUtils";
+import { createUnionDispatch } from "../Utils/UnionUtils";
 import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
@@ -118,7 +118,7 @@ export default function useBangConnection() {
     }, [settings, connection]);
 
     useEffect(() => {
-        const handler = createUnionReducer<undefined, ServerMessage, void>({
+        connection.subscribe(createUnionDispatch<ServerMessage>({
             ping() {
                 connection.sendMessage({ pong: {} });
             },
@@ -170,9 +170,7 @@ export default function useBangConnection() {
             game_started() {
                 sceneDispatch({ gotoGame: {} });
             },
-        })
-
-        connection.subscribe(update => handler(undefined, update));
+        }));
         return connection.unsubscribe;
     }, [connection, settings, observer]);
 
