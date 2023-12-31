@@ -1,13 +1,13 @@
-import { CSSProperties, useCallback, useContext } from "react";
+import { CSSProperties, useContext } from "react";
 import { getRectCenter } from "../../../Utils/Rect";
-import { useUpdateEveryFrame } from "../../../Utils/UseUpdateEveryFrame";
-import { CardTracker } from "../Model/CardTracker"
+import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
+import { LobbyContext, getUser } from "../../Lobby/Lobby";
+import { GameTableContext } from "../GameScene";
+import { CardTracker } from "../Model/CardTracker";
 import { PlayerMoveId, getPlayer } from "../Model/GameTable";
 import { Milliseconds, PlayerId } from "../Model/GameUpdate";
-import "./Style/MovePlayersAnimation.css"
 import PlayerView from "../PlayerView";
-import { GameTableContext } from "../GameScene";
-import { LobbyContext, getUser } from "../../Lobby/Lobby";
+import "./Style/MovePlayersAnimation.css";
 
 interface MovePlayerProps {
     tracker: CardTracker;
@@ -20,10 +20,10 @@ function MovePlayerAnimation({ tracker, from, to, duration }: MovePlayerProps) {
     const table = useContext(GameTableContext);
     const { users } = useContext(LobbyContext);
 
-    const [startRect, endRect] = useUpdateEveryFrame(useCallback(() => [
+    const [startRect, endRect] = useUpdateEveryFrame(() => [
         tracker.getPlayerPockets(from)?.getPlayerRect(),
         tracker.getPlayerPockets(to)?.getPlayerRect()
-    ], [tracker, from, to]));
+    ]);
 
     if (startRect) {
         const startPoint = getRectCenter(startRect);

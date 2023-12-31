@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
+import useEvent from "react-use-event-hook";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
-import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
+import { getUser } from "../Scenes/Lobby/Lobby";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
@@ -13,7 +14,6 @@ import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
 import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserId, UserInfo } from "./ServerMessage";
-import useEvent from "react-use-event-hook";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
@@ -86,7 +86,7 @@ export type BangConnection = WebSocketConnection<ServerMessage, ClientMessage>;
 
 export default function useBangConnection() {
     const [scene, sceneDispatch] = useReducer(sceneReducer, null, defaultCurrentScene);
-    const gameChannel: GameChannel = useChannel<GameUpdate>();
+    const gameChannel = useChannel<GameUpdate>();
 
     const settings = useSettings();
 
@@ -101,11 +101,13 @@ export default function useBangConnection() {
 
     const connected = useEvent(async () => {
         if (scene.type === 'connect') {
-            connection.sendMessage({ connect: {
-                user: await makeUserInfo(settings.username, settings.propic),
-                user_id: settings.myUserId,
-                commit_hash: Env.commitHash
-            }});
+            connection.sendMessage({
+                connect: {
+                    user: await makeUserInfo(settings.username, settings.propic),
+                    user_id: settings.myUserId,
+                    commit_hash: Env.commitHash
+                }
+            });
         }
     });
 
@@ -182,14 +184,14 @@ export default function useBangConnection() {
         return connection.unsubscribe;
     }, [connection, settings, gameChannel]);
 
-    const setGameOptions: SetGameOptions = useCallback(gameOptions => {
+    const setGameOptions = useEvent(gameOptions => {
         if (scene.type !== 'lobby') {
             throw new Error('Invalid scene type: ' + scene.type);
         }
         connection.sendMessage({ lobby_edit: { name: scene.lobbyInfo.name, options: gameOptions } });
         sceneDispatch({ updateLobbyInfo: lobbyInfo => ({ ...lobbyInfo, options: gameOptions }) });
         settings.setGameOptions(gameOptions);
-    }, [scene, connection, settings]);
+    });
 
     return { scene, settings, connection, gameChannel, setGameOptions } as const;
 }

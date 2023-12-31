@@ -1,4 +1,5 @@
-import { createContext, useCallback } from 'react';
+import { createContext } from 'react';
+import useEvent from 'react-use-event-hook';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
 import { LobbyState, newLobbyState } from '../../Model/SceneState';
@@ -25,7 +26,7 @@ export interface LobbyProps {
 export const LobbyContext = createContext<LobbyState>(newLobbyState());
 
 export default function LobbyScene({ myUserId, lobbyInfo, setGameOptions, connection, lobbyState }: LobbyProps) {
-  const handleStartGame = useCallback(() => connection.sendMessage({ game_start: {} }), [connection]);
+  const handleStartGame = useEvent(() => connection.sendMessage({ game_start: {} }));
 
   return (
     <LobbyContext.Provider value={lobbyState}>

@@ -1,11 +1,11 @@
-import { CSSProperties, useCallback } from "react";
+import { CSSProperties } from "react";
 import { getRectCenter } from "../../../Utils/Rect";
-import { useUpdateEveryFrame } from "../../../Utils/UseUpdateEveryFrame";
+import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
+import { SPRITE_CUBE } from "../CardView";
 import { CardTracker } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
 import { Milliseconds } from "../Model/GameUpdate";
 import "./Style/MoveCubeAnimation.css";
-import { SPRITE_CUBE } from "../CardView";
 
 export interface MoveCubeProps {
     tracker: CardTracker;
@@ -16,10 +16,10 @@ export interface MoveCubeProps {
 }
 
 export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, target_card, duration }: MoveCubeProps) {
-    const [startRect, endRect] = useUpdateEveryFrame(useCallback(() => ([
+    const [startRect, endRect] = useUpdateEveryFrame(() => [
         tracker.getCubesRect(origin_card),
         tracker.getCubesRect(target_card)
-    ]), [tracker, origin_card, target_card]));
+    ]);
     
     if (startRect && endRect) {
         const startPoint = getRectCenter(startRect);

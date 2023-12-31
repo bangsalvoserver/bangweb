@@ -1,5 +1,6 @@
-import { RefObject, createContext, useCallback, useEffect, useMemo, useRef } from "react";
+import { RefObject, createContext, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
+import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
@@ -49,7 +50,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
 
   const isGameOver = table.status.flags.includes('game_over');
   
-  const handleReturnLobby = useCallback(() => connection.sendMessage({ lobby_return: {} }), [connection]);
+  const handleReturnLobby = useEvent(() => connection.sendMessage({ lobby_return: {} }));
 
   const setRef = (pocket: PocketType) => {
     return (value: PocketRef | null) => {
