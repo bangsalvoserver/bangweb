@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer } from "react";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { SetGameOptions, getUser } from "../Scenes/Lobby/Lobby";
@@ -6,13 +6,14 @@ import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
 import { createUnionDispatch } from "../Utils/UnionUtils";
+import useChannel, { Channel } from "../Utils/UseChannel";
+import useWebSocket, { WebSocketConnection } from "../Utils/UseWebSocket";
 import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
 import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserId, UserInfo } from "./ServerMessage";
-import useWebSocket, { WebSocketConnection } from "../Utils/UseWebSocket";
-import useChannel, { Channel } from "../Utils/UseChannel";
+import useEvent from "react-use-event-hook";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
@@ -97,25 +98,32 @@ export default function useBangConnection() {
     }, []);
 
     const connection = useWebSocket<ServerMessage, ClientMessage>(bangServerUrl);
-    const connectedRef = useRef(false);
+
+    const connected = useEvent(async () => {
+        if (scene.type === 'connect') {
+            connection.sendMessage({ connect: {
+                user: await makeUserInfo(settings.username, settings.propic),
+                user_id: settings.myUserId,
+                commit_hash: Env.commitHash
+            }});
+        }
+    });
+
+    const disconnected = useEvent(() => {
+        if (scene.type !== 'connect') {
+            sceneDispatch({ reset: {} });
+        }
+    });
 
     useEffect(() => {
         if (connection.isConnected) {
-            if (!connectedRef.current) {
-                connectedRef.current = true;
-                (async () => connection.sendMessage({ connect: {
-                    user: await makeUserInfo(settings.username, settings.propic),
-                    user_id: settings.myUserId,
-                    commit_hash: Env.commitHash
-                }}))();
-            }
-        } else if (connectedRef.current) {
-            connectedRef.current = false;
-            sceneDispatch({ reset: {} });
+            connected();
         } else if (settings.myUserId) {
             connection.connect();
+        } else {
+            disconnected();
         }
-    }, [settings, connection]);
+    }, [settings.myUserId, connection, connected, disconnected]);
 
     useEffect(() => {
         connection.subscribe(createUnionDispatch<ServerMessage>({
