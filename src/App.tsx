@@ -9,7 +9,7 @@ import LobbyScene from './Scenes/Lobby/Lobby';
 import WaitingArea from './Scenes/WaitingArea/WaitingArea';
 
 export default function App() {
-  const { scene, settings, connection, observer, setGameOptions } = useBangConnection();
+  const { scene, settings, connection, gameChannel, setGameOptions } = useBangConnection();
 
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +42,7 @@ export default function App() {
           myUserId={settings.myUserId}
           connection={connection}
           lobbyState={scene.lobbyState}
-          observer={observer}
+          gameChannel={gameChannel}
           overlayRef={overlayRef}
         />
     }

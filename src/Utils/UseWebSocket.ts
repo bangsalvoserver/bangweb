@@ -1,7 +1,7 @@
 import { Dispatch, useMemo, useRef, useState } from "react";
-import useObserver from "./UseObserver";
+import useChannel from "./UseChannel";
 
-export interface Connection<ServerMessage, ClientMessage> {
+export interface WebSocketConnection<ServerMessage, ClientMessage> {
     subscribe: (handler: Dispatch<ServerMessage>) => void;
     unsubscribe: () => void;
     isConnected: boolean;
@@ -10,19 +10,23 @@ export interface Connection<ServerMessage, ClientMessage> {
     sendMessage: (message: ClientMessage) => void;
 }
 
-export default function useConnection<ServerMessage, ClientMessage>(url: string): Connection<ServerMessage, ClientMessage> {
-    const observer = useObserver<ServerMessage>();
-    const [isConnected, setIsConnected] = useState(false);
+export default function useWebSocket<ServerMessage, ClientMessage>(url: string): WebSocketConnection<ServerMessage, ClientMessage> {
+    const channel = useChannel<ServerMessage>();
     const socket = useRef<WebSocket>();
+    const [isConnected, setIsConnected] = useState(false);
 
-    return useMemo(() => {
-        const connect = () => {
+    return useMemo(() => ({
+        subscribe: channel.subscribe,
+        unsubscribe: channel.unsubscribe,
+        isConnected,
+
+        connect: () => {
             if (socket.current) return;
             
-            observer.clear();
+            channel.clear();
             socket.current = new WebSocket(url);
             socket.current.onmessage = (event) => {
-                observer.update(JSON.parse(event.data));
+                channel.update(JSON.parse(event.data));
             };
             socket.current.onopen = () => {
                 console.log('WebSocket connection established');
@@ -38,24 +42,19 @@ export default function useConnection<ServerMessage, ClientMessage>(url: string)
                 setIsConnected(false);
                 socket.current = undefined;
             };
-        };
-    
-        const disconnect = () => {
+        },
+
+        disconnect: () => {
             socket.current?.close();
-        };
-    
-        const sendMessage = (message: ClientMessage) => {
+        },
+
+        sendMessage: (message: ClientMessage) => {
             if (socket.current?.readyState === WebSocket.OPEN) {
                 socket.current.send(JSON.stringify(message));
             }
-        };
-        
-        return {
-            subscribe: observer.subscribe,
-            unsubscribe: observer.unsubscribe,
-            isConnected, connect, disconnect, sendMessage
-        } as const;
-    }, [url, observer, isConnected]);
+        }
+
+    } as const), [url, channel, isConnected]);
 }
 
 

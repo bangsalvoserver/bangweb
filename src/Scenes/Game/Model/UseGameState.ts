@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { UserId } from "../../../Model/ServerMessage";
-import { GameUpdateObserver } from "../../../Model/UseBangConnection";
+import { GameChannel } from "../../../Model/UseBangConnection";
 import { createUnionDispatch } from "../../../Utils/UnionUtils";
 import { newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
 import { GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
-export default function useGameState(observer: GameUpdateObserver, myUserId?: UserId) {
+export default function useGameState(gameChannel: GameChannel, myUserId?: UserId) {
     const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
@@ -185,16 +185,16 @@ export default function useGameState(observer: GameUpdateObserver, myUserId?: Us
             }
         };
 
-        observer.subscribe(update => {
+        gameChannel.subscribe(update => {
             gameUpdates.current.push(update);
             handleNextUpdate();
         });
 
         return () => {
             clearTimeout(timeout);
-            observer.unsubscribe();
+            gameChannel.unsubscribe();
         }
-    }, [observer]);
+    }, [gameChannel]);
 
     return { table, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }

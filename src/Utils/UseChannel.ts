@@ -1,13 +1,13 @@
 import { Dispatch, useMemo, useRef } from "react";
 
-export interface Observer<T> {
+export interface Channel<T> {
     update: (message: T) => void;
     clear: () => void;
     subscribe: (fn: Dispatch<T>) => void;
     unsubscribe: () => void;
 };
 
-export default function useObserver<T>(): Observer<T> {
+export default function useChannel<T>(): Channel<T> {
     const messages = useRef<T[]>([]);
     const subscriber = useRef<Dispatch<T>>();
 

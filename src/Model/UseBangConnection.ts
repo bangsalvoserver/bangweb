@@ -11,8 +11,8 @@ import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
 import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserId, UserInfo } from "./ServerMessage";
-import useConnection, { Connection } from "./UseConnection";
-import useObserver, { Observer } from "./UseObserver";
+import useWebSocket, { WebSocketConnection } from "../Utils/UseWebSocket";
+import useChannel, { Channel } from "../Utils/UseChannel";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
@@ -79,13 +79,13 @@ function handleLobbyRemoveUser({ user_id }: LobbyRemoveUser): UpdateFunction<Lob
     };
 }
 
-export type GameUpdateObserver = Observer<GameUpdate>;
+export type GameChannel = Channel<GameUpdate>;
 
-export type BangConnection = Connection<ServerMessage, ClientMessage>;
+export type BangConnection = WebSocketConnection<ServerMessage, ClientMessage>;
 
 export default function useBangConnection() {
     const [scene, sceneDispatch] = useReducer(sceneReducer, null, defaultCurrentScene);
-    const observer: GameUpdateObserver = useObserver<GameUpdate>();
+    const gameChannel: GameChannel = useChannel<GameUpdate>();
 
     const settings = useSettings();
 
@@ -96,7 +96,7 @@ export default function useBangConnection() {
         return Env.bangServerUrl;
     }, []);
 
-    const connection = useConnection<ServerMessage, ClientMessage>(bangServerUrl);
+    const connection = useWebSocket<ServerMessage, ClientMessage>(bangServerUrl);
     const connectedRef = useRef(false);
 
     useEffect(() => {
@@ -137,7 +137,7 @@ export default function useBangConnection() {
                 sceneDispatch({ updateLobbies: handleUpdateLobbies(message) });
             },
             lobby_entered(message) {
-                observer.clear();
+                gameChannel.clear();
                 settings.setMyLobbyId(message.lobby_id);
                 sceneDispatch({ handleLobbyEntered: message });
             },
@@ -165,14 +165,14 @@ export default function useBangConnection() {
                 sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, chatMessages: lobbyState.chatMessages.concat(message) }) });
             },
             game_update(update) {
-                observer.update(update);
+                gameChannel.update(update);
             },
             game_started() {
                 sceneDispatch({ gotoGame: {} });
             },
         }));
         return connection.unsubscribe;
-    }, [connection, settings, observer]);
+    }, [connection, settings, gameChannel]);
 
     const setGameOptions: SetGameOptions = useCallback(gameOptions => {
         if (scene.type !== 'lobby') {
@@ -183,5 +183,5 @@ export default function useBangConnection() {
         settings.setGameOptions(gameOptions);
     }, [scene, connection, settings]);
 
-    return { scene, settings, connection, observer, setGameOptions } as const;
+    return { scene, settings, connection, gameChannel, setGameOptions } as const;
 }

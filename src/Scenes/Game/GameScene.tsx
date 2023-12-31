@@ -2,7 +2,7 @@ import { RefObject, createContext, useCallback, useEffect, useMemo, useRef } fro
 import { createPortal } from "react-dom";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
-import { BangConnection, GameUpdateObserver } from "../../Model/UseBangConnection";
+import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
@@ -33,15 +33,15 @@ export interface GameProps {
   myUserId?: UserId;
   connection: BangConnection;
   lobbyState: LobbyState;
-  observer: GameUpdateObserver;
+  gameChannel: GameChannel;
   overlayRef: RefObject<HTMLDivElement>;
 }
 
 const EMPTY_TABLE = newGameTable();
 export const GameTableContext = createContext(EMPTY_TABLE);
 
-export default function GameScene({ myUserId, connection, lobbyState, observer, overlayRef }: GameProps) {
-  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(observer, myUserId);
+export default function GameScene({ myUserId, connection, lobbyState, gameChannel, overlayRef }: GameProps) {
+  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, myUserId);
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
   const playerRefs = useMapRef<PlayerId, PlayerRef>();
