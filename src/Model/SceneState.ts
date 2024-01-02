@@ -20,6 +20,7 @@ export function newLobbyState(lobbyId?: LobbyId): LobbyState {
 
 export type SceneState =
     { type: 'connect' } |
+    { type: 'loading' } |
     { type: 'waiting_area', lobbies: LobbyValue[] } |
     { type: 'lobby', lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState } |
     { type: 'game', lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
@@ -28,6 +29,7 @@ export type UpdateFunction<T> = (value: T) => T;
 
 export type SceneUpdate =
     { reset: Empty } |
+    { gotoLoading: Empty } |
     { gotoWaitingArea: Empty } |
     { gotoGame: Empty } |
     { updateLobbies: UpdateFunction<LobbyValue[]> } |
@@ -35,13 +37,20 @@ export type SceneUpdate =
     { updateLobbyState: UpdateFunction<LobbyState> } |
     { handleLobbyEntered: LobbyEntered };
 
-export function defaultCurrentScene(): SceneState {
-    return { type: 'connect' };
+export function defaultCurrentScene(myUserId?: UserId): SceneState {
+    if (myUserId) {
+        return { type: 'loading' };
+    } else {
+        return { type: 'connect' };
+    }
 }
 
 export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     reset() {
-        return defaultCurrentScene();
+        return { type: 'connect' };
+    },
+    gotoLoading() {
+        return { type: 'loading' };
     },
     gotoWaitingArea() {
         if ('lobbies' in this) {

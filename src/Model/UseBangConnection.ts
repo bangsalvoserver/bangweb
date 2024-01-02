@@ -85,10 +85,10 @@ export type GameChannel = Channel<GameUpdate>;
 export type BangConnection = WebSocketConnection<ServerMessage, ClientMessage>;
 
 export default function useBangConnection() {
-    const [scene, sceneDispatch] = useReducer(sceneReducer, null, defaultCurrentScene);
-    const gameChannel = useChannel<GameUpdate>();
-
     const settings = useSettings();
+
+    const [scene, sceneDispatch] = useReducer(sceneReducer, settings.myUserId, defaultCurrentScene);
+    const gameChannel = useChannel<GameUpdate>();
 
     const bangServerUrl = useMemo(() => {
         if (!Env.bangServerUrl) {
@@ -100,7 +100,7 @@ export default function useBangConnection() {
     const connection = useWebSocket<ServerMessage, ClientMessage>(bangServerUrl);
 
     const connected = useEvent(async () => {
-        if (scene.type === 'connect') {
+        if (scene.type === 'loading') {
             connection.sendMessage({
                 connect: {
                     user: await makeUserInfo(settings.username, settings.propic),
@@ -184,6 +184,13 @@ export default function useBangConnection() {
         return connection.unsubscribe;
     }, [connection, settings, gameChannel]);
 
+    const handleConnect = useEvent(() => {
+        if (!connection.isConnected) {
+            connection.connect();
+            sceneDispatch({ gotoLoading: {} });
+        }
+    });
+
     const setGameOptions = useEvent(gameOptions => {
         if (scene.type !== 'lobby') {
             throw new Error('Invalid scene type: ' + scene.type);
@@ -193,5 +200,5 @@ export default function useBangConnection() {
         settings.setGameOptions(gameOptions);
     });
 
-    return { scene, settings, connection, gameChannel, setGameOptions } as const;
+    return { scene, settings, connection, gameChannel, setGameOptions, handleConnect } as const;
 }

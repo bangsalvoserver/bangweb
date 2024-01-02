@@ -1,33 +1,23 @@
 import { SyntheticEvent } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
-import { BangConnection } from '../../Model/UseBangConnection';
 
 export interface ConnectProps {
   username?: string;
   setUsername: (value: string) => void;
-  connection: BangConnection;
+  handleConnect: () => void;
 }
 
-export default function ConnectScene({ username, setUsername, connection }: ConnectProps) {
-  const handleConnect = function(event: SyntheticEvent) {
+export default function ConnectScene({ username, setUsername, handleConnect }: ConnectProps) {
+  const handleConnectEvent = function(event: SyntheticEvent) {
     event.preventDefault();
-    if (!connection.isConnected && username) {
-      connection.connect();
+    if (username) {
+      handleConnect();
     }
   };
 
-  return (
-    <form onSubmit={handleConnect} className="flex flex-col items-center">
-    <h1
-    className='
-    text-7xl
-    text-center
-    text-red-700
-    font-bold
-    p-4
-    '
-    >{getLabel('ui', 'APP_TITLE')}</h1>
+  return <form onSubmit={handleConnectEvent} className="flex flex-col items-center">
+    <img src='logo192.png' alt={getLabel('ui', 'APP_TITLE')} />
     <label htmlFor="username" className="text-lg font-medium">{getLabel('ui', 'LABEL_USERNAME')}</label>
     <input
       className="
@@ -48,5 +38,4 @@ export default function ConnectScene({ username, setUsername, connection }: Conn
     />
     <Button type="submit" color="green">{getLabel('ui', 'BUTTON_CONNECT')}</Button>
   </form>
-  )
 }

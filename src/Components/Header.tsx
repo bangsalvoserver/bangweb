@@ -71,7 +71,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
             <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={handlePropicChange} />
           </button>
 
-          { scene.type !== 'connect' && <div className='flex relative' ref={menuRef}>
+          { 'lobbies' in scene && <div className='flex relative' ref={menuRef}>
           <button
             onClick={() => setIsMenuOpen(value => !value)}
             type="button" className="inline-flex items-center p-0.5 md:p-2 ml-1 text-sm rounded-lg focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600">

@@ -5,11 +5,12 @@ import OverlayButtons from './Components/OverlayButtons';
 import useBangConnection from './Model/UseBangConnection';
 import ConnectScene from './Scenes/Connect/Connect';
 import GameScene from './Scenes/Game/GameScene';
+import LoadingScene from './Scenes/Loading/Loading';
 import LobbyScene from './Scenes/Lobby/Lobby';
 import WaitingArea from './Scenes/WaitingArea/WaitingArea';
 
 export default function App() {
-  const { scene, settings, connection, gameChannel, setGameOptions } = useBangConnection();
+  const { scene, settings, connection, gameChannel, handleConnect, setGameOptions } = useBangConnection();
 
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -19,8 +20,10 @@ export default function App() {
         return <ConnectScene
           username={settings.username}
           setUsername={settings.setUsername}
-          connection={connection}
+          handleConnect={handleConnect}
         />;
+      case 'loading':
+        return <LoadingScene />;
       case 'waiting_area':
         return <WaitingArea
           lobbies={scene.lobbies}

@@ -37,6 +37,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
 
     ui: {
         APP_TITLE: "Bang!",
+        LOADING: "Loading...",
         UNKNOWN_CARD: "(Unknown card)",
         UNKNOWN_PLAYER: "(Unknown player)",
         USER_DISCONNECTED: "(Disconnected)",
