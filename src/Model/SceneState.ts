@@ -22,7 +22,7 @@ export type SceneState =
     { type: 'connect' } |
     { type: 'waiting_area', lobbies: LobbyValue[] } |
     { type: 'lobby', lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState } |
-    { type: 'game', lobbies: LobbyValue[], lobbyState: LobbyState };
+    { type: 'game', lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
 export type UpdateFunction<T> = (value: T) => T;
 
