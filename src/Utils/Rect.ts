@@ -27,12 +27,21 @@ export function getRectCenter(rect: Rect): Point {
     }
 };
 
-export function getWindowRect(border: number = 0): Rect {
+export function getWindowRect(): Rect {
     return {
-        x: border,
-        y: border,
-        w: window.innerWidth - 2 * border,
-        h: window.innerHeight - 2 * border
+        x: window.scrollX,
+        y: window.scrollY,
+        w: window.innerWidth,
+        h: window.innerHeight
+    };
+}
+
+export function shrinkRect(rect: Rect, padX: number, padY: number): Rect {
+    return {
+        x: rect.x + padX,
+        y: rect.y + padY,
+        w: rect.w - padX * 2,
+        h: rect.h - padY * 2
     };
 }
 

@@ -1,5 +1,5 @@
 import { CSSProperties, useContext } from "react";
-import { clampPoint, getRectCenter, getWindowRect } from "../../Utils/Rect";
+import { clampPoint, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import { getCardUrl } from "./CardView";
 import { GameTableContext } from "./GameScene";
@@ -17,7 +17,7 @@ function CardOverlayInner({ tracker, card }: CardOverlayInnerProps) {
   const rect = useUpdateEveryFrame(() => tracker.getTablePocket(card.pocket)?.getCardRect(card.id));
   if (!rect) return null;
 
-  const rectCenter = clampPoint(getRectCenter(rect), getWindowRect(200));
+  const rectCenter = clampPoint(getRectCenter(rect), shrinkRect(getWindowRect(), 150, 200));
   const cardOverlayStyle = {
       '--card-overlay-x': rectCenter.x + 'px',
       '--card-overlay-y': rectCenter.y + 'px'
