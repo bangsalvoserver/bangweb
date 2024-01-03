@@ -1,11 +1,11 @@
-import { RefObject, createContext, useEffect, useMemo, useReducer, useRef } from "react";
+import { RefObject, createContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
+import { isMobileDevice } from "../../Utils/MobileCheck";
 import { getDivRect } from "../../Utils/Rect";
-import { createUnionReducer } from "../../Utils/UnionUtils";
 import { MapRef, useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
@@ -31,7 +31,6 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import { isMobileDevice } from "../../Utils/MobileCheck";
 
 export interface GameProps {
   myUserId?: UserId;
@@ -70,23 +69,17 @@ function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: Map
   }), [playerRefs, pocketRefs, cubesRef]);
 }
 
-type SetUpdate<T> = { add: T } | { remove: T };
-const cardOverlayReducer = createUnionReducer<CardId[], SetUpdate<CardId>>({
-  add(card) { return this.concat(card); },
-  remove(card) {
-    const index = this.indexOf(card);
-    if (index < 0) return this;
-    return this.slice(0, index).concat(this.slice(index + 1));
-  }
-});
-
 function useCardOverlayTracker() {
-  const [cards, cardsDispatch] = useReducer(cardOverlayReducer, []);
+  const [cards, setCards] = useState<CardId[]>([]);
 
   const overlayCard = useMemo(() => cards.at(-1), [cards]);
   const cardOverlayTracker: CardOverlayTracker = useMemo(() => ({
-    addCard: card => cardsDispatch({ add: card }),
-    removeCard: card => cardsDispatch({ remove: card })
+    addCard: card => setCards(cards => cards.concat(card)),
+    removeCard: card => setCards(cards => {
+      const index = cards.indexOf(card);
+      if (index < 0) return cards;
+      return cards.slice(0, index).concat(cards.slice(index + 1));
+    })
   }), []);
 
   return { overlayCard, cardOverlayTracker } as const;
