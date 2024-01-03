@@ -7,6 +7,7 @@ import { CardId } from "../Model/GameUpdate";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
+import { CardOverlayTracker } from "../CardView";
 
 export interface StackPocketProps {
     pocketRef?: Ref<PocketRef>;
@@ -14,9 +15,10 @@ export interface StackPocketProps {
     onClickCard?: (card: Card) => void;
     slice?: number;
     showCount?: boolean;
+    cardOverlayTracker?: CardOverlayTracker;
 }
 
-export default function StackPocket({ pocketRef, cards, onClickCard, slice, showCount }: StackPocketProps) {
+export default function StackPocket({ pocketRef, cards, onClickCard, slice, showCount, cardOverlayTracker }: StackPocketProps) {
     const table = useContext(GameTableContext);
 
     const position = useRef<PocketRef>(null);
@@ -33,7 +35,7 @@ export default function StackPocket({ pocketRef, cards, onClickCard, slice, show
     } : undefined;
 
     return <div className='stack-pocket' onClick={handleClickLastCard}>
-        <PocketView pocketRef={position} cards={ cards.slice(-(slice ?? 2))} />
+        <PocketView pocketRef={position} cards={ cards.slice(-(slice ?? 2))} cardOverlayTracker={cardOverlayTracker} />
         {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
     </div>;
 }

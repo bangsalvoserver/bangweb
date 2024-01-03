@@ -1,7 +1,7 @@
 import { Ref, useContext, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../../Utils/Rect";
 import { useMapRef } from "../../../Utils/UseMapRef";
-import CardView from "../CardView";
+import CardView, { CardOverlayTracker } from "../CardView";
 import { GameTableContext } from "../GameScene";
 import { CardRef, PocketRef } from "../Model/CardTracker";
 import { Card, getCard } from "../Model/GameTable";
@@ -13,9 +13,10 @@ export interface PocketProps {
     pocketRef?: Ref<PocketRef>;
     cards: CardId[];
     onClickCard?: (card: Card) => void;
+    cardOverlayTracker?: CardOverlayTracker;
 }
 
-export default function PocketView({ pocketRef, cards, onClickCard }: PocketProps) {
+export default function PocketView({ pocketRef, cards, onClickCard, cardOverlayTracker }: PocketProps) {
     const table = useContext(GameTableContext);
     const divRef = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
@@ -43,7 +44,7 @@ export default function PocketView({ pocketRef, cards, onClickCard }: PocketProp
             } else {
                 const card = getCard(table, id);
                 const key = card.animation ? `${id} ${card.animationKey}` : `${id}`;
-                return <CardView cardRef={setPos(id)} key={key} card={card} onClickCard={onClickCard} />
+                return <CardView cardRef={setPos(id)} key={key} card={card} onClickCard={onClickCard} cardOverlayTracker={cardOverlayTracker} />
             }
         }) }
     </div>;

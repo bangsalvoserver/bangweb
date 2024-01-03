@@ -1,0 +1,26 @@
+.card-overlay {
+    position: absolute;
+    left: var(--card-overlay-x);
+    top: var(--card-overlay-y);
+    z-index: 30;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+.card-overlay-inner {
+    width: var(--card-width-unscaled);
+    height: var(--card-height-unscaled);
+    transform: translate(-50%, -50%);
+
+    animation-name: card-overlay-zoom;
+    animation-duration: 300ms;
+    animation-fill-mode: forwards;
+}
+
+@keyframes card-overlay-zoom {
+    from {
+        width: var(--card-width);
+        height: var(--card-height);
+    }
+}

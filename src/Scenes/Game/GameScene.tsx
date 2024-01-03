@@ -1,20 +1,22 @@
-import { RefObject, createContext, useEffect, useMemo, useRef } from "react";
+import { RefObject, createContext, useEffect, useMemo, useReducer, useRef } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { getDivRect } from "../../Utils/Rect";
-import { useMapRef } from "../../Utils/UseMapRef";
+import { createUnionReducer } from "../../Utils/UnionUtils";
+import { MapRef, useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
-import { SPRITE_CUBE } from "./CardView";
+import CardOverlayView from "./CardOverlayView";
+import { CardOverlayTracker, SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
 import { PocketType } from "./Model/CardEnums";
 import { CardTracker, PlayerRef, PocketRef } from "./Model/CardTracker";
 import { Card, Player, PocketId, getPlayer, newGameTable } from "./Model/GameTable";
-import { PlayerId } from "./Model/GameUpdate";
+import { CardId, PlayerId } from "./Model/GameUpdate";
 import { selectorCanConfirm, selectorCanUndo } from "./Model/TargetSelector";
 import { handleClickCard, handleClickPlayer, handleSendGameAction } from "./Model/TargetSelectorManager";
 import useGameState from "./Model/UseGameState";
@@ -29,6 +31,7 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
+import { isMobileDevice } from "../../Utils/MobileCheck";
 
 export interface GameProps {
   myUserId?: UserId;
@@ -41,24 +44,8 @@ export interface GameProps {
 const EMPTY_TABLE = newGameTable();
 export const GameTableContext = createContext(EMPTY_TABLE);
 
-export default function GameScene({ myUserId, connection, lobbyState, gameChannel, overlayRef }: GameProps) {
-  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, myUserId);
-
-  const pocketRefs = useMapRef<PocketType, PocketRef>();
-  const playerRefs = useMapRef<PlayerId, PlayerRef>();
-  const cubesRef = useRef<HTMLDivElement>(null);
-
-  const isGameOver = table.status.flags.includes('game_over');
-  
-  const handleReturnLobby = useEvent(() => connection.sendMessage({ lobby_return: {} }));
-
-  const setRef = (pocket: PocketType) => {
-    return (value: PocketRef | null) => {
-      pocketRefs.set(pocket, value);
-    };
-  };
-
-  const tracker: CardTracker = useMemo(() => ({
+function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, cubesRef: RefObject<HTMLDivElement>): CardTracker {
+  return useMemo(() => ({
     getPlayerPockets(player: PlayerId) {
       return playerRefs.get(player);
     },
@@ -80,7 +67,50 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
         return cubesRef.current ? getDivRect(cubesRef.current) : null;
       }
     }
-  }), [playerRefs, pocketRefs]);
+  }), [playerRefs, pocketRefs, cubesRef]);
+}
+
+type SetUpdate<T> = { add: T } | { remove: T };
+const cardOverlayReducer = createUnionReducer<CardId[], SetUpdate<CardId>>({
+  add(card) { return this.concat(card); },
+  remove(card) {
+    const index = this.indexOf(card);
+    if (index < 0) return this;
+    return this.slice(0, index).concat(this.slice(index + 1));
+  }
+});
+
+function useCardOverlayTracker() {
+  const [cards, cardsDispatch] = useReducer(cardOverlayReducer, []);
+
+  const overlayCard = useMemo(() => cards.at(0), [cards]);
+  const cardOverlayTracker: CardOverlayTracker = useMemo(() => ({
+    addCard: card => cardsDispatch({ add: card }),
+    removeCard: card => cardsDispatch({ remove: card })
+  }), []);
+
+  return { overlayCard, cardOverlayTracker } as const;
+}
+
+export default function GameScene({ myUserId, connection, lobbyState, gameChannel, overlayRef }: GameProps) {
+  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, myUserId);
+
+  const pocketRefs = useMapRef<PocketType, PocketRef>();
+  const playerRefs = useMapRef<PlayerId, PlayerRef>();
+  const cubesRef = useRef<HTMLDivElement>(null);
+
+  const isGameOver = table.status.flags.includes('game_over');
+  
+  const handleReturnLobby = useEvent(() => connection.sendMessage({ lobby_return: {} }));
+
+  const setRef = (pocket: PocketType) => {
+    return (value: PocketRef | null) => {
+      pocketRefs.set(pocket, value);
+    };
+  };
+
+  const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
+  const { overlayCard, cardOverlayTracker } = useCardOverlayTracker();
 
   const clickIsAllowed = !isGameOver
     && table.self_player !== undefined
@@ -112,7 +142,11 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
         <StackPocket pocketRef={setRef('shop_discard')} cards={table.pockets.shop_discard} />
       </div>
       <StackPocket showCount pocketRef={setRef('shop_deck')} cards={table.pockets.shop_deck} />
-      <PocketView pocketRef={setRef('shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} onClickCard={onClickCard} />
+      <PocketView
+        pocketRef={setRef('shop_selection')}
+        cards={table.pockets.shop_selection.slice(0).reverse()}
+        onClickCard={onClickCard}
+        cardOverlayTracker={cardOverlayTracker} />
     </div>
   );
 
@@ -121,8 +155,14 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
       <div className="train-row-inner">
         <StackPocket showCount pocketRef={setRef('train_deck')} cards={table.pockets.train_deck} />
         <div className="train-stations-container">
-          <StationsView cards={table.pockets.stations} onClickCard={onClickCard} />
-          <TrainView pocketRef={setRef('train')} onClickCard={onClickCard} />
+          <StationsView
+            cards={table.pockets.stations}
+            onClickCard={onClickCard}
+            cardOverlayTracker={cardOverlayTracker} />
+          <TrainView
+            pocketRef={setRef('train')}
+            onClickCard={onClickCard}
+            cardOverlayTracker={cardOverlayTracker} />
         </div>
       </div>
     </div>
@@ -137,8 +177,16 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
 
   const mainDeck = (table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0 || table.animation) &&
     <div className="pocket-group">
-      <StackPocket slice={10} pocketRef={setRef('discard_pile')} cards={table.pockets.discard_pile} onClickCard={onClickCard} />
-      <StackPocket showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} onClickCard={onClickCard} />
+      <StackPocket slice={10}
+        pocketRef={setRef('discard_pile')}
+        cards={table.pockets.discard_pile}
+        onClickCard={onClickCard}
+        cardOverlayTracker={cardOverlayTracker} />
+      <StackPocket showCount
+        pocketRef={setRef('main_deck')}
+        cards={table.pockets.main_deck}
+        onClickCard={onClickCard}
+        cardOverlayTracker={cardOverlayTracker} />
     </div>;
 
   const scenarioCards =
@@ -147,17 +195,32 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
     && <div className="pocket-group">
       {(table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0) && <>
         <div className="inline-block card-faded"><StackPocket pocketRef={setRef('scenario_deck')} cards={table.pockets.scenario_deck} slice={2} showCount /></div>
-        <StackPocket pocketRef={setRef('scenario_card')} cards={table.pockets.scenario_card} slice={2} onClickCard={onClickCard} />
+        <StackPocket slice={2}
+          pocketRef={setRef('scenario_card')}
+          cards={table.pockets.scenario_card}
+          onClickCard={onClickCard}
+          cardOverlayTracker={cardOverlayTracker} />
       </>}
       {(table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0) && <>
-        <StackPocket pocketRef={setRef('wws_scenario_deck')} cards={table.pockets.wws_scenario_deck} slice={2} showCount />
-        <StackPocket pocketRef={setRef('wws_scenario_card')} cards={table.pockets.wws_scenario_card} slice={2} onClickCard={onClickCard} />
+        <StackPocket slice={2} showCount
+          pocketRef={setRef('wws_scenario_deck')}
+          cards={table.pockets.wws_scenario_deck}
+          cardOverlayTracker={cardOverlayTracker} />
+        <StackPocket slice={2}
+          pocketRef={setRef('wws_scenario_card')}
+          cards={table.pockets.wws_scenario_card}
+          onClickCard={onClickCard}
+          cardOverlayTracker={cardOverlayTracker} />
       </>}
     </div>;
 
   const selectionPocket = table.pockets.selection.length !== 0 && (
     <div className="selection-view whitespace-nowrap">
-      <PocketView pocketRef={setRef('selection')} cards={table.pockets.selection} onClickCard={onClickCard} />
+      <PocketView
+        pocketRef={setRef('selection')}
+        cards={table.pockets.selection}
+        onClickCard={onClickCard}
+        cardOverlayTracker={cardOverlayTracker} />
     </div>
   );
 
@@ -172,7 +235,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
       {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
         : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player}
-          onClickPlayer={onClickPlayer} onClickCard={onClickCard} />}
+          onClickPlayer={onClickPlayer} onClickCard={onClickCard} cardOverlayTracker={cardOverlayTracker} />}
     </div>;
   });
 
@@ -190,7 +253,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
         </div>
         {selectionPocket}
         <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
-        <CardChoiceView tracker={tracker} onClickCard={onClickCard} />
+        <CardChoiceView tracker={tracker} onClickCard={onClickCard} cardOverlayTracker={cardOverlayTracker} />
         <AnimationView tracker={tracker} />
         <StatusBar
           myUserId={myUserId}
@@ -201,6 +264,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
           handleUndo={handleUndo}
           onClickCard={onClickCard}
         />
+        { isMobileDevice() || <CardOverlayView tracker={tracker} overlayCard={overlayCard} /> }
       </div>
       { overlayRef.current && createPortal(<GameLogView logs={gameLogs} />, overlayRef.current) }
     </GameTableContext.Provider>

@@ -5,7 +5,7 @@ import { getCard, getCardImage, isCardKnown } from "../Model/GameTable";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
 
-function StationCardView({ card, onClickCard }: CardProps) {
+function StationCardView({ card, onClickCard, cardOverlayTracker }: CardProps) {
     const table = useContext(GameTableContext);
 
     const cardImage = getCardImage(card);
@@ -21,7 +21,7 @@ function StationCardView({ card, onClickCard }: CardProps) {
     );
 }
 
-export default function StationsView({ cards, onClickCard }: PocketProps) {
+export default function StationsView({ cards, onClickCard, cardOverlayTracker }: PocketProps) {
     const table = useContext(GameTableContext);
 
     return <div className='stations-view'>

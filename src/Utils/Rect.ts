@@ -26,3 +26,19 @@ export function getRectCenter(rect: Rect): Point {
         y: rect.y + rect.h / 2
     }
 };
+
+export function getWindowRect(border: number = 0): Rect {
+    return {
+        x: border,
+        y: border,
+        w: window.innerWidth - 2 * border,
+        h: window.innerHeight - 2 * border
+    };
+}
+
+export function clampPoint(pt: Point, rect: Rect): Point {
+  return {
+    x: Math.max(rect.x, Math.min(rect.x + rect.w, pt.x)),
+    y: Math.max(rect.y, Math.min(rect.y + rect.h, pt.y))
+  };
+}

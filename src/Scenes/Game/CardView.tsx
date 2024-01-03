@@ -1,4 +1,4 @@
-import { CSSProperties, Ref, useContext, useImperativeHandle, useRef } from "react";
+import { CSSProperties, Ref, RefObject, useContext, useEffect, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
@@ -8,6 +8,7 @@ import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
+import { CardId } from "./Model/GameUpdate";
 
 export const SPRITE_CUBE = spriteCube;
 
@@ -15,11 +16,17 @@ export function getCardUrl(image: string) {
     return `/cards/${image}.png`;
 }
 
+export interface CardOverlayTracker {
+    addCard: (card: CardId) => void;
+    removeCard: (card: CardId) => void;
+}
+
 export interface CardProps {
     cardRef?: Ref<CardRef>;
     card: Card;
     showBackface?: boolean;
     onClickCard?: (card: Card) => void;
+    cardOverlayTracker?: CardOverlayTracker;
 }
 
 export function getSelectorCardClass(table: GameTable, card: Card) {
@@ -60,7 +67,41 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     return null;
 }
 
-export default function CardView({ cardRef, card, showBackface, onClickCard }: CardProps) {
+export function useCardOverlay(card: CardId, divRef: RefObject<HTMLDivElement>, tracker?: CardOverlayTracker) {
+    useEffect(() => {
+        const div = divRef.current;
+        if (!div || !tracker) return;
+
+        let timeout: number | undefined;
+        let added = false;
+
+        const addOverlay = () => {
+            timeout = setTimeout(() => {
+                added = true;
+                tracker.addCard(card);
+            }, 500);
+        };
+
+        const removeOverlay = () => {
+            clearTimeout(timeout);
+            if (added) {
+                added = false;
+                tracker.removeCard(card);
+            }
+        };
+
+        div.addEventListener('mouseenter', addOverlay);
+        div.addEventListener('mouseleave', removeOverlay);
+
+        return () => {
+            div.removeEventListener('mouseenter', addOverlay);
+            div.removeEventListener('mouseleave', removeOverlay);
+            removeOverlay();
+        }
+    }, [divRef, card, tracker]);
+}
+
+export default function CardView({ cardRef, card, showBackface, onClickCard, cardOverlayTracker }: CardProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
 
@@ -69,6 +110,8 @@ export default function CardView({ cardRef, card, showBackface, onClickCard }: C
     useImperativeHandle(cardRef, () => ({
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
+
+    useCardOverlay(card.id, divRef, cardOverlayTracker);
 
     const selectorCardClass = getSelectorCardClass(table, card);
     const selectedCubes = countSelectedCubes(selector, card);

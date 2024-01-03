@@ -1,7 +1,7 @@
 import { CSSProperties, useContext, useMemo } from "react";
 import { getRectCenter } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
-import CardView from "./CardView";
+import CardView, { CardOverlayTracker } from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
@@ -12,6 +12,7 @@ import "./Style/CardChoiceView.css";
 export interface CardChoiceProps {
     tracker: CardTracker;
     onClickCard?: (card: Card) => void;
+    cardOverlayTracker?: CardOverlayTracker;
 }
 
 interface CardChoiceInnerProps {
@@ -19,9 +20,10 @@ interface CardChoiceInnerProps {
     anchor: Card;
     tracker: CardTracker;
     onClickCard?: (card: Card) => void;
+    cardOverlayTracker?: CardOverlayTracker;
 }
 
-function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInnerProps) {
+function CardChoiceInner({ cards, anchor, tracker, onClickCard, cardOverlayTracker }: CardChoiceInnerProps) {
     const anchorRect = useUpdateEveryFrame(() => tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id));
 
     if (anchorRect) {
@@ -35,7 +37,7 @@ function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInne
         return (
             <div className="card-choice" style={cardChoiceStyle}>
                 <div className="card-choice-inner">
-                    {cards.map(card => <CardView key={card.id} card={card} onClickCard={onClickCard} />)}
+                    {cards.map(card => <CardView key={card.id} card={card} onClickCard={onClickCard} cardOverlayTracker={cardOverlayTracker} />)}
                 </div>
             </div>
         );
@@ -44,7 +46,7 @@ function CardChoiceInner({ cards, anchor, tracker, onClickCard }: CardChoiceInne
     }
 }
 
-export default function CardChoiceView({ tracker, onClickCard }: CardChoiceProps) {
+export default function CardChoiceView({ tracker, onClickCard, cardOverlayTracker }: CardChoiceProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
 
@@ -70,6 +72,7 @@ export default function CardChoiceView({ tracker, onClickCard }: CardChoiceProps
             anchor={getCard(table, anchor)}
             tracker={tracker}
             onClickCard={onClickCard}
+            cardOverlayTracker={cardOverlayTracker}
         />
     } else {
         return null;

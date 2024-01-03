@@ -5,13 +5,15 @@ import { Card } from "../Model/GameTable";
 import { isSelectionPlaying } from "../Model/TargetSelector";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
+import { CardOverlayTracker } from "../CardView";
 
 export interface TrainProps {
     pocketRef?: Ref<PocketRef>;
     onClickCard?: (card: Card) => void;
+    cardOverlayTracker?: CardOverlayTracker;
 }
 
-export default function TrainView({ pocketRef, onClickCard }: TrainProps) {
+export default function TrainView({ pocketRef, onClickCard, cardOverlayTracker }: TrainProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
 
@@ -47,7 +49,11 @@ export default function TrainView({ pocketRef, onClickCard }: TrainProps) {
     return (
         <div className={classes.join(' ')} style={trainPositionStyle}>
             <div className="train-container-inner" key={animationKey}>
-                <PocketView pocketRef={pocketRef} cards={table.pockets.train.slice().reverse()} onClickCard={onClickCard} />
+                <PocketView
+                    pocketRef={pocketRef}
+                    cards={table.pockets.train.slice().reverse()}
+                    onClickCard={onClickCard}
+                    cardOverlayTracker={cardOverlayTracker} />
             </div>
         </div>
     );
