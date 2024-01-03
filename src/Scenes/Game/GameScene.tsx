@@ -83,7 +83,7 @@ const cardOverlayReducer = createUnionReducer<CardId[], SetUpdate<CardId>>({
 function useCardOverlayTracker() {
   const [cards, cardsDispatch] = useReducer(cardOverlayReducer, []);
 
-  const overlayCard = useMemo(() => cards.at(0), [cards]);
+  const overlayCard = useMemo(() => cards.at(-1), [cards]);
   const cardOverlayTracker: CardOverlayTracker = useMemo(() => ({
     addCard: card => cardsDispatch({ add: card }),
     removeCard: card => cardsDispatch({ remove: card })
