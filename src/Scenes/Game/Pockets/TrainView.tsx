@@ -1,11 +1,11 @@
 import { CSSProperties, Ref, useContext } from "react";
 import { GameTableContext } from "../GameScene";
+import { CardOverlayTracker } from "../Model/CardOverlayTracker";
 import { PocketRef } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
 import { isSelectionPlaying } from "../Model/TargetSelector";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
-import { CardOverlayTracker } from "../CardView";
 
 export interface TrainProps {
     pocketRef?: Ref<PocketRef>;

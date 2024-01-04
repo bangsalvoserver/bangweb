@@ -1,13 +1,13 @@
 import { Ref, useContext, useImperativeHandle, useRef } from "react";
 import { countIf } from "../../../Utils/ArrayUtils";
 import { GameTableContext } from "../GameScene";
+import { CardOverlayTracker } from "../Model/CardOverlayTracker";
 import { PocketRef } from "../Model/CardTracker";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
-import { CardOverlayTracker } from "../CardView";
 
 export interface StackPocketProps {
     pocketRef?: Ref<PocketRef>;

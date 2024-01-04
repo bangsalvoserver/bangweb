@@ -1,27 +1,20 @@
-import { CSSProperties, Ref, RefObject, useContext, useEffect, useImperativeHandle, useRef } from "react";
+import { CSSProperties, Ref, useContext, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
+import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
 import { Card, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
 import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
-import { getLocalizedCardName } from "./GameStringComponent";
+import { CardOverlayTracker, useCardOverlay } from "./Model/CardOverlayTracker";
 
 export const SPRITE_CUBE = spriteCube;
 
 export function getCardUrl(image: string) {
     return `/cards/${image}.png`;
-}
-
-export type OverlayIdType = 'card' | 'player_role';
-export type OverlayId = { type: OverlayIdType, id: number };
-
-export interface CardOverlayTracker {
-    add: (card: OverlayId) => void;
-    remove: (card: OverlayId) => void;
 }
 
 export interface CardProps {
@@ -68,49 +61,6 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
         }
     }
     return null;
-}
-
-export function useCardOverlay(type: OverlayIdType, id: number, divRef?: RefObject<HTMLElement>, tracker?: CardOverlayTracker) {
-    useEffect(() => {
-        const div = divRef?.current;
-        if (!div || !tracker) return;
-
-        let timeout: number | undefined;
-        let added = false;
-
-        const overlayId = { type, id };
-
-        const addOverlay = () => {
-            timeout = setTimeout(() => {
-                added = true;
-                tracker.add(overlayId);
-            }, 500);
-        };
-
-        const removeOverlay = () => {
-            clearTimeout(timeout);
-            if (added) {
-                added = false;
-                tracker.remove(overlayId);
-            }
-        };
-
-        const resetTimeout = () => {
-            removeOverlay();
-            addOverlay();
-        };
-
-        div.addEventListener('mouseenter', addOverlay);
-        div.addEventListener('mouseleave', removeOverlay);
-        div.addEventListener('mousemove', resetTimeout);
-
-        return () => {
-            div.removeEventListener('mouseenter', addOverlay);
-            div.removeEventListener('mouseleave', removeOverlay);
-            div.removeEventListener('mousemove', resetTimeout);
-            removeOverlay();
-        }
-    }, [type, id, divRef, tracker]);
 }
 
 export default function CardView({ cardRef, card, showBackface, onClickCard, cardOverlayTracker }: CardProps) {

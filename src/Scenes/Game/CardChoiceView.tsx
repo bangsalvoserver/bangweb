@@ -1,14 +1,15 @@
 import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo } from "react";
 import { getRectCenter } from "../../Utils/Rect";
+import { useMapRef } from "../../Utils/UseMapRef";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
-import CardView, { CardOverlayTracker } from "./CardView";
+import CardView from "./CardView";
 import { GameTableContext } from "./GameScene";
+import { CardOverlayTracker } from "./Model/CardOverlayTracker";
 import { CardRef, CardTracker, PocketRef } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { getPlayableCards, isSelectionPlaying } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
-import { useMapRef } from "../../Utils/UseMapRef";
 
 export interface CardChoiceProps {
     tracker: CardTracker;

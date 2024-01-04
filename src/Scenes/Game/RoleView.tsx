@@ -1,9 +1,10 @@
 import { CSSProperties, RefObject } from "react";
 import getLabel from "../../Locale/GetLabel";
-import { CardOverlayTracker, getCardUrl, useCardOverlay } from "./CardView";
+import { getCardUrl } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
 import { Milliseconds, PlayerId } from "./Model/GameUpdate";
 import "./Style/CardView.css";
+import { CardOverlayTracker, useCardOverlay } from "./Model/CardOverlayTracker";
 
 export interface RoleProps {
     playerId: PlayerId;

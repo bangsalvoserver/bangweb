@@ -1,15 +1,16 @@
 import { CSSProperties, useContext } from "react";
+import getLabel from "../../Locale/GetLabel";
 import { Rect, clampPoint, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardSignView from "./CardSignView";
-import { OverlayId, getCardUrl } from "./CardView";
+import { getCardUrl } from "./CardView";
 import { GameTableContext } from "./GameScene";
+import { getLocalizedCardName } from "./GameStringComponent";
+import { OverlayId } from "./Model/CardOverlayTracker";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, CardImage, getCard, getCardImage, getPlayer, isCardKnown } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
 import "./Style/CardOverlayView.css";
-import getLabel from "../../Locale/GetLabel";
-import { getLocalizedCardName } from "./GameStringComponent";
 
 interface CardOverlayInnerProps {
   getRect: () => Rect | null;

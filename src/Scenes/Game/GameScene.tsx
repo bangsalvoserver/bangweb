@@ -1,4 +1,4 @@
-import { RefObject, createContext, useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, createContext, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
@@ -11,9 +11,10 @@ import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardChoiceView from "./CardChoiceView";
 import CardOverlayView from "./CardOverlayView";
-import { CardOverlayTracker, OverlayId, SPRITE_CUBE } from "./CardView";
+import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
 import { PocketType } from "./Model/CardEnums";
+import { useCardOverlayState } from "./Model/CardOverlayTracker";
 import { CardTracker, PlayerRef, PocketRef } from "./Model/CardTracker";
 import { Card, Player, PocketId, getPlayer, newGameTable } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
@@ -69,23 +70,6 @@ function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: Map
   }), [playerRefs, pocketRefs, cubesRef]);
 }
 
-function useCardOverlayTracker() {
-  const [overlays, setOverlays] = useState<OverlayId[]>([]);
-
-  const overlayId = useMemo(() => overlays.at(-1), [overlays]);
-  const cardOverlayTracker: CardOverlayTracker = useMemo(() => ({
-    add: id => setOverlays(ids => ids.concat(id)),
-    remove: id => setOverlays(ids => {
-      const index = ids.indexOf(id);
-      // const index = ids.findIndex(compareOverlayId(id));
-      if (index < 0) return ids;
-      return ids.slice(0, index).concat(ids.slice(index + 1));
-    })
-  }), []);
-
-  return { overlayId, cardOverlayTracker } as const;
-}
-
 export default function GameScene({ myUserId, connection, lobbyState, gameChannel, overlayRef }: GameProps) {
   const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, myUserId);
 
@@ -104,7 +88,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
   };
 
   const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
-  const { overlayId, cardOverlayTracker } = useCardOverlayTracker();
+  const { overlayId, cardOverlayTracker } = useCardOverlayState();
 
   const clickIsAllowed = !isGameOver
     && table.self_player !== undefined

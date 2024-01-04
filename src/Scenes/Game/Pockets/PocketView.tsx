@@ -1,8 +1,9 @@
 import { Ref, useContext, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../../Utils/Rect";
 import { useMapRef } from "../../../Utils/UseMapRef";
-import CardView, { CardOverlayTracker } from "../CardView";
+import CardView from "../CardView";
 import { GameTableContext } from "../GameScene";
+import { CardOverlayTracker } from "../Model/CardOverlayTracker";
 import { CardRef, PocketRef } from "../Model/CardTracker";
 import { Card, getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";

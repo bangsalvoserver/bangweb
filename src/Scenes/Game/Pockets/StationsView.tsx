@@ -1,5 +1,5 @@
 import { useContext, useImperativeHandle, useRef } from "react";
-import { CardProps, getCardUrl, getSelectorCardClass, useCardOverlay } from "../CardView";
+import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameTableContext } from "../GameScene";
 import { getCard, getCardImage, isCardKnown } from "../Model/GameTable";
 import { PocketProps } from "./PocketView";
@@ -9,6 +9,7 @@ import { useMapRef } from "../../../Utils/UseMapRef";
 import { CardRef } from "../Model/CardTracker";
 import { getDivRect } from "../../../Utils/Rect";
 import { getLocalizedCardName } from "../GameStringComponent";
+import { useCardOverlay } from "../Model/CardOverlayTracker";
 
 function StationCardView({ card, onClickCard, cardOverlayTracker, cardRef }: CardProps) {
     const table = useContext(GameTableContext);

@@ -2,9 +2,9 @@ import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef 
 import { Rect, getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
-import { CardOverlayTracker } from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
+import { CardOverlayTracker } from "./Model/CardOverlayTracker";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { Card, GameTable, Player } from "./Model/GameTable";
