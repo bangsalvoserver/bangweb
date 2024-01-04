@@ -70,7 +70,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     return null;
 }
 
-export function useCardOverlay(type: OverlayIdType, id: number, divRef?: RefObject<HTMLDivElement>, tracker?: CardOverlayTracker) {
+export function useCardOverlay(type: OverlayIdType, id: number, divRef?: RefObject<HTMLElement>, tracker?: CardOverlayTracker) {
     useEffect(() => {
         const div = divRef?.current;
         if (!div || !tracker) return;
@@ -95,12 +95,19 @@ export function useCardOverlay(type: OverlayIdType, id: number, divRef?: RefObje
             }
         };
 
+        const resetTimeout = () => {
+            removeOverlay();
+            addOverlay();
+        };
+
         div.addEventListener('mouseenter', addOverlay);
         div.addEventListener('mouseleave', removeOverlay);
+        div.addEventListener('mousemove', resetTimeout);
 
         return () => {
             div.removeEventListener('mouseenter', addOverlay);
             div.removeEventListener('mouseleave', removeOverlay);
+            div.removeEventListener('mousemove', resetTimeout);
             removeOverlay();
         }
     }, [type, id, divRef, tracker]);

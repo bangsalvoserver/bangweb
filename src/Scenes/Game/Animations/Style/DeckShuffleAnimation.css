@@ -1,5 +1,6 @@
 .deck-shuffle-animation {
     z-index: 2;
+    pointer-events: none;
     --total-delay: calc(var(--duration) * 0.6);
     --delay-per-card: calc(var(--total-delay) / var(--num-cards));
 }

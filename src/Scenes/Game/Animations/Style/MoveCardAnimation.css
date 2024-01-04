@@ -7,6 +7,7 @@
     animation-fill-mode: both;
     transition: ease-in-out;
     z-index: 15;
+    pointer-events: none;
 }
 
 .card-anchor {
