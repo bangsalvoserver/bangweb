@@ -1,17 +1,19 @@
-import { CSSProperties, useContext, useMemo } from "react";
+import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo } from "react";
 import { getRectCenter } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardView, { CardOverlayTracker } from "./CardView";
 import { GameTableContext } from "./GameScene";
-import { CardTracker } from "./Model/CardTracker";
+import { CardRef, CardTracker, PocketRef } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { getPlayableCards, isSelectionPlaying } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
+import { useMapRef } from "../../Utils/UseMapRef";
 
 export interface CardChoiceProps {
     tracker: CardTracker;
     onClickCard?: (card: Card) => void;
+    pocketRef?: Ref<PocketRef>;
     cardOverlayTracker?: CardOverlayTracker;
 }
 
@@ -20,11 +22,25 @@ interface CardChoiceInnerProps {
     anchor: Card;
     tracker: CardTracker;
     onClickCard?: (card: Card) => void;
+    pocketRef?: Ref<PocketRef>;
     cardOverlayTracker?: CardOverlayTracker;
 }
 
-function CardChoiceInner({ cards, anchor, tracker, onClickCard, cardOverlayTracker }: CardChoiceInnerProps) {
+function CardChoiceInner({ cards, anchor, tracker, onClickCard, pocketRef, cardOverlayTracker }: CardChoiceInnerProps) {
     const anchorRect = useUpdateEveryFrame(() => tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id));
+    
+    const cardRefs = useMapRef<CardId, CardRef>();
+
+    const setPos = (id: CardId) => {
+        return (value: CardRef | null) => {
+            cardRefs.set(id, value);
+        };
+    };
+
+    useImperativeHandle(pocketRef, () => ({
+        getPocketRect: () => null,
+        getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
+    }));
 
     if (anchorRect) {
         const anchorCenter = getRectCenter(anchorRect);
@@ -37,7 +53,12 @@ function CardChoiceInner({ cards, anchor, tracker, onClickCard, cardOverlayTrack
         return (
             <div className="card-choice" style={cardChoiceStyle}>
                 <div className="card-choice-inner">
-                    {cards.map(card => <CardView key={card.id} card={card} onClickCard={onClickCard} cardOverlayTracker={cardOverlayTracker} />)}
+                    { cards.map(card => <CardView
+                        key={card.id}
+                        cardRef={setPos(card.id)}
+                        card={card}
+                        onClickCard={onClickCard}
+                        cardOverlayTracker={cardOverlayTracker} />) }
                 </div>
             </div>
         );
@@ -46,7 +67,7 @@ function CardChoiceInner({ cards, anchor, tracker, onClickCard, cardOverlayTrack
     }
 }
 
-export default function CardChoiceView({ tracker, onClickCard, cardOverlayTracker }: CardChoiceProps) {
+export default function CardChoiceView({ tracker, onClickCard, pocketRef, cardOverlayTracker }: CardChoiceProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
 
@@ -72,6 +93,7 @@ export default function CardChoiceView({ tracker, onClickCard, cardOverlayTracke
             anchor={getCard(table, anchor)}
             tracker={tracker}
             onClickCard={onClickCard}
+            pocketRef={pocketRef}
             cardOverlayTracker={cardOverlayTracker}
         />
     } else {

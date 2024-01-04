@@ -6,21 +6,40 @@
     pointer-events: none;
     width: 0;
     height: 0;
-}
-
-.card-overlay-inner {
-    width: var(--card-width-unscaled);
-    height: var(--card-height-unscaled);
-    transform: translate(-50%, -50%);
 
     animation-name: card-overlay-zoom;
     animation-duration: 300ms;
     animation-fill-mode: forwards;
 }
 
+.card-overlay-inner {
+    position: relative;
+    width: var(--card-width-unscaled);
+    height: var(--card-height-unscaled);
+    transform: translate(-50%, -50%);
+}
+
+.card-overlay-sign {
+    display: inline;
+    text-align: left;
+    position: absolute;
+    left: 6%;
+    bottom: 4%;
+}
+
+.card-overlay-sign img {
+    display: inline;
+}
+
+.card-overlay-img {
+    background-color: white;
+    border-radius: var(--card-border-unscaled) var(--card-border-unscaled);
+    
+    box-shadow: 5px 5px 15px -2px black;
+}
+
 @keyframes card-overlay-zoom {
     from {
-        width: var(--card-width);
-        height: var(--card-height);
+        transform: scale(calc(var(--card-scale)));
     }
 }

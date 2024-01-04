@@ -7,6 +7,7 @@ import { CardTracker } from "./Model/CardTracker";
 import { KnownCard, getCard, getCardImage, isCardKnown } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import "./Style/CardOverlayView.css";
+import CardSignView from "./CardSignView";
 
 interface CardOverlayInnerProps {
   tracker: CardTracker;
@@ -27,7 +28,10 @@ function CardOverlayInner({ tracker, card }: CardOverlayInnerProps) {
 
   return <div className="card-overlay" style={cardOverlayStyle}>
     <div className="card-overlay-inner">
-      <img src={getCardUrl(cardImage.image)} alt={card.cardData.name} />
+      <img className="card-overlay-img" src={getCardUrl(cardImage.image)} alt={card.cardData.name} />
+      {cardImage.sign && <div className="card-overlay-sign">
+        <CardSignView sign={cardImage.sign} />
+      </div> }
     </div>
   </div>;
 }
