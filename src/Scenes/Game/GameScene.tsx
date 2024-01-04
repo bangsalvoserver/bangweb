@@ -6,6 +6,7 @@ import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { isMobileDevice } from "../../Utils/MobileCheck";
 import { getDivRect } from "../../Utils/Rect";
+import useEventConditional from "../../Utils/UseEventConditional";
 import { MapRef, useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
@@ -94,15 +95,13 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
     && table.self_player !== undefined
     && table.selector.selection.mode !== 'finish'
     && table.selector.prompt.type === 'none';
-
-  const onClickCard = clickIsAllowed ? (card: Card) => handleClickCard(table, selectorDispatch, card) : undefined;
-  const onClickPlayer = clickIsAllowed ? (player: Player) => handleClickPlayer(table, selectorDispatch, player) : undefined;
-
-  const handleConfirm = (clickIsAllowed && selectorCanConfirm(table)) ? () => selectorDispatch({ confirmPlay: {} }) : undefined;
-  const handleUndo = (clickIsAllowed && selectorCanUndo(table)) ? () => selectorDispatch({ undoSelection: {} }) : undefined;
+  
+  const onClickCard = useEventConditional(clickIsAllowed, (card: Card) => handleClickCard(table, selectorDispatch, card));
+  const onClickPlayer = useEventConditional(clickIsAllowed, (player: Player) => handleClickPlayer(table, selectorDispatch, player));
+  const handleConfirm = useEventConditional(clickIsAllowed && selectorCanConfirm(table), () => selectorDispatch({ confirmPlay: {} }));
+  const handleUndo = useEventConditional(clickIsAllowed && selectorCanUndo(table), () => selectorDispatch({ undoSelection: {} }));
 
   const gameActionSent = useRef(false);
-  
   useEffect(() => {
     if (gameActionSent.current) {
       gameActionSent.current = false;
