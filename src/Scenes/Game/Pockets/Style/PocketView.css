@@ -26,6 +26,7 @@
 }
 
 .card-faded .card-front::before {
+    pointer-events: none;
     content: "";
     display: block;
     position: absolute;

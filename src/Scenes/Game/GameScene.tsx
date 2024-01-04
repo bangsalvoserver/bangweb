@@ -189,7 +189,12 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
       || table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0)
     && <div className="pocket-group">
       {(table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0) && <>
-        <div className="inline-block card-faded"><StackPocket pocketRef={setRef('scenario_deck')} cards={table.pockets.scenario_deck} slice={2} showCount /></div>
+        <div className="inline-block card-faded">
+          <StackPocket slice={2} showCount
+            pocketRef={setRef('scenario_deck')}
+            cards={table.pockets.scenario_deck}
+            cardOverlayTracker={cardOverlayTracker} />
+        </div>
         <StackPocket slice={2}
           pocketRef={setRef('scenario_card')}
           cards={table.pockets.scenario_card}
@@ -199,8 +204,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
       {(table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0) && <>
         <StackPocket slice={2} showCount
           pocketRef={setRef('wws_scenario_deck')}
-          cards={table.pockets.wws_scenario_deck}
-          cardOverlayTracker={cardOverlayTracker} />
+          cards={table.pockets.wws_scenario_deck} />
         <StackPocket slice={2}
           pocketRef={setRef('wws_scenario_card')}
           cards={table.pockets.wws_scenario_card}
