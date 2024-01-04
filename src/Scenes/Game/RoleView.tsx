@@ -31,7 +31,7 @@ export default function RoleView({ role, flipDuration, roleRef }: RoleProps) {
     return <div className='pocket-view'>
         <div ref={roleRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={imageSrc} alt={getLabel(role, 'role')} />
+                <img className="card-view-img" src={imageSrc} alt={getLabel('role', role)} />
             </div>
             {flipDuration ? <div className="card-back-flip">
                 <img className="card-view-img" src={backfaceSrc} alt="" />

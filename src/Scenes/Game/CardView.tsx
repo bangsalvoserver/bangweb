@@ -8,6 +8,7 @@ import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
+import { getLocalizedCardName } from "./GameStringComponent";
 
 export const SPRITE_CUBE = spriteCube;
 
@@ -173,7 +174,7 @@ export default function CardView({ cardRef, card, showBackface, onClickCard, car
         <div ref={divRef} style={style} className={classes.join(' ')}
             onClick={onClickCard ? () => onClickCard(card) : undefined} >
             { cardImage ? <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={isCardKnown(card) ? card.cardData.name : ""} />
+                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : ""} />
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}

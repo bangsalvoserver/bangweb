@@ -9,6 +9,7 @@ import { Card, CardImage, getCard, getCardImage, getPlayer, isCardKnown } from "
 import { PlayerId } from "./Model/GameUpdate";
 import "./Style/CardOverlayView.css";
 import getLabel from "../../Locale/GetLabel";
+import { getLocalizedCardName } from "./GameStringComponent";
 
 interface CardOverlayInnerProps {
   getRect: () => Rect | null;
@@ -56,14 +57,14 @@ export default function CardOverlayView({ tracker, overlayId }: CardOverlayProps
       const card = getCard(table, overlayId.id);
       if (isCardKnown(card)) {
         const cardImage = getCardImage(card)!;
-        return <CardOverlayInner getRect={() => getCardRect(tracker, card)} cardImage={cardImage} cardAlt={card.cardData.name} />;
+        return <CardOverlayInner getRect={() => getCardRect(tracker, card)} cardImage={cardImage} cardAlt={getLocalizedCardName(card.cardData.name)} />;
       }
     } else if (overlayId.type === 'player_role') {
       const player = getPlayer(table, overlayId.id);
       const role = player.status.role;
       if (role !== 'unknown') {
         const cardImage: CardImage = { image: 'role/' + role};
-        return <CardOverlayInner getRect={() => getRoleRect(tracker, overlayId.id)} cardImage={cardImage} cardAlt={getLabel(role, 'role')} />;
+        return <CardOverlayInner getRect={() => getRoleRect(tracker, overlayId.id)} cardImage={cardImage} cardAlt={getLabel('role', role)} />;
       }
     }
   }

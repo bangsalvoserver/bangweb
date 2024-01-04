@@ -8,6 +8,7 @@ import { CardId } from "../Model/GameUpdate";
 import { useMapRef } from "../../../Utils/UseMapRef";
 import { CardRef } from "../Model/CardTracker";
 import { getDivRect } from "../../../Utils/Rect";
+import { getLocalizedCardName } from "../GameStringComponent";
 
 function StationCardView({ card, onClickCard, cardOverlayTracker, cardRef }: CardProps) {
     const table = useContext(GameTableContext);
@@ -27,7 +28,7 @@ function StationCardView({ card, onClickCard, cardOverlayTracker, cardRef }: Car
 
     return (
         <div ref={divRef} className={`station-card ${selectorCardClass ?? ''}`} onClick={onClickCard ? () => onClickCard(card) : undefined}>
-            <img className='station-card-img' src={imageSrc} alt={isCardKnown(card) ? card.cardData.name : ""} />
+            <img className='station-card-img' src={imageSrc} alt={isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : ""} />
         </div>
     );
 }
