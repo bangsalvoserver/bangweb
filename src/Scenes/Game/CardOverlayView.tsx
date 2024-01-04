@@ -1,21 +1,23 @@
 import { CSSProperties, useContext } from "react";
-import { clampPoint, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
+import { Rect, clampPoint, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
-import { getCardUrl } from "./CardView";
+import CardSignView from "./CardSignView";
+import { OverlayId, getCardUrl } from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";
-import { KnownCard, getCard, getCardImage, isCardKnown } from "./Model/GameTable";
-import { CardId } from "./Model/GameUpdate";
+import { Card, CardImage, getCard, getCardImage, getPlayer, isCardKnown } from "./Model/GameTable";
+import { PlayerId } from "./Model/GameUpdate";
 import "./Style/CardOverlayView.css";
-import CardSignView from "./CardSignView";
+import getLabel from "../../Locale/GetLabel";
 
 interface CardOverlayInnerProps {
-  tracker: CardTracker;
-  card: KnownCard;
+  getRect: () => Rect | null;
+  cardImage: CardImage;
+  cardAlt: string;
 }
 
-function CardOverlayInner({ tracker, card }: CardOverlayInnerProps) {
-  const rect = useUpdateEveryFrame(() => tracker.getTablePocket(card.pocket)?.getCardRect(card.id));
+function CardOverlayInner({ getRect, cardImage, cardAlt }: CardOverlayInnerProps) {
+  const rect = useUpdateEveryFrame(getRect);
   if (!rect) return null;
 
   const rectCenter = clampPoint(getRectCenter(rect), shrinkRect(getWindowRect(), 150, 200));
@@ -24,11 +26,9 @@ function CardOverlayInner({ tracker, card }: CardOverlayInnerProps) {
       '--card-overlay-y': rectCenter.y + 'px'
   } as CSSProperties;
 
-  const cardImage = getCardImage(card)!;
-
   return <div className="card-overlay" style={cardOverlayStyle}>
     <div className="card-overlay-inner">
-      <img className="card-overlay-img" src={getCardUrl(cardImage.image)} alt={card.cardData.name} />
+      <img className="card-overlay-img" src={getCardUrl(cardImage.image)} alt={cardAlt} />
       {cardImage.sign && <div className="card-overlay-sign">
         <CardSignView sign={cardImage.sign} />
       </div> }
@@ -38,15 +38,33 @@ function CardOverlayInner({ tracker, card }: CardOverlayInnerProps) {
 
 export interface CardOverlayProps {
   tracker: CardTracker;
-  overlayCard?: CardId;
+  overlayId?: OverlayId;
 }
 
-export default function CardOverlayView({ tracker, overlayCard }: CardOverlayProps) {
+function getCardRect(tracker: CardTracker, card: Card): Rect | null {
+  return tracker.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
+}
+
+function getRoleRect(tracker: CardTracker, player: PlayerId): Rect | null {
+  return tracker.getPlayerPockets(player)?.getRoleRect() ?? null;
+}
+
+export default function CardOverlayView({ tracker, overlayId }: CardOverlayProps) {
   const table = useContext(GameTableContext);
-  if (overlayCard) {
-    const card = getCard(table, overlayCard);
-    if (isCardKnown(card)) {
-      return <CardOverlayInner tracker={tracker} card={card} />;
+  if (overlayId) {
+    if (overlayId.type === 'card') {
+      const card = getCard(table, overlayId.id);
+      if (isCardKnown(card)) {
+        const cardImage = getCardImage(card)!;
+        return <CardOverlayInner getRect={() => getCardRect(tracker, card)} cardImage={cardImage} cardAlt={card.cardData.name} />;
+      }
+    } else if (overlayId.type === 'player_role') {
+      const player = getPlayer(table, overlayId.id);
+      const role = player.status.role;
+      if (role !== 'unknown') {
+        const cardImage: CardImage = { image: 'role/' + role};
+        return <CardOverlayInner getRect={() => getRoleRect(tracker, overlayId.id)} cardImage={cardImage} cardAlt={getLabel(role, 'role')} />;
+      }
     }
   }
   return null;

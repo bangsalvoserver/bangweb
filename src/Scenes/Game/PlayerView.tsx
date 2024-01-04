@@ -14,7 +14,7 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { CardOverlayTracker } from "./CardView";
+import { CardOverlayTracker, useCardOverlay } from "./CardView";
 
 export interface PlayerProps {
     playerRef?: Ref<PlayerRef>;
@@ -83,13 +83,17 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
     const divRef = useRef<HTMLDivElement>(null);
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
+    const roleRef = useRef<HTMLDivElement>(null);
     const extraCharacters = useRef<PocketRef>(null);
+
+    useCardOverlay('player_role', player.id, roleRef, cardOverlayTracker);
 
     const handleClickPlayer = onClickPlayer ? () => onClickPlayer(player) : undefined;
 
     useImperativeHandle(playerRef, () => ({
         getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null,
-        getPocket: pocket => pocketRefs.get(pocket)
+        getPocket: pocket => pocketRefs.get(pocket),
+        getRoleRect: () => roleRef.current ? getDivRect(roleRef.current) : null
     }));
 
     const setRef = (pocket: PocketType) => {
@@ -191,7 +195,11 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
                             onClickCard={onClickCard}
                             cardOverlayTracker={cardOverlayTracker} /> }
                     <div className='stack-pocket'>
-                        <RoleView key={roleKey} flipDuration={flipDuration} role={playerRole} />
+                        <RoleView
+                            key={roleKey}
+                            flipDuration={flipDuration}
+                            role={playerRole}
+                            roleRef={roleRef} />
                     </div>
                 </div>
                 { (isPlayerSelf || table.status.flags.includes('hands_shown'))

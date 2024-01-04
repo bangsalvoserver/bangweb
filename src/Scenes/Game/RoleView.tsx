@@ -1,16 +1,17 @@
-import { CSSProperties } from "react";
-import "./Style/CardView.css";
+import { CSSProperties, Ref } from "react";
+import getLabel from "../../Locale/GetLabel";
+import { getCardUrl } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
 import { Milliseconds } from "./Model/GameUpdate";
-import { getCardUrl } from "./CardView";
-import getLabel from "../../Locale/GetLabel";
+import "./Style/CardView.css";
 
 export interface RoleProps {
     role: PlayerRole;
     flipDuration?: Milliseconds;
+    roleRef?: Ref<HTMLDivElement>;
 }
 
-export default function RoleView({ role, flipDuration }: RoleProps) {
+export default function RoleView({ role, flipDuration, roleRef }: RoleProps) {
     const backfaceSrc = getCardUrl('backface/role');
     const imageSrc = role === 'unknown' ? backfaceSrc : getCardUrl('role/' + role);
 
@@ -28,7 +29,7 @@ export default function RoleView({ role, flipDuration }: RoleProps) {
     }
 
     return <div className='pocket-view'>
-        <div style={style} className={classes.join(' ')}>
+        <div ref={roleRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
                 <img className="card-view-img" src={imageSrc} alt={getLabel(role, 'role')} />
             </div>

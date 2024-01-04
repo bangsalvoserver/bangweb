@@ -20,7 +20,7 @@ function StationCardView({ card, onClickCard, cardOverlayTracker, cardRef }: Car
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    useCardOverlay(card.id, divRef, cardOverlayTracker);
+    useCardOverlay('card', card.id, divRef, cardOverlayTracker);
 
     if (!cardImage) return null;
     const imageSrc = getCardUrl(cardImage.image);
