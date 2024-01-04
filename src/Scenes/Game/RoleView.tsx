@@ -1,17 +1,21 @@
-import { CSSProperties, Ref } from "react";
+import { CSSProperties, RefObject } from "react";
 import getLabel from "../../Locale/GetLabel";
-import { getCardUrl } from "./CardView";
+import { CardOverlayTracker, getCardUrl, useCardOverlay } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
-import { Milliseconds } from "./Model/GameUpdate";
+import { Milliseconds, PlayerId } from "./Model/GameUpdate";
 import "./Style/CardView.css";
 
 export interface RoleProps {
+    playerId: PlayerId;
     role: PlayerRole;
     flipDuration?: Milliseconds;
-    roleRef?: Ref<HTMLDivElement>;
+    roleRef?: RefObject<HTMLDivElement>;
+    cardOverlayTracker?: CardOverlayTracker;
 }
 
-export default function RoleView({ role, flipDuration, roleRef }: RoleProps) {
+export default function RoleView({ playerId, role, flipDuration, roleRef, cardOverlayTracker }: RoleProps) {
+    useCardOverlay('player_role', playerId, roleRef, cardOverlayTracker);
+
     const backfaceSrc = getCardUrl('backface/role');
     const imageSrc = role === 'unknown' ? backfaceSrc : getCardUrl('role/' + role);
 

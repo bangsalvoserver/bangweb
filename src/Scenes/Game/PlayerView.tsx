@@ -2,6 +2,7 @@ import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef 
 import { Rect, getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
+import { CardOverlayTracker } from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
@@ -14,7 +15,6 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { CardOverlayTracker, useCardOverlay } from "./CardView";
 
 export interface PlayerProps {
     playerRef?: Ref<PlayerRef>;
@@ -85,8 +85,6 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
     const tableRef = useRef<HTMLDivElement>(null);
     const roleRef = useRef<HTMLDivElement>(null);
     const extraCharacters = useRef<PocketRef>(null);
-
-    useCardOverlay('player_role', player.id, roleRef, cardOverlayTracker);
 
     const handleClickPlayer = onClickPlayer ? () => onClickPlayer(player) : undefined;
 
@@ -198,8 +196,10 @@ export default function PlayerView({ playerRef, user, player, onClickCard, onCli
                         <RoleView
                             key={roleKey}
                             flipDuration={flipDuration}
+                            playerId={player.id}
                             role={playerRole}
-                            roleRef={roleRef} />
+                            roleRef={roleRef}
+                            cardOverlayTracker={cardOverlayTracker} />
                     </div>
                 </div>
                 { (isPlayerSelf || table.status.flags.includes('hands_shown'))

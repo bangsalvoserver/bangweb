@@ -70,9 +70,9 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     return null;
 }
 
-export function useCardOverlay(type: OverlayIdType, id: number, divRef: RefObject<HTMLDivElement>, tracker?: CardOverlayTracker) {
+export function useCardOverlay(type: OverlayIdType, id: number, divRef?: RefObject<HTMLDivElement>, tracker?: CardOverlayTracker) {
     useEffect(() => {
-        const div = divRef.current;
+        const div = divRef?.current;
         if (!div || !tracker) return;
 
         let timeout: number | undefined;
