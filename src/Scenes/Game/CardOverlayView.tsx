@@ -65,7 +65,7 @@ export default function CardOverlayView({ tracker, overlayId }: CardOverlayProps
       const role = player.status.role;
       if (role !== 'unknown') {
         const cardImage: CardImage = { image: 'role/' + role};
-        return <CardOverlayInner getRect={() => getRoleRect(tracker, overlayId.id)} cardImage={cardImage} cardAlt={getLabel('role', role)} />;
+        return <CardOverlayInner getRect={() => getRoleRect(tracker, overlayId.id)} cardImage={cardImage} cardAlt={getLabel('PlayerRole', role)} />;
       }
     }
   }

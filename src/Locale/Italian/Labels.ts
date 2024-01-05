@@ -35,6 +35,17 @@ export const LABELS_ITALIAN: LabelRegistry = {
         canyondiablo:           "Canyon Diablo",
     },
 
+    PlayerRole: {
+        unknwown:               "(Ruolo sconosciuto)",
+        sheriff:                "Sceriffo",
+        deputy:                 "Vice",
+        outlaw:                 "Fuorilegge",
+        renegade:               "Rinnegato",
+        deputy_3p:              "Vice",
+        outlaw_3p:              "Fuorilegge",
+        renegade_3p:            "Rinnegato"
+    },
+
     ui: {
         APP_TITLE: "Bang!",
         LOADING: "Caricamento...",
