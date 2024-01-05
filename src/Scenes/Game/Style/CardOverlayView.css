@@ -40,6 +40,6 @@
 
 @keyframes card-overlay-zoom {
     from {
-        transform: scale(calc(var(--card-scale)));
+        scale: var(--card-scale);
     }
 }

@@ -115,15 +115,15 @@
 }
 
 .card-view-inner {
-    text-align: left;
     position: absolute;
-    left: 6%;
-    bottom: 4%;
+    left: 4%;
+    bottom: 2%;
+    width: max-content;
+    line-height: 0;
+    scale: calc(var(--card-scale) * 2);
+    transform-origin: bottom left;
 }
 
 .card-view-inner img {
-    vertical-align: bottom;
     display: inline;
-    width: 25%;
-    bottom: 0;
 }
