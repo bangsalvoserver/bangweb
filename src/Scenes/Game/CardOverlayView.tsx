@@ -8,7 +8,7 @@ import { GameTableContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { OverlayId } from "./Model/UseCardOverlay";
 import { CardTracker } from "./Model/CardTracker";
-import { Card, CardImage, getCard, getCardImage, getPlayer, isCardKnown } from "./Model/GameTable";
+import { Card, CardImage, getCard, getCardBackface, getCardImage, getPlayer, isCardKnown } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
 import "./Style/CardOverlayView.css";
 
@@ -57,20 +57,18 @@ export default function CardOverlayView({ tracker, overlayId }: CardOverlayProps
     if (overlayId.type === 'card') {
       try {
         const card = getCard(table, overlayId.id);
-        if (isCardKnown(card)) {
-          const cardImage = getCardImage(card)!;
-          return <CardOverlayInner getRect={() => getCardRect(tracker, card)} cardImage={cardImage} cardAlt={getLocalizedCardName(card.cardData.name)} />;
-        }
+        const cardImage = getCardImage(card) || { image: getCardBackface(card) };
+        const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : getLabel('DeckType', card.cardData.deck);
+        return <CardOverlayInner getRect={() => getCardRect(tracker, card)} cardImage={cardImage} cardAlt={cardAlt} />;
       } catch (e) {
         // getCard can fail if the card is destroyed while we're hovering it.
       }
     } else if (overlayId.type === 'player_role') {
       const player = getPlayer(table, overlayId.id);
       const role = player.status.role;
-      if (role !== 'unknown') {
-        const cardImage: CardImage = { image: 'role/' + role};
-        return <CardOverlayInner getRect={() => getRoleRect(tracker, overlayId.id)} cardImage={cardImage} cardAlt={getLabel('PlayerRole', role)} />;
-      }
+      const cardImage: CardImage = { image: role === 'unknown' ? 'backface/role' : 'role/' + role };
+      const cardAlt = getLabel('PlayerRole', role);
+      return <CardOverlayInner getRect={() => getRoleRect(tracker, overlayId.id)} cardImage={cardImage} cardAlt={cardAlt} />;
     }
   }
   return null;
