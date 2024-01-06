@@ -4,7 +4,7 @@ import { GameTableContext } from "../GameScene";
 import { PocketRef } from "../Model/CardTracker";
 import { getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
-import { SelectorConfirmContext } from "../Model/TargetSelectorManager";
+import { DEFAULT_SELECTOR_CONFIRM, SelectorConfirmContext } from "../Model/TargetSelectorManager";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
@@ -33,7 +33,9 @@ export default function StackPocket({ pocketRef, cards, slice, showCount }: Stac
     const handleClickLastCard = lastCard && lastCard > 0 ? handleClickCard(getCard(table, lastCard)) : undefined;
 
     return <div className='stack-pocket' onClick={handleClickLastCard}>
-        <PocketView pocketRef={position} cards={ cards.slice(-(slice ?? 2))} />
+        <SelectorConfirmContext.Provider value={DEFAULT_SELECTOR_CONFIRM}>
+            <PocketView pocketRef={position} cards={ cards.slice(-(slice ?? 2))} />
+        </SelectorConfirmContext.Provider>
         {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
     </div>;
 }
