@@ -6,7 +6,7 @@ import CardSignView from "./CardSignView";
 import { getCardUrl } from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
-import { OverlayId } from "./Model/CardOverlayTracker";
+import { OverlayId } from "./Model/UseCardOverlay";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, CardImage, getCard, getCardImage, getPlayer, isCardKnown } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";

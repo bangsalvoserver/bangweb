@@ -9,7 +9,8 @@ import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
-import { CardOverlayTracker, useCardOverlay } from "./Model/CardOverlayTracker";
+import useCardOverlay from "./Model/UseCardOverlay";
+import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
 
 export const SPRITE_CUBE = spriteCube;
 
@@ -21,8 +22,6 @@ export interface CardProps {
     cardRef?: Ref<CardRef>;
     card: Card;
     showBackface?: boolean;
-    onClickCard?: (card: Card) => void;
-    cardOverlayTracker?: CardOverlayTracker;
 }
 
 export function getSelectorCardClass(table: GameTable, card: Card) {
@@ -63,9 +62,11 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     return null;
 }
 
-export default function CardView({ cardRef, card, showBackface, onClickCard, cardOverlayTracker }: CardProps) {
+export default function CardView({ cardRef, card, showBackface }: CardProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
+
+    const { handleClickCard } = useContext(SelectorConfirmContext);
 
     const divRef = useRef<HTMLDivElement>(null);
 
@@ -73,7 +74,7 @@ export default function CardView({ cardRef, card, showBackface, onClickCard, car
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    useCardOverlay('card', card.id, divRef, cardOverlayTracker);
+    useCardOverlay('card', card.id, divRef);
 
     const selectorCardClass = getSelectorCardClass(table, card);
     const selectedCubes = countSelectedCubes(selector, card);
@@ -129,7 +130,7 @@ export default function CardView({ cardRef, card, showBackface, onClickCard, car
 
     return (
         <div ref={divRef} style={style} className={classes.join(' ')}
-            onClick={onClickCard ? () => onClickCard(card) : undefined} >
+            onClick={handleClickCard(card)} >
             { cardImage ? <div className="card-front">
                 <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : ""} />
                 {cardImage.sign && <div className="card-view-inner">

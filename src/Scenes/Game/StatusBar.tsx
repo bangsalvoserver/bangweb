@@ -5,9 +5,10 @@ import { UserId } from "../../Model/ServerMessage";
 import { LobbyContext } from "../Lobby/Lobby";
 import { GameTableContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
-import { Card, getCard } from "./Model/GameTable";
+import { getCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
+import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
 import "./Style/TimerAnimation.css";
 
 export interface StatusProps {
@@ -15,14 +16,13 @@ export interface StatusProps {
   gameError: GameString | undefined;
   handleClearGameError: () => void;
   handleReturnLobby: () => void;
-  handleConfirm?: () => void;
-  handleUndo?: () => void;
-  onClickCard?: (card: Card) => void;
 }
 
-export default function StatusBar({ myUserId, gameError, handleClearGameError, handleReturnLobby, handleConfirm, handleUndo, onClickCard }: StatusProps) {
+export default function StatusBar({ myUserId, gameError, handleClearGameError, handleReturnLobby }: StatusProps) {
   const { lobbyOwner } = useContext(LobbyContext);
   const table = useContext(GameTableContext);
+  const { handleClickCard, handleConfirm, handleUndo } = useContext(SelectorConfirmContext);
+
   const selector = table.selector;
 
   const isGameOver = table.status.flags.includes('game_over');
@@ -36,7 +36,7 @@ export default function StatusBar({ myUserId, gameError, handleClearGameError, h
     if (isCurrent || isPlayable) {
       const color = isResponse(selector) ? 'red' : isCurrent ? 'blue' : 'green';
       return (
-        <Button key={id} color={color} onClick={onClickCard ? () => onClickCard(card) : undefined}>
+        <Button key={id} color={color} onClick={handleClickCard(card)}>
           <LocalizedCardName name={card.cardData.name} />
         </Button>
       );

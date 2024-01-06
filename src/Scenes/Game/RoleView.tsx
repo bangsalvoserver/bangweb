@@ -4,18 +4,17 @@ import { getCardUrl } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
 import { Milliseconds, PlayerId } from "./Model/GameUpdate";
 import "./Style/CardView.css";
-import { CardOverlayTracker, useCardOverlay } from "./Model/CardOverlayTracker";
+import useCardOverlay from "./Model/UseCardOverlay";
 
 export interface RoleProps {
     playerId: PlayerId;
     role: PlayerRole;
     flipDuration?: Milliseconds;
     roleRef?: RefObject<HTMLDivElement>;
-    cardOverlayTracker?: CardOverlayTracker;
 }
 
-export default function RoleView({ playerId, role, flipDuration, roleRef, cardOverlayTracker }: RoleProps) {
-    useCardOverlay('player_role', playerId, roleRef, cardOverlayTracker);
+export default function RoleView({ playerId, role, flipDuration, roleRef }: RoleProps) {
+    useCardOverlay('player_role', playerId, roleRef);
 
     const backfaceSrc = getCardUrl('backface/role');
     const imageSrc = role === 'unknown' ? backfaceSrc : getCardUrl('role/' + role);
