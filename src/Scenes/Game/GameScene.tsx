@@ -1,6 +1,7 @@
 import { RefObject, createContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
+import { curry2 } from "ts-curry";
 import { LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
@@ -50,12 +51,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
   const cubesRef = useRef<HTMLDivElement>(null);
 
   const handleReturnLobby = useEvent(() => connection.sendMessage({ lobby_return: {} }));
-
-  const setRef = (pocket: PocketType) => {
-    return (value: PocketRef | null) => {
-      pocketRefs.set(pocket, value);
-    };
-  };
+  const setRef = curry2(pocketRefs.set);
 
   const selectorConfirm = useSelectorConfirm(table, selectorDispatch);
   useSendGameAction(table.selector, connection);

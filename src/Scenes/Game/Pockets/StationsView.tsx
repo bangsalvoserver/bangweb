@@ -45,13 +45,7 @@ export default function StationsView({ cards, pocketRef }: PocketProps) {
         getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
     }));
 
-    const setPos = (id: CardId) => {
-        return (value: CardRef | null) => {
-            cardRefs.set(id, value);
-        };
-    };
-
     return <div className='stations-view'>
-        { cards.map(id => <StationCardView key={id} card={getCard(table, id)} cardRef={setPos(id)} /> ) }
+        { cards.map(id => <StationCardView key={id} card={getCard(table, id)} cardRef={ref => cardRefs.set(id, ref)} /> ) }
     </div>;
 }

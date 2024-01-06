@@ -1,4 +1,5 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
+import { curry2 } from "ts-curry";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
@@ -91,12 +92,7 @@ export default function PlayerView({ playerRef, user, player }: PlayerProps) {
         getRoleRect: () => roleRef.current ? getDivRect(roleRef.current) : null
     }));
 
-    const setRef = (pocket: PocketType) => {
-        return (value: PocketRef | null) => {
-            pocketRefs.set(pocket, value);
-        };
-    };
-
+    const setRef = curry2(pocketRefs.set);
     const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
         return (pocket: PocketRef | null) => {
             pocketRefs.set(key, pocket ? clampedPocket(pocket, scrollRef) : null);

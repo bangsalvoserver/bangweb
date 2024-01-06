@@ -27,12 +27,6 @@ function CardChoiceInner({ cards, anchor, tracker, pocketRef }: CardChoiceInnerP
     
     const cardRefs = useMapRef<CardId, CardRef>();
 
-    const setPos = (id: CardId) => {
-        return (value: CardRef | null) => {
-            cardRefs.set(id, value);
-        };
-    };
-
     useImperativeHandle(pocketRef, () => ({
         getPocketRect: () => null,
         getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
@@ -49,7 +43,7 @@ function CardChoiceInner({ cards, anchor, tracker, pocketRef }: CardChoiceInnerP
         return (
             <div className="card-choice" style={cardChoiceStyle}>
                 <div className="card-choice-inner">
-                    { cards.map(card => <CardView key={card.id} cardRef={setPos(card.id)} card={card} />) }
+                    { cards.map(card => <CardView key={card.id} cardRef={ref => cardRefs.set(card.id, ref)} card={card} />) }
                 </div>
             </div>
         );
