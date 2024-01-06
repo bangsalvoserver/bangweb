@@ -1,10 +1,9 @@
-import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo } from "react";
+import { CSSProperties, useContext, useMemo } from "react";
 import { getRectCenter } from "../../Utils/Rect";
-import { useMapRef } from "../../Utils/UseMapRef";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardView from "./CardView";
 import { GameTableContext } from "./GameScene";
-import { CardRef, CardTracker, PocketRef } from "./Model/CardTracker";
+import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { getPlayableCards, isSelectionPlaying } from "./Model/TargetSelector";
@@ -12,47 +11,35 @@ import "./Style/CardChoiceView.css";
 
 export interface CardChoiceProps {
     tracker: CardTracker;
-    pocketRef?: Ref<PocketRef>;
 }
 
 interface CardChoiceInnerProps {
     cards: Card[];
     anchor: Card;
     tracker: CardTracker;
-    pocketRef?: Ref<PocketRef>;
 }
 
-function CardChoiceInner({ cards, anchor, tracker, pocketRef }: CardChoiceInnerProps) {
+function CardChoiceInner({ cards, anchor, tracker }: CardChoiceInnerProps) {
     const anchorRect = useUpdateEveryFrame(() => tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id));
     
-    const cardRefs = useMapRef<CardId, CardRef>();
+    if (!anchorRect) return null;
+    const anchorCenter = getRectCenter(anchorRect);
 
-    useImperativeHandle(pocketRef, () => ({
-        getPocketRect: () => null,
-        getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
-    }));
+    const cardChoiceStyle = {
+        '--card-anchor-x': anchorCenter.x + 'px',
+        '--card-anchor-y': anchorCenter.y + 'px'
+    } as CSSProperties;
 
-    if (anchorRect) {
-        const anchorCenter = getRectCenter(anchorRect);
-
-        const cardChoiceStyle = {
-            '--card-anchor-x': anchorCenter.x + 'px',
-            '--card-anchor-y': anchorCenter.y + 'px'
-        } as CSSProperties;
-
-        return (
-            <div className="card-choice" style={cardChoiceStyle}>
-                <div className="card-choice-inner">
-                    { cards.map(card => <CardView key={card.id} cardRef={ref => cardRefs.set(card.id, ref)} card={card} />) }
-                </div>
+    return (
+        <div className="card-choice" style={cardChoiceStyle}>
+            <div className="card-choice-inner">
+                { cards.map(card => <CardView key={card.id} card={card} />) }
             </div>
-        );
-    } else {
-        return null;
-    }
+        </div>
+    );
 }
 
-export default function CardChoiceView({ tracker, pocketRef }: CardChoiceProps) {
+export default function CardChoiceView({ tracker }: CardChoiceProps) {
     const table = useContext(GameTableContext);
     const selector = table.selector;
 
@@ -77,7 +64,6 @@ export default function CardChoiceView({ tracker, pocketRef }: CardChoiceProps) 
             cards={cards.map(id => getCard(table, id))}
             anchor={getCard(table, anchor)}
             tracker={tracker}
-            pocketRef={pocketRef}
         />
     } else {
         return null;

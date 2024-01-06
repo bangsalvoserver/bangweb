@@ -74,7 +74,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
       <div className="train-row-inner">
         <StackPocket showCount pocketRef={setRef('train_deck')} cards={table.pockets.train_deck} />
         <div className="train-stations-container">
-          <StationsView pocketRef={setRef('stations')} cards={table.pockets.stations} />
+          <StationsView cards={table.pockets.stations} />
           <TrainView pocketRef={setRef('train')} />
         </div>
       </div>
@@ -149,7 +149,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
               </div>
               {selectionPocket}
               <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
-              <CardChoiceView tracker={tracker} pocketRef={setRef('hidden_deck')} />
+              <CardChoiceView tracker={tracker} />
               <StatusBar
                 myUserId={myUserId}
                 gameError={gameError}
