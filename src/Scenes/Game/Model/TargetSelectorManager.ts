@@ -36,6 +36,53 @@ export function useSendGameAction(selector: TargetSelector, connection: BangConn
     }, [selector, connection]);
 }
 
+function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | undefined {
+    const selector = table.selector;
+    switch (selector.selection.mode) {
+    case 'target':
+    case 'modifier': {
+        let cardTarget = card;
+        if (card.pocket?.name === 'player_character') {
+            cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
+        }
+        if (isValidCardTarget(table as PlayingSelectorTable, cardTarget)) {
+            return { addCardTarget: cardTarget };
+        }
+        break;
+    }
+    case 'start': {
+        const canPlay = selectorCanPlayCard(selector, card);
+        if (isResponse(selector)) {
+            const canPick = selectorCanPickCard(table, card);
+            if (canPlay && canPick) {
+                return { setPrompt: { type: 'playpick', card }};
+            } else if (canPlay) {
+                return { selectPlayingCard: card };
+            } else if (canPick) {
+                return { selectPickCard: card };
+            }
+        } else if (canPlay) {
+            return { selectPlayingCard: card };
+        }
+    }
+    }
+}
+
+function getClickPlayerUpdate(table: GameTable, player: Player): SelectorUpdate | undefined {
+    switch (table.selector.selection.mode) {
+    case 'target':
+    case 'modifier':
+        if (isValidPlayerTarget(table as PlayingSelectorTable, player)) {
+            return { addPlayerTarget: player };
+        }
+        break;
+    case 'equip':
+        if (isValidEquipTarget(table as PlayingSelectorTable, player)) {
+            return { addEquipTarget: player };
+        }
+    }
+}
+
 export type OptionalDispatch = DispatchWithoutAction | undefined;
 
 export interface SelectorConfirm {
@@ -54,65 +101,21 @@ export const DEFAULT_SELECTOR_CONFIRM: SelectorConfirm = {
 
 export const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SELECTOR_CONFIRM);
 
-function buildHandleClickCard(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>, card: Card): OptionalDispatch {
-    const selector = table.selector;
-    switch (selector.selection.mode) {
-    case 'target':
-    case 'modifier': {
-        let cardTarget = card;
-        if (card.pocket?.name === 'player_character') {
-            cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
-        }
-        if (isValidCardTarget(table as PlayingSelectorTable, cardTarget)) {
-            return () => selectorDispatch({ addCardTarget: cardTarget });
-        }
-        break;
-    }
-    case 'start': {
-        const canPlay = selectorCanPlayCard(selector, card);
-        if (isResponse(selector)) {
-            const canPick = selectorCanPickCard(table, card);
-            if (canPlay && canPick) {
-                return () => selectorDispatch({ setPrompt: { type: 'playpick', card }});
-            } else if (canPlay) {
-                return () => selectorDispatch({ selectPlayingCard: card });
-            } else if (canPick) {
-                return () => selectorDispatch({ selectPickCard: card });
-            }
-        } else if (canPlay) {
-            return () => selectorDispatch({ selectPlayingCard: card });
-        }
-    }
-    }
-}
-
-function buildHandleClickPlayer(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>, player: Player): OptionalDispatch | undefined {
-    switch (table.selector.selection.mode) {
-    case 'target':
-    case 'modifier':
-        if (isValidPlayerTarget(table as PlayingSelectorTable, player)) {
-            return () => selectorDispatch({ addPlayerTarget: player });
-        }
-        break;
-    case 'equip':
-        if (isValidEquipTarget(table as PlayingSelectorTable, player)) {
-            return () => selectorDispatch({ addEquipTarget: player });
-        }
-    }
-}
-
 export function useSelectorConfirm(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>): SelectorConfirm {
     return useMemo(() => {
+        const buildDispatch = (update: SelectorUpdate | undefined): OptionalDispatch => {
+            if (update) return () => selectorDispatch(update);
+        };
         if (!table.status.flags.includes('game_over')
             && table.self_player !== undefined
             && table.selector.selection.mode !== 'finish'
             && table.selector.prompt.type === 'none')
         {
             return {
-                handleClickCard: card => buildHandleClickCard(table, selectorDispatch, card),
-                handleClickPlayer: player => buildHandleClickPlayer(table, selectorDispatch, player),
-                handleConfirm: selectorCanConfirm(table) ? () => selectorDispatch({ confirmPlay: {} }) : undefined,
-                handleUndo: selectorCanUndo(table) ? () => selectorDispatch({ undoSelection: {} }) : undefined
+                handleClickCard: card => buildDispatch(getClickCardUpdate(table, card)),
+                handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, player)),
+                handleConfirm: buildDispatch(selectorCanConfirm(table) ? { confirmPlay: {} } : undefined),
+                handleUndo: buildDispatch(selectorCanUndo(table) ? { undoSelection: {} } : undefined)
             } as const;
         }
         return DEFAULT_SELECTOR_CONFIRM;
