@@ -55,10 +55,14 @@ export default function CardOverlayView({ tracker, overlayId }: CardOverlayProps
   const table = useContext(GameTableContext);
   if (overlayId) {
     if (overlayId.type === 'card') {
-      const card = getCard(table, overlayId.id);
-      if (isCardKnown(card)) {
-        const cardImage = getCardImage(card)!;
-        return <CardOverlayInner getRect={() => getCardRect(tracker, card)} cardImage={cardImage} cardAlt={getLocalizedCardName(card.cardData.name)} />;
+      try {
+        const card = getCard(table, overlayId.id);
+        if (isCardKnown(card)) {
+          const cardImage = getCardImage(card)!;
+          return <CardOverlayInner getRect={() => getCardRect(tracker, card)} cardImage={cardImage} cardAlt={getLocalizedCardName(card.cardData.name)} />;
+        }
+      } catch (e) {
+        // getCard can fail if the card is destroyed while we're hovering it.
       }
     } else if (overlayId.type === 'player_role') {
       const player = getPlayer(table, overlayId.id);
