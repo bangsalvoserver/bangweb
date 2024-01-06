@@ -83,13 +83,11 @@ export default function PlayerView({ playerRef, user, player }: PlayerProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
-    const roleRef = useRef<HTMLDivElement>(null);
     const extraCharacters = useRef<PocketRef>(null);
 
     useImperativeHandle(playerRef, () => ({
         getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null,
-        getPocket: pocket => pocketRefs.get(pocket),
-        getRoleRect: () => roleRef.current ? getDivRect(roleRef.current) : null
+        getPocket: pocket => pocketRefs.get(pocket)
     }));
 
     const setRef = curry2(pocketRefs.set);
@@ -178,11 +176,7 @@ export default function PlayerView({ playerRef, user, player }: PlayerProps) {
                     { player.pockets.player_character.length > 1 && 
                         <PocketView pocketRef={extraCharacters} cards={player.pockets.player_character.slice(1)} /> }
                     <div className='stack-pocket'>
-                        <RoleView key={roleKey}
-                            flipDuration={flipDuration}
-                            playerId={player.id}
-                            role={playerRole}
-                            roleRef={roleRef} />
+                        <RoleView key={roleKey} flipDuration={flipDuration} role={playerRole} />
                     </div>
                 </div>
                 { (isPlayerSelf || table.status.flags.includes('hands_shown'))

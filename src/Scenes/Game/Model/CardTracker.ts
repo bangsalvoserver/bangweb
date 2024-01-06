@@ -13,7 +13,6 @@ export interface PocketRef {
 export type PlayerRef = {
     getPlayerRect: () => Rect | null;
     getPocket: (pocket: PocketType) => PocketRef | null;
-    getRoleRect: () => Rect | null;
 };
 
 export interface CardRef {

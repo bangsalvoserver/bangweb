@@ -24,7 +24,7 @@ function StationCardView({ card, cardRef }: CardProps) {
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    useCardOverlay('card', card.id, divRef);
+    useCardOverlay('card', card, divRef);
 
     if (!cardImage) return null;
     const imageSrc = getCardUrl(cardImage.image);

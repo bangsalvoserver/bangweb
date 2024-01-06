@@ -160,7 +160,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
           </SelectorConfirmContext.Provider>
 
           <AnimationView tracker={tracker} />
-          { isMobileDevice() || <CardOverlayView tracker={tracker} overlayId={overlayId} /> }
+          { isMobileDevice() || <CardOverlayView overlayId={overlayId} /> }
         </div>
         
         { overlayRef.current && createPortal(<GameLogView logs={gameLogs} />, overlayRef.current) }

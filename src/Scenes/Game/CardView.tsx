@@ -6,11 +6,11 @@ import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
 import { Card, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
 import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
+import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
+import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
-import useCardOverlay from "./Model/UseCardOverlay";
-import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
 
 export const SPRITE_CUBE = spriteCube;
 
@@ -74,7 +74,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    useCardOverlay('card', card.id, divRef);
+    useCardOverlay('card', card, divRef);
 
     const selectorCardClass = getSelectorCardClass(table, card);
     const selectedCubes = countSelectedCubes(selector, card);
