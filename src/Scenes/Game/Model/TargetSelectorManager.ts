@@ -101,23 +101,26 @@ export const DEFAULT_SELECTOR_CONFIRM: SelectorConfirm = {
 
 export const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SELECTOR_CONFIRM);
 
+export function isClickAllowed(table: GameTable) {
+    return !table.status.flags.includes('game_over')
+        && table.self_player !== undefined
+        && table.selector.selection.mode !== 'finish'
+        && table.selector.prompt.type === 'none';
+}
+
 export function useSelectorConfirm(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>): SelectorConfirm {
     return useMemo(() => {
+        if (!isClickAllowed(table)) return DEFAULT_SELECTOR_CONFIRM;
+        
         const buildDispatch = (update: SelectorUpdate | undefined): OptionalDispatch => {
             if (update) return () => selectorDispatch(update);
         };
-        if (!table.status.flags.includes('game_over')
-            && table.self_player !== undefined
-            && table.selector.selection.mode !== 'finish'
-            && table.selector.prompt.type === 'none')
-        {
-            return {
-                handleClickCard: card => buildDispatch(getClickCardUpdate(table, card)),
-                handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, player)),
-                handleConfirm: buildDispatch(selectorCanConfirm(table) ? { confirmPlay: {} } : undefined),
-                handleUndo: buildDispatch(selectorCanUndo(table) ? { undoSelection: {} } : undefined)
-            } as const;
-        }
-        return DEFAULT_SELECTOR_CONFIRM;
+
+        return {
+            handleClickCard: card => buildDispatch(getClickCardUpdate(table, card)),
+            handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, player)),
+            handleConfirm: buildDispatch(selectorCanConfirm(table) ? { confirmPlay: {} } : undefined),
+            handleUndo: buildDispatch(selectorCanUndo(table) ? { undoSelection: {} } : undefined)
+        } as const;
     }, [table, selectorDispatch]);
 }

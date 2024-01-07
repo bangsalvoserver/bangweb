@@ -59,7 +59,6 @@ function Header({ scene, settings, connection }: HeaderProps) {
     <nav className="border-gray-200 bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-1.5 md:p-4">
         <button className="flex items-center">
-          <img src="" className="h-8 mr-3" alt="" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">{getLabel('ui', 'APP_TITLE')}</span>
         </button>
         <div className="flex items-center order-2">
