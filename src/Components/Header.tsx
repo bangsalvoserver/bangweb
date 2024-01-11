@@ -5,7 +5,7 @@ import { SceneState } from '../Model/SceneState';
 import { BangConnection, makeUserInfo } from '../Model/UseBangConnection';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { ImageSrc } from '../Utils/ImageSerial';
-import { useFocusRefState } from '../Utils/UseEventListener';
+import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import UserMenu, { UserMenuItem } from './UserMenu';
 
 export interface HeaderProps {
@@ -18,7 +18,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   
   const menuRef = useRef<HTMLDivElement>(null);
-  const [isMenuOpen, setIsMenuOpen] = useFocusRefState(menuRef);
+  const [isMenuOpen, setIsMenuOpen] = useCloseOnLoseFocus(menuRef);
 
   const handleEditUser = async (username?: string, propic?: ImageSrc) => {
     settings.setUsername(username);

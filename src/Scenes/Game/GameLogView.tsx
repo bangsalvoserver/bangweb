@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useFocusRefState } from "../../Utils/UseEventListener";
+import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
 import GameStringComponent from "./GameStringComponent";
 import { GameString } from "./Model/GameUpdate";
 import "./Style/GameLogView.css";
@@ -12,7 +12,7 @@ export default function GameLogView({ logs }: GameLogProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
 
     const gameLogRef = useRef<HTMLDivElement>(null);
-    const [isLogOpen, setIsLogOpen] = useFocusRefState(gameLogRef);
+    const [isLogOpen, setIsLogOpen] = useCloseOnLoseFocus(gameLogRef);
 
     useEffect(() => {
         if (isLogOpen) {

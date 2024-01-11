@@ -5,7 +5,7 @@ import { UserId } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { getUsername } from "../Scenes/Lobby/LobbyUser";
-import { useFocusRefState } from "../Utils/UseEventListener";
+import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import "./Style/LobbyChat.css";
 
 export interface ChatProps {
@@ -19,7 +19,7 @@ export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProp
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
     
-    const [isChatOpen, setIsChatOpen] = useFocusRefState(chatRef);
+    const [isChatOpen, setIsChatOpen] = useCloseOnLoseFocus(chatRef);
     const [numReadMessages, setNumReadMessages] = useState(0);
     
     const messages = lobbyState.chatMessages;
