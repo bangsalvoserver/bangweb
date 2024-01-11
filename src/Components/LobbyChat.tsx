@@ -5,6 +5,7 @@ import { UserId } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { getUsername } from "../Scenes/Lobby/LobbyUser";
+import { countIf } from "../Utils/ArrayUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import "./Style/LobbyChat.css";
 
@@ -23,7 +24,7 @@ export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProp
     const [numReadMessages, setNumReadMessages] = useState(0);
     
     const messages = lobbyState.chatMessages;
-    const numUnreadMessages = useMemo(() => messages.reduce((prev, { is_read }) => prev + +(!is_read), 0), [messages]);
+    const numUnreadMessages = useMemo(() => countIf(messages, m => m.is_read), [messages]);
 
     useEffect(() => {
         if (isChatOpen) {
