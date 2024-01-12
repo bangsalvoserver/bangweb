@@ -24,7 +24,7 @@ export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProp
     const [numReadMessages, setNumReadMessages] = useState(0);
     
     const messages = lobbyState.chatMessages;
-    const numUnreadMessages = useMemo(() => countIf(messages, m => m.is_read), [messages]);
+    const numUnreadMessages = useMemo(() => countIf(messages, m => !m.is_read), [messages]);
 
     useEffect(() => {
         if (isChatOpen) {
