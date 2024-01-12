@@ -61,7 +61,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
     <div className="pocket-group relative">
-      <div className="absolute">
+      <div className="absolute card-faded">
         <StackPocket pocketRef={setRef('shop_discard')} cards={table.pockets.shop_discard} />
       </div>
       <StackPocket showCount pocketRef={setRef('shop_deck')} cards={table.pockets.shop_deck} />

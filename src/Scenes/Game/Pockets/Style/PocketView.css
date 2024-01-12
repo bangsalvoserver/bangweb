@@ -9,6 +9,14 @@
     vertical-align: middle;
 }
 
+.stack-pocket {
+    pointer-events: none;
+}
+
+.stack-pocket .card-view:last-child {
+    pointer-events: all;
+}
+
 .stack-pocket .card-slot {
     margin: unset;
     position: absolute;
