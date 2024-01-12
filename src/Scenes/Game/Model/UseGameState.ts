@@ -132,10 +132,9 @@ export default function useGameState(gameChannel: GameChannel, myUserId?: UserId
                 delayDispatch(update.duration, () => tableDispatch({ card_animation_end: update.card }));
             },
         
-            short_pause(update) {
-                const card = update.card;
-                tableDispatch({ short_pause: update });
-                delayDispatch(update.duration, card ? () => tableDispatch({ card_animation_end: card }) : undefined);
+            short_pause({ card, duration }) {
+                tableDispatch({ short_pause: { card, duration } });
+                delayDispatch(duration, card ? () => tableDispatch({ card_animation_end: card }) : undefined);
             },
         
             add_cubes(update) {
