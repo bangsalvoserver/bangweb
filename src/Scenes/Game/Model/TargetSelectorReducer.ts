@@ -161,11 +161,11 @@ function isAutoConfirmable(table: PlayingSelectorTable): boolean {
     if (effect?.target === 'max_cards') {
         if (table.players.every(target => {
             const cardNotTargetable = (card: CardId) => 
-            !checkCardFilter(table, effect.card_filter, getCard(table, card));
+                !checkCardFilter(table, effect.card_filter, getCard(table, card));
             
             return !checkPlayerFilter(table, effect.player_filter, target)
-            || (target.pockets.player_hand.every(cardNotTargetable)
-            && target.pockets.player_table.every(cardNotTargetable));
+                || (target.pockets.player_hand.every(cardNotTargetable)
+                && target.pockets.player_table.every(cardNotTargetable));
         })) {
             return true;
         }

@@ -10,12 +10,12 @@ function removeZeroes(targets: CardTarget[]): CardTarget[] {
     const lastTarget = targets.at(-1);
     if (lastTarget) {
         const [key, value] = Object.entries(lastTarget)[0];
-        if (Array.isArray(value) && value.includes(0)) {
-            const newValue = value.filter(n => n !== 0);
-            if (newValue.length === 0) {
+        if (Array.isArray(value)) {
+            const zeroIndex = value.indexOf(0);
+            if (zeroIndex === 0) {
                 return targets.slice(0, -1);
-            } else {
-                return targets.slice(0, -1).concat({ [key]: newValue } as CardTarget);
+            } else if (zeroIndex > 0) {
+                return targets.slice(0, -1).concat({ [key]: value.slice(0, zeroIndex) } as CardTarget);
             }
         }
     }
