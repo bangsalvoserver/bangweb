@@ -232,14 +232,13 @@ export function isCardSelected(selector: TargetSelector, card: CardId): boolean 
     const check = (target: CardTarget) => {
         if ('card' in target) {
             return target.card === card;
-        }
-        if ('extra_card' in target) {
+        } else if ('extra_card' in target) {
             return target.extra_card === card;
-        }
-        if ('cards' in target) {
+        } else if ('cards' in target) {
             return target.cards.includes(card);
-        }
-        if ('cards_other_players' in target) {
+        } else if ('max_cards' in target) {
+            return target.max_cards.includes(card);
+        } else if ('cards_other_players' in target) {
             return target.cards_other_players.includes(card);
         }
         return false;
@@ -269,11 +268,9 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
     const check = (target: CardTarget) => {
         if ('player' in target) {
             return target.player === player.id;
-        }
-        if ('conditional_player' in target) {
+        } else if ('conditional_player' in target) {
             return target.conditional_player === player.id;
-        }
-        if ('adjacent_players' in target) {
+        } else if ('adjacent_players' in target) {
             return target.adjacent_players.includes(player.id);
         }
         return false;
@@ -347,6 +344,7 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
     case 'card':
     case 'extra_card':
     case 'cards':
+    case 'max_cards':
         if (player && !checkPlayerFilter(table, nextTarget.player_filter, getPlayer(table, player))) {
             return false;
         }

@@ -4,6 +4,23 @@ import { PlayingSelectorTable, TargetSelector, isResponse, isSelectionPicking, i
 import { SelectorUpdate } from "./TargetSelectorReducer";
 import { GameAction } from "./GameAction";
 import { BangConnection } from "../../../Model/UseBangConnection";
+import { CardTarget } from "./CardEnums";
+
+function removeZeroes(targets: CardTarget[]): CardTarget[] {
+    const lastTarget = targets.at(-1);
+    if (lastTarget) {
+        const [key, value] = Object.entries(lastTarget)[0];
+        if (Array.isArray(value) && value.includes(0)) {
+            const newValue = value.filter(n => n !== 0);
+            if (newValue.length === 0) {
+                return targets.slice(0, -1);
+            } else {
+                return targets.slice(0, -1).concat({ [key]: newValue } as CardTarget);
+            }
+        }
+    }
+    return targets;
+}
 
 function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
     const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
@@ -14,8 +31,8 @@ function getSelectorGameAction(selector: TargetSelector): GameAction | undefined
             return { pick_card: { card, bypass_prompt, timer_id }};
         } else if (isSelectionPlaying(selector) && selector.selection.playing_card) {
             const card = selector.selection.playing_card.id;
-            const modifiers = selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets }));
-            const targets = selector.selection.targets;
+            const modifiers = selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets: removeZeroes(targets) }));
+            const targets = removeZeroes(selector.selection.targets);
             return { play_card: { card, modifiers, targets, bypass_prompt, timer_id }};
         }
     }

@@ -11,6 +11,7 @@ export type CardTarget =
     { extra_card: CardId | null } |
     { players: Empty } |
     { cards: CardId[] } |
+    { max_cards: CardId[] } |
     { cards_other_players: CardId[] } |
     { select_cubes: CardId[] } |
     { self_cubes: Empty };
