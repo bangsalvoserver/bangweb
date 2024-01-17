@@ -117,13 +117,10 @@ export function selectorCanConfirm(table: GameTable): boolean {
         const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
         const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
         const index = getNextTargetIndex(targets);
-        if (index < targets.length) {
-            const lastTarget = targets.at(-1);
-            if (lastTarget !== undefined) {
-                const lastTargetValue = Object.values(lastTarget)[0];
-                if (Array.isArray(lastTargetValue) && !lastTargetValue.every(id => id === 0)) {
-                    return false;
-                }
+        if (index < targets.length && targets.length !== 0) {
+            const [lastTargetKey, lastTargetValue] = Object.entries(targets.at(-1)!)[0];
+            if (Array.isArray(lastTargetValue) && lastTargetValue[0] !== 0) {
+                return lastTargetKey === 'max_cards';
             }
         }
         
