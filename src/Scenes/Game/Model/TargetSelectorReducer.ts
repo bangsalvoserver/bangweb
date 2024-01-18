@@ -1,12 +1,12 @@
 import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty } from "../../../Model/ServerMessage";
-import { countIf } from "../../../Utils/ArrayUtils";
+import { countIf, sum } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
+import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanConfirm, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -155,23 +155,7 @@ function isAutoConfirmable(table: PlayingSelectorTable): boolean {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
 
-    const index = getNextTargetIndex(targets);
-    const effect = getEffectAt([effects, optionals], index);
-    
-    if (effect?.target === 'max_cards') {
-        if (table.players.every(target => {
-            const cardNotTargetable = (card: CardId) => 
-                !checkCardFilter(table, effect.card_filter, getCard(table, card));
-            
-            return !checkPlayerFilter(table, effect.player_filter, target)
-                || (target.pockets.player_hand.every(cardNotTargetable)
-                && target.pockets.player_table.every(cardNotTargetable));
-        })) {
-            return true;
-        }
-    }
-
-    const diff = index - effects.length;
+    const diff = getNextTargetIndex(targets) - effects.length;
     if (diff < 0) return false;
 
     if (optionals.length !== 0 && diff % optionals.length === 0) {
@@ -226,10 +210,19 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
         }
         break;
     case 'cards':
-    case 'max_cards':
     case 'select_cubes':
         if (index >= targets.length) {
             return reserveTargets(effect.target, effect.target_value);
+        }
+        break;
+    case 'max_cards':
+        if (index >= targets.length) {
+            const cardTargetable = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
+            const countTargetableCards = sum(table.players, player => {
+                return countIf(player.pockets.player_hand, cardTargetable)
+                    + countIf(player.pockets.player_table, cardTargetable);
+            });
+            return reserveTargets(effect.target, Math.min(effect.target_value, countTargetableCards));
         }
         break;
     case 'cards_other_players':
@@ -310,6 +303,32 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
     }
 }
 
+function removeZeroes(targets: CardTarget[]): CardTarget[] {
+    const lastTarget = targets.at(-1);
+    if (lastTarget) {
+        const [key, value] = Object.entries(lastTarget)[0];
+        if (Array.isArray(value)) {
+            const zeroIndex = value.indexOf(0);
+            if (zeroIndex === 0) {
+                return targets.slice(0, -1);
+            } else if (zeroIndex > 0) {
+                return targets.slice(0, -1).concat({ [key]: value.slice(0, zeroIndex) } as CardTarget);
+            }
+        }
+    }
+    return targets;
+}
+
+function handleConfirmPlay(table: PlayingSelectorTable): TargetSelector {
+    const selector = editSelectorTargets(table.selector, removeZeroes);
+    const newTable = { ...table, selector };
+    if (selectorCanConfirm(newTable)) {
+        return setSelectorMode(selector, 'finish');
+    } else {
+        return handleAutoTargets(newTable);
+    }
+}
+
 function handleAutoSelect(table: GameTable): TargetSelector {
     const selector = table.selector;
     const cardId = getAutoSelectCard(table);
@@ -333,7 +352,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
 
     confirmPlay () {
         checkSelectionPlaying(this.selector);
-        return setSelectorMode(this.selector, 'finish');
+        return handleConfirmPlay(this as PlayingSelectorTable);
     },
 
     undoSelection () {
