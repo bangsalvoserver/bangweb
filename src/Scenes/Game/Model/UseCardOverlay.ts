@@ -19,7 +19,10 @@ export default function useCardOverlay<K extends keyof OverlayIdType>(type: K, v
         if (!setCardOverlay) return;
         
         const div = divRef.current;
-        if (!div) throw new Error('useCardOverlay: divRef is not initialized'); 
+        if (!div) {
+            console.error('useCardOverlay: divRef is not initialized'); 
+            return;
+        }
 
         let timeout: number | undefined;
         let added = false;
