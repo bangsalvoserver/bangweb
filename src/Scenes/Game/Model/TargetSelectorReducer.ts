@@ -4,9 +4,9 @@ import { countIf, sum } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanConfirm, selectorCanPlayCard, zipCardTargets } from "./TargetSelector";
+import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanConfirm, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -338,7 +338,7 @@ function handleAutoSelect(table: GameTable): TargetSelector {
     const cardId = getAutoSelectCard(table);
     if (cardId) {
       const card = getCard(table, cardId);
-      if (selectorCanPlayCard(selector, card)) {
+      if (isCardKnown(card) && !isCardCurrent(selector, card)) {
         return handleSelectPlayingCard(table, card);
       }
     }
