@@ -1,10 +1,11 @@
-import { CSSProperties, useRef } from "react";
+import { CSSProperties, useMemo, useRef } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { getCardUrl } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
 import { Milliseconds } from "./Model/GameUpdate";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardView.css";
+import { CardImage } from "./Model/GameTable";
 
 export interface RoleProps {
     role: PlayerRole;
@@ -13,10 +14,15 @@ export interface RoleProps {
 
 export default function RoleView({ role, flipDuration }: RoleProps) {
     const divRef = useRef<HTMLDivElement>(null);
-    useCardOverlay('role', role, divRef);
 
-    const backfaceSrc = getCardUrl('backface/role');
-    const imageSrc = role === 'unknown' ? backfaceSrc : getCardUrl('role/' + role);
+    const [backfaceSrc, cardImage, cardAlt] = useMemo(() => {
+        const backfaceSrc = 'backface/role';
+        const cardImage: CardImage = { image: role === 'unknown' ? backfaceSrc : 'role/' + role };
+        const cardAlt = getLabel('PlayerRole', role);
+        return [backfaceSrc, cardImage, cardAlt] as const;
+    }, [role]);
+
+    useCardOverlay(cardImage, cardAlt, divRef);
 
     let style: CSSProperties | undefined;
 
@@ -34,10 +40,10 @@ export default function RoleView({ role, flipDuration }: RoleProps) {
     return <div className='pocket-view'>
         <div ref={divRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={imageSrc} alt={getLabel('PlayerRole', role)} />
+                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={cardAlt} />
             </div>
             {flipDuration ? <div className="card-back-flip">
-                <img className="card-view-img" src={backfaceSrc} alt="" />
+                <img className="card-view-img" src={getCardUrl(backfaceSrc)} alt="" />
             </div> : null}
         </div>
     </div>;

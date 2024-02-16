@@ -1,10 +1,10 @@
-import { CSSProperties, Ref, useContext, useImperativeHandle, useRef } from "react";
+import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameTableContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
-import { Card, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
+import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
 import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -74,14 +74,17 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    useCardOverlay('card', card, divRef);
+    let [backfaceImage, cardImage, cardAlt] = useMemo(() => {
+        const backfaceImage: CardImage = { image: getCardBackface(card) };
+        const cardImage = getCardImage(card);
+        const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : "";
+        return [backfaceImage, cardImage, cardAlt] as const;
+    }, [card]);
+
+    useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
     const selectorCardClass = getSelectorCardClass(table, card);
     const selectedCubes = countSelectedCubes(selector, card);
-
-    let backfaceSrc = getCardUrl(getCardBackface(card));
-
-    let cardImage = getCardImage(card);
 
     let style: CSSProperties | undefined;
     let classes = ['card-view'];
@@ -96,7 +99,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
             classes.push('card-animation', 'z-10', 'card-animation-flip');
             if (card.animation.flipping.backface) {
-                backfaceSrc = getCardUrl(card.animation.flipping.backface);
+                backfaceImage.image = card.animation.flipping.backface;
             }
             if (card.animation.flipping.cardImage) {
                 cardImage = card.animation.flipping.cardImage;
@@ -132,7 +135,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         <div ref={divRef} style={style} className={classes.join(' ')}
             onClick={handleClickCard(card)} >
             { cardImage ? <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : ""} />
+                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={cardAlt} />
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}
@@ -142,10 +145,10 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
                     ))}
                 </div>}
             </div> : <div className="card-back">
-                <img className="card-view-img" src={backfaceSrc} alt="" />
+                <img className="card-view-img" src={getCardUrl(backfaceImage.image)} alt="" />
             </div> }
             { showBackface && <div className="card-back-flip">
-                <img className="card-view-img" src={backfaceSrc} alt=""  />
+                <img className="card-view-img" src={getCardUrl(backfaceImage.image)} alt=""  />
             </div> }
         </div>
     )

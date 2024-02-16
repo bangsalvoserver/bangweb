@@ -1,18 +1,15 @@
 import { Dispatch, RefObject, SetStateAction, createContext, useContext, useEffect } from "react";
-import { PlayerRole } from "./CardEnums";
-import { Card } from "./GameTable";
+import { CardImage } from "./GameTable";
 
-interface OverlayIdType {
-    'card': Card,
-    'role': PlayerRole
+export interface OverlayState {
+    cardImage: CardImage;
+    cardAlt: string;
+    divRef: RefObject<HTMLDivElement>;
 };
 
-type Distribute<K extends keyof OverlayIdType> = K extends any ? { type: K, value: OverlayIdType[K], divRef: RefObject<HTMLDivElement> } : never;
-export type OverlayId = Distribute<keyof OverlayIdType>;
+export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayState | undefined>> | null>(null);
 
-export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayId | undefined>> | null>(null);
-
-export default function useCardOverlay<K extends keyof OverlayIdType>(type: K, value: OverlayIdType[K], divRef: RefObject<HTMLElement>) {
+export default function useCardOverlay(cardImage: CardImage, cardAlt: string, divRef: RefObject<HTMLDivElement>) {
     const setCardOverlay = useContext(SetCardOverlayContext);
 
     useEffect(() => {
@@ -30,7 +27,7 @@ export default function useCardOverlay<K extends keyof OverlayIdType>(type: K, v
         const addOverlay = () => {
             timeout = setTimeout(() => {
                 added = true;
-                setCardOverlay({ type, value, divRef } as OverlayId);
+                setCardOverlay({ cardImage, cardAlt, divRef });
             }, 500);
         };
 
@@ -57,5 +54,5 @@ export default function useCardOverlay<K extends keyof OverlayIdType>(type: K, v
             div.removeEventListener('mousemove', resetTimeout);
             removeOverlay();
         }
-    }, [type, value, divRef, setCardOverlay]);
+    }, [cardImage, cardAlt, divRef, setCardOverlay]);
 }

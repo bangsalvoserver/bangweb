@@ -1,12 +1,10 @@
 import { CSSProperties, RefObject } from "react";
-import getLabel from "../../Locale/GetLabel";
 import { clampPoint, getDivRect, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardSignView from "./CardSignView";
 import { getCardUrl } from "./CardView";
-import { getLocalizedCardName } from "./GameStringComponent";
-import { CardImage, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
-import { OverlayId } from "./Model/UseCardOverlay";
+import { CardImage } from "./Model/GameTable";
+import { OverlayState } from "./Model/UseCardOverlay";
 import "./Style/CardOverlayView.css";
 
 interface CardOverlayInnerProps {
@@ -36,25 +34,10 @@ function CardOverlayInner({ divRef, cardImage, cardAlt }: CardOverlayInnerProps)
 }
 
 export interface CardOverlayProps {
-  overlayId?: OverlayId;
+  overlayState?: OverlayState;
 }
 
-export default function CardOverlayView({ overlayId }: CardOverlayProps) {
-  if (overlayId) {
-    switch (overlayId.type) {
-    case 'card': {
-      const card = overlayId.value;
-      const cardImage = getCardImage(card) || { image: getCardBackface(card) };
-      const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : getLabel('DeckType', card.cardData.deck);
-      return <CardOverlayInner divRef={overlayId.divRef} cardImage={cardImage} cardAlt={cardAlt} />;
-    }
-    case 'role': {
-      const role = overlayId.value;
-      const cardImage: CardImage = { image: role === 'unknown' ? 'backface/role' : 'role/' + role };
-      const cardAlt = getLabel('PlayerRole', role);
-      return <CardOverlayInner divRef={overlayId.divRef} cardImage={cardImage} cardAlt={cardAlt} />;
-    }
-    }
-  }
-  return null;
+export default function CardOverlayView({ overlayState }: CardOverlayProps) {
+  if (!overlayState) return null;
+  return <CardOverlayInner divRef={overlayState.divRef} cardImage={overlayState.cardImage} cardAlt={overlayState.cardAlt} />;
 }

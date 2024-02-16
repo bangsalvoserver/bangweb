@@ -18,7 +18,7 @@ import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
 import { getPlayer, newGameTable } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
 import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/TargetSelectorManager";
-import { OverlayId, SetCardOverlayContext } from "./Model/UseCardOverlay";
+import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
 import useGameState from "./Model/UseGameState";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
@@ -57,7 +57,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
   useSendGameAction(table.selector, connection);
 
   const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
-  const [overlayId, setCardOverlayId] = useState<OverlayId>();
+  const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
     <div className="pocket-group relative">
@@ -137,7 +137,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
       <GameTableContext.Provider value={table}>
         <div className="game-scene">
           <SelectorConfirmContext.Provider value={selectorConfirm}>
-            <SetCardOverlayContext.Provider value={setCardOverlayId}>
+            <SetCardOverlayContext.Provider value={setCardOverlayState}>
               <div className="main-deck-row">
                 <div>
                   {shopPockets}{tableCubes}{mainDeck}{scenarioCards}
@@ -160,7 +160,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
           </SelectorConfirmContext.Provider>
 
           <AnimationView tracker={tracker} />
-          { isMobileDevice() || <CardOverlayView overlayId={overlayId} /> }
+          { isMobileDevice() || <CardOverlayView overlayState={overlayState} /> }
         </div>
         
         { overlayRef.current && createPortal(<GameLogView logs={gameLogs} />, overlayRef.current) }
