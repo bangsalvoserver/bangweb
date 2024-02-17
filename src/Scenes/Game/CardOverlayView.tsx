@@ -1,19 +1,12 @@
-import { CSSProperties, RefObject } from "react";
+import { CSSProperties } from "react";
 import { clampPoint, getDivRect, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardSignView from "./CardSignView";
 import { getCardUrl } from "./CardView";
-import { CardImage } from "./Model/GameTable";
 import { OverlayState } from "./Model/UseCardOverlay";
 import "./Style/CardOverlayView.css";
 
-interface CardOverlayInnerProps {
-  divRef: RefObject<HTMLDivElement>;
-  cardImage: CardImage;
-  cardAlt: string;
-}
-
-function CardOverlayInner({ divRef, cardImage, cardAlt }: CardOverlayInnerProps) {
+function CardOverlayInner({ divRef, cardImage, cardAlt }: OverlayState) {
   const rect = useUpdateEveryFrame(() => divRef.current ? getDivRect(divRef.current) : null);
   if (!rect) return null;
 
@@ -38,6 +31,6 @@ export interface CardOverlayProps {
 }
 
 export default function CardOverlayView({ overlayState }: CardOverlayProps) {
-  if (!overlayState) return null;
-  return <CardOverlayInner divRef={overlayState.divRef} cardImage={overlayState.cardImage} cardAlt={overlayState.cardAlt} />;
+  if (overlayState) return <CardOverlayInner { ...overlayState } />;
+  return null;
 }
