@@ -7,6 +7,7 @@ import { getUser } from "../Scenes/Lobby/Lobby";
 import { getUsername } from "../Scenes/Lobby/LobbyUser";
 import { countIf } from "../Utils/ArrayUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
+import usePrevious from "../Utils/UsePrevious";
 import "./Style/LobbyChat.css";
 
 export interface ChatProps {
@@ -15,23 +16,48 @@ export interface ChatProps {
     lobbyState: LobbyState;
 }
 
+const BUBBLE_DURATION = 10000;
+
 export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProps) {
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
     
     const [isChatOpen, setIsChatOpen] = useCloseOnLoseFocus(chatRef);
-    const [numReadMessages, setNumReadMessages] = useState(0);
     
     const messages = lobbyState.chatMessages;
-    const numUnreadMessages = useMemo(() => countIf(messages, m => !m.is_read), [messages]);
+    const countMessages = useMemo(() => countIf(messages, m => !m.is_read), [messages]);
+    const prevCountMessages = usePrevious(countMessages) ?? 0;
 
+    const [numReadMessages, setNumReadMessages] = useState(0);
+    const [numFinishedBubbles, setNumFinishedBubbles] = useState(0);
+
+    const bubbleTimeouts = useRef<number[]>([]);
+
+    const numBubbles = countMessages - numFinishedBubbles;
+    const numUnreadMessages = countMessages - numReadMessages;
+    
     useEffect(() => {
         if (isChatOpen) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            setNumReadMessages(numUnreadMessages);
+            setNumReadMessages(countMessages);
+            setNumFinishedBubbles(countMessages);
+            for (const timeout of bubbleTimeouts.current) {
+                clearTimeout(timeout);
+            }
+            bubbleTimeouts.current = [];
         }
-    }, [isChatOpen, messages, numUnreadMessages]);
+    }, [isChatOpen, countMessages]);
+
+    useEffect(() => {
+        const diff = countMessages - prevCountMessages;
+        if (diff > 0) {
+            bubbleTimeouts.current.push(setTimeout(() => {
+                setNumFinishedBubbles(value => value + diff);
+                bubbleTimeouts.current.shift();
+            }, BUBBLE_DURATION));
+        }
+    }, [countMessages, prevCountMessages]);
 
     useLayoutEffect(() => {
         if (isChatOpen) {
@@ -75,11 +101,17 @@ export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProp
                         c0.192-0.385,0.116-0.849-0.188-1.153C57.753,46.753,56.403,42.619,55.894,37.042z"/>
                 </g>
             </svg>
-            {numReadMessages < numUnreadMessages &&
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-white font-bold bg-red-600 rounded-full w-5 h-5">
-                    {numUnreadMessages - numReadMessages}
-                </div>}
+            {numUnreadMessages > 0 && <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-white font-bold bg-red-600 rounded-full w-5 h-5">
+                {numUnreadMessages}
+            </div>}
         </button>
+        {numBubbles > 0 && <div className="lobby-chat-bubble">
+            {[...Array(numBubbles)].map((item, i) => {
+                const index = messages.length - numBubbles + i;
+                const { user_id, message } = messages[index];
+                return <MessageTag user_id={user_id} message={message} key={index}/>;
+            })}
+        </div>}
         <div className={'lobby-chat-box ' + (!isChatOpen ? 'hidden' : '')}>
             {messages.length !== 0 && <div className="lobby-chat-messages">
                 {messages.map(({ user_id, message }, index) => <MessageTag user_id={user_id} message={message} key={index} />)}
