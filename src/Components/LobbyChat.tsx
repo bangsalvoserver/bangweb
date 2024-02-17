@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
 import { LobbyState } from "../Model/SceneState";
 import { UserId } from "../Model/ServerMessage";
@@ -48,15 +48,15 @@ export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProp
         }
     };
 
-    const newMessageTag = (user_id: UserId, message: string, index: number) => {
+    const MessageTag = useCallback(({user_id, message}: {user_id: UserId, message: string}) => {
         if (user_id) {
             const user = getUser(lobbyState.users, user_id);
             const pClass = user_id === myUserId ? 'text-right' : '';
-            return (<p key={index} className={pClass}><span className='username'>{getUsername(user)}</span> : {message}</p>);
+            return (<p className={pClass}><span className='username'>{getUsername(user)}</span> : {message}</p>);
         } else {
-            return (<p key={index} className='server-message'>{message}</p>);
+            return (<p className='server-message'>{message}</p>);
         }
-    };
+    }, [lobbyState.users, myUserId]);
 
     return <div ref={chatRef}>
         <button className='
@@ -82,7 +82,7 @@ export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProp
         </button>
         <div className={'lobby-chat-box ' + (!isChatOpen ? 'hidden' : '')}>
             {messages.length !== 0 && <div className="lobby-chat-messages">
-                {messages.map(({ user_id, message }, index) => newMessageTag(user_id, message, index))}
+                {messages.map(({ user_id, message }, index) => <MessageTag user_id={user_id} message={message} key={index} />)}
                 <div ref={messagesEnd} />
             </div>}
             <form className="lobby-chat-form" onSubmit={handleFormSubmit}>
