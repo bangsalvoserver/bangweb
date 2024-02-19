@@ -16,8 +16,6 @@ export interface ChatProps {
     lobbyState: LobbyState;
 }
 
-const BUBBLE_DURATION = 10000;
-
 export default function LobbyChat({ myUserId, connection, lobbyState: { users, chatMessages: messages } }: ChatProps) {
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);
@@ -37,6 +35,8 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
     const bubbleTimeouts = useRef<number[]>([]);
     
     useEffect(() => {
+        const CHAT_BUBBLE_DURATION = 20000;
+
         if (isChatOpen) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             setNumReadMessages(countMessages);
@@ -49,7 +49,7 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
                 bubbleTimeouts.current.push(setTimeout(() => {
                     setNumFinishedBubbles(value => value + diff);
                     bubbleTimeouts.current.shift();
-                }, BUBBLE_DURATION));
+                }, CHAT_BUBBLE_DURATION));
             }
         }
     }, [isChatOpen, countMessages, prevCountMessages]);
