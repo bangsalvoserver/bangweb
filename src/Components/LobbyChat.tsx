@@ -18,46 +18,41 @@ export interface ChatProps {
 
 const BUBBLE_DURATION = 10000;
 
-export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProps) {
+export default function LobbyChat({ myUserId, connection, lobbyState: { users, chatMessages: messages } }: ChatProps) {
     const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
     
     const [isChatOpen, setIsChatOpen] = useCloseOnLoseFocus(chatRef);
     
-    const messages = lobbyState.chatMessages;
     const countMessages = useMemo(() => countIf(messages, m => !m.is_read), [messages]);
     const prevCountMessages = usePrevious(countMessages) ?? 0;
 
     const [numReadMessages, setNumReadMessages] = useState(0);
     const [numFinishedBubbles, setNumFinishedBubbles] = useState(0);
 
-    const bubbleTimeouts = useRef<number[]>([]);
+    const numUnreadMessages = isChatOpen ? 0 : (countMessages - numReadMessages);
+    const numBubbles = isChatOpen ? 0 : (countMessages - numFinishedBubbles);
 
-    const numBubbles = countMessages - numFinishedBubbles;
-    const numUnreadMessages = countMessages - numReadMessages;
+    const bubbleTimeouts = useRef<number[]>([]);
     
     useEffect(() => {
         if (isChatOpen) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             setNumReadMessages(countMessages);
             setNumFinishedBubbles(countMessages);
-            for (const timeout of bubbleTimeouts.current) {
-                clearTimeout(timeout);
-            }
+            bubbleTimeouts.current.forEach(clearTimeout);
             bubbleTimeouts.current = [];
+        } else {
+            const diff = countMessages - prevCountMessages;
+            if (diff > 0) {
+                bubbleTimeouts.current.push(setTimeout(() => {
+                    setNumFinishedBubbles(value => value + diff);
+                    bubbleTimeouts.current.shift();
+                }, BUBBLE_DURATION));
+            }
         }
-    }, [isChatOpen, countMessages]);
-
-    useEffect(() => {
-        const diff = countMessages - prevCountMessages;
-        if (diff > 0) {
-            bubbleTimeouts.current.push(setTimeout(() => {
-                setNumFinishedBubbles(value => value + diff);
-                bubbleTimeouts.current.shift();
-            }, BUBBLE_DURATION));
-        }
-    }, [countMessages, prevCountMessages]);
+    }, [isChatOpen, countMessages, prevCountMessages]);
 
     useLayoutEffect(() => {
         if (isChatOpen) {
@@ -76,13 +71,13 @@ export default function LobbyChat({ myUserId, connection, lobbyState }: ChatProp
 
     const MessageTag = useCallback(({user_id, message}: {user_id: UserId, message: string}) => {
         if (user_id) {
-            const user = getUser(lobbyState.users, user_id);
+            const user = getUser(users, user_id);
             const pClass = user_id === myUserId ? 'text-right' : '';
             return (<p className={pClass}><span className='username'>{getUsername(user)}</span> : {message}</p>);
         } else {
             return (<p className='server-message'>{message}</p>);
         }
-    }, [lobbyState.users, myUserId]);
+    }, [users, myUserId]);
 
     return <div ref={chatRef}>
         <button className='
