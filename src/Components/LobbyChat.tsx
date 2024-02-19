@@ -100,13 +100,13 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
                 {numUnreadMessages}
             </div>}
         </button>
-        {numBubbles > 0 && <div className="lobby-chat-bubble">
+        {numBubbles > 0 && <div className="lobby-chat-bubble-outer"><div className="lobby-chat-bubble">
             {[...Array(numBubbles)].map((item, i) => {
                 const index = messages.length - numBubbles + i;
                 const { user_id, message } = messages[index];
                 return <MessageTag user_id={user_id} message={message} key={index}/>;
             })}
-        </div>}
+        </div></div>}
         <div className={'lobby-chat-box ' + (!isChatOpen ? 'hidden' : '')}>
             {messages.length !== 0 && <div className="lobby-chat-messages">
                 {messages.map(({ user_id, message }, index) => <MessageTag user_id={user_id} message={message} key={index} />)}

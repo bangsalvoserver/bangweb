@@ -7,42 +7,32 @@
 
     width: calc(min(20em, 100vw - 2em));
     max-height: 60vh;
-    
+
     flex-direction: column;
 }
 
-.lobby-chat-bubble {
-    display: flex;
-    flex-direction: column;
-
+.lobby-chat-bubble-outer {
     position: fixed;
     right: 1em;
     bottom: 4.5em;
-
-    background-color: rgba(255, 255, 255, 0.8);
-
     max-width: calc(min(20em, 100vw - 2em));
+    
+    filter: drop-shadow(1px 1px 2px black);
+}
 
-    padding: 0.2em 0.5em;
+.lobby-chat-bubble {
+    background-color: rgba(255, 255, 255, 0.8);
 
     --r: 0.5em; /* the radius */
     --t: 0.5em; /* the size of the tail */
-    
-    max-width: 300px;
-    padding: calc(2*var(--r)/3);
-    mask: 
-      radial-gradient(var(--t) at var(--_d) 0,#0000 98%,#000 102%) 
-        var(--_d) 100%/calc(100% - var(--r)) var(--t) no-repeat,
-      conic-gradient(at var(--r) var(--r),#000 75%,#0000 0) 
-        calc(var(--r)/-2) calc(var(--r)/-2) padding-box, 
-      radial-gradient(50% 50%,#000 98%,#0000 101%) 
-        0 0/var(--r) var(--r) space padding-box;
-    
-    --_d: 100%;
+
+    padding: 0.2em 0.5em;
     border-right: var(--t) solid #0000;
-    margin-left: var(--t);
-    place-self: end;
-  }
+    mask:
+        radial-gradient(var(--t) at 100% 0, #0000 98%, #000 102%) 100% 100%/calc(100% - var(--r)) var(--t) no-repeat,
+        conic-gradient(at var(--r) var(--r), #000 75%, #0000 0) calc(var(--r)/-2) calc(var(--r)/-2) padding-box,
+        radial-gradient(closest-side at 50% 50%, #000 98%, #0000 101%) 0 0/var(--r) var(--r) space padding-box;
+}
 
 .lobby-chat-messages {
     background-color: rgba(255, 255, 255, 0.8);
