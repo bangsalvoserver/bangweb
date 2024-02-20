@@ -36,9 +36,7 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
     
     useEffect(() => {
         const CHAT_BUBBLE_DURATION = 20000;
-
         if (isChatOpen) {
-            messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             setNumReadMessages(countMessages);
             setNumFinishedBubbles(countMessages);
             bubbleTimeouts.current.forEach(clearTimeout);
@@ -59,6 +57,12 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
             inputMessage.current?.focus();
         }
     }, [isChatOpen]);
+
+    useLayoutEffect(() => {
+        if (isChatOpen && countMessages > prevCountMessages) {
+            messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+    }, [isChatOpen, countMessages, prevCountMessages]);
 
     const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
@@ -83,7 +87,7 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
         <button className='
                 w-8 h-8 md:w-12 md:h-12 relative
                 p-2 ml-1 text-sm rounded-full focus:outline-none focus:ring-2 text-gray-400 bg-gray-600 hover:bg-gray-700 focus:ring-gray-800
-            ' onClick={() => setIsChatOpen(!isChatOpen)}>
+            ' onClick={() => setIsChatOpen(value => !value)}>
             <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 60" xmlSpace="preserve">
                 <g>
                     <path d="M26,9.586C11.664,9.586,0,20.09,0,33c0,4.499,1.418,8.856,4.106,12.627c-0.51,5.578-1.86,9.712-3.813,11.666
