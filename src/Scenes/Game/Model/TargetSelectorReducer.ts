@@ -218,7 +218,7 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
     case 'max_cards':
         if (index >= targets.length) {
             const cardTargetable = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
-            const countTargetableCards = sum(table.players, player => {
+            let countTargetableCards = sum(table.players, player => {
                 if (checkPlayerFilter(table, effect.player_filter, player)) {
                     return countIf(player.pockets.player_hand, cardTargetable)
                         + countIf(player.pockets.player_table, cardTargetable);
@@ -226,7 +226,10 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
                     return 0;
                 }
             });
-            return reserveTargets(effect.target, Math.min(effect.target_value, countTargetableCards));
+            if (effect.target_value !== 0 && countTargetableCards < effect.target_value) {
+                countTargetableCards = effect.target_value;   
+            }
+            return reserveTargets(effect.target, countTargetableCards);
         }
         break;
     case 'cards_other_players':
