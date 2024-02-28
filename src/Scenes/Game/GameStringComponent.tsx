@@ -42,15 +42,16 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
     const { users } = useContext(LobbyContext);
 
     const formatArgs = useMemo<GameStringFormatArg[]>(() => message.format_args.map(arg => {
-        if ('integer' in arg) {
+        switch (true) {
+        case 'integer' in arg:
             return { type: 'integer', value: arg.integer };
-        } else if ('card' in arg) {
+        case 'card' in arg:
             if ('name' in arg.card) {
                 return { type: 'card', value: arg.card as FormatCardName };
             } else {
                 return { type: 'card', value: null };
             }
-        } else if ('player' in arg) {
+        case 'player' in arg:
             if (arg.player) {
                 const player = findPlayer(table.players, arg.player);
                 const user = getUser(users, player.userid);
@@ -58,8 +59,9 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
             } else {
                 return { type: 'player', value: null }
             }
+        default:
+            throw new Error('Invalid argument in format_args');
         }
-        throw new Error('Invalid argument in format_args');
     }), [message, users, table.players]);
 
     if (message.format_str in gameStringRegistry) {

@@ -227,18 +227,20 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
 
 export function isCardSelected(selector: TargetSelector, card: CardId): boolean {
     const check = (target: CardTarget) => {
-        if ('card' in target) {
+        switch (true) {
+        case 'card' in target:
             return target.card === card;
-        } else if ('extra_card' in target) {
+        case 'extra_card' in target:
             return target.extra_card === card;
-        } else if ('cards' in target) {
+        case 'cards' in target:
             return target.cards.includes(card);
-        } else if ('max_cards' in target) {
+        case 'max_cards' in target:
             return target.max_cards.includes(card);
-        } else if ('cards_other_players' in target) {
+        case 'cards_other_players' in target:
             return target.cards_other_players.includes(card);
+        default:
+            return false;
         }
-        return false;
     };
     if (isSelectionPlaying(selector)) {
         if (selector.selection.targets.some(check)) {
@@ -263,14 +265,16 @@ export function isHandSelected(table: GameTable, card: Card): boolean {
 
 export function isPlayerSelected(selector: TargetSelector, player: Player): boolean {
     const check = (target: CardTarget) => {
-        if ('player' in target) {
+        switch (true) {
+        case 'player' in target:
             return target.player === player.id;
-        } else if ('conditional_player' in target) {
+        case 'conditional_player' in target:
             return target.conditional_player === player.id;
-        } else if ('adjacent_players' in target) {
+        case 'adjacent_players' in target:
             return target.adjacent_players.includes(player.id);
+        default:
+            return false;
         }
-        return false;
     };
     if (isSelectionPlaying(selector)) {
         if (selector.selection.targets.some(check)) {

@@ -125,22 +125,26 @@ export default function PlayerView({ playerRef, user, player }: PlayerProps) {
     
     let roleKey: number | null = null;
     if (player.animation) {
-        if ('flipping_role' in player.animation) {
+        switch (true) {
+        case 'flipping_role' in player.animation:
             roleKey = player.animationKey;
             flipDuration = player.animation.flipping_role.duration;
             if (player.status.role === 'unknown') {
                 playerRole = player.animation.flipping_role.role;
             }
-        } else if ('player_hp' in player.animation) {
+            break;
+        case 'player_hp' in player.animation:
             fromPlayerHp = player.animation.player_hp.hp;
             playerStyle = {
                 '--duration': player.animation.player_hp.duration + 'ms'
             } as CSSProperties;
-        } else if ('player_death' in player.animation) {
+            break;
+        case 'player_death' in player.animation:
             playerStyle = {
                 '--duration': player.animation.player_death.duration + 'ms'
             } as CSSProperties;
             classes.push('player-animation-death');
+            break;
         }
     } else if (selectorPlayerClass) {
         classes.push(selectorPlayerClass);

@@ -14,7 +14,8 @@ export interface AnimationProps {
 export default function AnimationView({ tracker }: AnimationProps) {
     const table = useContext(GameTableContext);
     if (table.animation) {
-        if ('move_card' in table.animation) {
+        switch (true) {
+        case 'move_card' in table.animation: {
             const animation = table.animation.move_card;
             return <MoveCardAnimation
                 key={table.animationKey}
@@ -23,7 +24,8 @@ export default function AnimationView({ tracker }: AnimationProps) {
                 destPocket={newPocketId(animation.pocket, animation.player)}
                 duration={animation.duration}
             />;
-        } else if ('move_cubes' in table.animation) {
+        }
+        case 'move_cubes' in table.animation: {
             const animation = table.animation.move_cubes;
             return <MoveCubeAnimation
                 key={table.animationKey}
@@ -33,7 +35,8 @@ export default function AnimationView({ tracker }: AnimationProps) {
                 target_card={animation.target_card ? getCard(table, animation.target_card) : null}
                 duration={animation.duration}
             />;
-        } else if ('deck_shuffle' in table.animation) {
+        }
+        case 'deck_shuffle' in table.animation: {
             const animation = table.animation.deck_shuffle;
             return <DeckShuffleAnimation
                 key={table.animationKey}
@@ -42,7 +45,8 @@ export default function AnimationView({ tracker }: AnimationProps) {
                 pocket={animation.pocket}
                 duration={animation.duration}
             />;
-        } else if ('move_players' in table.animation) {
+        }
+        case 'move_players' in table.animation: {
             const animation = table.animation.move_players;
             return <MovePlayersAnimation
                 key={table.animationKey}
@@ -50,7 +54,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
                 players={animation.players}
                 duration={animation.duration}
             />;
-        }
+        }}
     }
     return null;
 }

@@ -90,7 +90,8 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
     let classes = ['card-view'];
 
     if (card.animation) {
-        if ('flipping' in card.animation) {
+        switch (true) {
+        case 'flipping' in card.animation:
             style = {
                 '--duration': card.animation.flipping.duration + 'ms'
             } as CSSProperties;
@@ -106,21 +107,25 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
             } else {
                 classes.push('card-animation-reverse');
             }
-        } else if ('turning' in card.animation) {
+            break;
+        case 'turning' in card.animation:
             style = {
                 '--duration': card.animation.turning.duration + 'ms'
             } as CSSProperties;
 
             classes.push('card-animation', 'z-10', 'card-animation-turn');
             if (!card.inactive) classes.push('card-animation-reverse');
-        } else if ('flash' in card.animation) {
+            break;
+        case 'flash' in card.animation:
             style = {
                 '--duration': card.animation.flash.duration + 'ms'
             } as CSSProperties;
 
             classes.push('z-10', 'card-animation-flash');
-        } else if ('short_pause' in card.animation) {
-            classes.push('z-10')
+            break;
+        case 'short_pause' in card.animation:
+            classes.push('z-10');
+            break;
         }
     } else {
         if (card.inactive) {
