@@ -52,6 +52,7 @@ export function isPlayerInGame(player: Player): boolean {
 
 export function isBangCard(table: GameTable, origin: Player, card: Card): boolean {
     return table.status.flags.includes('treat_any_as_bang')
+        || origin.status.flags.includes('treat_any_as_bang')
         || cardHasTag(card, 'bangcard')
         || (origin.status.flags.includes('treat_missed_as_bang') && cardHasTag(card, 'missed'));
 }
