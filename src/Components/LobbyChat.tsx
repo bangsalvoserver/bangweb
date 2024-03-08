@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
 import { LobbyState } from "../Model/SceneState";
 import { UserId } from "../Model/ServerMessage";
@@ -52,13 +52,13 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
         }
     }, [isChatOpen, countMessages, prevCountMessages]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (isChatOpen) {
             inputMessage.current?.focus();
         }
     }, [isChatOpen]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (isChatOpen && countMessages > prevCountMessages) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
