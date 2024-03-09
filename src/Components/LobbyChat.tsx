@@ -58,10 +58,10 @@ export default function LobbyChat({ myUserId, connection, lobbyState: { users, c
     }, [isChatOpen]);
 
     useLayoutEffect(() => {
-        if (isChatOpen && countMessages > prevCountMessages) {
+        if (numReadMessages) {
             messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
-    }, [isChatOpen, countMessages, prevCountMessages]);
+    }, [numReadMessages]);
 
     const handleFormSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
