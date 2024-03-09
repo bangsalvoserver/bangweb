@@ -1,18 +1,19 @@
-import { RefObject, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function useCloseOnLoseFocus<T extends Element>(ref: RefObject<T>) {
+export default function useCloseOnLoseFocus<T extends Element>() {
     const [isOpen, setIsOpen] = useState(false);
+    const ref = useRef<T>(null);
   
     useEffect(() => {
       const callback = (ev: MouseEvent) => {
-        if (!ref.current?.contains(ev.target as Node)) {
+        if (ref.current && !ref.current.contains(ev.target as Node)) {
           setIsOpen(false);
         }
       };
 
-      window.addEventListener('click', callback);
-      return () => window.removeEventListener('click', callback);
-    }, [ref]);
+      window.addEventListener('mousedown', callback);
+      return () => window.removeEventListener('mousedown', callback);
+    }, []);
   
-    return [isOpen, setIsOpen] as const;
+    return [ isOpen, setIsOpen, ref ] as const;
 }

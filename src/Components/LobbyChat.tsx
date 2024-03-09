@@ -17,11 +17,10 @@ export interface ChatProps {
 }
 
 export default function LobbyChat({ myUserId, connection, lobbyState: { users, chatMessages: messages } }: ChatProps) {
-    const chatRef = useRef<HTMLDivElement>(null);
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
     
-    const [isChatOpen, setIsChatOpen] = useCloseOnLoseFocus(chatRef);
+    const [isChatOpen, setIsChatOpen, chatRef] = useCloseOnLoseFocus<HTMLDivElement>();
     
     const countMessages = useMemo(() => countIf(messages, m => !m.is_read), [messages]);
     const prevCountMessages = usePrevious(countMessages) ?? 0;

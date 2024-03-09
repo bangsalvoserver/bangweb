@@ -17,8 +17,7 @@ export interface HeaderProps {
 function Header({ scene, settings, connection }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [isMenuOpen, setIsMenuOpen] = useCloseOnLoseFocus(menuRef);
+  const [isMenuOpen, setIsMenuOpen, menuRef] = useCloseOnLoseFocus<HTMLDivElement>();
 
   const handleEditUser = async (username?: string, propic?: ImageSrc) => {
     settings.setUsername(username);

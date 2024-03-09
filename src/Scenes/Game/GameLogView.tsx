@@ -11,8 +11,7 @@ export interface GameLogProps {
 export default function GameLogView({ logs }: GameLogProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
 
-    const gameLogRef = useRef<HTMLDivElement>(null);
-    const [isLogOpen, setIsLogOpen] = useCloseOnLoseFocus(gameLogRef);
+    const [isLogOpen, setIsLogOpen, gameLogRef] = useCloseOnLoseFocus<HTMLDivElement>();
 
     useEffect(() => {
         if (isLogOpen) {
