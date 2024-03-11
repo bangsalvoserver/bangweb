@@ -54,7 +54,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
   const setRef = curry2(pocketRefs.set);
 
   const selectorConfirm = useSelectorConfirm(table, selectorDispatch);
-  useSendGameAction(table.selector, connection);
+  useSendGameAction(table, connection);
 
   const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
