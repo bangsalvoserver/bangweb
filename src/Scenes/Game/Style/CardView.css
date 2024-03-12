@@ -65,15 +65,15 @@
 }
 
 .card-targetable {
-    --card-highlight-color: #ffff0060;
+    --card-highlight-color: #eca60e;
 }
 
 .card-current {
-    --card-highlight-color: #306effee;
+    --card-highlight-color: #306eff;
 }
 
 .card-pickable {
-    --card-highlight-color: #40c0ffaa; 
+    --card-highlight-color: #e6f32bd3;
 }
 
 .card-playable {

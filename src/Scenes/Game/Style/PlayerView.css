@@ -76,7 +76,7 @@
 }
 
 .player-targetable {
-    --player-border-color: #806c00ff;
+    --player-border-color: rgb(212, 167, 42);
 }
 
 .player-top-row {
