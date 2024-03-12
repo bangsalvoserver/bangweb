@@ -72,12 +72,8 @@
     --card-highlight-color: #306effee;
 }
 
-.card-picked {
-    --card-highlight-color: #40c0ffaa; 
-}
-
 .card-pickable {
-    --card-highlight-color: #ffffffaa; 
+    --card-highlight-color: #40c0ffaa; 
 }
 
 .card-playable {

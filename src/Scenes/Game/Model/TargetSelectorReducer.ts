@@ -310,6 +310,20 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
     }
 }
 
+function handleSelectPickCard(table: GameTable, card: Card): TargetSelector {
+    if (!isResponse(table.selector)) {
+        throw new Error('TargetSelector: not in response mode');
+    }
+    const origin_card = table.selector.request.respond_cards
+        .map(card => getCard(table, card.card))
+        .find(card => cardHasTag(card, 'pick'));
+    if (!origin_card || !isCardKnown(origin_card)) {
+        throw new Error('TargetSelector: cannot find pick card');
+    }
+    let selector = handleSelectPlayingCard(table, origin_card) as PlayingSelector;
+    return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, appendCardTarget(selector, card.id))});
+}
+
 function removeZeroes(targets: CardTarget[]): CardTarget[] {
     const lastTarget = targets.at(-1);
     if (lastTarget) {
@@ -378,13 +392,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     selectPickCard (card) {
-        return {
-            ...this.selector,
-            selection: {
-                picked_card: card.id,
-                mode: 'finish'
-            }
-        };
+        return handleSelectPickCard(this, card);
     },
 
     addCardTarget (card) {

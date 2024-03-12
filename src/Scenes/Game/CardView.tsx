@@ -5,7 +5,7 @@ import { GameTableContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
 import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
-import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
+import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
@@ -36,10 +36,6 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
             } else if (isValidCardTarget(table as PlayingSelectorTable, card)) {
                 return 'card-targetable';
             }
-        }
-    } else if (isSelectionPicking(selector)) {
-        if (selector.selection.picked_card === card.id) {
-            return 'card-picked';
         }
     }
     if (isCardCurrent(selector, card)) {

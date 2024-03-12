@@ -1,48 +1,36 @@
 import { Dispatch, DispatchWithoutAction, createContext, useEffect, useMemo, useRef } from "react";
 import { BangConnection } from "../../../Model/UseBangConnection";
-import { cardHasTag } from "./Filters";
 import { GameAction } from "./GameAction";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { RequestStatusArgs } from "./GameUpdate";
-import { PlayingSelectorTable, isResponse, isSelectionPicking, isSelectionPlaying, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPickCard, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
+import { PlayingSelectorTable, TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPickCard, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
-function getSelectorGameAction(table: GameTable): GameAction | undefined {
-    const selector = table.selector;
+function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
     const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
     if (selector.selection.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
-        const timer_id = (isResponse(selector) && selector.request.timer?.timer_id) || null;
-        if (isSelectionPicking(selector)) {
-            return {
-                card: (selector.request as RequestStatusArgs).respond_cards
-                    .find(card => cardHasTag(getCard(table, card.card), 'pick'))!.card,
-                modifiers: [],
-                targets: [{card: selector.selection.picked_card}],
-                bypass_prompt,
-                timer_id
-            };
-        } else if (isSelectionPlaying(selector) && selector.selection.playing_card) {
-            const card = selector.selection.playing_card.id;
-            const modifiers = selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets }));
-            const targets = selector.selection.targets;
-            return { card, modifiers, targets, bypass_prompt, timer_id };
-        }
+        return {
+            card: selector.selection.playing_card!.id,
+            modifiers: selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets })),
+            targets: selector.selection.targets,
+            timer_id: (isResponse(selector) && selector.request.timer?.timer_id) || null,
+            bypass_prompt,
+        };
     }
 }
 
-export function useSendGameAction(table: GameTable, connection: BangConnection) {
+export function useSendGameAction(selector: TargetSelector, connection: BangConnection) {
     const gameActionSent = useRef(false);
     useEffect(() => {
         if (gameActionSent.current) {
             gameActionSent.current = false;
         } else {
-            const action = getSelectorGameAction(table);
+            const action = getSelectorGameAction(selector);
             if (action) {
                 connection.sendMessage({ game_action: action });
                 gameActionSent.current = true;
             }
         }
-    }, [table, connection]);
+    }, [selector, connection]);
 }
 
 function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | undefined {

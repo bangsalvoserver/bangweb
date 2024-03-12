@@ -14,11 +14,6 @@ export type GamePrompt =
     { type: 'yesno', message: GameString, response: boolean } |
     { type: 'playpick', card: KnownCard };
 
-export interface PickCardSelection {
-    picked_card: CardId;
-    mode: 'finish';
-}
-
 export interface EffectContext {
     repeat_card?: CardId;
     card_choice?: CardId;
@@ -55,7 +50,6 @@ export interface TargetSelector {
     request: RequestStatusUnion;
     prompt: GamePrompt;
     selection:
-        PickCardSelection |
         PlayCardSelection |
         { mode: 'start' };
 }
@@ -63,7 +57,6 @@ export interface TargetSelector {
 export type RequestSelector = ChangeField<TargetSelector, 'request', RequestStatusArgs>;
 export type StatusReadySelector = ChangeField<TargetSelector, 'request', StatusReadyArgs>;
 export type PlayingSelector = ChangeField<TargetSelector, 'selection', PlayCardSelection>;
-export type PickingSelector = ChangeField<TargetSelector, 'selection', PickCardSelection>;
 export type PlayingSelectorTable = ChangeField<GameTable, 'selector', PlayingSelector>;
 
 export function isResponse(selector: TargetSelector): selector is RequestSelector {
@@ -76,10 +69,6 @@ export function isStatusReady(selector: TargetSelector): selector is StatusReady
 
 export function isSelectionPlaying(selector: TargetSelector): selector is PlayingSelector {
     return 'playing_card' in selector.selection;
-}
-
-export function isSelectionPicking(selector: TargetSelector): selector is PickingSelector {
-    return 'picked_card' in selector.selection;
 }
 
 export function checkSelectionPlaying(selector: TargetSelector): asserts selector is PlayingSelector {
