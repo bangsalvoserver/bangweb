@@ -68,16 +68,28 @@
     --card-highlight-color: #eca60e;
 }
 
+.card-targetable:hover {
+    --card-highlight-color: #cf920f;
+}
+
 .card-current {
     --card-highlight-color: #306eff;
 }
 
 .card-pickable {
-    --card-highlight-color: #e6f32bd3;
+    --card-highlight-color: #e6f32bad;
+}
+
+.card-pickable:hover {
+    --card-highlight-color: #cdda1fad;
 }
 
 .card-playable {
     --card-highlight-color: #1ed760aa;
+}
+
+.card-playable:hover {
+    --card-highlight-color: #189b46de;
 }
 
 .card-highlight {
@@ -95,6 +107,11 @@
 .card-targetable-cubes .card-cube {
     background-color: #ffa000ff;
     box-shadow: 0px 0px 3px 3px #ffa000ff;
+}
+
+.card-targetable-cubes:hover .card-cube {
+    background-color: rgb(202, 128, 0);
+    box-shadow: 0px 0px 3px 3px rgb(202, 128, 0);
 }
 
 .card-cube-selected {

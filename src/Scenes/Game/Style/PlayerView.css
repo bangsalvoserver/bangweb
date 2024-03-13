@@ -76,6 +76,10 @@
 }
 
 .player-targetable {
+    --player-border-color: rgb(177, 123, 24);
+}
+
+.player-targetable:hover {
     --player-border-color: rgb(212, 167, 42);
 }
 
