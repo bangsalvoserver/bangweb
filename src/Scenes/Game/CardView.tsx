@@ -43,7 +43,11 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     } else if (isCardPrompted(selector, card)) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
-        return 'card-playable';
+        if (selector.selection.mode === 'start') {
+            return 'card-playable';
+        } else {
+            return 'card-modified';
+        }
     } else if (selectorCanPickCard(table, card)) {
         return 'card-pickable';
     }

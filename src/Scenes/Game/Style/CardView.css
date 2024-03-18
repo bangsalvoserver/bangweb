@@ -66,6 +66,7 @@
 
 .card-targetable {
     --card-highlight-color: #eca60e;
+    cursor: pointer;
 }
 
 .card-targetable:hover {
@@ -78,6 +79,7 @@
 
 .card-pickable {
     --card-highlight-color: #e6f32bad;
+    cursor: pointer;
 }
 
 .card-pickable:hover {
@@ -86,10 +88,15 @@
 
 .card-playable {
     --card-highlight-color: #1ed760aa;
+    cursor: pointer;
 }
 
 .card-playable:hover {
     --card-highlight-color: #189b46de;
+}
+
+.card-modified {
+    --card-highlight-color: #4470d6b7;
 }
 
 .card-highlight {
@@ -102,6 +109,10 @@
 
 .card-cube {
     border-radius: 50%;
+}
+
+.card-targetable-cubes {
+    cursor: pointer;
 }
 
 .card-targetable-cubes .card-cube {

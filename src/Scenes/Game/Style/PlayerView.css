@@ -77,6 +77,7 @@
 
 .player-targetable {
     --player-border-color: rgb(177, 123, 24);
+    cursor: pointer;
 }
 
 .player-targetable:hover {
