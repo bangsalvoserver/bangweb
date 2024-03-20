@@ -141,7 +141,7 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
         return editContext({ train_advance: 1 });
     case 'sgt_blaze':
         for (const [target, effect] of zipCardTargets(targets, getCardEffects(modifier, isResponse(selector)))) {
-            if (effect.type === 'ctx_add' && 'player' in target) {
+            if (effect.type === 'skip_player' && 'player' in target) {
                 return editContext({ skipped_player: target.player });
             }
         }
