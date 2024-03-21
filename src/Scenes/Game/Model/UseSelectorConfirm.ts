@@ -116,7 +116,7 @@ export function useSelectorConfirm(table: GameTable, selectorDispatch: Dispatch<
         return {
             handleClickCard: card => buildDispatch(getClickCardUpdate(table, card)),
             handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, player)),
-            handleConfirm: buildDispatch(selectorCanConfirm(table) ? { confirmPlay: {} } : undefined),
+            handleConfirm: buildDispatch(selectorCanConfirm(table.selector) ? { confirmPlay: {} } : undefined),
             handleUndo: buildDispatch(selectorCanUndo(table) ? { undoSelection: {} } : undefined)
         } as const;
     }, [table, selectorDispatch]);

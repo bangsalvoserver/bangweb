@@ -6,7 +6,7 @@ import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
 import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
 import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
-import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
+import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";

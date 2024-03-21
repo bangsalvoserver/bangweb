@@ -10,7 +10,7 @@ import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { GameTable, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { PlayingSelectorTable, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
-import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
+import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";

@@ -17,7 +17,7 @@ import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
 import { getPlayer, newGameTable } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
-import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/TargetSelectorManager";
+import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/UseSelectorConfirm";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
 import useGameState from "./Model/UseGameState";
 import PlayerSlotView from "./PlayerSlotView";

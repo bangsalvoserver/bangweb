@@ -6,7 +6,7 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanConfirm, zipCardTargets } from "./TargetSelector";
+import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, countSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -88,6 +88,7 @@ function appendCardTarget(selector: PlayingSelector, card: CardId): TargetListMa
         return appendTarget(effect.target, card);
     case 'cards':
     case 'select_cubes':
+    case 'select_cubes_repeat':
     case 'cards_other_players':
     case 'max_cards':
         return appendMultitarget(effect.target, card);
@@ -106,6 +107,7 @@ function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): Target
     case 'conditional_player':
         return appendTarget(effect.target, player);
     case 'adjacent_players':
+    case 'player_per_cube':
         return appendMultitarget(effect.target, player);
     default:
         throw new Error('TargetSelector: cannot add player target');
@@ -159,14 +161,7 @@ function isAutoConfirmable(table: PlayingSelectorTable): boolean {
     if (diff < 0) return false;
 
     if (optionals.length !== 0 && diff % optionals.length === 0) {
-        if (cardHasTag(currentCard, 'auto_confirm')) {
-            if (optionals.some(effect => effect.target === 'player'
-                && !table.alive_players.some(target =>
-                    checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)))))
-            {
-                return true;
-            }
-        } else if (cardHasTag(currentCard, 'auto_confirm_red_ringo')) {
+        if (cardHasTag(currentCard, 'red_ringo')) {
             let cubeSlots = 0;
             for (const cardId of getPlayer(table, table.self_player!).pockets.player_table) {
                 const card = getCard(table, cardId);
@@ -180,14 +175,15 @@ function isAutoConfirmable(table: PlayingSelectorTable): boolean {
         }
     }
 
-    return !cardHasTag(currentCard, 'repeatable') && diff === optionals.length;
+    return diff === optionals.length;
 }
 
 function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undefined {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const effects = getCardEffects(currentCard, isResponse(selector));
+    const effect = getEffectAt(effects, index);
 
     switch (effect?.target) {
     case 'none':
@@ -209,10 +205,37 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
             return reserveTargets(effect.target, 2);
         }
         break;
+    case 'player_per_cube':
+        if (index >= targets.length) {
+            let numCubes = 0;
+            for (const [t, e] of zipCardTargets(targets, effects)) {
+                if ('select_cubes' in t) {
+                    numCubes += t.select_cubes.length;
+                } else if ('select_cubes_repeat' in t) {
+                    numCubes += t.select_cubes_repeat.length;
+                } else if ('self_cubes' in t) {
+                    numCubes += e.target_value;
+                }
+            }
+            return reserveTargets(effect.target, numCubes);
+        }
+        break;
     case 'cards':
     case 'select_cubes':
         if (index >= targets.length) {
             return reserveTargets(effect.target, effect.target_value);
+        }
+        break;
+    case 'select_cubes_repeat':
+        if (index >= targets.length) {
+            const getCountCubes = (cardId: CardId) => {
+                const card = getCard(table, cardId);
+                return card.num_cubes - countSelectedCubes(selector, card);
+            };
+            const selfPlayer = getPlayer(table, table.self_player!);
+            const cubeCount = sum(selfPlayer.pockets.player_character, getCountCubes)
+                + sum(selfPlayer.pockets.player_table, getCountCubes);
+            return reserveTargets(effect.target, cubeCount - cubeCount % effect.target_value);
         }
         break;
     case 'max_cards':
@@ -331,7 +354,11 @@ function removeZeroes(targets: CardTarget[]): CardTarget[] {
         if (Array.isArray(value)) {
             const zeroIndex = value.indexOf(0);
             if (zeroIndex === 0) {
-                return targets.slice(0, -1);
+                if (key === 'select_cubes_repeat') {
+                    return targets.slice(0, -1).concat({ [key]: [] });
+                } else {
+                    return targets.slice(0, -1);
+                }
             } else if (zeroIndex > 0) {
                 return targets.slice(0, -1).concat({ [key]: value.slice(0, zeroIndex) } as CardTarget);
             }
@@ -341,12 +368,12 @@ function removeZeroes(targets: CardTarget[]): CardTarget[] {
 }
 
 function handleConfirmPlay(table: PlayingSelectorTable): TargetSelector {
-    const selector = editSelectorTargets(table.selector, removeZeroes);
-    const newTable = { ...table, selector };
-    if (selectorCanConfirm(newTable)) {
-        return setSelectorMode(selector, 'finish');
+    const newSelector = editSelectorTargets(table.selector, removeZeroes);
+    if (selectorCanConfirmLastTarget(table.selector)) {
+        console.log('confirm last target');
+        return handleAutoTargets({ ...table, selector: newSelector });
     } else {
-        return handleAutoTargets(newTable);
+        return setSelectorMode(newSelector, 'finish');
     }
 }
 

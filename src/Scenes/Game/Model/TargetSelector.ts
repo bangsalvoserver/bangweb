@@ -98,26 +98,31 @@ export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard,
     }
 }
 
-export function selectorCanConfirm(table: GameTable): boolean {
-    const selector = table.selector;
-    switch (selector.selection.mode) {
-    case 'target':
-    case 'modifier': {
+export function selectorCanConfirmLastTarget(selector: TargetSelector) {
+    if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
+        const [, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
+        if (targets.length !== 0 && getNextTargetIndex(targets) < targets.length) {
+            const [key, value] = Object.entries(targets.at(-1)!)[0];
+            switch (key) {
+            case 'max_cards':
+                return Array.isArray(key) && value[0] !== 0;
+            case 'select_cubes_repeat':
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+export function selectorCanConfirm(selector: TargetSelector): boolean {
+    if (selectorCanConfirmLastTarget(selector)) {
+        return true;
+    } else if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
         const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
         const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
         const index = getNextTargetIndex(targets);
-        if (index < targets.length && targets.length !== 0) {
-            const [lastTargetKey, lastTargetValue] = Object.entries(targets.at(-1)!)[0];
-            if (Array.isArray(lastTargetValue) && lastTargetValue[0] !== 0) {
-                return lastTargetKey === 'max_cards';
-            }
-        }
-        
-        return optionals.length !== 0
-            && index >= effects.length
-            && (index - effects.length) % optionals.length === 0;
-    }
-    default:
+        return optionals.length !== 0 && index === effects.length;
+    } else {
         return false;
     }
 }
@@ -261,6 +266,8 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
             return target.conditional_player === player.id;
         case 'adjacent_players' in target:
             return target.adjacent_players.includes(player.id);
+        case 'player_per_cube' in target:
+            return target.player_per_cube.includes(player.id);
         default:
             return false;
         }
@@ -283,6 +290,8 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
         for (const [target, effect] of zipCardTargets(targets, getCardEffects(card, response))) {
             if ('select_cubes' in target) {
                 selected += count(target.select_cubes, targetCard.id);
+            } else if ('select_cubes_repeat' in target) {
+                selected += count(target.select_cubes_repeat, targetCard.id);
             } else if ('self_cubes' in target && targetCard.id === card.id) {
                 selected += effect.target_value;
             }
@@ -306,8 +315,9 @@ export function isValidCubeTarget(table: PlayingSelectorTable, card: Card): bool
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
-    
-    return nextTarget?.target === 'select_cubes'
+
+    const nextTargetType = nextTarget?.target ?? 'none';
+    return (nextTargetType === 'select_cubes' || nextTargetType === 'select_cubes_repeat')
         && player === table.self_player
         && card.num_cubes > countSelectedCubes(selector, card);
 }
@@ -366,6 +376,7 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
         return true;
     }
     case 'select_cubes':
+    case 'select_cubes_repeat':
         return player === table.self_player
             && card.num_cubes > countSelectedCubes(selector, card);
     default:
@@ -421,6 +432,7 @@ export function isValidPlayerTarget(table: PlayingSelectorTable, player: Player)
     switch (nextTarget?.target) {
     case 'player':
     case 'conditional_player':
+    case 'player_per_cube':
         return checkPlayerFilter(table, nextTarget.player_filter, player);
     case 'adjacent_players': {
         const checkTargets = (target1: Player, target2: Player) => {

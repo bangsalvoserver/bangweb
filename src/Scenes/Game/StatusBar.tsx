@@ -8,7 +8,7 @@ import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { getCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
-import { SelectorConfirmContext } from "./Model/TargetSelectorManager";
+import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/TimerAnimation.css";
 
 export interface StatusProps {

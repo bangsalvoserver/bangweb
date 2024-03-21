@@ -3,7 +3,7 @@ import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameTableContext } from "../GameScene";
 import { getLocalizedCardName } from "../GameStringComponent";
 import { getCard, getCardImage, isCardKnown } from "../Model/GameTable";
-import { SelectorConfirmContext } from "../Model/TargetSelectorManager";
+import { SelectorConfirmContext } from "../Model/UseSelectorConfirm";
 import useCardOverlay from "../Model/UseCardOverlay";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
