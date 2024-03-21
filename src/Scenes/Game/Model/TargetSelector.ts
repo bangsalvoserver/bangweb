@@ -105,6 +105,7 @@ export function selectorCanConfirmLastTarget(selector: TargetSelector) {
             const [key, value] = Object.entries(targets.at(-1)!)[0];
             switch (key) {
             case 'max_cards':
+            case 'move_cube_slot':
                 return Array.isArray(key) && value[0] !== 0;
             case 'select_cubes_repeat':
                 return true;
@@ -232,6 +233,8 @@ export function isCardSelected(selector: TargetSelector, card: CardId): boolean 
             return target.max_cards.includes(card);
         case 'cards_other_players' in target:
             return target.cards_other_players.includes(card);
+        case 'move_cube_slot' in target:
+            return target.move_cube_slot.includes(card);
         default:
             return false;
         }
@@ -345,6 +348,7 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
     case 'extra_card':
     case 'cards':
     case 'max_cards':
+    case 'move_cube_slot':
         if (player && !checkPlayerFilter(table, nextTarget.player_filter, getPlayer(table, player))) {
             return false;
         }

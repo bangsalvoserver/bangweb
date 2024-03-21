@@ -90,6 +90,7 @@ function appendCardTarget(selector: PlayingSelector, card: CardId): TargetListMa
     case 'select_cubes':
     case 'select_cubes_repeat':
     case 'cards_other_players':
+    case 'move_cube_slot':
     case 'max_cards':
         return appendMultitarget(effect.target, card);
     default:
@@ -150,32 +151,6 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
         break;
     }
     return selector;
-}
-
-function isAutoConfirmable(table: PlayingSelectorTable): boolean {
-    const selector = table.selector;
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
-
-    const diff = getNextTargetIndex(targets) - effects.length;
-    if (diff < 0) return false;
-
-    if (optionals.length !== 0 && diff % optionals.length === 0) {
-        if (cardHasTag(currentCard, 'red_ringo')) {
-            let cubeSlots = 0;
-            for (const cardId of getPlayer(table, table.self_player!).pockets.player_table) {
-                const card = getCard(table, cardId);
-                if (getCardColor(card) === 'orange') {
-                    cubeSlots += 4 - card.num_cubes;
-                }
-            }
-            if (currentCard.num_cubes <= 1 || cubeSlots <= 1) {
-                return true;
-            }
-        }
-    }
-
-    return diff === optionals.length;
 }
 
 function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undefined {
@@ -265,6 +240,21 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
             return reserveTargets(effect.target, numTargetable);
         }
         break;
+    case 'move_cube_slot':
+        if (index >= targets.length) {
+            const selfPlayer = getPlayer(table, table.self_player!);
+            let cubeSlots = 0;
+            for (const cardId of selfPlayer.pockets.player_table) {
+                const card = getCard(table, cardId);
+                if (getCardColor(card) === 'orange') {
+                    cubeSlots += 4 - card.num_cubes;
+                }
+            }
+            const firstCharacter = selfPlayer.pockets.player_character[0];
+            const characterCubes = getCard(table, firstCharacter).num_cubes;
+            return reserveTargets(effect.target, Math.min(effect.target_value, cubeSlots, characterCubes));
+        }
+        break;
     }
 }
 
@@ -279,7 +269,11 @@ function setSelectorMode(selector: PlayingSelector, mode: 'start' | 'finish'): P
 }
 function handleAutoTargets(table: PlayingSelectorTable): TargetSelector {
     const selector = table.selector;
-    if (isAutoConfirmable(table)) {
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
+    const index = getNextTargetIndex(targets);
+
+    if (index === effects.length + optionals.length) {
         if (selector.selection.mode === 'modifier') {
             return handleAutoSelect({ ...table, selector: setSelectorMode(addModifierContext(selector), 'start')});
         } else {

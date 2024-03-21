@@ -14,6 +14,7 @@ export type CardTarget =
     { cards: CardId[] } |
     { max_cards: CardId[] } |
     { cards_other_players: CardId[] } |
+    { move_cube_slot: CardId[] } |
     { select_cubes: CardId[] } |
     { select_cubes_repeat: CardId[] } |
     { self_cubes: Empty };
