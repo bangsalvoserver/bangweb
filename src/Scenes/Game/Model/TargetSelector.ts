@@ -100,15 +100,18 @@ export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard,
 
 export function selectorCanConfirmLastTarget(selector: TargetSelector) {
     if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
-        const [, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
-        if (targets.length !== 0 && getNextTargetIndex(targets) < targets.length) {
-            const [key, value] = Object.entries(targets.at(-1)!)[0];
-            switch (key) {
-            case 'max_cards':
-            case 'move_cube_slot':
-                return (value as CardId[])[0] !== 0;
-            case 'select_cubes_repeat':
-                return true;
+        const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
+        const index = getNextTargetIndex(targets);
+        if (targets.length !== 0 && index < targets.length) {
+            const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+            const target = targets.at(-1)!;
+            switch (true) {
+            case 'max_cards' in target:
+                return target.max_cards[0] !== 0;
+            case 'move_cube_slot' in target:
+                return target.move_cube_slot[0] !== 0;
+            case 'select_cubes_repeat' in target:
+                return target.select_cubes_repeat.indexOf(0) % (effect?.target_value ?? 1) === 0;
             }
         }
     }
