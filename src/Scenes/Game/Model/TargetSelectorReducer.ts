@@ -210,7 +210,14 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
             const selfPlayer = getPlayer(table, table.self_player!);
             const cubeCount = sum(selfPlayer.pockets.player_character, getCountCubes)
                 + sum(selfPlayer.pockets.player_table, getCountCubes);
-            return reserveTargets(effect.target, cubeCount - cubeCount % effect.target_value);
+            let maxCount = cubeCount - cubeCount % effect.target_value;
+            if (effect.player_filter.length !== 0) {
+                const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)));
+                if (numPlayers <= maxCount) {
+                    maxCount = numPlayers - 1;
+                }
+            }
+            return reserveTargets(effect.target, maxCount);
         }
         break;
     case 'max_cards':
