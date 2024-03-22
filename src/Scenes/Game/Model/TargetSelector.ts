@@ -156,7 +156,7 @@ export function selectorCanUndo(table: GameTable): boolean {
     if (selector.selection.mode === 'start') {
         return isSelectionPlaying(selector) && !selector.selection.playing_card;
     }
-    if (isAutoSelect(table)) {
+    if (!selector.selection.context.card_choice && isAutoSelect(table)) {
         const someTargetNotNone = (targets: CardTarget[]) => {
             return targets.some(target => {
                 const value = Object.values(target)[0];
