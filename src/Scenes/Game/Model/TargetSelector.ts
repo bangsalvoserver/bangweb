@@ -106,7 +106,7 @@ export function selectorCanConfirmLastTarget(selector: TargetSelector) {
             switch (key) {
             case 'max_cards':
             case 'move_cube_slot':
-                return Array.isArray(key) && value[0] !== 0;
+                return (value as CardId[])[0] !== 0;
             case 'select_cubes_repeat':
                 return true;
             }

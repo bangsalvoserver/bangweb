@@ -192,7 +192,7 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
                     numCubes += e.target_value;
                 }
             }
-            return reserveTargets(effect.target, numCubes);
+            return reserveTargets(effect.target, numCubes + 1);
         }
         break;
     case 'cards':
