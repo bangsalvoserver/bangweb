@@ -344,18 +344,17 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
 
-    switch (nextTarget?.target) {
+    switch (effect?.target) {
     case 'card':
     case 'extra_card':
     case 'cards':
     case 'max_cards':
-    case 'move_cube_slot':
-        if (player && !checkPlayerFilter(table, nextTarget.player_filter, getPlayer(table, player))) {
+        if (player && !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
             return false;
         }
-        if (!checkCardFilter(table, nextTarget.card_filter, card)) {
+        if (!checkCardFilter(table, effect.card_filter, card)) {
             return false;
         }
         return true;
@@ -386,6 +385,11 @@ export function isValidCardTarget(table: PlayingSelectorTable, card: Card): bool
     case 'select_cubes_repeat':
         return player === table.self_player
             && card.num_cubes > countSelectedCubes(selector, card);
+    case 'move_cube_slot':
+        return player === table.self_player
+            && card.pocket.name === 'player_table'
+            && getCardColor(card) === 'orange'
+            && card.num_cubes < 4 - count((targets[index] as {move_cube_slot: CardId[]}).move_cube_slot, card.id);
     default:
         return false;
     }
@@ -434,13 +438,13 @@ export function isValidPlayerTarget(table: PlayingSelectorTable, player: Player)
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
 
-    switch (nextTarget?.target) {
+    switch (effect?.target) {
     case 'player':
     case 'conditional_player':
     case 'player_per_cube':
-        return checkPlayerFilter(table, nextTarget.player_filter, player);
+        return checkPlayerFilter(table, effect.player_filter, player);
     case 'adjacent_players': {
         const checkTargets = (target1: Player, target2: Player) => {
             return checkPlayerFilter(table, ['notself'], target2)
