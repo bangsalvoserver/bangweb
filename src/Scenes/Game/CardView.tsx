@@ -26,40 +26,44 @@ export interface CardProps {
 
 export function getSelectorCardClass(table: GameTable, card: Card) {
     const selector = table.selector;
+    const classes = [];
     if (isSelectionPlaying(selector)) {
         if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
-            return 'card-selected';
+            classes.push('card-selected');
         }
         if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
             if (isValidCubeTarget(table as PlayingSelectorTable, card)) {
-                return 'card-targetable-cubes';
+                classes.push('card-targetable-cubes');
             } else if (isValidCardTarget(table as PlayingSelectorTable, card)) {
-                return 'card-targetable';
+                classes.push('card-targetable');
             }
         }
     }
     if (isCardCurrent(selector, card)) {
-        return 'card-current';
+        classes.push('card-current');
     } else if (isCardPrompted(selector, card)) {
-        return 'card-current';
+        classes.push('card-current');
     } else if (selectorCanPlayCard(selector, card)) {
         if (selector.selection.mode === 'start') {
-            return 'card-playable';
+            classes.push('card-playable');
         } else {
-            return 'card-modified';
+            classes.push('card-modified');
         }
     } else if (selectorCanPickCard(table, card)) {
-        return 'card-pickable';
+        classes.push('card-pickable');
     }
     if (isResponse(selector)) {
         if (selector.request.highlight_cards.includes(card.id)) {
-            return 'card-highlight';
+            classes.push('card-highlight');
         }
         if (selector.request.origin_card === card.id) {
-            return 'card-origin';
+            classes.push('card-origin');
         }
     }
-    return null;
+    if (classes.length === 0) {
+        return null;
+    }
+    return classes.join(' ');
 }
 
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
