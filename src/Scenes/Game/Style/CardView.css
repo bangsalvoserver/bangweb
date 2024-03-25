@@ -94,6 +94,11 @@
     --card-highlight-color: #cdda1fad;
 }
 
+.card-pickable.card-selected {
+    --card-highlight-color: #ff1e00ad !important;
+    cursor: unset !important;
+}
+
 .card-playable {
     --card-highlight-color: #1ed760aa;
     cursor: pointer;
