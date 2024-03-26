@@ -240,6 +240,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     LOG_BOUGHT_CARD: (arg0, arg1) =>                                            <>{arg1} buys and plays {arg0}</>,
     LOG_BOUGHT_EQUIP: (arg0, arg1) =>                                           <>{arg1} buys and equips {arg0}</>,
     LOG_BOUGHT_EQUIP_TO: (arg0, arg1, arg2) =>                                  <>{arg1} buys and equips {arg0} to {arg2}</>,
+    LOG_CHOSE_CARD: (arg0, arg1) =>                                             <>{arg1} chose {arg1}</>,
     LOG_RESPONDED_WITH_CARD: (arg0, arg1) =>                                    <>{arg1} responds with {arg0}</>,
     LOG_RESPONDED_WITH_CARD_AS_MISSED: (arg0, arg1) =>                          <>{arg1} responds with {arg0} as Missed!</>,
     LOG_DRAWN_FROM_DECK: (arg0) =>                                              <>{arg0} draws from the deck</>,

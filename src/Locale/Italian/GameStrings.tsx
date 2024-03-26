@@ -240,6 +240,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     LOG_BOUGHT_CARD: (card, player) =>                                      <>{player} compra e gioca {card}</>,
     LOG_BOUGHT_EQUIP: (card, player) =>                                     <>{player} compra ed equipaggia {card}</>,
     LOG_BOUGHT_EQUIP_TO: (card, player, target) =>                          <>{player} compra ed equipaggia {card} a {target}</>,
+    LOG_CHOSE_CARD: (card, player) =>                                       <>{player} sceglie {card}</>,
     LOG_RESPONDED_WITH_CARD: (card, player) =>                              <>{player} risponde con {card}</>,
     LOG_RESPONDED_WITH_CARD_AS_MISSED: (card, player) =>                    <>{player} risponde con {card} come Mancato!</>,
     LOG_DRAWN_FROM_DECK: (player) =>                                        <>{player} pesca dal mazzo</>,
