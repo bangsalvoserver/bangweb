@@ -35,13 +35,13 @@ export interface CardData {
     expansion: ExpansionType[];
     deck: DeckType;
     modifier: {
-        type: ModifierType
+        type: ModifierType | null
     };
     mth_effect: {
-        type: MthType
+        type: MthType | null
     };
     mth_response: {
-        type: MthType
+        type: MthType | null
     };
     equip_target: PlayerFilter[];
     color: CardColor;

@@ -306,7 +306,7 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             },
             prompt: { type: 'none' }
         };
-    } else if (card.cardData.modifier.type === 'none') {
+    } else if (card.cardData.modifier.type === null) {
         return handleAutoTargets({ ...table, selector: {
             ...selector,
             selection: {
