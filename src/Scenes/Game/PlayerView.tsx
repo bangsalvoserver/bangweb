@@ -9,7 +9,7 @@ import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { GameTable, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
-import { PlayingSelectorTable, isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import { isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
@@ -31,12 +31,12 @@ function getSelectorPlayerClass(table: GameTable, player: Player) {
     switch (selector.selection.mode) {
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(table as PlayingSelectorTable, player)) {
+        if (isValidPlayerTarget(table, player)) {
             return 'player-targetable';
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(table as PlayingSelectorTable, player)) {
+        if (isValidEquipTarget(table, player)) {
             return 'player-targetable';
         }
         break;

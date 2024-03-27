@@ -73,6 +73,15 @@
     --card-highlight-color: #cf920f;
 }
 
+.card-retargetable {
+    --card-highlight-color: rgb(255, 38, 0);
+    cursor: pointer;
+}
+
+.card-retargetable:hover {
+    --card-highlight-color: rgb(180, 27, 0);
+}
+
 .card-current {
     --card-highlight-color: #306eff;
 }
@@ -84,11 +93,6 @@
 
 .card-pickable:hover {
     --card-highlight-color: #cdda1fad;
-}
-
-.card-pickable.card-selected {
-    --card-highlight-color: #ff1e00ad !important;
-    cursor: unset !important;
 }
 
 .card-playable {

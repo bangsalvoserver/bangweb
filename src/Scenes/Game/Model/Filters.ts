@@ -2,7 +2,7 @@ import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
-import { PlayingSelectorTable, isCardCurrent, isPlayerSelected, isResponse } from "./TargetSelector";
+import { isCardCurrent, isPlayerSelected, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     return isCardKnown(card) ? card.cardData.tags.find(tag => tag.type === tagType)?.tag_value : undefined;
@@ -57,7 +57,7 @@ export function isBangCard(table: GameTable, origin: Player, card: Card): boolea
         || (origin.status.flags.includes('treat_missed_as_bang') && cardHasTag(card, 'missed'));
 }
 
-export function calcPlayerDistance(table: PlayingSelectorTable, from: PlayerId, to: PlayerId): number {
+export function calcPlayerDistance(table: GameTable, from: PlayerId, to: PlayerId): number {
     if (from === to) {
         return 0;
     }
@@ -99,7 +99,7 @@ export function calcPlayerDistance(table: PlayingSelectorTable, from: PlayerId, 
     return Math.min(countCw, countCcw) + distanceMod;
 }
 
-export function checkPlayerFilter(table: PlayingSelectorTable, filter: PlayerFilter[], target: Player): boolean {
+export function checkPlayerFilter(table: GameTable, filter: PlayerFilter[], target: Player): boolean {
     const selector = table.selector;
     const origin = getPlayer(table, table.self_player!);
     const context = selector.selection.context;

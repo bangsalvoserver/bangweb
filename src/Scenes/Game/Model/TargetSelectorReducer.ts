@@ -6,7 +6,7 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayingSelector, PlayingSelectorTable, RequestStatusUnion, TargetSelector, checkSelectionPlaying, countSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, isSelectionPlaying, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget, zipCardTargets } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget, zipCardTargets } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -22,7 +22,7 @@ export type SelectorUpdate =
 
 type TargetListMapper = UpdateFunction<CardTarget[]>;
 
-function editSelectorTargets(selector: PlayingSelector, mapper: TargetListMapper): PlayingSelector {
+function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper): TargetSelector {
     switch (selector.selection.mode) {
     case 'target':
         return {
@@ -77,7 +77,7 @@ function appendMultitarget(targetType: MultiTargetType, id: number): TargetListM
     };
 }
 
-function appendCardTarget(selector: PlayingSelector, card: CardId): TargetListMapper {
+function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMapper {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
@@ -98,7 +98,7 @@ function appendCardTarget(selector: PlayingSelector, card: CardId): TargetListMa
     }
 }
 
-function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): TargetListMapper {
+function appendPlayerTarget(selector: TargetSelector, player: PlayerId): TargetListMapper {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
@@ -115,9 +115,9 @@ function appendPlayerTarget(selector: PlayingSelector, player: PlayerId): Target
     }
 }
 
-function addModifierContext(selector: PlayingSelector): PlayingSelector {
+function addModifierContext(selector: TargetSelector): TargetSelector {
     const [modifier, targets] = getCurrentCardAndTargets(selector);
-    const editContext = (source: {}): PlayingSelector => {
+    const editContext = (source: {}): TargetSelector => {
         return {
             ...selector,
             selection: {
@@ -148,7 +148,7 @@ function addModifierContext(selector: PlayingSelector): PlayingSelector {
     return selector;
 }
 
-function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undefined {
+function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
@@ -260,7 +260,7 @@ function appendAutoTarget(table: PlayingSelectorTable): TargetListMapper | undef
     }
 }
 
-function setSelectorMode(selector: PlayingSelector, mode: 'start' | 'finish'): PlayingSelector {
+function setSelectorMode(selector: TargetSelector, mode: PlayCardSelectionMode): TargetSelector {
     return {
         ...selector,
         selection: {
@@ -269,7 +269,7 @@ function setSelectorMode(selector: PlayingSelector, mode: 'start' | 'finish'): P
         }
     };
 }
-function handleAutoTargets(table: PlayingSelectorTable): TargetSelector {
+function handleAutoTargets(table: GameTable): TargetSelector {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
@@ -293,7 +293,7 @@ function handleAutoTargets(table: PlayingSelectorTable): TargetSelector {
 
 function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelector {
     const selector = table.selector;
-    const selection = isSelectionPlaying(table.selector) ? table.selector.selection : newPlayCardSelection();
+    const selection = selector.selection;
 
     if (isEquipCard(card)) {
         return {
@@ -339,7 +339,7 @@ function handleSelectPickCard(table: GameTable, card: Card): TargetSelector {
     if (!origin_card || !isCardKnown(origin_card)) {
         throw new Error('TargetSelector: cannot find pick card');
     }
-    let selector = handleSelectPlayingCard(table, origin_card) as PlayingSelector;
+    let selector = handleSelectPlayingCard(table, origin_card);
     return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, appendCardTarget(selector, card.id))});
 }
 
@@ -363,7 +363,7 @@ function removeZeroes(targets: CardTarget[]): CardTarget[] {
     return targets;
 }
 
-function handleConfirmPlay(table: PlayingSelectorTable): TargetSelector {
+function handleConfirmPlay(table: GameTable): TargetSelector {
     const newSelector = editSelectorTargets(table.selector, removeZeroes);
     if (selectorCanConfirmLastTarget(table.selector)) {
         console.log('confirm last target');
@@ -395,8 +395,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     confirmPlay () {
-        checkSelectionPlaying(this.selector);
-        return handleConfirmPlay(this as PlayingSelectorTable);
+        return handleConfirmPlay(this);
     },
 
     undoSelection () {
@@ -405,7 +404,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
             selector: {
                 ...this.selector,
                 prompt: { type: 'none' },
-                selection: { mode: 'start' }
+                selection: newPlayCardSelection('none')
             }
         });
     },
@@ -419,12 +418,10 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     addCardTarget (card) {
-        checkSelectionPlaying(this.selector);
         return handleAutoTargets({ ...this, selector: editSelectorTargets(this.selector, appendCardTarget(this.selector, card.id))});
     },
 
     addPlayerTarget (player) {
-        checkSelectionPlaying(this.selector);
         return handleAutoTargets({...this, selector: editSelectorTargets(this.selector, appendPlayerTarget(this.selector, player.id))});
     },
 

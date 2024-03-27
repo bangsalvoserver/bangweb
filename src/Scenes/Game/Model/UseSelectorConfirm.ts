@@ -2,7 +2,7 @@ import { Dispatch, DispatchWithoutAction, createContext, useEffect, useMemo, use
 import { BangConnection } from "../../../Model/UseBangConnection";
 import { GameAction } from "./GameAction";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { PlayingSelectorTable, TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPickCard, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
+import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPickCard, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
@@ -42,11 +42,12 @@ function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | unde
         if (card.pocket?.name === 'player_character') {
             cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
         }
-        if (isValidCardTarget(table as PlayingSelectorTable, cardTarget)) {
+        if (isValidCardTarget(table, cardTarget)) {
             return { addCardTarget: cardTarget };
         }
         break;
     }
+    case 'none':
     case 'start': {
         const canPlay = selectorCanPlayCard(selector, card);
         if (isResponse(selector)) {
@@ -69,12 +70,12 @@ function getClickPlayerUpdate(table: GameTable, player: Player): SelectorUpdate 
     switch (table.selector.selection.mode) {
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(table as PlayingSelectorTable, player)) {
+        if (isValidPlayerTarget(table, player)) {
             return { addPlayerTarget: player };
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(table as PlayingSelectorTable, player)) {
+        if (isValidEquipTarget(table, player)) {
             return { addEquipTarget: player };
         }
     }

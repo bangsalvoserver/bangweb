@@ -6,7 +6,7 @@ import { GameTableContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
-import { getPlayableCards, isSelectionPlaying } from "./Model/TargetSelector";
+import { getPlayableCards } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
 
 export interface CardChoiceProps {
@@ -44,7 +44,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     const selector = table.selector;
 
     const choiceCards = useMemo((): [CardId, CardId[]] | undefined => {
-        if (isSelectionPlaying(selector)) {
+        if (selector.selection.mode !== 'none') {
             const anchor = selector.selection.context.card_choice;
             if (anchor) {
                 return [anchor, getPlayableCards({

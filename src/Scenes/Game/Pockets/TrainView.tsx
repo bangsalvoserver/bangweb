@@ -1,7 +1,6 @@
 import { CSSProperties, Ref, useContext } from "react";
 import { GameTableContext } from "../GameScene";
 import { PocketRef } from "../Model/CardTracker";
-import { isSelectionPlaying } from "../Model/TargetSelector";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
 
@@ -32,14 +31,12 @@ export default function TrainView({ pocketRef }: TrainProps) {
                 '--duration': animation.duration + 'ms'
             } as CSSProperties;
         }
-    } else if (isSelectionPlaying(selector)) {
-        if (selector.selection.context.train_advance) {
-            classes.push('train-advance-transition');
-            trainPositionStyle = {
-                ...trainPositionStyle,
-                '--train-position-diff': selector.selection.context.train_advance
-            } as CSSProperties;
-        }
+    } else if (selector.selection.context.train_advance) {
+        classes.push('train-advance-transition');
+        trainPositionStyle = {
+            ...trainPositionStyle,
+            '--train-position-diff': selector.selection.context.train_advance
+        } as CSSProperties;
     }
 
     return (

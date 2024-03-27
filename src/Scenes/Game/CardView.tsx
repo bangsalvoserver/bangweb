@@ -5,9 +5,9 @@ import { GameTableContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
 import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
-import { PlayingSelectorTable, countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isSelectionPlaying, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
-import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
+import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
+import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
@@ -26,21 +26,19 @@ export interface CardProps {
 
 export function getSelectorCardClass(table: GameTable, card: Card) {
     const selector = table.selector;
-    if (isSelectionPlaying(selector)) {
-        if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
-            if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
-                if (isValidCardTarget(table as PlayingSelectorTable, card)) {
-                    return 'card-targetable card-selected';
-                }
-            }
-            return 'card-selected';
-        }
+    if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
         if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
-            if (isValidCubeTarget(table as PlayingSelectorTable, card)) {
-                return 'card-targetable-cubes';
-            } else if (isValidCardTarget(table as PlayingSelectorTable, card)) {
-                return 'card-targetable';
+            if (isValidCardTarget(table, card)) {
+                return 'card-retargetable';
             }
+        }
+        return 'card-selected';
+    }
+    if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
+        if (isValidCubeTarget(table, card)) {
+            return 'card-targetable-cubes';
+        } else if (isValidCardTarget(table, card)) {
+            return 'card-targetable';
         }
     }
     if (isCardCurrent(selector, card)) {
@@ -48,7 +46,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     } else if (isCardPrompted(selector, card)) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
-        if (selector.selection.mode === 'start') {
+        if (selector.selection.mode === 'start' || selector.selection.mode === 'none') {
             return 'card-playable';
         } else {
             return 'card-modified';

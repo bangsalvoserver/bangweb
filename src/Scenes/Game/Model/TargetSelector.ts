@@ -23,6 +23,14 @@ export interface EffectContext {
     ignore_distances?: boolean;
 }
 
+export type PlayCardSelectionMode =
+    | 'none' // No card selected
+    | 'modifier' // Selecting target for modifier
+    | 'start' // Modifiers selected, selecting new card
+    | 'target' // Selecting target for playing card
+    | 'equip' // Selecting target for equip
+    | 'finish' // Last target selected, sending game_action
+
 export interface PlayCardSelection {
     playing_card: KnownCard | null;
     targets: CardTarget[];
@@ -33,31 +41,27 @@ export interface PlayCardSelection {
     }[];
 
     context: EffectContext;
-    mode: 'start' | 'target' | 'modifier' | 'equip' | 'finish';
+    mode: PlayCardSelectionMode;
 }
 
-export function newPlayCardSelection(): PlayCardSelection {
+export function newPlayCardSelection(mode: PlayCardSelectionMode): PlayCardSelection {
     return {
         playing_card: null,
         targets: [],
         modifiers: [],
         context: {},
-        mode: 'start'
+        mode
     };
 }
 
 export interface TargetSelector {
     request: RequestStatusUnion;
     prompt: GamePrompt;
-    selection:
-        PlayCardSelection |
-        { mode: 'start' };
+    selection: PlayCardSelection;
 }
 
 export type RequestSelector = ChangeField<TargetSelector, 'request', RequestStatusArgs>;
 export type StatusReadySelector = ChangeField<TargetSelector, 'request', StatusReadyArgs>;
-export type PlayingSelector = ChangeField<TargetSelector, 'selection', PlayCardSelection>;
-export type PlayingSelectorTable = ChangeField<GameTable, 'selector', PlayingSelector>;
 
 export function isResponse(selector: TargetSelector): selector is RequestSelector {
     return 'respond_cards' in selector.request;
@@ -67,25 +71,15 @@ export function isStatusReady(selector: TargetSelector): selector is StatusReady
     return 'play_cards' in selector.request;
 }
 
-export function isSelectionPlaying(selector: TargetSelector): selector is PlayingSelector {
-    return 'playing_card' in selector.selection;
-}
-
-export function checkSelectionPlaying(selector: TargetSelector): asserts selector is PlayingSelector {
-    if (!isSelectionPlaying(selector)) {
-        throw new Error('TargetSelector: selection is not PlayCardSelection');
-    }
-}
-
 export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelector {
     return {
         request,
         prompt: { type: 'none' },
-        selection: { mode: 'start' },
+        selection: newPlayCardSelection('none'),
     };
 }
 
-export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard, CardTarget[]] {
+export function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, CardTarget[]] {
     switch (selector.selection.mode) {
     case 'target':
         return [selector.selection.playing_card!, selector.selection.targets];
@@ -100,7 +94,7 @@ export function getCurrentCardAndTargets(selector: PlayingSelector): [KnownCard,
 
 export function selectorCanConfirmLastTarget(selector: TargetSelector) {
     if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
-        const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
+        const [currentCard, targets] = getCurrentCardAndTargets(selector);
         const index = getNextTargetIndex(targets);
         if (targets.length !== 0 && index < targets.length) {
             const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
@@ -122,7 +116,7 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
     if (selectorCanConfirmLastTarget(selector)) {
         return true;
     } else if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
-        const [currentCard, targets] = getCurrentCardAndTargets(selector as PlayingSelector);
+        const [currentCard, targets] = getCurrentCardAndTargets(selector);
         const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
         const index = getNextTargetIndex(targets);
         return optionals.length !== 0 && index === effects.length;
@@ -140,21 +134,22 @@ export function isAutoSelect(table: GameTable): boolean {
 
 export function getAutoSelectCard(table: GameTable): CardId | undefined {
     const selector = table.selector;
-    if (selector.selection.mode === 'start') {
-        if (isSelectionPlaying(selector)) {
-            const context = selector.selection.context;
-            return context.repeat_card || context.traincost;
-        } else if (isAutoSelect(table)) {
-            return (selector as RequestSelector).request.respond_cards[0].card;
-        }
+    if (selector.selection.mode === 'none' && isAutoSelect(table)) {
+        return (selector as RequestSelector).request.respond_cards[0].card;
+    } else if (selector.selection.mode === 'start') {
+        const context = selector.selection.context;
+        return context.repeat_card || context.traincost;
     }
 }
 
 export function selectorCanUndo(table: GameTable): boolean {
     const selector = table.selector;
-    if (selector.selection.mode === 'finish') return false;
-    if (selector.selection.mode === 'start') {
-        return isSelectionPlaying(selector) && !selector.selection.playing_card;
+    switch (selector.selection.mode) {
+    case 'none':
+    case 'finish':
+        return false;
+    case 'start':
+        return true;
     }
     if (!selector.selection.context.card_choice && isAutoSelect(table)) {
         const someTargetNotNone = (targets: CardTarget[]) => {
@@ -175,20 +170,20 @@ export function selectorCanUndo(table: GameTable): boolean {
 }
 
 export function getPlayableCards(selector: TargetSelector): CardId[] {
+    if (selector.selection.playing_card !== null) {
+        return [];
+    }
+    
     let tree: CardNode[] = [];
     if (isResponse(selector)) {
         tree = selector.request.respond_cards;
     } else if (isStatusReady(selector)) {
         tree = selector.request.play_cards;
     }
-    if (isSelectionPlaying(selector)) {
-        if (selector.selection.playing_card !== null) {
-            return [];
-        }
-        tree = selector.selection.modifiers.reduce((tree: CardNode[], { modifier }) => {
-            return tree.find(leaf => leaf.card === modifier.id)!.branches;
-        }, tree);
-    }
+    tree = selector.selection.modifiers.reduce((tree: CardNode[], { modifier }) => {
+        return tree.find(leaf => leaf.card === modifier.id)!.branches;
+    }, tree);
+
     return tree.map(node => node.card);
 }
 
@@ -214,9 +209,8 @@ export function selectorCanPickCard(table: GameTable, card: Card): boolean {
 }
 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
-    return isSelectionPlaying(selector)
-        && (selector.selection.playing_card?.id === card.id
-        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id));
+    return selector.selection.playing_card?.id === card.id
+        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id);
 }
 
 export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
@@ -242,20 +236,18 @@ export function isCardSelected(selector: TargetSelector, card: CardId): boolean 
             return false;
         }
     };
-    if (isSelectionPlaying(selector)) {
-        if (selector.selection.targets.some(check)) {
-            return true;
-        }
-        if (selector.selection.modifiers.some(({targets}) => targets.some(check))) {
-            return true;
-        }
+    if (selector.selection.targets.some(check)) {
+        return true;
+    }
+    if (selector.selection.modifiers.some(({targets}) => targets.some(check))) {
+        return true;
     }
     return false;
 }
 
 export function isHandSelected(table: GameTable, card: Card): boolean {
     const selector = table.selector;
-    if (card.pocket?.name === 'player_hand' && card.pocket.player !== table.self_player && isSelectionPlaying(selector)) {
+    if (card.pocket?.name === 'player_hand' && card.pocket.player !== table.self_player) {
         const player = getPlayer(table, card.pocket.player);
         return player.pockets.player_hand.some(id => isCardSelected(selector, id));
     } else {
@@ -278,13 +270,11 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
             return false;
         }
     };
-    if (isSelectionPlaying(selector)) {
-        if (selector.selection.targets.some(check)) {
-            return true;
-        }
-        if (selector.selection.modifiers.some(({targets}) => targets.some(check))) {
-            return true;
-        }
+    if (selector.selection.targets.some(check)) {
+        return true;
+    }
+    if (selector.selection.modifiers.some(({targets}) => targets.some(check))) {
+        return true;
     }
     return false;
 }
@@ -303,18 +293,16 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
             }
         }
     };
-    if (isSelectionPlaying(selector)) {
-        if (selector.selection.playing_card) {
-            doCount(selector.selection.playing_card, selector.selection.targets);
-        }
-        for (const {modifier, targets} of selector.selection.modifiers) {
-            doCount(modifier, targets);
-        }
+    if (selector.selection.playing_card) {
+        doCount(selector.selection.playing_card, selector.selection.targets);
+    }
+    for (const {modifier, targets} of selector.selection.modifiers) {
+        doCount(modifier, targets);
     }
     return selected;
 }
 
-export function isValidCubeTarget(table: PlayingSelectorTable, card: Card): boolean {
+export function isValidCubeTarget(table: GameTable, card: Card): boolean {
     const selector = table.selector;
     const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
@@ -328,7 +316,7 @@ export function isValidCubeTarget(table: PlayingSelectorTable, card: Card): bool
         && card.num_cubes > countSelectedCubes(selector, card);
 }
 
-export function isValidCardTarget(table: PlayingSelectorTable, card: Card): boolean {
+export function isValidCardTarget(table: GameTable, card: Card): boolean {
     switch (card.pocket?.name) {
     case 'player_character':
     case 'player_table':
@@ -434,7 +422,7 @@ export function getEffectAt([effects, optionals]: EffectsAndOptionals, index: nu
     }
 }
 
-export function isValidPlayerTarget(table: PlayingSelectorTable, player: Player): boolean {
+export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
@@ -463,7 +451,7 @@ export function isValidPlayerTarget(table: PlayingSelectorTable, player: Player)
     }
 }
 
-export function isValidEquipTarget(table: PlayingSelectorTable, player: Player): boolean {
+export function isValidEquipTarget(table: GameTable, player: Player): boolean {
     const selector = table.selector;
     return selector.selection.playing_card !== null
         && isEquipCard(selector.selection.playing_card)
