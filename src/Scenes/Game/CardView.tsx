@@ -26,44 +26,45 @@ export interface CardProps {
 
 export function getSelectorCardClass(table: GameTable, card: Card) {
     const selector = table.selector;
-    const classes = [];
     if (isSelectionPlaying(selector)) {
         if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
-            classes.push('card-selected');
+            if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
+                if (isValidCardTarget(table as PlayingSelectorTable, card)) {
+                    return 'card-targetable card-selected';
+                }
+            }
+            return 'card-selected';
         }
         if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
             if (isValidCubeTarget(table as PlayingSelectorTable, card)) {
-                classes.push('card-targetable-cubes');
+                return 'card-targetable-cubes';
             } else if (isValidCardTarget(table as PlayingSelectorTable, card)) {
-                classes.push('card-targetable');
+                return 'card-targetable';
             }
         }
     }
     if (isCardCurrent(selector, card)) {
-        classes.push('card-current');
+        return 'card-current';
     } else if (isCardPrompted(selector, card)) {
-        classes.push('card-current');
+        return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
         if (selector.selection.mode === 'start') {
-            classes.push('card-playable');
+            return 'card-playable';
         } else {
-            classes.push('card-modified');
+            return 'card-modified';
         }
     } else if (selectorCanPickCard(table, card)) {
-        classes.push('card-pickable');
+        return 'card-pickable';
     }
     if (isResponse(selector)) {
         if (selector.request.highlight_cards.includes(card.id)) {
-            classes.push('card-highlight');
+            return 'card-highlight';
         }
         if (selector.request.origin_card === card.id) {
-            classes.push('card-origin');
+            return 'card-origin';
         }
     }
-    if (classes.length === 0) {
-        return null;
-    }
-    return classes.join(' ');
+    return null;
 }
 
 export default function CardView({ cardRef, card, showBackface }: CardProps) {

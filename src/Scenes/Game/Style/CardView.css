@@ -73,14 +73,6 @@
     --card-highlight-color: #cf920f;
 }
 
-.card-selected.card-targetable {
-    --card-highlight-color: rgb(255, 38, 0) !important;
-}
-
-.card-selected.card-targetable:hover {
-    --card-highlight-color: rgb(180, 27, 0) !important;
-}
-
 .card-current {
     --card-highlight-color: #306eff;
 }
