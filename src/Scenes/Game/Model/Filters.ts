@@ -127,7 +127,7 @@ export function checkPlayerFilter(table: PlayingSelectorTable, filter: PlayerFil
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length === 0) return false;
 
     if (filter.includes('target_set') && isResponse(selector)) {
-        if (!selector.request.target_set.find(t => 'player' in t && t.player === target.id)) {
+        if (!selector.request.target_set.includes(target.id)) {
             return false;
         }
     }

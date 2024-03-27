@@ -1,6 +1,6 @@
 import { Empty, UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
-import { CardTarget, DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
+import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export type CardId = number;
@@ -138,7 +138,7 @@ export interface RequestStatusArgs {
     pick_cards: CardId[];
     highlight_cards: CardId[];
     distances: PlayerDistances;
-    target_set: CardTarget[];
+    target_set: PlayerId[];
     timer: TimerStatusArgs | null;
 }
 
