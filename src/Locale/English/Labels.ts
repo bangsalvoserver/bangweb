@@ -69,6 +69,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         BUTTON_CREATE_LOBBY: "Create Lobby",
         BUTTON_LEAVE_LOBBY: "Leave Lobby",
         BUTTON_DISCONNECT: "Disconnect",
+        BUTTON_REJOIN: "Rejoin",
     },
 
     lobby: {

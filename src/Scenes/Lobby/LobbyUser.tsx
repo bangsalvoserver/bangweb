@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { UserId } from "../../Model/ServerMessage";
 import { ImageSrc } from "../../Utils/ImageSerial";
-import "./Style/LobbyUser.css"
+import "./Style/LobbyUser.css";
 import defaultUserPropic from "/media/icon_default_user.png";
 import propicDisconnected from "/media/icon_disconnected.png";
 
@@ -15,6 +16,7 @@ export interface LobbyUserProps {
     user?: UserValue;
     isOwner?: boolean;
     align?: 'horizontal' | 'vertical';
+    children?: ReactNode;
 }
 
 export const DEFAULT_USER_PROPIC = defaultUserPropic;
@@ -28,7 +30,7 @@ export function getUsername(user?: UserValue) {
   return user?.name ?? getLabel('ui', 'USER_DISCONNECTED');
 }
 
-export default function LobbyUser({ user, align }: LobbyUserProps) {
+export default function LobbyUser({ user, align, children }: LobbyUserProps) {
   return (
     <div className={`lobby-user ${align === 'vertical' ? 'flex-col' : 'flex-row'}`}>
       <div className='lobby-user-inner'>
@@ -37,6 +39,7 @@ export default function LobbyUser({ user, align }: LobbyUserProps) {
       <div className='lobby-username'>
         {getUsername(user)}
       </div>
+      {children}
     </div>
   );
 }

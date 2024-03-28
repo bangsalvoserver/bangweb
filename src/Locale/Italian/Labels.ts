@@ -69,6 +69,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         BUTTON_CREATE_LOBBY: "Crea Lobby",
         BUTTON_LEAVE_LOBBY: "Esci dalla Lobby",
         BUTTON_DISCONNECT: "Disconnetti",
+        BUTTON_REJOIN: "Rientra",
     },
 
     lobby: {

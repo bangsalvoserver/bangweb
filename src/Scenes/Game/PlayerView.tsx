@@ -16,11 +16,14 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import getLabel from "../../Locale/GetLabel";
+import Button from "../../Components/Button";
 
 export interface PlayerProps {
     playerRef?: Ref<PlayerRef>;
-    user?: UserValue,
-    player: Player,
+    user?: UserValue;
+    player: Player;
+    handleRejoin?: () => void;
 }
 
 function getSelectorPlayerClass(table: GameTable, player: Player) {
@@ -74,7 +77,7 @@ function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>):
     };
 }
 
-export default function PlayerView({ playerRef, user, player }: PlayerProps) {
+export default function PlayerView({ playerRef, user, player, handleRejoin }: PlayerProps) {
     const table = useContext(GameTableContext);
     const { handleClickPlayer } = useContext(SelectorConfirmContext);
 
@@ -109,6 +112,8 @@ export default function PlayerView({ playerRef, user, player }: PlayerProps) {
     const isGhost = isPlayerGhost(player);
     const isWinner = player.status.flags.includes('winner');
     const isSkipTurn = player.status.flags.includes('skip_turn');
+
+    const canRejoin = !table.self_player && (!user || user.id <= 0);
 
     let classes = ['player-view'];
     if (isWinner) {
@@ -216,7 +221,9 @@ export default function PlayerView({ playerRef, user, player }: PlayerProps) {
                 : <div className="player-icon icon-dead"/> ) }
         </div>
         <div className='player-propic'>
-            <LobbyUser user={user} align='horizontal' />
+            <LobbyUser user={user} align='horizontal'>
+                { canRejoin && <Button className="button-rejoin" onClick={handleRejoin} color="green">{getLabel('ui','BUTTON_REJOIN')}</Button> }
+            </LobbyUser>
         </div>
     </div>
 }

@@ -56,6 +56,8 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
   const selectorConfirm = useSelectorConfirm(table, selectorDispatch);
   useSendGameAction(table.selector, connection);
 
+  const handleRejoin = (player_id: PlayerId) => () => connection.sendMessage({ game_rejoin: player_id });
+
   const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
@@ -128,7 +130,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
     return <div key={player_id} className="player-grid-item" player-index={index}>
       {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
-        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player} />}
+        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player} handleRejoin={handleRejoin(player_id)} />}
     </div>;
   });
 
