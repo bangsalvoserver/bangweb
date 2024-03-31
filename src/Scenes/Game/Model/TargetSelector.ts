@@ -144,14 +144,9 @@ export function getAutoSelectCard(table: GameTable): CardId | undefined {
 
 export function selectorCanUndo(table: GameTable): boolean {
     const selector = table.selector;
-    switch (selector.selection.mode) {
-    case 'none':
-    case 'finish':
+    if (selector.selection.mode === 'none' || selector.selection.mode === 'finish') {
         return false;
-    case 'start':
-        return true;
-    }
-    if (!selector.selection.context.card_choice && isAutoSelect(table)) {
+    } else if (isAutoSelect(table)) {
         const someTargetNotNone = (targets: CardTarget[]) => {
             return targets.some(target => {
                 const value = Object.values(target)[0];
@@ -160,10 +155,13 @@ export function selectorCanUndo(table: GameTable): boolean {
                 return true;
             });
         };
-        if (selector.selection.mode === 'target') {
-            return someTargetNotNone(selector.selection.targets);
-        } else if (selector.selection.mode === 'modifier') {
+        switch (selector.selection.mode) {
+        case 'target':
+            return selector.selection.context.card_choice !== undefined || someTargetNotNone(selector.selection.targets);
+        case 'modifier':
             return selector.selection.modifiers.length !== 1 || someTargetNotNone(selector.selection.modifiers[0].targets);
+        case 'start':
+            return selector.selection.context.card_choice === undefined;
         }
     }
     return true;
