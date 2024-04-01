@@ -139,6 +139,9 @@ export default function useBangConnection() {
                 settings.setMyUserId(user_id);
                 sceneDispatch({ gotoWaitingArea: {} });
             },
+            client_count(count) {
+                sceneDispatch({ setClientCount: count });
+            },
             lobby_error(message) {
                 // TODO add gui element for lobby error
                 console.error('Lobby error: ', getLabel('lobby', message));

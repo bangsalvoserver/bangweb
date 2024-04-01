@@ -21,14 +21,15 @@ export function newLobbyState(lobbyId?: LobbyId): LobbyState {
 export type SceneState =
     { type: 'connect' } |
     { type: 'loading' } |
-    { type: 'waiting_area', lobbies: LobbyValue[] } |
-    { type: 'lobby', lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState } |
-    { type: 'game', lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
+    { type: 'waiting_area', clientCount: number, lobbies: LobbyValue[] } |
+    { type: 'lobby', clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState } |
+    { type: 'game', clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
 export type UpdateFunction<T> = (value: T) => T;
 
 export type SceneUpdate =
     { reset: Empty } |
+    { setClientCount: number } |
     { gotoLoading: Empty } |
     { gotoWaitingArea: Empty } |
     { gotoGame: Empty } |
@@ -49,14 +50,20 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     reset() {
         return { type: 'connect' };
     },
+    setClientCount(count) {
+        if ('clientCount' in this) {
+            return { ...this, clientCount: count };
+        }
+        throw new Error('Invalid scene type: ' + this.type);
+    },
     gotoLoading() {
         return { type: 'loading' };
     },
     gotoWaitingArea() {
         if ('lobbies' in this) {
-            return { type: 'waiting_area', lobbies: this.lobbies };
+            return { type: 'waiting_area', clientCount: this.clientCount, lobbies: this.lobbies };
         } else {
-            return { type: 'waiting_area', lobbies: [] };
+            return { type: 'waiting_area', clientCount: 0, lobbies: [] };
         }
     },
     gotoGame() {
