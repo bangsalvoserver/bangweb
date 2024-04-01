@@ -13,16 +13,24 @@ export const jsonConverter: Converter<any> = { fromString: JSON.parse, toString:
 
 function useStorage<T>(key: string, converter: Converter<T>, storage: Storage) {
     const [value, setValue] = useState(() => {
-        const stringValue = storage.getItem(key);
-        if (stringValue) {
-            return converter.fromString(stringValue);
+        try {
+            const stringValue = storage.getItem(key);
+            if (stringValue) {
+                return converter.fromString(stringValue);
+            }
+        } catch (e) {
+            console.error(`Cannot get value of ${key} in storage:`, e);
         }
     });
     useEffect(() => {
-        if (value) {
-            storage.setItem(key, converter.toString(value));
-        } else {
-            storage.removeItem(key);
+        try {
+            if (value) {
+                storage.setItem(key, converter.toString(value));
+            } else {
+                storage.removeItem(key);
+            }
+        } catch (e) {
+            console.error(`Cannot set value of ${key} in storage:`, e);
         }
     }, [key, converter, storage, value]);
     return [value, setValue] as const;
