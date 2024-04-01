@@ -13,6 +13,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     PROMPT_NO_BANGS_PLAYED: (card) =>                                           <>You haven't played any Bang, playing {card} would have no effect. Continue?</>,
     PROMPT_TARGET_SELF_GHOST_CARD: () =>                                        <>You're discarding your own ghost card. Continue?</>,
     PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                         <>Playing {card} to heal by {amount} hp would waste {max_amount} hp. Continue?</>,
+    PROMPT_BANDIDOS_SUICIDE: (card) =>                                          <>Playing {card} will lead to suicide. Continue?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                              <>{card} : Play or discard this card?</>,
     
     STATUS_GAME_OVER: () =>                                                     <>Game Over</>,
