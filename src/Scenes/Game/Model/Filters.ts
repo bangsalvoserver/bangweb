@@ -5,7 +5,9 @@ import { PlayerId } from "./GameUpdate";
 import { isCardCurrent, isPlayerSelected, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
-    return isCardKnown(card) ? card.cardData.tags.find(tag => tag.type === tagType)?.tag_value : undefined;
+    if (isCardKnown(card) && tagType in card.cardData.tags) {
+        return card.cardData.tags[tagType];
+    }
 }
 
 export function cardHasTag(card: Card, tagType: TagType): boolean {

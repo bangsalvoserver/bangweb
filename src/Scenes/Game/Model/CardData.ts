@@ -14,11 +14,6 @@ export interface CardEquip {
     type: EquipType;
 }
 
-export interface CardTag {
-    tag_value: number;
-    type: TagType;
-}
-
 export interface CardSign {
     suit: CardSuit;
     rank: CardRank;
@@ -31,7 +26,7 @@ export interface CardData {
     responses: CardEffect[];
     optionals: CardEffect[];
     equips: CardEquip[];
-    tags: CardTag[];
+    tags: Record<TagType, number>;
     expansion: ExpansionType[];
     deck: DeckType;
     modifier: {
