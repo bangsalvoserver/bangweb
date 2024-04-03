@@ -6,7 +6,7 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget, zipCardTargets } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectedCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -177,16 +177,7 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
         break;
     case 'player_per_cube':
         if (index >= targets.length) {
-            let numCubes = 0;
-            for (const [t, e] of zipCardTargets(targets, effects)) {
-                if ('select_cubes' in t) {
-                    numCubes += t.select_cubes.length;
-                } else if ('select_cubes_repeat' in t) {
-                    numCubes += t.select_cubes_repeat.length;
-                } else if ('self_cubes' in t) {
-                    numCubes += e.target_value;
-                }
-            }
+            const numCubes = countTargetsSelectedCubes(currentCard, targets, effects, _ => true);
             return reserveTargets(effect.target, numCubes + 1);
         }
         break;

@@ -18,12 +18,16 @@ export function count<T>(arr: T[], value: T) {
     return countIf(arr, x => x === value);
 }
 
-export function countIf<T>(arr: T[], predicate: (value: T) => boolean) {
+export function countIf<T>(arr: Iterable<T>, predicate: (value: T) => boolean) {
     return sum(arr, value => +predicate(value));
 }
 
-export function sum<T>(arr: T[], mapper: (value: T) => number) {
-    return arr.reduce((count, value) => count + mapper(value), 0);
+export function sum<T>(values: Iterable<T>, mapper: (value: T) => number) {
+    let ret = 0;
+    for (const value of values) {
+        ret += mapper(value);
+    }
+    return ret;
 }
 
 export function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<Key, Value[]> {

@@ -1,5 +1,5 @@
 import { Empty } from "../../../Model/ServerMessage";
-import { count } from "../../../Utils/ArrayUtils";
+import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
@@ -277,25 +277,32 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
     return false;
 }
 
+export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], effects: EffectsAndOptionals, condition: (card: CardId) => boolean): number {
+    return sum(zipCardTargets(targets, effects), ([target, effect]) => {
+        switch (true) {
+        case 'select_cubes' in target:
+            return countIf(target.select_cubes, condition);
+        case 'select_cubes_repeat' in target:
+            return countIf(target.select_cubes_repeat, condition);
+        case 'self_cubes' in target:
+            return effect.target_value * +condition(card.id);
+        default:
+            return 0;
+        }
+    });
+}
+
 export function countSelectedCubes(selector: TargetSelector, targetCard: Card): number {
     let selected = 0;
     const response = isResponse(selector);
-    const doCount = (card: KnownCard, targets: CardTarget[]) => {
-        for (const [target, effect] of zipCardTargets(targets, getCardEffects(card, response))) {
-            if ('select_cubes' in target) {
-                selected += count(target.select_cubes, targetCard.id);
-            } else if ('select_cubes_repeat' in target) {
-                selected += count(target.select_cubes_repeat, targetCard.id);
-            } else if ('self_cubes' in target && targetCard.id === card.id) {
-                selected += effect.target_value;
-            }
-        }
-    };
+    const isTargetCard = (card: CardId) => card === targetCard.id;
     if (selector.selection.playing_card) {
-        doCount(selector.selection.playing_card, selector.selection.targets);
+        const effects = getCardEffects(selector.selection.playing_card, response);
+        selected += countTargetsSelectedCubes(selector.selection.playing_card, selector.selection.targets, effects, isTargetCard);
     }
     for (const {modifier, targets} of selector.selection.modifiers) {
-        doCount(modifier, targets);
+        const effects = getCardEffects(modifier, response);
+        selected += countTargetsSelectedCubes(modifier, targets, effects, isTargetCard);
     }
     return selected;
 }
