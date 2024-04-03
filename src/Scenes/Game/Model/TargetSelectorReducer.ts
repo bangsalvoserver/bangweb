@@ -6,7 +6,7 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectedCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -88,8 +88,9 @@ function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMap
         return appendTarget(effect.target, card);
     case 'cards':
     case 'select_cubes':
-    case 'select_cubes_repeat':
     case 'select_cubes_optional':
+    case 'select_cubes_repeat':
+    case 'select_cubes_players':
     case 'cards_other_players':
     case 'move_cube_slot':
     case 'max_cards':
@@ -188,39 +189,28 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
             return reserveTargets(effect.target, effect.target_value);
         }
         break;
-    case 'select_cubes_repeat':
-        if (index >= targets.length) {
-            const getCountCubes = (cardId: CardId) => {
-                const card = getCard(table, cardId);
-                return card.num_cubes - countSelectedCubes(selector, card);
-            };
-            const selfPlayer = getPlayer(table, table.self_player!);
-            const cubeCount = sum(selfPlayer.pockets.player_character, getCountCubes)
-                + sum(selfPlayer.pockets.player_table, getCountCubes);
-            let maxCount = cubeCount - cubeCount % effect.target_value;
-            if (effect.player_filter.length !== 0) {
-                const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)));
-                if (numPlayers <= maxCount) {
-                    maxCount = numPlayers - 1;
-                }
-            }
-            return reserveTargets(effect.target, maxCount);
-        }
-        break;
     case 'select_cubes_optional':
         if (index >= targets.length) {
-            const getCountCubes = (cardId: CardId) => {
-                const card = getCard(table, cardId);
-                return card.num_cubes - countSelectedCubes(selector, card);
-            };
-            const selfPlayer = getPlayer(table, table.self_player!);
-            const cubeCount = sum(selfPlayer.pockets.player_character, getCountCubes)
-                + sum(selfPlayer.pockets.player_table, getCountCubes);
-            if (cubeCount >= effect.target_value) {
+            if (countSelectableCubes(table) >= effect.target_value) {
                 return reserveTargets(effect.target, effect.target_value);
             } else {
                 return appendTarget(effect.target, []);
             }
+        }
+        break;
+    case 'select_cubes_repeat':
+        if (index >= targets.length) {
+            const cubeCount = countSelectableCubes(table);
+            const maxCount = cubeCount - cubeCount % effect.target_value;
+            return reserveTargets(effect.target, maxCount);
+        }
+        break;
+    case 'select_cubes_players':
+        if (index >= targets.length) {
+            const cubeCount = countSelectableCubes(table);
+            const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)));
+            const maxCount = Math.min(cubeCount, numPlayers - 1);
+            return reserveTargets(effect.target, maxCount);
         }
         break;
     case 'max_cards':
@@ -363,6 +353,8 @@ function removeZeroes(targets: CardTarget[]): CardTarget[] {
                     return targets.slice(0, -1).concat({ select_cubes_repeat: [] });
                 case 'select_cubes_optional':
                     return targets.slice(0, -1).concat({ select_cubes_optional: [] });
+                case 'select_cubes_players':
+                    return targets.slice(0, -1).concat({ select_cubes_players: [] });
                 default:
                     return targets.slice(0, -1);
                 }

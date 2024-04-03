@@ -16,8 +16,9 @@ export type CardTarget =
     { cards_other_players: CardId[] } |
     { move_cube_slot: CardId[] } |
     { select_cubes: CardId[] } |
-    { select_cubes_repeat: CardId[] } |
     { select_cubes_optional: CardId[] } |
+    { select_cubes_repeat: CardId[] } |
+    { select_cubes_players: CardId[] } |
     { self_cubes: Empty };
 
 export type TargetType = KeysOfUnion<CardTarget>;

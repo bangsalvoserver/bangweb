@@ -104,10 +104,12 @@ export function selectorCanConfirmLastTarget(selector: TargetSelector) {
                 return target.max_cards[0] !== 0;
             case 'move_cube_slot' in target:
                 return target.move_cube_slot[0] !== 0;
-            case 'select_cubes_repeat' in target:
-                return target.select_cubes_repeat.indexOf(0) % (effect?.target_value ?? 1) === 0;
             case 'select_cubes_optional' in target:
                 return target.select_cubes_optional.at(0) === 0;
+            case 'select_cubes_repeat' in target:
+                return target.select_cubes_repeat.indexOf(0) % (effect?.target_value ?? 1) === 0;
+            case 'select_cubes_players' in target:
+                return true;
             }
         }
     }
@@ -283,10 +285,12 @@ export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], eff
         switch (true) {
         case 'select_cubes' in target:
             return countIf(target.select_cubes, condition);
-        case 'select_cubes_repeat' in target:
-            return countIf(target.select_cubes_repeat, condition);
         case 'select_cubes_optional' in target:
             return countIf(target.select_cubes_optional, condition);
+        case 'select_cubes_repeat' in target:
+            return countIf(target.select_cubes_repeat, condition);
+        case 'select_cubes_players' in target:
+            return countIf(target.select_cubes_players, condition);
         case 'self_cubes' in target:
             return effect.target_value * +condition(card.id);
         default:
@@ -308,6 +312,16 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
         selected += countTargetsSelectedCubes(modifier, targets, effects, isTargetCard);
     }
     return selected;
+}
+
+export function countSelectableCubes(table: GameTable): number {
+    const getCountCubes = (cardId: CardId) => {
+        const card = getCard(table, cardId);
+        return card.num_cubes - countSelectedCubes(table.selector, card);
+    };
+    const selfPlayer = getPlayer(table, table.self_player!);
+    return sum(selfPlayer.pockets.player_character, getCountCubes)
+        + sum(selfPlayer.pockets.player_table, getCountCubes);
 }
 
 export function isValidCubeTarget(table: GameTable, card: Card): boolean {
@@ -378,8 +392,9 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
         return true;
     }
     case 'select_cubes':
-    case 'select_cubes_repeat':
     case 'select_cubes_optional':
+    case 'select_cubes_repeat':
+    case 'select_cubes_players':
         return player === table.self_player
             && card.num_cubes > countSelectedCubes(selector, card);
     case 'move_cube_slot':
