@@ -106,6 +106,8 @@ export function selectorCanConfirmLastTarget(selector: TargetSelector) {
                 return target.move_cube_slot[0] !== 0;
             case 'select_cubes_repeat' in target:
                 return target.select_cubes_repeat.indexOf(0) % (effect?.target_value ?? 1) === 0;
+            case 'select_cubes_optional' in target:
+                return target.select_cubes_optional.at(0) === 0;
             }
         }
     }
@@ -284,6 +286,8 @@ export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], eff
             return countIf(target.select_cubes, condition);
         case 'select_cubes_repeat' in target:
             return countIf(target.select_cubes_repeat, condition);
+        case 'select_cubes_optional' in target:
+            return countIf(target.select_cubes_optional, condition);
         case 'self_cubes' in target:
             return effect.target_value * +condition(card.id);
         default:
@@ -316,7 +320,7 @@ export function isValidCubeTarget(table: GameTable, card: Card): boolean {
     const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
 
     const nextTargetType = nextTarget?.target ?? 'none';
-    return (nextTargetType === 'select_cubes' || nextTargetType === 'select_cubes_repeat')
+    return nextTargetType.startsWith('select_cubes')
         && player === table.self_player
         && card.num_cubes > countSelectedCubes(selector, card);
 }
@@ -376,6 +380,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
     }
     case 'select_cubes':
     case 'select_cubes_repeat':
+    case 'select_cubes_optional':
         return player === table.self_player
             && card.num_cubes > countSelectedCubes(selector, card);
     case 'move_cube_slot':

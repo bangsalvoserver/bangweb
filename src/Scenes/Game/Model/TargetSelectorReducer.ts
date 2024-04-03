@@ -89,6 +89,7 @@ function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMap
     case 'cards':
     case 'select_cubes':
     case 'select_cubes_repeat':
+    case 'select_cubes_optional':
     case 'cards_other_players':
     case 'move_cube_slot':
     case 'max_cards':
@@ -204,6 +205,22 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
                 }
             }
             return reserveTargets(effect.target, maxCount);
+        }
+        break;
+    case 'select_cubes_optional':
+        if (index >= targets.length) {
+            const getCountCubes = (cardId: CardId) => {
+                const card = getCard(table, cardId);
+                return card.num_cubes - countSelectedCubes(selector, card);
+            };
+            const selfPlayer = getPlayer(table, table.self_player!);
+            const cubeCount = sum(selfPlayer.pockets.player_character, getCountCubes)
+                + sum(selfPlayer.pockets.player_table, getCountCubes);
+            if (cubeCount >= effect.target_value) {
+                return reserveTargets(effect.target, effect.target_value);
+            } else {
+                return appendTarget(effect.target, []);
+            }
         }
         break;
     case 'max_cards':
@@ -341,9 +358,12 @@ function removeZeroes(targets: CardTarget[]): CardTarget[] {
         if (Array.isArray(value)) {
             const zeroIndex = value.indexOf(0);
             if (zeroIndex === 0) {
-                if (key === 'select_cubes_repeat') {
-                    return targets.slice(0, -1).concat({ [key]: [] });
-                } else {
+                switch (key) {
+                case 'select_cubes_repeat':
+                    return targets.slice(0, -1).concat({ select_cubes_repeat: [] });
+                case 'select_cubes_optional':
+                    return targets.slice(0, -1).concat({ select_cubes_optional: [] });
+                default:
                     return targets.slice(0, -1);
                 }
             } else if (zeroIndex > 0) {
