@@ -293,5 +293,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     LOG_TRAIN_ADVANCE: () =>                                                <>Il treno avanza</>,
     LOG_PAID_FOR_STATION: (card, player) =>                                 <>{player} paga il prezzo per la stazione {card}</>,
     LOG_END_OF_LINE: () =>                                                  <>Capolinea! Si attiva l'effetto della locomotiva</>,
+    LOG_SKIP_PLAYER: (card, player, target, target_card) =>                 <>{player} usa {card} per escludere {target} dall'effetto di {target_card}</>,
+    LOG_SKIP_PLAYER_LOCOMOTIVE: (card, player, target) =>                   <>{player} usa {card} per escludare {target} dall'effetto della locomotiva</>,
 
 };

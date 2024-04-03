@@ -294,5 +294,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     LOG_TRAIN_ADVANCE: () =>                                                    <>The train advances</>,
     LOG_PAID_FOR_STATION: (arg0, arg1) =>                                       <>{arg1} pays the price for station {arg0}</>,
     LOG_END_OF_LINE: () =>                                                      <>End of the line! The effect of the locomotive is activated</>,
+    LOG_SKIP_PLAYER: (card, player, target, target_card) =>                     <>{player} uses {card} to exempt {target} from the effect of {target_card}</>,
+    LOG_SKIP_PLAYER_LOCOMOTIVE: (card, player, target) =>                       <>{player} uses {card} to exempt {target} from the effect of the locomotive</>,
 
 };
