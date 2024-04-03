@@ -97,7 +97,7 @@ export function selectorCanConfirmLastTarget(selector: TargetSelector) {
         const [currentCard, targets] = getCurrentCardAndTargets(selector);
         const index = getNextTargetIndex(targets);
         if (targets.length !== 0 && index < targets.length) {
-            const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+            const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
             const target = targets.at(-1)!;
             switch (true) {
             case 'max_cards' in target:
@@ -119,9 +119,8 @@ export function selectorCanConfirm(selector: TargetSelector): boolean {
         return true;
     } else if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
         const [currentCard, targets] = getCurrentCardAndTargets(selector);
-        const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
-        const index = getNextTargetIndex(targets);
-        return optionals.length !== 0 && index === effects.length;
+        const effects = getCardEffects(currentCard, isResponse(selector));
+        return getNextTargetIndex(targets) === effects.length;
     } else {
         return false;
     }
@@ -279,7 +278,7 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
     return false;
 }
 
-export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], effects: EffectsAndOptionals, condition: (card: CardId) => boolean): number {
+export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], effects: CardEffect[], condition: (card: CardId) => boolean): number {
     return sum(zipCardTargets(targets, effects), ([target, effect]) => {
         switch (true) {
         case 'select_cubes' in target:
@@ -317,7 +316,7 @@ export function isValidCubeTarget(table: GameTable, card: Card): boolean {
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const nextTarget = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const nextTarget = getCardEffects(currentCard, isResponse(selector)).at(index);
 
     const nextTargetType = nextTarget?.target ?? 'none';
     return nextTargetType.startsWith('select_cubes')
@@ -341,7 +340,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
 
     switch (effect?.target) {
     case 'card':
@@ -393,24 +392,15 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
     }
 }
 
-export type EffectsAndOptionals = [CardEffect[], CardEffect[]];
-export type TargetAndEffect = [CardTarget, CardEffect];
-
-export function getCardEffects(card: KnownCard, isResponse: boolean): EffectsAndOptionals {
-    return [isResponse ? card.cardData.responses : card.cardData.effects, card.cardData.optionals];
+export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
+    return isResponse ? card.cardData.responses : card.cardData.effects;
 }
 
-export function *zipCardTargets(targets: CardTarget[], [effects, optionals]: EffectsAndOptionals): Generator<[CardTarget, CardEffect]> {
+export function *zipCardTargets(targets: CardTarget[], effects: CardEffect[]): Generator<[CardTarget, CardEffect]> {
     let index = 0;
     for (let effect of effects) {
         if (index >= targets.length) return;
         yield [targets[index++], effect];
-    }
-    while (optionals.length !== 0) {
-        for (let effect of optionals) {
-            if (index >= targets.length) return;
-            yield [targets[index++], effect];
-        }
     }
 }
 
@@ -424,19 +414,11 @@ export function getNextTargetIndex(targets: CardTarget[]): number {
     return targets.length;
 }
 
-export function getEffectAt([effects, optionals]: EffectsAndOptionals, index: number): CardEffect | undefined {
-    if (index < effects.length) {
-        return effects[index];
-    } else if (optionals.length !== 0) {
-        return optionals[(index - effects.length) % optionals.length];
-    }
-}
-
 export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
 
     switch (effect?.target) {
     case 'player':

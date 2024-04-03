@@ -6,7 +6,7 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectedCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getEffectAt, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectedCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -80,7 +80,7 @@ function appendMultitarget(targetType: MultiTargetType, id: number): TargetListM
 function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMapper {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
 
     switch (effect?.target) {
     case 'card':
@@ -102,7 +102,7 @@ function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMap
 function appendPlayerTarget(selector: TargetSelector, player: PlayerId): TargetListMapper {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const effect = getEffectAt(getCardEffects(currentCard, isResponse(selector)), index);
+    const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
 
     switch (effect?.target) {
     case 'player':
@@ -154,7 +154,7 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
     const effects = getCardEffects(currentCard, isResponse(selector));
-    const effect = getEffectAt(effects, index);
+    const effect = effects.at(index);
 
     switch (effect?.target) {
     case 'none':
@@ -280,10 +280,10 @@ function setSelectorMode(selector: TargetSelector, mode: PlayCardSelectionMode):
 function handleAutoTargets(table: GameTable): TargetSelector {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const [effects, optionals] = getCardEffects(currentCard, isResponse(selector));
+    const effects = getCardEffects(currentCard, isResponse(selector));
     const index = getNextTargetIndex(targets);
 
-    if (index === effects.length + optionals.length) {
+    if (index === effects.length) {
         if (selector.selection.mode === 'modifier') {
             return handleAutoSelect({ ...table, selector: setSelectorMode(addModifierContext(selector), 'start')});
         } else {

@@ -24,7 +24,6 @@ export interface CardData {
     image: string;
     effects: CardEffect[];
     responses: CardEffect[];
-    optionals: CardEffect[];
     equips: CardEquip[];
     tags: Record<TagType, number>;
     expansion: ExpansionType[];
