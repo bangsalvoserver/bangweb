@@ -2,7 +2,7 @@ import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty } from "../../../Model/ServerMessage";
 import { countIf, sum } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
-import { CardTarget } from "./CardEnums";
+import { CardTarget, TagType } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
@@ -328,18 +328,31 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
     }
 }
 
-function handleSelectPickCard(table: GameTable, card: Card): TargetSelector {
+function selectTaggedCard(table: GameTable, tag: TagType): TargetSelector {
     if (!isResponse(table.selector)) {
         throw new Error('TargetSelector: not in response mode');
     }
     const origin_card = table.selector.request.respond_cards
         .map(card => getCard(table, card.card))
-        .find(card => cardHasTag(card, 'pick'));
+        .find(card => cardHasTag(card, tag));
     if (!origin_card || !isCardKnown(origin_card)) {
-        throw new Error('TargetSelector: cannot find pick card');
+        throw new Error('TargetSelector: cannot find card tagged ' + tag);
     }
-    let selector = handleSelectPlayingCard(table, origin_card);
+    return handleSelectPlayingCard(table, origin_card);
+}
+
+function handleSelectPickCard(table: GameTable, card: Card): TargetSelector {
+    const selector = selectTaggedCard(table, 'pick');
     return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, appendCardTarget(selector, card.id))});
+}
+
+function handleDismiss(table: GameTable): TargetSelector {
+    return selectTaggedCard({ ...table,
+        selector: {
+            ...table.selector,
+            selection: newPlayCardSelection('none')
+        }
+    }, 'resolve');
 }
 
 function confirmTarget(targets: CardTarget[]): CardTarget[] {
@@ -379,19 +392,6 @@ function handleAutoSelect(table: GameTable): TargetSelector {
     return selector;
 }
 
-function handleDismiss(table: GameTable): TargetSelector {
-    if (!isResponse(table.selector)) {
-        throw new Error('TargetSelector: not in response mode');
-    }
-    const origin_card = table.selector.request.respond_cards
-        .map(card => getCard(table, card.card))
-        .find(card => cardHasTag(card, 'resolve'));
-    if (!origin_card || !isCardKnown(origin_card)) {
-        throw new Error('TargetSelector: cannot find resolve card');
-    }
-    return handleSelectPlayingCard(table, origin_card);
-}
-
 const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, TargetSelector>({
     setRequest (request) {
         return handleAutoSelect({ ...this, selector: newTargetSelector(request) });
@@ -409,12 +409,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     dismissSelection () {
-        return handleDismiss({ ...this,
-            selector: {
-                ...this.selector,
-                selection: newPlayCardSelection('none')
-            }}
-        );
+        return handleDismiss(this);
     },
 
     undoSelection () {
