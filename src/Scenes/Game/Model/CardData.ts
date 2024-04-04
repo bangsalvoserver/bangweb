@@ -31,6 +31,9 @@ export interface CardData {
     modifier: {
         type: ModifierType | null
     };
+    modifier_response: {
+        type: ModifierType | null
+    };
     mth_effect: {
         type: MthType | null
     };

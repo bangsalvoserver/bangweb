@@ -6,7 +6,7 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -128,7 +128,7 @@ function addModifierContext(selector: TargetSelector): TargetSelector {
             }
         };
     };
-    switch (modifier.cardData.modifier.type) {
+    switch (getCardModifierType(modifier, isResponse(selector))) {
     case 'belltower':
         return editContext({ ignore_distances: true });
     case 'card_choice':
@@ -304,7 +304,7 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             },
             prompt: { type: 'none' }
         };
-    } else if (card.cardData.modifier.type === null) {
+    } else if (getCardModifierType(card, isResponse(selector)) === null) {
         return handleAutoTargets({ ...table, selector: {
             ...selector,
             selection: {

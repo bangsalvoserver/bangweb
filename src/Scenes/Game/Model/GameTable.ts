@@ -1,5 +1,5 @@
-import { Empty, UserId } from "../../../Model/ServerMessage";
 import { UpdateFunction } from "../../../Model/SceneState";
+import { Empty, UserId } from "../../../Model/ServerMessage";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";

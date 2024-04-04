@@ -2,7 +2,7 @@ import { Empty } from "../../../Model/ServerMessage";
 import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
-import { CardTarget } from "./CardEnums";
+import { CardTarget, ModifierType } from "./CardEnums";
 import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
@@ -409,6 +409,10 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
 
 export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
     return isResponse ? card.cardData.responses : card.cardData.effects;
+}
+
+export function getCardModifierType(card: KnownCard, isResponse: boolean): ModifierType | null {
+    return isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type;
 }
 
 export function *zipCardTargets(targets: CardTarget[], effects: CardEffect[]): Generator<[CardTarget, CardEffect]> {
