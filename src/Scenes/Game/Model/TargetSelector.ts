@@ -116,7 +116,7 @@ export function selectorCanConfirm(selector: TargetSelector) {
     return false;
 }
 
-export function selectorCanUndoAutoSelect(table: GameTable) {
+export function selectorCanDismiss(table: GameTable) {
     const selector = table.selector;
     if (findAutoSelectCard(table) !== undefined) {
         const allTargetsNone = (targets: CardTarget[]) => {
@@ -163,13 +163,8 @@ export function getAutoSelectCard(table: GameTable): CardId | undefined {
 }
 
 export function selectorCanUndo(table: GameTable): boolean {
-    const selector = table.selector;
-    if (selector.selection.mode === 'none' || selector.selection.mode === 'finish') {
-        return false;
-    } else if (selectorCanUndoAutoSelect(table)) {
-        return false;
-    }
-    return true;
+    return table.selector.selection.mode !== 'none'
+        && table.selector.selection.mode !== 'finish';
 }
 
 export function getPlayableCards(selector: TargetSelector): CardId[] {

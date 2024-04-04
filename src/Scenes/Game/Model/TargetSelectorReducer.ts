@@ -12,7 +12,7 @@ export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
     { setPrompt: GamePrompt } |
     { confirmPlay: Empty } |
-    { undoAutoSelection: Empty } |
+    { dismissSelection: Empty } |
     { undoSelection: Empty } |
     { selectPlayingCard: KnownCard } |
     { selectPickCard: Card } |
@@ -379,7 +379,7 @@ function handleAutoSelect(table: GameTable): TargetSelector {
     return selector;
 }
 
-function handleUndoAutoSelection(table: GameTable): TargetSelector {
+function handleDismiss(table: GameTable): TargetSelector {
     if (!isResponse(table.selector)) {
         throw new Error('TargetSelector: not in response mode');
     }
@@ -408,8 +408,8 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
         });
     },
 
-    undoAutoSelection () {
-        return handleUndoAutoSelection({ ...this,
+    dismissSelection () {
+        return handleDismiss({ ...this,
             selector: {
                 ...this.selector,
                 selection: newPlayCardSelection('none')
