@@ -2,7 +2,7 @@ import { Dispatch, DispatchWithoutAction, createContext, useEffect, useMemo, use
 import { BangConnection } from "../../../Model/UseBangConnection";
 import { GameAction } from "./GameAction";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPickCard, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
+import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPickCard, selectorCanPlayCard, selectorCanResolve, selectorCanUndo, selectorCanUndoAutoSelect } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
@@ -117,7 +117,10 @@ export function useSelectorConfirm(table: GameTable, selectorDispatch: Dispatch<
         return {
             handleClickCard: card => buildDispatch(getClickCardUpdate(table, card)),
             handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, player)),
-            handleConfirm: buildDispatch(selectorCanConfirm(table.selector) ? { confirmPlay: {} } : undefined),
+            handleConfirm: buildDispatch(
+                selectorCanConfirm(table.selector) ? { confirmPlay: {} }
+                    : selectorCanUndoAutoSelect(table) && selectorCanResolve(table)
+                        ? { undoAutoSelection: {} } : undefined),
             handleUndo: buildDispatch(selectorCanUndo(table) ? { undoSelection: {} } : undefined)
         } as const;
     }, [table, selectorDispatch]);

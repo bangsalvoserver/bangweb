@@ -6,12 +6,13 @@ import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector, selectorCanConfirmLastTarget } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
     { setPrompt: GamePrompt } |
     { confirmPlay: Empty } |
+    { undoAutoSelection: Empty } |
     { undoSelection: Empty } |
     { selectPlayingCard: KnownCard } |
     { selectPickCard: Card } |
@@ -341,7 +342,7 @@ function handleSelectPickCard(table: GameTable, card: Card): TargetSelector {
     return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, appendCardTarget(selector, card.id))});
 }
 
-function removeZeroes(targets: CardTarget[]): CardTarget[] {
+function confirmTarget(targets: CardTarget[]): CardTarget[] {
     const lastTarget = targets.at(-1);
     if (lastTarget) {
         const [key, value] = Object.entries(lastTarget)[0];
@@ -366,16 +367,6 @@ function removeZeroes(targets: CardTarget[]): CardTarget[] {
     return targets;
 }
 
-function handleConfirmPlay(table: GameTable): TargetSelector {
-    const newSelector = editSelectorTargets(table.selector, removeZeroes);
-    if (selectorCanConfirmLastTarget(table.selector)) {
-        console.log('confirm last target');
-        return handleAutoTargets({ ...table, selector: newSelector });
-    } else {
-        return setSelectorMode(newSelector, 'finish');
-    }
-}
-
 function handleAutoSelect(table: GameTable): TargetSelector {
     const selector = table.selector;
     const cardId = getAutoSelectCard(table);
@@ -388,6 +379,19 @@ function handleAutoSelect(table: GameTable): TargetSelector {
     return selector;
 }
 
+function handleUndoAutoSelection(table: GameTable): TargetSelector {
+    if (!isResponse(table.selector)) {
+        throw new Error('TargetSelector: not in response mode');
+    }
+    const origin_card = table.selector.request.respond_cards
+        .map(card => getCard(table, card.card))
+        .find(card => cardHasTag(card, 'resolve'));
+    if (!origin_card || !isCardKnown(origin_card)) {
+        throw new Error('TargetSelector: cannot find resolve card');
+    }
+    return handleSelectPlayingCard(table, origin_card);
+}
+
 const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, TargetSelector>({
     setRequest (request) {
         return handleAutoSelect({ ...this, selector: newTargetSelector(request) });
@@ -398,7 +402,19 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     confirmPlay () {
-        return handleConfirmPlay(this);
+        return handleAutoTargets({
+            ...this,
+            selector: editSelectorTargets(this.selector, confirmTarget)
+        });
+    },
+
+    undoAutoSelection () {
+        return handleUndoAutoSelection({ ...this,
+            selector: {
+                ...this.selector,
+                selection: newPlayCardSelection('none')
+            }}
+        );
     },
 
     undoSelection () {

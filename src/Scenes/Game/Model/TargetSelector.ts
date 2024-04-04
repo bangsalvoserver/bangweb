@@ -92,7 +92,7 @@ export function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, 
     }
 }
 
-export function selectorCanConfirmLastTarget(selector: TargetSelector) {
+export function selectorCanConfirm(selector: TargetSelector) {
     if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
         const [currentCard, targets] = getCurrentCardAndTargets(selector);
         const index = getNextTargetIndex(targets);
@@ -116,29 +116,46 @@ export function selectorCanConfirmLastTarget(selector: TargetSelector) {
     return false;
 }
 
-export function selectorCanConfirm(selector: TargetSelector): boolean {
-    if (selectorCanConfirmLastTarget(selector)) {
-        return true;
-    } else if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
-        const [currentCard, targets] = getCurrentCardAndTargets(selector);
-        const effects = getCardEffects(currentCard, isResponse(selector));
-        return getNextTargetIndex(targets) === effects.length;
-    } else {
-        return false;
+export function selectorCanUndoAutoSelect(table: GameTable) {
+    const selector = table.selector;
+    if (findAutoSelectCard(table) !== undefined) {
+        const allTargetsNone = (targets: CardTarget[]) => {
+            return targets.every(target => {
+                const value = Object.values(target)[0];
+                if (Array.isArray(value) && value.every(num => num === 0)) return true;
+                if (typeof value === 'object' && Object.keys(value).length === 0) return true;
+                return false;
+            });
+        };
+        switch (selector.selection.mode) {
+        case 'target':
+            return selector.selection.context.card_choice === undefined && allTargetsNone(selector.selection.targets);
+        case 'modifier':
+            return selector.selection.modifiers.length === 1 && allTargetsNone(selector.selection.modifiers[0].targets);
+        case 'start':
+            return selector.selection.context.card_choice !== undefined;
+        }
     }
+    return false;
 }
 
-export function isAutoSelect(table: GameTable): boolean {
+export function selectorCanResolve(table: GameTable): boolean {
     const selector = table.selector;
     return isResponse(selector)
-        && selector.request.respond_cards.length === 1 && selector.request.pick_cards.length === 0
-        && cardHasTag(getCard(table, selector.request.respond_cards[0].card), 'auto_select');
+        && selector.request.respond_cards.some(card => cardHasTag(getCard(table, card.card), 'resolve'));
+}
+
+function findAutoSelectCard(table: GameTable): CardId | undefined {
+    const selector = table.selector;
+    if (isResponse(selector)) {
+        return selector.request.respond_cards.find(card => cardHasTag(getCard(table, card.card), 'auto_select'))?.card;
+    }
 }
 
 export function getAutoSelectCard(table: GameTable): CardId | undefined {
     const selector = table.selector;
-    if (selector.selection.mode === 'none' && isAutoSelect(table)) {
-        return (selector as RequestSelector).request.respond_cards[0].card;
+    if (selector.selection.mode === 'none') {
+        return findAutoSelectCard(table);
     } else if (selector.selection.mode === 'start') {
         const context = selector.selection.context;
         return context.repeat_card || context.traincost;
@@ -149,23 +166,8 @@ export function selectorCanUndo(table: GameTable): boolean {
     const selector = table.selector;
     if (selector.selection.mode === 'none' || selector.selection.mode === 'finish') {
         return false;
-    } else if (isAutoSelect(table)) {
-        const someTargetNotNone = (targets: CardTarget[]) => {
-            return targets.some(target => {
-                const value = Object.values(target)[0];
-                if (Array.isArray(value) && value.every(num => num === 0)) return false;
-                if (typeof value === 'object' && Object.keys(value).length === 0) return false;
-                return true;
-            });
-        };
-        switch (selector.selection.mode) {
-        case 'target':
-            return selector.selection.context.card_choice !== undefined || someTargetNotNone(selector.selection.targets);
-        case 'modifier':
-            return selector.selection.modifiers.length !== 1 || someTargetNotNone(selector.selection.modifiers[0].targets);
-        case 'start':
-            return selector.selection.context.card_choice === undefined;
-        }
+    } else if (selectorCanUndoAutoSelect(table)) {
+        return false;
     }
     return true;
 }
