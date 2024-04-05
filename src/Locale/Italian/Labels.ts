@@ -29,7 +29,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         scenario_deck_size:     "I mazzi di High Noon e Fistful of Cards vengono mischiati assieme in un mazzetto di questa dimensione.",
         num_bots:               "Numero di bot per questa partita.",
         damage_timer:           "Timer (in ms) per permettere di giocare carte come Salvo!, quando qualcuno prende danno.",
-        escape_timer:           "Timer (in ms) per permettere di giocare Funga, prima che l'azione si risolva automaticamente.",
+        escape_timer:           "Timer (in ms) per permettere di giocare Fuga, prima che l'azione si risolva automaticamente.",
         bot_play_timer:         "Timer (in ms) per controllare la velocità di gioco dei bot.",
         tumbleweed_timer:       "Timer (in ms) per permettere di giocare Cespuglio, prima che l'estrazione si risolva automaticamente. (Imposta a 0 per disattivare)",
         game_seed:              "Seme per il generatore di numeri casuali. (Imposta a 0 per usare un valore casuale)"
