@@ -17,8 +17,9 @@
 }
 
 .tooltip .tooltiptext {
+    pointer-events: none;
     font-weight: normal;
-    visibility: hidden;
+    display: none;
     background-color: var(--tooltip-background-color);
     text-align: center;
     padding: 0.2em 0.5em;
@@ -35,7 +36,7 @@
 }
 
 .tooltip:hover .tooltiptext {
-    visibility: visible;
+    display: unset;
 }
 
 .tooltip .tooltiptext::after {
