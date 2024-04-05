@@ -103,8 +103,8 @@ export default function GameOptionsEditor(props: GameOptionProps) {
     };
 
     return (<div className="game-options-editor">
-        <div className="expansion-checkboxes" tabIndex={0} onKeyDown={handleKeyDown}>
-            <div className="expansions-header">{getLabel('GameOptions', 'expansions')}</div>
+        <div className="game-options-group" tabIndex={0} onKeyDown={handleKeyDown}>
+            <div className="game-options-group-header">{getLabel('GameOptions', 'expansions')}</div>
             <ExpansionCheckbox name='dodgecity' { ...props } />
             <ExpansionCheckbox name='goldrush' { ...props } />
             <ExpansionCheckbox name='armedanddangerous' { ...props } />
@@ -116,15 +116,18 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='thebullet' { ...props } />
             <UnofficialExpansionCheckbox name='canyondiablo' enabled={enableUnofficial} { ...props } />
         </div>
-        <OptionCheckbox prop='enable_ghost_cards' { ...props } />
-        <OptionCheckbox prop='character_choice' { ...props } />
-        <OptionCheckbox prop='quick_discard_all' { ...props } />
-        <OptionNumber prop='num_bots' max={8} { ...props } />
-        <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
-        <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
-        <OptionNumber prop='damage_timer' max={10000} { ...props } />
-        <OptionNumber prop='escape_timer' max={10000} { ...props } />
-        <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
-        <OptionNumber prop='game_seed' { ...props} />
+        <div className="game-options-group">
+            <div className="game-options-group-header">{getLabel('ui', 'GAME_OPTIONS')}</div>
+            <OptionCheckbox prop='enable_ghost_cards' { ...props } />
+            <OptionCheckbox prop='character_choice' { ...props } />
+            <OptionCheckbox prop='quick_discard_all' { ...props } />
+            <OptionNumber prop='num_bots' max={8} { ...props } />
+            <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
+            <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
+            <OptionNumber prop='damage_timer' max={10000} { ...props } />
+            <OptionNumber prop='escape_timer' max={10000} { ...props } />
+            <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
+            <OptionNumber prop='game_seed' { ...props} />
+        </div>
     </div>);
 }

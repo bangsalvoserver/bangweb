@@ -68,6 +68,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         STATUS_GAME_OVER: "Game Over",
         LABEL_USERNAME: "User Name:",
         LABEL_LOBBY_NAME: "Lobby Name:",
+        GAME_OPTIONS: "Game Options",
         BUTTON_CHAT_SEND: "Send",
         BUTTON_START_GAME: "Start Game",
         BUTTON_RETURN_LOBBY: "Return to Lobby",

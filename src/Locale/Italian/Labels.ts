@@ -68,6 +68,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         STATUS_GAME_OVER: "Partita Finita",
         LABEL_USERNAME: "Nome Utente:",
         LABEL_LOBBY_NAME: "Nome Lobby:",
+        GAME_OPTIONS: "Opzioni di Partita",
         BUTTON_CHAT_SEND: "Invia",
         BUTTON_START_GAME: "Avvia Partita",
         BUTTON_RETURN_LOBBY: "Ritorna alla Lobby",
