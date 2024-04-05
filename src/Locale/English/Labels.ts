@@ -22,6 +22,19 @@ export const LABELS_ENGLISH: LabelRegistry = {
         game_seed:              "Game Seed",
     },
 
+    GameOptionsTooltip: {
+        character_choice:       "Enables the choice of two characters before the start of the game.",
+        enable_ghost_cards:     "Enables cards that can bring back players that were eliminated.",
+        quick_discard_all:      "Automatically resolve actions where the player must discard every card.",
+        scenario_deck_size:     "The decks of High Noon and Fistful of Cards are shuffled together in a smaller deck of this size.",
+        num_bots:               "Number of bots for this game.",
+        damage_timer:           "Timer (in ms) to allow players to play cards like Saved!, when someone receives damage.",
+        escape_timer:           "Timer (in ms) to allow players to play Escape, before the action is resolved automatically.",
+        bot_play_timer:         "Timer (in ms) to change the speed of play of bots.",
+        tumbleweed_timer:       "Timer (in ms) to allow players to play Tumbleweed, before the \"draw\" is resolved automatically. (Set to 0 to disable)",
+        game_seed:              "Random number generator seed. (Set to 0 to use a random value)"
+    },
+
     ExpansionType: {
         thebullet:              "Dynamite Box",
         dodgecity:              "Dodge City",

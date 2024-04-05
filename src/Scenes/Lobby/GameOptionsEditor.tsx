@@ -4,6 +4,7 @@ import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import './Style/GameOptionsEditor.css';
 import { boolConverter, useLocalStorage } from "../../Utils/UseLocalStorage";
+import Tooltip from "../../Components/Tooltip";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
@@ -59,7 +60,10 @@ function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: GameOpt
             onChange={readOnly ? undefined : handleOptionChange}
             readOnly={readOnly}
         />
-        <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+        <label htmlFor={prop}>
+            {getLabel('GameOptions', prop)}
+            <Tooltip description={getLabel('GameOptionsTooltip', prop)} />
+        </label>
     </div>)
 };
 
@@ -76,7 +80,10 @@ function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: Game
     };
 
     return (<div className="option-number">
-        <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+        <label htmlFor={prop}>
+            {getLabel('GameOptions', prop)}
+            <Tooltip description={getLabel('GameOptionsTooltip', prop)} />
+        </label>
         <input id={prop} type="number"
             value={gameOptions[prop] ?? ''}
             pattern='[0-9]{0,5}'
@@ -113,10 +120,10 @@ export default function GameOptionsEditor(props: GameOptionProps) {
         <OptionCheckbox prop='character_choice' { ...props } />
         <OptionCheckbox prop='quick_discard_all' { ...props } />
         <OptionNumber prop='num_bots' max={8} { ...props } />
+        <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
         <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
         <OptionNumber prop='damage_timer' max={10000} { ...props } />
         <OptionNumber prop='escape_timer' max={10000} { ...props } />
-        <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
         <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
         <OptionNumber prop='game_seed' { ...props} />
     </div>);
