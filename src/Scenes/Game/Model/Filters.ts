@@ -2,7 +2,7 @@ import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
-import { isCardCurrent, isPlayerSelected, isResponse } from "./TargetSelector";
+import { isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     if (isCardKnown(card) && tagType in card.cardData.tags) {
@@ -157,6 +157,8 @@ export function checkPlayerFilter(table: GameTable, filter: PlayerFilter[], targ
 export function checkCardFilter(table: GameTable, filter: CardFilter[], target: Card): boolean {
     const selector = table.selector;
     const origin = getPlayer(table, table.self_player!);
+
+    if (isCardSelected(selector, target.id)) return false;
 
     if (!filter.includes('can_target_self') && isCardCurrent(selector, target)) return false;
 
