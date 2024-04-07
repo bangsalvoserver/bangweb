@@ -1,10 +1,10 @@
 import { ChangeEvent, KeyboardEvent, ReactNode, useCallback } from "react";
+import Tooltip from "../../Components/Tooltip";
 import getLabel from "../../Locale/GetLabel";
+import { boolConverter, useLocalStorage } from "../../Utils/UseLocalStorage";
 import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import './Style/GameOptionsEditor.css';
-import { boolConverter, useLocalStorage } from "../../Utils/UseLocalStorage";
-import Tooltip from "../../Components/Tooltip";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
@@ -95,6 +95,7 @@ function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: Game
 
 export default function GameOptionsEditor(props: GameOptionProps) {
     const [enableUnofficial, setEnableUnofficial] = useLocalStorage('enable_unofficial', boolConverter);
+    const [expandOptions, setExpandOptions] = useLocalStorage('expand_options', boolConverter);
 
     const handleKeyDown = (ev: KeyboardEvent<HTMLDivElement>) => {
         if (ev.key === 'x') {
@@ -125,27 +126,31 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <UnofficialExpansionCheckbox name='canyondiablo' enabled={enableUnofficial} { ...props } />
         </div>
         <div className="game-options-group">
-            <div className="game-options-group-header">{getLabel('ui', 'GAME_OPTIONS')}</div>
-            <ConditionalOnExpansion expansions={['greattrainrobbery','valleyofshadows','highnoon','fistfulofcards','wildwestshow']}>
-                <OptionCheckbox prop='enable_ghost_cards' { ...props } />
-            </ConditionalOnExpansion>
-            <OptionCheckbox prop='character_choice' { ...props } />
-            <OptionCheckbox prop='quick_discard_all' { ...props } />
-            <OptionNumber prop='num_bots' max={8} { ...props } />
-            <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
-            <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
-                <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
-            </ConditionalOnExpansion>
-            <ConditionalOnExpansion expansions={['valleyofshadows','canyondiablo']}>
-                <OptionNumber prop='damage_timer' max={10000} { ...props } />
-            </ConditionalOnExpansion>
-            <ConditionalOnExpansion expansions={['valleyofshadows']}>
-                <OptionNumber prop='escape_timer' max={10000} { ...props } />
-            </ConditionalOnExpansion>
-            <ConditionalOnExpansion expansions={['armedanddangerous']}>
-                <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
-            </ConditionalOnExpansion>
-            <OptionNumber prop='game_seed' { ...props} />
+            <div className="game-options-group-header cursor-pointer" onClick={() => setExpandOptions(value => !value)}>
+                {expandOptions ? '+' : '-'} {getLabel('ui', 'GAME_OPTIONS')}
+            </div>
+            <div className={expandOptions ? "game-options-visible" : "game-options-collapsed"}>
+                <ConditionalOnExpansion expansions={['greattrainrobbery','valleyofshadows','highnoon','fistfulofcards','wildwestshow']}>
+                    <OptionCheckbox prop='enable_ghost_cards' { ...props } />
+                </ConditionalOnExpansion>
+                <OptionCheckbox prop='character_choice' { ...props } />
+                <OptionCheckbox prop='quick_discard_all' { ...props } />
+                <OptionNumber prop='num_bots' max={8} { ...props } />
+                <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
+                <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
+                    <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
+                </ConditionalOnExpansion>
+                <ConditionalOnExpansion expansions={['valleyofshadows','canyondiablo']}>
+                    <OptionNumber prop='damage_timer' max={10000} { ...props } />
+                </ConditionalOnExpansion>
+                <ConditionalOnExpansion expansions={['valleyofshadows']}>
+                    <OptionNumber prop='escape_timer' max={10000} { ...props } />
+                </ConditionalOnExpansion>
+                <ConditionalOnExpansion expansions={['armedanddangerous']}>
+                    <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
+                </ConditionalOnExpansion>
+                <OptionNumber prop='game_seed' { ...props} />
+            </div>
         </div>
     </div>);
 }

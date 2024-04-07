@@ -18,6 +18,19 @@
     margin-bottom: 2pt;
 }
 
+.game-options-visible {
+    transition: max-height 300ms ease-in-out, visibility 200ms step-end;
+    max-height: 20em;
+    visibility: visible;
+}
+
+.game-options-collapsed {
+    transition: max-height 300ms ease-in-out, visibility 300ms step-end;
+    max-height: 0;
+    visibility: hidden;
+    overflow: hidden;
+}
+
 .option-checkbox label {
     margin-left: 0.3em;
 }
