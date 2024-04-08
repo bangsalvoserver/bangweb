@@ -196,7 +196,6 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
     const color = getCardColor(target);
     if (filter.includes('blue') && color !== 'blue') return false;
     if (filter.includes('train') && color !== 'train') return false;
-    if (filter.includes('nottrain') && color === 'train') return false;
     if (filter.includes('blue_or_train') && color !== 'blue' && color !== 'train') return false;
     if (filter.includes('black') !== (color === 'black')) return false;
 
