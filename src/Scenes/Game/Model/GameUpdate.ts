@@ -39,6 +39,7 @@ export interface MoveCardUpdate {
     card: CardId;
     player: PlayerId | null;
     pocket: PocketType;
+    front: boolean;
 }
 
 export interface AddCubesUpdate {

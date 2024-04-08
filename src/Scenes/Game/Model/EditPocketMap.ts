@@ -23,8 +23,8 @@ export function editPocketMap(
 }
 
 /// Adds a list of cards to a pocket
-export function addToPocket(pockets: TablePockets, players: Player[], pocket: PocketId, cardsToAdd: CardId[]) {
-    return editPocketMap(pockets, players, pocket, cards => cards.concat(cardsToAdd));
+export function addToPocket(pockets: TablePockets, players: Player[], pocket: PocketId, cardsToAdd: CardId[], front: boolean = false) {
+    return editPocketMap(pockets, players, pocket, cards => front ? cardsToAdd.concat(cards) : cards.concat(cardsToAdd));
 }
 
 /// Removes a list of cards from a pocket

@@ -177,17 +177,17 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     },
 
     // Adds a card to another pocket
-    move_card ({ card, player, pocket, duration }) {
+    move_card ({ card, player, pocket, front, duration }) {
         const fromPocket = getCard(this, card).pocket;
         let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id === card ? CARD_SLOT_ID_FROM : id));
 
         const toPocket = newPocketId(pocket, player);
-        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO]);
+        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], front);
 
         return {
             ...this,
             players, pockets,
-            animation: { move_card: { card, player, pocket, duration } },
+            animation: { move_card: { card, player, pocket, front, duration } },
             animationKey: this.animationKey + 1
         };
     },
