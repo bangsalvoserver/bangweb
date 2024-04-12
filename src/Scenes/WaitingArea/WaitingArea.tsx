@@ -6,6 +6,7 @@ import { BangConnection } from "../../Model/UseBangConnection";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
+import BangLogo from "../../Components/BangLogo";
 
 export interface WaitingAreaProps {
   lobbies: LobbyValue[];
@@ -30,6 +31,7 @@ function WaitingArea({ lobbies, connection, lobbyName, setLobbyName, gameOptions
   return (
     <div className="w-full">
       <form className='flex flex-col items-center' onSubmit={handleCreateLobby}>
+        <BangLogo />
         <label htmlFor='lobby_name' className='font-bold text-xl'>{getLabel('ui', 'LABEL_LOBBY_NAME')}</label>
         <input type='text' id='lobby_name'
           className='

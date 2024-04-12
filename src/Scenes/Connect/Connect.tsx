@@ -1,6 +1,7 @@
 import { SyntheticEvent } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
+import BangLogo from '../../Components/BangLogo';
 
 export interface ConnectProps {
   username?: string;
@@ -17,8 +18,8 @@ export default function ConnectScene({ username, setUsername, handleConnect }: C
   };
 
   return <form onSubmit={handleConnectEvent} className="flex flex-col items-center">
-    <img src='logo192.png' alt={getLabel('ui', 'APP_TITLE')} />
-    <label htmlFor="username" className="text-lg font-medium">{getLabel('ui', 'LABEL_USERNAME')}</label>
+    <BangLogo />
+    <label htmlFor="username" className="font-bold text-xl">{getLabel('ui', 'LABEL_USERNAME')}</label>
     <input
       className="
       border-2
