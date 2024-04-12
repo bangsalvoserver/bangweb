@@ -193,6 +193,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     ERROR_ONE_BANG_PER_TURN: () =>                                              <>You can only play one Bang card per turn</>,
     ERROR_CANT_SELF_DAMAGE: () =>                                               <>You can't take off the last life point</>,
     ERROR_CANT_HEAL_PAST_FULL_HP: () =>                                         <>You can't heal yourself past the last life point</>,
+    ERROR_PLAYER_IS_FULL_HP: (player) =>                                        <>{player} has already all life points</>,
     ERROR_NOT_START_OF_TURN: () =>                                              <>It's not the start of your turn</>,
     ERROR_DISCARD_PILE_EMPTY: () =>                                             <>The discard pile is empty</>,
     ERROR_MAX_USAGES: (arg0, arg1) =>                                           <>You can't play {arg0} more than {arg1} times per turn</>,
