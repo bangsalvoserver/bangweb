@@ -34,7 +34,6 @@ export default function App() {
         />;
       case 'lobby':
         return <LobbyScene
-          myUserId={settings.myUserId}
           lobbyInfo={scene.lobbyInfo}
           lobbyState={scene.lobbyState}
           connection={connection}
@@ -42,7 +41,6 @@ export default function App() {
         />;
       case 'game':
         return <GameScene
-          myUserId={settings.myUserId}
           connection={connection}
           lobbyState={scene.lobbyState}
           gameChannel={gameChannel}

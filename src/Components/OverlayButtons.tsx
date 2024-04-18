@@ -14,6 +14,6 @@ export interface OverlayProps {
 
 export default function OverlayButtons({ scene, settings, connection, overlayRef }: OverlayProps) {
     return <div className="overlay-buttons" ref={overlayRef}>
-        { 'lobbyState' in scene && <LobbyChat myUserId={settings.myUserId} connection={connection} lobbyState={scene.lobbyState}/> }
+        { 'lobbyState' in scene && <LobbyChat connection={connection} lobbyState={scene.lobbyState}/> }
     </div>
 }

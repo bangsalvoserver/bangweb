@@ -13,7 +13,7 @@ import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
-import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserId, UserInfo } from "./ServerMessage";
+import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserInfo } from "./ServerMessage";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
@@ -36,7 +36,7 @@ function handleUpdateLobbies({ lobby_id, name, num_players, state }: LobbyUpdate
     };
 }
 
-function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read }: LobbyAddUser, myUserId?: UserId): UpdateFunction<LobbyState> {
+function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read }: LobbyAddUser): UpdateFunction<LobbyState> {
     return lobbyState => {
         let chatMessages = lobbyState.chatMessages;
         let users = [...lobbyState.users];
@@ -50,7 +50,7 @@ function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read }:
                 chatMessages = chatMessages.concat({
                     user_id: 0,
                     message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
-                    is_read: is_read || user_id === myUserId
+                    is_read: is_read || user_id === lobbyState.myUserId
                 });
             }
             users.push(newUser);
@@ -87,7 +87,7 @@ export type BangConnection = WebSocketConnection<ServerMessage, ClientMessage>;
 export default function useBangConnection() {
     const settings = useSettings();
 
-    const [scene, sceneDispatch] = useReducer(sceneReducer, settings.myUserId, defaultCurrentScene);
+    const [scene, sceneDispatch] = useReducer(sceneReducer, settings.sessionId, defaultCurrentScene);
     const gameChannel = useChannel<GameUpdate>();
 
     const bangServerUrl = useMemo(() => {
@@ -104,7 +104,7 @@ export default function useBangConnection() {
             connection.sendMessage({
                 connect: {
                     user: await makeUserInfo(settings.username, settings.propic),
-                    user_id: settings.myUserId,
+                    session_id: settings.sessionId,
                     commit_hash: Env.commitHash
                 }
             });
@@ -120,23 +120,23 @@ export default function useBangConnection() {
     useEffect(() => {
         if (connection.isConnected) {
             connected();
-        } else if (settings.myUserId) {
+        } else if (settings.sessionId) {
             connection.connect();
         } else {
             disconnected();
         }
-    }, [settings.myUserId, connection, connected, disconnected]);
+    }, [settings.sessionId, connection, connected, disconnected]);
 
     useEffect(() => {
         connection.subscribe(createUnionDispatch<ServerMessage>({
             ping() {
                 connection.sendMessage({ pong: {} });
             },
-            client_accepted({ user_id }) {
+            client_accepted({ session_id }) {
                 if (settings.myLobbyId) {
                     connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId } });
                 }
-                settings.setMyUserId(user_id);
+                settings.setSessionId(session_id);
                 sceneDispatch({ gotoWaitingArea: {} });
             },
             client_count(count) {
@@ -164,15 +164,14 @@ export default function useBangConnection() {
                 sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, lobbyOwner: user_id }) });
             },
             lobby_add_user(message) {
-                sceneDispatch({ updateLobbyState: handleLobbyAddUser(message, settings.myUserId) });
+                sceneDispatch({ updateLobbyState: handleLobbyAddUser(message) });
             },
             lobby_remove_user({ user_id }) {
-                if (user_id === settings.myUserId) {
-                    settings.setMyLobbyId(undefined);
-                    sceneDispatch({ gotoWaitingArea: {} });
-                } else {
-                    sceneDispatch({ updateLobbyState: handleLobbyRemoveUser({ user_id }) });
-                }
+                sceneDispatch({ updateLobbyState: handleLobbyRemoveUser({ user_id }) });
+            },
+            lobby_kick() {
+                settings.setMyLobbyId(undefined);
+                sceneDispatch({ gotoWaitingArea: {} });
             },
             lobby_chat(message) {
                 sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, chatMessages: lobbyState.chatMessages.concat(message) }) });

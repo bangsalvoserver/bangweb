@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { curry2 } from "ts-curry";
 import { LobbyState } from "../../Model/SceneState";
-import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { isMobileDevice } from "../../Utils/MobileCheck";
 import { useMapRef } from "../../Utils/UseMapRef";
@@ -17,9 +16,9 @@ import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
 import { getPlayer, newGameTable } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
-import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/UseSelectorConfirm";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
 import useGameState from "./Model/UseGameState";
+import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/UseSelectorConfirm";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import PocketView from "./Pockets/PocketView";
@@ -33,18 +32,17 @@ import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
 
 export interface GameProps {
-  myUserId?: UserId;
   connection: BangConnection;
   lobbyState: LobbyState;
   gameChannel: GameChannel;
   overlayRef: RefObject<HTMLDivElement>;
 }
 
-const EMPTY_TABLE = newGameTable();
+const EMPTY_TABLE = newGameTable(0);
 export const GameTableContext = createContext(EMPTY_TABLE);
 
-export default function GameScene({ myUserId, connection, lobbyState, gameChannel, overlayRef }: GameProps) {
-  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, myUserId);
+export default function GameScene({ connection, lobbyState, gameChannel, overlayRef }: GameProps) {
+  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId);
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
   const playerRefs = useMapRef<PlayerId, PlayerRef>();
@@ -125,7 +123,7 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
 
   const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
-    const user = getUser(lobbyState.users, player.userid);
+    const user = getUser(lobbyState.users, player.user_id);
 
     return <div key={player_id} className="player-grid-item" player-index={index}>
       {movingPlayers.includes(player_id)
@@ -153,7 +151,6 @@ export default function GameScene({ myUserId, connection, lobbyState, gameChanne
               <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
               <CardChoiceView tracker={tracker} />
               <StatusBar
-                myUserId={myUserId}
                 gameError={gameError}
                 handleClearGameError={clearGameError}
                 handleReturnLobby={handleReturnLobby}

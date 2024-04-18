@@ -11,12 +11,11 @@ import usePrevious from "../Utils/UsePrevious";
 import "./Style/LobbyChat.css";
 
 export interface ChatProps {
-    myUserId?: UserId;
     connection: BangConnection;
     lobbyState: LobbyState;
 }
 
-export default function LobbyChat({ myUserId, connection, lobbyState: { users, chatMessages: messages } }: ChatProps) {
+export default function LobbyChat({ connection, lobbyState: { myUserId, users, chatMessages: messages } }: ChatProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
     

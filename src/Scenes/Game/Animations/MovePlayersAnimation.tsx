@@ -38,7 +38,7 @@ function MovePlayerAnimation({ tracker, from, to, duration }: MovePlayerProps) {
         } as CSSProperties;
 
         const player = getPlayer(table, from);
-        const user = getUser(users, player.userid);
+        const user = getUser(users, player.user_id);
 
         return <div style={style} className="move-player-animation">
             <div className="move-player-inner">

@@ -54,7 +54,7 @@ export default function GameStringComponent({ message }: GameStringProps): JSX.E
         case 'player' in arg:
             if (arg.player) {
                 const player = findPlayer(table.players, arg.player);
-                const user = getUser(users, player.userid);
+                const user = getUser(users, player.user_id);
                 return { type: 'player', value: getUsername(user) };
             } else {
                 return { type: 'player', value: null }

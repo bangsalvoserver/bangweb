@@ -1,7 +1,6 @@
 import { CSSProperties, useContext } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { UserId } from "../../Model/ServerMessage";
 import { LobbyContext } from "../Lobby/Lobby";
 import { GameTableContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName, getLocalizedCardName } from "./GameStringComponent";
@@ -12,14 +11,13 @@ import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/TimerAnimation.css";
 
 export interface StatusProps {
-  myUserId?: UserId;
   gameError: GameString | undefined;
   handleClearGameError: () => void;
   handleReturnLobby: () => void;
 }
 
-export default function StatusBar({ myUserId, gameError, handleClearGameError, handleReturnLobby }: StatusProps) {
-  const { lobbyOwner } = useContext(LobbyContext);
+export default function StatusBar({ gameError, handleClearGameError, handleReturnLobby }: StatusProps) {
+  const { myUserId, lobbyOwner } = useContext(LobbyContext);
   const table = useContext(GameTableContext);
   const { handleClickCard, handleConfirm, handleDismiss, handleUndo } = useContext(SelectorConfirmContext);
 

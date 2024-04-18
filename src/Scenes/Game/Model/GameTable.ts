@@ -132,7 +132,7 @@ export type PlayerAnimation =
     { player_death: Duration };
 
 export interface Player extends Id {
-    userid: UserId;
+    user_id: UserId;
     status: {
         role: PlayerRole,
         hp: number,
@@ -145,9 +145,9 @@ export interface Player extends Id {
     animationKey: number;
 }
 
-export function newPlayer(id: PlayerId, userid: UserId): Player {
+export function newPlayer(id: PlayerId, user_id: UserId): Player {
     return {
-        id, userid,
+        id, user_id,
         status: {
             role: 'unknown',
             hp: 0,
@@ -185,7 +185,7 @@ export type TableAnimation =
     { move_players: MovePlayersUpdate & Duration };
 
 export interface GameTable {
-    myUserId?: UserId;
+    myUserId: UserId;
     self_player?: PlayerId;
 
     players: Player[];
@@ -209,7 +209,7 @@ export interface GameTable {
     selector: TargetSelector;
 }
 
-export function newGameTable(myUserId?: UserId): GameTable {
+export function newGameTable(myUserId: UserId): GameTable {
     return {
         myUserId,
         

@@ -7,7 +7,7 @@ import gameTableReducer from "./GameTableReducer";
 import { GameString, GameUpdate, Milliseconds } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
-export default function useGameState(gameChannel: GameChannel, myUserId?: UserId) {
+export default function useGameState(gameChannel: GameChannel, myUserId: UserId) {
     const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();

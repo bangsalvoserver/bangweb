@@ -2,7 +2,7 @@ import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { intConverter, jsonConverter, stringConverter, useLocalStorage, useSessionStorage } from "../Utils/UseLocalStorage";
 
 export function useSettings() {
-    const [myUserId, setMyUserId] = useSessionStorage('user_id', intConverter);
+    const [sessionId, setSessionId] = useSessionStorage('session_id', intConverter);
     const [myLobbyId, setMyLobbyId] = useSessionStorage('lobby_id', intConverter);
     const [username, setUsername] = useLocalStorage('username', stringConverter);
     const [propic, setPropic] = useLocalStorage('propic', stringConverter);
@@ -10,7 +10,7 @@ export function useSettings() {
     const [gameOptions, setGameOptions] = useLocalStorage<GameOptions>('game_options', jsonConverter);
 
     return {
-        myUserId, setMyUserId,
+        sessionId, setSessionId,
         myLobbyId, setMyLobbyId,
         username, setUsername,
         propic, setPropic,

@@ -1,10 +1,10 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
 import { PlayerId } from "../Scenes/Game/Model/GameUpdate";
-import { Empty, LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./ServerMessage";
+import { Empty, LobbyId, LobbyInfo, LobbyMakeArgs, UserInfo } from "./ServerMessage";
 
 export interface ClientConnect {
     user: UserInfo;
-    user_id?: UserId;
+    session_id?: number;
     commit_hash?: string;
 }
 

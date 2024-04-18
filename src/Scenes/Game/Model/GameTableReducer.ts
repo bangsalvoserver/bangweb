@@ -48,13 +48,13 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         for (const { player_id, user_id } of players) {
             const foundPlayer = searchById(newPlayers, player_id);
             if (foundPlayer) {
-                newPlayers = editById(newPlayers, player_id, player => ({ ...player, userid: user_id }));
+                newPlayers = editById(newPlayers, player_id, player => ({ ...player, user_id }));
             } else {
                 newPlayers = newPlayers.concat(newPlayer(player_id, user_id)).sort(sortById);
                 newAlivePlayers = newAlivePlayers.concat(player_id);
             }
         }
-        const selfPlayer = newPlayers.find(p => p.userid === this.myUserId)?.id;
+        const selfPlayer = newPlayers.find(p => p.user_id === this.myUserId)?.id;
         return {
             ...this,
             players: newPlayers,

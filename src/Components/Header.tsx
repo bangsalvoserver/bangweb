@@ -31,7 +31,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const handleReturnLobby = () => connection.sendMessage({ lobby_return: {}});
 
   const handleDisconnect = () => {
-    settings.setMyUserId(undefined);
+    settings.setSessionId(undefined);
     settings.setMyLobbyId(undefined);
     connection.disconnect();
   };
@@ -78,7 +78,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
           </button>
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
-              { scene.type === 'game' && settings.myUserId === scene.lobbyState.lobbyOwner &&
+              { scene.type === 'game' && scene.lobbyState.myUserId === scene.lobbyState.lobbyOwner &&
                 <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
               { 'lobbyInfo' in scene
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>

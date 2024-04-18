@@ -4,15 +4,16 @@ import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { createUnionReducer } from "../Utils/UnionUtils";
 
 export interface LobbyState {
-    lobbyId?: LobbyId;
+    lobbyId: LobbyId;
+    myUserId: UserId;
     users: UserValue[];
     lobbyOwner?: UserId;
     chatMessages: ChatMessage[];
 }
 
-export function newLobbyState(lobbyId?: LobbyId): LobbyState {
+export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
     return {
-        lobbyId,
+        lobbyId, myUserId,
         users: [],
         chatMessages: []
     };
@@ -38,8 +39,8 @@ export type SceneUpdate =
     { updateLobbyState: UpdateFunction<LobbyState> } |
     { handleLobbyEntered: LobbyEntered };
 
-export function defaultCurrentScene(myUserId?: UserId): SceneState {
-    if (myUserId) {
+export function defaultCurrentScene(sessionId?: number): SceneState {
+    if (sessionId) {
         return { type: 'loading' };
     } else {
         return { type: 'connect' };
@@ -90,11 +91,11 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         }
         throw new Error('Invalid scene type: ' + this.type);
     },
-    handleLobbyEntered({ lobby_id, name, options }) {
+    handleLobbyEntered({ user_id, lobby_id, name, options }) {
         if ('lobbies' in this) {
             return { ...this, type: 'lobby',
                 lobbyInfo: { name, options },
-                lobbyState: 'lobbyState' in this ? this.lobbyState : newLobbyState(lobby_id)
+                lobbyState: 'lobbyState' in this ? this.lobbyState : newLobbyState(lobby_id, user_id)
             };
         }
         throw new Error('Invalid scene type: ' + this.type);

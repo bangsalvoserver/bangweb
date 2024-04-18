@@ -7,7 +7,7 @@ export type LobbyId = number;
 export type UserId = number;
 
 export interface ClientAccepted {
-    user_id: UserId;
+    session_id: number;
 }
 
 export type LobbyStateEnum = 'waiting' | 'playing' | 'finished';
@@ -30,6 +30,7 @@ export interface LobbyInfo {
 }
 
 export interface LobbyEntered {
+    user_id: UserId;
     lobby_id: LobbyId;
     name: string;
     options: GameOptions;
@@ -78,6 +79,7 @@ export type ServerMessage =
     {lobby_owner: LobbyOwner} |
     {lobby_add_user: LobbyAddUser} |
     {lobby_remove_user: LobbyRemoveUser} |
+    {lobby_kick: Empty} |
     {lobby_chat: ChatMessage} |
     {game_update: GameUpdate} |
     {game_started: Empty};
