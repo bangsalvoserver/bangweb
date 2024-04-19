@@ -112,7 +112,11 @@ export default function useBangConnection() {
     });
 
     const disconnected = useEvent(() => {
-        if (scene.type !== 'connect') {
+        if (scene.type === 'loading') {
+            if (settings.sessionId) {
+                connection.connect();
+            }
+        } else if (scene.type !== 'connect') {
             sceneDispatch({ reset: {} });
         }
     });
@@ -120,12 +124,10 @@ export default function useBangConnection() {
     useEffect(() => {
         if (connection.isConnected) {
             connected();
-        } else if (settings.sessionId) {
-            connection.connect();
         } else {
             disconnected();
         }
-    }, [settings.sessionId, connection, connected, disconnected]);
+    }, [connection, connected, disconnected]);
 
     useEffect(() => {
         connection.subscribe(createUnionDispatch<ServerMessage>({
