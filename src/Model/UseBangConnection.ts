@@ -115,9 +115,15 @@ export default function useBangConnection() {
         if (scene.type === 'loading') {
             if (settings.sessionId) {
                 connection.connect();
+            } else {
+                sceneDispatch({ reset: {} });
+                sceneDispatch({ setLobbyError: "ERROR_CANNOT_CONNECT_TO_SERVER" });
             }
         } else if (scene.type !== 'connect') {
             sceneDispatch({ reset: {} });
+            if (settings.sessionId) {
+                sceneDispatch({ setLobbyError: "ERROR_DISCONNECTED_FROM_SERVER" });
+            }
         }
     });
 
@@ -145,8 +151,7 @@ export default function useBangConnection() {
                 sceneDispatch({ setClientCount: count });
             },
             lobby_error(message) {
-                // TODO add gui element for lobby error
-                console.error('Lobby error: ', getLabel('lobby', message));
+                sceneDispatch({ setLobbyError: message });
             },
             lobby_update(message: LobbyUpdate) {
                 sceneDispatch({ updateLobbies: handleUpdateLobbies(message) });
@@ -204,5 +209,14 @@ export default function useBangConnection() {
         settings.setGameOptions(gameOptions);
     });
 
-    return { scene, settings, connection, gameChannel, setGameOptions, handleConnect } as const;
+    const clearLobbyError = useEvent(() => sceneDispatch({ setLobbyError: null }));
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (scene.lobbyError) sceneDispatch({ setLobbyError: null });
+        }, 5000);
+        return () => clearTimeout(timeout);
+    }, [scene.lobbyError]);
+
+    return { scene, settings, connection, gameChannel, setGameOptions, handleConnect, clearLobbyError } as const;
 }

@@ -20,16 +20,16 @@ export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
 }
 
 export type SceneState =
-    { type: 'connect' } |
-    { type: 'loading' } |
-    { type: 'waiting_area', clientCount: number, lobbies: LobbyValue[] } |
-    { type: 'lobby', clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState } |
-    { type: 'game', clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
+    { type: 'connect', lobbyError?: string } |
+    { type: 'loading', lobbyError?: string } |
+    { type: 'waiting_area', lobbyError?: string, clientCount: number, lobbies: LobbyValue[] } |
+    { type: 'lobby' | 'game', lobbyError?: string, clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
 export type UpdateFunction<T> = (value: T) => T;
 
 export type SceneUpdate =
     { reset: Empty } |
+    { setLobbyError: string | null } |
     { setClientCount: number } |
     { gotoLoading: Empty } |
     { gotoWaitingArea: Empty } |
@@ -50,6 +50,9 @@ export function defaultCurrentScene(sessionId?: number): SceneState {
 export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     reset() {
         return { type: 'connect' };
+    },
+    setLobbyError(message) {
+        return { ...this, lobbyError: message ?? undefined };
     },
     setClientCount(count) {
         if ('clientCount' in this) {

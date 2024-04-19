@@ -8,9 +8,10 @@ import GameScene from './Scenes/Game/GameScene';
 import LoadingScene from './Scenes/Loading/Loading';
 import LobbyScene from './Scenes/Lobby/Lobby';
 import WaitingArea from './Scenes/WaitingArea/WaitingArea';
+import LobbyError from './Components/LobbyError';
 
 export default function App() {
-  const { scene, settings, connection, gameChannel, handleConnect, setGameOptions } = useBangConnection();
+  const { scene, settings, connection, gameChannel, handleConnect, setGameOptions, clearLobbyError } = useBangConnection();
 
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -53,6 +54,7 @@ export default function App() {
     <div className="flex flex-col min-h-screen">
       <Header scene={scene} settings={settings} connection={connection} />
       <div className="current-scene">{currentScene()}</div>
+      <LobbyError message={scene.lobbyError} clearLobbyError={clearLobbyError} />
       <OverlayButtons scene={scene} settings={settings} connection={connection} overlayRef={overlayRef} />
     </div>
   );
