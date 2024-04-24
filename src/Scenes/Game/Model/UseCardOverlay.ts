@@ -40,7 +40,7 @@ export default function useCardOverlay(cardImage: CardImage, cardAlt: string, di
         };
 
         const resetTimeout = () => {
-            removeOverlay();
+            clearTimeout(timeout);
             addOverlay();
         };
 
