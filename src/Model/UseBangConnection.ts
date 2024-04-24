@@ -141,9 +141,6 @@ export default function useBangConnection() {
                 connection.sendMessage({ pong: {} });
             },
             client_accepted({ session_id }) {
-                if (settings.myLobbyId) {
-                    connection.sendMessage({ lobby_join: { lobby_id: settings.myLobbyId } });
-                }
                 settings.setSessionId(session_id);
                 sceneDispatch({ gotoWaitingArea: {} });
             },
@@ -158,7 +155,6 @@ export default function useBangConnection() {
             },
             lobby_entered(message) {
                 gameChannel.clear();
-                settings.setMyLobbyId(message.lobby_id);
                 sceneDispatch({ handleLobbyEntered: message });
             },
             lobby_edited(lobbyInfo) {
@@ -177,7 +173,6 @@ export default function useBangConnection() {
                 sceneDispatch({ updateLobbyState: handleLobbyRemoveUser({ user_id }) });
             },
             lobby_kick() {
-                settings.setMyLobbyId(undefined);
                 sceneDispatch({ gotoWaitingArea: {} });
             },
             lobby_chat(message) {

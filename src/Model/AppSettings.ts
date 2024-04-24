@@ -3,7 +3,6 @@ import { intConverter, jsonConverter, stringConverter, useLocalStorage, useSessi
 
 export function useSettings() {
     const [sessionId, setSessionId] = useSessionStorage('session_id', intConverter);
-    const [myLobbyId, setMyLobbyId] = useSessionStorage('lobby_id', intConverter);
     const [username, setUsername] = useLocalStorage('username', stringConverter);
     const [propic, setPropic] = useLocalStorage('propic', stringConverter);
     const [lobbyName, setLobbyName] = useLocalStorage('lobby_name', stringConverter);
@@ -11,7 +10,6 @@ export function useSettings() {
 
     return {
         sessionId, setSessionId,
-        myLobbyId, setMyLobbyId,
         username, setUsername,
         propic, setPropic,
         lobbyName, setLobbyName,

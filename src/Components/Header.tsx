@@ -32,7 +32,6 @@ function Header({ scene, settings, connection }: HeaderProps) {
 
   const handleDisconnect = () => {
     settings.setSessionId(undefined);
-    settings.setMyLobbyId(undefined);
     connection.disconnect();
   };
 
