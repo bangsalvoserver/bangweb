@@ -113,7 +113,7 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
     const isWinner = player.status.flags.includes('winner');
     const isSkipTurn = player.status.flags.includes('skip_turn');
 
-    const canRejoin = !table.self_player && (!user || user.id <= 0);
+    const canRejoin = !table.self_player && !user;
 
     let classes = ['player-view'];
     if (isWinner) {
