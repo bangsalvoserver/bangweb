@@ -22,10 +22,10 @@ export async function makeUserInfo(username?: string, propic?: ImageSrc): Promis
     };
 }
 
-function handleUpdateLobbies({ lobby_id, name, num_players, state }: LobbyUpdate): UpdateFunction<LobbyValue[]> {
+function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_players, state }: LobbyUpdate): UpdateFunction<LobbyValue[]> {
     return lobbies => {
         let copy = [...lobbies];
-        const newLobby = { id: lobby_id, name, num_players, state };
+        const newLobby: LobbyValue = { id: lobby_id, name, num_players, num_spectators, max_players, state };
         let index = copy.findIndex(lobby => lobby.id === lobby_id);
         if (index >= 0) {
             copy[index] = newLobby;

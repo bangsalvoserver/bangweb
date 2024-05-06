@@ -16,6 +16,8 @@ export interface LobbyUpdate {
     lobby_id: LobbyId;
     name: string;
     num_players: number;
+    num_spectators: number;
+    max_players: number;
     state: LobbyStateEnum;
 }
 

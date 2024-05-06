@@ -6,6 +6,8 @@ export interface LobbyValue {
   id: LobbyId;
   name: string;
   num_players: number;
+  num_spectators: number;
+  max_players: number;
   state: string;
 }
 
@@ -14,13 +16,14 @@ export interface LobbyElementProps {
   onClickJoin: (lobby_id: LobbyId) => void;
 }
 
-function LobbyElement({ lobby, onClickJoin }: LobbyElementProps) {
+function LobbyElement({ lobby: { id, name, num_players, num_spectators, max_players, state }, onClickJoin }: LobbyElementProps) {
+  const numPlayersStatus = `${num_players}/${max_players}` + (num_spectators > 0 ? `+${num_spectators}` : '');
   return (
     <div className="lobby-element">
-      <div>{lobby.name}</div>
-      <div>{lobby.num_players}/8</div>
-      <div>{getLabel('LobbyState', lobby.state)}</div>
-      <div><Button color='green' onClick={() => onClickJoin(lobby.id)}>{getLabel('ui', 'BUTTON_JOIN')}</Button></div>
+      <div>{name}</div>
+      <div>{numPlayersStatus}</div>
+      <div>{getLabel('LobbyState', state)}</div>
+      <div><Button color='green' onClick={() => onClickJoin(id)}>{getLabel('ui', 'BUTTON_JOIN')}</Button></div>
     </div>
   )
 }
