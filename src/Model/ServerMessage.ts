@@ -44,10 +44,6 @@ export interface LobbyRemoved {
     lobby_id: LobbyId;
 }
 
-export interface LobbyOwner {
-    user_id: UserId;
-}
-
 export interface UserInfo {
     name: string;
     profile_image?: ImagePixels;
@@ -57,10 +53,6 @@ export interface LobbyAddUser {
     user_id: UserId;
     user: UserInfo;
     is_read: boolean;
-}
-
-export interface LobbyRemoveUser {
-    user_id: UserId;
 }
 
 export interface ChatMessage {
@@ -78,9 +70,8 @@ export type ServerMessage =
     {lobby_entered: LobbyEntered} |
     {lobby_edited: LobbyEdited} |
     {lobby_removed: LobbyRemoved} |
-    {lobby_owner: LobbyOwner} |
     {lobby_add_user: LobbyAddUser} |
-    {lobby_remove_user: LobbyRemoveUser} |
+    {lobby_remove_user: number} |
     {lobby_kick: Empty} |
     {lobby_chat: ChatMessage} |
     {game_update: GameUpdate} |

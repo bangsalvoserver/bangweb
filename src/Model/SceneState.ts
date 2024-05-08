@@ -7,7 +7,6 @@ export interface LobbyState {
     lobbyId: LobbyId;
     myUserId: UserId;
     users: UserValue[];
-    lobbyOwner?: UserId;
     chatMessages: ChatMessage[];
 }
 
@@ -17,6 +16,10 @@ export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
         users: [],
         chatMessages: []
     };
+}
+
+export function isLobbyOwner(lobby: LobbyState) {
+    return lobby.users.at(0)?.id === lobby.myUserId;
 }
 
 export type SceneState =

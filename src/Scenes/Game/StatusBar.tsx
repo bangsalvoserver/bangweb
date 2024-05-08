@@ -9,6 +9,7 @@ import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/TimerAnimation.css";
+import { isLobbyOwner } from "../../Model/SceneState";
 
 export interface StatusProps {
   gameError: GameString | undefined;
@@ -17,7 +18,7 @@ export interface StatusProps {
 }
 
 export default function StatusBar({ gameError, handleClearGameError, handleReturnLobby }: StatusProps) {
-  const { myUserId, lobbyOwner } = useContext(LobbyContext);
+  const lobbyState = useContext(LobbyContext);
   const table = useContext(GameTableContext);
   const { handleClickCard, handleConfirm, handleDismiss, handleUndo } = useContext(SelectorConfirmContext);
 
@@ -55,7 +56,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
   if (isGameOver) {
     return <div className="status-bar">
       {getLabel('ui', 'STATUS_GAME_OVER')}
-      {myUserId === lobbyOwner && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>}
+      {isLobbyOwner(lobbyState) && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>}
     </div>
   } else if (gameError) {
     return <div className="status-bar status-bar-error">

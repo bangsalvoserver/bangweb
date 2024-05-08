@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import useEvent from 'react-use-event-hook';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
-import { LobbyState, newLobbyState } from '../../Model/SceneState';
+import { LobbyState, isLobbyOwner, newLobbyState } from '../../Model/SceneState';
 import { LobbyInfo, UserId } from '../../Model/ServerMessage';
 import { BangConnection } from '../../Model/UseBangConnection';
 import { GameOptions } from '../Game/Model/GameUpdate';
@@ -30,14 +30,14 @@ export default function LobbyScene({ lobbyInfo, setGameOptions, connection, lobb
   return (
     <LobbyContext.Provider value={lobbyState}>
       <div className='flex flex-col'>
-        { lobbyState.myUserId === lobbyState.lobbyOwner && <div className='status-bar'>
+        { isLobbyOwner(lobbyState) && <div className='status-bar'>
           <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button>
         </div> }
         <div className='flex flex-col md:flex-row items-center md:items-start mb-24'>
-          <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={setGameOptions} readOnly={lobbyState.myUserId !== lobbyState.lobbyOwner} />
+          <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={setGameOptions} readOnly={!isLobbyOwner(lobbyState)} />
           <div className='flex flex-col -order-1 md:order-none'>
-            {lobbyState.users.map(user => (
-              <LobbyUser align='vertical' key={user.id} user={user} isOwner={user.id === lobbyState.lobbyOwner} />
+            {lobbyState.users.map((user, i) => (
+              <LobbyUser align='vertical' key={user.id} user={user} isOwner={i === 0} />
             ))}
           </div>
         </div>

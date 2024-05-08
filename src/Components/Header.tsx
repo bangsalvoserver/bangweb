@@ -1,7 +1,7 @@
 import { ChangeEvent, useRef } from 'react';
 import getLabel from '../Locale/GetLabel';
 import AppSettings from '../Model/AppSettings';
-import { SceneState } from '../Model/SceneState';
+import { SceneState, isLobbyOwner } from '../Model/SceneState';
 import { BangConnection, makeUserInfo } from '../Model/UseBangConnection';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { ImageSrc } from '../Utils/ImageSerial';
@@ -77,7 +77,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
           </button>
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
-              { scene.type === 'game' && scene.lobbyState.myUserId === scene.lobbyState.lobbyOwner &&
+              { scene.type === 'game' && isLobbyOwner(scene.lobbyState) &&
                 <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
               { 'lobbyInfo' in scene
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>

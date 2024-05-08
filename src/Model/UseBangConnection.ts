@@ -13,7 +13,7 @@ import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
-import { LobbyAddUser, LobbyRemoveUser, LobbyUpdate, ServerMessage, UserInfo } from "./ServerMessage";
+import { LobbyAddUser, LobbyUpdate, ServerMessage, UserInfo } from "./ServerMessage";
 
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
@@ -59,7 +59,7 @@ function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read }:
     };
 }
 
-function handleLobbyRemoveUser({ user_id }: LobbyRemoveUser): UpdateFunction<LobbyState> {
+function handleLobbyRemoveUser(user_id: number): UpdateFunction<LobbyState> {
     return lobbyState => {
         let users = lobbyState.users;
         let chatMessages = lobbyState.chatMessages;
@@ -163,14 +163,11 @@ export default function useBangConnection() {
             lobby_removed({ lobby_id }) {
                 sceneDispatch({ updateLobbies: lobbies => lobbies.filter(lobby => lobby.id !== lobby_id) });
             },
-            lobby_owner({ user_id }) {
-                sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, lobbyOwner: user_id }) });
-            },
             lobby_add_user(message) {
                 sceneDispatch({ updateLobbyState: handleLobbyAddUser(message) });
             },
-            lobby_remove_user({ user_id }) {
-                sceneDispatch({ updateLobbyState: handleLobbyRemoveUser({ user_id }) });
+            lobby_remove_user(user_id) {
+                sceneDispatch({ updateLobbyState: handleLobbyRemoveUser(user_id) });
             },
             lobby_kick() {
                 sceneDispatch({ gotoWaitingArea: {} });
