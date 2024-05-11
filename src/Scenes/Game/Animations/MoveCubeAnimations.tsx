@@ -1,10 +1,10 @@
 import { CSSProperties } from "react";
+import { Milliseconds } from "../../../Model/ServerMessage";
 import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import { SPRITE_CUBE } from "../CardView";
 import { CardTracker } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
-import { Milliseconds } from "../Model/GameUpdate";
 import "./Style/MoveCubeAnimation.css";
 
 export interface MoveCubeProps {

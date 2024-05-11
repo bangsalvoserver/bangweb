@@ -2,10 +2,10 @@ import { CSSProperties, useMemo, useRef } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { getCardUrl } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
-import { Milliseconds } from "./Model/GameUpdate";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardView.css";
 import { CardImage } from "./Model/GameTable";
+import { Milliseconds } from "../../Model/ServerMessage";
 
 export interface RoleProps {
     role: PlayerRole;

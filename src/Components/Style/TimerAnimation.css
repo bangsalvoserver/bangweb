@@ -19,7 +19,7 @@
     --timer-color: #404040;
 }
 
-.request-timer {
+.timer-widget {
     display: inline-block;
     vertical-align: middle;
 

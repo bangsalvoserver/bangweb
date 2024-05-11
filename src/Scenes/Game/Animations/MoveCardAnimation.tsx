@@ -1,10 +1,10 @@
 import { CSSProperties } from "react";
+import { Milliseconds } from "../../../Model/ServerMessage";
 import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import CardView from "../CardView";
 import { CardTracker } from "../Model/CardTracker";
 import { Card, PocketId } from "../Model/GameTable";
-import { Milliseconds } from "../Model/GameUpdate";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import "./Style/MoveCardAnimation.css";
 

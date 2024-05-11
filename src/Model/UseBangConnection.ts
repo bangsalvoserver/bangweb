@@ -36,12 +36,12 @@ function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_
     };
 }
 
-function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read }: LobbyAddUser): UpdateFunction<LobbyState> {
+function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
     return lobbyState => {
         let chatMessages = lobbyState.chatMessages;
         let users = [...lobbyState.users];
 
-        const newUser: UserValue = { id: user_id, name, propic: deserializeImage(profile_image) };
+        const newUser: UserValue = { id: user_id, name, propic: deserializeImage(profile_image), lifetime };
         let index = users.findIndex(user => user.id === user_id);
         if (index >= 0) {
             users[index] = newUser;

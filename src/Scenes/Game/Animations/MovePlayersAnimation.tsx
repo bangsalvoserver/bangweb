@@ -1,11 +1,12 @@
 import { CSSProperties, useContext } from "react";
+import { Milliseconds } from "../../../Model/ServerMessage";
 import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import { LobbyContext, getUser } from "../../Lobby/Lobby";
 import { GameTableContext } from "../GameScene";
 import { CardTracker } from "../Model/CardTracker";
 import { PlayerMoveId, getPlayer } from "../Model/GameTable";
-import { Milliseconds, PlayerId } from "../Model/GameUpdate";
+import { PlayerId } from "../Model/GameUpdate";
 import PlayerView from "../PlayerView";
 import "./Style/MovePlayersAnimation.css";
 

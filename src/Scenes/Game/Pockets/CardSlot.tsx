@@ -1,7 +1,8 @@
 import { CSSProperties, Ref, useImperativeHandle, useRef } from "react";
+import { Milliseconds } from "../../../Model/ServerMessage";
 import { getDivRect } from "../../../Utils/Rect";
 import { CardRef } from "../Model/CardTracker";
-import { CardId, Milliseconds } from "../Model/GameUpdate";
+import { CardId } from "../Model/GameUpdate";
 import "./Style/CardSlot.css";
 
 export const CARD_SLOT_ID_FROM: CardId = -1;

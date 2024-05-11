@@ -1,11 +1,10 @@
-import { Empty, UserId } from "../../../Model/ServerMessage";
+import { Empty, Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export type CardId = number;
 export type PlayerId = number;
-export type Milliseconds = number;
 
 export interface Duration {
     duration: Milliseconds;
@@ -127,7 +126,7 @@ export interface PlayerDistances {
 
 export interface TimerStatusArgs {
     timer_id: number;
-    duration: Duration;
+    duration: Milliseconds;
 }
 
 export interface RequestStatusArgs {

@@ -1,6 +1,8 @@
-import { CSSProperties, useContext } from "react";
+import { useContext } from "react";
 import Button from "../../Components/Button";
+import TimerWidget from "../../Components/TimerWidget";
 import getLabel from "../../Locale/GetLabel";
+import { isLobbyOwner } from "../../Model/SceneState";
 import { LobbyContext } from "../Lobby/Lobby";
 import { GameTableContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName, getLocalizedCardName } from "./GameStringComponent";
@@ -8,8 +10,6 @@ import { getCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
-import "./Style/TimerAnimation.css";
-import { isLobbyOwner } from "../../Model/SceneState";
 
 export interface StatusProps {
   gameError: GameString | undefined;
@@ -45,9 +45,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
   })
 
   const timerWidget = isResponse(selector) && selector.request.timer &&
-    <div key={selector.request.timer.timer_id} className="request-timer" style={{
-      '--duration': selector.request.timer.duration + 'ms'
-    } as CSSProperties} />;
+    <TimerWidget key={selector.request.timer.timer_id} duration={selector.request.timer.duration} />;
 
   const confirmButton = handleConfirm && <Button color='blue' onClick={handleConfirm}>{getLabel('ui', 'BUTTON_OK')}</Button>;
   const dismissButton = handleDismiss && <Button color='red' onClick={handleDismiss}>{getLocalizedCardName('GAME_CONFIRM')}</Button>;

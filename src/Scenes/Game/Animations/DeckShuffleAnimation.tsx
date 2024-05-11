@@ -1,12 +1,13 @@
 import { CSSProperties, useContext } from "react";
-import { CardId, Milliseconds } from "../Model/GameUpdate";
+import { Milliseconds } from "../../../Model/ServerMessage";
 import { isMobileDevice } from "../../../Utils/MobileCheck";
 import { getRectCenter } from "../../../Utils/Rect";
 import CardView from "../CardView";
 import { GameTableContext } from "../GameScene";
-import { getCard, newPocketId } from "../Model/GameTable";
-import "./Style/DeckShuffleAnimation.css";
 import { CardTracker } from "../Model/CardTracker";
+import { getCard, newPocketId } from "../Model/GameTable";
+import { CardId } from "../Model/GameUpdate";
+import "./Style/DeckShuffleAnimation.css";
 
 export interface DeckShuffleProps {
     tracker: CardTracker;

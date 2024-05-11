@@ -9,6 +9,10 @@
     justify-items: center;
 }
 
+.lobby-user .timer-widget {
+    --timer-size: 1.5em;
+}
+
 .flex-row .lobby-username {
     margin-left: 0.4em;
 }

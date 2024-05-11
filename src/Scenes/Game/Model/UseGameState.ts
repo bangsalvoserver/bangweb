@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { UserId } from "../../../Model/ServerMessage";
+import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { GameChannel } from "../../../Model/UseBangConnection";
 import { createUnionDispatch } from "../../../Utils/UnionUtils";
 import { newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
-import { GameString, GameUpdate, Milliseconds } from "./GameUpdate";
+import { GameString, GameUpdate } from "./GameUpdate";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export default function useGameState(gameChannel: GameChannel, myUserId: UserId) {

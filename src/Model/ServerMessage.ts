@@ -5,6 +5,7 @@ export type Empty = Record<string, never>;
 
 export type LobbyId = number;
 export type UserId = number;
+export type Milliseconds = number;
 
 export interface ClientAccepted {
     session_id: number;
@@ -53,6 +54,7 @@ export interface LobbyAddUser {
     user_id: UserId;
     user: UserInfo;
     is_read: boolean;
+    lifetime: Milliseconds;
 }
 
 export interface ChatMessage {
