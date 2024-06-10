@@ -1,10 +1,14 @@
 import { Dispatch, useMemo, useRef, useState } from "react";
 import useChannel from "./UseChannel";
 
+export type ConnectionState =
+    { state: 'disconnected', reason: string | null } |
+    { state: 'connected' }
+
 export interface WebSocketConnection<ServerMessage, ClientMessage> {
     subscribe: (handler: Dispatch<ServerMessage>) => void;
     unsubscribe: () => void;
-    isConnected: boolean;
+    connectionState: ConnectionState;
     connect: () => void;
     disconnect: () => void;
     sendMessage: (message: ClientMessage) => void;
@@ -13,12 +17,12 @@ export interface WebSocketConnection<ServerMessage, ClientMessage> {
 export default function useWebSocket<ServerMessage, ClientMessage>(url: string): WebSocketConnection<ServerMessage, ClientMessage> {
     const channel = useChannel<ServerMessage>();
     const socket = useRef<WebSocket>();
-    const [isConnected, setIsConnected] = useState(false);
+    const [connectionState, setConnectionState] = useState<ConnectionState>({ state: 'disconnected', reason: null });
 
     return useMemo(() => ({
         subscribe: channel.subscribe,
         unsubscribe: channel.unsubscribe,
-        isConnected,
+        connectionState,
 
         connect: () => {
             if (socket.current) return;
@@ -30,16 +34,17 @@ export default function useWebSocket<ServerMessage, ClientMessage>(url: string):
             };
             socket.current.onopen = () => {
                 console.log('WebSocket connection established');
-                setIsConnected(true);
+                setConnectionState({ state: 'connected' });
             };
-            socket.current.onclose = () => {
-                console.log('WebSocket connection closed');
-                setIsConnected(false);
+            socket.current.onclose = (e) => {
+                const reason = e.reason.trim();
+                console.log(`WebSocket connection closed (reason = ${reason})`);
+                setConnectionState({ state: 'disconnected', reason: reason.length === 0 ? null : reason });
                 socket.current = undefined;
             };
             socket.current.onerror = () => {
                 console.log('WebSocket connection error');
-                setIsConnected(false);
+                setConnectionState({ state: 'disconnected', reason: 'CONNECTION_FAILURE' });
                 socket.current = undefined;
             };
         },
@@ -54,7 +59,7 @@ export default function useWebSocket<ServerMessage, ClientMessage>(url: string):
             }
         }
 
-    } as const), [url, channel, isConnected]);
+    } as const), [url, channel, connectionState]);
 }
 
 

@@ -111,27 +111,27 @@ export default function useBangConnection() {
         }
     });
 
-    const disconnected = useEvent(() => {
+    const disconnected = useEvent((reason: string | null) => {
         if (scene.type === 'loading') {
             if (settings.sessionId) {
                 connection.connect();
             } else {
                 sceneDispatch({ reset: {} });
-                sceneDispatch({ setLobbyError: "ERROR_CANNOT_CONNECT_TO_SERVER" });
+                sceneDispatch({ setLobbyError: reason ?? "ERROR_CANNOT_CONNECT_TO_SERVER" });
             }
         } else if (scene.type !== 'connect') {
             sceneDispatch({ reset: {} });
             if (settings.sessionId) {
-                sceneDispatch({ setLobbyError: "ERROR_DISCONNECTED_FROM_SERVER" });
+                sceneDispatch({ setLobbyError: reason ?? "ERROR_DISCONNECTED_FROM_SERVER" });
             }
         }
     });
 
     useEffect(() => {
-        if (connection.isConnected) {
+        if (connection.connectionState.state === 'connected') {
             connected();
         } else {
-            disconnected();
+            disconnected(connection.connectionState.reason);
         }
     }, [connection, connected, disconnected]);
 
@@ -186,7 +186,7 @@ export default function useBangConnection() {
     }, [connection, settings, gameChannel]);
 
     const handleConnect = useEvent(() => {
-        if (!connection.isConnected) {
+        if (connection.connectionState.state !== 'connected') {
             connection.connect();
             sceneDispatch({ gotoLoading: {} });
         }
