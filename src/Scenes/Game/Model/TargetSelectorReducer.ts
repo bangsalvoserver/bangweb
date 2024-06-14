@@ -225,7 +225,7 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
                     return 0;
                 }
             });
-            if (effect.target_value !== 0 && countTargetableCards < effect.target_value) {
+            if (effect.target_value !== 0 && countTargetableCards > effect.target_value) {
                 countTargetableCards = effect.target_value;   
             }
             return reserveTargets(effect.target, countTargetableCards);
