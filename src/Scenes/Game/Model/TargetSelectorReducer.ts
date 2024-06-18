@@ -6,7 +6,7 @@ import { CardTarget, TagType } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, isStatusReady, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -295,16 +295,20 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
     const selection = selector.selection;
 
     if (isEquipCard(card)) {
-        return {
+        const newSelector: TargetSelector = {
             ...selector,
             selection: {
                 ...selection,
                 playing_card: card,
-                mode: card.cardData.equip_target.length === 0
-                    ? 'finish' : 'equip'
+                mode: 'equip'
             },
             prompt: { type: 'none' }
         };
+        if (card.cardData.equip_target.length === 0) {
+            return handleAddEquipTarget({ ...table, selector: newSelector }, getPlayer(table, table.self_player!));
+        } else {
+            return newSelector;
+        }
     } else if (getCardModifierType(card, isResponse(selector)) === null) {
         return handleAutoTargets({ ...table, selector: {
             ...selector,
@@ -328,11 +332,18 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
     }
 }
 
-function selectTaggedCard(table: GameTable, tag: TagType): TargetSelector {
-    if (!isResponse(table.selector)) {
-        throw new Error('TargetSelector: not in response mode');
+function getBasePlayableCards(selector: TargetSelector) {
+    if (isResponse(selector)) {
+        return selector.request.respond_cards;
+    } else if (isStatusReady(selector)) {
+        return selector.request.play_cards;
+    } else {
+        throw new Error('TargetSelector: cannot');
     }
-    const origin_card = table.selector.request.respond_cards
+}
+
+function selectTaggedCard(table: GameTable, tag: TagType): TargetSelector {
+    const origin_card = getBasePlayableCards(table.selector)
         .map(card => getCard(table, card.card))
         .find(card => cardHasTag(card, tag));
     if (!origin_card || !isCardKnown(origin_card)) {
@@ -342,17 +353,40 @@ function selectTaggedCard(table: GameTable, tag: TagType): TargetSelector {
 }
 
 function handleSelectPickCard(table: GameTable, card: Card): TargetSelector {
-    const selector = selectTaggedCard(table, 'pick');
-    return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, appendCardTarget(selector, card.id))});
+    let selector = selectTaggedCard(table, 'pick');
+    selector = editSelectorTargets(selector, appendCardTarget(selector, card.id));
+    return handleAutoTargets({ ...table, selector });
+}
+
+function handleAddEquipTarget(table: GameTable, player: Player): TargetSelector {
+    if (table.selector.selection.mode !== 'equip') {
+        throw new Error('TargetSelector: not in equipping mode');
+    }
+    const equip_card = table.selector.selection.playing_card;
+    if (equip_card == null) {
+        throw new Error('TargetSelector: no equip card selected');
+    }
+    let selector = table.selector;
+    selector = {
+        ...selector,
+        selection: {
+            ...selector.selection,
+            playing_card: null,
+            mode: selector.selection.modifiers.length === 0 ? 'none' : 'start'
+        }
+    };
+    selector = selectTaggedCard({ ...table, selector }, 'equip');
+    selector = editSelectorTargets(selector, appendCardTarget(selector, equip_card.id));
+    selector = editSelectorTargets(selector, appendPlayerTarget(selector, player.id));
+    return handleAutoTargets({ ...table, selector });
 }
 
 function handleDismiss(table: GameTable): TargetSelector {
-    return selectTaggedCard({ ...table,
-        selector: {
-            ...table.selector,
-            selection: newPlayCardSelection('none')
-        }
-    }, 'resolve');
+    const selector: TargetSelector = {
+        ...table.selector,
+        selection: newPlayCardSelection('none')
+    };
+    return selectTaggedCard({ ...table, selector }, 'resolve');
 }
 
 function confirmTarget(targets: CardTarget[]): CardTarget[] {
@@ -440,17 +474,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     addEquipTarget (player) {
-        if (this.selector.selection.mode !== 'equip') {
-            throw new Error('TargetSelector: not in equipping mode');
-        }
-        return {
-            ...this.selector,
-            selection: {
-                ...this.selector.selection,
-                targets: [{ player: player.id }],
-                mode: 'finish'
-            },
-        };
+        return handleAddEquipTarget(this, player);
     }
     
 });
