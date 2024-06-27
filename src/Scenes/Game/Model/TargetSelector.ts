@@ -366,7 +366,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
         }
         return true;
     case 'card_per_player': {
-        if (getCardColor(card) === 'black' || card.cardData.deck === 'character') {
+        if (!checkCardFilter(table, effect.card_filter, card)) {
             return false;
         }
         if (!player || player === selector.selection.context.skipped_player

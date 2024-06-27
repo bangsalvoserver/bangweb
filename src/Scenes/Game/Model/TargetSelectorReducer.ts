@@ -233,13 +233,12 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
         break;
     case 'card_per_player':
         if (index >= targets.length) {
-            const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) !== 'black';
-            const playerHasCards = (player: Player) => player.pockets.player_hand.length !== 0 || player.pockets.player_table.some(cardIsNotBlack);
+            const cardIsValid = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
             const numTargetable = countIf(table.alive_players, target => {
                 const targetPlayer = getPlayer(table, target);
                 return target !== selector.selection.context.skipped_player
                     && checkPlayerFilter(table, effect.player_filter, targetPlayer)
-                    && playerHasCards(targetPlayer);
+                    && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
             });
             return reserveTargets(effect.target, numTargetable);
         }
