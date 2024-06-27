@@ -3,7 +3,7 @@ import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, ModifierType } from "./CardEnums";
-import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getEquipTarget, isEquipCard } from "./Filters";
+import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -323,7 +323,6 @@ export function countSelectableCubes(table: GameTable): number {
 
 export function isValidCubeTarget(table: GameTable, card: Card): boolean {
     const selector = table.selector;
-    const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
@@ -331,7 +330,7 @@ export function isValidCubeTarget(table: GameTable, card: Card): boolean {
 
     const nextTargetType = nextTarget?.target ?? 'none';
     return nextTargetType.startsWith('select_cubes')
-        && player === table.self_player
+        && getCardOwner(card) === table.self_player
         && card.num_cubes > countSelectedCubes(selector, card);
 }
 
@@ -346,7 +345,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
         return false;
     }
 
-    const player = card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
+    const player = getCardOwner(card);
 
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
@@ -375,15 +374,9 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
         }
         const lastTarget = selector.selection.targets.at(index);
         if (lastTarget && 'card_per_player' in lastTarget) {
-            if (lastTarget.card_per_player.some(targetCard => {
-                if (targetCard <= 0) return false;
-                const selectedCard = getCard(table, targetCard);
-                if (selectedCard.pocket && 'player' in selectedCard.pocket) {
-                    return selectedCard.pocket.player === player;
-                } else {
-                    return false;
-                }
-            })) {
+            if (lastTarget.card_per_player.some(targetCard =>
+                targetCard > 0 && getCardOwner(getCard(table, targetCard)) === player
+            )) {
                 return false;
             }
         }

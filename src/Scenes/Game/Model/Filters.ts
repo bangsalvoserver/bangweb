@@ -26,6 +26,10 @@ export function getCardSign(card: Card): CardSign {
     return isCardKnown(card) ? card.cardData.sign : {rank: 'none', suit: 'none'};
 }
 
+export function getCardOwner(card: Card): PlayerId | undefined {
+    return card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
+}
+
 export function isEquipCard(card: Card): boolean {
     switch (card.pocket?.name) {
     case 'player_hand':
