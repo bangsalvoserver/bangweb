@@ -92,7 +92,7 @@ function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMap
     case 'select_cubes_optional':
     case 'select_cubes_repeat':
     case 'select_cubes_players':
-    case 'cards_other_players':
+    case 'card_per_player':
     case 'move_cube_slot':
     case 'max_cards':
         return appendMultitarget(effect.target, card);
@@ -231,13 +231,16 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
             return reserveTargets(effect.target, countTargetableCards);
         }
         break;
-    case 'cards_other_players':
+    case 'card_per_player':
         if (index >= targets.length) {
             const cardIsNotBlack = (card: CardId) => getCardColor(getCard(table, card)) !== 'black';
             const playerHasCards = (player: Player) => player.pockets.player_hand.length !== 0 || player.pockets.player_table.some(cardIsNotBlack);
-            const numTargetable = countIf(table.alive_players, target =>
-                target !== table.self_player && target !== selector.selection.context.skipped_player
-                && playerHasCards(getPlayer(table, target)));
+            const numTargetable = countIf(table.alive_players, target => {
+                const targetPlayer = getPlayer(table, target);
+                return target !== selector.selection.context.skipped_player
+                    && checkPlayerFilter(table, effect.player_filter, targetPlayer)
+                    && playerHasCards(targetPlayer);
+            });
             return reserveTargets(effect.target, numTargetable);
         }
         break;

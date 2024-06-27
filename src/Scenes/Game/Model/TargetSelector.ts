@@ -226,8 +226,8 @@ export function isCardSelected(selector: TargetSelector, card: CardId): boolean 
             return target.cards.includes(card);
         case 'max_cards' in target:
             return target.max_cards.includes(card);
-        case 'cards_other_players' in target:
-            return target.cards_other_players.includes(card);
+        case 'card_per_player' in target:
+            return target.card_per_player.includes(card);
         case 'move_cube_slot' in target:
             return target.move_cube_slot.includes(card);
         default:
@@ -365,16 +365,17 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
             return false;
         }
         return true;
-    case 'cards_other_players': {
+    case 'card_per_player': {
         if (getCardColor(card) === 'black' || card.cardData.deck === 'character') {
             return false;
         }
-        if (!player || player === table.self_player || player === selector.selection.context.skipped_player) {
+        if (!player || player === selector.selection.context.skipped_player
+            || !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
             return false;
         }
         const lastTarget = selector.selection.targets.at(index);
-        if (lastTarget && 'cards_other_players' in lastTarget) {
-            if (lastTarget.cards_other_players.some(targetCard => {
+        if (lastTarget && 'card_per_player' in lastTarget) {
+            if (lastTarget.card_per_player.some(targetCard => {
                 if (targetCard <= 0) return false;
                 const selectedCard = getCard(table, targetCard);
                 if (selectedCard.pocket && 'player' in selectedCard.pocket) {

@@ -13,7 +13,7 @@ export type CardTarget =
     { players: Empty } |
     { cards: CardId[] } |
     { max_cards: CardId[] } |
-    { cards_other_players: CardId[] } |
+    { card_per_player: CardId[] } |
     { move_cube_slot: CardId[] } |
     { select_cubes: CardId[] } |
     { select_cubes_optional: CardId[] } |
