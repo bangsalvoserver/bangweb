@@ -3,7 +3,7 @@ import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, ModifierType } from "./CardEnums";
-import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard } from "./Filters";
+import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -437,15 +437,15 @@ export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
         return checkPlayerFilter(table, effect.player_filter, player);
     case 'adjacent_players': {
         const checkTargets = (target1: Player, target2: Player) => {
-            return checkPlayerFilter(table, ['notself'], target2)
-                && calcPlayerDistance(table, target1.id, target2.id) === 1;
+            return target1.id !== target2.id && target2.id !== table.self_player
+                && calcPlayerDistance(table, target1.id, target2.id) <= effect.target_value;
         };
         const firstPlayer = (targets[index] as {adjacent_players: PlayerId[]}).adjacent_players[0];
         if (firstPlayer === 0) {
-            return checkPlayerFilter(table, ['notself', 'reachable'], player)
+            return checkPlayerFilter(table, effect.player_filter, player)
                 && table.alive_players.some(target2 => checkTargets(player, getPlayer(table, target2)));
         } else {
-            return checkTargets(getPlayer(table, firstPlayer), player);
+            return isPlayerInGame(player) && checkTargets(getPlayer(table, firstPlayer), player);
         }
     }
     default:
