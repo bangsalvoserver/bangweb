@@ -6,7 +6,7 @@ import { CardTarget, TagType } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, getSkippedPlayer, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, getSkippedPlayer, isCardCurrent, isCardModifier, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -275,13 +275,13 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             },
             prompt: { type: 'none' }
         };
-    } else if (getCardModifierType(card, isResponse(selector)) === null) {
+    } else if (isCardModifier(card, isResponse(selector))) {
         return handleAutoTargets({ ...table, selector: {
             ...selector,
             selection: {
                 ...selection,
-                playing_card: card,
-                mode: 'target'
+                modifiers: selection.modifiers.concat({ modifier: card, targets: [] }),
+                mode: 'modifier'
             },
             prompt: { type: 'none' }
         }});
@@ -290,8 +290,8 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             ...selector,
             selection: {
                 ...selection,
-                modifiers: selection.modifiers.concat({ modifier: card, targets: [] }),
-                mode: 'modifier'
+                playing_card: card,
+                mode: 'target'
             },
             prompt: { type: 'none' }
         }});

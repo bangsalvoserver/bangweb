@@ -2,10 +2,10 @@ import { Empty } from "../../../Model/ServerMessage";
 import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
-import { CardTarget, ModifierType } from "./CardEnums";
+import { CardTarget } from "./CardEnums";
 import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
-import { CardId, PlayableCardInfo, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs, EffectContext } from "./GameUpdate";
+import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | Empty;
 
@@ -444,8 +444,8 @@ export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect
     return isResponse ? card.cardData.responses : card.cardData.effects;
 }
 
-export function getCardModifierType(card: KnownCard, isResponse: boolean): ModifierType | null {
-    return isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type;
+export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
+    return (isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type) !== null;
 }
 
 export function *zipCardTargets(targets: CardTarget[], effects: CardEffect[]): Generator<[CardTarget, CardEffect]> {
