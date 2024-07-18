@@ -3,6 +3,7 @@ import { GameTableContext } from "../GameScene";
 import { PocketRef } from "../Model/CardTracker";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
+import { getModifierContext } from "../Model/TargetSelector";
 
 export interface TrainProps {
     pocketRef?: Ref<PocketRef>;
@@ -31,12 +32,15 @@ export default function TrainView({ pocketRef }: TrainProps) {
                 '--duration': animation.duration + 'ms'
             } as CSSProperties;
         }
-    } else if (selector.selection.context.train_advance) {
-        classes.push('train-advance-transition');
-        trainPositionStyle = {
-            ...trainPositionStyle,
-            '--train-position-diff': selector.selection.context.train_advance
-        } as CSSProperties;
+    } else {
+        const trainAdvance = getModifierContext(selector, 'train_advance') ?? 0;
+        if (trainAdvance > 0) {
+            classes.push('train-advance-transition');
+            trainPositionStyle = {
+                ...trainPositionStyle,
+                '--train-position-diff': trainAdvance
+            } as CSSProperties;
+        }
     }
 
     return (

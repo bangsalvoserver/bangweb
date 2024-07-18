@@ -5,7 +5,7 @@ import { CardEffect } from "./CardData";
 import { CardTarget, ModifierType } from "./CardEnums";
 import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
-import { CardId, CardModifiersPair, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { CardId, PlayableCardInfo, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs, EffectContext } from "./GameUpdate";
 
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | Empty;
 
@@ -13,15 +13,6 @@ export type GamePrompt =
     { type: 'none' } |
     { type: 'yesno', message: GameString, response: boolean } |
     { type: 'playpick', card: KnownCard };
-
-export interface EffectContext {
-    repeat_card?: CardId;
-    card_choice?: CardId;
-    traincost?: CardId;
-    train_advance?: number;
-    skipped_player?: PlayerId;
-    ignore_distances?: boolean;
-}
 
 export type PlayCardSelectionMode =
     | 'none' // No card selected
@@ -40,7 +31,6 @@ export interface PlayCardSelection {
         targets: CardTarget[];
     }[];
 
-    context: EffectContext;
     mode: PlayCardSelectionMode;
 }
 
@@ -49,7 +39,6 @@ export function newPlayCardSelection(mode: PlayCardSelectionMode): PlayCardSelec
         playing_card: null,
         targets: [],
         modifiers: [],
-        context: {},
         mode
     };
 }
@@ -129,11 +118,11 @@ export function selectorCanDismiss(table: GameTable) {
         };
         switch (selector.selection.mode) {
         case 'target':
-            return selector.selection.context.card_choice === undefined && allTargetsNone(selector.selection.targets);
+            return getModifierContext(selector, 'card_choice') === null && allTargetsNone(selector.selection.targets);
         case 'modifier':
             return selector.selection.modifiers.length === 1 && allTargetsNone(selector.selection.modifiers[0].targets);
         case 'start':
-            return selector.selection.context.card_choice !== undefined;
+            return getModifierContext(selector, 'card_choice') !== null;
         }
     }
     return false;
@@ -162,8 +151,10 @@ export function getAutoSelectCard(table: GameTable): CardId | undefined {
     if (selector.selection.mode === 'none') {
         return findAutoSelectCard(table);
     } else if (selector.selection.mode === 'start') {
-        const context = selector.selection.context;
-        return context.repeat_card || context.traincost;
+        const card = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
+        if (card !== null && getPlayableCards(table.selector).includes(card)) {
+            return card;
+        }
     }
 }
 
@@ -172,17 +163,26 @@ export function selectorCanUndo(table: GameTable): boolean {
         && table.selector.selection.mode !== 'finish';
 }
 
+function indexOfMatchingModifiers(selection: PlayCardSelection, info: PlayableCardInfo): number | undefined {
+    let i = 0;
+    for (const { modifier } of selection.modifiers) {
+        if (info.modifiers.at(i) !== modifier.id) {
+            return undefined;
+        }
+        ++i;
+    }
+    return i;
+}
+
 export function getPlayableCards(selector: TargetSelector): CardId[] {
     if (!selector.selection.playing_card) {
-        const nextPlayableCard = (pair: CardModifiersPair) => {
-            let i = 0;
-            for (const { modifier } of selector.selection.modifiers) {
-                if (pair.modifiers.at(i) !== modifier.id) {
-                    return [];
-                }
-                ++i;
+        const nextPlayableCard = (info: PlayableCardInfo) => {
+            const index = indexOfMatchingModifiers(selector.selection, info);
+            if (index !== undefined) {
+                return [info.modifiers.at(index) ?? info.card];
+            } else {
+                return [];
             }
-            return [pair.modifiers.at(i) ?? pair.card];
         };
         
         if (isResponse(selector)) {
@@ -193,6 +193,26 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
     }
 
     return [];
+}
+
+export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): EffectContext[K] | null {
+    if (selector.selection.modifiers.length !== 0) {
+        const findContext = (cards: PlayableCardInfo[]) => {
+            for (const info of cards) {
+                const index = indexOfMatchingModifiers(selector.selection, info);
+                if (index !== undefined && info.context !== null) {
+                    return info.context[prop];
+                }
+            }
+            return null;
+        }
+        if (isResponse(selector)) {
+            return findContext(selector.request.respond_cards);
+        } else if (isStatusReady(selector)) {
+            return findContext(selector.request.play_cards);
+        }
+    }
+    return null;
 }
 
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
@@ -331,6 +351,18 @@ export function countSelectableCubes(table: GameTable): number {
         + sum(selfPlayer.pockets.player_table, getCountCubes);
 }
 
+export function getSkippedPlayer(selector: TargetSelector): PlayerId | undefined {
+    const response = isResponse(selector);
+    for (const {modifier, targets} of selector.selection.modifiers) {
+        const effects = getCardEffects(modifier, response);
+        for (const [target, effect] of zipCardTargets(targets, effects)) {
+            if (effect.type === 'skip_player') {
+                return (target as { 'player': PlayerId }).player;
+            }
+        }
+    }
+}
+
 export function isValidCubeTarget(table: GameTable, card: Card): boolean {
     const selector = table.selector;
 
@@ -378,7 +410,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
         if (!checkCardFilter(table, effect.card_filter, card)) {
             return false;
         }
-        if (!player || player === selector.selection.context.skipped_player
+        if (!player || player === getSkippedPlayer(selector)
             || !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
             return false;
         }

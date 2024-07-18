@@ -2,7 +2,7 @@ import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
-import { isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
+import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     if (isCardKnown(card) && tagType in card.cardData.tags) {
@@ -108,7 +108,6 @@ export function calcPlayerDistance(table: GameTable, from: PlayerId, to: PlayerI
 export function checkPlayerFilter(table: GameTable, filter: PlayerFilter[], target: Player): boolean {
     const selector = table.selector;
     const origin = getPlayer(table, table.self_player!);
-    const context = selector.selection.context;
 
     if (isPlayerSelected(selector, target)) return false;
 
@@ -138,7 +137,7 @@ export function checkPlayerFilter(table: GameTable, filter: PlayerFilter[], targ
         }
     }
 
-    if (!context.ignore_distances && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
+    if (!getModifierContext(selector, 'ignore_distances') && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
         const distances = selector.request.distances;
         let range = distances.range_mod;
         if (filter.includes('reachable')) {

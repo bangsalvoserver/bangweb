@@ -6,7 +6,7 @@ import { CardTarget, TagType } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getNextTargetIndex, getPlayableCards, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCardModifierType, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, getSkippedPlayer, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -118,39 +118,6 @@ function appendPlayerTarget(selector: TargetSelector, player: PlayerId): TargetL
     }
 }
 
-function addModifierContext(selector: TargetSelector): TargetSelector {
-    const [modifier, targets] = getCurrentCardAndTargets(selector);
-    const editContext = (source: {}): TargetSelector => {
-        return {
-            ...selector,
-            selection: {
-                ...selector.selection,
-                context: Object.assign(selector.selection.context, source)
-            }
-        };
-    };
-    switch (getCardModifierType(modifier, isResponse(selector))) {
-    case 'belltower':
-        return editContext({ ignore_distances: true });
-    case 'card_choice':
-        return editContext({ card_choice: modifier.id });
-    case 'leevankliff':
-    case 'spike_spiezel':
-    case 'moneybag':
-        return editContext({ repeat_card: getPlayableCards(selector)[0] });
-    case 'traincost':
-        if (modifier.pocket?.name === 'stations') {
-            return editContext({ traincost: getPlayableCards(selector)[0] });
-        }
-        break;
-    case 'locomotive':
-        return editContext({ train_advance: 1 });
-    case 'sgt_blaze':
-        return editContext({ skipped_player: (targets[0] as { player: PlayerId }).player});
-    }
-    return selector;
-}
-
 function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
@@ -164,7 +131,7 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
     case 'self_cubes':
         return appendTarget(effect.target, {});
     case 'extra_card':
-        if (selector.selection.context.repeat_card) {
+        if (getModifierContext(selector, 'repeat_card')) {
             return appendTarget(effect.target, null);
         }
         break;
@@ -236,7 +203,7 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
             const cardIsValid = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
             const numTargetable = countIf(table.alive_players, target => {
                 const targetPlayer = getPlayer(table, target);
-                return target !== selector.selection.context.skipped_player
+                return target !== getSkippedPlayer(selector)
                     && checkPlayerFilter(table, effect.player_filter, targetPlayer)
                     && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
             });
@@ -270,6 +237,7 @@ function setSelectorMode(selector: TargetSelector, mode: PlayCardSelectionMode):
         }
     };
 }
+
 function handleAutoTargets(table: GameTable): TargetSelector {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
@@ -278,7 +246,7 @@ function handleAutoTargets(table: GameTable): TargetSelector {
 
     if (index === effects.length) {
         if (selector.selection.mode === 'modifier') {
-            return handleAutoSelect({ ...table, selector: setSelectorMode(addModifierContext(selector), 'start')});
+            return handleAutoSelect({ ...table, selector: setSelectorMode(selector, 'start')});
         } else {
             return setSelectorMode(selector, 'finish');
         }
