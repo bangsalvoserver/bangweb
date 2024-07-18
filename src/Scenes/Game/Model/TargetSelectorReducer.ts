@@ -335,7 +335,7 @@ function selectTaggedCard(table: GameTable, tag: TagType): TargetSelector {
         throw new Error('TargetSelector: not in response mode');
     }
     const origin_card = table.selector.request.respond_cards
-        .map(card => getCard(table, card.card))
+        .map(card => getCard(table, card[card.length-1]))
         .find(card => cardHasTag(card, tag));
     if (!origin_card || !isCardKnown(origin_card)) {
         throw new Error('TargetSelector: cannot find card tagged ' + tag);

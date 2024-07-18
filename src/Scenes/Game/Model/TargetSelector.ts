@@ -5,7 +5,7 @@ import { CardEffect } from "./CardData";
 import { CardTarget, ModifierType } from "./CardEnums";
 import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
-import { CardId, CardNode, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { CardId, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | Empty;
 
@@ -142,13 +142,13 @@ export function selectorCanDismiss(table: GameTable) {
 export function selectorCanResolve(table: GameTable): boolean {
     const selector = table.selector;
     return isResponse(selector)
-        && selector.request.respond_cards.some(card => cardHasTag(getCard(table, card.card), 'resolve'));
+        && selector.request.respond_cards.some(card => cardHasTag(getCard(table, card[card.length-1]), 'resolve'));
 }
 
 function findAutoSelectCard(table: GameTable): CardId | undefined {
     const selector = table.selector;
     if (isResponse(selector)) {
-        return selector.request.respond_cards.find(card => cardHasTag(getCard(table, card.card), 'auto_select'))?.card;
+        return selector.request.respond_cards.find(card => cardHasTag(getCard(table, card[card.length-1]), 'auto_select'))?.at(-1);
     }
 }
 
@@ -168,21 +168,26 @@ export function selectorCanUndo(table: GameTable): boolean {
 }
 
 export function getPlayableCards(selector: TargetSelector): CardId[] {
-    if (selector.selection.playing_card !== null) {
-        return [];
+    if (!selector.selection.playing_card) {
+        const nextPlayableCard = (list: CardId[]) => {
+            let i = 0;
+            for (const { modifier } of selector.selection.modifiers) {
+                if (list.at(i) !== modifier.id) {
+                    return [];
+                }
+                ++i;
+            }
+            return [list[i]];
+        };
+        
+        if (isResponse(selector)) {
+            return selector.request.respond_cards.flatMap(nextPlayableCard);
+        } else if (isStatusReady(selector)) {
+            return selector.request.play_cards.flatMap(nextPlayableCard);
+        }
     }
-    
-    let tree: CardNode[] = [];
-    if (isResponse(selector)) {
-        tree = selector.request.respond_cards;
-    } else if (isStatusReady(selector)) {
-        tree = selector.request.play_cards;
-    }
-    tree = selector.selection.modifiers.reduce((tree: CardNode[], { modifier }) => {
-        return tree.find(leaf => leaf.card === modifier.id)!.branches;
-    }, tree);
 
-    return tree.map(node => node.card);
+    return [];
 }
 
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {

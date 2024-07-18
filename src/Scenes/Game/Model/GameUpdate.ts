@@ -113,11 +113,6 @@ export interface PlayerFlagsUpdate {
     flags: PlayerFlag[];
 }
 
-export interface CardNode {
-    card: CardId;
-    branches: CardNode[];
-}
-
 export interface PlayerDistances {
     distances: { player: PlayerId, distance: number }[];
     range_mod: number;
@@ -134,7 +129,7 @@ export interface RequestStatusArgs {
     origin: PlayerId | null;
     target: PlayerId | null;
     status_text: GameString;
-    respond_cards: CardNode[];
+    respond_cards: CardId[][];
     pick_cards: CardId[];
     highlight_cards: CardId[];
     distances: PlayerDistances;
@@ -143,7 +138,7 @@ export interface RequestStatusArgs {
 }
 
 export interface StatusReadyArgs {
-    play_cards: CardNode[];
+    play_cards: CardId[][];
     distances: PlayerDistances;
 }
 
