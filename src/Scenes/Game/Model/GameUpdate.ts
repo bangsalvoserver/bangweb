@@ -124,12 +124,17 @@ export interface TimerStatusArgs {
     duration: Milliseconds;
 }
 
+export interface CardModifiersPair {
+    card: CardId;
+    modifiers: CardId[];
+}
+
 export interface RequestStatusArgs {
     origin_card: CardId | null;
     origin: PlayerId | null;
     target: PlayerId | null;
     status_text: GameString;
-    respond_cards: CardId[][];
+    respond_cards: CardModifiersPair[];
     pick_cards: CardId[];
     highlight_cards: CardId[];
     distances: PlayerDistances;
@@ -138,7 +143,7 @@ export interface RequestStatusArgs {
 }
 
 export interface StatusReadyArgs {
-    play_cards: CardId[][];
+    play_cards: CardModifiersPair[];
     distances: PlayerDistances;
 }
 

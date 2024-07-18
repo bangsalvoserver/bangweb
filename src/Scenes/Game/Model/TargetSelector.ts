@@ -5,7 +5,7 @@ import { CardEffect } from "./CardData";
 import { CardTarget, ModifierType } from "./CardEnums";
 import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
-import { CardId, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { CardId, CardModifiersPair, GameString, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | Empty;
 
@@ -142,13 +142,18 @@ export function selectorCanDismiss(table: GameTable) {
 export function selectorCanResolve(table: GameTable): boolean {
     const selector = table.selector;
     return isResponse(selector)
-        && selector.request.respond_cards.some(card => cardHasTag(getCard(table, card[card.length-1]), 'resolve'));
+        && selector.request.respond_cards.some(pair => cardHasTag(getCard(table, pair.card), 'resolve'));
 }
 
 function findAutoSelectCard(table: GameTable): CardId | undefined {
     const selector = table.selector;
     if (isResponse(selector)) {
-        return selector.request.respond_cards.find(card => cardHasTag(getCard(table, card[card.length-1]), 'auto_select'))?.at(-1);
+        for (const pair of selector.request.respond_cards) {
+            const card = pair.modifiers.at(0) ?? pair.card;
+            if (cardHasTag(getCard(table, card), 'auto_select')) {
+                return card;
+            }
+        }
     }
 }
 
@@ -169,15 +174,15 @@ export function selectorCanUndo(table: GameTable): boolean {
 
 export function getPlayableCards(selector: TargetSelector): CardId[] {
     if (!selector.selection.playing_card) {
-        const nextPlayableCard = (list: CardId[]) => {
+        const nextPlayableCard = (pair: CardModifiersPair) => {
             let i = 0;
             for (const { modifier } of selector.selection.modifiers) {
-                if (list.at(i) !== modifier.id) {
+                if (pair.modifiers.at(i) !== modifier.id) {
                     return [];
                 }
                 ++i;
             }
-            return [list[i]];
+            return [pair.modifiers.at(i) ?? pair.card];
         };
         
         if (isResponse(selector)) {
