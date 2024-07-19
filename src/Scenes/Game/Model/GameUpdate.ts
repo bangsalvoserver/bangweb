@@ -125,11 +125,11 @@ export interface TimerStatusArgs {
 }
 
 export interface EffectContext {
-    playing_card: CardId | null;
-    repeat_card: CardId | null;
-    card_choice: CardId | null;
-    train_advance: number;
-    ignore_distances: boolean;
+    playing_card?: CardId;
+    repeat_card?: CardId;
+    card_choice?: CardId;
+    train_advance?: number;
+    ignore_distances?: boolean;
 }
 
 export interface PlayableCardInfo {

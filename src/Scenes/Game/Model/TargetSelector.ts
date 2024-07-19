@@ -195,13 +195,13 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
     return [];
 }
 
-export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): EffectContext[K] | null {
+export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): NonNullable<EffectContext[K]> | null {
     if (selector.selection.modifiers.length !== 0) {
         const findContext = (cards: PlayableCardInfo[]) => {
             for (const info of cards) {
                 const index = indexOfMatchingModifiers(selector.selection, info);
                 if (index !== undefined && info.context !== null) {
-                    return info.context[prop];
+                    return info.context[prop] ?? null;
                 }
             }
             return null;
