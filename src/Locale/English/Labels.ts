@@ -103,4 +103,15 @@ export const LABELS_ENGLISH: LabelRegistry = {
         ERROR_GAME_CHEATS_NOT_ENABLED: "Cheats are not enabled",
         INVALID_COMMAND_NAME: "Invalid command name",
     },
+
+    server: {
+        ERROR_CANNOT_CONNECT_TO_SERVER: "Cannot connect to the server",
+        ERROR_DISCONNECTED_FROM_SERVER: "Disconnected from the server",
+        INVALID_CLIENT_COMMIT_HASH: "The server has a different version from the client. Wait a few minutes and retry.",
+        SERVER_STOP: "The server has been stopped. Wait a few minutes and retry.",
+        HANDSHAKE_FAIL: "Error during the connection",
+        RECONNECT_WITH_SAME_SESSION_ID: "Your session has been transfered",
+        INACTIVITY: "Disconnected for inactivity",
+        QUIT: "Disconnected by user command",
+    },
 };

@@ -117,12 +117,12 @@ export default function useBangConnection() {
                 connection.connect();
             } else {
                 sceneDispatch({ reset: {} });
-                sceneDispatch({ setLobbyError: reason ?? "ERROR_CANNOT_CONNECT_TO_SERVER" });
+                sceneDispatch({ setError: { type: 'server', message: reason ?? "ERROR_CANNOT_CONNECT_TO_SERVER" }});
             }
         } else if (scene.type !== 'connect') {
             sceneDispatch({ reset: {} });
             if (settings.sessionId) {
-                sceneDispatch({ setLobbyError: reason ?? "ERROR_DISCONNECTED_FROM_SERVER" });
+                sceneDispatch({ setError: { type: 'server', message: reason ?? "ERROR_DISCONNECTED_FROM_SERVER" }});
             }
         }
     });
@@ -148,7 +148,7 @@ export default function useBangConnection() {
                 sceneDispatch({ setClientCount: count });
             },
             lobby_error(message) {
-                sceneDispatch({ setLobbyError: message });
+                sceneDispatch({ setError: { type:'lobby', message } });
             },
             lobby_update(message: LobbyUpdate) {
                 sceneDispatch({ updateLobbies: handleUpdateLobbies(message) });
@@ -201,14 +201,14 @@ export default function useBangConnection() {
         settings.setGameOptions(gameOptions);
     });
 
-    const clearLobbyError = useEvent(() => sceneDispatch({ setLobbyError: null }));
+    const clearError = useEvent(() => sceneDispatch({ setError: null }));
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            if (scene.lobbyError) sceneDispatch({ setLobbyError: null });
+            if (scene.error) sceneDispatch({ setError: null });
         }, 5000);
         return () => clearTimeout(timeout);
-    }, [scene.lobbyError]);
+    }, [scene.error]);
 
-    return { scene, settings, connection, gameChannel, setGameOptions, handleConnect, clearLobbyError } as const;
+    return { scene, settings, connection, gameChannel, setGameOptions, handleConnect, clearError } as const;
 }

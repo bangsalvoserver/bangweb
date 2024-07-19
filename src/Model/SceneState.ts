@@ -22,17 +22,20 @@ export function isLobbyOwner(lobby: LobbyState) {
     return lobby.users.at(0)?.id === lobby.myUserId;
 }
 
+export type ErrorType = 'lobby' | 'server';
+export type ErrorState = { type: ErrorType, message: string };
+
 export type SceneState =
-    { type: 'connect', lobbyError?: string } |
-    { type: 'loading', lobbyError?: string } |
-    { type: 'waiting_area', lobbyError?: string, clientCount: number, lobbies: LobbyValue[] } |
-    { type: 'lobby' | 'game', lobbyError?: string, clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
+    { type: 'connect', error?: ErrorState } |
+    { type: 'loading', error?: ErrorState } |
+    { type: 'waiting_area', error?: ErrorState, clientCount: number, lobbies: LobbyValue[] } |
+    { type: 'lobby' | 'game', error?: ErrorState, clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
 export type UpdateFunction<T> = (value: T) => T;
 
 export type SceneUpdate =
     { reset: Empty } |
-    { setLobbyError: string | null } |
+    { setError: ErrorState | null } |
     { setClientCount: number } |
     { gotoLoading: Empty } |
     { gotoWaitingArea: Empty } |
@@ -54,8 +57,8 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     reset() {
         return { type: 'connect' };
     },
-    setLobbyError(message) {
-        return { ...this, lobbyError: message ?? undefined };
+    setError(error) {
+        return { ...this, error: error ?? undefined };
     },
     setClientCount(count) {
         if ('clientCount' in this) {
