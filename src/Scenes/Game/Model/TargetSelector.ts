@@ -283,17 +283,17 @@ export function isHandSelected(table: GameTable, card: Card): boolean {
     }
 }
 
-export function isPlayerSelected(selector: TargetSelector, player: Player): boolean {
+export function isPlayerSelected(selector: TargetSelector, player: PlayerId): boolean {
     const check = (target: CardTarget) => {
         switch (true) {
         case 'player' in target:
-            return target.player === player.id;
+            return target.player === player;
         case 'conditional_player' in target:
-            return target.conditional_player === player.id;
+            return target.conditional_player === player;
         case 'adjacent_players' in target:
-            return target.adjacent_players.includes(player.id);
+            return target.adjacent_players.includes(player);
         case 'player_per_cube' in target:
-            return target.player_per_cube.includes(player.id);
+            return target.player_per_cube.includes(player);
         default:
             return false;
         }
@@ -351,18 +351,6 @@ export function countSelectableCubes(table: GameTable): number {
         + sum(selfPlayer.pockets.player_table, getCountCubes);
 }
 
-export function getSkippedPlayer(selector: TargetSelector): PlayerId | undefined {
-    const response = isResponse(selector);
-    for (const {modifier, targets} of selector.selection.modifiers) {
-        const effects = getCardEffects(modifier, response);
-        for (const [target, effect] of zipCardTargets(targets, effects)) {
-            if (effect.type === 'skip_player') {
-                return (target as { 'player': PlayerId }).player;
-            }
-        }
-    }
-}
-
 export function isValidCubeTarget(table: GameTable, card: Card): boolean {
     const selector = table.selector;
 
@@ -410,7 +398,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
         if (!checkCardFilter(table, effect.card_filter, card)) {
             return false;
         }
-        if (!player || player === getSkippedPlayer(selector)
+        if (!player || isPlayerSelected(selector, player)
             || !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
             return false;
         }

@@ -6,7 +6,7 @@ import { CardTarget, TagType } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, getSkippedPlayer, isCardCurrent, isCardModifier, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, isCardCurrent, isCardModifier, isPlayerSelected, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -203,7 +203,7 @@ function appendAutoTarget(table: GameTable): TargetListMapper | undefined {
             const cardIsValid = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
             const numTargetable = countIf(table.alive_players, target => {
                 const targetPlayer = getPlayer(table, target);
-                return target !== getSkippedPlayer(selector)
+                return !isPlayerSelected(selector, target)
                     && checkPlayerFilter(table, effect.player_filter, targetPlayer)
                     && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
             });

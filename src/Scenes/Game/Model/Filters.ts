@@ -109,7 +109,7 @@ export function checkPlayerFilter(table: GameTable, filter: PlayerFilter[], targ
     const selector = table.selector;
     const origin = getPlayer(table, table.self_player!);
 
-    if (isPlayerSelected(selector, target)) return false;
+    if (isPlayerSelected(selector, target.id)) return false;
 
     if (filter.includes('dead')) {
         if (!filter.includes('alive') && !target.status.flags.includes('dead')) {

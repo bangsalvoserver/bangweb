@@ -28,7 +28,7 @@ export interface PlayerProps {
 
 function getSelectorPlayerClass(table: GameTable, player: Player) {
     const selector = table.selector;
-    if (isPlayerSelected(selector, player)) {
+    if (isPlayerSelected(selector, player.id)) {
         return 'player-selected';
     }
     switch (selector.selection.mode) {
