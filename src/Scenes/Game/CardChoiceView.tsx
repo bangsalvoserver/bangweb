@@ -1,12 +1,11 @@
-import { CSSProperties, useContext, useMemo } from "react";
+import { CSSProperties, useContext } from "react";
 import { getRectCenter } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardView from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
-import { CardId } from "./Model/GameUpdate";
-import { getModifierContext, getPlayableCards } from "./Model/TargetSelector";
+import { getModifierContext, getPlayableCards, isCardCurrent } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
 
 export interface CardChoiceProps {
@@ -41,31 +40,17 @@ function CardChoiceInner({ cards, anchor, tracker }: CardChoiceInnerProps) {
 
 export default function CardChoiceView({ tracker }: CardChoiceProps) {
     const table = useContext(GameTableContext);
+
     const selector = table.selector;
+    if (selector.selection.mode === 'none') return null;
 
-    const choiceCards = useMemo((): [CardId, CardId[]] | undefined => {
-        if (selector.selection.mode !== 'none') {
-            const anchor = getModifierContext(selector, 'card_choice');
-            if (anchor) {
-                return [anchor, getPlayableCards({
-                    ...selector,
-                    selection: {
-                        ...selector.selection,
-                        playing_card: null
-                    }
-                })];
-            }
-        }
-    }, [selector]);
+    const cardId = getModifierContext(selector, 'card_choice');
+    if (!cardId) return null;
 
-    if (choiceCards) {
-        const [anchor, cards] = choiceCards;
-        return <CardChoiceInner 
-            cards={cards.map(id => getCard(table, id))}
-            anchor={getCard(table, anchor)}
-            tracker={tracker}
-        />
-    } else {
-        return null;
-    }
+    const anchor = getCard(table, cardId);
+    if (!isCardCurrent(selector, anchor)) return null;
+
+    const cards = getPlayableCards({ ...selector, selection: { ...selector.selection, playing_card: null }});
+
+    return <CardChoiceInner cards={cards.map(id => getCard(table, id))} anchor={anchor} tracker={tracker} />
 }
