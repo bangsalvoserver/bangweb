@@ -59,8 +59,8 @@ function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | unde
         }
         break;
     }
-    case 'none':
-    case 'start': {
+    case 'start':
+    case 'middle': {
         if (selectorCanPlayCard(selector, card)) {
             return { selectPlayingCard: card };
         }

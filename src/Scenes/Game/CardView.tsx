@@ -45,8 +45,8 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
         switch (selector.selection.mode) {
-        case 'none':
         case 'start':
+        case 'middle':
         case 'preselect':
             return 'card-playable';
         default:

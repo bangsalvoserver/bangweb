@@ -42,7 +42,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     const table = useContext(GameTableContext);
 
     const selector = table.selector;
-    if (selector.selection.mode === 'none') return null;
+    if (selector.selection.mode === 'start') return null;
 
     const cardId = getModifierContext(selector, 'card_choice');
     if (!cardId) return null;

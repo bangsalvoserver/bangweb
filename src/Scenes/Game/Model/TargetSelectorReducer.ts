@@ -275,7 +275,7 @@ function handlePreselect(table: GameTable): TargetSelector {
 }
 
 function handleAutoSelect(table: GameTable): TargetSelector {
-    const selector = setSelectorMode(table.selector, 'start');
+    const selector = setSelectorMode(table.selector, 'middle');
     const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
     if (cardId) {
         const card = getCard(table, cardId);
@@ -298,7 +298,7 @@ function handleEndPreselection(table: GameTable): TargetSelector {
                         modifier: selector.selection.preselection.card,
                         targets: selector.selection.preselection.targets
                     }],
-                    mode: 'start'
+                    mode: 'middle'
                 }
             };
         } else {
@@ -432,7 +432,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
             selector: {
                 ...this.selector,
                 prompt: { type: 'none' },
-                selection: newPlayCardSelection('none')
+                selection: newPlayCardSelection('start')
             }
         });
     },

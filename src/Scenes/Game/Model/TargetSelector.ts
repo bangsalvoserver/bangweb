@@ -15,10 +15,10 @@ export type GamePrompt =
     { type: 'playpick', card: KnownCard };
 
 export type PlayCardSelectionMode =
-    | 'none' // No card selected
+    | 'start' // No card selected
     | 'preselect' // Player can either play a card or add a target for the preselection
     | 'modifier' // Selecting target for modifier
-    | 'start' // Modifiers selected, selecting new card
+    | 'middle' // Modifiers selected, selecting new card
     | 'target' // Selecting target for playing card
     | 'equip' // Selecting target for equip
     | 'finish' // Last target selected, sending game_action
@@ -26,20 +26,20 @@ export type PlayCardSelectionMode =
 /*
  *                     TARGET SELECTOR STATE MACHINE GRAPH
  * 
- *          /--(1)----------------------------------------------\
- *         /                           +===========+             \
- *        / /--(4)-------------------> | preselect |              \
- *       / /                 /-------- +===========+ ---------\    \
- *  (0)  | |                (2)              (8)            (1,9)  |
- *   |   | |                 |                |               |    |
- *   v   | |                 v                v               v    v
- *  +======+         +==========+ --(5)-> +=======+         +========+         +========+
- *  | none | --(2)-> | modifier |         | start | --(1)-> | target | --(6)-> | finish |
- *  +======+         +==========+ <-(2)-- +=======+         +========+         +========+
- *       |                                    |                                     ^
- *       \                                    \--(3)--> +=======+                   |
- *        \                                             | equip | --(7)-------------/
- *         \--(3)-------------------------------------> +=======+
+ *          /--(1)-----------------------------------------------\
+ *         /                            +===========+             \
+ *        / /--(4)--------------------> | preselect |              \
+ *       / /                 /--------- +===========+ ---------\    \
+ *  (0)  | |                (2)               (8)            (1,9)  |
+ *   |   | |                 |                 |               |    |
+ *   v   | |                 v                 v               v    v
+ *  +=======+         +==========+ --(5)-> +========+         +========+         +========+
+ *  | start | --(2)-> | modifier |         | middle | --(1)-> | target | --(6)-> | finish |
+ *  +=======+         +==========+ <-(2)-- +========+         +========+         +========+
+ *       |                                     |                                     ^
+ *       \                                     \--(3)--> +=======+                   |
+ *        \                                              | equip | --(7)-------------/
+ *         \--(3)--------------------------------------> +=======+
  * 
  *  (0) Start here / player has clicked on 'Undo'
  *  (1) Player has clicked on a playing card
@@ -102,7 +102,7 @@ export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelec
     return {
         request,
         prompt: { type: 'none' },
-        selection: newPlayCardSelection('none'),
+        selection: newPlayCardSelection('start'),
     };
 }
 
@@ -159,7 +159,7 @@ export function selectorCanConfirm(selector: TargetSelector) {
 export function selectorCanUndo(table: GameTable): boolean {
     switch (table.selector.selection.mode) {
     case 'modifier':
-    case 'start':
+    case 'middle':
     case 'target':
     case 'equip':
         return table.selector.selection.preselection === null;
