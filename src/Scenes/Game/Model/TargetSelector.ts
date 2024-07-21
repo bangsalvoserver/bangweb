@@ -23,6 +23,37 @@ export type PlayCardSelectionMode =
     | 'equip' // Selecting target for equip
     | 'finish' // Last target selected, sending game_action
 
+/*
+ *                     TARGET SELECTOR STATE MACHINE GRAPH
+ * 
+ *          /--(1)----------------------------------------------\
+ *         /                           +===========+             \
+ *        / /--(4)-------------------> | preselect |              \
+ *       / /                 /-------- +===========+ ---------\    \
+ *  (0)  | |                (2)              (8)            (1,9)  |
+ *   |   | |                 |                |               |    |
+ *   v   | |                 v                v               v    v
+ *  +======+         +==========+ --(5)-> +=======+         +========+         +========+
+ *  | none | --(2)-> | modifier |         | start | --(1)-> | target | --(6)-> | finish |
+ *  +======+         +==========+ <-(2)-- +=======+         +========+         +========+
+ *       |                                    |                                     ^
+ *       \                                    \--(3)--> +=======+                   |
+ *        \                                             | equip | --(7)-------------/
+ *         \--(3)-------------------------------------> +=======+
+ * 
+ *  (0) Start here / player has clicked on 'Undo'
+ *  (1) Player has clicked on a playing card
+ *  (2) Player has clicked on a modifier card
+ *  (3) Player has clicked on an equippable card
+ *  (4) Client has received a request with a card tagged 'preselect'
+ *  (5) Player has selected the last target for the modifier
+ *  (6) Player has selected the last target for the playing card
+ *  (7) Player has selected the target for the equippable card
+ *  (8) Player has selected the last target for the preselect *modifier* card
+ *  (9) Player has added a target for the preselect *playing* card -- targeting state is transfered
+ * 
+ */
+
 export interface PlayCardSelection {
     playing_card: KnownCard | null;
     targets: CardTarget[];
