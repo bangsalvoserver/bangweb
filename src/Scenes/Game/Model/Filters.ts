@@ -1,6 +1,6 @@
 import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
-import { Card, GameTable, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
 import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
 
@@ -10,7 +10,7 @@ export function getTagValue(card: Card, tagType: TagType): number | undefined {
     }
 }
 
-export function cardHasTag(card: Card, tagType: TagType): boolean {
+export function cardHasTag(card: Card, tagType: TagType): card is KnownCard {
     return getTagValue(card, tagType) !== undefined;
 }
 
@@ -181,6 +181,22 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
             break;
         default:
             return false;
+        }
+    } else if (filter.includes('pick_card')) {
+        if (!isResponse(selector)) {
+            return false;
+        }
+        switch (target.pocket?.name) {
+        case 'main_deck':
+        case 'discard_pile':
+            if (!selector.request.pick_cards.some(pickCard => getCard(table, pickCard).pocket?.name === target.pocket?.name)) {
+                return false;
+            }
+            break;
+        default:
+            if (!selector.request.pick_cards.includes(target.id)) {
+                return false;
+            }
         }
     } else if (target.cardData.deck === 'character') {
         return false;

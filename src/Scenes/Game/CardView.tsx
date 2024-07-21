@@ -5,7 +5,7 @@ import { GameTableContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
 import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
-import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPickCard, selectorCanPlayCard } from "./Model/TargetSelector";
+import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/CardAnimations.css";
@@ -27,14 +27,14 @@ export interface CardProps {
 export function getSelectorCardClass(table: GameTable, card: Card) {
     const selector = table.selector;
     if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
-        if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
+        if (selectorIsTargeting(selector)) {
             if (isValidCardTarget(table, card)) {
                 return 'card-retargetable';
             }
         }
         return 'card-selected';
     }
-    if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
+    if (selectorIsTargeting(selector)) {
         if (isValidCubeTarget(table, card)) {
             return 'card-targetable-cubes';
         } else if (isValidCardTarget(table, card)) {
@@ -51,8 +51,6 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
         } else {
             return 'card-modified';
         }
-    } else if (selectorCanPickCard(table, card)) {
-        return 'card-pickable';
     }
     if (isResponse(selector)) {
         if (selector.request.highlight_cards.includes(card.id)) {

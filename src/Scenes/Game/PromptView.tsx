@@ -41,7 +41,7 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
         };
 
         const handlePlay = () => selectorDispatch({ selectPlayingCard: card });
-        const handlePick = () => selectorDispatch({ selectPickCard: card });
+        const handlePick = () => selectorDispatch({ addCardTarget: card });
         const handleUndo = () => selectorDispatch({ undoSelection: {} });
 
         return <div className="prompt-view">

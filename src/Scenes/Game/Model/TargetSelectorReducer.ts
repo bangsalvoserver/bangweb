@@ -2,20 +2,18 @@ import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty } from "../../../Model/ServerMessage";
 import { countIf, sum } from "../../../Utils/ArrayUtils";
 import { FilteredKeys, SpreadUnion, createUnionReducer } from "../../../Utils/UnionUtils";
-import { CardTarget, TagType } from "./CardEnums";
+import { CardTarget } from "./CardEnums";
 import { cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getAutoSelectCard, getCardEffects, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, isCardCurrent, isCardModifier, isPlayerSelected, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, countSelectableCubes, countTargetsSelectedCubes, getCardEffects, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, isCardModifier, isPlayerSelected, isResponse, newPlayCardSelection, newTargetSelector, selectorCanPlayCard } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
     { setPrompt: GamePrompt } |
     { confirmPlay: Empty } |
-    { dismissSelection: Empty } |
     { undoSelection: Empty } |
     { selectPlayingCard: KnownCard } |
-    { selectPickCard: Card } |
     { addCardTarget: Card } |
     { addPlayerTarget: Player } |
     { addEquipTarget: Player }
@@ -25,6 +23,17 @@ type TargetListMapper = UpdateFunction<CardTarget[]>;
 
 function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper): TargetSelector {
     switch (selector.selection.mode) {
+    case 'preselect':
+        return {
+            ...selector,
+            selection: {
+                ...selector.selection,
+                preselection: {
+                    card: selector.selection.preselection!.card,
+                    targets: mapper(selector.selection.preselection!.targets)
+                }
+            }
+        };
     case 'target':
         return {
             ...selector,
@@ -238,6 +247,80 @@ function setSelectorMode(selector: TargetSelector, mode: PlayCardSelectionMode):
     };
 }
 
+function handlePreselect(table: GameTable): TargetSelector {
+    const selector = table.selector;
+    if (isResponse(selector)) {
+        for (const pair of selector.request.respond_cards) {
+            const cardId = pair.modifiers.at(0) ?? pair.card;
+            const card = getCard(table, cardId);
+            if (cardHasTag(card, 'preselect')) {
+                return handleAutoTargets({
+                    ...table,
+                    selector: {
+                        ...selector,
+                        selection: {
+                            ...selector.selection,
+                            mode: 'preselect',
+                            preselection: {
+                                card,
+                                targets: []
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+    return selector;
+}
+
+function handleAutoSelect(table: GameTable): TargetSelector {
+    const selector = table.selector;
+    if (selector.selection.mode === 'start') {
+        const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
+        if (cardId !== null) {
+            const card = getCard(table, cardId);
+            if (selectorCanPlayCard(table.selector, card)) {
+                return handleSelectPlayingCard(table, card);
+            }
+        }
+    }
+    return selector;
+}
+
+function handleEndPreselection(table: GameTable): TargetSelector {
+    const selector = table.selector;
+    if (selector.selection.mode === 'preselect' && selector.selection.preselection !== null) {
+        if (isCardModifier(selector.selection.preselection.card, isResponse(selector))) {
+            return {
+                ...selector,
+                selection: {
+                    ...selector.selection,
+                    modifiers: [{
+                        modifier: selector.selection.preselection.card,
+                        targets: selector.selection.preselection.targets
+                    }],
+                    mode: 'start'
+                }
+            };
+        } else {
+            return handleAutoTargets({ ...table,
+                selector: {
+                    ...selector,
+                    selection: {
+                        playing_card: selector.selection.preselection.card,
+                        targets: selector.selection.preselection.targets,
+                        preselection: null,
+                        modifiers: [],
+                        mode: 'target'
+                    }
+                }
+            })
+        }
+    }
+    return handleAutoTargets(table);
+}
+
 function handleAutoTargets(table: GameTable): TargetSelector {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
@@ -245,10 +328,13 @@ function handleAutoTargets(table: GameTable): TargetSelector {
     const index = getNextTargetIndex(targets);
 
     if (index === effects.length) {
-        if (selector.selection.mode === 'modifier') {
-            return handleAutoSelect({ ...table, selector: setSelectorMode(selector, 'start')});
-        } else {
+        switch (selector.selection.mode) {
+        case 'preselect':
+            return handleEndPreselection(table);
+        case 'target':
             return setSelectorMode(selector, 'finish');
+        case 'modifier':
+            return handleAutoSelect({ ...table, selector: setSelectorMode(selector, 'start')});
         }
     }
 
@@ -269,6 +355,7 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             ...selector,
             selection: {
                 ...selection,
+                preselection: null,
                 playing_card: card,
                 mode: card.cardData.equip_target.length === 0
                     ? 'finish' : 'equip'
@@ -280,6 +367,7 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             ...selector,
             selection: {
                 ...selection,
+                preselection: null,
                 modifiers: selection.modifiers.concat({ modifier: card, targets: [] }),
                 mode: 'modifier'
             },
@@ -290,39 +378,13 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             ...selector,
             selection: {
                 ...selection,
+                preselection: null,
                 playing_card: card,
                 mode: 'target'
             },
             prompt: { type: 'none' }
         }});
     }
-}
-
-function selectTaggedCard(table: GameTable, tag: TagType): TargetSelector {
-    if (!isResponse(table.selector)) {
-        throw new Error('TargetSelector: not in response mode');
-    }
-    const origin_card = table.selector.request.respond_cards
-        .map(pair => getCard(table, pair.card))
-        .find(card => cardHasTag(card, tag));
-    if (!origin_card || !isCardKnown(origin_card)) {
-        throw new Error('TargetSelector: cannot find card tagged ' + tag);
-    }
-    return handleSelectPlayingCard(table, origin_card);
-}
-
-function handleSelectPickCard(table: GameTable, card: Card): TargetSelector {
-    const selector = selectTaggedCard(table, 'pick');
-    return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, appendCardTarget(selector, card.id))});
-}
-
-function handleDismiss(table: GameTable): TargetSelector {
-    return selectTaggedCard({ ...table,
-        selector: {
-            ...table.selector,
-            selection: newPlayCardSelection('none')
-        }
-    }, 'resolve');
 }
 
 function confirmTarget(targets: CardTarget[]): CardTarget[] {
@@ -350,21 +412,9 @@ function confirmTarget(targets: CardTarget[]): CardTarget[] {
     return targets;
 }
 
-function handleAutoSelect(table: GameTable): TargetSelector {
-    const selector = table.selector;
-    const cardId = getAutoSelectCard(table);
-    if (cardId) {
-      const card = getCard(table, cardId);
-      if (isCardKnown(card) && !isCardCurrent(selector, card)) {
-        return handleSelectPlayingCard(table, card);
-      }
-    }
-    return selector;
-}
-
 const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, TargetSelector>({
     setRequest (request) {
-        return handleAutoSelect({ ...this, selector: newTargetSelector(request) });
+        return handlePreselect({ ...this, selector: newTargetSelector(request) });
     },
 
     setPrompt (prompt) {
@@ -378,12 +428,8 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
         });
     },
 
-    dismissSelection () {
-        return handleDismiss(this);
-    },
-
     undoSelection () {
-        return handleAutoSelect({
+        return handlePreselect({
             ...this,
             selector: {
                 ...this.selector,
@@ -397,16 +443,12 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
         return handleSelectPlayingCard(this, card);
     },
 
-    selectPickCard (card) {
-        return handleSelectPickCard(this, card);
-    },
-
     addCardTarget (card) {
-        return handleAutoTargets({ ...this, selector: editSelectorTargets(this.selector, appendCardTarget(this.selector, card.id))});
+        return handleEndPreselection({ ...this, selector: editSelectorTargets(this.selector, appendCardTarget(this.selector, card.id))});
     },
 
     addPlayerTarget (player) {
-        return handleAutoTargets({...this, selector: editSelectorTargets(this.selector, appendPlayerTarget(this.selector, player.id))});
+        return handleEndPreselection({...this, selector: editSelectorTargets(this.selector, appendPlayerTarget(this.selector, player.id))});
     },
 
     addEquipTarget (player) {

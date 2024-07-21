@@ -2,7 +2,7 @@ import { Dispatch, DispatchWithoutAction, createContext, useEffect, useMemo, use
 import { BangConnection } from "../../../Model/UseBangConnection";
 import { GameAction } from "./GameAction";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
-import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPickCard, selectorCanPlayCard, selectorCanResolve, selectorCanUndo, selectorCanDismiss } from "./TargetSelector";
+import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
@@ -47,19 +47,21 @@ function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | unde
         }
         break;
     }
+    case 'preselect':  {
+        const canPlay = selectorCanPlayCard(selector, card);
+        const canPick = isValidCardTarget(table, card);
+        if (canPlay && canPick) {
+            return { setPrompt: { type: 'playpick', card }};
+        } else if (canPlay) {
+            return { selectPlayingCard: card };
+        } else if (canPick) {
+            return { addCardTarget: card };
+        }
+        break;
+    }
     case 'none':
     case 'start': {
-        const canPlay = selectorCanPlayCard(selector, card);
-        if (isResponse(selector)) {
-            const canPick = selectorCanPickCard(table, card);
-            if (canPlay && canPick) {
-                return { setPrompt: { type: 'playpick', card }};
-            } else if (canPlay) {
-                return { selectPlayingCard: card };
-            } else if (canPick) {
-                return { selectPickCard: card };
-            }
-        } else if (canPlay) {
+        if (selectorCanPlayCard(selector, card)) {
             return { selectPlayingCard: card };
         }
     }
@@ -68,6 +70,7 @@ function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | unde
 
 function getClickPlayerUpdate(table: GameTable, player: Player): SelectorUpdate | undefined {
     switch (table.selector.selection.mode) {
+    case 'preselect':
     case 'target':
     case 'modifier':
         if (isValidPlayerTarget(table, player)) {
@@ -87,7 +90,6 @@ export interface SelectorConfirm {
     handleClickCard: (card: Card) => OptionalDispatch;
     handleClickPlayer: (player: Player) => OptionalDispatch;
     handleConfirm: OptionalDispatch;
-    handleDismiss: OptionalDispatch;
     handleUndo: OptionalDispatch;
 }
 
@@ -95,7 +97,6 @@ export const DEFAULT_SELECTOR_CONFIRM: SelectorConfirm = {
     handleClickCard: card => undefined,
     handleClickPlayer: player => undefined,
     handleConfirm: undefined,
-    handleDismiss: undefined,
     handleUndo: undefined,
 };
 
@@ -120,8 +121,7 @@ export function useSelectorConfirm(table: GameTable, selectorDispatch: Dispatch<
             handleClickCard: card => buildDispatch(getClickCardUpdate(table, card)),
             handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, player)),
             handleConfirm: buildDispatch(selectorCanConfirm(table.selector) ? { confirmPlay: {} } : undefined),
-            handleDismiss: buildDispatch(selectorCanResolve(table) && selectorCanDismiss(table) ? { dismissSelection: {} } : undefined),
-            handleUndo: buildDispatch(selectorCanUndo(table) && !selectorCanDismiss(table) ? { undoSelection: {} } : undefined)
+            handleUndo: buildDispatch(selectorCanUndo(table) ? { undoSelection: {} } : undefined)
         } as const;
     }, [table, selectorDispatch]);
 }

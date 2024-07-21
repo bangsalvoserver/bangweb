@@ -3,7 +3,7 @@ import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
-import { calcPlayerDistance, cardHasTag, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -16,6 +16,7 @@ export type GamePrompt =
 
 export type PlayCardSelectionMode =
     | 'none' // No card selected
+    | 'preselect' // Player can either play a card or add a target for the preselection
     | 'modifier' // Selecting target for modifier
     | 'start' // Modifiers selected, selecting new card
     | 'target' // Selecting target for playing card
@@ -25,6 +26,11 @@ export type PlayCardSelectionMode =
 export interface PlayCardSelection {
     playing_card: KnownCard | null;
     targets: CardTarget[];
+
+    preselection: {
+        card: KnownCard;
+        targets: CardTarget[];
+    } | null;
 
     modifiers: {
         modifier: KnownCard;
@@ -39,6 +45,7 @@ export function newPlayCardSelection(mode: PlayCardSelectionMode): PlayCardSelec
         playing_card: null,
         targets: [],
         modifiers: [],
+        preselection: null,
         mode
     };
 }
@@ -70,6 +77,8 @@ export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelec
 
 export function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, CardTarget[]] {
     switch (selector.selection.mode) {
+    case 'preselect':
+        return [selector.selection.preselection!.card, selector.selection.preselection!.targets];
     case 'target':
         return [selector.selection.playing_card!, selector.selection.targets];
     case 'modifier': {
@@ -81,8 +90,19 @@ export function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, 
     }
 }
 
+export function selectorIsTargeting(selector: TargetSelector) {
+    switch (selector.selection.mode) {
+    case 'preselect':
+    case 'target':
+    case 'modifier':
+        return true;
+    default:
+        return false;
+    }
+}
+
 export function selectorCanConfirm(selector: TargetSelector) {
-    if (selector.selection.mode === 'target' || selector.selection.mode === 'modifier') {
+    if (selectorIsTargeting(selector)) {
         const [currentCard, targets] = getCurrentCardAndTargets(selector);
         const index = getNextTargetIndex(targets);
         if (targets.length !== 0 && index < targets.length) {
@@ -105,64 +125,19 @@ export function selectorCanConfirm(selector: TargetSelector) {
     return false;
 }
 
-export function selectorCanDismiss(table: GameTable) {
-    const selector = table.selector;
-    if (findAutoSelectCard(table) !== undefined) {
-        const allTargetsNone = (targets: CardTarget[]) => {
-            return targets.every(target => {
-                const value = Object.values(target)[0];
-                if (Array.isArray(value) && value.every(num => num === 0)) return true;
-                if (typeof value === 'object' && Object.keys(value).length === 0) return true;
-                return false;
-            });
-        };
-        switch (selector.selection.mode) {
-        case 'target':
-            return getModifierContext(selector, 'card_choice') === null && allTargetsNone(selector.selection.targets);
-        case 'modifier':
-            return selector.selection.modifiers.length === 1 && allTargetsNone(selector.selection.modifiers[0].targets);
-        case 'start':
-            return getModifierContext(selector, 'card_choice') !== null;
-        }
-    }
-    return false;
-}
-
-export function selectorCanResolve(table: GameTable): boolean {
-    const selector = table.selector;
-    return isResponse(selector)
-        && selector.request.respond_cards.some(pair => cardHasTag(getCard(table, pair.card), 'resolve'));
-}
-
-function findAutoSelectCard(table: GameTable): CardId | undefined {
-    const selector = table.selector;
-    if (isResponse(selector)) {
-        for (const pair of selector.request.respond_cards) {
-            const card = pair.modifiers.at(0) ?? pair.card;
-            if (cardHasTag(getCard(table, card), 'auto_select')) {
-                return card;
-            }
-        }
-    }
-}
-
-export function getAutoSelectCard(table: GameTable): CardId | undefined {
-    const selector = table.selector;
-    if (selector.selection.mode === 'none') {
-        return findAutoSelectCard(table);
-    } else if (selector.selection.mode === 'start') {
-        const card = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
-        if (card !== null && getPlayableCards(table.selector).includes(card)) {
-            return card;
-        }
-    }
-}
-
 export function selectorCanUndo(table: GameTable): boolean {
-    return table.selector.selection.mode !== 'none'
-        && table.selector.selection.mode !== 'finish';
+    switch (table.selector.selection.mode) {
+    case 'modifier':
+    case 'start':
+    case 'target':
+    case 'equip':
+        return table.selector.selection.preselection === null;
+    default:
+        return false;
+    }
 }
 
+// TODO refactor
 function indexOfMatchingModifiers(selection: PlayCardSelection, info: PlayableCardInfo): number | undefined {
     let i = 0;
     for (const { modifier } of selection.modifiers) {
@@ -174,6 +149,7 @@ function indexOfMatchingModifiers(selection: PlayCardSelection, info: PlayableCa
     return i;
 }
 
+// TODO remove duplicates
 export function getPlayableCards(selector: TargetSelector): CardId[] {
     if (!selector.selection.playing_card) {
         const nextPlayableCard = (info: PlayableCardInfo) => {
@@ -195,6 +171,7 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
     return [];
 }
 
+// TODO only return if all playable cards has the same context variable
 export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): NonNullable<EffectContext[K]> | null {
     if (selector.selection.modifiers.length !== 0) {
         const findContext = (cards: PlayableCardInfo[]) => {
@@ -222,23 +199,10 @@ export function selectorCanPlayCard(selector: TargetSelector, card: Card): card 
         && getPlayableCards(selector).includes(card.id);
 }
 
-export function selectorCanPickCard(table: GameTable, card: Card): boolean {
-    const selector = table.selector;
-    if (isResponse(selector)) {
-        switch (card.pocket?.name) {
-            case 'main_deck':
-            case 'discard_pile':
-                return selector.request.pick_cards.some(pickCard => getCard(table, pickCard).pocket?.name === card.pocket?.name);
-            default:
-                return selector.request.pick_cards.includes(card.id);
-        }
-    }
-    return false;
-}
-
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
     return selector.selection.playing_card?.id === card.id
-        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id);
+        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id)
+        || selector.selection.preselection?.card?.id === card.id;
 }
 
 export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
@@ -402,7 +366,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
             || !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
             return false;
         }
-        const lastTarget = selector.selection.targets.at(index);
+        const lastTarget = targets.at(index);
         if (lastTarget && 'card_per_player' in lastTarget) {
             if (lastTarget.card_per_player.some(targetCard =>
                 targetCard > 0 && getCardOwner(getCard(table, targetCard)) === player
