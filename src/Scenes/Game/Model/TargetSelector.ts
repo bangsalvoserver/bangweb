@@ -1,5 +1,5 @@
 import { Empty } from "../../../Model/ServerMessage";
-import { count, countIf, sum } from "../../../Utils/ArrayUtils";
+import { count, countIf, removeDuplicates, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
@@ -137,49 +137,56 @@ export function selectorCanUndo(table: GameTable): boolean {
     }
 }
 
-// TODO refactor
-function indexOfMatchingModifiers(selection: PlayCardSelection, info: PlayableCardInfo): number | undefined {
+function isMatchingModifiers(selection: PlayCardSelection, info: PlayableCardInfo): boolean {
     let i = 0;
     for (const { modifier } of selection.modifiers) {
         if (info.modifiers.at(i) !== modifier.id) {
-            return undefined;
+            return false;
         }
         ++i;
     }
-    return i;
+    return true;
 }
 
-// TODO remove duplicates
 export function getPlayableCards(selector: TargetSelector): CardId[] {
+    let result: CardId[] = [];
+    
     if (!selector.selection.playing_card) {
-        const nextPlayableCard = (info: PlayableCardInfo) => {
-            const index = indexOfMatchingModifiers(selector.selection, info);
-            if (index !== undefined) {
-                return [info.modifiers.at(index) ?? info.card];
-            } else {
-                return [];
+        const check = (cards: PlayableCardInfo[]) => {
+            for (const info of cards) {
+                if (isMatchingModifiers(selector.selection, info)) {
+                    const card = info.modifiers.at(selector.selection.modifiers.length) ?? info.card;
+                    if (!result.includes(card)) {
+                        result.push(card);
+                    }
+                }
             }
         };
         
         if (isResponse(selector)) {
-            return selector.request.respond_cards.flatMap(nextPlayableCard);
+            check(selector.request.respond_cards);
         } else if (isStatusReady(selector)) {
-            return selector.request.play_cards.flatMap(nextPlayableCard);
+            check(selector.request.play_cards);
         }
     }
 
-    return [];
+    return result;
 }
 
-// TODO only return if all playable cards has the same context variable
 export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): NonNullable<EffectContext[K]> | null {
     if (selector.selection.modifiers.length !== 0) {
         const findContext = (cards: PlayableCardInfo[]) => {
+            const result: NonNullable<EffectContext[K]>[] = [];
             for (const info of cards) {
-                const index = indexOfMatchingModifiers(selector.selection, info);
-                if (index !== undefined && info.context !== null) {
-                    return info.context[prop] ?? null;
+                if (isMatchingModifiers(selector.selection, info) && info.context !== null) {
+                    const ctx = info.context[prop];
+                    if (ctx && !result.includes(ctx)) {
+                        result.push(ctx);
+                    }
                 }
+            }
+            if (result.length === 1) {
+                return result[0];
             }
             return null;
         }
