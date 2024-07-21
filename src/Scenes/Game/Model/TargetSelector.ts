@@ -209,7 +209,8 @@ export function selectorCanPlayCard(selector: TargetSelector, card: Card): card 
 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
     return selector.selection.playing_card?.id === card.id
-        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id);
+        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id)
+        || selector.selection.preselection?.card.id === card.id;
 }
 
 export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
