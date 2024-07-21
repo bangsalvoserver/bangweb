@@ -275,14 +275,12 @@ function handlePreselect(table: GameTable): TargetSelector {
 }
 
 function handleAutoSelect(table: GameTable): TargetSelector {
-    const selector = table.selector;
-    if (selector.selection.mode === 'start') {
-        const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
-        if (cardId !== null) {
-            const card = getCard(table, cardId);
-            if (!isCardCurrent(selector, card) && isCardKnown(card) && getPlayableCards(selector).includes(card.id)) {
-                return handleSelectPlayingCard(table, card);
-            }
+    const selector = setSelectorMode(table.selector, 'start');
+    const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
+    if (cardId) {
+        const card = getCard(table, cardId);
+        if (!isCardCurrent(selector, card) && isCardKnown(card) && getPlayableCards(selector).includes(card.id)) {
+            return handleSelectPlayingCard(table, card);
         }
     }
     return selector;
@@ -334,7 +332,7 @@ function handleAutoTargets(table: GameTable): TargetSelector {
         case 'target':
             return setSelectorMode(selector, 'finish');
         case 'modifier':
-            return handleAutoSelect({ ...table, selector: setSelectorMode(selector, 'start')});
+            return handleAutoSelect(table);
         }
     }
 

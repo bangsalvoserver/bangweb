@@ -124,13 +124,13 @@ export interface TimerStatusArgs {
     duration: Milliseconds;
 }
 
-export interface EffectContext {
-    playing_card?: CardId;
-    repeat_card?: CardId;
-    card_choice?: CardId;
-    train_advance?: number;
-    ignore_distances?: boolean;
-}
+export type EffectContext = Partial<{
+    playing_card: CardId,
+    repeat_card: CardId,
+    card_choice: CardId,
+    train_advance: number,
+    ignore_distances: boolean,
+}>;
 
 export interface PlayableCardInfo {
     card: CardId;

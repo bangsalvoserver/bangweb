@@ -173,23 +173,23 @@ export function getPlayableCards(selector: TargetSelector): CardId[] {
     return result;
 }
 
-export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): NonNullable<EffectContext[K]> | null {
+export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): EffectContext[K] {
     if (selector.selection.modifiers.length !== 0) {
         const findContext = (cards: PlayableCardInfo[]) => {
             let result: EffectContext[K] = undefined;
             for (const info of cards) {
-                if (isMatchingModifiers(selector.selection, info) && info.context !== null) {
-                    const ctx = info.context[prop];
-                    if (ctx) {
+                if (isMatchingModifiers(selector.selection, info)) {
+                    const value = info.context?.[prop];
+                    if (value) {
                         if (result === undefined) {
-                            result = ctx;
-                        } else if (result !== ctx) {
-                            return null;
+                            result = value;
+                        } else if (result !== value) {
+                            return undefined;
                         }
                     }
                 }
             }
-            return result ?? null;
+            return result;
         }
         if (isResponse(selector)) {
             return findContext(selector.request.respond_cards);
@@ -197,7 +197,6 @@ export function getModifierContext<K extends keyof EffectContext> (selector: Tar
             return findContext(selector.request.play_cards);
         }
     }
-    return null;
 }
 
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
