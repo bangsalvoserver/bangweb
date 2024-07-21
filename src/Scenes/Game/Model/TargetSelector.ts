@@ -1,9 +1,9 @@
 import { Empty } from "../../../Model/ServerMessage";
-import { count, countIf, removeDuplicates, sum } from "../../../Utils/ArrayUtils";
+import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPickTarget, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -208,8 +208,7 @@ export function selectorCanPlayCard(selector: TargetSelector, card: Card): card 
 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
     return selector.selection.playing_card?.id === card.id
-        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id)
-        || selector.selection.preselection?.card?.id === card.id;
+        || selector.selection.modifiers.some(({modifier}) => modifier.id === card.id);
 }
 
 export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
@@ -336,16 +335,6 @@ export function isValidCubeTarget(table: GameTable, card: Card): boolean {
 }
 
 export function isValidCardTarget(table: GameTable, card: Card): boolean {
-    switch (card.pocket?.name) {
-    case 'player_character':
-    case 'player_table':
-    case 'player_hand':
-    case 'selection':
-        break;
-    default:
-        return false;
-    }
-
     const player = getCardOwner(card);
 
     const selector = table.selector;
@@ -358,6 +347,9 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
     case 'extra_card':
     case 'cards':
     case 'max_cards':
+        if (effect.card_filter.includes('pick_card')) {
+            return checkPickTarget(table, card);
+        }
         if (player && !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
             return false;
         }
@@ -391,7 +383,7 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
             && card.num_cubes > countSelectedCubes(selector, card);
     case 'move_cube_slot':
         return player === table.self_player
-            && card.pocket.name === 'player_table'
+            && card.pocket?.name === 'player_table'
             && getCardColor(card) === 'orange'
             && card.num_cubes < 4 - count((targets[index] as {move_cube_slot: CardId[]}).move_cube_slot, card.id);
     default:

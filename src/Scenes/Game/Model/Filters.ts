@@ -157,7 +157,31 @@ export function checkPlayerFilter(table: GameTable, filter: PlayerFilter[], targ
     return true;
 }
 
+export function checkPickTarget(table: GameTable, target: Card): boolean {
+    const selector = table.selector;
+    if (!isResponse(selector)) {
+        return false;
+    }
+    switch (target.pocket?.name) {
+    case 'main_deck':
+    case 'discard_pile':
+        return selector.request.pick_cards.some(pickCard => getCard(table, pickCard).pocket?.name === target.pocket?.name);
+    default:
+        return selector.request.pick_cards.includes(target.id);
+    }
+}
+
 export function checkCardFilter(table: GameTable, filter: CardFilter[], target: Card): boolean {
+    switch (target.pocket?.name) {
+    case 'player_character':
+    case 'player_table':
+    case 'player_hand':
+    case 'selection':
+        break;
+    default:
+        return false;
+    }
+
     const selector = table.selector;
     const origin = getPlayer(table, table.self_player!);
 
@@ -181,22 +205,6 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
             break;
         default:
             return false;
-        }
-    } else if (filter.includes('pick_card')) {
-        if (!isResponse(selector)) {
-            return false;
-        }
-        switch (target.pocket?.name) {
-        case 'main_deck':
-        case 'discard_pile':
-            if (!selector.request.pick_cards.some(pickCard => getCard(table, pickCard).pocket?.name === target.pocket?.name)) {
-                return false;
-            }
-            break;
-        default:
-            if (!selector.request.pick_cards.includes(target.id)) {
-                return false;
-            }
         }
     } else if (target.cardData.deck === 'character') {
         return false;

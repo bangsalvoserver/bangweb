@@ -41,14 +41,15 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
             return 'card-targetable';
         }
     }
-    if (isCardCurrent(selector, card)) {
-        return 'card-current';
-    } else if (isCardPrompted(selector, card)) {
+    if (isCardCurrent(selector, card) || isCardPrompted(selector, card)) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
-        if (selector.selection.mode === 'start' || selector.selection.mode === 'none') {
+        switch (selector.selection.mode) {
+        case 'none':
+        case 'start':
+        case 'preselect':
             return 'card-playable';
-        } else {
+        default:
             return 'card-modified';
         }
     }
