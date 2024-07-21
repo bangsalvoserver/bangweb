@@ -313,6 +313,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     YOOMA:                      "Yooma",
     GAME_PASS:                  "Termina il turno",
     GAME_CONFIRM:               "Conferma",
+    GAME_DISMISS:               "Ignora",
     GAME_SELL_BEER:             "Vendi birra",
     GAME_DISCARD_BLACK:         "Scarta equip",
     GAME_DISCARD_BRONCO:        "Scarta Bronco",

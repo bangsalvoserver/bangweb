@@ -1,8 +1,10 @@
 import { MouseEventHandler, ReactNode } from "react";
 
+export type ButtonColor = 'green' | 'blue' | 'red';
+
 export interface ButtonProps {
     className?: string;
-    color?: 'green' | 'blue' | 'red';
+    color?: ButtonColor;
     type?: 'submit' | 'reset' | 'button';
     onClick?: MouseEventHandler<HTMLButtonElement>;
     children: ReactNode;
@@ -21,16 +23,25 @@ export default function Button({ className, color, type, onClick, children }: Bu
         }
     };
 
+    const fullClassName = `
+        font-bold
+        py-1
+        px-4
+        rounded-md
+        focus:outline-none
+        focus:ring-2
+        ${getColorClasses()}
+        ${className ?? ''}
+    `;
+
     return (
-        <button type={type} onClick={onClick} className={`
-            font-bold
-            py-1
-            px-4
-            rounded-md
-            focus:outline-none
-            focus:ring-2
-            ${getColorClasses()}
-            ${className ?? ''}`}
-        >{children}</button>
+        <button
+            type={type}
+            onClick={onClick}
+            disabled={type !== 'submit' && !onClick}
+            className={fullClassName}
+        >
+            {children}
+        </button>
     );
 }

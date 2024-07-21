@@ -1,20 +1,33 @@
 import { useContext } from "react";
-import Button from "../../Components/Button";
+import Button, { ButtonColor } from "../../Components/Button";
 import TimerWidget from "../../Components/TimerWidget";
 import getLabel from "../../Locale/GetLabel";
 import { isLobbyOwner } from "../../Model/SceneState";
 import { LobbyContext } from "../Lobby/Lobby";
 import { GameTableContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
-import { getCard } from "./Model/GameTable";
+import { getCard, KnownCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
+import { getTagValue } from "./Model/Filters";
 
 export interface StatusProps {
   gameError: GameString | undefined;
   handleClearGameError: () => void;
   handleReturnLobby: () => void;
+}
+
+function getCardButtonColor(card: KnownCard): ButtonColor {
+  switch (getTagValue(card, 'button_color')) {
+  case 0:
+  default:
+    return 'green';
+  case 1:
+    return 'red'
+  case 2:
+    return 'blue';
+  }
 }
 
 export default function StatusBar({ gameError, handleClearGameError, handleReturnLobby }: StatusProps) {
@@ -30,18 +43,14 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
 
   const buttonRow = table.pockets.button_row.flatMap(id => {
     const card = getCard(table, id);
-    const isCurrent = isCardCurrent(selector, card);
-    const isPlayable = selectorCanPlayCard(selector, card);
-    if (isCurrent || isPlayable) {
-      const color = isResponse(selector) ? 'red' : isCurrent ? 'blue' : 'green';
+    if (selectorCanPlayCard(selector, card) || isCardCurrent(selector, card)) {
       return (
-        <Button key={id} color={color} onClick={handleClickCard(card)}>
+        <Button key={id} color={getCardButtonColor(card)} onClick={handleClickCard(card)}>
           <LocalizedCardName name={card.cardData.name} />
         </Button>
       );
-    } else {
-      return [];
     }
+    return [];
   })
 
   const timerWidget = isResponse(selector) && selector.request.timer &&
