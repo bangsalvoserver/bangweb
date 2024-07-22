@@ -254,6 +254,8 @@ export const CARDS_ENGLISH: CardRegistry = {
     STRONGBOX:                  "Strongbox",
     SWITCH:                     "Switch",
     TRAIN_ROBBERY:              "Train Robbery",
+    TRAIN_ROBBERY_DISCARD:      "Train Robbery: Discard a card",
+    TRAIN_ROBBERY_BANG:         "Train Robbery: Receive a Bang",
     WATER_TOWER:                "Water Tower",
     BENNY_BRAWLER:              "Benny Brawler",
     EVAN_BABBIT:                "Evan Babbit",

@@ -132,7 +132,7 @@ export function checkPlayerFilter(table: GameTable, filter: PlayerFilter[], targ
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length === 0) return false;
 
     if (filter.includes('target_set') && isResponse(selector)) {
-        if (!selector.request.target_set.includes(target.id)) {
+        if (!selector.request.target_set_players.includes(target.id)) {
             return false;
         }
     }
@@ -265,6 +265,12 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
         if (!selector.request.origin_card) return false;
         const reqOriginCard = getCard(table, selector.request.origin_card);
         if (!(isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit === sign.suit)) return false;
+    }
+
+    if (filter.includes('target_set') && isResponse(selector)) {
+        if (!selector.request.target_set_cards.includes(target.id)) {
+            return false;
+        }
     }
 
     if (filter.includes('selection') && target.pocket?.name !== 'selection') return false;

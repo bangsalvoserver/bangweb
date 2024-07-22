@@ -5,6 +5,7 @@ import CardView from "./CardView";
 import { GameTableContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
+import { CardId } from "./Model/GameUpdate";
 import { getModifierContext, getPlayableCards, isCardCurrent } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
 
@@ -47,8 +48,22 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     const cardId = getModifierContext(selector, 'card_choice');
     if (!cardId) return null;
 
-    const anchor = getCard(table, cardId);
+    let anchor = getCard(table, cardId);
     if (!isCardCurrent(selector, anchor)) return null;
+
+    if (anchor.pocket?.name === 'hidden_deck') {
+        let lastTarget: CardId | undefined;
+        for (const { targets } of selector.selection.modifiers) {
+            for (const target of targets) {
+                if ('card' in target) {
+                    lastTarget = target.card;
+                }
+            }
+        }
+        if (lastTarget) {
+            anchor = getCard(table, lastTarget);
+        }
+    }
 
     const cards = getPlayableCards({ ...selector, selection: { ...selector.selection, playing_card: null }});
 

@@ -147,7 +147,8 @@ export interface RequestStatusArgs {
     pick_cards: CardId[];
     highlight_cards: CardId[];
     distances: PlayerDistances;
-    target_set: PlayerId[];
+    target_set_players: PlayerId[];
+    target_set_cards: CardId[];
     timer: TimerStatusArgs | null;
 }
 

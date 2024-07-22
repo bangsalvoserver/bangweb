@@ -286,7 +286,7 @@ function handleAutoSelect(table: GameTable): TargetSelector {
     return selector;
 }
 
-function handleEndPreselection(table: GameTable): TargetSelector {
+function handleEndPreselection(table: GameTable, remove: boolean = true): TargetSelector {
     const selector = table.selector;
     if (selector.selection.mode === 'preselect' && selector.selection.preselection !== null) {
         if (isCardModifier(selector.selection.preselection.card, isResponse(selector))) {
@@ -298,6 +298,7 @@ function handleEndPreselection(table: GameTable): TargetSelector {
                         modifier: selector.selection.preselection.card,
                         targets: selector.selection.preselection.targets
                     }],
+                    preselection: remove ? null : selector.selection.preselection,
                     mode: 'middle'
                 }
             };
@@ -328,7 +329,7 @@ function handleAutoTargets(table: GameTable): TargetSelector {
     if (index === effects.length) {
         switch (selector.selection.mode) {
         case 'preselect':
-            return handleEndPreselection(table);
+            return handleEndPreselection(table, false);
         case 'target':
             return setSelectorMode(selector, 'finish');
         case 'modifier':
