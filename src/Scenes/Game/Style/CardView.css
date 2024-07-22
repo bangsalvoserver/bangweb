@@ -10,6 +10,7 @@
     --one-hp-size: calc(var(--card-scale) * var(--one-hp-size-unscaled));
 
     --card-margin: 0.2em;
+    --card-highlight-size: 3px;
 }
 
 .card-view {
@@ -65,12 +66,13 @@
 }
 
 .card-targetable {
-    --card-highlight-color: #eca60e;
+    --card-highlight-color: #cdda1fad;
     cursor: pointer;
 }
 
 .card-targetable:hover {
-    --card-highlight-color: #cf920f;
+    --card-highlight-color: #e6f32bad;
+    --card-highlight-size: 4px;
 }
 
 .card-retargetable {
@@ -133,7 +135,7 @@
 .card-view-img {
     background-color: white;
     border-radius: var(--card-border) var(--card-border);
-    box-shadow: 0px 0px 3px 3px var(--card-highlight-color);
+    box-shadow: 0px 0px var(--card-highlight-size) var(--card-highlight-size) var(--card-highlight-color);
     width: var(--card-width);
     height: var(--card-height);
 }
