@@ -114,7 +114,7 @@ export interface PlayerFlagsUpdate {
 }
 
 export interface PlayerDistances {
-    distances: { player: PlayerId, distance: number }[];
+    distance_mods: { player: PlayerId, value: number }[];
     range_mod: number;
     weapon_range: number;
 }

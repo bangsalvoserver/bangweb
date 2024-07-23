@@ -69,7 +69,7 @@ export function calcPlayerDistance(table: GameTable, from: PlayerId, to: PlayerI
     }
     
     const selector = table.selector;
-    const distanceMod = selector.request.distances.distances.find(item => item.player === to)?.distance ?? 0;
+    const distanceMod = selector.request.distances.distance_mods.find(item => item.player === to)?.value ?? 0;
 
     if (table.status.flags.includes('disable_player_distances')) {
         return 1 + distanceMod;
