@@ -197,12 +197,12 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
             return false;
         }
     } else {
+        if (filter.includes('selection') !== (target.pocket?.name === 'selection')) return false;
+
         switch (target.pocket?.name) {
         case 'player_hand':
         case 'player_table':
-            break;
         case 'selection':
-            if (!filter.includes('selection')) return false;
             break;
         default:
             return false;
