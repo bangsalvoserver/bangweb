@@ -144,7 +144,6 @@ export interface RequestStatusArgs {
     target: PlayerId | null;
     status_text: GameString;
     respond_cards: PlayableCardInfo[];
-    pick_cards: CardId[];
     highlight_cards: CardId[];
     distances: PlayerDistances;
     target_set_players: PlayerId[];

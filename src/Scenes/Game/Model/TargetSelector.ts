@@ -3,7 +3,7 @@ import { count, countIf, sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
-import { calcPlayerDistance, checkCardFilter, checkPickTarget, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 
@@ -379,9 +379,6 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
     case 'extra_card':
     case 'cards':
     case 'max_cards':
-        if (effect.card_filter.includes('pick_card')) {
-            return checkPickTarget(table, card);
-        }
         if (player && !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
             return false;
         }
