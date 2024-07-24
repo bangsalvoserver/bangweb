@@ -27,18 +27,21 @@ export interface CardProps {
 export function getSelectorCardClass(table: GameTable, card: Card) {
     const selector = table.selector;
     if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
-        if (selectorIsTargeting(selector)) {
-            if (isValidCardTarget(table, card)) {
-                return 'card-retargetable';
-            }
+        if (selectorIsTargeting(selector) && isValidCardTarget(table, card)) {
+            return 'card-retargetable';
+        } else {
+            return 'card-selected';
         }
-        return 'card-selected';
     }
     if (selectorIsTargeting(selector)) {
         if (isValidCubeTarget(table, card)) {
             return 'card-targetable-cubes';
         } else if (isValidCardTarget(table, card)) {
-            return 'card-targetable';
+            if (selectorCanPlayCard(selector, card)) {
+                return 'card-playable';
+            } else {
+                return 'card-targetable';
+            }
         }
     }
     if (isCardCurrent(selector, card) || isCardPrompted(selector, card)) {
