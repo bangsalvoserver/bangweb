@@ -99,41 +99,36 @@ export default function useBangConnection() {
 
     const connection = useWebSocket<ServerMessage, ClientMessage>(bangServerUrl);
 
-    const connected = useEvent(async () => {
-        if (scene.type === 'loading') {
-            connection.sendMessage({
-                connect: {
-                    user: await makeUserInfo(settings.username, settings.propic),
-                    session_id: settings.sessionId,
-                    commit_hash: Env.commitHash
-                }
-            });
+    const initial = useEvent(() => {
+        if (settings.sessionId) {
+            connection.connect();
         }
     });
 
+    const connected = useEvent(async () => {
+        connection.sendMessage({
+            connect: {
+                user: await makeUserInfo(settings.username, settings.propic),
+                session_id: settings.sessionId,
+                commit_hash: Env.commitHash
+            }
+        });
+    });
+
     const disconnected = useEvent((reason: string | null) => {
-        if (scene.type === 'loading') {
-            if (settings.sessionId) {
-                connection.connect();
-            } else {
-                sceneDispatch({ reset: {} });
-                sceneDispatch({ setError: { type: 'server', message: reason ?? "ERROR_CANNOT_CONNECT_TO_SERVER" }});
-            }
-        } else if (scene.type !== 'connect') {
-            sceneDispatch({ reset: {} });
-            if (settings.sessionId) {
-                sceneDispatch({ setError: { type: 'server', message: reason ?? "ERROR_DISCONNECTED_FROM_SERVER" }});
-            }
+        sceneDispatch({ reset: {} });
+        if (settings.sessionId) {
+            sceneDispatch({ setError: { type: 'server', message: reason ?? "ERROR_DISCONNECTED_FROM_SERVER" }});
         }
     });
 
     useEffect(() => {
-        if (connection.connectionState.state === 'connected') {
-            connected();
-        } else {
-            disconnected(connection.connectionState.reason);
+        switch (connection.connectionState.state) {
+        case 'initial': initial(); break;
+        case 'connected': connected(); break;
+        case 'disconnected': disconnected(connection.connectionState.reason); break;
         }
-    }, [connection, connected, disconnected]);
+    }, [connection, initial, connected, disconnected]);
 
     useEffect(() => {
         connection.subscribe(createUnionDispatch<ServerMessage>({

@@ -2,8 +2,9 @@ import { Dispatch, useMemo, useRef, useState } from "react";
 import useChannel from "./UseChannel";
 
 export type ConnectionState =
-    { state: 'disconnected', reason: string | null } |
-    { state: 'connected' }
+    { state: 'initial' } |
+    { state: 'connected' } |
+    { state: 'disconnected', reason: string | null };
 
 export interface WebSocketConnection<ServerMessage, ClientMessage> {
     subscribe: (handler: Dispatch<ServerMessage>) => void;
@@ -17,7 +18,7 @@ export interface WebSocketConnection<ServerMessage, ClientMessage> {
 export default function useWebSocket<ServerMessage, ClientMessage>(url: string): WebSocketConnection<ServerMessage, ClientMessage> {
     const channel = useChannel<ServerMessage>();
     const socket = useRef<WebSocket>();
-    const [connectionState, setConnectionState] = useState<ConnectionState>({ state: 'disconnected', reason: null });
+    const [connectionState, setConnectionState] = useState<ConnectionState>({ state: 'initial' });
 
     return useMemo(() => ({
         subscribe: channel.subscribe,
