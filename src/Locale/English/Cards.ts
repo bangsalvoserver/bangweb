@@ -315,7 +315,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     YOOMA:                      "Yooma",
     GAME_PASS:                  "End turn",
     GAME_CONFIRM:               "Confirm",
-    GAME_DISMISS:               "Dismiss",
+    GAME_DISMISS:               "Continue",
     GAME_SELL_BEER:             "Sell beer",
     GAME_DISCARD_BLACK:         "Discard equip",
     GAME_DISCARD_BRONCO:        "Discard Bronco",
