@@ -116,7 +116,7 @@ export default function useBangConnection() {
 
     const disconnected = useEvent((reason: string | null) => {
         sceneDispatch({ reset: {} });
-        if (settings.sessionId) {
+        if (reason !== null || settings.sessionId !== null) {
             sceneDispatch({ setError: { type: 'server', message: reason ?? "ERROR_DISCONNECTED_FROM_SERVER" }});
         }
     });
