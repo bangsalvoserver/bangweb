@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { curry2 } from "ts-curry";
 import { LobbyState } from "../../Model/SceneState";
+import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { isMobileDevice } from "../../Utils/MobileCheck";
 import { useMapRef } from "../../Utils/UseMapRef";
@@ -54,7 +55,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
   const selectorConfirm = useSelectorConfirm(table, selectorDispatch);
   useSendGameAction(table.selector, connection);
 
-  const handleRejoin = (player_id: PlayerId) => () => connection.sendMessage({ game_rejoin: player_id });
+  const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
 
   const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
@@ -128,7 +129,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
     return <div key={player_id} className="player-grid-item" player-index={index}>
       {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
-        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player} handleRejoin={handleRejoin(player_id)} />}
+        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player} handleRejoin={handleRejoin(player.user_id)} />}
     </div>;
   });
 

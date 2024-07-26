@@ -1,6 +1,5 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
-import { PlayerId } from "../Scenes/Game/Model/GameUpdate";
-import { Empty, LobbyId, LobbyInfo, LobbyMakeArgs, UserInfo } from "./ServerMessage";
+import { Empty, LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./ServerMessage";
 
 export interface ClientConnect {
     user: UserInfo;
@@ -19,5 +18,5 @@ export type ClientMessage =
     {lobby_chat: { message: string }} |
     {lobby_return: Empty } |
     {game_start: Empty } |
-    {game_rejoin: PlayerId} |
+    {game_rejoin: { user_id: UserId }} |
     {game_action: GameAction};
