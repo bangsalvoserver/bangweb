@@ -20,7 +20,6 @@
     "yargs": "^17.7.2"
   },
   "scripts": {
-    "build_env": "node scripts/build_env.js",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "vite": "vite",

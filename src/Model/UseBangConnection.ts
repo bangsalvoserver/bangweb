@@ -109,8 +109,7 @@ export default function useBangConnection() {
         connection.sendMessage({
             connect: {
                 user: await makeUserInfo(settings.username, settings.propic),
-                session_id: settings.sessionId,
-                commit_hash: Env.commitHash
+                session_id: settings.sessionId
             }
         });
     });

@@ -107,7 +107,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
     server: {
         ERROR_CANNOT_CONNECT_TO_SERVER: "Impossibile connettersi al server",
         ERROR_DISCONNECTED_FROM_SERVER: "Disconnessione dal server",
-        INVALID_CLIENT_COMMIT_HASH: "Il server ha una versione diversa dal client. Attendere qualche minuto e riprovare.",
         SERVER_STOP: "Il server è stato chiuso. Attendere qualche minuto e riprovare.",
         HANDSHAKE_FAIL: "Errore durante la connessione",
         RECONNECT_WITH_SAME_SESSION_ID: "La sessione è stata trasferita",

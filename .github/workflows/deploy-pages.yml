@@ -28,7 +28,7 @@ jobs:
       run: npm install
 
     - name: Build .env file
-      run: npm run build_env -- --BANG_SERVER_URL=${{ vars.BANG_SERVER_URL }}
+      run: echo "VITE_BANG_SERVER_URL=${{ vars.BANG_SERVER_URL }}" > .env
 
     - name: Build
       run: npm run build

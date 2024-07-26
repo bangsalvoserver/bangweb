@@ -4,7 +4,6 @@ import { Empty, LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./Se
 export interface ClientConnect {
     user: UserInfo;
     session_id?: number;
-    commit_hash?: string;
 }
 
 export type ClientMessage =
