@@ -14,6 +14,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     PROMPT_TARGET_SELF_GHOST_CARD: () =>                                    <>Stai scartando la tua carta fantasma. Continuare?</>,
     PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                     <>Giocare {card} per curarsi di {amount === 1 ? "un punto vita" : `${amount} punti vita`} sprecherebbe {max_amount === 1 ? "un punto vita" : `${max_amount} punti vita`}. Continuare?</>,
     PROMPT_BANDIDOS_SUICIDE: (card) =>                                      <>Giocare {card} porta al suicidio. Continuare?</>,
+    PROMPT_DEATH: () =>                                                     <>Puoi giocare una birra per salvarti. Continuare?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card} : Giocare la carta o scartarla?</>,
 
     STATUS_GAME_OVER: () =>                                                 <>Partita Finita</>,
