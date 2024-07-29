@@ -217,7 +217,7 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
     if (filter.includes('missedcard') && !cardHasTag(target, 'missedcard')) return false;
     if (filter.includes('not_missedcard') && cardHasTag(target, 'missedcard')) return false;
     if (filter.includes('bronco') && !cardHasTag(target, 'bronco')) return false;
-    if (filter.includes('catbalou_panic') && !cardHasTag(target, 'cat_balou') && !cardHasTag(target, 'panic')) return false;
+    if (filter.includes('catbalou_panic') && !cardHasTag(target, 'catbalou_panic')) return false;
 
     const color = getCardColor(target);
     if (filter.includes('blue') && color !== 'blue') return false;
