@@ -20,7 +20,7 @@ function WaitingArea({ lobbies, connection, lobbyName, setLobbyName, gameOptions
   const handleCreateLobby = function (event: SyntheticEvent) {
     event.preventDefault();
     if (lobbyName) {
-      connection.sendMessage({ lobby_make: { name: lobbyName, options: gameOptions }});
+      connection.sendMessage({ lobby_make: { name: lobbyName, options: gameOptions ?? null }});
     }
   };
 

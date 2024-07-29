@@ -1,9 +1,15 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
-import { Empty, LobbyId, LobbyInfo, LobbyMakeArgs, UserId, UserInfo } from "./ServerMessage";
+import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
+import { Empty, LobbyId, LobbyInfo, UserId, UserInfo } from "./ServerMessage";
 
 export interface ClientConnect {
     user: UserInfo;
     session_id: number;
+}
+
+export interface LobbyMakeArgs {
+    name: string;
+    options: GameOptions | null;
 }
 
 export type ClientMessage =

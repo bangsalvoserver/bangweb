@@ -15,8 +15,8 @@ async function loadImage(src: ImageSrc): Promise<HTMLImageElement> {
     });
 }
 
-export async function serializeImage(src: ImageSrc | undefined, scale?: number): Promise<ImagePixels | undefined> {
-    if (!src) return undefined;
+export async function serializeImage(src: ImageSrc | undefined, scale?: number): Promise<ImagePixels | null> {
+    if (!src) return null;
     
     let image = await loadImage(src);
 
@@ -35,7 +35,7 @@ export async function serializeImage(src: ImageSrc | undefined, scale?: number):
 
     let ctx = canvas.getContext('2d');
     if (!ctx) {
-        return undefined;
+        return null;
     }
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
@@ -47,7 +47,7 @@ export async function serializeImage(src: ImageSrc | undefined, scale?: number):
     return {width: canvas.width, height: canvas.height, pixels: window.btoa(binary)};
 }
 
-export function deserializeImage(data: ImagePixels | undefined): ImageSrc | undefined {
+export function deserializeImage(data: ImagePixels | null): ImageSrc | undefined {
     if (!data || data.width === 0 || data.height === 0) {
         return undefined;
     }

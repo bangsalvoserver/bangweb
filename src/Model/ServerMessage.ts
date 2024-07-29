@@ -22,11 +22,6 @@ export interface LobbyUpdate {
     state: LobbyStateEnum;
 }
 
-export interface LobbyMakeArgs {
-    name: string;
-    options?: GameOptions;
-}
-
 export interface LobbyInfo {
     name: string;
     options: GameOptions;
@@ -47,7 +42,7 @@ export interface LobbyRemoved {
 
 export interface UserInfo {
     name: string;
-    profile_image?: ImagePixels;
+    profile_image: ImagePixels | null;
 }
 
 export interface LobbyAddUser {
