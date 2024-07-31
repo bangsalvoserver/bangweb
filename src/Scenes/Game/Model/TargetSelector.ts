@@ -379,31 +379,14 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
     case 'extra_card':
     case 'cards':
     case 'max_cards':
-        if (player && !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
-            return false;
-        }
-        if (!checkCardFilter(table, effect.card_filter, card)) {
-            return false;
-        }
-        return true;
-    case 'card_per_player': {
-        if (!checkCardFilter(table, effect.card_filter, card)) {
-            return false;
-        }
-        if (!player || isPlayerSelected(selector, player)
-            || !checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))) {
-            return false;
-        }
-        const lastTarget = targets.at(index);
-        if (lastTarget && 'card_per_player' in lastTarget) {
-            if (lastTarget.card_per_player.some(targetCard =>
-                targetCard > 0 && getCardOwner(getCard(table, targetCard)) === player
-            )) {
-                return false;
-            }
-        }
-        return true;
-    }
+        return (!player || checkPlayerFilter(table, effect.player_filter, getPlayer(table, player)))
+            && checkCardFilter(table, effect.card_filter, card);
+    case 'card_per_player':
+        return player !== undefined && !isPlayerSelected(selector, player)
+            && checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))
+            && checkCardFilter(table, effect.card_filter, card)
+            && !(targets[index] as { card_per_player: CardId[] }).card_per_player
+                .some(targetCard => targetCard !== 0 && getCardOwner(getCard(table, targetCard)) === player);
     case 'select_cubes':
     case 'select_cubes_optional':
     case 'select_cubes_repeat':
