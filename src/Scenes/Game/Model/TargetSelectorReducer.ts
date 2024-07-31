@@ -398,21 +398,7 @@ function confirmTarget(targets: CardTarget[]): CardTarget[] {
     if (lastTarget) {
         const [key, value] = Object.entries(lastTarget)[0];
         if (Array.isArray(value)) {
-            const zeroIndex = value.indexOf(0);
-            if (zeroIndex === 0) {
-                switch (key) {
-                case 'select_cubes_repeat':
-                    return targets.slice(0, -1).concat({ select_cubes_repeat: [] });
-                case 'select_cubes_optional':
-                    return targets.slice(0, -1).concat({ select_cubes_optional: [] });
-                case 'select_cubes_players':
-                    return targets.slice(0, -1).concat({ select_cubes_players: [] });
-                default:
-                    return targets.slice(0, -1);
-                }
-            } else if (zeroIndex > 0) {
-                return targets.slice(0, -1).concat({ [key]: value.slice(0, zeroIndex) } as CardTarget);
-            }
+            return targets.slice(0, -1).concat({ [key]: value.slice(0, value.indexOf(0)) } as CardTarget);
         }
     }
     return targets;
