@@ -460,6 +460,7 @@ export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
     case 'adjacent_players': {
         const checkTargets = (target1: Player, target2: Player) => {
             return target1.id !== target2.id && target2.id !== table.self_player
+                && isPlayerInGame(target2)
                 && calcPlayerDistance(table, target1.id, target2.id) <= effect.target_value;
         };
         const firstPlayer = (targets[index] as {adjacent_players: PlayerId[]}).adjacent_players[0];
@@ -467,7 +468,7 @@ export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
             return checkPlayerFilter(table, effect.player_filter, player)
                 && table.alive_players.some(target2 => checkTargets(player, getPlayer(table, target2)));
         } else {
-            return isPlayerInGame(player) && checkTargets(getPlayer(table, firstPlayer), player);
+            return checkTargets(getPlayer(table, firstPlayer), player);
         }
     }
     default:
