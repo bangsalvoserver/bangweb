@@ -250,25 +250,32 @@ function setSelectorMode(selector: TargetSelector, mode: PlayCardSelectionMode):
 function handlePreselect(table: GameTable): TargetSelector {
     const selector = table.selector;
     if (isResponse(selector)) {
+        let preselectCard: KnownCard | undefined;
         for (const pair of selector.request.respond_cards) {
-            const cardId = pair.modifiers.at(0) ?? pair.card;
-            const card = getCard(table, cardId);
+            const card = getCard(table, pair.modifiers.at(0) ?? pair.card);
             if (cardHasTag(card, 'preselect')) {
-                return handleAutoTargets({
-                    ...table,
-                    selector: {
-                        ...selector,
-                        selection: {
-                            ...selector.selection,
-                            mode: 'preselect',
-                            preselection: {
-                                card,
-                                targets: []
-                            }
+                if (!preselectCard) {
+                    preselectCard = card;
+                } else if (preselectCard.id !== card.id) {
+                    throw new Error('Multiple preselect cards in response');
+                }
+            }
+        }
+        if (preselectCard) {
+            return handleAutoTargets({
+                ...table,
+                selector: {
+                    ...selector,
+                    selection: {
+                        ...selector.selection,
+                        mode: 'preselect',
+                        preselection: {
+                            card: preselectCard,
+                            targets: []
                         }
                     }
-                });
-            }
+                }
+            });
         }
     }
     return selector;
