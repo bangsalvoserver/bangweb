@@ -226,17 +226,6 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
     }
 }
 
-function confirmTarget(targets: CardTarget[]): CardTarget[] {
-    const lastTarget = targets.at(-1);
-    if (lastTarget) {
-        const [key, value] = Object.entries(lastTarget)[0];
-        if (Array.isArray(value)) {
-            return targets.slice(0, -1).concat({ [key]: value.slice(0, value.indexOf(0)) } as CardTarget);
-        }
-    }
-    return targets;
-}
-
 const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, TargetSelector>({
     setRequest (request) {
         return handlePreselect({ ...this, selector: newTargetSelector(request) });
@@ -249,7 +238,8 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     confirmPlay () {
         return handleAutoTargets({
             ...this,
-            selector: editSelectorTargets(this.selector, confirmTarget)
+            selector: editSelectorTargets(this.selector, targets => 
+                targets.slice(0, -1).concat(targetDispatch.confirmSelection(targets[targets.length - 1])))
         });
     },
 

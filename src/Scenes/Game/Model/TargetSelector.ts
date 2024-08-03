@@ -122,21 +122,15 @@ function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, CardTar
     }
 }
 
-function getNextTargetIndex(targets: CardTarget[]): number {
-    if (targets.length !== 0) {
-        let lastTarget = Object.values(targets.at(-1)!)[0];
-        if (Array.isArray(lastTarget) && lastTarget.includes(0)) {
-            return targets.length - 1;
-        }
-    }
-    return targets.length;
-}
-
 export function getTargetSelectorStatus(selector: TargetSelector) {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const index = getNextTargetIndex(targets);
     const effects = getCardEffects(currentCard, isResponse(selector));
-    return {currentCard, effects, targets, index};
+    
+    let index = targets.length;
+    if (targets.length !== 0 && !targetDispatch.isSelectionFinished(targets[targets.length-1])) {
+        --index;
+    }
+    return { currentCard, effects, targets, index } as const;
 }
 
 export function selectorIsTargeting(selector: TargetSelector) {
