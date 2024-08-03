@@ -1,11 +1,12 @@
 import { Empty } from "../../../Model/ServerMessage";
-import { count, countIf, sum } from "../../../Utils/ArrayUtils";
+import { sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getEquipTarget, isEquipCard, isPlayerInGame } from "./Filters";
+import { checkPlayerFilter, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import targetDispatch from "./TargetDispatch";
 
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | Empty;
 
@@ -137,20 +138,9 @@ export function selectorCanConfirm(selector: TargetSelector) {
         const [currentCard, targets] = getCurrentCardAndTargets(selector);
         const index = getNextTargetIndex(targets);
         if (targets.length !== 0 && index < targets.length) {
-            const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
-            const target = targets.at(-1)!;
-            switch (true) {
-            case 'max_cards' in target:
-                return target.max_cards[0] !== 0;
-            case 'move_cube_slot' in target:
-                return target.move_cube_slot[0] !== 0;
-            case 'select_cubes_optional' in target:
-                return target.select_cubes_optional.at(0) === 0;
-            case 'select_cubes_repeat' in target:
-                return target.select_cubes_repeat.indexOf(0) % (effect?.target_value ?? 1) === 0;
-            case 'select_cubes_players' in target:
-                return true;
-            }
+            const target = targets[targets.length - 1];
+            const effect = getCardEffects(currentCard, isResponse(selector))[index];
+            return targetDispatch.isSelectionConfirmable(target, effect);
         }
     }
     return false;
@@ -248,24 +238,7 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
 }
 
 export function isCardSelected(selector: TargetSelector, card: CardId): boolean {
-    const check = (target: CardTarget) => {
-        switch (true) {
-        case 'card' in target:
-            return target.card === card;
-        case 'extra_card' in target:
-            return target.extra_card === card;
-        case 'cards' in target:
-            return target.cards.includes(card);
-        case 'max_cards' in target:
-            return target.max_cards.includes(card);
-        case 'card_per_player' in target:
-            return target.card_per_player.includes(card);
-        case 'move_cube_slot' in target:
-            return target.move_cube_slot.includes(card);
-        default:
-            return false;
-        }
-    };
+    const check = (target: CardTarget) => targetDispatch.isCardSelected(target, card);
     if (selector.selection.targets.some(check)) {
         return true;
     }
@@ -286,20 +259,7 @@ export function isHandSelected(table: GameTable, card: Card): boolean {
 }
 
 export function isPlayerSelected(selector: TargetSelector, player: PlayerId): boolean {
-    const check = (target: CardTarget) => {
-        switch (true) {
-        case 'player' in target:
-            return target.player === player;
-        case 'conditional_player' in target:
-            return target.conditional_player === player;
-        case 'adjacent_players' in target:
-            return target.adjacent_players.includes(player);
-        case 'player_per_cube' in target:
-            return target.player_per_cube.includes(player);
-        default:
-            return false;
-        }
-    };
+    const check = (target: CardTarget) => targetDispatch.isPlayerSelected(target, player);
     if (selector.selection.targets.some(check)) {
         return true;
     }
@@ -309,22 +269,9 @@ export function isPlayerSelected(selector: TargetSelector, player: PlayerId): bo
     return false;
 }
 
-export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], effects: CardEffect[], condition: (card: CardId) => boolean): number {
+export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], effects: CardEffect[], condition?: (card: CardId) => boolean): number {
     return sum(zipCardTargets(targets, effects), ([target, effect]) => {
-        switch (true) {
-        case 'select_cubes' in target:
-            return countIf(target.select_cubes, condition);
-        case 'select_cubes_optional' in target:
-            return countIf(target.select_cubes_optional, condition);
-        case 'select_cubes_repeat' in target:
-            return countIf(target.select_cubes_repeat, condition);
-        case 'select_cubes_players' in target:
-            return countIf(target.select_cubes_players, condition);
-        case 'self_cubes' in target:
-            return effect.target_value * +condition(card.id);
-        default:
-            return 0;
-        }
+        return targetDispatch.countCubesIf(target, effect, card, condition);
     });
 }
 
@@ -355,52 +302,21 @@ export function countSelectableCubes(table: GameTable): number {
 
 export function isValidCubeTarget(table: GameTable, card: Card): boolean {
     const selector = table.selector;
-
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const nextTarget = getCardEffects(currentCard, isResponse(selector)).at(index);
+    const effect = getCardEffects(currentCard, isResponse(selector))[index];
 
-    const nextTargetType = nextTarget?.target ?? 'none';
-    return nextTargetType.startsWith('select_cubes')
-        && getCardOwner(card) === table.self_player
-        && card.num_cubes > countSelectedCubes(selector, card);
+    return targetDispatch.isValidCubeTarget(table, effect, card);
 }
 
 export function isValidCardTarget(table: GameTable, card: Card): boolean {
-    const player = getCardOwner(card);
-
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
+    const effect = getCardEffects(currentCard, isResponse(selector))[index];
 
-    switch (effect?.target) {
-    case 'card':
-    case 'extra_card':
-    case 'cards':
-    case 'max_cards':
-        return (!player || checkPlayerFilter(table, effect.player_filter, getPlayer(table, player)))
-            && checkCardFilter(table, effect.card_filter, card);
-    case 'card_per_player':
-        return player !== undefined && !isPlayerSelected(selector, player)
-            && checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))
-            && checkCardFilter(table, effect.card_filter, card)
-            && !(targets[index] as { card_per_player: CardId[] }).card_per_player
-                .some(targetCard => targetCard !== 0 && getCardOwner(getCard(table, targetCard)) === player);
-    case 'select_cubes':
-    case 'select_cubes_optional':
-    case 'select_cubes_repeat':
-    case 'select_cubes_players':
-        return player === table.self_player
-            && card.num_cubes > countSelectedCubes(selector, card);
-    case 'move_cube_slot':
-        return player === table.self_player
-            && card.pocket?.name === 'player_table'
-            && getCardColor(card) === 'orange'
-            && card.num_cubes < 4 - count((targets[index] as {move_cube_slot: CardId[]}).move_cube_slot, card.id);
-    default:
-        return false;
-    }
+    return targetDispatch.isValidCubeTarget(table, effect, card)
+        || targetDispatch.isValidCardTarget(table, targets.at(index), effect, card);
 }
 
 export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
@@ -433,30 +349,9 @@ export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
     const selector = table.selector;
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const index = getNextTargetIndex(targets);
-    const effect = getCardEffects(currentCard, isResponse(selector)).at(index);
-
-    switch (effect?.target) {
-    case 'player':
-    case 'conditional_player':
-    case 'player_per_cube':
-        return checkPlayerFilter(table, effect.player_filter, player);
-    case 'adjacent_players': {
-        const checkTargets = (target1: Player, target2: Player) => {
-            return target1.id !== target2.id && target2.id !== table.self_player
-                && isPlayerInGame(target2)
-                && calcPlayerDistance(table, target1.id, target2.id) <= effect.target_value;
-        };
-        const firstPlayer = (targets[index] as {adjacent_players: PlayerId[]}).adjacent_players[0];
-        if (firstPlayer === 0) {
-            return checkPlayerFilter(table, effect.player_filter, player)
-                && table.alive_players.some(target2 => checkTargets(player, getPlayer(table, target2)));
-        } else {
-            return checkTargets(getPlayer(table, firstPlayer), player);
-        }
-    }
-    default:
-        return false;
-    }
+    const effect = getCardEffects(currentCard, isResponse(selector))[index];
+    
+    return targetDispatch.isValidPlayerTarget(table, targets.at(index), effect, player);
 }
 
 export function isValidEquipTarget(table: GameTable, player: Player): boolean {
