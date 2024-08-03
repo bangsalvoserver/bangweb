@@ -5,7 +5,7 @@ import { CardTarget, TargetType } from "./CardEnums";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getPlayer, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { countSelectableCubes, countSelectedCubes, countTargetsSelectedCubes, getCardEffects, getCurrentCardAndTargets, getModifierContext, isPlayerSelected, isResponse } from "./TargetSelector";
+import { countSelectableCubes, countSelectedCubes, countTargetsSelectedCubes, getModifierContext, getTargetSelectorStatus, isPlayerSelected } from "./TargetSelector";
 
 interface TargetDispatch<T> {
     isCardSelected: (target: T, card: CardId) => boolean;
@@ -187,9 +187,7 @@ const targetDispatch = buildDispatch({
         appendPlayerTarget: appendMultiTarget,
         isValidPlayerTarget,
         buildAutoTarget: (table, effect) => {
-            const selector = table.selector;
-            const [currentCard, targets] = getCurrentCardAndTargets(selector);
-            const effects = getCardEffects(currentCard, isResponse(selector));
+            const {currentCard, targets, effects} = getTargetSelectorStatus(table.selector);
             const numCubes = countTargetsSelectedCubes(currentCard, targets, effects);
             return buildZeroes(numCubes + 1);
         }

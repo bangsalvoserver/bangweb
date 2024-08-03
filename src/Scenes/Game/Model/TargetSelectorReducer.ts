@@ -6,7 +6,7 @@ import { cardHasTag, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
-import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, getCardEffects, getCurrentCardAndTargets, getModifierContext, getNextTargetIndex, getPlayableCards, isCardCurrent, isCardModifier, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, getModifierContext, getPlayableCards, getTargetSelectorStatus, isCardCurrent, isCardModifier, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -62,19 +62,13 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
 }
 
 function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMapper {
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const index = getNextTargetIndex(targets);
-    const effect = getCardEffects(currentCard, isResponse(selector))[index];
-
-    return _ => targets.slice(0, index).concat(targetDispatch.appendCardTarget(targets.at(index), effect, card));
+    const {effects, targets, index} = getTargetSelectorStatus(selector);
+    return _ => targets.slice(0, index).concat(targetDispatch.appendCardTarget(targets.at(index), effects[index], card));
 }
 
 function appendPlayerTarget(selector: TargetSelector, player: PlayerId): TargetListMapper {
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const index = getNextTargetIndex(targets);
-    const effect = getCardEffects(currentCard, isResponse(selector))[index];
-
-    return _ => targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(targets.at(index), effect, player));
+    const {effects, targets, index} = getTargetSelectorStatus(selector);
+    return _ => targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(targets.at(index), effects[index], player));
 }
 
 function setSelectorMode(selector: TargetSelector, mode: PlayCardSelectionMode): TargetSelector {
@@ -169,9 +163,7 @@ function handleEndPreselection(table: GameTable, remove: boolean = true): Target
 
 function handleAutoTargets(table: GameTable): TargetSelector {
     const selector = table.selector;
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const effects = getCardEffects(currentCard, isResponse(selector));
-    const index = getNextTargetIndex(targets);
+    const {effects, targets, index} = getTargetSelectorStatus(selector);
 
     if (index >= effects.length) {
         switch (selector.selection.mode) {

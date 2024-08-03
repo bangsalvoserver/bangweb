@@ -107,7 +107,7 @@ export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelec
     };
 }
 
-export function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, CardTarget[]] {
+function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, CardTarget[]] {
     switch (selector.selection.mode) {
     case 'preselect':
         return [selector.selection.preselection!.card, selector.selection.preselection!.targets];
@@ -120,6 +120,23 @@ export function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, 
     default:
         throw new Error('TargetSelector: not in targeting mode');
     }
+}
+
+function getNextTargetIndex(targets: CardTarget[]): number {
+    if (targets.length !== 0) {
+        let lastTarget = Object.values(targets.at(-1)!)[0];
+        if (Array.isArray(lastTarget) && lastTarget.includes(0)) {
+            return targets.length - 1;
+        }
+    }
+    return targets.length;
+}
+
+export function getTargetSelectorStatus(selector: TargetSelector) {
+    const [currentCard, targets] = getCurrentCardAndTargets(selector);
+    const index = getNextTargetIndex(targets);
+    const effects = getCardEffects(currentCard, isResponse(selector));
+    return {currentCard, effects, targets, index};
 }
 
 export function selectorIsTargeting(selector: TargetSelector) {
@@ -135,8 +152,7 @@ export function selectorIsTargeting(selector: TargetSelector) {
 
 export function selectorCanConfirm(selector: TargetSelector) {
     if (selectorIsTargeting(selector)) {
-        const [currentCard, targets] = getCurrentCardAndTargets(selector);
-        const index = getNextTargetIndex(targets);
+        const { currentCard, targets, index } = getTargetSelectorStatus(selector);
         if (targets.length !== 0 && index < targets.length) {
             const target = targets[targets.length - 1];
             const effect = getCardEffects(currentCard, isResponse(selector))[index];
@@ -301,22 +317,14 @@ export function countSelectableCubes(table: GameTable): number {
 }
 
 export function isValidCubeTarget(table: GameTable, card: Card): boolean {
-    const selector = table.selector;
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const index = getNextTargetIndex(targets);
-    const effect = getCardEffects(currentCard, isResponse(selector))[index];
-
-    return targetDispatch.isValidCubeTarget(table, effect, card);
+    const { effects, index } = getTargetSelectorStatus(table.selector);
+    return targetDispatch.isValidCubeTarget(table, effects[index], card);
 }
 
 export function isValidCardTarget(table: GameTable, card: Card): boolean {
-    const selector = table.selector;
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const index = getNextTargetIndex(targets);
-    const effect = getCardEffects(currentCard, isResponse(selector))[index];
-
-    return targetDispatch.isValidCubeTarget(table, effect, card)
-        || targetDispatch.isValidCardTarget(table, targets.at(index), effect, card);
+    const { effects, targets, index } = getTargetSelectorStatus(table.selector);
+    return targetDispatch.isValidCubeTarget(table, effects[index], card)
+        || targetDispatch.isValidCardTarget(table, targets.at(index), effects[index], card);
 }
 
 export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
@@ -335,23 +343,9 @@ export function *zipCardTargets(targets: CardTarget[], effects: CardEffect[]): G
     }
 }
 
-export function getNextTargetIndex(targets: CardTarget[]): number {
-    if (targets.length !== 0) {
-        let lastTarget = Object.values(targets.at(-1)!)[0];
-        if (Array.isArray(lastTarget) && lastTarget.includes(0)) {
-            return targets.length - 1;
-        }
-    }
-    return targets.length;
-}
-
 export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
-    const selector = table.selector;
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
-    const index = getNextTargetIndex(targets);
-    const effect = getCardEffects(currentCard, isResponse(selector))[index];
-    
-    return targetDispatch.isValidPlayerTarget(table, targets.at(index), effect, player);
+    const {effects, targets, index} = getTargetSelectorStatus(table.selector);
+    return targetDispatch.isValidPlayerTarget(table, targets.at(index), effects[index], player);
 }
 
 export function isValidEquipTarget(table: GameTable, player: Player): boolean {
