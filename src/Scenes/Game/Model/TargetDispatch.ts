@@ -1,5 +1,4 @@
 import { count, countIf, sum } from "../../../Utils/ArrayUtils";
-import { UnionValue } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, TargetType } from "./CardEnums";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, isPlayerInGame } from "./Filters";
@@ -26,7 +25,7 @@ interface TargetDispatch<T> {
     buildAutoTarget: (table: GameTable, effect: CardEffect) => T | undefined;
 }
 
-type DispatchMap = { [K in TargetType]: Partial<TargetDispatch<UnionValue<CardTarget, K>>> };
+type DispatchMap = { [K in CardTarget as keyof K]: Partial<TargetDispatch<K[keyof K]>> };
 
 function buildDispatch(dispatchMap: DispatchMap) {
     return {
@@ -341,7 +340,7 @@ const targetDispatch = buildDispatch({
         }
     },
     self_cubes: {
-        countCubesIf: (target, effect, card, condition) => effect.target_value * +condition(card.id),
+        countCubesIf: (target, effect, card, condition) => condition(card.id) ? effect.target_value : 0,
         buildAutoTarget: () => ({})
     }
 });

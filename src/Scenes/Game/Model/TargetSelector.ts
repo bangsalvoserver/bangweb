@@ -146,11 +146,9 @@ export function selectorIsTargeting(selector: TargetSelector) {
 
 export function selectorCanConfirm(selector: TargetSelector) {
     if (selectorIsTargeting(selector)) {
-        const { currentCard, targets, index } = getTargetSelectorStatus(selector);
-        if (targets.length !== 0 && index < targets.length) {
-            const target = targets[targets.length - 1];
-            const effect = getCardEffects(currentCard, isResponse(selector))[index];
-            return targetDispatch.isSelectionConfirmable(target, effect);
+        const { effects, targets, index } = getTargetSelectorStatus(selector);
+        if (index < targets.length) {
+            return targetDispatch.isSelectionConfirmable(targets[index], effects[index]);
         }
     }
     return false;
@@ -338,7 +336,7 @@ export function *zipCardTargets(targets: CardTarget[], effects: CardEffect[]): G
 }
 
 export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
-    const {effects, targets, index} = getTargetSelectorStatus(table.selector);
+    const { effects, targets, index } = getTargetSelectorStatus(table.selector);
     return targetDispatch.isValidPlayerTarget(table, targets.at(index), effects[index], player);
 }
 
