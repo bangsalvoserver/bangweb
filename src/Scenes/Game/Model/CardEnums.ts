@@ -7,7 +7,7 @@ export type CardTarget =
     { player: PlayerId } |
     { conditional_player: PlayerId | null } |
     { adjacent_players: PlayerId[] } |
-    { player_per_cube: PlayerId[] } |
+    { player_per_cube: [CardId[], PlayerId[]] } |
     { card: CardId } |
     { extra_card: CardId | null } |
     { players: Empty } |
@@ -18,7 +18,6 @@ export type CardTarget =
     { select_cubes: CardId[] } |
     { select_cubes_optional: CardId[] } |
     { select_cubes_repeat: CardId[] } |
-    { select_cubes_players: CardId[] } |
     { self_cubes: Empty };
 
 export type TargetType = KeysOfUnion<CardTarget>;
