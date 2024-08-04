@@ -90,12 +90,9 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
         },
         buildAutoTarget: (table: GameTable, effect: CardEffect) => {
             const fn = getDispatch(effect.target).buildAutoTarget;
-            if (fn) {
-                const targetValue = fn(table, effect);
-                if (targetValue !== undefined) {
-                    return buildCardTarget(effect.target, targetValue);
-                }
-            }
+            if (!fn) return undefined;
+            const targetValue = fn(table, effect);
+            return targetValue !== undefined ? buildCardTarget(effect.target, targetValue) : undefined;
         }
     }
 }
