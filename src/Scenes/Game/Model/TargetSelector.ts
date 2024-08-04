@@ -277,7 +277,7 @@ export function isPlayerSelected(selector: TargetSelector, player: PlayerId): bo
     return false;
 }
 
-export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], effects: CardEffect[], condition?: (card: CardId) => boolean): number {
+export function countTargetsSelectedCubes(card: Card, targets: CardTarget[], effects: CardEffect[], condition: (card: CardId) => boolean = _ => true): number {
     return sum(zipCardTargets(targets, effects), ([target, effect]) => {
         return targetDispatch.countCubesIf(target, effect, card, condition);
     });

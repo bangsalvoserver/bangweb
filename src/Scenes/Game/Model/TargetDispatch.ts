@@ -6,16 +6,16 @@ import { Card, GameTable, getCard, getPlayer, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, countTargetsSelectedCubes, getModifierContext, getTargetSelectorStatus, isPlayerSelected } from "./TargetSelector";
 
-interface TargetDispatch<T> {
+interface TargetDispatchOf<T> {
     isCardSelected: (target: T, card: CardId) => boolean;
     isValidCardTarget: (table: GameTable, target: T | undefined, effect: CardEffect, card: Card) => boolean;
-    appendCardTarget: (target: T | undefined, card: CardId) => T;
+    appendCardTarget: (target: T | undefined, effect: CardEffect, card: CardId) => T;
 
     isPlayerSelected: (target: T, player: PlayerId) => boolean;
     isValidPlayerTarget: (table: GameTable, target: T | undefined, effect: CardEffect, player: Player) => boolean;
-    appendPlayerTarget: (target: T | undefined, player: PlayerId) => T;
+    appendPlayerTarget: (target: T | undefined, effect: CardEffect, player: PlayerId) => T;
 
-    isValidCubeTarget: (table: GameTable, card: Card) => boolean;
+    isValidCubeTarget: (table: GameTable, effect: CardEffect, card: Card) => boolean;
     countCubesIf: (target: T, effect: CardEffect, card: Card, condition: (card: CardId) => boolean) => number;
 
     isSelectionFinished: (target: T) => boolean;
@@ -25,82 +25,81 @@ interface TargetDispatch<T> {
     buildAutoTarget: (table: GameTable, effect: CardEffect) => T | undefined;
 }
 
-type DispatchMap = { [K in CardTarget as keyof K]: Partial<TargetDispatch<K[keyof K]>> };
+export type TargetDispatch = TargetDispatchOf<CardTarget>;
 
-function buildDispatch(dispatchMap: DispatchMap) {
+type DispatchMap = { [K in CardTarget as keyof K]: Partial<TargetDispatchOf<K[keyof K]>> };
+
+function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
+    const getDispatch = (key: TargetType) => dispatchMap[key] as Partial<TargetDispatchOf<unknown>>;
     return {
         isCardSelected: (target: CardTarget, card: CardId) => {
             const [key, value] = Object.entries(target)[0];
-            const fn = dispatchMap[key as TargetType].isCardSelected;
+            const fn = getDispatch(key as TargetType).isCardSelected;
             if (!fn) return false;
-            return (fn as (target: unknown, card: CardId) => boolean)(value, card);
+            return fn(value, card);
         },
         isValidCardTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, card: Card) => {
-            const fn = dispatchMap[effect.target].isValidCardTarget;
+            const fn = getDispatch(effect.target).isValidCardTarget;
             if (!fn) return false;
             const targetValue = target ? Object.values(target)[0] : undefined;
-            return (fn as (table: GameTable, target: unknown, effect: CardEffect, card: Card) => boolean)(table, targetValue, effect, card);
+            return fn(table, targetValue, effect, card);
         },
         appendCardTarget: (target: CardTarget | undefined, effect: CardEffect, card: CardId) => {
-            const fn = dispatchMap[effect.target].appendCardTarget;
+            const fn = getDispatch(effect.target).appendCardTarget;
             if (!fn) throw new Error('TargetSelector: cannot add card target');
             const targetValue = target ? Object.values(target)[0] : undefined;
-            const result = (fn as (target: unknown, card: CardId) => unknown)(targetValue, card);
-            return {[effect.target]: result} as CardTarget;
+            return {[effect.target]: fn(targetValue, effect, card)} as CardTarget;
         },
         isPlayerSelected: (target: CardTarget, player: PlayerId) => {
             const [key, value] = Object.entries(target)[0];
-            const fn = dispatchMap[key as TargetType].isPlayerSelected;
+            const fn = getDispatch(key as TargetType).isPlayerSelected;
             if (!fn) return false;
-            return (fn as (target: unknown, player: PlayerId) => boolean)(value, player);
+            return fn(value, player);
         },
         isValidPlayerTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, player: Player) => {
-            const fn = dispatchMap[effect.target].isValidPlayerTarget;
+            const fn = getDispatch(effect.target).isValidPlayerTarget;
             if (!fn) return false;
             const targetValue = target ? Object.values(target)[0] : undefined;
-            return (fn as (table: GameTable, target: unknown, effect: CardEffect, player: Player) => boolean)(table, targetValue, effect, player);
+            return fn(table, targetValue, effect, player);
         },
         appendPlayerTarget: (target: CardTarget | undefined, effect: CardEffect, player: PlayerId) => {
-            const fn = dispatchMap[effect.target].appendPlayerTarget;
+            const fn = getDispatch(effect.target).appendPlayerTarget;
             if (!fn) throw new Error('TargetSelector: cannot add player target');
             const targetValue = target ? Object.values(target)[0] : undefined;
-            const result = (fn as (target: unknown, player: PlayerId) => unknown)(targetValue, player);
-            return {[effect.target]: result} as CardTarget;
+            return {[effect.target]: fn(targetValue, effect, player)} as CardTarget;
         },
         isValidCubeTarget: (table: GameTable, effect: CardEffect, card: Card) => {
-            const fn = dispatchMap[effect.target].isValidCubeTarget;
+            const fn = getDispatch(effect.target).isValidCubeTarget;
             if (!fn) return false;
-            return fn(table, card);
+            return fn(table, effect, card);
         },
-        countCubesIf: (target: CardTarget, effect: CardEffect, card: Card, condition: (card: CardId) => boolean = _ => true) => {
-            const fn = dispatchMap[effect.target].countCubesIf;
+        countCubesIf: (target: CardTarget, effect: CardEffect, card: Card, condition: (card: CardId) => boolean) => {
+            const fn = getDispatch(effect.target).countCubesIf;
             if (!fn) return 0;
             const targetValue = target ? Object.values(target)[0] : undefined;
-            return (fn as (target: unknown, effect: CardEffect, card: Card, condition: (card: CardId) => boolean) => number)(targetValue, effect, card, condition);
+            return fn(targetValue, effect, card, condition);
         },
         isSelectionFinished: (target: CardTarget) => {
             const [key, value] = Object.entries(target)[0];
-            const fn = dispatchMap[key as TargetType].isSelectionFinished;
+            const fn = getDispatch(key as TargetType).isSelectionFinished;
             if (!fn) return true;
-            return (fn as (target: unknown) => boolean)(value);
+            return fn(value);
         },
         isSelectionConfirmable: (target: CardTarget, effect: CardEffect) => {
-            const fn = dispatchMap[effect.target].isSelectionConfirmable;
+            const fn = getDispatch(effect.target).isSelectionConfirmable;
             if (!fn) return false;
-            const targetValue = Object.values(target)[0];
-            return (fn as (target: unknown, effect: CardEffect) => boolean)(targetValue, effect);
+            return fn(Object.values(target)[0], effect);
         },
         confirmSelection: (target: CardTarget) => {
             const [key, value] = Object.entries(target)[0];
-            const fn = dispatchMap[key as TargetType].confirmSelection;
+            const fn = getDispatch(key as TargetType).confirmSelection;
             if (!fn) throw new Error('Cannot confirm selection');
-            const result = (fn as (target: unknown) => unknown)(value);
-            return {[key]: result} as CardTarget;
+            return {[key]: fn(value)} as CardTarget;
         },
         buildAutoTarget: (table: GameTable, effect: CardEffect) => {
-            const fn = dispatchMap[effect.target].buildAutoTarget;
+            const fn = getDispatch(effect.target).buildAutoTarget;
             if (fn) {
-                const targetValue = (fn as (table: GameTable, effect: CardEffect) => unknown)(table, effect);
+                const targetValue = fn(table, effect);
                 if (targetValue !== undefined) {
                     return {[effect.target] : targetValue} as CardTarget;
                 }
@@ -121,28 +120,28 @@ const checkMultiTarget = <T>(target: T[], value: T) => {
     return target.includes(value);
 };
 
-const appendSingleTarget = <T>(target: unknown, value: T) => {
+const appendSingleTarget = <T, U extends T>(target: T, effect: CardEffect, value: U) => {
     return value;
 }
 
-const appendMultiTarget = (target: number[] | undefined, value: number) => {
+const appendMultiTarget = (target: number[] | undefined, effect: CardEffect, value: number) => {
     if (!target) throw new Error('TargetSelector: last target is not reserved');
     let copy = [...target];
     copy[target.indexOf(0)] = value;
     return copy;
 }
 
-const isValidPlayerTarget = (table: GameTable, target: unknown, effect: CardEffect, player: Player) => {
+const isValidPlayerTarget = <T>(table: GameTable, target: T, effect: CardEffect, player: Player) => {
     return checkPlayerFilter(table, effect.player_filter, player);
 }
 
-const isValidCardTarget = (table: GameTable, target: unknown, effect: CardEffect, card: Card) => {
+const isValidCardTarget = <T>(table: GameTable, target: T, effect: CardEffect, card: Card) => {
     const player = getCardOwner(card);
     return (!player || checkPlayerFilter(table, effect.player_filter, getPlayer(table, player)))
         && checkCardFilter(table, effect.card_filter, card);
 };
 
-const isValidCubeTarget = (table: GameTable, card: Card) => {
+const isValidCubeTarget = (table: GameTable, effect: CardEffect, card: Card) => {
     return getCardOwner(card) === table.self_player
         && card.num_cubes > countSelectedCubes(table.selector, card);
 };
@@ -178,7 +177,7 @@ const targetDispatch = buildDispatch({
     },
     adjacent_players: {
         isPlayerSelected: checkMultiTarget,
-        appendPlayerTarget: (target, player) => (target ?? []).concat(player),
+        appendPlayerTarget: (target, effect, player) => (target ?? []).concat(player),
         isSelectionFinished: (target) => target.length === 2,
         isValidPlayerTarget: (table, target, effect, player) => {
             const checkTargets = (target1: Player, target2: Player) => {
