@@ -1,4 +1,4 @@
-import { count, countIf, sum } from "../../../Utils/ArrayUtils";
+import { count, countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, TargetType } from "./CardEnums";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, isPlayerInGame } from "./Filters";
@@ -266,14 +266,13 @@ const targetDispatch = buildDispatch({
         isSelectionFinished, confirmSelection,
         buildAutoTarget: (table, effect) => {
             const cardTargetable = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
-            let countTargetableCards = sum(table.players, player => {
+            let countTargetableCards = 0;
+            for (const player of table.players) {
                 if (checkPlayerFilter(table, effect.player_filter, player)) {
-                    return countIf(player.pockets.player_hand, cardTargetable)
-                        + countIf(player.pockets.player_table, cardTargetable);
-                } else {
-                    return 0;
+                    countTargetableCards += countIf(player.pockets.player_hand, cardTargetable);
+                    countTargetableCards += countIf(player.pockets.player_table, cardTargetable);
                 }
-            });
+            }
             if (effect.target_value !== 0 && countTargetableCards > effect.target_value) {
                 countTargetableCards = effect.target_value;   
             }
