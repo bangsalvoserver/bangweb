@@ -31,78 +31,69 @@ type DispatchMap = { [K in CardTarget as keyof K]: Partial<TargetDispatchOf<K[ke
 
 function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
     const getDispatch = (key: TargetType) => dispatchMap[key] as Partial<TargetDispatchOf<unknown>>;
+
+    const cardTargetKeyValue = (target: CardTarget) => Object.entries(target)[0] as [TargetType, unknown];
+    const cardTargetValue = (target: CardTarget | undefined) => target ? Object.values(target)[0] as unknown : undefined;
+    const buildCardTarget = (key: TargetType, value: unknown) => ({[key]: value} as CardTarget);
+
     return {
         isCardSelected: (target: CardTarget, card: CardId) => {
-            const [key, value] = Object.entries(target)[0];
-            const fn = getDispatch(key as TargetType).isCardSelected;
-            if (!fn) return false;
-            return fn(value, card);
+            const [key, value] = cardTargetKeyValue(target);
+            const fn = getDispatch(key).isCardSelected;
+            return fn !== undefined && fn(value, card);
         },
         isValidCardTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, card: Card) => {
             const fn = getDispatch(effect.target).isValidCardTarget;
-            if (!fn) return false;
-            const targetValue = target ? Object.values(target)[0] : undefined;
-            return fn(table, targetValue, effect, card);
+            return fn !== undefined && fn(table, cardTargetValue(target), effect, card);
         },
         appendCardTarget: (target: CardTarget | undefined, effect: CardEffect, card: CardId) => {
             const fn = getDispatch(effect.target).appendCardTarget;
             if (!fn) throw new Error('TargetSelector: cannot add card target');
-            const targetValue = target ? Object.values(target)[0] : undefined;
-            return {[effect.target]: fn(targetValue, effect, card)} as CardTarget;
+            return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, card));
         },
         isPlayerSelected: (target: CardTarget, player: PlayerId) => {
-            const [key, value] = Object.entries(target)[0];
-            const fn = getDispatch(key as TargetType).isPlayerSelected;
-            if (!fn) return false;
-            return fn(value, player);
+            const [key, value] = cardTargetKeyValue(target);
+            const fn = getDispatch(key).isPlayerSelected;
+            return fn !== undefined && fn(value, player);
         },
         isValidPlayerTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, player: Player) => {
             const fn = getDispatch(effect.target).isValidPlayerTarget;
-            if (!fn) return false;
-            const targetValue = target ? Object.values(target)[0] : undefined;
-            return fn(table, targetValue, effect, player);
+            return fn !== undefined && fn(table, cardTargetValue(target), effect, player);
         },
         appendPlayerTarget: (target: CardTarget | undefined, effect: CardEffect, player: PlayerId) => {
             const fn = getDispatch(effect.target).appendPlayerTarget;
             if (!fn) throw new Error('TargetSelector: cannot add player target');
-            const targetValue = target ? Object.values(target)[0] : undefined;
-            return {[effect.target]: fn(targetValue, effect, player)} as CardTarget;
+            return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, player));
         },
         isValidCubeTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, card: Card) => {
             const fn = getDispatch(effect.target).isValidCubeTarget;
-            if (!fn) return false;
-            const targetValue = target ? Object.values(target)[0] : undefined;
-            return fn(table, targetValue, effect, card);
+            return fn !== undefined && fn(table, cardTargetValue(target), effect, card);
         },
         getCubesSelected: (target: CardTarget, effect: CardEffect, originCard: Card, targetCard: Card) => {
             const fn = getDispatch(effect.target).getCubesSelected;
-            if (!fn) return 0;
-            const targetValue = target ? Object.values(target)[0] : undefined;
-            return fn(targetValue, effect, originCard, targetCard);
+            return fn ? fn(cardTargetValue(target), effect, originCard, targetCard) : 0;
         },
         isSelectionFinished: (target: CardTarget) => {
-            const [key, value] = Object.entries(target)[0];
-            const fn = getDispatch(key as TargetType).isSelectionFinished;
-            if (!fn) return true;
-            return fn(value);
+            const [key, value] = cardTargetKeyValue(target);
+            const fn = getDispatch(key).isSelectionFinished;
+            return fn === undefined || fn(value);
         },
         isSelectionConfirmable: (target: CardTarget, effect: CardEffect) => {
             const fn = getDispatch(effect.target).isSelectionConfirmable;
-            if (!fn) return false;
-            return fn(Object.values(target)[0], effect);
+            return fn !== undefined && fn(cardTargetValue(target), effect);
         },
         confirmSelection: (target: CardTarget) => {
-            const [key, value] = Object.entries(target)[0];
-            const fn = getDispatch(key as TargetType).confirmSelection;
+            const [key, value] = cardTargetKeyValue(target);
+            const fn = getDispatch(key).confirmSelection;
             if (!fn) throw new Error('Cannot confirm selection');
-            return {[key]: fn(value)} as CardTarget;
+            return buildCardTarget(key, fn(value));
         },
         buildAutoTarget: (table: GameTable, effect: CardEffect) => {
             const fn = getDispatch(effect.target).buildAutoTarget;
             if (fn) {
                 const targetValue = fn(table, effect);
                 if (targetValue !== undefined) {
-                    return {[effect.target] : targetValue} as CardTarget;
+                    return buildCardTarget(effect.target, targetValue);
                 }
             }
         }
