@@ -154,6 +154,7 @@ const targetIsSized = (target: number[], size: number) => target.length === size
 
 const isSelectionFinished = (target: number[], effect: CardEffect) => target.at(-1) !== 0;
 const confirmSelection = (target: number[]) => target.slice(0, target.indexOf(0));
+const getReservedLength = (target: number[]) => target.at(-1) === 0 ? target.indexOf(0) : target.length;
 
 const targetDispatch = buildDispatch({
     none: {
@@ -195,41 +196,34 @@ const targetDispatch = buildDispatch({
     player_per_cube: {
         appendCardTarget: (target, effect, card) => {
             if (!target) throw new Error('target is not reserved');
-            let [cubes, players] = target;
-            cubes = appendReservedMultiTarget(cubes, effect, card);
-            if (isSelectionFinished(cubes, effect)) {
-                players = buildZeroes(cubes.length + 1);
-            }
-            return [cubes, players];
+            const [cubes, players] = target;
+            return [appendReservedMultiTarget(cubes, effect, card), players];
         },
         appendPlayerTarget: (target, effect, player) => {
             if (!target) throw new Error('target is not reserved');
-            let [cubes, players] = target;
-            players = appendReservedMultiTarget(players, effect, player);
-            return [cubes, players];
+            const [cubes, players] = target;
+            return [cubes, appendMultiTarget(players, effect, player)];
         },
         isValidCubeTarget: (table, target, effect, card) => {
-            return !(target !== undefined && isSelectionFinished(target[0], effect))
+            if (!target) throw new Error('target is not reserved');
+            return !isSelectionFinished(target[0], effect)
                 && isValidCubeTarget(table, target, effect, card);
         },
         isValidPlayerTarget: (table, target, effect, player) => {
-            return target !== undefined && isSelectionFinished(target[0], effect)
-                && isValidPlayerTarget(table, target, effect, player);
+            if (!target) throw new Error('target is not reserved');
+            const [cubes, players] = target;
+            return getReservedLength(cubes) >= players.length && isValidPlayerTarget(table, target, effect, player);
         },
         getCubesSelected: ([cubes, players], effect, originCard, targetCard) => getCubesSelected(cubes, effect, originCard, targetCard),
         isPlayerSelected: ([cubes, players], player) => checkMultiTarget(players, player),
-        isSelectionConfirmable: (target, effect) => !isSelectionFinished(target[0], effect),
-        isSelectionFinished: ([cubes, players], effect) => isSelectionFinished(cubes, effect) && isSelectionFinished(players, effect),
-        confirmSelection: ([cubes, players]) => {
-            cubes = confirmSelection(cubes);
-            players = buildZeroes(cubes.length + 1);
-            return [cubes, players];
-        },
+        isSelectionFinished: ([cubes, players], effect) => isSelectionFinished(cubes, effect) && targetIsSized(players, cubes.length + 1),
+        isSelectionConfirmable: ([cubes, players], effect) => targetIsSized(players, getReservedLength(cubes) + 1),
+        confirmSelection: ([cubes, players]) => [confirmSelection(cubes), players],
         buildAutoTarget: (table, effect) => {
             const cubeCount = countSelectableCubes(table);
             const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)));
             const maxCount = Math.min(cubeCount, numPlayers - 1);
-            return [buildZeroes(maxCount), [0]];
+            return [buildZeroes(maxCount), []];
         }
     },
     card: {
@@ -341,7 +335,7 @@ const targetDispatch = buildDispatch({
     select_cubes_repeat: {
         appendCardTarget: appendReservedMultiTarget,
         isValidCubeTarget, getCubesSelected,
-        isSelectionConfirmable: (target, effect) => target.indexOf(0) % (effect.target_value ?? 1) === 0,
+        isSelectionConfirmable: (target, effect) => getReservedLength(target) % (effect.target_value ?? 1) === 0,
         isSelectionFinished, confirmSelection,
         buildAutoTarget: (table, effect) => {
             const cubeCount = countSelectableCubes(table);
