@@ -126,9 +126,9 @@ export function getTargetSelectorStatus(selector: TargetSelector) {
     const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const effects = getCardEffects(currentCard, isResponse(selector));
     
-    let index = targets.length;
-    if (targets.length !== 0 && !targetDispatch.isSelectionFinished(targets[targets.length-1])) {
-        --index;
+    let index = targets.length - 1;
+    if (targets.length === 0 || targetDispatch.isSelectionFinished(targets[index], effects[index])) {
+        ++index;
     }
     return { currentCard, effects, targets, index } as const;
 }
