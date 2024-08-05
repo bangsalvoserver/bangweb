@@ -202,18 +202,18 @@ const targetDispatch = buildDispatch({
             return !isSelectionFinished(cubes) && isValidCubeTarget(table, cubes, effect, card);
         },
         isValidPlayerTarget: (table, [cubes, players], effect, player) => {
-            return getReservedLength(cubes) >= players.length
+            return getReservedLength(cubes) + effect.target_value > players.length
                 && isValidPlayerTarget(table, players, effect, player);
         },
         getCubesSelected: ([cubes, players], effect, originCard, targetCard) => getCubesSelected(cubes, effect, originCard, targetCard),
         isPlayerSelected: ([cubes, players], player) => checkMultiTarget(players, player),
-        isSelectionFinished: ([cubes, players], effect) => isSelectionFinished(cubes) && targetIsSized(players, cubes.length + 1),
-        isSelectionConfirmable: ([cubes, players], effect) => targetIsSized(players, getReservedLength(cubes) + 1),
+        isSelectionFinished: ([cubes, players], effect) => isSelectionFinished(cubes) && targetIsSized(players, cubes.length + effect.target_value),
+        isSelectionConfirmable: ([cubes, players], effect) => targetIsSized(players, getReservedLength(cubes) + effect.target_value),
         confirmSelection: ([cubes, players]) => [confirmSelection(cubes), players],
         buildAutoTarget: (table, effect) => {
             const cubeCount = countSelectableCubes(table);
             const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)));
-            const maxCount = Math.min(cubeCount, numPlayers - 1);
+            const maxCount = Math.min(cubeCount, numPlayers - effect.target_value);
             return [buildZeroes(maxCount), []];
         }
     }),
