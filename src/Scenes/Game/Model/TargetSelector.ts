@@ -2,9 +2,9 @@ import { Empty } from "../../../Model/ServerMessage";
 import { sum } from "../../../Utils/ArrayUtils";
 import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
-import { CardTarget } from "./CardEnums";
-import { checkPlayerFilter, getEquipTarget, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getCardEffects, getPlayer, isCardKnown } from "./GameTable";
+import { CardTarget } from "./CardTarget";
+import { checkPlayerFilter, getCardEffects, getEquipTarget, isEquipCard } from "./Filters";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 

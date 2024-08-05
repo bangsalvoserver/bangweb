@@ -1,9 +1,9 @@
 import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty } from "../../../Model/ServerMessage";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
-import { CardTarget } from "./CardEnums";
-import { cardHasTag, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, isCardKnown, isCardModifier } from "./GameTable";
+import { CardTarget } from "./CardTarget";
+import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
+import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, getModifierContext, getPlayableCards, getTargetSelectorStatus, isCardCurrent, isResponse, newPlayCardSelection, newTargetSelector } from "./TargetSelector";
@@ -11,7 +11,7 @@ import { GamePrompt, PlayCardSelectionMode, RequestStatusUnion, TargetSelector, 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
     { setPrompt: GamePrompt } |
-    { confirmPlay: Empty } |
+    { confirmSelection: Empty } |
     { undoSelection: Empty } |
     { selectPlayingCard: KnownCard } |
     { addCardTarget: Card } |
@@ -235,7 +235,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
         return { ...this.selector, prompt };
     },
 
-    confirmPlay () {
+    confirmSelection () {
         return handleAutoTargets({
             ...this,
             selector: editSelectorTargets(this.selector, targets => 

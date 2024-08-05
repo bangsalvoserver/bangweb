@@ -1,7 +1,7 @@
 import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty, UserId } from "../../../Model/ServerMessage";
 import { ChangeField } from "../../../Utils/UnionUtils";
-import { CardData, CardEffect, CardSign } from "./CardData";
+import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
 import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
 import { TargetSelector, newTargetSelector } from "./TargetSelector";
@@ -93,14 +93,6 @@ export function getCardBackface(card: Card): string {
         }
     }
     return 'backface/' + card.cardData.deck;
-}
-
-export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
-    return isResponse ? card.cardData.responses : card.cardData.effects;
-}
-
-export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
-    return (isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type) !== null;
 }
 
 export function newPocketId(pocketName: PocketType, player: PlayerId | null = null): PocketId {

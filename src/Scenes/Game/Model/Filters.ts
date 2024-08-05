@@ -1,4 +1,4 @@
-import { CardSign } from "./CardData";
+import { CardEffect, CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
@@ -28,6 +28,14 @@ export function getCardSign(card: Card): CardSign {
 
 export function getCardOwner(card: Card): PlayerId | undefined {
     return card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
+}
+
+export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
+    return isResponse ? card.cardData.responses : card.cardData.effects;
+}
+
+export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
+    return (isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type) !== null;
 }
 
 export function isEquipCard(card: Card): boolean {

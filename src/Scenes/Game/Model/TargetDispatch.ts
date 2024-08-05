@@ -1,6 +1,6 @@
 import { count, countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
-import { CardTarget, TargetType } from "./CardEnums";
+import { CardTarget, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getPlayer, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
@@ -37,58 +37,58 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
     const buildCardTarget = (key: TargetType, value: unknown) => ({[key]: value} as CardTarget);
 
     return {
-        isCardSelected: (target: CardTarget, card: CardId) => {
+        isCardSelected: (target, card) => {
             const [key, value] = cardTargetKeyValue(target);
             const fn = getDispatch(key).isCardSelected;
             return fn !== undefined && fn(value, card);
         },
-        isValidCardTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, card: Card) => {
+        isValidCardTarget: (table, target, effect, card) => {
             const fn = getDispatch(effect.target).isValidCardTarget;
             return fn !== undefined && fn(table, cardTargetValue(target), effect, card);
         },
-        appendCardTarget: (target: CardTarget | undefined, effect: CardEffect, card: CardId) => {
+        appendCardTarget: (target, effect, card) => {
             const fn = getDispatch(effect.target).appendCardTarget;
             if (!fn) throw new Error('TargetSelector: cannot add card target');
             return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, card));
         },
-        isPlayerSelected: (target: CardTarget, player: PlayerId) => {
+        isPlayerSelected: (target, player) => {
             const [key, value] = cardTargetKeyValue(target);
             const fn = getDispatch(key).isPlayerSelected;
             return fn !== undefined && fn(value, player);
         },
-        isValidPlayerTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, player: Player) => {
+        isValidPlayerTarget: (table, target, effect, player) => {
             const fn = getDispatch(effect.target).isValidPlayerTarget;
             return fn !== undefined && fn(table, cardTargetValue(target), effect, player);
         },
-        appendPlayerTarget: (target: CardTarget | undefined, effect: CardEffect, player: PlayerId) => {
+        appendPlayerTarget: (target, effect, player) => {
             const fn = getDispatch(effect.target).appendPlayerTarget;
             if (!fn) throw new Error('TargetSelector: cannot add player target');
             return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, player));
         },
-        isValidCubeTarget: (table: GameTable, target: CardTarget | undefined, effect: CardEffect, card: Card) => {
+        isValidCubeTarget: (table, target, effect, card) => {
             const fn = getDispatch(effect.target).isValidCubeTarget;
             return fn !== undefined && fn(table, cardTargetValue(target), effect, card);
         },
-        getCubesSelected: (target: CardTarget, effect: CardEffect, originCard: Card, targetCard: Card) => {
+        getCubesSelected: (target, effect, originCard, targetCard) => {
             const fn = getDispatch(effect.target).getCubesSelected;
             return fn ? fn(cardTargetValue(target), effect, originCard, targetCard) : 0;
         },
-        isSelectionFinished: (target: CardTarget, effect: CardEffect) => {
+        isSelectionFinished: (target, effect) => {
             const [key, value] = cardTargetKeyValue(target);
             const fn = getDispatch(key).isSelectionFinished;
             return fn === undefined || fn(value, effect);
         },
-        isSelectionConfirmable: (target: CardTarget, effect: CardEffect) => {
+        isSelectionConfirmable: (target, effect) => {
             const fn = getDispatch(effect.target).isSelectionConfirmable;
             return fn !== undefined && fn(cardTargetValue(target), effect);
         },
-        confirmSelection: (target: CardTarget) => {
+        confirmSelection: (target) => {
             const [key, value] = cardTargetKeyValue(target);
             const fn = getDispatch(key).confirmSelection;
             if (!fn) throw new Error('Cannot confirm selection');
             return buildCardTarget(key, fn(value));
         },
-        buildAutoTarget: (table: GameTable, effect: CardEffect) => {
+        buildAutoTarget: (table, effect) => {
             const fn = getDispatch(effect.target).buildAutoTarget;
             if (!fn) return undefined;
             const targetValue = fn(table, effect);
@@ -345,7 +345,7 @@ const targetDispatch = buildDispatch({
         isSelectionFinished, confirmSelection,
         buildAutoTarget: (table, effect) => {
             const cubeCount = countSelectableCubes(table);
-            const maxCount = cubeCount - cubeCount % effect.target_value;
+            const maxCount = cubeCount - cubeCount % (effect.target_value ?? 1);
             return buildZeroes(maxCount);
         }
     },

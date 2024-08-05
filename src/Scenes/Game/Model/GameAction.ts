@@ -1,4 +1,4 @@
-import { CardTarget } from "./CardEnums";
+import { CardTarget } from "./CardTarget";
 import { CardId } from "./GameUpdate";
 
 export interface GameAction {
