@@ -84,7 +84,7 @@
     --card-highlight-color: rgb(180, 27, 0);
 }
 
-.card-current {
+.card-current, .card-prompted {
     --card-highlight-color: #306eff;
 }
 

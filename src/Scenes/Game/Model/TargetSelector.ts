@@ -4,7 +4,7 @@ import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardEnums";
 import { checkPlayerFilter, getEquipTarget, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getCardEffects, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
@@ -321,14 +321,6 @@ export function isValidCardTarget(table: GameTable, card: Card): boolean {
     const effect = effects[index];
     return targetDispatch.isValidCubeTarget(table, target, effect, card)
         || targetDispatch.isValidCardTarget(table, target, effect, card);
-}
-
-export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
-    return isResponse ? card.cardData.responses : card.cardData.effects;
-}
-
-export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
-    return (isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type) !== null;
 }
 
 export function isValidPlayerTarget(table: GameTable, player: Player): boolean {

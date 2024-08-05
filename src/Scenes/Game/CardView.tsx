@@ -26,6 +26,9 @@ export interface CardProps {
 
 export function getSelectorCardClass(table: GameTable, card: Card) {
     const selector = table.selector;
+    if (isCardPrompted(selector, card)) {
+        return 'card-prompted';
+    }
     if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
         if (selectorIsTargeting(selector) && isValidCardTarget(table, card)) {
             return 'card-retargetable';
@@ -44,7 +47,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
             }
         }
     }
-    if (isCardCurrent(selector, card) || isCardPrompted(selector, card)) {
+    if (isCardCurrent(selector, card)) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
         switch (selector.selection.mode) {
