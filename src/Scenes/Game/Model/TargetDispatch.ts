@@ -103,8 +103,10 @@ const reservedDispatch = <T>(dispatch: Partial<TargetDispatchOf<T, T>> & BuildAu
     return dispatch as Partial<TargetDispatchOf<T>>;
 };
 
-const buildZeroes = (count: number) => {
-    return Array<number>(count).fill(0);
+const PLACEHOLDER = -1;
+
+const reserveTargets = (count: number) => {
+    return Array<number>(count).fill(PLACEHOLDER);
 };
 
 const checkSingleTarget = <T, U extends T>(target: T, value: U) => {
@@ -124,7 +126,7 @@ const appendMultiTarget = (target: number[] | undefined, effect: CardEffect, val
 };
 
 const appendReservedTarget = (target: number[], effect: CardEffect, value: number) => {
-    const index = target.indexOf(0);
+    const index = target.indexOf(PLACEHOLDER);
     if (index < 0) throw new Error('Target is full');
     let copy = target.slice();
     copy[index] = value;
@@ -150,13 +152,13 @@ const getCubesSelected = (target: CardId[], effect: CardEffect, originCard: Card
     return count(target, targetCard.id);
 };
 
-const targetIsEmpty = (target: number[], effect?: CardEffect) => target[0] === 0;
-const targetIsNotEmpty = (target: number[], effect?: CardEffect) => target[0] !== 0;
+const targetIsEmpty = (target: number[], effect?: CardEffect) => target[0] === PLACEHOLDER;
+const targetIsNotEmpty = (target: number[], effect?: CardEffect) => target[0] !== PLACEHOLDER;
 const targetIsSized = (target: number[], size: number) => target.length === size;
 
-const isSelectionFinished = (target: number[], effect?: CardEffect) => target.length === 0 || target[target.length - 1] !== 0;
-const confirmSelection = (target: number[]) => isSelectionFinished(target) ? target : target.slice(0, target.indexOf(0));
-const getReservedLength = (target: number[]) => isSelectionFinished(target) ? target.length : target.indexOf(0);
+const isSelectionFinished = (target: number[], effect?: CardEffect) => target.length === 0 || target[target.length - 1] !== PLACEHOLDER;
+const confirmSelection = (target: number[]) => isSelectionFinished(target) ? target : target.slice(0, target.indexOf(PLACEHOLDER));
+const getReservedLength = (target: number[]) => isSelectionFinished(target) ? target.length : target.indexOf(PLACEHOLDER);
 
 const targetDispatch = buildDispatch({
     none: {
@@ -214,7 +216,7 @@ const targetDispatch = buildDispatch({
             const cubeCount = countSelectableCubes(table);
             const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)));
             const maxCount = Math.min(cubeCount, numPlayers - effect.target_value);
-            return [buildZeroes(maxCount), []];
+            return [reserveTargets(maxCount), []];
         }
     }),
     card: {
@@ -259,7 +261,7 @@ const targetDispatch = buildDispatch({
             if (effect.target_value !== 0 && countTargetableCards > effect.target_value) {
                 countTargetableCards = effect.target_value;
             }
-            return buildZeroes(countTargetableCards);
+            return reserveTargets(countTargetableCards);
         }
     }),
     card_per_player: reservedDispatch({
@@ -271,7 +273,7 @@ const targetDispatch = buildDispatch({
             return player !== undefined && !isPlayerSelected(table.selector, player)
                 && checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))
                 && checkCardFilter(table, effect.card_filter, card)
-                && !target?.some(targetCard => targetCard !== 0 && getCardOwner(getCard(table, targetCard)) === player);
+                && !target.some(targetCard => targetCard !== PLACEHOLDER && getCardOwner(getCard(table, targetCard)) === player);
         },
         buildAutoTarget: (table, effect) => {
             const cardIsValid = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
@@ -281,7 +283,7 @@ const targetDispatch = buildDispatch({
                     && checkPlayerFilter(table, effect.player_filter, targetPlayer)
                     && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
             });
-            return buildZeroes(numTargetable);
+            return reserveTargets(numTargetable);
         }
     }),
     move_cube_slot: reservedDispatch({
@@ -306,7 +308,7 @@ const targetDispatch = buildDispatch({
             }
             const firstCharacter = selfPlayer.pockets.player_character[0];
             const characterCubes = getCard(table, firstCharacter).num_cubes;
-            return buildZeroes(Math.min(effect.target_value, cubeSlots, characterCubes));
+            return reserveTargets(Math.min(effect.target_value, cubeSlots, characterCubes));
         }
     }),
     select_cubes: {
@@ -320,7 +322,7 @@ const targetDispatch = buildDispatch({
         isSelectionConfirmable: targetIsEmpty,
         isSelectionFinished, confirmSelection,
         buildAutoTarget: (table, effect) => {
-            return buildZeroes(countSelectableCubes(table) >= effect.target_value ? effect.target_value : 0);
+            return reserveTargets(countSelectableCubes(table) >= effect.target_value ? effect.target_value : 0);
         }
     }),
     select_cubes_repeat: reservedDispatch({
@@ -331,7 +333,7 @@ const targetDispatch = buildDispatch({
         buildAutoTarget: (table, effect) => {
             const cubeCount = countSelectableCubes(table);
             const maxCount = cubeCount - cubeCount % (effect.target_value ?? 1);
-            return buildZeroes(maxCount);
+            return reserveTargets(maxCount);
         }
     }),
     self_cubes: {
