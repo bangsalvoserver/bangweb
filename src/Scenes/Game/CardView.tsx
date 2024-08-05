@@ -41,7 +41,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
             return 'card-targetable-cubes';
         } else if (isValidCardTarget(table, card)) {
             if (selectorCanPlayCard(selector, card)) {
-                return 'card-playable';
+                return 'card-playable card-targetable';
             } else {
                 return 'card-targetable';
             }

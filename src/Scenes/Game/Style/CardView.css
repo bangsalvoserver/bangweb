@@ -84,8 +84,12 @@
     --card-highlight-color: rgb(180, 27, 0);
 }
 
-.card-current, .card-prompted {
+.card-current {
     --card-highlight-color: #306eff;
+}
+
+.card-prompted {
+    --card-highlight-color: #1848b8;
 }
 
 .card-playable {
@@ -95,6 +99,14 @@
 
 .card-playable:hover {
     --card-highlight-color: #189b46de;
+}
+
+.card-playable.card-targetable {
+    --card-highlight-color: #44da1fad;
+}
+
+.card-playable.card-targetable:hover {
+    --card-highlight-color: #33b811ad;
 }
 
 .card-modified {
