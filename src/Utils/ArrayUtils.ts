@@ -30,6 +30,11 @@ export function sum<T>(values: Iterable<T>, mapper: (value: T) => number) {
     return ret;
 }
 
+export function mapLast<T>(arr: T[], mapper: (value: T) => T) {
+    const last = arr[arr.length-1];
+    return arr.slice(0, -1).concat(mapper(last));
+}
+
 export function group<Key, Value>(values: Value[], mapper: (value: Value) => Key): Map<Key, Value[]> {
     let map = new Map<Key, Value[]>();
     values.forEach(value => {

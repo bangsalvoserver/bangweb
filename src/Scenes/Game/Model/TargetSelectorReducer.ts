@@ -1,5 +1,6 @@
 import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty } from "../../../Model/ServerMessage";
+import { mapLast } from "../../../Utils/ArrayUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardTarget";
 import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
@@ -36,16 +37,13 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
             ...selector,
             targets: mapper(selector.targets)
         };
-    case 'modifier':
+    case 'modifier': 
         return {
             ...selector,
-            modifiers: selector.modifiers.map((modifier, index) => {
-                if (index === selector.modifiers.length - 1) {
-                    return { ...modifier, targets: mapper(modifier.targets) };
-                } else {
-                    return modifier;
-                }
-            })
+            modifiers: mapLast(selector.modifiers, mod => ({
+                ...mod,
+                targets: mapper(mod.targets)
+            }))
         };
     default:
         throw new Error('TargetSelector: not in targeting mode');
@@ -204,16 +202,12 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     confirmSelection () {
         return handleAutoTargets({
             ...this,
-            selector: editSelectorTargets(this.selector, targets => 
-                targets.slice(0, -1).concat(targetDispatch.confirmSelection(targets[targets.length - 1])))
+            selector: editSelectorTargets(this.selector, targets => mapLast(targets, targetDispatch.confirmSelection))
         });
     },
 
     undoSelection () {
-        return handlePreselect({
-            ...this,
-            selector: newTargetSelector(this.selector.request)
-        });
+        return handlePreselect({ ...this, selector: newTargetSelector(this.selector.request) });
     },
 
     selectPlayingCard ( card ) {
