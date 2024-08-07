@@ -64,8 +64,8 @@ function setSelectorMode(selector: TargetSelector, mode: TargetSelectorMode): Ta
     return { ...selector, mode };
 }
 
-function handlePreselect(table: GameTable): TargetSelector {
-    const selector = table.selector;
+function handleSetRequest(table: GameTable, request: RequestStatusUnion): TargetSelector {
+    const selector = newTargetSelector(request);
     if (isResponse(selector)) {
         let preselectCard: KnownCard | undefined;
         for (const pair of selector.request.respond_cards) {
@@ -192,7 +192,7 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
 
 const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, TargetSelector>({
     setRequest (request) {
-        return handlePreselect({ ...this, selector: newTargetSelector(request) });
+        return handleSetRequest(this, request);
     },
 
     setPrompt (prompt) {
@@ -207,7 +207,7 @@ const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, Targ
     },
 
     undoSelection () {
-        return handlePreselect({ ...this, selector: newTargetSelector(this.selector.request) });
+        return handleSetRequest(this, this.selector.request);
     },
 
     selectPlayingCard ( card ) {
