@@ -1,6 +1,5 @@
 import { Empty } from "../../../Model/ServerMessage";
 import { sum } from "../../../Utils/ArrayUtils";
-import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget } from "./CardTarget";
 import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
@@ -60,8 +59,8 @@ export interface TargetSelection {
     targets: CardTarget[];
 }
 
-export interface TargetSelector {
-    request: RequestStatusUnion;
+interface TargetSelectorBase<T extends RequestStatusUnion> {
+    request: T;
     prompt: GamePrompt;
     
     playing_card: KnownCard | null;
@@ -71,6 +70,8 @@ export interface TargetSelector {
 
     mode: TargetSelectorMode;
 }
+
+export type TargetSelector = TargetSelectorBase<RequestStatusUnion>;
 
 export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelector {
     return {
@@ -85,14 +86,11 @@ export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelec
     };
 }
 
-export type RequestSelector = ChangeField<TargetSelector, 'request', RequestStatusArgs>;
-export type StatusReadySelector = ChangeField<TargetSelector, 'request', StatusReadyArgs>;
-
-export function isResponse(selector: TargetSelector): selector is RequestSelector {
+export function isResponse(selector: TargetSelector): selector is TargetSelectorBase<RequestStatusArgs> {
     return 'respond_cards' in selector.request;
 }
 
-export function isStatusReady(selector: TargetSelector): selector is StatusReadySelector {
+export function isStatusReady(selector: TargetSelector): selector is TargetSelectorBase<StatusReadyArgs> {
     return 'play_cards' in selector.request;
 }
 

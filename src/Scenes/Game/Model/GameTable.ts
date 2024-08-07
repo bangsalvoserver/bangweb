@@ -1,6 +1,5 @@
 import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty, UserId } from "../../../Model/ServerMessage";
-import { ChangeField } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
 import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
@@ -56,8 +55,10 @@ export type CardAnimation =
     { flash: Duration } |
     { short_pause: Empty };
 
-export interface Card extends Id {
-    cardData: { deck: DeckType } | CardData;
+type CardDeckOrData = { deck: DeckType } | CardData;
+
+interface CardBase<T extends CardDeckOrData> extends Id {
+    cardData: T;
     pocket: PocketId;
 
     inactive: boolean;
@@ -66,6 +67,9 @@ export interface Card extends Id {
     animation?: CardAnimation;
     animationKey: number;
 }
+
+export type Card = CardBase<CardDeckOrData>;
+export type KnownCard = CardBase<CardData>;
 
 function parseCardImage(image: string, deck: string): string {
     return image.includes('/') ? image : `${deck}/${image}`;
@@ -115,8 +119,6 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
         animationKey: 0
     };
 }
-
-export type KnownCard = ChangeField<Card, 'cardData', CardData>;
 
 export function isCardKnown(card: Card): card is KnownCard {
     return 'name' in card.cardData;
