@@ -1,5 +1,5 @@
 import { CardEffect, CardSign } from "./CardData";
-import { CardColor, CardFilter, PlayerFilter, TagType } from "./CardEnums";
+import { CardColor, CardFilter, PlayerFilter, PocketType, TagType } from "./CardEnums";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
 import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse } from "./TargetSelector";
@@ -26,6 +26,10 @@ export function getCardSign(card: Card): CardSign {
     return isCardKnown(card) ? card.cardData.sign : {rank: 'none', suit: 'none'};
 }
 
+export function getCardPocket(card: Card): PocketType {
+    return card.pocket?.name ?? 'none';
+}
+
 export function getCardOwner(card: Card): PlayerId | undefined {
     return card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 }
@@ -39,7 +43,7 @@ export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
 }
 
 export function isEquipCard(card: Card): boolean {
-    switch (card.pocket?.name) {
+    switch (getCardPocket(card)) {
     case 'player_hand':
     case 'shop_selection':
         return getCardColor(card) !== 'brown';
@@ -173,12 +177,14 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
 
     if (!filter.includes('can_target_self') && isCardCurrent(selector, target)) return false;
 
+    const targetPocket = getCardPocket(target);
+
     if (filter.includes('target_set')) {
         if (!isResponse(selector)) return false;
-        switch (target.pocket?.name) {
+        switch (targetPocket) {
         case 'main_deck':
         case 'discard_pile':
-            if (!selector.request.target_set_cards.some(pickCard => getCard(table, pickCard).pocket?.name === target.pocket?.name)) {
+            if (!selector.request.target_set_cards.some(pickCard => getCardPocket(getCard(table, pickCard)) === targetPocket)) {
                 return false;
             }
             break;
@@ -188,10 +194,10 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
             }
         }
     } else if (filter.includes('cube_slot')) {
-        switch (target.pocket?.name) {
+        switch (targetPocket) {
         case 'player_character': {
-            const targetOwner = 'player' in target.pocket ? getPlayer(table, target.pocket.player) : undefined;
-            if (targetOwner?.pockets.player_character[0] !== target.id) {
+            const targetOwner = getCardOwner(target);
+            if (!targetOwner || getPlayer(table, targetOwner)?.pockets.player_character[0] !== target.id) {
                 return false;
             }
             break;
@@ -205,9 +211,9 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
             return false;
         }
     } else {
-        if (filter.includes('selection') !== (target.pocket?.name === 'selection')) return false;
+        if (filter.includes('selection') !== (targetPocket === 'selection')) return false;
 
-        switch (target.pocket?.name) {
+        switch (targetPocket) {
         case 'player_hand':
         case 'player_table':
         case 'selection':
@@ -275,8 +281,8 @@ export function checkCardFilter(table: GameTable, filter: CardFilter[], target: 
         if (!(isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit === sign.suit)) return false;
     }
 
-    if (filter.includes('table') && target.pocket?.name !== 'player_table') return false;
-    if (filter.includes('hand') && target.pocket?.name !== 'player_hand') return false;
+    if (filter.includes('table') && targetPocket !== 'player_table') return false;
+    if (filter.includes('hand') && targetPocket !== 'player_hand') return false;
 
     return true;
 }

@@ -31,7 +31,7 @@ function getSelectorPlayerClass(table: GameTable, player: Player) {
     if (isPlayerSelected(selector, player.id)) {
         return 'player-selected';
     }
-    switch (selector.selection.mode) {
+    switch (selector.mode) {
     case 'preselect':
     case 'target':
     case 'modifier':

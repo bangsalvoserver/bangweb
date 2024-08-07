@@ -8,6 +8,7 @@ import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
 import { getModifierContext, getPlayableCards, isCardCurrent } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
+import { getCardPocket } from "./Model/Filters";
 
 export interface CardChoiceProps {
     tracker: CardTracker;
@@ -43,7 +44,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     const table = useContext(GameTableContext);
 
     const selector = table.selector;
-    if (selector.selection.mode === 'start') return null;
+    if (selector.mode === 'start') return null;
 
     const cardId = getModifierContext(selector, 'card_choice');
     if (!cardId) return null;
@@ -51,9 +52,9 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     let anchor = getCard(table, cardId);
     if (!isCardCurrent(selector, anchor)) return null;
 
-    if (anchor.pocket?.name === 'hidden_deck') {
+    if (getCardPocket(anchor) === 'hidden_deck') {
         let lastTarget: CardId | undefined;
-        for (const { targets } of selector.selection.modifiers) {
+        for (const { targets } of selector.modifiers) {
             for (const target of targets) {
                 if ('card' in target) {
                     lastTarget = target.card;
@@ -65,7 +66,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
         }
     }
 
-    const cards = getPlayableCards({ ...selector, selection: { ...selector.selection, playing_card: null }});
+    const cards = getPlayableCards({ ...selector, playing_card: null });
 
     return <CardChoiceInner cards={cards.map(id => getCard(table, id))} anchor={anchor} tracker={tracker} />
 }

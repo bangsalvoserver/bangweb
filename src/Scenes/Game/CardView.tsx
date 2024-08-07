@@ -50,7 +50,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
     if (isCardCurrent(selector, card)) {
         return 'card-current';
     } else if (selectorCanPlayCard(selector, card)) {
-        switch (selector.selection.mode) {
+        switch (selector.mode) {
         case 'start':
         case 'middle':
         case 'preselect':

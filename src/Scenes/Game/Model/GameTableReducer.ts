@@ -3,6 +3,7 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
+import { getCardPocket } from "./Filters";
 import { GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchById, sortById } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
 import targetSelectorReducer from "./TargetSelectorReducer";
@@ -229,7 +230,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             cards: this.cards.map(card => {
-                if (card.pocket?.name === fromPocket) {
+                if (getCardPocket(card) === fromPocket) {
                     return { ...card, cardData: { deck: card.cardData.deck }, pocket: { name: pocket } };
                 } else {
                     return card;

@@ -4,14 +4,15 @@ import { GameAction } from "./GameAction";
 import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
 import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
+import { getCardOwner, getCardPocket } from "./Filters";
 
 function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
     const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
-    if (selector.selection.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
+    if (selector.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         return {
-            card: selector.selection.playing_card!.id,
-            modifiers: selector.selection.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets })),
-            targets: selector.selection.targets,
+            card: selector.playing_card!.id,
+            modifiers: selector.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets })),
+            targets: selector.targets,
             timer_id: (isResponse(selector) && selector.request.timer?.timer_id) || null,
             bypass_prompt,
         };
@@ -35,12 +36,12 @@ export function useSendGameAction(selector: TargetSelector, connection: BangConn
 
 function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | undefined {
     const selector = table.selector;
-    switch (selector.selection.mode) {
+    switch (selector.mode) {
     case 'target':
     case 'modifier': {
         let cardTarget = card;
-        if (card.pocket?.name === 'player_character') {
-            cardTarget = getCard(table, getPlayer(table, card.pocket.player).pockets.player_character[0]);
+        if (getCardPocket(card) === 'player_character') {
+            cardTarget = getCard(table, getPlayer(table, getCardOwner(card)!).pockets.player_character[0]);
         }
         if (isValidCardTarget(table, cardTarget)) {
             return { addCardTarget: cardTarget };
@@ -69,7 +70,7 @@ function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | unde
 }
 
 function getClickPlayerUpdate(table: GameTable, player: Player): SelectorUpdate | undefined {
-    switch (table.selector.selection.mode) {
+    switch (table.selector.mode) {
     case 'preselect':
     case 'target':
     case 'modifier':
@@ -105,7 +106,7 @@ export const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SEL
 export function isClickAllowed(table: GameTable) {
     return !table.status.flags.includes('game_over')
         && table.self_player !== undefined
-        && table.selector.selection.mode !== 'finish'
+        && table.selector.mode !== 'finish'
         && table.selector.prompt.type === 'none';
 }
 

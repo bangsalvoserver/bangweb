@@ -1,7 +1,7 @@
 import { count, countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, TargetType } from "./CardTarget";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getPlayer, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSelected } from "./TargetSelector";
@@ -290,7 +290,7 @@ const targetDispatch = buildDispatch({
         appendCardTarget: appendReservedTarget,
         isValidCardTarget: (table, target, effect, card) => {
             return getCardOwner(card) === table.self_player
-                && card.pocket?.name === 'player_table'
+                && getCardPocket(card) === 'player_table'
                 && getCardColor(card) === 'orange'
                 && card.num_cubes < 4 - count(target, card.id);
         },
