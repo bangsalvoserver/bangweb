@@ -114,7 +114,7 @@ function handleEndPreselection(table: GameTable, remove: boolean = true): Target
             return {
                 ...selector,
                 modifiers: [{
-                    modifier: selector.preselection.card,
+                    card: selector.preselection.card,
                     targets: selector.preselection.targets
                 }],
                 preselection: remove ? null : selector.preselection,
@@ -176,7 +176,7 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             ...selector,
             prompt: { type: 'none' },
             preselection: null,
-            modifiers: selector.modifiers.concat({ modifier: card, targets: [] }),
+            modifiers: selector.modifiers.concat({ card, targets: [] }),
             mode: 'modifier'
         }});
     } else {

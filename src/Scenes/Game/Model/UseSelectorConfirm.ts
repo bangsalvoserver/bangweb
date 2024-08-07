@@ -11,7 +11,7 @@ function getSelectorGameAction(selector: TargetSelector): GameAction | undefined
     if (selector.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         return {
             card: selector.playing_card!.id,
-            modifiers: selector.modifiers.map(({modifier, targets}) => ({ card: modifier.id, targets })),
+            modifiers: selector.modifiers.map(({card, targets}) => ({ card: card.id, targets })),
             targets: selector.targets,
             timer_id: (isResponse(selector) && selector.request.timer?.timer_id) || null,
             bypass_prompt,

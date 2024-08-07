@@ -55,22 +55,19 @@ export type TargetSelectorMode =
  * 
  */
 
+export interface TargetSelection {
+    card: KnownCard;
+    targets: CardTarget[];
+}
+
 export interface TargetSelector {
     request: RequestStatusUnion;
     prompt: GamePrompt;
     
     playing_card: KnownCard | null;
     targets: CardTarget[];
-
-    preselection: {
-        card: KnownCard;
-        targets: CardTarget[];
-    } | null;
-
-    modifiers: {
-        modifier: KnownCard;
-        targets: CardTarget[];
-    }[];
+    modifiers: TargetSelection[];
+    preselection: TargetSelection | null;
 
     mode: TargetSelectorMode;
 }
@@ -99,23 +96,29 @@ export function isStatusReady(selector: TargetSelector): selector is StatusReady
     return 'play_cards' in selector.request;
 }
 
-function getCurrentCardAndTargets(selector: TargetSelector): [KnownCard, CardTarget[]] {
+export function getTargetSelectorStatus(selector: TargetSelector) {
+    let currentCard: KnownCard | undefined;
+    let targets: CardTarget[] | undefined;
+
     switch (selector.mode) {
     case 'preselect':
-        return [selector.preselection!.card, selector.preselection!.targets];
+        currentCard = selector.preselection!.card;
+        targets = selector.preselection!.targets;
+        break;
     case 'target':
-        return [selector.playing_card!, selector.targets];
+        currentCard = selector.playing_card!;
+        targets = selector.targets;
+        break;
     case 'modifier': {
-        const pair = selector.modifiers.at(-1)!;
-        return [pair.modifier, pair.targets];
+        const modifier = selector.modifiers[selector.modifiers.length - 1];
+        currentCard = modifier.card;
+        targets = modifier.targets;
+        break;
     }
     default:
         throw new Error('TargetSelector: not in targeting mode');
     }
-}
 
-export function getTargetSelectorStatus(selector: TargetSelector) {
-    const [currentCard, targets] = getCurrentCardAndTargets(selector);
     const effects = getCardEffects(currentCard, isResponse(selector));
     
     let index = targets.length - 1;
@@ -160,8 +163,8 @@ export function selectorCanUndo(table: GameTable): boolean {
 
 function isMatchingModifiers(selector: TargetSelector, info: PlayableCardInfo): boolean {
     let i = 0;
-    for (const { modifier } of selector.modifiers) {
-        if (info.modifiers.at(i) !== modifier.id) {
+    for (const { card } of selector.modifiers) {
+        if (info.modifiers.at(i) !== card.id) {
             return false;
         }
         ++i;
@@ -229,7 +232,7 @@ export function selectorCanPlayCard(selector: TargetSelector, card: Card): card 
 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
     return selector.playing_card?.id === card.id
-        || selector.modifiers.some(({modifier}) => modifier.id === card.id)
+        || selector.modifiers.some(selection => selection.card.id === card.id)
         || selector.preselection?.card.id === card.id;
 }
 
@@ -285,9 +288,9 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
         const effects = getCardEffects(selector.playing_card, response);
         doCount(selector.playing_card, selector.targets, effects);
     }
-    for (const {modifier, targets} of selector.modifiers) {
-        const effects = getCardEffects(modifier, response);
-        doCount(modifier, targets, effects);
+    for (const {card, targets} of selector.modifiers) {
+        const effects = getCardEffects(card, response);
+        doCount(card, targets, effects);
     }
     return selected;
 }
