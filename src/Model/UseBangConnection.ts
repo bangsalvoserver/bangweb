@@ -36,7 +36,7 @@ function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_
     };
 }
 
-function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
+function handleLobbyAddUser({ user_id, user: { name, profile_image }, flags, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
     return lobbyState => {
         let chatMessages = lobbyState.chatMessages;
         let users = [...lobbyState.users];
@@ -48,9 +48,9 @@ function handleLobbyAddUser({ user_id, user: { name, profile_image }, is_read, l
         } else {
             if (user_id >= 0) {
                 chatMessages = chatMessages.concat({
-                    user_id: 0,
+                    type: 'lobby',
                     message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
-                    is_read: is_read || user_id === lobbyState.myUserId
+                    isRead: flags.includes('is_read') || user_id === lobbyState.myUserId
                 });
             }
             users.push(newUser);
@@ -68,9 +68,9 @@ function handleLobbyRemoveUser(user_id: number): UpdateFunction<LobbyState> {
             const user = getUser(users, user_id);
             if (user) {
                 chatMessages = chatMessages.concat({
-                    user_id: 0,
+                    type: 'lobby',
                     message: getLabel('lobby', 'USER_LEFT_LOBBY', user.name),
-                    is_read: false
+                    isRead: false
                 });
             }
         }
@@ -166,8 +166,15 @@ export default function useBangConnection() {
             lobby_kick() {
                 sceneDispatch({ gotoWaitingArea: {} });
             },
-            lobby_chat(message) {
-                sceneDispatch({ updateLobbyState: lobbyState => ({ ...lobbyState, chatMessages: lobbyState.chatMessages.concat(message) }) });
+            lobby_chat({ user_id, username, message, flags }) {
+                sceneDispatch({ updateLobbyState: lobbyState => ({
+                    ...lobbyState, chatMessages: lobbyState.chatMessages.concat({ type:'user', user_id, username, message, isRead: flags.includes('is_read') })
+                }) });
+            },
+            lobby_message(message) {
+                sceneDispatch({ updateLobbyState: lobbyState => ({
+                    ...lobbyState, chatMessages: lobbyState.chatMessages.concat({ type:'lobby', message, isRead: false })
+                })});
             },
             game_update(update) {
                 gameChannel.update(update);

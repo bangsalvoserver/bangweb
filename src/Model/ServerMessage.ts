@@ -45,17 +45,20 @@ export interface UserInfo {
     profile_image: ImagePixels | null;
 }
 
+export type LobbyChatFlag = 'is_read';
+
 export interface LobbyAddUser {
     user_id: UserId;
     user: UserInfo;
-    is_read: boolean;
+    flags: LobbyChatFlag[];
     lifetime: Milliseconds;
 }
 
 export interface ChatMessage {
-    user_id: UserId;
+    user_id: number;
+    username: string;
     message: string;
-    is_read: boolean;
+    flags: LobbyChatFlag[];
 }
 
 export type ServerMessage =
@@ -71,5 +74,6 @@ export type ServerMessage =
     {lobby_remove_user: number} |
     {lobby_kick: Empty} |
     {lobby_chat: ChatMessage} |
+    {lobby_message: string} |
     {game_update: GameUpdate} |
     {game_started: Empty};

@@ -1,13 +1,27 @@
-import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyInfo, UserId } from "./ServerMessage";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { createUnionReducer } from "../Utils/UnionUtils";
+import { Empty, LobbyEntered, LobbyId, LobbyInfo, UserId } from "./ServerMessage";
+
+export type ChatMessageState =
+    {
+        type: 'user',
+        user_id: UserId,
+        username: string,
+        message: string,
+        isRead: boolean
+    } |
+    {
+        type: 'lobby',
+        message: string,
+        isRead: boolean
+    };
 
 export interface LobbyState {
     lobbyId: LobbyId;
     myUserId: UserId;
     users: UserValue[];
-    chatMessages: ChatMessage[];
+    chatMessages: ChatMessageState[];
 }
 
 export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
