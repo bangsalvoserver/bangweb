@@ -4,7 +4,7 @@ import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { getCardPocket } from "./Filters";
-import { GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchById, sortById } from "./GameTable";
+import { GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
 import targetSelectorReducer from "./TargetSelectorReducer";
 
@@ -14,11 +14,11 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     add_cards ({ card_ids, pocket, player }) {
         const pocketRef = newPocketId(pocket, player);
         const [pockets, players] = addToPocket(this.pockets, this.players, pocketRef, card_ids.map(card => card.id));
-        return {
-            ...this,
-            cards: this.cards.concat(card_ids.map(({ id, deck }) => newCard(id, deck, pocketRef))).sort(sortById),
-            pockets, players
-        };
+        let cards = this.cards.slice();
+        for (const { id, deck } of card_ids) {
+            cards.splice(searchIndexById(cards, id), 0, newCard(id, deck, pocketRef));
+        }
+        return { ...this, cards, pockets, players };
     },
 
     /// Removes the specified cards
@@ -44,14 +44,14 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Creates new players or updates existing players with specified player_id and user_id
     player_add ({ players }) {
-        let newPlayers: Player[] = this.players;
+        let newPlayers: Player[] = this.players.slice();
         let newAlivePlayers = this.alive_players;
         for (const { player_id, user_id } of players) {
-            const foundPlayer = searchById(newPlayers, player_id);
-            if (foundPlayer) {
-                newPlayers = editById(newPlayers, player_id, player => ({ ...player, user_id }));
+            const playerIndex = searchIndexById(newPlayers, player_id);
+            if (newPlayers.at(playerIndex)?.id === player_id) {
+                newPlayers[playerIndex] = { ...newPlayers[playerIndex], user_id };
             } else {
-                newPlayers = newPlayers.concat(newPlayer(player_id, user_id)).sort(sortById);
+                newPlayers.splice(playerIndex, 0, newPlayer(player_id, user_id));
                 newAlivePlayers = newAlivePlayers.concat(player_id);
             }
         }
