@@ -170,26 +170,40 @@ function isMatchingModifiers(selector: TargetSelector, info: PlayableCardInfo): 
     return true;
 }
 
-export function getPlayableCards(selector: TargetSelector): CardId[] {
-    let result: CardId[] = [];
-    
+export function isCardPlayable(selector: TargetSelector, card: CardId): boolean {
     if (!selector.playing_card) {
-        const check = (cards: PlayableCardInfo[]) => {
-            for (const info of cards) {
-                if (isMatchingModifiers(selector, info)) {
-                    const card = info.modifiers.at(selector.modifiers.length) ?? info.card;
-                    if (!result.includes(card)) {
-                        result.push(card);
-                    }
-                }
-            }
+        const check = (info: PlayableCardInfo) => {
+            return isMatchingModifiers(selector, info)
+                && card === (info.modifiers.at(selector.modifiers.length) ?? info.card);
         };
         
         if (isResponse(selector)) {
-            check(selector.request.respond_cards);
+            return selector.request.respond_cards.some(check);
         } else if (isStatusReady(selector)) {
-            check(selector.request.play_cards);
+            return selector.request.play_cards.some(check);
         }
+    }
+
+    return false;
+}
+
+export function getAllPlayableCards(selector: TargetSelector): CardId[] {
+    let result: CardId[] = [];
+    const check = (cards: PlayableCardInfo[]) => {
+        for (const info of cards) {
+            if (isMatchingModifiers(selector, info)) {
+                const card = info.modifiers.at(selector.modifiers.length) ?? info.card;
+                if (!result.includes(card)) {
+                    result.push(card);
+                }
+            }
+        }
+    };
+    
+    if (isResponse(selector)) {
+        check(selector.request.respond_cards);
+    } else if (isStatusReady(selector)) {
+        check(selector.request.play_cards);
     }
 
     return result;
@@ -224,8 +238,8 @@ export function getModifierContext<K extends keyof EffectContext> (selector: Tar
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
     return !isCardCurrent(selector, card)
         && !isCardSelected(selector, card.id)
-        && isCardKnown(card)
-        && getPlayableCards(selector).includes(card.id);
+        && isCardPlayable(selector, card.id)
+        && isCardKnown(card);
 }
 
 export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {

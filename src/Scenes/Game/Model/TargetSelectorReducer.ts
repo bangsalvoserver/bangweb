@@ -7,7 +7,7 @@ import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
-import { GamePrompt, TargetSelectorMode, RequestStatusUnion, TargetSelector, getModifierContext, getPlayableCards, getTargetSelectorStatus, isCardCurrent, isResponse, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, RequestStatusUnion, TargetSelector, TargetSelectorMode, getModifierContext, getTargetSelectorStatus, isCardCurrent, isCardPlayable, isResponse, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -100,7 +100,7 @@ function handleAutoSelect(table: GameTable): TargetSelector {
     const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
     if (cardId) {
         const card = getCard(table, cardId);
-        if (!isCardCurrent(selector, card) && isCardKnown(card) && getPlayableCards(selector).includes(card.id)) {
+        if (!isCardCurrent(selector, card) && isCardKnown(card) && isCardPlayable(selector, card.id)) {
             return handleSelectPlayingCard(table, card);
         }
     }

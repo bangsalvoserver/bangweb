@@ -6,7 +6,7 @@ import { GameTableContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
-import { getModifierContext, getPlayableCards, isCardCurrent } from "./Model/TargetSelector";
+import { getModifierContext, getAllPlayableCards, isCardCurrent } from "./Model/TargetSelector";
 import "./Style/CardChoiceView.css";
 import { getCardPocket } from "./Model/Filters";
 
@@ -66,7 +66,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
         }
     }
 
-    const cards = getPlayableCards({ ...selector, playing_card: null });
+    const cards = getAllPlayableCards(selector);
 
     return <CardChoiceInner cards={cards.map(id => getCard(table, id))} anchor={anchor} tracker={tracker} />
 }
