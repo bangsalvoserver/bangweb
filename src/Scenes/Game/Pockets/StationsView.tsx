@@ -1,6 +1,6 @@
 import { useContext, useMemo, useRef } from "react";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
-import { GameTableContext } from "../GameScene";
+import { GameStateContext } from "../GameScene";
 import { getLocalizedCardName } from "../GameStringComponent";
 import { getCard, getCardImage, isCardKnown } from "../Model/GameTable";
 import { SelectorConfirmContext } from "../Model/UseSelectorConfirm";
@@ -9,7 +9,7 @@ import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
 
 function StationCardView({ card }: CardProps) {
-    const table = useContext(GameTableContext);
+    const { table, selector } = useContext(GameStateContext);
     const { handleClickCard } = useContext(SelectorConfirmContext);
 
     const divRef = useRef<HTMLDivElement>(null);
@@ -20,7 +20,7 @@ function StationCardView({ card }: CardProps) {
 
     useCardOverlay(cardImage, cardAlt, divRef);
     
-    const selectorCardClass = getSelectorCardClass(table, card);
+    const selectorCardClass = getSelectorCardClass(table, selector, card);
     return (
         <div ref={divRef} className={`station-card ${selectorCardClass ?? ''}`} onClick={handleClickCard(card)}>
             <img className='station-card-img' src={getCardUrl(cardImage.image)} alt={cardAlt} />
@@ -29,7 +29,7 @@ function StationCardView({ card }: CardProps) {
 }
 
 export default function StationsView({ cards }: PocketProps) {
-    const table = useContext(GameTableContext);
+    const { table } = useContext(GameStateContext);
     return <div className='stations-view'>
         { cards.map(id => <StationCardView key={id} card={getCard(table, id)} /> ) }
     </div>;

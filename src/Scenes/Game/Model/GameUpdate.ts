@@ -1,7 +1,6 @@
 import { Empty, Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType } from "./CardEnums";
-import { SelectorUpdate } from "./TargetSelectorReducer";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -194,7 +193,6 @@ export type GameTableUpdate =
     { game_flags: GameFlag[] };
 
 export type SyntheticTableUpdate =
-    { selector_update: SelectorUpdate } |
     { player_order_end: PlayerOrderUpdate } |
     { player_animation_end: PlayerId } |
     { move_card_end: MoveCardUpdate } |

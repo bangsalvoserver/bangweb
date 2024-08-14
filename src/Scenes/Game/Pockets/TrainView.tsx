@@ -1,5 +1,5 @@
 import { CSSProperties, Ref, useContext } from "react";
-import { GameTableContext } from "../GameScene";
+import { GameStateContext } from "../GameScene";
 import { PocketRef } from "../Model/CardTracker";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
@@ -10,8 +10,7 @@ export interface TrainProps {
 }
 
 export default function TrainView({ pocketRef }: TrainProps) {
-    const table = useContext(GameTableContext);
-    const selector = table.selector;
+    const { table, selector } = useContext(GameStateContext);
 
     let trainPositionStyle = {
         '--train-position': table.status.train_position

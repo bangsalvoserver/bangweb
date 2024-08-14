@@ -1,11 +1,11 @@
 import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
-import { GameTableContext } from "./GameScene";
+import { GameStateContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { CardRef } from "./Model/CardTracker";
 import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
-import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting } from "./Model/TargetSelector";
+import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/CardAnimations.css";
@@ -24,22 +24,21 @@ export interface CardProps {
     showBackface?: boolean;
 }
 
-export function getSelectorCardClass(table: GameTable, card: Card) {
-    const selector = table.selector;
+export function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
     if (isCardPrompted(selector, card)) {
         return 'card-prompted';
     }
-    if (isHandSelected(table, card) || isCardSelected(selector, card.id)) {
-        if (selectorIsTargeting(selector) && isValidCardTarget(table, card)) {
+    if (isHandSelected(table, selector, card) || isCardSelected(selector, card.id)) {
+        if (selectorIsTargeting(selector) && isValidCardTarget(table, selector, card)) {
             return 'card-retargetable';
         } else {
             return 'card-selected';
         }
     }
     if (selectorIsTargeting(selector)) {
-        if (isValidCubeTarget(table, card)) {
+        if (isValidCubeTarget(table, selector, card)) {
             return 'card-targetable-cubes';
-        } else if (isValidCardTarget(table, card)) {
+        } else if (isValidCardTarget(table, selector, card)) {
             if (selectorCanPlayCard(selector, card)) {
                 return 'card-playable card-targetable';
             } else {
@@ -71,8 +70,7 @@ export function getSelectorCardClass(table: GameTable, card: Card) {
 }
 
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
-    const table = useContext(GameTableContext);
-    const selector = table.selector;
+    const { table, selector } = useContext(GameStateContext);
 
     const { handleClickCard } = useContext(SelectorConfirmContext);
 
@@ -91,7 +89,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
-    const selectorCardClass = getSelectorCardClass(table, card);
+    const selectorCardClass = getSelectorCardClass(table, selector, card);
     const selectedCubes = countSelectedCubes(selector, card);
 
     let style: CSSProperties | undefined;

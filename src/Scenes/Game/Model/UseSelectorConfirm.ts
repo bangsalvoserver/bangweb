@@ -34,8 +34,7 @@ export function useSendGameAction(selector: TargetSelector, connection: BangConn
     }, [selector, connection]);
 }
 
-function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | undefined {
-    const selector = table.selector;
+function getClickCardUpdate(table: GameTable, selector: TargetSelector, card: Card): SelectorUpdate | undefined {
     switch (selector.mode) {
     case 'target':
     case 'modifier': {
@@ -43,14 +42,14 @@ function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | unde
         if (getCardPocket(card) === 'player_character') {
             cardTarget = getCard(table, getPlayer(table, getCardOwner(card)!).pockets.player_character[0]);
         }
-        if (isValidCardTarget(table, cardTarget)) {
+        if (isValidCardTarget(table, selector, cardTarget)) {
             return { addCardTarget: cardTarget };
         }
         break;
     }
     case 'preselect':  {
         const canPlay = selectorCanPlayCard(selector, card);
-        const canPick = isValidCardTarget(table, card);
+        const canPick = isValidCardTarget(table, selector, card);
         if (canPlay && canPick) {
             return { setPrompt: { type: 'playpick', card }};
         } else if (canPlay) {
@@ -69,17 +68,17 @@ function getClickCardUpdate(table: GameTable, card: Card): SelectorUpdate | unde
     }
 }
 
-function getClickPlayerUpdate(table: GameTable, player: Player): SelectorUpdate | undefined {
-    switch (table.selector.mode) {
+function getClickPlayerUpdate(table: GameTable, selector: TargetSelector, player: Player): SelectorUpdate | undefined {
+    switch (selector.mode) {
     case 'preselect':
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(table, player)) {
+        if (isValidPlayerTarget(table, selector, player)) {
             return { addPlayerTarget: player };
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(table, player)) {
+        if (isValidEquipTarget(table, selector, player)) {
             return { addEquipTarget: player };
         }
     }
@@ -103,26 +102,26 @@ export const DEFAULT_SELECTOR_CONFIRM: SelectorConfirm = {
 
 export const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SELECTOR_CONFIRM);
 
-export function isClickAllowed(table: GameTable) {
+export function isClickAllowed(table: GameTable, selector: TargetSelector) {
     return !table.status.flags.includes('game_over')
         && table.self_player !== undefined
-        && table.selector.mode !== 'finish'
-        && table.selector.prompt.type === 'none';
+        && selector.mode !== 'finish'
+        && selector.prompt.type === 'none';
 }
 
-export function useSelectorConfirm(table: GameTable, selectorDispatch: Dispatch<SelectorUpdate>): SelectorConfirm {
+export function useSelectorConfirm(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>): SelectorConfirm {
     return useMemo(() => {
-        if (!isClickAllowed(table)) return DEFAULT_SELECTOR_CONFIRM;
+        if (!isClickAllowed(table, selector)) return DEFAULT_SELECTOR_CONFIRM;
         
         const buildDispatch = (update: SelectorUpdate | undefined): OptionalDispatch => {
             if (update) return () => selectorDispatch(update);
         };
 
         return {
-            handleClickCard: card => buildDispatch(getClickCardUpdate(table, card)),
-            handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, player)),
-            handleConfirm: buildDispatch(selectorCanConfirm(table.selector) ? { confirmSelection: {} } : undefined),
-            handleUndo: buildDispatch(selectorCanUndo(table) ? { undoSelection: {} } : undefined)
+            handleClickCard: card => buildDispatch(getClickCardUpdate(table, selector, card)),
+            handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, selector, player)),
+            handleConfirm: buildDispatch(selectorCanConfirm(selector) ? { confirmSelection: {} } : undefined),
+            handleUndo: buildDispatch(selectorCanUndo(selector) ? { undoSelection: {} } : undefined)
         } as const;
-    }, [table, selectorDispatch]);
+    }, [table, selector, selectorDispatch]);
 }

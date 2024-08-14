@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { GameTableContext } from "../GameScene";
+import { GameStateContext } from "../GameScene";
 import { getCard, newPocketId } from "../Model/GameTable";
 import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import MoveCardAnimation from "./MoveCardAnimation";
@@ -12,7 +12,7 @@ export interface AnimationProps {
 }
 
 export default function AnimationView({ tracker }: AnimationProps) {
-    const table = useContext(GameTableContext);
+    const { table } = useContext(GameStateContext);
     if (table.animation) {
         switch (true) {
         case 'move_card' in table.animation: {

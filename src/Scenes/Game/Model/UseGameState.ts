@@ -1,14 +1,41 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { GameChannel } from "../../../Model/UseBangConnection";
-import { createUnionDispatch } from "../../../Utils/UnionUtils";
-import { newGameTable } from "./GameTable";
+import { createUnionDispatch, createUnionReducer } from "../../../Utils/UnionUtils";
+import { GameTable, newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
-import { GameString, GameUpdate } from "./GameUpdate";
-import { SelectorUpdate } from "./TargetSelectorReducer";
+import { GameString, GameUpdate, TableUpdate } from "./GameUpdate";
+import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
+import { newTargetSelector, TargetSelector } from "./TargetSelector";
+
+export interface GameState {
+    table: GameTable;
+    selector: TargetSelector;
+}
+
+type GameStateUpdate = 
+    { table_update: TableUpdate } |
+    { selector_update: SelectorUpdate };
+
+const gameStateReducer = createUnionReducer<GameState, GameStateUpdate>({
+    table_update(update) {
+        return { ...this, table: gameTableReducer(this.table, update) };
+    },
+    selector_update(update) {
+        return { ...this, selector: targetSelectorReducer(this.selector, this.table, update) };
+    }
+});
+
+export function newGameState(myUserId: UserId): GameState {
+    return {
+        table: newGameTable(myUserId),
+        selector: newTargetSelector()
+    };
+}
 
 export default function useGameState(gameChannel: GameChannel, myUserId: UserId) {
-    const [table, tableDispatch] = useReducer(gameTableReducer, myUserId, newGameTable);
+    const [state, stateDispatch] = useReducer(gameStateReducer, myUserId, newGameState);
+
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
     const gameUpdates = useRef<GameUpdate[]>([]);
@@ -22,7 +49,8 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId)
         return () => clearTimeout(timeout);
     }, [clearGameError]);
     
-    const selectorDispatch = (update: SelectorUpdate) => tableDispatch({ selector_update: update });
+    const tableDispatch = (update: TableUpdate) => stateDispatch({ table_update: update });
+    const selectorDispatch = (update: SelectorUpdate) => stateDispatch({ selector_update: update });
 
     useEffect(() => {
         let timeout : number | undefined;
@@ -195,5 +223,5 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId)
         }
     }, [gameChannel]);
 
-    return { table, selectorDispatch, gameLogs, gameError, clearGameError } as const;
+    return { state, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }

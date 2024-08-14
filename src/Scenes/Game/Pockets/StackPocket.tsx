@@ -1,6 +1,6 @@
 import { Ref, useContext, useImperativeHandle, useRef } from "react";
 import { countIf } from "../../../Utils/ArrayUtils";
-import { GameTableContext } from "../GameScene";
+import { GameStateContext } from "../GameScene";
 import { PocketRef } from "../Model/CardTracker";
 import { getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
@@ -17,7 +17,7 @@ export interface StackPocketProps {
 }
 
 export default function StackPocket({ pocketRef, cards, slice, showCount }: StackPocketProps) {
-    const table = useContext(GameTableContext);
+    const { table } = useContext(GameStateContext);
     const { handleClickCard } = useContext(SelectorConfirmContext);
 
     const position = useRef<PocketRef>(null);

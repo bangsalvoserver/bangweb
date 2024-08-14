@@ -4,22 +4,22 @@ import { CardTarget, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getPlayer, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
-import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSelected } from "./TargetSelector";
+import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSelected, TargetSelector } from "./TargetSelector";
 
 interface BuildAutoTarget<T> {
-    buildAutoTarget: (table: GameTable, effect: CardEffect) => T;
+    buildAutoTarget: (table: GameTable, selector: TargetSelector, effect: CardEffect) => T;
 }
 
 interface TargetDispatchOf<T extends U, U = T | undefined> extends BuildAutoTarget<U> {
     isCardSelected: (target: T, card: CardId) => boolean;
-    isValidCardTarget: (table: GameTable, target: U, effect: CardEffect, card: Card) => boolean;
+    isValidCardTarget: (table: GameTable, selector: TargetSelector, target: U, effect: CardEffect, card: Card) => boolean;
     appendCardTarget: (target: U, effect: CardEffect, card: CardId) => T;
 
     isPlayerSelected: (target: T, player: PlayerId) => boolean;
-    isValidPlayerTarget: (table: GameTable, target: U, effect: CardEffect, player: Player) => boolean;
+    isValidPlayerTarget: (table: GameTable, selector: TargetSelector, target: U, effect: CardEffect, player: Player) => boolean;
     appendPlayerTarget: (target: U, effect: CardEffect, player: PlayerId) => T;
 
-    isValidCubeTarget: (table: GameTable, target: U, effect: CardEffect, card: Card) => boolean;
+    isValidCubeTarget: (table: GameTable, selector: TargetSelector, target: U, effect: CardEffect, card: Card) => boolean;
     getCubesSelected: (target: T, effect: CardEffect, originCard: Card, targetCard: Card) => number;
 
     isSelectionFinished: (target: T, effect: CardEffect) => boolean;
@@ -44,9 +44,9 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             const fn = getDispatch(key).isCardSelected;
             return fn !== undefined && fn(value, card);
         },
-        isValidCardTarget: (table, target, effect, card) => {
+        isValidCardTarget: (table, selector, target, effect, card) => {
             const fn = getDispatch(effect.target).isValidCardTarget;
-            return fn !== undefined && fn(table, cardTargetValue(target), effect, card);
+            return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, card);
         },
         appendCardTarget: (target, effect, card) => {
             const fn = getDispatch(effect.target).appendCardTarget;
@@ -58,18 +58,18 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             const fn = getDispatch(key).isPlayerSelected;
             return fn !== undefined && fn(value, player);
         },
-        isValidPlayerTarget: (table, target, effect, player) => {
+        isValidPlayerTarget: (table, selector, target, effect, player) => {
             const fn = getDispatch(effect.target).isValidPlayerTarget;
-            return fn !== undefined && fn(table, cardTargetValue(target), effect, player);
+            return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, player);
         },
         appendPlayerTarget: (target, effect, player) => {
             const fn = getDispatch(effect.target).appendPlayerTarget;
             if (!fn) throw new Error('Cannot add player target');
             return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, player));
         },
-        isValidCubeTarget: (table, target, effect, card) => {
+        isValidCubeTarget: (table, selector, target, effect, card) => {
             const fn = getDispatch(effect.target).isValidCubeTarget;
-            return fn !== undefined && fn(table, cardTargetValue(target), effect, card);
+            return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, card);
         },
         getCubesSelected: (target, effect, originCard, targetCard) => {
             const fn = getDispatch(effect.target).getCubesSelected;
@@ -90,10 +90,10 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             if (!fn) throw new Error('Cannot confirm selection');
             return buildCardTarget(key, fn(value));
         },
-        buildAutoTarget: (table, effect) => {
+        buildAutoTarget: (table, selector, effect) => {
             const fn = getDispatch(effect.target).buildAutoTarget;
             if (!fn) return undefined;
-            const targetValue = fn(table, effect);
+            const targetValue = fn(table, selector, effect);
             return targetValue !== undefined ? buildCardTarget(effect.target, targetValue) : undefined;
         }
     }
@@ -133,19 +133,19 @@ const appendReservedTarget = (target: number[], effect: CardEffect, value: numbe
     return copy;
 };
 
-const isValidPlayerTarget = <T>(table: GameTable, target: T, effect: CardEffect, player: Player) => {
-    return checkPlayerFilter(table, effect.player_filter, player);
+const isValidPlayerTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, player: Player) => {
+    return checkPlayerFilter(table, selector, effect.player_filter, player);
 };
 
-const isValidCardTarget = <T>(table: GameTable, target: T, effect: CardEffect, card: Card) => {
+const isValidCardTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, card: Card) => {
     const player = getCardOwner(card);
-    return (!player || checkPlayerFilter(table, effect.player_filter, getPlayer(table, player)))
-        && checkCardFilter(table, effect.card_filter, card);
+    return (!player || checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, player)))
+        && checkCardFilter(table, selector, effect.card_filter, card);
 };
 
-const isValidCubeTarget = <T>(table: GameTable, target: T, effect: CardEffect, card: Card) => {
+const isValidCubeTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, card: Card) => {
     return getCardOwner(card) === table.self_player
-        && card.num_cubes > countSelectedCubes(table.selector, card);
+        && card.num_cubes > countSelectedCubes(selector, card);
 };
 
 const getCubesSelected = (target: CardId[], effect: CardEffect, originCard: Card, targetCard: Card) => {
@@ -173,8 +173,8 @@ const targetDispatch = buildDispatch({
         isPlayerSelected: checkSingleTarget,
         appendPlayerTarget: appendSingleTarget,
         isValidPlayerTarget,
-        buildAutoTarget: (table, effect) => {
-            if (table.alive_players.every(target => !checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)))) {
+        buildAutoTarget: (table, selector, effect) => {
+            if (table.alive_players.every(target => !checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))) {
                 return null;
             }
         }
@@ -183,16 +183,16 @@ const targetDispatch = buildDispatch({
         isPlayerSelected: checkMultiTarget,
         appendPlayerTarget: appendMultiTarget,
         isSelectionFinished: (target) => targetIsSized(target, 2),
-        isValidPlayerTarget: (table, target, effect, player) => {
+        isValidPlayerTarget: (table, selector, target, effect, player) => {
             const checkTargets = (target1: Player, target2: Player) => {
                 return target1.id !== target2.id && target2.id !== table.self_player
                     && isPlayerInGame(target2)
-                    && calcPlayerDistance(table, target1.id, target2.id) <= effect.target_value;
+                    && calcPlayerDistance(table, selector, target1.id, target2.id) <= effect.target_value;
             };
             if (target) {
                 return checkTargets(getPlayer(table, target[0]), player);
             } else {
-                return checkPlayerFilter(table, effect.player_filter, player)
+                return checkPlayerFilter(table, selector, effect.player_filter, player)
                     && table.alive_players.some(target2 => checkTargets(player, getPlayer(table, target2)));
             }
         }
@@ -200,21 +200,21 @@ const targetDispatch = buildDispatch({
     player_per_cube: reservedDispatch({
         appendCardTarget: ([cubes, players], effect, card) => [appendReservedTarget(cubes, effect, card), players],
         appendPlayerTarget: ([cubes, players], effect, player) => [cubes, appendMultiTarget(players, effect, player)],
-        isValidCubeTarget: (table, [cubes, players], effect, card) => {
-            return !isSelectionFinished(cubes) && isValidCubeTarget(table, cubes, effect, card);
+        isValidCubeTarget: (table, selector, [cubes, players], effect, card) => {
+            return !isSelectionFinished(cubes) && isValidCubeTarget(table, selector, cubes, effect, card);
         },
-        isValidPlayerTarget: (table, [cubes, players], effect, player) => {
+        isValidPlayerTarget: (table, selector, [cubes, players], effect, player) => {
             return getReservedLength(cubes) + effect.target_value > players.length
-                && isValidPlayerTarget(table, players, effect, player);
+                && isValidPlayerTarget(table, selector, players, effect, player);
         },
         getCubesSelected: ([cubes, players], effect, originCard, targetCard) => getCubesSelected(cubes, effect, originCard, targetCard),
         isPlayerSelected: ([cubes, players], player) => checkMultiTarget(players, player),
         isSelectionFinished: ([cubes, players], effect) => isSelectionFinished(cubes) && targetIsSized(players, cubes.length + effect.target_value),
         isSelectionConfirmable: ([cubes, players], effect) => targetIsSized(players, getReservedLength(cubes) + effect.target_value),
         confirmSelection: ([cubes, players]) => [confirmSelection(cubes), players],
-        buildAutoTarget: (table, effect) => {
-            const cubeCount = countSelectableCubes(table);
-            const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, effect.player_filter, getPlayer(table, target)));
+        buildAutoTarget: (table, selector, effect) => {
+            const cubeCount = countSelectableCubes(table, selector);
+            const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)));
             const maxCount = Math.min(cubeCount, numPlayers - effect.target_value);
             return [reserveTargets(maxCount), []];
         }
@@ -228,8 +228,8 @@ const targetDispatch = buildDispatch({
         isCardSelected: checkSingleTarget,
         appendCardTarget: appendSingleTarget,
         isValidCardTarget,
-        buildAutoTarget: (table, effect) => {
-            if (getModifierContext(table.selector, 'repeat_card')) {
+        buildAutoTarget: (table, selector, effect) => {
+            if (getModifierContext(selector, 'repeat_card')) {
                 return null;
             }
         }
@@ -249,11 +249,11 @@ const targetDispatch = buildDispatch({
         isValidCardTarget,
         isSelectionConfirmable: targetIsNotEmpty,
         isSelectionFinished, confirmSelection,
-        buildAutoTarget: (table, effect) => {
-            const cardTargetable = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
+        buildAutoTarget: (table, selector, effect) => {
+            const cardTargetable = (card: CardId) => checkCardFilter(table, selector, effect.card_filter, getCard(table, card));
             let countTargetableCards = 0;
             for (const player of table.players) {
-                if (checkPlayerFilter(table, effect.player_filter, player)) {
+                if (checkPlayerFilter(table, selector, effect.player_filter, player)) {
                     countTargetableCards += countIf(player.pockets.player_hand, cardTargetable);
                     countTargetableCards += countIf(player.pockets.player_table, cardTargetable);
                 }
@@ -268,19 +268,19 @@ const targetDispatch = buildDispatch({
         isCardSelected: checkMultiTarget,
         appendCardTarget: appendReservedTarget,
         isSelectionFinished,
-        isValidCardTarget: (table, target, effect, card) => {
+        isValidCardTarget: (table, selector, target, effect, card) => {
             const player = getCardOwner(card);
-            return player !== undefined && !isPlayerSelected(table.selector, player)
-                && checkPlayerFilter(table, effect.player_filter, getPlayer(table, player))
-                && checkCardFilter(table, effect.card_filter, card)
+            return player !== undefined && !isPlayerSelected(selector, player)
+                && checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, player))
+                && checkCardFilter(table, selector, effect.card_filter, card)
                 && !target.some(targetCard => targetCard !== PLACEHOLDER && getCardOwner(getCard(table, targetCard)) === player);
         },
-        buildAutoTarget: (table, effect) => {
-            const cardIsValid = (card: CardId) => checkCardFilter(table, effect.card_filter, getCard(table, card));
+        buildAutoTarget: (table, selector, effect) => {
+            const cardIsValid = (card: CardId) => checkCardFilter(table, selector, effect.card_filter, getCard(table, card));
             const numTargetable = countIf(table.alive_players, target => {
                 const targetPlayer = getPlayer(table, target);
-                return !isPlayerSelected(table.selector, target)
-                    && checkPlayerFilter(table, effect.player_filter, targetPlayer)
+                return !isPlayerSelected(selector, target)
+                    && checkPlayerFilter(table, selector, effect.player_filter, targetPlayer)
                     && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
             });
             return reserveTargets(numTargetable);
@@ -288,7 +288,7 @@ const targetDispatch = buildDispatch({
     }),
     move_cube_slot: reservedDispatch({
         appendCardTarget: appendReservedTarget,
-        isValidCardTarget: (table, target, effect, card) => {
+        isValidCardTarget: (table, selector, target, effect, card) => {
             return getCardOwner(card) === table.self_player
                 && getCardPocket(card) === 'player_table'
                 && getCardColor(card) === 'orange'
@@ -297,7 +297,7 @@ const targetDispatch = buildDispatch({
         isCardSelected: checkMultiTarget,
         isSelectionConfirmable: targetIsNotEmpty,
         isSelectionFinished, confirmSelection,
-        buildAutoTarget: (table, effect) => {
+        buildAutoTarget: (table, selector, effect) => {
             const selfPlayer = getPlayer(table, table.self_player!);
             let cubeSlots = 0;
             for (const cardId of selfPlayer.pockets.player_table) {
@@ -321,8 +321,8 @@ const targetDispatch = buildDispatch({
         isValidCubeTarget, getCubesSelected,
         isSelectionConfirmable: targetIsEmpty,
         isSelectionFinished, confirmSelection,
-        buildAutoTarget: (table, effect) => {
-            return reserveTargets(countSelectableCubes(table) >= effect.target_value ? effect.target_value : 0);
+        buildAutoTarget: (table, selector, effect) => {
+            return reserveTargets(countSelectableCubes(table, selector) >= effect.target_value ? effect.target_value : 0);
         }
     }),
     select_cubes_repeat: reservedDispatch({
@@ -330,8 +330,8 @@ const targetDispatch = buildDispatch({
         isValidCubeTarget, getCubesSelected,
         isSelectionConfirmable: (target, effect) => getReservedLength(target) % (effect.target_value ?? 1) === 0,
         isSelectionFinished, confirmSelection,
-        buildAutoTarget: (table, effect) => {
-            const cubeCount = countSelectableCubes(table);
+        buildAutoTarget: (table, selector, effect) => {
+            const cubeCount = countSelectableCubes(table, selector);
             const maxCount = cubeCount - cubeCount % (effect.target_value ?? 1);
             return reserveTargets(maxCount);
         }

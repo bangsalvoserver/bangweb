@@ -3,7 +3,7 @@ import { Milliseconds } from "../../../Model/ServerMessage";
 import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import { LobbyContext, getUser } from "../../Lobby/Lobby";
-import { GameTableContext } from "../GameScene";
+import { GameStateContext } from "../GameScene";
 import { CardTracker } from "../Model/CardTracker";
 import { PlayerMoveId, getPlayer } from "../Model/GameTable";
 import { PlayerId } from "../Model/GameUpdate";
@@ -18,7 +18,7 @@ interface MovePlayerProps {
 }
 
 function MovePlayerAnimation({ tracker, from, to, duration }: MovePlayerProps) {
-    const table = useContext(GameTableContext);
+    const { table } = useContext(GameStateContext);
     const { users } = useContext(LobbyContext);
 
     const [startRect, endRect] = useUpdateEveryFrame(() => [

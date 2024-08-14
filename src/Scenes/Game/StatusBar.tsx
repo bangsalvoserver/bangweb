@@ -4,7 +4,7 @@ import TimerWidget from "../../Components/TimerWidget";
 import getLabel from "../../Locale/GetLabel";
 import { isLobbyOwner } from "../../Model/SceneState";
 import { LobbyContext } from "../Lobby/Lobby";
-import { GameTableContext } from "./GameScene";
+import { GameStateContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { getCard, KnownCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
@@ -32,10 +32,8 @@ function getCardButtonColor(card: KnownCard): ButtonColor {
 
 export default function StatusBar({ gameError, handleClearGameError, handleReturnLobby }: StatusProps) {
   const lobbyState = useContext(LobbyContext);
-  const table = useContext(GameTableContext);
+  const { table, selector } = useContext(GameStateContext);
   const { handleClickCard, handleConfirm, handleUndo } = useContext(SelectorConfirmContext);
-
-  const selector = table.selector;
 
   const isGameOver = table.status.flags.includes('game_over');
 

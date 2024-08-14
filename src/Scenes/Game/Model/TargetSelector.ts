@@ -147,13 +147,13 @@ export function selectorCanConfirm(selector: TargetSelector) {
     return false;
 }
 
-export function selectorCanUndo(table: GameTable): boolean {
-    switch (table.selector.mode) {
+export function selectorCanUndo(selector: TargetSelector): boolean {
+    switch (selector.mode) {
     case 'modifier':
     case 'middle':
     case 'target':
     case 'equip':
-        return table.selector.preselection === null;
+        return selector.preselection === null;
     default:
         return false;
     }
@@ -263,11 +263,11 @@ export function isCardSelected(selector: TargetSelector, card: CardId): boolean 
     return false;
 }
 
-export function isHandSelected(table: GameTable, card: Card): boolean {
+export function isHandSelected(table: GameTable, selector: TargetSelector, card: Card): boolean {
     const cardOwner = getCardOwner(card);
     if (getCardPocket(card) === 'player_hand' && cardOwner !== table.self_player) {
         const player = getPlayer(table, cardOwner!);
-        return player.pockets.player_hand.some(id => isCardSelected(table.selector, id));
+        return player.pockets.player_hand.some(id => isCardSelected(selector, id));
     } else {
         return false;
     }
@@ -307,37 +307,36 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
     return selected;
 }
 
-export function countSelectableCubes(table: GameTable): number {
+export function countSelectableCubes(table: GameTable, selector: TargetSelector): number {
     const getCountCubes = (cardId: CardId) => {
         const card = getCard(table, cardId);
-        return card.num_cubes - countSelectedCubes(table.selector, card);
+        return card.num_cubes - countSelectedCubes(selector, card);
     };
     const selfPlayer = getPlayer(table, table.self_player!);
     return sum(selfPlayer.pockets.player_character, getCountCubes)
         + sum(selfPlayer.pockets.player_table, getCountCubes);
 }
 
-export function isValidCubeTarget(table: GameTable, card: Card): boolean {
-    const { effects, targets, index } = getTargetSelectorStatus(table.selector);
-    return targetDispatch.isValidCubeTarget(table, targets.at(index), effects[index], card);
+export function isValidCubeTarget(table: GameTable, selector: TargetSelector, card: Card): boolean {
+    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    return targetDispatch.isValidCubeTarget(table, selector, targets.at(index), effects[index], card);
 }
 
-export function isValidCardTarget(table: GameTable, card: Card): boolean {
-    const { effects, targets, index } = getTargetSelectorStatus(table.selector);
+export function isValidCardTarget(table: GameTable, selector: TargetSelector, card: Card): boolean {
+    const { effects, targets, index } = getTargetSelectorStatus(selector);
     const target = targets.at(index);
     const effect = effects[index];
-    return targetDispatch.isValidCubeTarget(table, target, effect, card)
-        || targetDispatch.isValidCardTarget(table, target, effect, card);
+    return targetDispatch.isValidCubeTarget(table, selector, target, effect, card)
+        || targetDispatch.isValidCardTarget(table, selector, target, effect, card);
 }
 
-export function isValidPlayerTarget(table: GameTable, player: Player): boolean {
-    const { effects, targets, index } = getTargetSelectorStatus(table.selector);
-    return targetDispatch.isValidPlayerTarget(table, targets.at(index), effects[index], player);
+export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, player: Player): boolean {
+    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    return targetDispatch.isValidPlayerTarget(table, selector, targets.at(index), effects[index], player);
 }
 
-export function isValidEquipTarget(table: GameTable, player: Player): boolean {
-    const selector = table.selector;
+export function isValidEquipTarget(table: GameTable, selector: TargetSelector, player: Player): boolean {
     return selector.playing_card !== null
         && isEquipCard(selector.playing_card)
-        && checkPlayerFilter(table, getEquipTarget(selector.playing_card), player);
+        && checkPlayerFilter(table, selector, getEquipTarget(selector.playing_card), player);
 }

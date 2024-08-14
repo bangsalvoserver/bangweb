@@ -2,7 +2,7 @@ import { Ref, useContext, useImperativeHandle, useRef } from "react";
 import { getDivRect } from "../../../Utils/Rect";
 import { useMapRef } from "../../../Utils/UseMapRef";
 import CardView from "../CardView";
-import { GameTableContext } from "../GameScene";
+import { GameStateContext } from "../GameScene";
 import { CardRef, PocketRef } from "../Model/CardTracker";
 import { getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
@@ -16,7 +16,7 @@ export interface PocketProps {
 }
 
 export default function PocketView({ pocketRef, cards }: PocketProps) {
-    const table = useContext(GameTableContext);
+    const { table } = useContext(GameStateContext);
     const divRef = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
     const setPos = curry2(cardRefs.set);

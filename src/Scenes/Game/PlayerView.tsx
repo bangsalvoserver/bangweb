@@ -3,13 +3,13 @@ import { curry2 } from "ts-curry";
 import { Rect, getDivRect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
-import { GameTableContext } from "./GameScene";
+import { GameStateContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { GameTable, Player } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
-import { isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget } from "./Model/TargetSelector";
+import { isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
@@ -26,8 +26,7 @@ export interface PlayerProps {
     handleRejoin?: () => void;
 }
 
-function getSelectorPlayerClass(table: GameTable, player: Player) {
-    const selector = table.selector;
+function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player) {
     if (isPlayerSelected(selector, player.id)) {
         return 'player-selected';
     }
@@ -35,12 +34,12 @@ function getSelectorPlayerClass(table: GameTable, player: Player) {
     case 'preselect':
     case 'target':
     case 'modifier':
-        if (isValidPlayerTarget(table, player)) {
+        if (isValidPlayerTarget(table, selector, player)) {
             return 'player-targetable';
         }
         break;
     case 'equip':
-        if (isValidEquipTarget(table, player)) {
+        if (isValidEquipTarget(table, selector, player)) {
             return 'player-targetable';
         }
         break;
@@ -79,10 +78,9 @@ function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>):
 }
 
 export default function PlayerView({ playerRef, user, player, handleRejoin }: PlayerProps) {
-    const table = useContext(GameTableContext);
+    const { table, selector } = useContext(GameStateContext);
     const { handleClickPlayer } = useContext(SelectorConfirmContext);
 
-    const selector = table.selector;
     const pocketRefs = useMapRef<PocketType, PocketRef>();
     const divRef = useRef<HTMLDivElement>(null);
     const handRef = useRef<HTMLDivElement>(null);
@@ -104,7 +102,7 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id === table.status.current_turn;
 
-    const selectorPlayerClass = getSelectorPlayerClass(table, player);
+    const selectorPlayerClass = getSelectorPlayerClass(table, selector, player);
 
     const isPlayerSelf = player.id === table.self_player;
     const isOrigin = isResponse(selector) && selector.request.origin === player.id;

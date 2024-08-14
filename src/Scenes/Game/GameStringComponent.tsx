@@ -4,7 +4,7 @@ import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import { getUsername } from "../Lobby/LobbyUser";
 import CardSignView from "./CardSignView";
-import { GameTableContext } from "./GameScene";
+import { GameStateContext } from "./GameScene";
 import { CardSign } from "./Model/CardData";
 import { findPlayer } from "./Model/GameTable";
 import { FormatCardName, GameString } from "./Model/GameUpdate";
@@ -38,7 +38,7 @@ type GameStringFormatArg =
     { type: 'player', value: string | null };
 
 export default function GameStringComponent({ message }: GameStringProps): JSX.Element {
-    const table = useContext(GameTableContext);
+    const { table } = useContext(GameStateContext);
     const { users } = useContext(LobbyContext);
 
     const formatArgs = useMemo<GameStringFormatArg[]>(() => message.format_args.map(arg => {

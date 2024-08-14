@@ -15,10 +15,10 @@ import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
-import { getPlayer, newGameTable } from "./Model/GameTable";
+import { getPlayer } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
-import useGameState from "./Model/UseGameState";
+import useGameState, { newGameState } from "./Model/UseGameState";
 import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/UseSelectorConfirm";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
@@ -39,11 +39,12 @@ export interface GameProps {
   overlayRef: RefObject<HTMLDivElement>;
 }
 
-const EMPTY_TABLE = newGameTable(0);
-export const GameTableContext = createContext(EMPTY_TABLE);
+const EMPTY_GAME_STATE = newGameState(0);
+export const GameStateContext = createContext(EMPTY_GAME_STATE);
 
 export default function GameScene({ connection, lobbyState, gameChannel, overlayRef }: GameProps) {
-  const { table, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId);
+  const { state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId);
+  const { table, selector } = state;
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
   const playerRefs = useMapRef<PlayerId, PlayerRef>();
@@ -52,8 +53,8 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
   const handleReturnLobby = useEvent(() => connection.sendMessage({ lobby_return: {} }));
   const setRef = curry2(pocketRefs.set);
 
-  const selectorConfirm = useSelectorConfirm(table, selectorDispatch);
-  useSendGameAction(table.selector, connection);
+  const selectorConfirm = useSelectorConfirm(table, selector, selectorDispatch);
+  useSendGameAction(selector, connection);
 
   const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
 
@@ -135,7 +136,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
 
   return (
     <LobbyContext.Provider value={lobbyState}>
-      <GameTableContext.Provider value={table}>
+      <GameStateContext.Provider value={state}>
         <div className="game-scene">
           <SelectorConfirmContext.Provider value={selectorConfirm}>
             <SetCardOverlayContext.Provider value={setCardOverlayState}>
@@ -149,7 +150,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
                 {playerViews}
               </div>
               {selectionPocket}
-              <PromptView prompt={table.selector.prompt} selectorDispatch={selectorDispatch} />
+              <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
               <CardChoiceView tracker={tracker} />
               <StatusBar
                 gameError={gameError}
@@ -164,7 +165,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
         </div>
         
         { overlayRef.current && createPortal(<GameLogView logs={gameLogs} />, overlayRef.current) }
-      </GameTableContext.Provider>
+      </GameStateContext.Provider>
     </LobbyContext.Provider>
   );
 }

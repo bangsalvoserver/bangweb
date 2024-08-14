@@ -1,7 +1,7 @@
 import { UpdateFunction } from "../../../Model/SceneState";
 import { Empty } from "../../../Model/ServerMessage";
 import { mapLast } from "../../../Utils/ArrayUtils";
-import { createUnionReducer } from "../../../Utils/UnionUtils";
+import { createContextUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardTarget";
 import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
@@ -79,15 +79,12 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
             }
         }
         if (preselectCard) {
-            return handleAutoTargets({
-                ...table,
-                selector: {
-                    ...selector,
-                    mode: 'preselect',
-                    preselection: {
-                        card: preselectCard,
-                        targets: []
-                    }
+            return handleAutoTargets(table, {
+                ...selector,
+                mode: 'preselect',
+                preselection: {
+                    card: preselectCard,
+                    targets: []
                 }
             });
         }
@@ -95,20 +92,19 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
     return selector;
 }
 
-function handleAutoSelect(table: GameTable): TargetSelector {
-    const selector = setSelectorMode(table.selector, 'middle');
+function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSelector {
+    selector = setSelectorMode(selector, 'middle');
     const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
     if (cardId) {
         const card = getCard(table, cardId);
         if (!isCardCurrent(selector, card) && isCardKnown(card) && isCardPlayable(selector, card.id)) {
-            return handleSelectPlayingCard(table, card);
+            return handleSelectPlayingCard(table, selector, card);
         }
     }
     return selector;
 }
 
-function handleEndPreselection(table: GameTable, remove: boolean = true): TargetSelector {
-    const selector = table.selector;
+function handleEndPreselection(table: GameTable, selector: TargetSelector, remove: boolean = true): TargetSelector {
     if (selector.mode === 'preselect' && selector.preselection !== null) {
         if (isCardModifier(selector.preselection.card, isResponse(selector))) {
             return {
@@ -121,48 +117,43 @@ function handleEndPreselection(table: GameTable, remove: boolean = true): Target
                 mode: 'middle'
             };
         } else {
-            return handleAutoTargets({ ...table,
-                selector: {
-                    ...selector,
-                    playing_card: selector.preselection.card,
-                    targets: selector.preselection.targets,
-                    preselection: null,
-                    modifiers: [],
-                    mode: 'target'
-                }
-            })
+            return handleAutoTargets(table, {
+                ...selector,
+                playing_card: selector.preselection.card,
+                targets: selector.preselection.targets,
+                preselection: null,
+                modifiers: [],
+                mode: 'target'
+            });
         }
     }
-    return handleAutoTargets(table);
+    return handleAutoTargets(table, selector);
 }
 
-function handleAutoTargets(table: GameTable): TargetSelector {
-    const selector = table.selector;
+function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSelector {
     const { effects, targets, index } = getTargetSelectorStatus(selector);
 
     if (index >= effects.length) {
         switch (selector.mode) {
         case 'preselect':
-            return handleEndPreselection(table, false);
+            return handleEndPreselection(table, selector, false);
         case 'target':
             return setSelectorMode(selector, 'finish');
         case 'modifier':
-            return handleAutoSelect(table);
+            return handleAutoSelect(table, selector);
         }
     }
 
     if (index >= targets.length) {
-        const value = targetDispatch.buildAutoTarget(table, effects[index]);
+        const value = targetDispatch.buildAutoTarget(table, selector, effects[index]);
         if (value) {
-            return handleAutoTargets({ ...table, selector: editSelectorTargets(selector, _ => targets.concat(value)) });
+            return handleAutoTargets(table, editSelectorTargets(selector, _ => targets.concat(value)));
         }
     }
     return selector;
 }
 
-function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelector {
-    const selector = table.selector;
-
+function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelector {
     if (isEquipCard(card)) {
         return {
             ...selector,
@@ -172,62 +163,59 @@ function handleSelectPlayingCard(table: GameTable, card: KnownCard): TargetSelec
             mode: card.cardData.equip_target.length === 0 ? 'finish' : 'equip'
         };
     } else if (isCardModifier(card, isResponse(selector))) {
-        return handleAutoTargets({ ...table, selector: {
+        return handleAutoTargets(table, {
             ...selector,
             prompt: { type: 'none' },
             preselection: null,
             modifiers: selector.modifiers.concat({ card, targets: [] }),
             mode: 'modifier'
-        }});
+        });
     } else {
-        return handleAutoTargets({ ...table, selector: {
+        return handleAutoTargets(table, {
             ...selector,
             prompt: { type: 'none' },
             preselection: null,
             playing_card: card,
             mode: 'target'
-        }});
+        });
     }
 }
 
-const targetSelectorReducer = createUnionReducer<GameTable, SelectorUpdate, TargetSelector>({
-    setRequest (request) {
-        return handleSetRequest(this, request);
+const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTable, SelectorUpdate>({
+    setRequest (table, request) {
+        return handleSetRequest(table, request);
     },
 
-    setPrompt (prompt) {
-        return { ...this.selector, prompt };
+    setPrompt (table, prompt) {
+        return { ...this, prompt };
     },
 
-    confirmSelection () {
-        return handleAutoTargets({
-            ...this,
-            selector: editSelectorTargets(this.selector, targets => mapLast(targets, targetDispatch.confirmSelection))
-        });
+    confirmSelection (table) {
+        return handleAutoTargets(table, editSelectorTargets(this, targets => mapLast(targets, targetDispatch.confirmSelection)));
     },
 
-    undoSelection () {
-        return handleSetRequest(this, this.selector.request);
+    undoSelection (table) {
+        return handleSetRequest(table, this.request);
     },
 
-    selectPlayingCard ( card ) {
-        return handleSelectPlayingCard(this, card);
+    selectPlayingCard (table, card) {
+        return handleSelectPlayingCard(table, this, card);
     },
 
-    addCardTarget (card) {
-        return handleEndPreselection({ ...this, selector: editSelectorTargets(this.selector, appendCardTarget(this.selector, card.id))});
+    addCardTarget (table, card) {
+        return handleEndPreselection(table, editSelectorTargets(this, appendCardTarget(this, card.id)));
     },
 
-    addPlayerTarget (player) {
-        return handleEndPreselection({...this, selector: editSelectorTargets(this.selector, appendPlayerTarget(this.selector, player.id))});
+    addPlayerTarget (table, player) {
+        return handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(this, player.id)));
     },
 
-    addEquipTarget (player) {
-        if (this.selector.mode !== 'equip') {
+    addEquipTarget (table, player) {
+        if (this.mode !== 'equip') {
             throw new Error('TargetSelector: not in equipping mode');
         }
         return {
-            ...this.selector,
+            ...this,
             targets: [{ player: player.id }],
             mode: 'finish'
         };

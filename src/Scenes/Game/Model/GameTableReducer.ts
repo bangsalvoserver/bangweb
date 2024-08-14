@@ -6,7 +6,6 @@ import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { getCardPocket } from "./Filters";
 import { GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
-import targetSelectorReducer from "./TargetSelectorReducer";
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
@@ -398,13 +397,6 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
                 ...this.status,
                 flags
             }
-        };
-    },
-
-    selector_update(update) {
-        return {
-            ...this,
-            selector: targetSelectorReducer(this, update)
         };
     }
 

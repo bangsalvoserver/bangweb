@@ -3,7 +3,6 @@ import { Empty, UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
 import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
-import { TargetSelector, newTargetSelector } from "./TargetSelector";
 
 export interface Id {
     id: number
@@ -208,8 +207,6 @@ export interface GameTable {
     
     animation?: TableAnimation;
     animationKey: number;
-
-    selector: TargetSelector;
 }
 
 export function newGameTable(myUserId: UserId): GameTable {
@@ -246,8 +243,7 @@ export function newGameTable(myUserId: UserId): GameTable {
             flags: [],
         },
 
-        animationKey: 0,
-        selector: newTargetSelector()
+        animationKey: 0
     };
 }
 

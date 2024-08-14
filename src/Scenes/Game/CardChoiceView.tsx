@@ -2,7 +2,7 @@ import { CSSProperties, useContext } from "react";
 import { getRectCenter } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardView from "./CardView";
-import { GameTableContext } from "./GameScene";
+import { GameStateContext } from "./GameScene";
 import { CardTracker } from "./Model/CardTracker";
 import { Card, getCard } from "./Model/GameTable";
 import { CardId } from "./Model/GameUpdate";
@@ -41,9 +41,8 @@ function CardChoiceInner({ cards, anchor, tracker }: CardChoiceInnerProps) {
 }
 
 export default function CardChoiceView({ tracker }: CardChoiceProps) {
-    const table = useContext(GameTableContext);
+    const { table, selector } = useContext(GameStateContext);
 
-    const selector = table.selector;
     if (selector.mode === 'start') return null;
 
     const cardId = getModifierContext(selector, 'card_choice');
