@@ -7,7 +7,7 @@ import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
-import { GamePrompt, RequestStatusUnion, TargetSelector, TargetSelectorMode, getModifierContext, getTargetSelectorStatus, isCardCurrent, isCardPlayable, isResponse, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, RequestStatusUnion, TargetSelection, TargetSelector, TargetSelectorMode, getModifierContext, getTargetSelectorStatus, isCardCurrent, isCardPlayable, isResponse, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -22,29 +22,21 @@ export type SelectorUpdate =
 
 type TargetListMapper = UpdateFunction<CardTarget[]>;
 
+function mapSelection(selection: TargetSelection, mapper: TargetListMapper): TargetSelection {
+    return {
+        card: selection.card,
+        targets: mapper(selection.targets)
+    }
+};
+
 function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper): TargetSelector {
     switch (selector.mode) {
     case 'preselect':
-        return {
-            ...selector,
-            preselection: {
-                card: selector.preselection!.card,
-                targets: mapper(selector.preselection!.targets)
-            }
-        };
+        return { ...selector, preselection: mapSelection(selector.preselection!, mapper) };
     case 'target':
-        return {
-            ...selector,
-            targets: mapper(selector.targets)
-        };
+        return { ...selector, selection: mapSelection(selector.selection!, mapper) };
     case 'modifier': 
-        return {
-            ...selector,
-            modifiers: mapLast(selector.modifiers, mod => ({
-                ...mod,
-                targets: mapper(mod.targets)
-            }))
-        };
+        return { ...selector, modifiers: mapLast(selector.modifiers, mod => mapSelection(mod, mapper)) };
     default:
         throw new Error('TargetSelector: not in targeting mode');
     }
@@ -119,8 +111,7 @@ function handleEndPreselection(table: GameTable, selector: TargetSelector, remov
         } else {
             return handleAutoTargets(table, {
                 ...selector,
-                playing_card: selector.preselection.card,
-                targets: selector.preselection.targets,
+                selection: selector.preselection,
                 preselection: null,
                 modifiers: [],
                 mode: 'target'
@@ -159,7 +150,7 @@ function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, car
             ...selector,
             prompt: { type: 'none' },
             preselection: null,
-            playing_card: card,
+            selection: { card, targets: [] },
             mode: card.cardData.equip_target.length === 0 ? 'finish' : 'equip'
         };
     } else if (isCardModifier(card, isResponse(selector))) {
@@ -175,10 +166,24 @@ function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, car
             ...selector,
             prompt: { type: 'none' },
             preselection: null,
-            playing_card: card,
+            selection: { card, targets: [] },
             mode: 'target'
         });
     }
+}
+
+function handleAddEquipTarget(selector: TargetSelector, player: PlayerId): TargetSelector {
+    if (selector.mode !== 'equip') {
+        throw new Error('TargetSelector: not in equipping mode');
+    }
+    return {
+        ...selector,
+        selection: {
+            ...selector.selection!,
+            targets: [{ player }]
+        },
+        mode: 'finish'
+    };
 }
 
 const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTable, SelectorUpdate>({
@@ -211,14 +216,7 @@ const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTabl
     },
 
     addEquipTarget (table, player) {
-        if (this.mode !== 'equip') {
-            throw new Error('TargetSelector: not in equipping mode');
-        }
-        return {
-            ...this,
-            targets: [{ player: player.id }],
-            mode: 'finish'
-        };
+        return handleAddEquipTarget(this, player.id);
     }
     
 });

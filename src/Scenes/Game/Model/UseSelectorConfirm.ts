@@ -10,9 +10,9 @@ function getSelectorGameAction(selector: TargetSelector): GameAction | undefined
     const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
     if (selector.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         return {
-            card: selector.playing_card!.id,
+            card: selector.selection!.card.id,
+            targets: selector.selection!.targets,
             modifiers: selector.modifiers.map(({card, targets}) => ({ card: card.id, targets })),
-            targets: selector.targets,
             timer_id: (isResponse(selector) && selector.request.timer?.timer_id) || null,
             bypass_prompt,
         };
