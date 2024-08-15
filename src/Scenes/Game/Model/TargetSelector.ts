@@ -91,16 +91,21 @@ export function isStatusReady(selector: TargetSelector): selector is TargetSelec
     return 'play_cards' in selector.request;
 }
 
+function getCurrentTargetSelection(selector: TargetSelector) {
+    switch (selector.mode) {
+    case 'preselect':
+        return selector.preselection!;
+    case 'target':
+        return selector.selection!;
+    case 'modifier':
+        return selector.modifiers[selector.modifiers.length - 1];
+    default:
+        throw new Error('TargetSelector: not in targeting mode');
+    }
+}
+
 export function getTargetSelectorStatus(selector: TargetSelector) {
-    const { card, targets} = (() => {
-        switch (selector.mode) {
-        case 'preselect': return selector.preselection!;
-        case 'target': return selector.selection!;
-        case 'modifier': return selector.modifiers[selector.modifiers.length - 1];
-        default:
-            throw new Error('TargetSelector: not in targeting mode');
-        }
-    })();
+    const { card, targets } = getCurrentTargetSelection(selector);
 
     const effects = getCardEffects(card, isResponse(selector));
     
@@ -108,7 +113,7 @@ export function getTargetSelectorStatus(selector: TargetSelector) {
     if (targets.length === 0 || targetDispatch.isSelectionFinished(targets[index], effects[index])) {
         ++index;
     }
-    return { currentCard: card, effects, targets, index } as const;
+    return { effects, targets, index } as const;
 }
 
 export function selectorIsTargeting(selector: TargetSelector) {

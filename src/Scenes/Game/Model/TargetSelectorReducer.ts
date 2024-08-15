@@ -1,4 +1,4 @@
-import { UpdateFunction } from "../../../Model/SceneState";
+import { SetStateAction } from "react";
 import { Empty } from "../../../Model/ServerMessage";
 import { mapLast } from "../../../Utils/ArrayUtils";
 import { createContextUnionReducer } from "../../../Utils/UnionUtils";
@@ -20,12 +20,12 @@ export type SelectorUpdate =
     { addEquipTarget: Player }
 ;
 
-type TargetListMapper = UpdateFunction<CardTarget[]>;
+type TargetListMapper = SetStateAction<CardTarget[]>;
 
 function mapSelection(selection: TargetSelection, mapper: TargetListMapper): TargetSelection {
     return {
         card: selection.card,
-        targets: mapper(selection.targets)
+        targets: typeof(mapper) === 'function' ? mapper(selection.targets) : mapper
     }
 };
 
@@ -44,12 +44,12 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
 
 function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMapper {
     const { effects, targets, index } = getTargetSelectorStatus(selector);
-    return _ => targets.slice(0, index).concat(targetDispatch.appendCardTarget(targets.at(index), effects[index], card));
+    return targets.slice(0, index).concat(targetDispatch.appendCardTarget(targets.at(index), effects[index], card));
 }
 
 function appendPlayerTarget(selector: TargetSelector, player: PlayerId): TargetListMapper {
     const { effects, targets, index } = getTargetSelectorStatus(selector);
-    return _ => targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(targets.at(index), effects[index], player));
+    return targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(targets.at(index), effects[index], player));
 }
 
 function setSelectorMode(selector: TargetSelector, mode: TargetSelectorMode): TargetSelector {
@@ -101,10 +101,7 @@ function handleEndPreselection(table: GameTable, selector: TargetSelector, remov
         if (isCardModifier(selector.preselection.card, isResponse(selector))) {
             return {
                 ...selector,
-                modifiers: [{
-                    card: selector.preselection.card,
-                    targets: selector.preselection.targets
-                }],
+                modifiers: [selector.preselection],
                 preselection: remove ? null : selector.preselection,
                 mode: 'middle'
             };
@@ -132,13 +129,15 @@ function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSe
             return setSelectorMode(selector, 'finish');
         case 'modifier':
             return handleAutoSelect(table, selector);
+        default:
+            throw new Error('TargetSelector: not in targeting mode');
         }
     }
 
     if (index >= targets.length) {
         const value = targetDispatch.buildAutoTarget(table, selector, effects[index]);
         if (value) {
-            return handleAutoTargets(table, editSelectorTargets(selector, _ => targets.concat(value)));
+            return handleAutoTargets(table, editSelectorTargets(selector, targets.concat(value)));
         }
     }
     return selector;
