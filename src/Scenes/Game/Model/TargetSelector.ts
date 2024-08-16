@@ -149,80 +149,58 @@ export function selectorCanUndo(selector: TargetSelector): boolean {
     }
 }
 
-function isMatchingModifiers(selector: TargetSelector, info: PlayableCardInfo): boolean {
-    let i = 0;
-    for (const { card } of selector.modifiers) {
-        if (info.modifiers.at(i) !== card.id) {
-            return false;
-        }
-        ++i;
+export function *getAllPlayableCards(selector: TargetSelector): Generator<[CardId, EffectContext]> {
+    let cards: PlayableCardInfo[];
+    if (isResponse(selector)) {
+        cards = selector.request.respond_cards;
+    } else if (isStatusReady(selector)) {
+        cards = selector.request.play_cards;
+    } else {
+        cards = [];
     }
-    return true;
+    for (const { card, modifiers, context } of cards) {
+        let i = 0;
+        for (const { card: modCard } of selector.modifiers) {
+            if (modifiers.at(i) !== modCard.id) {
+                break;
+            }
+            ++i;
+        }
+        if (i >= selector.modifiers.length) {
+            yield [
+                modifiers.at(selector.modifiers.length) ?? card,
+                context ?? {}
+            ];
+        }
+    }
 }
 
 export function isCardPlayable(selector: TargetSelector, card: CardId): boolean {
     if (!selector.selection) {
-        const check = (info: PlayableCardInfo) => {
-            return isMatchingModifiers(selector, info)
-                && card === (info.modifiers.at(selector.modifiers.length) ?? info.card);
-        };
-        
-        if (isResponse(selector)) {
-            return selector.request.respond_cards.some(check);
-        } else if (isStatusReady(selector)) {
-            return selector.request.play_cards.some(check);
+        for (const [playableCard, ] of getAllPlayableCards(selector)) {
+            if (playableCard === card) {
+                return true;
+            }
         }
     }
-
     return false;
 }
 
-export function getAllPlayableCards(selector: TargetSelector): CardId[] {
-    let result: CardId[] = [];
-    const check = (cards: PlayableCardInfo[]) => {
-        for (const info of cards) {
-            if (isMatchingModifiers(selector, info)) {
-                const card = info.modifiers.at(selector.modifiers.length) ?? info.card;
-                if (!result.includes(card)) {
-                    result.push(card);
-                }
-            }
-        }
-    };
-    
-    if (isResponse(selector)) {
-        check(selector.request.respond_cards);
-    } else if (isStatusReady(selector)) {
-        check(selector.request.play_cards);
-    }
-
-    return result;
-}
-
 export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): EffectContext[K] {
+    let result: EffectContext[K] = undefined;
     if (selector.modifiers.length !== 0) {
-        const findContext = (cards: PlayableCardInfo[]) => {
-            let result: EffectContext[K] = undefined;
-            for (const info of cards) {
-                if (isMatchingModifiers(selector, info)) {
-                    const value = info.context?.[prop];
-                    if (value) {
-                        if (result === undefined) {
-                            result = value;
-                        } else if (result !== value) {
-                            return undefined;
-                        }
-                    }
+        for (const [, context] of getAllPlayableCards(selector)) {
+            const value = context[prop];
+            if (value) {
+                if (result === undefined) {
+                    result = value;
+                } else if (result !== value) {
+                    return undefined;
                 }
             }
-            return result;
-        }
-        if (isResponse(selector)) {
-            return findContext(selector.request.respond_cards);
-        } else if (isStatusReady(selector)) {
-            return findContext(selector.request.play_cards);
         }
     }
+    return result;
 }
 
 export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
