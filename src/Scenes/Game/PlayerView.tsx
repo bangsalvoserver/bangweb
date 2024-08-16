@@ -26,7 +26,7 @@ export interface PlayerProps {
     handleRejoin?: () => void;
 }
 
-function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player) {
+function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player): string {
     if (isPlayerSelected(selector, player.id)) {
         return 'player-selected';
     }
@@ -44,7 +44,7 @@ function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, play
         }
         break;
     }
-    return null;
+    return '';
 }
 
 function clampCardRect(cardRect: Rect, pocketRect: Rect | null): Rect {
@@ -102,8 +102,6 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id === table.status.current_turn;
 
-    const selectorPlayerClass = getSelectorPlayerClass(table, selector, player);
-
     const isPlayerSelf = player.id === table.self_player;
     const isOrigin = isResponse(selector) && selector.request.origin === player.id;
     const isTarget = isResponse(selector) && selector.request.target === player.id;
@@ -128,30 +126,28 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
     let fromPlayerHp = player.status.hp;
     
     let roleKey: number | null = null;
-    if (player.animation) {
-        switch (true) {
-        case 'flipping_role' in player.animation:
-            roleKey = player.animationKey;
-            flipDuration = player.animation.flipping_role.duration;
-            if (player.status.role === 'unknown') {
-                playerRole = player.animation.flipping_role.role;
-            }
-            break;
-        case 'player_hp' in player.animation:
-            fromPlayerHp = player.animation.player_hp.hp;
-            playerStyle = {
-                '--duration': player.animation.player_hp.duration + 'ms'
-            } as CSSProperties;
-            break;
-        case 'player_death' in player.animation:
-            playerStyle = {
-                '--duration': player.animation.player_death.duration + 'ms'
-            } as CSSProperties;
-            classes.push('player-animation-death');
-            break;
+    switch (player.animation.type) {
+    case 'flipping_role':
+        roleKey = player.animation.key;
+        flipDuration = player.animation.duration;
+        if (player.status.role === 'unknown') {
+            playerRole = player.animation.role;
         }
-    } else if (selectorPlayerClass) {
-        classes.push(selectorPlayerClass);
+        break;
+    case 'player_hp':
+        fromPlayerHp = player.animation.hp;
+        playerStyle = {
+            '--duration': player.animation.duration + 'ms'
+        } as CSSProperties;
+        break;
+    case 'player_death':
+        playerStyle = {
+            '--duration': player.animation.duration + 'ms'
+        } as CSSProperties;
+        classes.push('player-animation-death');
+        break;
+    case 'none':
+        classes.push(getSelectorPlayerClass(table, selector, player));
     }
 
     if (isPlayerSelf) {

@@ -120,8 +120,8 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
     </div>
   );
 
-  const movingPlayers = (table.animation && 'move_players' in table.animation) ?
-    table.animation.move_players.players.map(p => p.from) : [];
+  const movingPlayers = table.animation.type === 'move_players' ?
+    table.animation.players.map(p => p.from) : [];
 
   const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);

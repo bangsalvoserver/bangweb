@@ -4,8 +4,22 @@ import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { getCardPocket } from "./Filters";
-import { GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
+import { AnimationKey, GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
+
+function setAnimation<T extends { animation: U }, U extends AnimationKey>(value: T, animation: Omit<U, 'key'>): T {
+    return {
+        ...value,
+        animation: { ...animation, key: value.animation.key + 1 }
+    };
+}
+
+function clearAnimation<T extends { animation: U }, U extends AnimationKey>(value: T): T {
+    return {
+        ...value,
+        animation: { type: 'none', key: value.animation.key }
+    };
+}
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
@@ -69,12 +83,10 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, players);
 
-        const newPlayers = removedPlayers.length === 0
-            ? this.players : editById(this.players, removedPlayers, player => ({
-                ...player,
-                animation: { player_death: { duration }},
-                animationKey: player.animationKey + 1
-            }));
+        let newPlayers = this.players;
+        if (removedPlayers.length !== 0) {
+            newPlayers = editById(newPlayers, removedPlayers, player => setAnimation(player, { type: 'player_death', duration }))
+        }
 
         const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
             if (rotatedPlayers[i] === player_id) {
@@ -85,12 +97,12 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             }
         });
 
-        return {
-            ...this,
-            players: newPlayers,
-            animation: movedPlayers.length === 0 ? undefined : { move_players: { players: movedPlayers, duration } },
-            animationKey: this.animationKey + +(movedPlayers.length !== 0)
-        };
+        const newTable: GameTable = { ...this, players: newPlayers };
+        if (movedPlayers.length === 0) {
+            return clearAnimation(newTable);
+        } else {
+            return setAnimation(newTable, { type: 'move_players', players: movedPlayers, duration });
+        }
     },
     
     // Changes the order of how players are seated
@@ -99,31 +111,27 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, players);
 
-        const newPlayers = removedPlayers.length === 0
-            ? this.players : editById(this.players, removedPlayers, player => ({
-                ...player,
-                animation: undefined
-            }));
+        let newPlayers = this.players;
+        if (removedPlayers.length !== 0) {
+            newPlayers = editById(newPlayers, removedPlayers, clearAnimation)
+        }
 
-        return {
+        return clearAnimation({
             ...this,
             players: newPlayers,
             alive_players: rotatedPlayers,
             dead_players: removedPlayers.length === 0 ? this.dead_players : this.dead_players.concat(removedPlayers),
-            animation: undefined
-        };
+        })
     },
 
     // Changes a player's hp
     player_hp ({ player, hp, duration }) {
         return {
             ...this,
-            players: editById(this.players, player, p => ({
-                ...p,
-                status: { ...p.status, hp },
-                animation: { player_hp: { hp: p.status.hp, duration } },
-                animationKey: p.animationKey + 1
-            }))
+            players: editById(this.players, player, p => setAnimation(
+                { ...p, status: { ...p.status, hp } },
+                { type: 'player_hp', hp: p.status.hp, duration }
+            ))
         };
     },
 
@@ -139,19 +147,17 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     player_show_role ({ player, role, duration }) {
         return {
             ...this,
-            players: editById(this.players, player, p => ({
-                ...p,
-                animation: { flipping_role: { role: p.status.role, duration } },
-                animationKey: p.animationKey + 1,
-                status: { ...p.status, role }
-            }))
+            players: editById(this.players, player, p => setAnimation(
+                { ...p, status: { ...p.status, role } },
+                { type: 'flipping_role', role: p.status.role, duration }
+            ))
         };
     },
 
     player_animation_end (player) {
         return {
             ...this,
-            players: editById(this.players, player, p => ({ ...p, animation: undefined }))
+            players: editById(this.players, player, clearAnimation)
         }
     },
 
@@ -184,12 +190,10 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const toPocket = newPocketId(pocket, player);
         [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], front);
 
-        return {
-            ...this,
-            players, pockets,
-            animation: { move_card: { card, player, pocket, front, duration } },
-            animationKey: this.animationKey + 1
-        };
+        return setAnimation(
+            { ...this, players, pockets },
+            { type: 'move_card', card, player, pocket, front, duration }
+        );
     },
 
     // Removes a card from its pocket
@@ -200,33 +204,30 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const toPocket = newPocketId(pocket, player);
         [pockets, players] = editPocketMap(pockets, players, toPocket, cards => cards.map(id => id === CARD_SLOT_ID_TO ? card: id));
 
-        return {
+        return clearAnimation({
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, pocket: toPocket, animation: undefined })),
-            players, pockets,
-            animation: undefined
-        };
+            cards: editById(this.cards, card, card => clearAnimation({ ...card, pocket: toPocket })),
+            players, pockets
+        });
     },
 
     // Moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
     deck_shuffled ({ pocket, duration }) {
         const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
-        return {
+        return setAnimation({
             ...this,
             pockets: {
                 ...this.pockets,
                 [fromPocket]: [],
                 [pocket]: [],
-            },
-            animation: { deck_shuffle: { pocket, duration, cards: this.pockets[fromPocket] } },
-            animationKey: this.animationKey + 1
-        };
+            }
+        }, { type: 'deck_shuffle', pocket, duration, cards: this.pockets[fromPocket] });
     },
 
     deck_shuffled_end ({ pocket }) {
         const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
-        let animationCards = this.animation && 'deck_shuffle' in this.animation ? this.animation.deck_shuffle.cards : [];
-        return {
+        let animationCards = this.animation.type === 'deck_shuffle' ? this.animation.cards : [];
+        return clearAnimation({
             ...this,
             cards: this.cards.map(card => {
                 if (getCardPocket(card) === fromPocket) {
@@ -238,21 +239,18 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             pockets: {
                 ...this.pockets,
                 [pocket]: animationCards
-            },
-            animation: undefined
-        };
+            }
+        });
     },
 
     // Sets the cardData field
     show_card ({ card, info, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({
-                ...card,
-                animation: { flipping: { duration } },
-                animationKey: card.animationKey + 1,
-                cardData: info
-            }))
+            cards: editById(this.cards, card, card => setAnimation(
+                { ...card, cardData: info },
+                { type: 'flipping', duration }
+            ))
         };
     },
 
@@ -260,12 +258,10 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     hide_card ({ card, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({
-                ...card,
-                animation: { flipping: { cardImage: getCardImage(card), backface: getCardBackface(card), duration } },
-                animationKey: card.animationKey + 1,
-                cardData: { deck: card.cardData.deck }
-            }))
+            cards: editById(this.cards, card, card => setAnimation(
+                { ...card, cardData: { deck: card.cardData.deck }},
+                { type: 'flipping', cardImage: getCardImage(card), backface: getCardBackface(card), duration },
+            ))
         };
     },
 
@@ -273,23 +269,19 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     tap_card ({ card, inactive, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({
-                ...card,
-                inactive,
-                animation: { turning: { duration } },
-                animationKey: card.animationKey + 1
-            }))
+            cards: editById(this.cards, card, card => setAnimation(
+                { ...card, inactive },
+                { type: 'turning', duration },
+            ))
         };
     },
 
     flash_card ({ card, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({
-                ...card,
-                animation: { flash: { duration } },
-                animationKey: card.animationKey + 1
-            }))
+            cards: editById(this.cards, card, card => setAnimation(card,
+                { type: 'flash', duration }
+            ))
         };
     },
 
@@ -297,18 +289,16 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         if (!card) return this;
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({
-                ...card,
-                animation: { short_pause: {} },
-                animationKey: card.animationKey + 1
-            }))
+            cards: editById(this.cards, card, card => setAnimation(card,
+                { type: 'short_pause' },
+            ))
         };
     },
 
     card_animation_end (card) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => ({ ...card, animation: undefined }))
+            cards: editById(this.cards, card, clearAnimation)
         };
     },
 
@@ -338,16 +328,14 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         } else {
             tableCubes -= num_cubes;
         }
-        return {
+        return setAnimation({
             ...this,
             status: {
                 ...this.status,
                 num_cubes: tableCubes
             },
-            cards: tableCards,
-            animation: { move_cubes: { num_cubes, origin_card, target_card, duration } },
-            animationKey: this.animationKey + 1
-        };
+            cards: tableCards
+        }, { type: 'move_cubes', num_cubes, origin_card, target_card, duration });
     },
 
     move_cubes_end ({ num_cubes, target_card }) {
@@ -358,35 +346,29 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         } else {
             tableCubes += num_cubes;
         }
-        return {
+        return clearAnimation({
             ...this,
             status: {
                 ...this.status,
                 num_cubes: tableCubes
             },
-            cards: tableCards,
-            animation: undefined
-        };
+            cards: tableCards
+        });
     },
 
     // Changes the train_position field
     move_train ({ position, duration }) {
-        return {
-            ...this,
-            animation: { move_train: { position, duration }},
-            animationKey: this.animationKey + 1
-        };
+        return setAnimation(this, { type: 'move_train', position, duration })
     },
 
     move_train_end({ position }) {
-        return {
+        return clearAnimation({
             ...this,
             status: {
                 ...this.status,
                 train_position: position
-            },
-            animation: undefined
-        };
+            }
+        });
     },
 
     // Changes the status.flags field

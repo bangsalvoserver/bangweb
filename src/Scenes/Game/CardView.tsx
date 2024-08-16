@@ -24,7 +24,7 @@ export interface CardProps {
     showBackface?: boolean;
 }
 
-export function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card) {
+export function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card): string {
     if (isCardPrompted(selector, card)) {
         return 'card-prompted';
     }
@@ -66,7 +66,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
             return 'card-origin';
         }
     }
-    return null;
+    return '';
 }
 
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
@@ -89,57 +89,52 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
-    const selectorCardClass = getSelectorCardClass(table, selector, card);
     const selectedCubes = countSelectedCubes(selector, card);
 
     let style: CSSProperties | undefined;
     let classes = ['card-view'];
 
-    if (card.animation) {
-        switch (true) {
-        case 'flipping' in card.animation:
-            style = {
-                '--duration': card.animation.flipping.duration + 'ms'
-            } as CSSProperties;
+    switch (card.animation.type) {
+    case 'flipping':
+        style = {
+            '--duration': card.animation.duration + 'ms'
+        } as CSSProperties;
 
-            showBackface = true;
+        showBackface = true;
 
-            classes.push('card-animation', 'z-10', 'card-animation-flip');
-            if (card.animation.flipping.backface) {
-                backfaceImage.image = card.animation.flipping.backface;
-            }
-            if (card.animation.flipping.cardImage) {
-                cardImage = card.animation.flipping.cardImage;
-            } else {
-                classes.push('card-animation-reverse');
-            }
-            break;
-        case 'turning' in card.animation:
-            style = {
-                '--duration': card.animation.turning.duration + 'ms'
-            } as CSSProperties;
-
-            classes.push('card-animation', 'z-10', 'card-animation-turn');
-            if (!card.inactive) classes.push('card-animation-reverse');
-            break;
-        case 'flash' in card.animation:
-            style = {
-                '--duration': card.animation.flash.duration + 'ms'
-            } as CSSProperties;
-
-            classes.push('z-10', 'card-animation-flash');
-            break;
-        case 'short_pause' in card.animation:
-            classes.push('z-10');
-            break;
+        classes.push('card-animation', 'z-10', 'card-animation-flip');
+        if (card.animation.backface) {
+            backfaceImage.image = card.animation.backface;
         }
-    } else {
+        if (card.animation.cardImage) {
+            cardImage = card.animation.cardImage;
+        } else {
+            classes.push('card-animation-reverse');
+        }
+        break;
+    case 'turning':
+        style = {
+            '--duration': card.animation.duration + 'ms'
+        } as CSSProperties;
+
+        classes.push('card-animation', 'z-10', 'card-animation-turn');
+        if (!card.inactive) classes.push('card-animation-reverse');
+        break;
+    case 'flash':
+        style = {
+            '--duration': card.animation.duration + 'ms'
+        } as CSSProperties;
+
+        classes.push('z-10', 'card-animation-flash');
+        break;
+    case 'short_pause':
+        classes.push('z-10');
+        break;
+    case 'none':
         if (card.inactive) {
             classes.push('card-horizontal');
         }
-        if (selectorCardClass) {
-            classes.push(selectorCardClass);
-        }
+        classes.push(getSelectorCardClass(table, selector, card));
     }
 
     return (

@@ -18,20 +18,19 @@ export default function TrainView({ pocketRef }: TrainProps) {
 
     let classes = ['train-container'];
 
-    let animationKey: number | null = null;
-    if (table.animation) {
-        if ('move_train' in table.animation) {
-            animationKey = table.animationKey;
-            const animation = table.animation.move_train;
+    let trainKey: number | null = null;
+    switch (table.animation.type) {
+    case 'move_train':
+        trainKey = table.animation.key;
 
-            classes.push('train-container-move');
-            trainPositionStyle = {
-                ...trainPositionStyle,
-                '--train-position-diff': animation.position - table.status.train_position,
-                '--duration': animation.duration + 'ms'
-            } as CSSProperties;
-        }
-    } else {
+        classes.push('train-container-move');
+        trainPositionStyle = {
+            ...trainPositionStyle,
+            '--train-position-diff': table.animation.position - table.status.train_position,
+            '--duration': table.animation.duration + 'ms'
+        } as CSSProperties;
+        break;
+    case 'none':
         const trainAdvance = getModifierContext(selector, 'train_advance') ?? 0;
         if (trainAdvance > 0) {
             classes.push('train-advance-transition');
@@ -40,11 +39,12 @@ export default function TrainView({ pocketRef }: TrainProps) {
                 '--train-position-diff': trainAdvance
             } as CSSProperties;
         }
+        break;
     }
 
     return (
         <div className={classes.join(' ')} style={trainPositionStyle}>
-            <div className="train-container-inner" key={animationKey}>
+            <div className="train-container-inner" key={trainKey}>
                 <PocketView pocketRef={pocketRef} cards={table.pockets.train.slice().reverse()} />
             </div>
         </div>

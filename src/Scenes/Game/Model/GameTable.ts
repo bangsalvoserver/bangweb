@@ -1,5 +1,5 @@
 import { UpdateFunction } from "../../../Model/SceneState";
-import { Empty, UserId } from "../../../Model/ServerMessage";
+import { UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
 import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
@@ -49,11 +49,16 @@ export interface CardImage {
     sign?: CardSign;
 }
 
+export interface AnimationKey {
+    key: number;
+}
+
 export type CardAnimation =
-    { flipping: { cardImage?: CardImage, backface?: string } & Duration } |
-    { turning: Duration } |
-    { flash: Duration } |
-    { short_pause: Empty };
+    { type: 'none' } |
+    { type: 'flipping', cardImage?: CardImage, backface?: string } & Duration |
+    { type: 'turning' } & Duration |
+    { type: 'flash' } & Duration |
+    { type: 'short_pause' };
 
 type CardDeckOrData = { deck: DeckType } | CardData;
 
@@ -64,8 +69,7 @@ interface CardBase<T extends CardDeckOrData> extends Id {
     inactive: boolean;
     num_cubes: number;
     
-    animation?: CardAnimation;
-    animationKey: number;
+    animation: CardAnimation & AnimationKey;
 }
 
 export type Card = CardBase<CardDeckOrData>;
@@ -116,7 +120,7 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
         pocket,
         inactive: false,
         num_cubes: 0,
-        animationKey: 0
+        animation: { type: 'none', key: 0}
     };
 }
 
@@ -129,9 +133,10 @@ export type PlayerPockets = Record<PlayerPocketType, CardId[]>;
 export type TablePockets = Record<TablePocketType, CardId[]>;
 
 export type PlayerAnimation =
-    { flipping_role: { role: PlayerRole } & Duration } |
-    { player_hp: { hp: number} & Duration } |
-    { player_death: Duration };
+    { type: 'none' } |
+    { type: 'flipping_role', role: PlayerRole } & Duration |
+    { type: 'player_hp', hp: number} & Duration |
+    { type: 'player_death' } & Duration;
 
 export interface Player extends Id {
     user_id: UserId;
@@ -143,8 +148,7 @@ export interface Player extends Id {
     };
     pockets: PlayerPockets;
 
-    animation?: PlayerAnimation;
-    animationKey: number;
+    animation: PlayerAnimation & AnimationKey;
 }
 
 export function newPlayer(id: PlayerId, user_id: UserId): Player {
@@ -162,7 +166,7 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
             player_character: [],
             player_backup: []
         },
-        animationKey: 0
+        animation: { type: 'none', key: 0}
     };
 }
 
@@ -180,11 +184,12 @@ export interface MovePlayersUpdate {
 }
 
 export type TableAnimation =
-    { move_card: MoveCardUpdate & Duration } |
-    { move_cubes: MoveCubesUpdate & Duration } |
-    { deck_shuffle: DeckShuffledUpdate & DeckCards & Duration } |
-    { move_train: MoveTrainUpdate & Duration } |
-    { move_players: MovePlayersUpdate & Duration };
+    { type: 'none' } |
+    { type: 'move_card' } & MoveCardUpdate & Duration |
+    { type: 'move_cubes' } & MoveCubesUpdate & Duration |
+    { type: 'deck_shuffle' } & DeckShuffledUpdate & DeckCards & Duration |
+    { type: 'move_train' } & MoveTrainUpdate & Duration |
+    { type: 'move_players' } & MovePlayersUpdate & Duration;
 
 export interface GameTable {
     myUserId: UserId;
@@ -205,8 +210,7 @@ export interface GameTable {
         current_turn?: PlayerId;
     };
     
-    animation?: TableAnimation;
-    animationKey: number;
+    animation: TableAnimation & AnimationKey;
 }
 
 export function newGameTable(myUserId: UserId): GameTable {
@@ -243,7 +247,7 @@ export function newGameTable(myUserId: UserId): GameTable {
             flags: [],
         },
 
-        animationKey: 0
+        animation: { type: 'none', key: 0 }
     };
 }
 
