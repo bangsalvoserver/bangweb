@@ -80,7 +80,7 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
         return 0;
     }
     
-    const distanceMod = selector.request.distances.distance_mods.find(item => item.player === to)?.value ?? 0;
+    const distanceMod = selector.request?.distances.distance_mods.find(item => item.player === to)?.value ?? 0;
 
     if (table.status.flags.includes('disable_player_distances')) {
         return 1 + distanceMod;
@@ -148,10 +148,11 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
     }
 
     if (!getModifierContext(selector, 'ignore_distances') && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
-        const distances = selector.request.distances;
-        let range = distances.range_mod;
+        const distances = selector.request?.distances;
+        
+        let range = distances?.range_mod ?? 0;
         if (filter.includes('reachable')) {
-            if (distances.weapon_range === 0) {
+            if (!distances?.weapon_range) {
                 return false;
             }
             range += distances.weapon_range;

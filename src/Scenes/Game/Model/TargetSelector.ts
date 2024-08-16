@@ -1,4 +1,3 @@
-import { Empty } from "../../../Model/ServerMessage";
 import { sum } from "../../../Utils/ArrayUtils";
 import { CardTarget } from "./CardTarget";
 import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
@@ -6,7 +5,7 @@ import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } f
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
-export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | Empty;
+export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | null;
 
 export type GamePrompt =
     { type: 'none' } |
@@ -71,7 +70,7 @@ interface TargetSelectorBase<T extends RequestStatusUnion> {
 
 export type TargetSelector = TargetSelectorBase<RequestStatusUnion>;
 
-export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelector {
+export function newTargetSelector(request: RequestStatusUnion = null): TargetSelector {
     return {
         request,
         prompt: { type: 'none' },
@@ -84,11 +83,11 @@ export function newTargetSelector(request: RequestStatusUnion = {}): TargetSelec
 }
 
 export function isResponse(selector: TargetSelector): selector is TargetSelectorBase<RequestStatusArgs> {
-    return 'respond_cards' in selector.request;
+    return selector.request !== null && 'respond_cards' in selector.request;
 }
 
 export function isStatusReady(selector: TargetSelector): selector is TargetSelectorBase<StatusReadyArgs> {
-    return 'play_cards' in selector.request;
+    return selector.request !== null && 'play_cards' in selector.request;
 }
 
 function getCurrentTargetSelection(selector: TargetSelector) {
@@ -158,20 +157,18 @@ export function *getAllPlayableCards(selector: TargetSelector): Generator<[CardI
     } else {
         cards = [];
     }
-    for (const { card, modifiers, context } of cards) {
+    outerLoop: for (const { card, modifiers, context } of cards) {
         let i = 0;
         for (const { card: modCard } of selector.modifiers) {
             if (modifiers.at(i) !== modCard.id) {
-                break;
+                continue outerLoop;
             }
             ++i;
         }
-        if (i >= selector.modifiers.length) {
-            yield [
-                modifiers.at(selector.modifiers.length) ?? card,
-                context ?? {}
-            ];
-        }
+        yield [
+            modifiers.at(selector.modifiers.length) ?? card,
+            context ?? {}
+        ];
     }
 }
 

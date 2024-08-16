@@ -192,7 +192,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId)
             },
         
             status_clear() {
-                selectorDispatch({ setRequest: {} });
+                selectorDispatch({ setRequest: null });
             },
         
             clear_logs() {

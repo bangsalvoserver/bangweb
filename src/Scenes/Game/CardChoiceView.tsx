@@ -66,10 +66,8 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     }
 
     let cards: Card[] = [];
-    for (const [id, ] of getAllPlayableCards(selector)) {
-        if (cards.every(card => card.id !== id)) {
-            cards.push(getCard(table, id));
-        }
+    for (const [card, ] of getAllPlayableCards(selector)) {
+        cards.push(getCard(table, card));
     }
 
     return <CardChoiceInner cards={cards} anchor={anchor} tracker={tracker} />
