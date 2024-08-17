@@ -37,7 +37,7 @@ export default function PocketView({ pocketRef, cards }: PocketProps) {
                 }
             } else {
                 const card = getCard(table, id);
-                const key = card.animation ? `${id} ${card.animation.key}` : `${id}`;
+                const key = `${id} ${card.animation.key}`;
                 return <CardView cardRef={setPos(id)} key={key} card={card} />
             }
         }) }

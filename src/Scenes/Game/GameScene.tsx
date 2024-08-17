@@ -90,7 +90,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
     </>}
   </div>;
 
-  const mainDeck = (table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0 || table.animation) &&
+  const mainDeck = (table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0 || table.animation.type === 'deck_shuffle') &&
     <div className="pocket-group">
       <StackPocket slice={10} pocketRef={setRef('discard_pile')} cards={table.pockets.discard_pile} />
       <StackPocket showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} />
@@ -120,8 +120,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
     </div>
   );
 
-  const movingPlayers = table.animation.type === 'move_players' ?
-    table.animation.players.map(p => p.from) : [];
+  const movingPlayers = table.animation.type === 'move_players' ? table.animation.players.map(p => p.from) : [];
 
   const playerViews = table.alive_players.map((player_id, index) => {
     const player = getPlayer(table, player_id);
