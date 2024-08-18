@@ -7,7 +7,7 @@ import { getUsername } from "../Lobby/LobbyUser";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
 import { CardSign } from "./Model/CardData";
-import { findPlayer } from "./Model/GameTable";
+import { getPlayer } from "./Model/GameTable";
 import { FormatArg, GameString, PlayerId } from "./Model/GameUpdate";
 import "./Style/GameStringComponent.css";
 
@@ -37,7 +37,7 @@ export function PlayerNameView({ id }: PlayerNameProps) {
     const { table } = useContext(GameStateContext);
     const { users } = useContext(LobbyContext);
 
-    const player = findPlayer(table.players, id);
+    const player = getPlayer(table, id);
     const user = getUser(users, player.user_id);
     const username = getUsername(user);
     
@@ -59,7 +59,7 @@ const transformFormatArg = createUnionDispatch<FormatArg, number | JSX.Element>(
     },
     player: value => {
         if (value) {
-            return <PlayerNameView id={value} />;
+            return <PlayerNameView id={value} />
         } else {
             return <span className="player-name unknown-name">{getLabel('ui', 'UNKNOWN_PLAYER')}</span>
         }

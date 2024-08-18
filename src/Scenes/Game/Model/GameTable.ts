@@ -251,26 +251,18 @@ export function newGameTable(myUserId: UserId): GameTable {
     };
 }
 
-export function findCard(cards: Card[], id: CardId): Card {
-    const card = searchById(cards, id);
+export function getCard(table: GameTable, id: CardId): Card {
+    const card = searchById(table.cards, id);
     if (!card) {
         throw new Error(`Card not found: ${id}`);
     }
     return card;
 }
 
-export function getCard(table: GameTable, id: CardId): Card {
-    return findCard(table.cards, id);
-}
-
-export function findPlayer(players: Player[], id: PlayerId): Player {
-    const player = searchById(players, id);
+export function getPlayer(table: GameTable, id: PlayerId): Player {
+    const player = searchById(table.players, id);
     if (!player) {
         throw new Error(`Player not found: ${id}`);
     }
     return player;
-}
-
-export function getPlayer(table: GameTable, id: PlayerId): Player {
-    return findPlayer(table.players, id);
 }
