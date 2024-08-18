@@ -9,11 +9,10 @@ export interface Duration {
     duration: Milliseconds;
 }
 
-export interface FormatInteger { integer: number };
-export interface FormatCardName { name: string, sign: CardSign };
-export interface FormatCard { card: FormatCardName | Empty };
-export interface FormatPlayer { player: PlayerId | null };
-export type FormatArg = FormatInteger | FormatCard | FormatPlayer;
+export type FormatArg = 
+    { integer: number } |
+    { card: { name?: string, sign?: CardSign }} |
+    { player: PlayerId };
 
 export interface GameString {
     format_str: string;

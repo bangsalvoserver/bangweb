@@ -35,17 +35,17 @@ export function createContextUnionReducer<State, Context, Update extends UnionUp
     };
 }
 
-type UnionDispatchFunction<T> = (value: T) => void;
-type UnionDispatchMap<Update extends UnionUpdate> = {
-    [K in Update as keyof K]: UnionDispatchFunction<K[keyof K]>
+type UnionDispatchFunction<T, RetType> = (value: T) => RetType;
+type UnionDispatchMap<Update extends UnionUpdate, RetType> = {
+    [K in Update as keyof K]: UnionDispatchFunction<K[keyof K], RetType>
 };
 
-export function createUnionDispatch<Update extends UnionUpdate>(functions: UnionDispatchMap<Update>) {
+export function createUnionDispatch<Update extends UnionUpdate, RetType = void>(functions: UnionDispatchMap<Update, RetType>) {
     return (update: Update) => {
         const [updateType, updateValue] = Object.entries(update)[0] as [KeysOfUnion<Update>, unknown];
-        const fn = functions[updateType as KeysOfUnion<Update>] as UnionDispatchFunction<unknown>;
+        const fn = functions[updateType as KeysOfUnion<Update>] as UnionDispatchFunction<unknown, RetType>;
         if (!fn) throw new Error("Invalid updateType: " + updateType);
 
-        fn(updateValue);
+        return fn(updateValue);
     };
 }
