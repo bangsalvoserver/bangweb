@@ -1,14 +1,14 @@
 import { CSSProperties, useContext } from "react";
-import { getRectCenter } from "../../Utils/Rect";
-import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
-import CardView from "./CardView";
-import { GameStateContext } from "./GameScene";
-import { CardTracker } from "./Model/CardTracker";
-import { Card, getCard } from "./Model/GameTable";
-import { CardId } from "./Model/GameUpdate";
-import { getModifierContext, getAllPlayableCards, isCardCurrent } from "./Model/TargetSelector";
+import { getRectCenter } from "../../../Utils/Rect";
+import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
+import CardView from "../CardView";
+import { GameStateContext } from "../GameScene";
+import { CardTracker } from "../Model/CardTracker";
+import { Card, getCard } from "../Model/GameTable";
+import { CardId } from "../Model/GameUpdate";
+import { getModifierContext, getAllPlayableCards, isCardCurrent } from "../Model/TargetSelector";
 import "./Style/CardChoiceView.css";
-import { getCardPocket } from "./Model/Filters";
+import { getCardPocket } from "../Model/Filters";
 
 export interface CardChoiceProps {
     tracker: CardTracker;

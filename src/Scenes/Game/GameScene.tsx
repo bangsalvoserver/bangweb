@@ -9,7 +9,7 @@ import { isMobileDevice } from "../../Utils/MobileCheck";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
-import CardChoiceView from "./CardChoiceView";
+import CardChoiceView from "./Pockets/CardChoiceView";
 import CardOverlayView from "./CardOverlayView";
 import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
