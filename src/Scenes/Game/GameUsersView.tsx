@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { UserId } from "../../Model/ServerMessage";
 import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
-import { LobbyContext } from "../Lobby/Lobby";
+import { getUser, LobbyContext } from "../Lobby/Lobby";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameStateContext } from "./GameScene";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
@@ -9,7 +9,8 @@ import { Player } from "./Model/GameTable";
 import "./Style/GameUsersView.css";
 
 interface GameUserProps {
-    user: UserValue;
+    player?: Player;
+    user?: UserValue;
     myUserId: UserId;
 }
 
@@ -29,10 +30,7 @@ function getRoleIcon(player: Player | undefined): string | undefined {
     }
 }
 
-function GameUserPlayer({ user, myUserId }: GameUserProps) {
-    const { table } = useContext(GameStateContext);
-
-    const player = table.players.find(p => p.user_id === user.id);
+function GameUserPlayer({ player, user, myUserId }: GameUserProps) {
     const playerIcons = useMemo(() => {
         const role = getRoleIcon(player);
         const isWinner = player && player.status.flags.includes('winner');
@@ -46,7 +44,7 @@ function GameUserPlayer({ user, myUserId }: GameUserProps) {
         </div>;
     }, [player]);
 
-    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user.id}>
+    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user?.id}>
         { playerIcons }
     </LobbyUser>;
 }
@@ -55,6 +53,24 @@ export default function GameUsersView() {
     const [isPanelOpen, setIsPanelOpen, panelRef] = useCloseOnLoseFocus<HTMLDivElement>();
 
     const { users, myUserId } = useContext(LobbyContext);
+    const { table } = useContext(GameStateContext);
+
+    const gameUserPlayers = useMemo(() => {
+        let players: [UserId, Player | undefined, UserValue | undefined][] = table.players.map(player => {
+            const user = getUser(users, player.user_id);
+            return [ player.user_id, player, user];
+        });
+
+        for (const user of users) {
+            if (players.every(([user_id, ]) => user_id !== user.id)) {
+                players.push([ user.id, undefined, user ]);
+            }
+        }
+
+        return players.map(([user_id, player, user]) =>
+            <GameUserPlayer key={user_id} player={player} user={user} myUserId={myUserId} />
+        );
+    }, [users, myUserId, table.players]);
 
     return <div ref={panelRef} className="order-2">
         <button className='
@@ -79,9 +95,7 @@ export default function GameUsersView() {
                 </svg>
         </button>
         <div className={'game-users-box ' + (!isPanelOpen ? 'hidden' : '')}>
-            {users.map((user, i) => (
-                <GameUserPlayer key={user.id} user={user} myUserId={myUserId} />
-            ))}
+            { gameUserPlayers }
         </div>
     </div>;
 }
