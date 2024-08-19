@@ -16,6 +16,7 @@ export interface UserValue {
 
 export interface LobbyUserProps {
     user?: UserValue;
+    isSelf?: boolean;
     isOwner?: boolean;
     align?: 'horizontal' | 'vertical';
     children?: ReactNode;
@@ -32,14 +33,14 @@ export function getUsername(user?: UserValue) {
   return user?.name ?? getLabel('ui', 'USER_DISCONNECTED');
 }
 
-export default function LobbyUser({ user, align, children }: LobbyUserProps) {
+export default function LobbyUser({ isSelf, user, align, children }: LobbyUserProps) {
   const timerWidget = user && user.lifetime > 0 && <TimerWidget duration={user.lifetime} />;
   return (
     <div className={`lobby-user ${align === 'vertical' ? 'flex-col' : 'flex-row'}`}>
       <div className='lobby-user-inner'>
         <img src={getPropic(user)} alt="" />
       </div>
-      <div className='lobby-username'>
+      <div className={`lobby-username ${isSelf ? 'lobby-username-self' : ''}`}>
         {getUsername(user)}{timerWidget}
       </div>
       {children}

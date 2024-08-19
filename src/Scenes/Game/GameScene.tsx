@@ -9,10 +9,10 @@ import { isMobileDevice } from "../../Utils/MobileCheck";
 import { useMapRef } from "../../Utils/UseMapRef";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
-import CardChoiceView from "./Pockets/CardChoiceView";
 import CardOverlayView from "./CardOverlayView";
 import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
+import GameUsersView from "./GameUsersView";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
 import { getPlayer } from "./Model/GameTable";
@@ -22,6 +22,7 @@ import useGameState, { newGameState } from "./Model/UseGameState";
 import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/UseSelectorConfirm";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
+import CardChoiceView from "./Pockets/CardChoiceView";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import StationsView from "./Pockets/StationsView";
@@ -163,7 +164,11 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
           { isMobileDevice() || <CardOverlayView overlayState={overlayState} /> }
         </div>
         
-        { overlayRef.current && createPortal(<GameLogView logs={gameLogs} />, overlayRef.current) }
+        { overlayRef.current && createPortal(
+          <>
+            <GameUsersView />
+            <GameLogView logs={gameLogs} />
+          </>, overlayRef.current) }
       </GameStateContext.Provider>
     </LobbyContext.Provider>
   );

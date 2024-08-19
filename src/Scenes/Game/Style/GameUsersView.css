@@ -1,0 +1,23 @@
+.game-users-box {
+    z-index: 10;
+    display: block;
+    
+    position: fixed;
+    right: 1em;
+    bottom: 5.5em;
+
+    min-width: 200px;
+}
+
+.game-users-box .lobby-user {
+    outline: 2px solid #2d1000ff;
+    background-color: #cec9b8c5;
+    border-radius: 0.5em;
+    margin: 0.4em;
+    padding: 0.2em;
+    font-size: 10pt;
+}
+
+.game-player-icons {
+    margin-left: 0.5em;
+}

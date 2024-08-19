@@ -77,7 +77,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         };
     },
 
-    // Adds the removed players to the dead_players array, sets the player_death animation and/or the player_move animation
+    // Sets the player_death animation and/or the player_move animation
     player_order ({ players, duration }) {
         const filteredPlayers = intersect(this.alive_players, players);
         const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
@@ -119,8 +119,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return clearAnimation({
             ...this,
             players: newPlayers,
-            alive_players: rotatedPlayers,
-            dead_players: removedPlayers.length === 0 ? this.dead_players : this.dead_players.concat(removedPlayers),
+            alive_players: rotatedPlayers
         })
     },
 

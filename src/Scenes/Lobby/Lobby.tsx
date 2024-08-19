@@ -37,7 +37,7 @@ export default function LobbyScene({ lobbyInfo, setGameOptions, connection, lobb
           <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={setGameOptions} readOnly={!isLobbyOwner(lobbyState)} />
           <div className='flex flex-col -order-1 md:order-none'>
             {lobbyState.users.map((user, i) => (
-              <LobbyUser align='vertical' key={user.id} user={user} isOwner={i === 0} />
+              <LobbyUser align='vertical' key={user.id} user={user} isOwner={i === 0} isSelf={user.id === lobbyState.myUserId} />
             ))}
           </div>
         </div>

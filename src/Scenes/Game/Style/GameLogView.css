@@ -1,3 +1,9 @@
+.game-log-view {
+    flex-grow: 1;
+    display: flex;
+    justify-content: right;
+}
+
 .game-log-box {
     display: block;
     
@@ -12,4 +18,15 @@
     font-size: 10pt;
     padding: 0.5em;
     background-color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+    .game-log-view {
+        justify-content: left;
+    }
+
+    .game-log-box {
+        right: unset;
+        left: 1em;
+    }
 }

@@ -1,17 +1,22 @@
+:root {
+    --overlay-margin: 1em;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --overlay-margin: 0.5em;
+    }
+}
+
 .overlay-buttons {
     position: fixed;
-    right: 1em;
-    bottom: 1em;
+
+    width: calc(100% - 2 * var(--overlay-margin));
+    left: var(--overlay-margin);
+    bottom: var(--overlay-margin);
 
     z-index: 20;
 
     display: flex;
     flex-direction: row-reverse;
-}
-
-@media (max-width: 768px) {
-    .overlay-buttons {
-        right: 0.5em;
-        bottom: 0.5em;
-    }
 }

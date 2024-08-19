@@ -239,3 +239,28 @@
     --icon-url: url('/media/icon_skip_turn.png');
     --icon-color: #ff0000ff;
 }
+
+.icon-spectator {
+    --icon-url: url('/media/icon_spectator.png'); 
+    --icon-color: #94a4af;
+}
+
+.icon-sheriff {
+    --icon-url: url('/media/icon_sheriff.png'); 
+    --icon-color: #dfcc29;
+}
+
+.icon-outlaw {
+    --icon-url: url('/media/icon_outlaw.png'); 
+    --icon-color: #e97070;
+}
+
+.icon-deputy {
+    --icon-url: url('/media/icon_deputy.png'); 
+    --icon-color: #afdf29;
+}
+
+.icon-renegade {
+    --icon-url: url('/media/icon_renegade.png'); 
+    --icon-color: #75a4da;
+}

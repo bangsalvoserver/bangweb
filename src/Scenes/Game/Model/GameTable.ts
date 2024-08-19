@@ -201,7 +201,6 @@ export interface GameTable {
     pockets: TablePockets;
 
     alive_players: PlayerId[];
-    dead_players: PlayerId[];
 
     status: {
         num_cubes: number;
@@ -239,7 +238,6 @@ export function newGameTable(myUserId: UserId): GameTable {
         },
 
         alive_players: [],
-        dead_players: [],
 
         status: {
             num_cubes: 0,
