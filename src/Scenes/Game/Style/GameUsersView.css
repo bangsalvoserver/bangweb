@@ -1,12 +1,19 @@
+.game-users-outer {
+    order: 2;
+}
+
 .game-users-box {
     z-index: 10;
     display: block;
     
     position: fixed;
     right: 1em;
-    bottom: 5.5em;
+    bottom: 4.5em;
 
     min-width: 200px;
+    max-height: calc(100vh - 10em);
+
+    overflow-y: auto;
 }
 
 .game-users-box .lobby-user {

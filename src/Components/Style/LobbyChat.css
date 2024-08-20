@@ -1,3 +1,7 @@
+.lobby-chat-outer {
+    order: 1;
+}
+
 .lobby-chat-box {
     display: flex;
 

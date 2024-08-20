@@ -1,7 +1,5 @@
-.game-log-view {
-    flex-grow: 1;
-    display: flex;
-    justify-content: right;
+.game-log-outer {
+    order: 4;
 }
 
 .game-log-box {
@@ -21,8 +19,11 @@
 }
 
 @media (max-width: 768px) {
-    .game-log-view {
-        justify-content: left;
+    .overlay-buttons::before {
+        order: 3;
+        content: "";
+        display: block;
+        flex-grow: 1;
     }
 
     .game-log-box {

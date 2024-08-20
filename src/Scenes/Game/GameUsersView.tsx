@@ -72,7 +72,7 @@ export default function GameUsersView() {
         );
     }, [users, myUserId, table.players]);
 
-    return <div ref={panelRef} className="order-2">
+    return <div ref={panelRef} className="game-users-outer">
         <button className='
                 w-8 h-8 md:w-12 md:h-12 relative
                 p-2 ml-1 text-sm rounded-full focus:outline-none focus:ring-2 text-gray-400 bg-gray-600 hover:bg-gray-700 focus:ring-gray-800
