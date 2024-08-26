@@ -65,6 +65,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         UNKNOWN_CARD: "(Carta sconosciuta)",
         UNKNOWN_PLAYER: "(Giocatore sconosciuto)",
         USER_DISCONNECTED: "(Disconnesso)",
+        USERNAME_EMPTY: "(Nome utente vuoto)",
         STATUS_GAME_OVER: "Partita Finita",
         LABEL_USERNAME: "Nome Utente",
         LABEL_LOBBY_NAME: "Nome Lobby",
