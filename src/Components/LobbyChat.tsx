@@ -6,19 +6,11 @@ import { countIf } from "../Utils/ArrayUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import usePrevious from "../Utils/UsePrevious";
 import "./Style/LobbyChat.css";
+import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 
 export interface ChatProps {
     connection: BangConnection;
     lobbyState: LobbyState;
-}
-
-const MAX_USERNAME_LENGTH = 50;
-
-function clipUsername(username: string): string {
-    if (username.length > MAX_USERNAME_LENGTH) {
-        return username.substring(0, MAX_USERNAME_LENGTH);
-    }
-    return username;
 }
 
 export default function LobbyChat({ connection, lobbyState: { myUserId, users, chatMessages: messages } }: ChatProps) {

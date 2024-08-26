@@ -29,8 +29,23 @@ export function getPropic(user?: UserValue) {
   return user? (user.propic ?? DEFAULT_USER_PROPIC) : PROPIC_DISCONNECTED;
 }
 
+
+const MAX_USERNAME_LENGTH = 50;
+
+export function clipUsername(username: string): string {
+    if (username.length > MAX_USERNAME_LENGTH) {
+        return username.substring(0, MAX_USERNAME_LENGTH);
+    }
+    return username;
+}
+
 export function getUsername(user?: UserValue) {
-  return user?.name ?? getLabel('ui', 'USER_DISCONNECTED');
+  const username = user?.name;
+  if (username) {
+    return clipUsername(username);
+  } else {
+    return getLabel('ui', 'USER_DISCONNECTED');
+  }
 }
 
 export default function LobbyUser({ isSelf, user, align, children }: LobbyUserProps) {
