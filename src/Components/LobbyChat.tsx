@@ -12,6 +12,15 @@ export interface ChatProps {
     lobbyState: LobbyState;
 }
 
+const MAX_USERNAME_LENGTH = 50;
+
+function clipUsername(username: string): string {
+    if (username.length > MAX_USERNAME_LENGTH) {
+        return username.substring(0, MAX_USERNAME_LENGTH);
+    }
+    return username;
+}
+
 export default function LobbyChat({ connection, lobbyState: { myUserId, users, chatMessages: messages } }: ChatProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
@@ -71,7 +80,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     const MessageTag = useCallback((props: ChatMessageState) => {
         if (props.type === 'user') {
             const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return (<p className={pClass}><span className='username'>{props.username}</span> : {props.message}</p>);
+            return (<p className={pClass}><span className='username'>{clipUsername(props.username)}</span> : {props.message}</p>);
         } else {
             return (<p className='server-message'>{props.message}</p>);
         }
