@@ -24,6 +24,10 @@
 .lobby-username {
     font-weight: bold;
     z-index: 3;
+    max-width: 20em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .lobby-user-inner {
