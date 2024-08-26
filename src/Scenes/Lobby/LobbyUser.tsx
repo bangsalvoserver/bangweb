@@ -40,13 +40,12 @@ export function clipUsername(username: string): string {
 }
 
 export function getUsername(user?: UserValue) {
-  const username = user?.name;
-  if (username === undefined) {
+  if (!user) {
     return getLabel('ui', 'USER_DISCONNECTED');
-  } else if (username.length === 0) {
+  } else if (user.name.length === 0) {
     return getLabel('ui', 'USERNAME_EMPTY');
   } else {
-    return clipUsername(username);
+    return clipUsername(user.name);
   }
 }
 

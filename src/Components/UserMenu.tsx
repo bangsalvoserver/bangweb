@@ -35,7 +35,7 @@ export default function UserMenu({ username, setUsername, children }: UserMenuPr
       <div className="px-4 py-3">
         <div className={showInput ? 'username-input' : 'username-span'}
           onClick={() => setShowInput(true)}>
-          <span className="block text-sm text-white">{username || getLabel('ui', 'UNKNOWN_PLAYER')}</span>
+          <span className="block text-sm text-white">{username || getLabel('ui', 'USERNAME_EMPTY')}</span>
           <input ref={usernameRef} value={username}
             onChange={e => setUsername(e.target.value)}
             onBlur={() => setShowInput(false)}
