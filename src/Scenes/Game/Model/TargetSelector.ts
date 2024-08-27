@@ -252,7 +252,7 @@ export function isPlayerSelected(selector: TargetSelector, player: PlayerId): bo
 export function countSelectedCubes(selector: TargetSelector, targetCard: Card): number {
     let selected = 0;
     const doCount = ({ card, targets }: TargetSelection) => {
-        const effects = getCardEffects(card, response);
+        const effects = getCardEffects(card, isResponse(selector));
         let index = 0;
         for (const effect of effects) {
             if (index >= targets.length) break;
@@ -261,7 +261,6 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
         }
     };
 
-    const response = isResponse(selector);
     if (selector.selection) {
         doCount(selector.selection);
     }

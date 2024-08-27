@@ -40,8 +40,7 @@ export type ErrorType = 'lobby' | 'server';
 export type ErrorState = { type: ErrorType, message: string };
 
 export type SceneState =
-    { type: 'connect', error?: ErrorState } |
-    { type: 'loading', error?: ErrorState } |
+    { type: 'connect' | 'loading', error?: ErrorState } |
     { type: 'waiting_area', error?: ErrorState, clientCount: number, lobbies: LobbyValue[] } |
     { type: 'lobby' | 'game', error?: ErrorState, clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 

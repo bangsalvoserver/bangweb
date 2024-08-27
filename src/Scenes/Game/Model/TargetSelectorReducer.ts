@@ -85,7 +85,6 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
 }
 
 function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSelector {
-    selector = setSelectorMode(selector, 'middle');
     const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
     if (cardId) {
         const card = getCard(table, cardId);
@@ -128,7 +127,7 @@ function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSe
         case 'target':
             return setSelectorMode(selector, 'finish');
         case 'modifier':
-            return handleAutoSelect(table, selector);
+            return handleAutoSelect(table, setSelectorMode(selector, 'middle'));
         default:
             throw new Error('TargetSelector: not in targeting mode');
         }
