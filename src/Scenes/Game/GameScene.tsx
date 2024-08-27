@@ -38,13 +38,14 @@ export interface GameProps {
   lobbyState: LobbyState;
   gameChannel: GameChannel;
   overlayRef: RefObject<HTMLDivElement>;
+  muteSounds?: boolean;
 }
 
 const EMPTY_GAME_STATE = newGameState(0);
 export const GameStateContext = createContext(EMPTY_GAME_STATE);
 
-export default function GameScene({ connection, lobbyState, gameChannel, overlayRef }: GameProps) {
-  const { state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId);
+export default function GameScene({ connection, lobbyState, gameChannel, overlayRef, muteSounds }: GameProps) {
+  const { state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId, muteSounds ?? false);
   const { table, selector } = state;
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();

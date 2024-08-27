@@ -7,6 +7,8 @@ import gameTableReducer from "./GameTableReducer";
 import { GameString, GameUpdate, TableUpdate } from "./GameUpdate";
 import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
 import { newTargetSelector, TargetSelector } from "./TargetSelector";
+import { useMapRef } from "../../../Utils/UseMapRef";
+import useEvent from "react-use-event-hook";
 
 export interface GameState {
     table: GameTable;
@@ -33,12 +35,25 @@ export function newGameState(myUserId: UserId): GameState {
     };
 }
 
-export default function useGameState(gameChannel: GameChannel, myUserId: UserId) {
+export default function useGameState(gameChannel: GameChannel, myUserId: UserId, muteSounds: boolean) {
     const [state, stateDispatch] = useReducer(gameStateReducer, myUserId, newGameState);
 
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
     const gameUpdates = useRef<GameUpdate[]>([]);
+
+    const soundsMap = useMapRef<string, HTMLAudioElement>();
+
+    const playSound = useEvent((name: string) => {
+        let sound = soundsMap.get(name);
+        if (sound === null) {
+            sound = new Audio(`/sounds/${name}.wav`);
+            soundsMap.set(name, sound);
+        }
+        if (!muteSounds) {
+            sound.play();
+        }
+    });
 
     const clearGameError = useCallback(() => {
         if (gameError) setGameError(undefined);
@@ -88,7 +103,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId)
             },
         
             play_sound(sound) {
-                // TODO
+                playSound(sound);
             },
         
             add_cards(update) {
@@ -221,7 +236,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId)
             clearTimeout(timeout);
             gameChannel.unsubscribe();
         }
-    }, [gameChannel]);
+    }, [gameChannel, playSound]);
 
     return { state, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }

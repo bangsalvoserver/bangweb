@@ -46,6 +46,10 @@ function Header({ scene, settings, connection }: HeaderProps) {
     }
   };
 
+  const handleToggleSounds = () => {
+    settings.setMuteSounds(value => !value);
+  };
+
   const closeMenuAnd = (fn: () => void) => {
     return () => {
       setIsMenuOpen(false);
@@ -77,8 +81,10 @@ function Header({ scene, settings, connection }: HeaderProps) {
           </button>
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
-              { scene.type === 'game' && isLobbyOwner(scene.lobbyState) &&
-                <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
+              { scene.type === 'game' && <>
+                <UserMenuItem onClick={handleToggleSounds}>{getLabel('ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
+                { isLobbyOwner(scene.lobbyState) && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
+              </>}
               { 'lobbyInfo' in scene
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
                 : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }

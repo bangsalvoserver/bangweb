@@ -46,6 +46,7 @@ export default function App() {
           lobbyState={scene.lobbyState}
           gameChannel={gameChannel}
           overlayRef={overlayRef}
+          muteSounds={settings.muteSounds}
         />
     }
   };

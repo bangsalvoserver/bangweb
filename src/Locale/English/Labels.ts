@@ -72,6 +72,8 @@ export const LABELS_ENGLISH: LabelRegistry = {
         GAME_OPTIONS: "Game Options",
         BUTTON_CHAT_SEND: "Send",
         BUTTON_START_GAME: "Start Game",
+        BUTTON_ENABLE_SOUNDS: "Enable Sounds",
+        BUTTON_DISABLE_SOUNDS: "Disable Sounds",
         BUTTON_RETURN_LOBBY: "Return to Lobby",
         BUTTON_OK: "OK",
         BUTTON_UNDO: "Undo",
