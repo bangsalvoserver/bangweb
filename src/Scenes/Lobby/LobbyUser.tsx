@@ -29,17 +29,8 @@ export function getPropic(user?: UserValue) {
   return user? (user.propic ?? DEFAULT_USER_PROPIC) : PROPIC_DISCONNECTED;
 }
 
-
-const MAX_USERNAME_LENGTH = 50;
-
 export function clipUsername(username: string): string {
-  if (username.length === 0) {
-    return getLabel('ui', 'USERNAME_EMPTY');
-  } else if (username.length > MAX_USERNAME_LENGTH) {
-    return username.substring(0, MAX_USERNAME_LENGTH);
-  } else {
-    return username;
-  }
+  return username.length !== 0 ? username : getLabel('ui', 'USERNAME_EMPTY');
 }
 
 export function getUsername(user?: UserValue) {
