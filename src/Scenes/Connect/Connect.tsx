@@ -2,6 +2,7 @@ import { SyntheticEvent } from 'react';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
 import BangLogo from '../../Components/BangLogo';
+import { MAX_USERNAME_LENGTH } from '../../Model/AppSettings';
 
 export interface ConnectProps {
   username?: string;
@@ -35,6 +36,7 @@ export default function ConnectScene({ username, setUsername, handleConnect }: C
       type="text"
       id="username"
       value={username}
+      maxLength={MAX_USERNAME_LENGTH}
       onChange={e => setUsername(e.target.value)}
     />
     <Button type="submit" color="green">{getLabel('ui', 'BUTTON_CONNECT')}</Button>

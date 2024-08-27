@@ -17,6 +17,8 @@ export function useSettings() {
     } as const;
 }
 
+export const MAX_USERNAME_LENGTH = 50;
+
 type AppSettings = ReturnType<typeof useSettings>;
 
 export default AppSettings;

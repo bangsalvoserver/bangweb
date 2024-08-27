@@ -1,6 +1,7 @@
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 import "./Style/UserMenu.css";
+import { MAX_USERNAME_LENGTH } from "../Model/AppSettings";
 
 export interface UserMenuItemProps {
   onClick: () => void;
@@ -37,6 +38,7 @@ export default function UserMenu({ username, setUsername, children }: UserMenuPr
           onClick={() => setShowInput(true)}>
           <span className="block text-sm text-white">{clipUsername(username ?? '')}</span>
           <input ref={usernameRef} value={username}
+            maxLength={MAX_USERNAME_LENGTH}
             onChange={e => setUsername(e.target.value)}
             onBlur={() => setShowInput(false)}
           />
