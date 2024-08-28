@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useMapRef } from "./UseMapRef";
 import useEvent from "react-use-event-hook";
 
+const soundsMap = new Map<string, HTMLAudioElement>();
+
 export default function usePlaySound(muteSounds: boolean = false) {
-    const soundsMap = useMapRef<string, HTMLAudioElement>();
     const currentAudio = useRef<HTMLAudioElement>();
 
     const clearCurrentAudio = useCallback(() => {
@@ -28,7 +28,7 @@ export default function usePlaySound(muteSounds: boolean = false) {
             clearCurrentAudio();
 
             let sound = soundsMap.get(name);
-            if (sound === null) {
+            if (sound === undefined) {
                 sound = new Audio(`/sounds/${name}.wav`);
                 soundsMap.set(name, sound);
             }
