@@ -2,13 +2,12 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { GameChannel } from "../../../Model/UseBangConnection";
 import { createUnionDispatch, createUnionReducer } from "../../../Utils/UnionUtils";
+import usePlaySound from "../../../Utils/UsePlaySound";
 import { GameTable, newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
 import { GameString, GameUpdate, TableUpdate } from "./GameUpdate";
-import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
 import { newTargetSelector, TargetSelector } from "./TargetSelector";
-import { useMapRef } from "../../../Utils/UseMapRef";
-import useEvent from "react-use-event-hook";
+import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
 
 export interface GameState {
     table: GameTable;
@@ -42,18 +41,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
     const [gameError, setGameError] = useState<GameString>();
     const gameUpdates = useRef<GameUpdate[]>([]);
 
-    const soundsMap = useMapRef<string, HTMLAudioElement>();
-
-    const playSound = useEvent((name: string) => {
-        let sound = soundsMap.get(name);
-        if (sound === null) {
-            sound = new Audio(`/sounds/${name}.wav`);
-            soundsMap.set(name, sound);
-        }
-        if (!muteSounds) {
-            sound.play();
-        }
-    });
+    const playSound = usePlaySound(muteSounds);
 
     const clearGameError = useCallback(() => {
         if (gameError) setGameError(undefined);
