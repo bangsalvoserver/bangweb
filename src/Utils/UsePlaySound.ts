@@ -28,7 +28,7 @@ export default function usePlaySound(muteSounds: boolean = false) {
         if (!muteSounds) {
             clearCurrentAudio();
 
-            const sound = computeIfAbsent(soundsMap, name, () => new Audio(`/sounds/${name}.wav`));
+            const sound = computeIfAbsent(soundsMap, name, () => new Audio(`/sounds/${name}.mp3`));
             currentAudio.current = sound;
 
             sound.addEventListener('ended', clearCurrentAudio);
