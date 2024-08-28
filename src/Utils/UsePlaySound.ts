@@ -19,6 +19,8 @@ export default function usePlaySound(muteSounds: boolean = false) {
         if (muteSounds) {
             clearCurrentAudio();
         }
+
+        return clearCurrentAudio;
     }, [muteSounds, clearCurrentAudio]);
 
     const playSound = useEvent((name: string) => {
