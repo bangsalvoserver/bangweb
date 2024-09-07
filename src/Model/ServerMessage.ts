@@ -13,6 +13,8 @@ export interface ClientAccepted {
 
 export type LobbyStateEnum = 'waiting' | 'playing' | 'finished';
 
+export type LobbyTeam = 'game_player' | 'game_spectator';
+
 export interface LobbyUpdate {
     lobby_id: LobbyId;
     name: string;
@@ -50,6 +52,7 @@ export type LobbyChatFlag = 'is_read';
 export interface LobbyAddUser {
     user_id: UserId;
     user: UserInfo;
+    team: LobbyTeam;
     flags: LobbyChatFlag[];
     lifetime: Milliseconds;
 }

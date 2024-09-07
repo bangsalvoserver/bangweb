@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import getLabel from "../../Locale/GetLabel";
-import { Milliseconds, UserId } from "../../Model/ServerMessage";
+import { LobbyTeam, Milliseconds, UserId } from "../../Model/ServerMessage";
 import { ImageSrc } from "../../Utils/ImageSerial";
 import "./Style/LobbyUser.css";
 import defaultUserPropic from "/media/icon_default_user.png";
@@ -11,6 +11,7 @@ export interface UserValue {
     id: UserId;
     name: string;
     propic?: ImageSrc;
+    team: LobbyTeam;
     lifetime: Milliseconds;
 }
 
@@ -45,7 +46,9 @@ export default function LobbyUser({ isSelf, user, align, children }: LobbyUserPr
         <img src={getPropic(user)} alt="" />
       </div>
       <div className={`lobby-username ${isSelf ? 'lobby-username-self' : ''}`}>
-        {getUsername(user)}{timerWidget}
+        {getUsername(user)}
+        {user?.team === 'game_spectator' && <div className="mx-1 align-middle player-icon icon-spectator"/> }
+        {timerWidget}
       </div>
       {children}
     </div>

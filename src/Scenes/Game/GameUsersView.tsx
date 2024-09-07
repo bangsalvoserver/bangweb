@@ -37,10 +37,9 @@ function GameUserPlayer({ player, user, myUserId }: GameUserProps) {
         return <div className="game-player-icons">
             { role && <div className={`player-icon ${role}`}/> }
             { isWinner && <div className="player-icon icon-winner"/> }
-            { player ? isPlayerDead(player) && (isPlayerGhost(player)
+            { player && isPlayerDead(player) && (isPlayerGhost(player)
                 ? <div className="player-icon icon-ghost"/>
-                : <div className="player-icon icon-dead"/> )
-                : <div className="player-icon icon-spectator"/> }
+                : <div className="player-icon icon-dead"/> ) }
         </div>;
     }, [player]);
 

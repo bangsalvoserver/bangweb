@@ -7,6 +7,7 @@ import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { ImageSrc } from '../Utils/ImageSerial';
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import UserMenu, { UserMenuItem } from './UserMenu';
+import { getUser } from '../Scenes/Lobby/Lobby';
 
 export interface HeaderProps {
   scene: SceneState;
@@ -29,6 +30,9 @@ function Header({ scene, settings, connection }: HeaderProps) {
 
   const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
   const handleReturnLobby = () => connection.sendMessage({ lobby_return: {}});
+
+  const isSpectator = 'lobbyState' in scene && getUser(scene.lobbyState.users, scene.lobbyState.myUserId)?.team === 'game_spectator';
+  const handleToggleSpectate = () => connection.sendMessage({ user_set_team: isSpectator ? 'game_player' : 'game_spectator' });
 
   const handleDisconnect = () => {
     settings.setSessionId(undefined);
@@ -83,6 +87,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
             <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
               <UserMenuItem onClick={handleToggleSounds}>{getLabel('ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
               { scene.type === 'game' && isLobbyOwner(scene.lobbyState) && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
+              { scene.type === 'lobby' && <UserMenuItem onClick={handleToggleSpectate}>{getLabel('ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }
               { 'lobbyInfo' in scene
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
                 : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
