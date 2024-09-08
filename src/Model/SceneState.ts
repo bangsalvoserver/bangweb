@@ -117,7 +117,9 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         if ('lobbies' in this) {
             return { ...this, type: 'lobby',
                 lobbyInfo: { name, options },
-                lobbyState: 'lobbyState' in this ? this.lobbyState : newLobbyState(lobby_id, user_id)
+                lobbyState: 'lobbyState' in this
+                    ? { ...this.lobbyState, users: this.lobbyState.users.filter(user => user.id >= 0) }
+                    : newLobbyState(lobby_id, user_id)
             };
         }
         throw new Error('Invalid scene type: ' + this.type);
