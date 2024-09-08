@@ -15,10 +15,12 @@ import Env from "./Env";
 import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
 import { LobbyAddUser, LobbyUpdate, ServerMessage, UserInfo } from "./ServerMessage";
 
+export const PROPIC_SIZE = 100;
+
 export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
     return {
         name: username ?? '',
-        profile_image: await serializeImage(propic, 50)
+        profile_image: await serializeImage(propic, PROPIC_SIZE)
     };
 }
 
