@@ -42,19 +42,19 @@ export interface LobbyRemoved {
     lobby_id: LobbyId;
 }
 
-export interface UserInfo {
-    name: string;
-    profile_image: ImagePixels | null;
-}
-
 export type LobbyChatFlag = 'is_read';
 
 export interface LobbyAddUser {
     user_id: UserId;
-    user: UserInfo;
+    username: string;
     team: LobbyTeam;
     flags: LobbyChatFlag[];
     lifetime: Milliseconds;
+}
+
+export interface LobbyUserPropic {
+    user_id: UserId;
+    propic: ImagePixels | null;
 }
 
 export interface ChatMessage {
@@ -74,6 +74,7 @@ export type ServerMessage =
     {lobby_edited: LobbyEdited} |
     {lobby_removed: LobbyRemoved} |
     {lobby_add_user: LobbyAddUser} |
+    {lobby_user_propic: LobbyUserPropic} |
     {lobby_remove_user: number} |
     {lobby_kick: Empty} |
     {lobby_chat: ChatMessage} |

@@ -3,26 +3,17 @@ import useEvent from "react-use-event-hook";
 import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { getUser } from "../Scenes/Lobby/Lobby";
-import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
-import { ImageSrc, deserializeImage, serializeImage } from "../Utils/ImageSerial";
+import { deserializeImage, PROPIC_SIZE, serializeImage } from "../Utils/ImageSerial";
 import { createUnionDispatch } from "../Utils/UnionUtils";
 import useChannel, { Channel } from "../Utils/UseChannel";
 import useWebSocket, { WebSocketConnection } from "../Utils/UseWebSocket";
 import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
-import { LobbyState, UpdateFunction, defaultCurrentScene, sceneReducer } from "./SceneState";
-import { LobbyAddUser, LobbyUpdate, ServerMessage, UserInfo } from "./ServerMessage";
-
-export const PROPIC_SIZE = 100;
-
-export async function makeUserInfo(username?: string, propic?: ImageSrc): Promise<UserInfo> {
-    return {
-        name: username ?? '',
-        profile_image: await serializeImage(propic, PROPIC_SIZE)
-    };
-}
+import { defaultCurrentScene, LobbyState, sceneReducer, UpdateFunction } from "./SceneState";
+import { LobbyAddUser, LobbyUpdate, LobbyUserPropic, ServerMessage } from "./ServerMessage";
+import { UserValue } from "../Scenes/Lobby/LobbyUser";
 
 function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_players, state }: LobbyUpdate): UpdateFunction<LobbyValue[]> {
     return lobbies => {
@@ -38,20 +29,20 @@ function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_
     };
 }
 
-function handleLobbyAddUser({ user_id, user: { name, profile_image }, team, flags, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
+function handleLobbyAddUser({ user_id, username, team, flags, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
     return lobbyState => {
         let chatMessages = lobbyState.chatMessages;
         let users = lobbyState.users.slice();
 
-        const newUser: UserValue = { id: user_id, name, propic: deserializeImage(profile_image), team, lifetime };
-        let index = users.findIndex(user => user.id === user_id);
+        const index = users.findIndex(user => user.id === user_id);
+        const newUser: UserValue = { id: user_id, name: username, team, lifetime }
         if (index >= 0) {
-            users[index] = newUser;
+            users[index] = { ...users[index], ...newUser };
         } else {
             if (user_id >= 0) {
                 chatMessages = chatMessages.concat({
                     type: 'lobby',
-                    message: getLabel('lobby', 'USER_JOINED_LOBBY', name),
+                    message: getLabel('lobby', 'USER_JOINED_LOBBY', username),
                     isRead: flags.includes('is_read') || user_id === lobbyState.myUserId
                 });
             }
@@ -59,6 +50,15 @@ function handleLobbyAddUser({ user_id, user: { name, profile_image }, team, flag
         }
         return { ...lobbyState, users, chatMessages };
     };
+}
+
+function handleLobbyUserPropic({ user_id, propic }: LobbyUserPropic): UpdateFunction<LobbyState> {
+    return lobbyState => ({
+        ...lobbyState,
+        users: lobbyState.users.map(user => user.id === user_id
+            ? { ...user, propic: deserializeImage(propic) }
+            : user)
+    });
 }
 
 function handleLobbyRemoveUser(user_id: number): UpdateFunction<LobbyState> {
@@ -110,7 +110,8 @@ export default function useBangConnection() {
     const connected = useEvent(async () => {
         connection.sendMessage({
             connect: {
-                user: await makeUserInfo(settings.username, settings.propic),
+                username: settings.username || '',
+                propic: await serializeImage(settings.propic, PROPIC_SIZE),
                 session_id: settings.sessionId ?? 0
             }
         });
@@ -165,6 +166,9 @@ export default function useBangConnection() {
             },
             lobby_add_user(message) {
                 sceneDispatch({ updateLobbyState: handleLobbyAddUser(message) });
+            },
+            lobby_user_propic(value) {
+                sceneDispatch({ updateLobbyState: handleLobbyUserPropic(value) })
             },
             lobby_remove_user(user_id) {
                 sceneDispatch({ updateLobbyState: handleLobbyRemoveUser(user_id) });

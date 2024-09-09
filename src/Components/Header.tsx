@@ -1,13 +1,13 @@
 import { ChangeEvent, useRef } from 'react';
 import getLabel from '../Locale/GetLabel';
 import AppSettings from '../Model/AppSettings';
-import { SceneState, isLobbyOwner } from '../Model/SceneState';
-import { BangConnection, makeUserInfo } from '../Model/UseBangConnection';
+import { isLobbyOwner, SceneState } from '../Model/SceneState';
+import { BangConnection } from '../Model/UseBangConnection';
+import { getUser } from '../Scenes/Lobby/Lobby';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
-import { ImageSrc } from '../Utils/ImageSerial';
+import { PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import UserMenu, { UserMenuItem } from './UserMenu';
-import { getUser } from '../Scenes/Lobby/Lobby';
 
 export interface HeaderProps {
   scene: SceneState;
@@ -20,10 +20,9 @@ function Header({ scene, settings, connection }: HeaderProps) {
   
   const [isMenuOpen, setIsMenuOpen, menuRef] = useCloseOnLoseFocus<HTMLDivElement>();
 
-  const handleEditUser = async (username?: string, propic?: ImageSrc) => {
+  const handleSetUsername = (username?: string) => {
     settings.setUsername(username);
-    settings.setPropic(propic);
-    connection.sendMessage({ user_edit: await makeUserInfo(username, propic) });
+    connection.sendMessage({ user_set_name: username ?? '' });
   };
 
   const handleClickPropic = () => inputFile.current?.click();
@@ -44,7 +43,9 @@ function Header({ scene, settings, connection }: HeaderProps) {
     if (file) {
       let reader = new FileReader();
       reader.onload = () => {
-        handleEditUser(settings.username, reader.result as string);
+        const propic = reader.result as string;
+        settings.setPropic(propic);
+        (async () => connection.sendMessage({ user_set_propic: await serializeImage(propic, PROPIC_SIZE) }))();
       };
       reader.readAsDataURL(file);
     }
@@ -84,7 +85,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
             <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd"></path></svg>
           </button>
           { isMenuOpen &&
-            <UserMenu username={settings.username} setUsername={username => handleEditUser(username, settings.propic)}>
+            <UserMenu username={settings.username} setUsername={handleSetUsername}>
               <UserMenuItem onClick={handleToggleSounds}>{getLabel('ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
               { scene.type === 'game' && isLobbyOwner(scene.lobbyState) && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
               { scene.type === 'lobby' && <UserMenuItem onClick={handleToggleSpectate}>{getLabel('ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }

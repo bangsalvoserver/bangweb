@@ -15,6 +15,8 @@ async function loadImage(src: ImageSrc): Promise<HTMLImageElement> {
     });
 }
 
+export const PROPIC_SIZE = 100;
+
 export async function serializeImage(src: ImageSrc | undefined, scale?: number): Promise<ImagePixels | null> {
     if (!src) return null;
     
