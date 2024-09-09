@@ -61,6 +61,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
 
     ui: {
         APP_TITLE: "Bang!",
+        DISCORD_LINK: "Entra nel discord ufficiale",
         LOADING: "Caricamento...",
         UNKNOWN_CARD: "(Carta sconosciuta)",
         UNKNOWN_PLAYER: "(Giocatore sconosciuto)",
