@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
+import usePrevious from "../../Utils/UsePrevious";
 import GameStringComponent from "./GameStringComponent";
 import { GameString } from "./Model/GameUpdate";
 import "./Style/GameLogView.css";
@@ -12,7 +13,7 @@ export default function GameLogView({ logs }: GameLogProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
     const logBoxRef = useRef<HTMLDivElement>(null);
     const isAtBottomRef = useRef(true);
-    const [prevLogsLength, setPrevLogsLength] = useState(logs.length);
+    const prevLogsLength = usePrevious(logs.length);
 
     const [isLogOpen, setIsLogOpen, gameLogRef] = useCloseOnLoseFocus<HTMLDivElement>();
 
@@ -28,10 +29,9 @@ export default function GameLogView({ logs }: GameLogProps) {
     };
 
     useEffect(() => {
-        if (isLogOpen && logs.length > prevLogsLength && isAtBottomRef.current) {
+        if (isLogOpen && prevLogsLength !== undefined && logs.length > prevLogsLength && isAtBottomRef.current) {
             scrollToBottom();
         }
-        setPrevLogsLength(logs.length);
     }, [isLogOpen, logs, prevLogsLength]);
 
     return <div ref={gameLogRef} className="game-log-outer">
