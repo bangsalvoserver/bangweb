@@ -5,7 +5,7 @@ import { isLobbyOwner, SceneState } from '../Model/SceneState';
 import { BangConnection } from '../Model/UseBangConnection';
 import { getUser } from '../Scenes/Lobby/Lobby';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
-import { PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
+import { loadFile, PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import UserMenu, { UserMenuItem } from './UserMenu';
 
@@ -41,13 +41,12 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const handlePropicChange = function (event: ChangeEvent<HTMLInputElement>) {
     let file = event.target.files ? event.target.files[0] : null;
     if (file) {
-      let reader = new FileReader();
-      reader.onload = () => {
-        const propic = reader.result as string;
+      (async () => {
+        const propic = await loadFile(file);
+        const image = await serializeImage(propic, PROPIC_SIZE);
         settings.setPropic(propic);
-        (async () => connection.sendMessage({ user_set_propic: await serializeImage(propic, PROPIC_SIZE) }))();
-      };
-      reader.readAsDataURL(file);
+        connection.sendMessage({ user_set_propic: image });
+      })();
     }
   };
 

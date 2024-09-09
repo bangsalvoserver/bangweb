@@ -6,7 +6,16 @@ export interface ImagePixels {
 
 export type ImageSrc = string;
 
-async function loadImage(src: ImageSrc): Promise<HTMLImageElement> {
+export async function loadFile(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+export async function loadImage(src: ImageSrc): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         let image = document.createElement('img');
         image.onload = () => resolve(image);
