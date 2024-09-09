@@ -24,15 +24,15 @@ export default function GameLogView({ logs }: GameLogProps) {
         }
     }, []);
 
-    const scrollToBottom = () => {
+    const scrollToBottom = useCallback(() => {
         messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
-    };
+    }, []);
 
     useEffect(() => {
         if (isLogOpen && prevLogsLength !== undefined && logs.length > prevLogsLength && isAtBottomRef.current) {
             scrollToBottom();
         }
-    }, [isLogOpen, logs, prevLogsLength]);
+    }, [isLogOpen, logs, prevLogsLength, scrollToBottom]);
 
     return <div ref={gameLogRef} className="game-log-outer">
         <button className='
