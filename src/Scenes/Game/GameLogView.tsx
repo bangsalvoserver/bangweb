@@ -11,7 +11,7 @@ export interface GameLogProps {
 export default function GameLogView({ logs }: GameLogProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
     const logBoxRef = useRef<HTMLDivElement>(null);
-    const [isAtBottom, setIsAtBottom] = useState(true);
+    const isAtBottomRef = useRef(true);
     const [prevLogsLength, setPrevLogsLength] = useState(logs.length);
 
     const [isLogOpen, setIsLogOpen, gameLogRef] = useCloseOnLoseFocus<HTMLDivElement>();
@@ -19,7 +19,7 @@ export default function GameLogView({ logs }: GameLogProps) {
     const checkIfAtBottom = () => {
         if (logBoxRef.current) {
             const { scrollTop, scrollHeight, clientHeight } = logBoxRef.current;
-            setIsAtBottom(Math.abs(scrollHeight - clientHeight - scrollTop) < 1);
+            isAtBottomRef.current = Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
         }
     };
 
@@ -28,11 +28,11 @@ export default function GameLogView({ logs }: GameLogProps) {
     };
 
     useEffect(() => {
-        if (isLogOpen && logs.length > prevLogsLength && isAtBottom) {
+        if (isLogOpen && logs.length > prevLogsLength && isAtBottomRef.current) {
             scrollToBottom();
         }
         setPrevLogsLength(logs.length);
-    }, [isLogOpen, logs, isAtBottom, prevLogsLength]);
+    }, [isLogOpen, logs, prevLogsLength]);
 
     return <div ref={gameLogRef} className="game-log-outer">
         <button className='
