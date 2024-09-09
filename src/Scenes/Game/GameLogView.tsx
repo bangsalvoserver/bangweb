@@ -24,7 +24,7 @@ export default function GameLogView({ logs }: GameLogProps) {
     }, []);
 
     const scrollToBottom = () => {
-        messagesEnd.current?.scrollIntoView({ behavior: 'auto' });
+        messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     useEffect(() => {
