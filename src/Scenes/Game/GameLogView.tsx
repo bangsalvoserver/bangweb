@@ -20,12 +20,14 @@ export default function GameLogView({ logs }: GameLogProps) {
     const checkIfAtBottom = useCallback(() => {
         if (logBoxRef.current) {
             const { scrollTop, scrollHeight, clientHeight } = logBoxRef.current;
-            isAtBottomRef.current = Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
+            const BOTTOM_DELTA = 10;
+            isAtBottomRef.current = Math.abs(scrollHeight - clientHeight - scrollTop) < BOTTOM_DELTA;
         }
     }, []);
 
     const scrollToBottom = useCallback(() => {
         messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
+        isAtBottomRef.current = true;
     }, []);
 
     useEffect(() => {
