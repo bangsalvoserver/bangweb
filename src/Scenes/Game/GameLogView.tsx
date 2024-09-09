@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
 import GameStringComponent from "./GameStringComponent";
 import { GameString } from "./Model/GameUpdate";
@@ -16,12 +16,12 @@ export default function GameLogView({ logs }: GameLogProps) {
 
     const [isLogOpen, setIsLogOpen, gameLogRef] = useCloseOnLoseFocus<HTMLDivElement>();
 
-    const checkIfAtBottom = () => {
+    const checkIfAtBottom = useCallback(() => {
         if (logBoxRef.current) {
             const { scrollTop, scrollHeight, clientHeight } = logBoxRef.current;
             isAtBottomRef.current = Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
         }
-    };
+    }, []);
 
     const scrollToBottom = () => {
         messagesEnd.current?.scrollIntoView({ behavior: 'auto' });
