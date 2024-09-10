@@ -1,14 +1,14 @@
 import { useRef } from 'react';
 import './App.css';
+import ErrorPopup from './Components/ErrorPopup';
 import Header from './Components/Header';
 import OverlayButtons from './Components/OverlayButtons';
 import useBangConnection from './Model/UseBangConnection';
-import ConnectScene from './Scenes/Connect/Connect';
 import GameScene from './Scenes/Game/GameScene';
+import HomeScene from './Scenes/Home/Home';
 import LoadingScene from './Scenes/Loading/Loading';
 import LobbyScene from './Scenes/Lobby/Lobby';
 import WaitingArea from './Scenes/WaitingArea/WaitingArea';
-import ErrorPopup from './Components/ErrorPopup';
 
 export default function App() {
   const { scene, settings, connection, gameChannel, handleConnect, setGameOptions, clearError } = useBangConnection();
@@ -17,8 +17,8 @@ export default function App() {
 
   const currentScene = () => {
     switch (scene.type) {
-      case 'connect':
-        return <ConnectScene
+      case 'home':
+        return <HomeScene
           username={settings.username}
           setUsername={settings.setUsername}
           handleConnect={handleConnect}

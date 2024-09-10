@@ -40,7 +40,7 @@ export type ErrorType = 'lobby' | 'server';
 export type ErrorState = { type: ErrorType, message: string };
 
 export type SceneState =
-    { type: 'connect' | 'loading', error?: ErrorState } |
+    { type: 'home' | 'loading', error?: ErrorState } |
     { type: 'waiting_area', error?: ErrorState, clientCount: number, lobbies: LobbyValue[] } |
     { type: 'lobby' | 'game', error?: ErrorState, clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
@@ -62,13 +62,13 @@ export function defaultCurrentScene(sessionId?: number): SceneState {
     if (sessionId) {
         return { type: 'loading' };
     } else {
-        return { type: 'connect' };
+        return { type: 'home' };
     }
 }
 
 export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     reset() {
-        return { type: 'connect' };
+        return { type: 'home' };
     },
     setError(error) {
         return { ...this, error: error ?? undefined };
