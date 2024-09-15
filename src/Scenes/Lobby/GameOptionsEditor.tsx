@@ -141,7 +141,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                     <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
                 </ConditionalOnExpansion>
                 <ConditionalOnExpansion expansions={['valleyofshadows','canyondiablo']}>
-                    <OptionNumber prop='damage_timer' max={10000} { ...props } />
+                    <OptionNumber prop='damage_timer' max={5000} { ...props } />
                 </ConditionalOnExpansion>
                 <ConditionalOnExpansion expansions={['valleyofshadows']}>
                     <OptionNumber prop='escape_timer' max={10000} { ...props } />
