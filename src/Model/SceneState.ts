@@ -41,15 +41,14 @@ export type ErrorState = { type: ErrorType, message: string };
 
 export type SceneState =
     { type: 'home' | 'loading', error?: ErrorState } |
-    { type: 'waiting_area', error?: ErrorState, clientCount: number, lobbies: LobbyValue[] } |
-    { type: 'lobby' | 'game', error?: ErrorState, clientCount: number, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
+    { type: 'waiting_area', error?: ErrorState, lobbies: LobbyValue[] } |
+    { type: 'lobby' | 'game', error?: ErrorState, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
 export type UpdateFunction<T> = (value: T) => T;
 
 export type SceneUpdate =
     { reset: Empty } |
     { setError: ErrorState | null } |
-    { setClientCount: number } |
     { gotoLoading: Empty } |
     { gotoWaitingArea: Empty } |
     { gotoGame: Empty } |
@@ -73,20 +72,14 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     setError(error) {
         return { ...this, error: error ?? undefined };
     },
-    setClientCount(count) {
-        if ('clientCount' in this) {
-            return { ...this, clientCount: count };
-        }
-        throw new Error('Invalid scene type: ' + this.type);
-    },
     gotoLoading() {
         return { type: 'loading' };
     },
     gotoWaitingArea() {
         if ('lobbies' in this) {
-            return { type: 'waiting_area', clientCount: this.clientCount, lobbies: this.lobbies };
+            return { type: 'waiting_area', lobbies: this.lobbies };
         } else {
-            return { type: 'waiting_area', clientCount: 0, lobbies: [] };
+            return { type: 'waiting_area', lobbies: [] };
         }
     },
     gotoGame() {

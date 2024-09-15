@@ -145,9 +145,6 @@ export default function useBangConnection() {
                 settings.setSessionId(session_id);
                 sceneDispatch({ gotoWaitingArea: {} });
             },
-            client_count(count) {
-                sceneDispatch({ setClientCount: count });
-            },
             lobby_error(message) {
                 sceneDispatch({ setError: { type:'lobby', message } });
             },
