@@ -74,7 +74,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
             const pClass = props.user_id === myUserId ? 'text-right' : '';
             return (<p className={pClass}><span className='username'>{clipUsername(props.username)}</span> : {props.message}</p>);
         } else {
-            return (<p className='server-message'>{props.message}</p>);
+            return props.message.split('\n').map((line, index) => line.length !== 0 && <p key={index} className='server-message'>{line}</p>);
         }
     }, [myUserId]);
 
