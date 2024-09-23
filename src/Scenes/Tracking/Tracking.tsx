@@ -13,9 +13,11 @@ function useFetch<T>(url: string): T | undefined {
         let fetching = true;
         (async () => {
             const response = await fetch(url);
-            const json = await response.json();
-            if (fetching) {
-                setResult(json);
+            if (response.ok) {
+                const json = await response.json();
+                if (fetching) {
+                    setResult(json);
+                }
             }
         })();
         return () => { fetching = false; };
