@@ -110,8 +110,7 @@ export default function TrackingScene() {
         return url;
     }, []);
 
-    const sinceDate = ''; // TODO add state
-
+    const sinceDate = new URLSearchParams(window.location.search).get('since_date') || '';
     const trackingData = useFetch<TrackingData>(bangServerUrl + '?since_date=' + sinceDate);
 
     return <div className="flex flex-col items-center">
