@@ -93,7 +93,7 @@ export default function GameUsersView() {
                 </g>
                 </svg>
         </button>
-        <div className={'game-users-box ' + (!isPanelOpen ? 'hidden' : '')}>
+        <div className={'game-users-box ' + (!isPanelOpen ? 'invisible' : '')}>
             { gameUserPlayers }
         </div>
     </div>;

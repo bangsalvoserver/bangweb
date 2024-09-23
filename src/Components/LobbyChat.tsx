@@ -105,7 +105,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
                 return <MessageTag key={index} {...messages[index]}/>;
             })}
         </div></div>}
-        <div className={'lobby-chat-box ' + (!isChatOpen ? 'hidden' : '')}>
+        <div className={'lobby-chat-box ' + (!isChatOpen ? 'invisible' : '')}>
             {messages.length !== 0 && <div className="lobby-chat-messages">
                 {messages.map((message, index) => <MessageTag key={index} {...message} />)}
                 <div ref={messagesEnd} />
