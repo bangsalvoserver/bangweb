@@ -39,34 +39,9 @@ function timestampToDate(timestamp: Timestamp) {
     return new Date(timestamp * 1000);
 }
 
-function timestampLabels(...minmax: TimestampCount[][]): Date[] {
-    let min: Timestamp | undefined;
-    let max: Timestamp | undefined;
-
-    for (const count of minmax) {
-        if (count.length > 2) {
-            const minTimestamp = count[0][0];
-            if (min !== undefined && min > minTimestamp) {
-                min = minTimestamp;
-            }
-            const maxTimestamp = count[count.length - 1][0];
-            if (max !== undefined && max < maxTimestamp) {
-                max = maxTimestamp;
-            }
-        }
-    }
-
-    if (min !== undefined && max !== undefined) {
-        return [timestampToDate(min), timestampToDate(max)];
-    } else {
-        return [];
-    }
-}
-
 function TrackingDataChart({ data }: { data: TrackingData }) {
     return <Line
         data={{
-            labels: timestampLabels(data.client_count, data.user_count, data.lobby_count),
             datasets: [
                 {
                     label: 'Client Count',
