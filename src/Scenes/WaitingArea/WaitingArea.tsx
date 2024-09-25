@@ -7,6 +7,7 @@ import { GameOptions } from "../Game/Model/GameUpdate";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
 import BangLogo from "../../Components/BangLogo";
+import { MAX_LOBBY_NAME_LENGTH } from "../../Model/AppSettings";
 
 export interface WaitingAreaProps {
   lobbies: LobbyValue[];
@@ -45,6 +46,7 @@ function WaitingArea({ lobbies, connection, lobbyName, setLobbyName, gameOptions
             focus:ring-2
             focus:ring-blue-500
           '
+          maxLength={MAX_LOBBY_NAME_LENGTH}
           value={lobbyName} onChange={e => setLobbyName(e.target.value)}></input>
         <Button color='green' type='submit'>{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
       </form>

@@ -21,6 +21,7 @@ export function useSettings() {
 }
 
 export const MAX_USERNAME_LENGTH = 50;
+export const MAX_LOBBY_NAME_LENGTH = 50;
 
 type AppSettings = ReturnType<typeof useSettings>;
 

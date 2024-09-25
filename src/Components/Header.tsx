@@ -63,11 +63,14 @@ function Header({ scene, settings, connection }: HeaderProps) {
 
   return (
     <nav className="border-gray-200 bg-gray-900">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-1.5 md:p-4">
+      <div className="max-w-screen-xl flex items-center justify-between mx-auto p-1.5 md:p-4">
         <div className="flex items-center">
           <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">{getLabel('ui', 'APP_TITLE')}</span>
         </div>
-        <div className="flex items-center order-2">
+        {'lobbyInfo' in scene && <div className="text-blue-500 whitespace-nowrap overflow-x-hidden text-ellipsis">
+          { scene.lobbyInfo.name }
+        </div>}
+        <div className="flex items-center">
           <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-600">
             <span className="sr-only">Open user menu</span>
             <div className='w-8 h-8 grid place-items-center' onClick={handleClickPropic}>
@@ -93,11 +96,6 @@ function Header({ scene, settings, connection }: HeaderProps) {
                 : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
             </UserMenu> }
           </div>}
-        </div>
-        <div className="items-center justify-between flex w-auto order-1">
-          <ul className="flex font-medium p-0 border-gray-100 rounded-lg flex-row space-x-8 mt-0 ">
-            {'lobbyInfo' in scene && <li className="block py-2 pl-3 pr-4 text-blue-500">{scene.lobbyInfo.name}</li>}
-          </ul>
         </div>
       </div>
     </nav>
