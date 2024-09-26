@@ -36,8 +36,9 @@ export function isLobbyOwner(lobby: LobbyState) {
     return lobby.users.at(0)?.id === lobby.myUserId;
 }
 
-export type ErrorType = 'lobby' | 'server';
-export type ErrorState = { type: ErrorType, message: string };
+export type ErrorState =
+    { type: 'lobby', message: string } |
+    { type: 'server', code: number | null, message: string };
 
 export type SceneState =
     { type: 'home' | 'loading', error?: ErrorState } |

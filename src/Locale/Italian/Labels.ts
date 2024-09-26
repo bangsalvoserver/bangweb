@@ -119,6 +119,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         RECONNECT_WITH_SAME_SESSION_ID: "La sessione è stata trasferita",
         INACTIVITY: "Disconnessione per inattività",
         QUIT: "Disconnessione da comando utente",
+        ERROR_CODE: code => `(Codice errore: ${code})`,
     },
 
 };

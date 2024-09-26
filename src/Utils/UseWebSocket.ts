@@ -4,7 +4,7 @@ import useChannel from "./UseChannel";
 export type ConnectionState =
     { state: 'initial' } |
     { state: 'connected' } |
-    { state: 'disconnected', reason: string | null };
+    { state: 'disconnected', code: number | null, reason: string | null };
 
 export interface WebSocketConnection<ServerMessage, ClientMessage> {
     subscribe: (handler: Dispatch<ServerMessage>) => void;
@@ -40,12 +40,12 @@ export default function useWebSocket<ServerMessage, ClientMessage>(url: string):
             socket.current.onclose = (e) => {
                 const reason = e.reason.trim();
                 console.log(`WebSocket connection closed (reason = ${reason})`);
-                setConnectionState({ state: 'disconnected', reason: reason.length === 0 ? null : reason });
+                setConnectionState({ state: 'disconnected', code: e.code, reason: reason.length === 0 ? null : reason });
                 socket.current = undefined;
             };
             socket.current.onerror = () => {
                 console.log('WebSocket connection error');
-                setConnectionState({ state: 'disconnected', reason: 'CONNECTION_FAILURE' });
+                setConnectionState({ state: 'disconnected', code: null, reason: 'CONNECTION_FAILURE' });
                 socket.current = undefined;
             };
         },

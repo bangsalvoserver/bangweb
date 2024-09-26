@@ -117,14 +117,14 @@ export default function useBangConnection() {
         });
     });
 
-    const disconnected = useEvent((reason: string | null) => {
+    const disconnected = useEvent((code: number | null, reason: string | null) => {
         sceneDispatch({ reset: {} });
         if (reason) {
-            sceneDispatch({ setError: { type: 'server', message: reason }});
+            sceneDispatch({ setError: { type: 'server', code, message: reason }});
         } else if (scene.type === 'loading') {
-            sceneDispatch({ setError: { type: 'server', message: 'ERROR_CANNOT_CONNECT_TO_SERVER' }});
+            sceneDispatch({ setError: { type: 'server', code, message: 'ERROR_CANNOT_CONNECT_TO_SERVER' }});
         } else if (settings.sessionId) {
-            sceneDispatch({ setError: { type: 'server', message: 'ERROR_DISCONNECTED_FROM_SERVER' }});
+            sceneDispatch({ setError: { type: 'server', code, message: 'ERROR_DISCONNECTED_FROM_SERVER' }});
         }
     });
 
@@ -132,7 +132,7 @@ export default function useBangConnection() {
         switch (connection.connectionState.state) {
         case 'initial': initial(); break;
         case 'connected': connected(); break;
-        case 'disconnected': disconnected(connection.connectionState.reason); break;
+        case 'disconnected': disconnected(connection.connectionState.code, connection.connectionState.reason); break;
         }
     }, [connection, initial, connected, disconnected]);
 
