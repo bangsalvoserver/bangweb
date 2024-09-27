@@ -87,8 +87,8 @@ export default function TrackingScene() {
         return url;
     }, []);
 
-    const sinceDate = new URLSearchParams(window.location.search).get('since_date') || '';
-    const trackingData = useFetch<TrackingData>(bangServerUrl + '?since_date=' + sinceDate);
+    const length = new URLSearchParams(window.location.search).get('length') || '';
+    const trackingData = useFetch<TrackingData>(bangServerUrl + '?length=' + length);
 
     return <div className="flex flex-col items-center">
         {trackingData && <TrackingDataChart data={trackingData} /> }
