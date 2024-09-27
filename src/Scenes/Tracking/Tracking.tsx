@@ -35,31 +35,41 @@ interface TrackingData {
     lobby_count: TimestampCount[];
 }
 
-function timestampToDate(timestamp: Timestamp) {
-    return new Date(timestamp * 1000);
+interface Point {
+    x: Date,
+    y: number
+}
+
+function timestampsToPoints(counts: TimestampCount[], now: Date): Point[] {
+    let result = counts.map(row => ({ x: new Date(row[0] * 1000), y: row[1] }));
+    if (result.length !== 0) {
+        result.push({ x: now, y: result[result.length - 1].y });
+    }
+    return result;
 }
 
 function TrackingDataChart({ data }: { data: TrackingData }) {
+    const now = new Date();
     return <Line
         data={{
             datasets: [
                 {
                     label: 'Client Count',
-                    data: data.client_count.map(row => ({ x: timestampToDate(row[0]), y: row[1] })),
+                    data: timestampsToPoints(data.client_count, now),
                     stepped: true,
                     borderColor: '#0000ff',
                     backgroundColor: '#ffffff',
                 },
                 {
                     label: 'User Count',
-                    data: data.user_count.map(row => ({ x: timestampToDate(row[0]), y: row[1] })),
+                    data: timestampsToPoints(data.user_count, now),
                     stepped: true,
                     borderColor: '#0080ff',
                     backgroundColor: '#ffffff',
                 },
                 {
                     label: 'Lobby Count',
-                    data: data.lobby_count.map(row => ({ x: timestampToDate(row[0]), y: row[1] })),
+                    data: timestampsToPoints(data.lobby_count, now),
                     stepped: true,
                     borderColor: '#ff8000',
                     backgroundColor: '#ffffff',
