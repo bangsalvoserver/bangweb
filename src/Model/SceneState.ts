@@ -27,7 +27,8 @@ export type ErrorState =
     { type: 'server', code: number | null, message: string };
 
 export type SceneState =
-    { type: 'home' | 'loading', error?: ErrorState } |
+    { type: 'home', error?: ErrorState } |
+    { type: 'loading', error?: ErrorState, message: string } |
     { type: 'waiting_area', error?: ErrorState, lobbies: LobbyValue[] } |
     { type: 'lobby' | 'game', error?: ErrorState, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
@@ -36,7 +37,7 @@ export type UpdateFunction<T> = (value: T) => T;
 export type SceneUpdate =
     { reset: Empty } |
     { setError: ErrorState | null } |
-    { gotoLoading: Empty } |
+    { gotoLoading: string } |
     { gotoWaitingArea: Empty } |
     { gotoGame: Empty } |
     { updateLobbies: UpdateFunction<LobbyValue[]> } |
@@ -46,7 +47,7 @@ export type SceneUpdate =
 
 export function defaultCurrentScene(sessionId?: number): SceneState {
     if (sessionId) {
-        return { type: 'loading' };
+        return { type: 'loading', message: 'LOADING' };
     } else {
         return { type: 'home' };
     }
@@ -59,8 +60,8 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     setError(error) {
         return { ...this, error: error ?? undefined };
     },
-    gotoLoading() {
-        return { type: 'loading' };
+    gotoLoading(message) {
+        return { type: 'loading', error: this.error, message };
     },
     gotoWaitingArea() {
         if ('lobbies' in this) {

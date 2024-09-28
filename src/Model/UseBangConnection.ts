@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import useEvent from "react-use-event-hook";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
@@ -77,6 +77,8 @@ export default function useBangConnection() {
 
     const connection = useWebSocket<ServerMessage, ClientMessage>(Env.bangServerUrl);
 
+    const reconnecting = useRef(false);
+
     const initial = useEvent(() => {
         if (settings.sessionId) {
             connection.connect();
@@ -84,6 +86,7 @@ export default function useBangConnection() {
     });
 
     const connected = useEvent(async () => {
+        reconnecting.current = false;
         connection.sendMessage({
             connect: {
                 username: settings.username || '',
@@ -101,6 +104,11 @@ export default function useBangConnection() {
             sceneDispatch({ setError: { type: 'server', code, message: 'ERROR_CANNOT_CONNECT_TO_SERVER' }});
         } else if (settings.sessionId) {
             sceneDispatch({ setError: { type: 'server', code, message: 'ERROR_DISCONNECTED_FROM_SERVER' }});
+            if (!reconnecting.current && code !== null && code !== 1000) {
+                sceneDispatch({ gotoLoading: 'RECONNECTING' });
+                reconnecting.current = true;
+                connection.connect();
+            }
         }
     });
 
@@ -165,7 +173,8 @@ export default function useBangConnection() {
     const handleConnect = useEvent(() => {
         if (connection.connectionState.state !== 'connected') {
             connection.connect();
-            sceneDispatch({ gotoLoading: {} });
+            reconnecting.current = false;
+            sceneDispatch({ gotoLoading: 'LOADING' });
         }
     });
 

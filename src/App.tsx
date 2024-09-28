@@ -24,7 +24,9 @@ export default function App() {
           handleConnect={handleConnect}
         />;
       case 'loading':
-        return <LoadingScene />;
+        return <LoadingScene 
+          message={scene.message}
+        />;
       case 'waiting_area':
         return <WaitingArea
           lobbies={scene.lobbies}
