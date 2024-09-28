@@ -1,6 +1,6 @@
 import { Chart as ChartJS, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Env from "../../Model/Env";
 
@@ -85,20 +85,8 @@ function TrackingDataChart({ data }: { data: TrackingData }) {
 }
 
 export default function TrackingScene() {
-    const bangServerUrl = useMemo(() => {
-        if (!Env.bangServerUrl) {
-            throw new Error('missing BANG_SERVER_URL environment variable');
-        }
-        let url = Env.bangServerUrl.replace('wss://', 'https://').replace('ws://', 'http://');
-        if (!url.endsWith('/')) {
-            url += '/';
-        }
-        url += 'tracking';
-        return url;
-    }, []);
-
     const length = new URLSearchParams(window.location.search).get('length') || '';
-    const trackingData = useFetch<TrackingData>(bangServerUrl + '?length=' + length);
+    const trackingData = useFetch<TrackingData>(Env.bangTrackingUrl + '?length=' + length);
 
     return <div className="flex flex-col items-center">
         {trackingData && <TrackingDataChart data={trackingData} /> }

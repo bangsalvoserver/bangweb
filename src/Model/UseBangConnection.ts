@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import useEvent from "react-use-event-hook";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
@@ -75,14 +75,7 @@ export default function useBangConnection() {
     const [scene, sceneDispatch] = useReducer(sceneReducer, settings.sessionId, defaultCurrentScene);
     const gameChannel = useChannel<GameUpdate>();
 
-    const bangServerUrl = useMemo(() => {
-        if (!Env.bangServerUrl) {
-            throw new Error('missing BANG_SERVER_URL environment variable');
-        }
-        return Env.bangServerUrl;
-    }, []);
-
-    const connection = useWebSocket<ServerMessage, ClientMessage>(bangServerUrl);
+    const connection = useWebSocket<ServerMessage, ClientMessage>(Env.bangServerUrl);
 
     const initial = useEvent(() => {
         if (settings.sessionId) {
