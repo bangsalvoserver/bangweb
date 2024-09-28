@@ -77,7 +77,7 @@ export default function useBangConnection() {
 
     const connection = useWebSocket<ServerMessage, ClientMessage>(Env.bangServerUrl);
 
-    const reconnecting = useRef(false);
+    const reconnecting = useRef<number>();
 
     const initial = useEvent(() => {
         if (settings.sessionId) {
@@ -86,7 +86,9 @@ export default function useBangConnection() {
     });
 
     const connected = useEvent(async () => {
-        reconnecting.current = false;
+        clearTimeout(reconnecting.current);
+        reconnecting.current = undefined;
+
         connection.sendMessage({
             connect: {
                 username: settings.username || '',
@@ -106,8 +108,7 @@ export default function useBangConnection() {
             sceneDispatch({ setError: { type: 'server', code, message: 'ERROR_DISCONNECTED_FROM_SERVER' }});
             if (!reconnecting.current && code !== null && code !== 1000) {
                 sceneDispatch({ gotoLoading: 'RECONNECTING' });
-                reconnecting.current = true;
-                connection.connect();
+                reconnecting.current = setTimeout(() => connection.connect(), 1000);
             }
         }
     });
@@ -172,8 +173,9 @@ export default function useBangConnection() {
 
     const handleConnect = useEvent(() => {
         if (connection.connectionState.state !== 'connected') {
+            clearTimeout(reconnecting.current);
+            reconnecting.current = undefined;
             connection.connect();
-            reconnecting.current = false;
             sceneDispatch({ gotoLoading: 'LOADING' });
         }
     });
