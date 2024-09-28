@@ -94,8 +94,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     lobby: {
-        USER_JOINED_LOBBY: (username) => `${username} entra in lobby`,
-        USER_LEFT_LOBBY: (username) => `${username} esce dalla lobby`,
         CONNECTION_ERROR: "Errore di connessione",
         ERROR_INVALID_LOBBY: "ID lobby non valido",
         ERROR_PLAYER_IN_LOBBY: "Giocatore già in una lobby",
@@ -109,6 +107,25 @@ export const LABELS_ITALIAN: LabelRegistry = {
         ERROR_LOBBY_NOT_FINISHED: "Lobby non in partita finita",
         ERROR_GAME_CHEATS_NOT_ENABLED: "I trucchi non sono abilitati",
         INVALID_COMMAND_NAME: "Comando non valido",
+    },
+
+    chat: {
+        HELP_DESCRIPTION: cmd => `${cmd} : visualizza questo messaggio`,
+        USERS_DESCRIPTION: cmd => `${cmd} : visualizza la lista di tutti gli utenti in questa lobby`,
+        KICK_DESCRIPTION: cmd => `${cmd} nome_utente_o_id : caccia un utente da questa lobby`,
+        MUTE_DESCRIPTION: cmd => `${cmd} nome_utente_o_id : muta un utente in questa lobby`,
+        UNMUTE_DESCRIPTION: cmd => `${cmd} nome_utente_o_id : smuta un utente in questa lobby`,
+        GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : visualizza le opzioni di gioco`,
+        SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : modifica un'opzione di gioco`,
+        RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : resetta le opzioni di gioco`,
+        GIVE_CARD_DESCRIPTION: cmd => `${cmd} card_name : prendi una carta`,
+        GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : visualizza il seed di gioco (solo durante schermata di partita finita)`,
+        QUIT_DESCRIPTION: cmd => `${cmd} : disconnettiti dal server`,
+        
+        GAME_SEED: seed => `Il seed di gioco è ${seed}`,
+        
+        USER_JOINED_LOBBY: (username) => `${username} entra in lobby`,
+        USER_LEFT_LOBBY: (username) => `${username} esce dalla lobby`,
     },
 
     server: {

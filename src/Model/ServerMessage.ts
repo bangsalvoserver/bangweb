@@ -42,13 +42,12 @@ export interface LobbyRemoved {
     lobby_id: LobbyId;
 }
 
-export type LobbyChatFlag = 'is_read';
+export type LobbyChatFlag = 'is_read' | 'server_message' | 'translated';
 
 export interface LobbyAddUser {
     user_id: UserId;
     username: string;
     team: LobbyTeam;
-    flags: LobbyChatFlag[];
     lifetime: Milliseconds;
 }
 
@@ -61,6 +60,7 @@ export interface ChatMessage {
     user_id: number;
     username: string;
     message: string;
+    args: string[];
     flags: LobbyChatFlag[];
 }
 
@@ -77,6 +77,5 @@ export type ServerMessage =
     {lobby_remove_user: number} |
     {lobby_kick: Empty} |
     {lobby_chat: ChatMessage} |
-    {lobby_message: string} |
     {game_update: GameUpdate} |
     {game_started: Empty};

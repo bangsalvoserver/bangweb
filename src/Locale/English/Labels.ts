@@ -94,8 +94,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
     },
 
     lobby: {
-        USER_JOINED_LOBBY: (username) => `${username} joined the lobby`,
-        USER_LEFT_LOBBY: (username) => `${username} left the lobby`,
         CONNECTION_ERROR: "Errore di connessione",
         ERROR_INVALID_LOBBY: "Invalid Lobby ID",
         ERROR_PLAYER_IN_LOBBY: "Player already in a lobby",
@@ -109,6 +107,25 @@ export const LABELS_ENGLISH: LabelRegistry = {
         ERROR_LOBBY_NOT_FINISHED: "Lobby not finished" ,
         ERROR_GAME_CHEATS_NOT_ENABLED: "Cheats are not enabled",
         INVALID_COMMAND_NAME: "Invalid command name",
+    },
+
+    chat: {
+        HELP_DESCRIPTION: cmd => `${cmd} : print this message`,
+        USERS_DESCRIPTION: cmd => `${cmd} : print list of users in this lobby`,
+        KICK_DESCRIPTION: cmd => `${cmd} username_or_id : kick an user in this lobby`,
+        MUTE_DESCRIPTION: cmd => `${cmd} username_or_id : mute an user in this lobby`,
+        UNMUTE_DESCRIPTION: cmd => `${cmd} username_or_id : unmute an user in this lobby`,
+        GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : print game options`,
+        SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : set a game option`,
+        RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : reset game options`,
+        GIVE_CARD_DESCRIPTION: cmd => `${cmd} card_name : give yourself a card`,
+        GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : print rng seed (only during game over screen)`,
+        QUIT_DESCRIPTION: cmd => `${cmd} : disconnect from server`,
+        
+        GAME_SEED: seed => `The game seed is ${seed}`,
+        
+        USER_JOINED_LOBBY: username => `${username} joined the lobby`,
+        USER_LEFT_LOBBY: username => `${username} left the lobby`,
     },
 
     server: {

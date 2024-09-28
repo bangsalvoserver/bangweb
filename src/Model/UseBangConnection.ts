@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useReducer } from "react";
 import useEvent from "react-use-event-hook";
-import getLabel from "../Locale/GetLabel";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
-import { getUser } from "../Scenes/Lobby/Lobby";
+import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
 import { deserializeImage, PROPIC_SIZE, serializeImage } from "../Utils/ImageSerial";
 import { createUnionDispatch } from "../Utils/UnionUtils";
@@ -12,8 +11,7 @@ import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { defaultCurrentScene, LobbyState, sceneReducer, UpdateFunction } from "./SceneState";
-import { LobbyAddUser, LobbyUpdate, LobbyUserPropic, ServerMessage } from "./ServerMessage";
-import { UserValue } from "../Scenes/Lobby/LobbyUser";
+import { ChatMessage, LobbyAddUser, LobbyUpdate, LobbyUserPropic, ServerMessage } from "./ServerMessage";
 
 function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_players, state }: LobbyUpdate): UpdateFunction<LobbyValue[]> {
     return lobbies => {
@@ -29,9 +27,8 @@ function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_
     };
 }
 
-function handleLobbyAddUser({ user_id, username, team, flags, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
+function handleLobbyAddUser({ user_id, username, team, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
     return lobbyState => {
-        let chatMessages = lobbyState.chatMessages;
         let users = lobbyState.users.slice();
 
         const index = users.findIndex(user => user.id === user_id);
@@ -39,16 +36,9 @@ function handleLobbyAddUser({ user_id, username, team, flags, lifetime }: LobbyA
         if (index >= 0) {
             users[index] = { ...users[index], ...newUser };
         } else {
-            if (user_id >= 0) {
-                chatMessages = chatMessages.concat({
-                    type: 'lobby',
-                    message: getLabel('lobby', 'USER_JOINED_LOBBY', username),
-                    isRead: flags.includes('is_read') || user_id === lobbyState.myUserId
-                });
-            }
             users.push(newUser);
         }
-        return { ...lobbyState, users, chatMessages };
+        return { ...lobbyState, users };
     };
 }
 
@@ -62,23 +52,21 @@ function handleLobbyUserPropic({ user_id, propic }: LobbyUserPropic): UpdateFunc
 }
 
 function handleLobbyRemoveUser(user_id: number): UpdateFunction<LobbyState> {
+    return lobbyState => ({
+        ...lobbyState,
+        users: lobbyState.users.filter(user => user.id !== user_id)
+    });
+}
+
+function handleLobbyChat({ user_id, username, message, args, flags }: ChatMessage): UpdateFunction<LobbyState> {
     return lobbyState => {
-        let users = lobbyState.users;
-        let chatMessages = lobbyState.chatMessages;
-
-        if (user_id >= 0) {
-            const user = getUser(users, user_id);
-            if (user) {
-                chatMessages = chatMessages.concat({
-                    type: 'lobby',
-                    message: getLabel('lobby', 'USER_LEFT_LOBBY', user.name),
-                    isRead: false
-                });
-            }
+        let chatMessages = lobbyState.chatMessages.slice();
+        if (flags.includes('server_message')) {
+            chatMessages.push({ type: 'lobby', message, args, isRead: flags.includes('is_read'), translated: flags.includes('translated') });
+        } else {
+            chatMessages.push({ type: 'user', user_id, username, message, isRead: flags.includes('is_read') });
         }
-
-        users = users.filter(user => user.id !== user_id);
-        return { ...lobbyState, users, chatMessages };
+        return { ...lobbyState, chatMessages };
     };
 }
 
@@ -173,15 +161,8 @@ export default function useBangConnection() {
             lobby_kick() {
                 sceneDispatch({ gotoWaitingArea: {} });
             },
-            lobby_chat({ user_id, username, message, flags }) {
-                sceneDispatch({ updateLobbyState: lobbyState => ({
-                    ...lobbyState, chatMessages: lobbyState.chatMessages.concat({ type:'user', user_id, username, message, isRead: flags.includes('is_read') })
-                }) });
-            },
-            lobby_message(message) {
-                sceneDispatch({ updateLobbyState: lobbyState => ({
-                    ...lobbyState, chatMessages: lobbyState.chatMessages.concat({ type:'lobby', message, isRead: false })
-                })});
+            lobby_chat(message) {
+                sceneDispatch({ updateLobbyState: handleLobbyChat(message) })
             },
             game_update(update) {
                 gameChannel.update(update);

@@ -72,9 +72,13 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     const MessageTag = useCallback((props: ChatMessageState) => {
         if (props.type === 'user') {
             const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return (<p className={pClass}><span className='username'>{clipUsername(props.username)}</span> : {props.message}</p>);
+            return <p className={pClass}><span className='username'>{clipUsername(props.username)}</span> : {props.message}</p>;
         } else {
-            return props.message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>);
+            if (props.translated) {
+                return <p className='server-message'>{getLabel('chat', props.message, ...props.args)}</p>;
+            } else {
+                return props.message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>);
+            }
         }
     }, [myUserId]);
 

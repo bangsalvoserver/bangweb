@@ -14,7 +14,9 @@ export type ChatMessageState =
     {
         type: 'lobby',
         message: string,
-        isRead: boolean
+        args: string[],
+        isRead: boolean,
+        translated: boolean
     };
 
 export interface LobbyState {
