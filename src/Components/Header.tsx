@@ -67,7 +67,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
         <div className="flex items-center">
           <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">{getLabel('ui', 'APP_TITLE')}</span>
         </div>
-        {'lobbyInfo' in scene && <div className="text-blue-500 whitespace-nowrap overflow-x-hidden text-ellipsis">
+        {'lobbyInfo' in scene && <div className="text-blue-500 font-medium whitespace-nowrap overflow-x-hidden text-ellipsis">
           { scene.lobbyInfo.name }
         </div>}
         <div className="flex items-center">
