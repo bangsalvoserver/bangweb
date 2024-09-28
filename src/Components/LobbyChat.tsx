@@ -1,12 +1,13 @@
 import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
-import { ChatMessageState, LobbyState } from "../Model/SceneState";
+import { LobbyState } from "../Model/SceneState";
 import { BangConnection } from "../Model/UseBangConnection";
+import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 import { countIf } from "../Utils/ArrayUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import usePrevious from "../Utils/UsePrevious";
 import "./Style/LobbyChat.css";
-import { clipUsername } from "../Scenes/Lobby/LobbyUser";
+import { ChatMessage } from "../Model/ServerMessage";
 
 export interface ChatProps {
     connection: BangConnection;
@@ -19,7 +20,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     
     const [isChatOpen, setIsChatOpen, chatRef] = useCloseOnLoseFocus<HTMLDivElement>();
     
-    const countMessages = useMemo(() => countIf(messages, m => !m.isRead), [messages]);
+    const countMessages = useMemo(() => countIf(messages, m => !m.flags.includes('is_read')), [messages]);
     const prevCountMessages = usePrevious(countMessages) ?? 0;
 
     const [numReadMessages, setNumReadMessages] = useState(0);
@@ -69,16 +70,16 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
         }
     };
 
-    const MessageTag = useCallback((props: ChatMessageState) => {
-        if (props.type === 'user') {
-            const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return <p className={pClass}><span className='username'>{clipUsername(props.username)}</span> : {props.message}</p>;
-        } else {
-            if (props.translated) {
+    const MessageTag = useCallback((props: ChatMessage) => {
+        if (props.flags.includes('server_message')) {
+            if (props.flags.includes('translated')) {
                 return <p className='server-message'>{getLabel('chat', props.message, ...props.args)}</p>;
             } else {
                 return props.message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>);
             }
+        } else {
+            const pClass = props.user_id === myUserId ? 'text-right' : '';
+            return <p className={pClass}><span className='username'>{clipUsername(props.username)}</span> : {props.message}</p>;
         }
     }, [myUserId]);
 

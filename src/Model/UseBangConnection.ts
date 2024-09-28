@@ -58,16 +58,11 @@ function handleLobbyRemoveUser(user_id: number): UpdateFunction<LobbyState> {
     });
 }
 
-function handleLobbyChat({ user_id, username, message, args, flags }: ChatMessage): UpdateFunction<LobbyState> {
-    return lobbyState => {
-        let chatMessages = lobbyState.chatMessages.slice();
-        if (flags.includes('server_message')) {
-            chatMessages.push({ type: 'lobby', message, args, isRead: flags.includes('is_read'), translated: flags.includes('translated') });
-        } else {
-            chatMessages.push({ type: 'user', user_id, username, message, isRead: flags.includes('is_read') });
-        }
-        return { ...lobbyState, chatMessages };
-    };
+function handleLobbyChat(message: ChatMessage): UpdateFunction<LobbyState> {
+    return lobbyState => ({
+        ...lobbyState,
+        chatMessages: lobbyState.chatMessages.concat(message)
+    });
 }
 
 export type GameChannel = Channel<GameUpdate>;
