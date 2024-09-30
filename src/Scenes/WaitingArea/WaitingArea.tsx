@@ -47,7 +47,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
             rounded-md
             m-2
             p-1
-            w-50
+            w-48
             focus:outline-none
             focus:ring-2
             focus:ring-blue-500
@@ -62,7 +62,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
             rounded-md
             m-2
             p-1
-            w-50
+            w-48
             focus:outline-none
             focus:ring-2
             focus:ring-blue-500
