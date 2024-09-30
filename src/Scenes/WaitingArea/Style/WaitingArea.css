@@ -15,7 +15,7 @@
     display: table-cell;
 }
 
-.lobby-element div:nth-child(1) {
+.lobby-element div#lobby-name {
     font-weight: bold;
     padding-right: 1em;
     padding-bottom: 0.5em;
@@ -25,15 +25,30 @@
     white-space: nowrap;
 }
 
-.lobby-element div:nth-child(2) {
+.lobby-element div#num-players {
     width: 2em;
 }
 
-.lobby-element div:nth-child(3) {
+.lobby-element div#lobby-state {
     width: 6em;
     text-align: center;
 }
 
-.lobby-element div:nth-child(4) {
+.lobby-element div#lobby-button-join {
     width: 0;
+}
+
+#lobby-button-join button {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.lobby-secure-icon {
+    margin-left: 0.5em;
+    width: 20px;
+    height: 20px;
+    background-image: url('/media/padlock.png');
 }

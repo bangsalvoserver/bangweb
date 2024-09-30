@@ -7,6 +7,7 @@ export function useSettings() {
     const [username, setUsername] = useLocalStorage('username', stringConverter);
     const [propic, setPropic] = useLocalStorage('propic', stringConverter);
     const [lobbyName, setLobbyName] = useLocalStorage('lobby_name', stringConverter);
+    const [lobbyPassword, setLobbyPassword] = useLocalStorage('lobby_password', stringConverter);
     const [gameOptions, setGameOptions] = useLocalStorage<GameOptions>('game_options', jsonConverter);
     const [muteSounds, setMuteSounds] = useLocalStorage('mute_sounds', boolConverter);
 
@@ -15,6 +16,7 @@ export function useSettings() {
         username, setUsername,
         propic, setPropic,
         lobbyName, setLobbyName,
+        lobbyPassword, setLobbyPassword,
         gameOptions, setGameOptions,
         muteSounds, setMuteSounds
     } as const;

@@ -21,6 +21,7 @@ export interface LobbyUpdate {
     num_players: number;
     num_spectators: number;
     max_players: number;
+    secure: boolean;
     state: LobbyStateEnum;
 }
 

@@ -12,6 +12,12 @@ export interface ClientConnect {
 export interface LobbyMakeArgs {
     name: string;
     options: GameOptions | null;
+    password: string;
+}
+
+export interface LobbyJoinArgs {
+    lobby_id: LobbyId;
+    password: string;
 }
 
 export type ClientMessage =
@@ -21,7 +27,7 @@ export type ClientMessage =
     {user_set_propic: ImagePixels | null} |
     {lobby_make: LobbyMakeArgs} |
     {lobby_edit: LobbyInfo} |
-    {lobby_join: { lobby_id: LobbyId }} |
+    {lobby_join: LobbyJoinArgs} |
     {lobby_leave: Empty } |
     {lobby_chat: { message: string }} |
     {lobby_return: Empty } |

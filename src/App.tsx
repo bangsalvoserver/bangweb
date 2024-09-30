@@ -31,9 +31,7 @@ export default function App() {
         return <WaitingArea
           lobbies={scene.lobbies}
           connection={connection}
-          lobbyName={settings.lobbyName}
-          setLobbyName={settings.setLobbyName}
-          gameOptions={settings.gameOptions}
+          settings={settings}
         />;
       case 'lobby':
         return <LobbyScene
