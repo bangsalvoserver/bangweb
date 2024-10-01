@@ -8,9 +8,9 @@ export function bytesToBase64(bytes: Uint8Array): string {
 
 export function base64ToBytes(input: string): Uint8Array {
     const binary = window.atob(input);
-    let bytes: number[] = [];
+    let bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; ++i) {
-        bytes.push(binary.charCodeAt(i));
+        bytes[i] = binary.charCodeAt(i);
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
