@@ -1,3 +1,6 @@
+import { inflate, deflate } from 'pako';
+import { base64ToBytes, bytesToBase64 } from './Base64Utils';
+
 export interface ImagePixels {
     width: number;
     height: number;
@@ -50,33 +53,35 @@ export async function serializeImage(src: ImageSrc | undefined, scale?: number):
     }
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-    let bytes = new Uint8ClampedArray(ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
-    let binary = '';
-    for (let i=0; i < bytes.byteLength; ++i) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return {width: canvas.width, height: canvas.height, pixels: window.btoa(binary)};
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = bytesToBase64(deflate(imageData.data.buffer));
+
+    return { width: canvas.width, height: canvas.height, pixels };
 }
 
 export function deserializeImage(data: ImagePixels | null): ImageSrc | undefined {
-    if (!data || data.width === 0 || data.height === 0) {
+    try {
+        if (!data || data.width === 0 || data.height === 0) {
+            return undefined;
+        }
+
+        const pixels = new Uint8ClampedArray(inflate(base64ToBytes(data.pixels)));
+        let imageData = new ImageData(pixels, data.width, data.height);
+
+        let canvas = document.createElement('canvas');
+        canvas.width = data.width;
+        canvas.height = data.height;
+        
+        let ctx = canvas.getContext('2d');
+        if (!ctx) {
+            return undefined;
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+
+        return canvas.toDataURL();
+    } catch (e) {
+        console.error('Cannot deserialize image: ' + e);
         return undefined;
     }
-
-    let image_data = new ImageData(new Uint8ClampedArray(
-        window.atob(data.pixels).split('').map((c) => c.charCodeAt(0))),
-        data.width, data.height);
-
-    let canvas = document.createElement('canvas');
-    canvas.width = data.width;
-    canvas.height = data.height;
-    
-    let ctx = canvas.getContext('2d');
-    if (!ctx) {
-        return undefined;
-    }
-    
-    ctx.putImageData(image_data, 0, 0);
-
-    return canvas.toDataURL();
 }
