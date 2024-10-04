@@ -38,15 +38,13 @@ function Header({ scene, settings, connection }: HeaderProps) {
     connection.disconnect();
   };
 
-  const handlePropicChange = function (event: ChangeEvent<HTMLInputElement>) {
+  const handlePropicChange = async (event: ChangeEvent<HTMLInputElement>) => {
     let file = event.target.files ? event.target.files[0] : null;
     if (file) {
-      (async () => {
-        const propic = await loadFile(file);
-        const image = await serializeImage(propic, PROPIC_SIZE);
-        settings.setPropic(propic);
-        connection.sendMessage({ user_set_propic: image });
-      })();
+      const propic = await loadFile(file);
+      const image = await serializeImage(propic, PROPIC_SIZE);
+      settings.setPropic(propic);
+      connection.sendMessage({ user_set_propic: image });
     }
   };
 
