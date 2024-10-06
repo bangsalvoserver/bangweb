@@ -24,7 +24,7 @@ export default function Button({ className, color, type, onClick, children }: Bu
     };
 
     const fullClassName = `
-        flex
+        inline-flex
         flex-row
         items-center
         justify-center
