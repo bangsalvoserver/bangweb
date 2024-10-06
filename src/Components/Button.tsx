@@ -24,6 +24,10 @@ export default function Button({ className, color, type, onClick, children }: Bu
     };
 
     const fullClassName = `
+        flex
+        flex-row
+        items-center
+        justify-center
         font-bold
         py-1
         px-4

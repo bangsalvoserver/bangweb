@@ -7,6 +7,7 @@ import { LobbyId } from "../../Model/ServerMessage";
 import { BangConnection } from "../../Model/UseBangConnection";
 import LobbyElement, { LobbyValue } from "./LobbyElement";
 import './Style/WaitingArea.css';
+import { boolConverter, useLocalStorage } from "../../Utils/UseLocalStorage";
 
 export interface WaitingAreaProps {
   lobbies: LobbyValue[];
@@ -15,6 +16,8 @@ export interface WaitingAreaProps {
 }
 
 function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
+  const [expandLobbyOptions, setExpandLobbyOptions] = useLocalStorage('expand_lobby_options', boolConverter);
+
   const handleCreateLobby = useCallback((event: SyntheticEvent) => {
     event.preventDefault();
     if (settings.lobbyName) {
@@ -47,14 +50,20 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
             rounded-md
             m-2
             p-1
-            w-48
+            w-44
             focus:outline-none
             focus:ring-2
             focus:ring-blue-500
           '
           maxLength={MAX_LOBBY_NAME_LENGTH}
-          value={settings.lobbyName} onChange={e => settings.setLobbyName(e.target.value)}></input></p>
-        <p><label htmlFor='lobby_password' className='font-bold text-xl'>{getLabel('ui', 'LABEL_LOBBY_PASSWORD')}</label>
+          value={settings.lobbyName} onChange={e => settings.setLobbyName(e.target.value)}></input>
+          <button type="button"
+            className="w-8 h-8 rounded-full focus:outline-none font-bold focus:ring-2 text-gray-400 bg-gray-600 hover:bg-gray-700 focus:ring-gray-800"
+            onClick={() => setExpandLobbyOptions(value => !value)}>
+            {expandLobbyOptions ? '+' : '-'}
+          </button>
+          </p>
+        <p className={expandLobbyOptions ? 'lobby-options-visible' : 'lobby-options-collapsed'}><label htmlFor='lobby_password' className='font-bold text-xl'>{getLabel('ui', 'LABEL_LOBBY_PASSWORD')}</label>
         <input type='text' id='lobby_password'
           className='
             border-2
@@ -62,13 +71,16 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
             rounded-md
             m-2
             p-1
-            w-48
+            w-44
             focus:outline-none
             focus:ring-2
             focus:ring-blue-500
           '
           value={settings.lobbyPassword} onChange={e => settings.setLobbyPassword(e.target.value)}></input></p>
-        <Button color='green' type='submit'>{getLabel('ui', 'BUTTON_CREATE_LOBBY')}</Button>
+        <Button color='green' type='submit'>
+          {getLabel('ui', 'BUTTON_CREATE_LOBBY')}
+          {(settings.lobbyPassword ?? '') !== '' && <div className='lobby-secure-icon' />}
+        </Button>
       </form>
       <div className='lobby-list'>
         {lobbies.map((lobby) => (

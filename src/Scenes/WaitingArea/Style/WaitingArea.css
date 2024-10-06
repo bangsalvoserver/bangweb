@@ -7,6 +7,18 @@
     margin-right: auto;
 }
 
+.lobby-options-visible {
+    transition: max-height 300ms ease-in-out, visibility 200ms step-end;
+    max-height: 4em;
+    overflow: hidden;
+}
+
+.lobby-options-collapsed {
+    transition: max-height 300ms ease-in-out, visibility 300ms step-end;
+    max-height: 0;
+    overflow: hidden;
+}
+
 .lobby-element {
     display: table-row;
 }
@@ -32,18 +44,6 @@
 .lobby-element div#lobby-state {
     width: 6em;
     text-align: center;
-}
-
-.lobby-element div#lobby-button-join {
-    width: 0;
-}
-
-#lobby-button-join button {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
 }
 
 .lobby-secure-icon {
