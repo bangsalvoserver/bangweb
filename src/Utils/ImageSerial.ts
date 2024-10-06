@@ -39,11 +39,15 @@ export async function serializeImage(src: ImageSrc | undefined, scale?: number):
     canvas.height = image.height;
     if (scale !== undefined) {
         if (canvas.width > canvas.height) {
-            canvas.height = scale * canvas.height / canvas.width;
-            canvas.width = scale;
+            if (scale < image.width) {
+                canvas.height = scale * canvas.height / canvas.width;
+                canvas.width = scale;
+            }
         } else {
-            canvas.width = scale * canvas.width / canvas.height;
-            canvas.height = scale;
+            if (scale < image.height) {
+                canvas.width = scale * canvas.width / canvas.height;
+                canvas.height = scale;
+            }
         }
     }
 
