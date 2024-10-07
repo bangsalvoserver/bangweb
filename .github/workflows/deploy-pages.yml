@@ -37,6 +37,7 @@ jobs:
       run: |
         echo "VITE_BANG_SERVER_URL=${{ vars.BANG_SERVER_URL }}" >> .env
         echo "VITE_DISCORD_LINK=${{ vars.DISCORD_LINK }}" >> .env
+        echo "VITE_PAYPAL_DONATE_LINK=${{ vars.PAYPAL_DONATE_LINK }}" >> .env
 
     - name: Build
       run: npm run build
