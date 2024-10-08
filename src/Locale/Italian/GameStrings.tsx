@@ -19,7 +19,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
 
     STATUS_GAME_OVER: () =>                                                 <>Partita Finita</>,
     STATUS_YOUR_TURN: () =>                                                 <>Tocca a te ... Scegli come pescare</>,
-    STATUS_YOUR_TURN_OTHER: (player) =>                                     <>Tocca a {player}</>,
+    STATUS_YOUR_TURN_OTHER: (player) =>                                     <>{player} deve scegliere come pescare</>,
     STATUS_CHARACTERCHOICE: () =>                                           <>Scegli il tuo personaggio</>,
     STATUS_CHARACTERCHOICE_OTHER: (player) =>                               <>{player} deve scegliere il personaggio</>,
     STATUS_PREDRAW: () =>                                                   <>Scegli per quale carta estrarre</>,

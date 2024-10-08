@@ -19,7 +19,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     
     STATUS_GAME_OVER: () =>                                                     <>Game Over</>,
     STATUS_YOUR_TURN: () =>                                                     <>Your turn ... Choose how to draw</>,
-    STATUS_YOUR_TURN_OTHER: (player) =>                                         <>{player}'s turn</>,
+    STATUS_YOUR_TURN_OTHER: (player) =>                                         <>{player} must choose how to draw</>,
     STATUS_CHARACTERCHOICE: () =>                                               <>Choose your character</>,
     STATUS_CHARACTERCHOICE_OTHER: (player) =>                                   <>{player} must choose their character</>,
     STATUS_PREDRAW: () =>                                                       <>Choose which card to "Draw!" for</>,
