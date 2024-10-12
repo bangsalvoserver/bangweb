@@ -1,11 +1,12 @@
 import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
 import { LobbyState } from "../Model/SceneState";
-import { ChatMessage } from "../Model/ServerMessage";
+import { ChatMessage, LobbyChatArg } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 import { countIf } from "../Utils/ArrayUtils";
+import { createUnionDispatch } from "../Utils/UnionUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import usePrevious from "../Utils/UsePrevious";
 import "./Style/LobbyChat.css";
@@ -71,10 +72,16 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
         }
     };
 
+    const transformChatArg = useMemo(() => createUnionDispatch<LobbyChatArg, string>({
+        user: user_id => clipUsername(getUser(users, user_id).name),
+        integer: value => value.toString(),
+        string: value => value
+    }), [users]);
+
     const MessageTag = useCallback((props: ChatMessage) => {
         if (props.flags.includes('server_message')) {
             if (props.flags.includes('translated')) {
-                return <p className='server-message'>{getLabel('chat', props.message, ...props.args)}</p>;
+                return <p className='server-message'>{getLabel('chat', props.message, ...props.args.map(transformChatArg))}</p>;
             } else {
                 return props.message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>);
             }
@@ -82,7 +89,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
             const pClass = props.user_id === myUserId ? 'text-right' : '';
             return <p className={pClass}><span className='username'>{clipUsername(getUser(users, props.user_id).name)}</span> : {props.message}</p>;
         }
-    }, [users, myUserId]);
+    }, [users, myUserId, transformChatArg]);
 
     return <div ref={chatRef} className="lobby-chat-outer">
         <button className='

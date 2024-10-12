@@ -57,10 +57,15 @@ export interface LobbyUserPropic {
     propic: ImagePixels | null;
 }
 
+export type LobbyChatArg =
+    {user: UserId} |
+    {integer: number} |
+    {string: string};
+
 export interface ChatMessage {
     user_id: number;
     message: string;
-    args: string[];
+    args: LobbyChatArg[];
     flags: LobbyChatFlag[];
 }
 
