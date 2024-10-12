@@ -15,7 +15,7 @@ export interface UserValue {
 }
 
 export interface LobbyUserProps {
-    user?: UserValue;
+    user: UserValue;
     isSelf?: boolean;
     align?: 'horizontal' | 'vertical';
     children?: ReactNode;
@@ -23,16 +23,12 @@ export interface LobbyUserProps {
 
 export const DEFAULT_USER_PROPIC = defaultUserPropic;
 
-export function getPropic(user?: UserValue) {
-  return user?.propic ?? DEFAULT_USER_PROPIC;
+export function getPropic(user: UserValue) {
+  return user.propic ?? DEFAULT_USER_PROPIC;
 }
 
 export function clipUsername(username: string): string {
   return username.length !== 0 ? username : getLabel('ui', 'USERNAME_EMPTY');
-}
-
-export function getUsername(user?: UserValue) {
-  return clipUsername(user?.name ?? '');
 }
 
 export default function LobbyUser({ isSelf, user, align, children }: LobbyUserProps) {
@@ -45,7 +41,7 @@ export default function LobbyUser({ isSelf, user, align, children }: LobbyUserPr
         <img src={getPropic(user)} alt="" />
       </div>
       <div className={`lobby-username ${isSelf ? 'lobby-username-self' : ''}`}>
-        {getUsername(user)}
+        {clipUsername(user.name)}
         { isDisconnected ? <div className="mx-1 align-middle player-icon icon-disconnected"/>
         : isSpectator ? <div className="mx-1 align-middle player-icon icon-spectator"/>
         : null }

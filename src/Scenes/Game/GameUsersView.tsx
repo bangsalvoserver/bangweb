@@ -10,7 +10,7 @@ import "./Style/GameUsersView.css";
 
 interface GameUserProps {
     player?: Player;
-    user?: UserValue;
+    user: UserValue;
     myUserId: UserId;
 }
 
@@ -43,7 +43,7 @@ function GameUserPlayer({ player, user, myUserId }: GameUserProps) {
         </div>;
     }, [player]);
 
-    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user?.id}>
+    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user.id}>
         { playerIcons }
     </LobbyUser>;
 }
@@ -55,7 +55,7 @@ export default function GameUsersView() {
     const { table } = useContext(GameStateContext);
 
     const gameUserPlayers = useMemo(() => {
-        let players: [UserId, Player | undefined, UserValue | undefined][] = table.players.map(player => {
+        let players: [UserId, Player | undefined, UserValue][] = table.players.map(player => {
             const user = getUser(users, player.user_id);
             return [ player.user_id, player, user];
         });

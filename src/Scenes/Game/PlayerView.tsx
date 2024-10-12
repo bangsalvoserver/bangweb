@@ -21,7 +21,7 @@ import Button from "../../Components/Button";
 
 export interface PlayerProps {
     playerRef?: Ref<PlayerRef>;
-    user?: UserValue;
+    user: UserValue;
     player: Player;
     handleRejoin?: () => void;
 }

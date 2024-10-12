@@ -3,7 +3,7 @@ import getLabel from "../../Locale/GetLabel";
 import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
 import { createUnionDispatch } from "../../Utils/UnionUtils";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
-import { getUsername } from "../Lobby/LobbyUser";
+import { clipUsername } from "../Lobby/LobbyUser";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
 import { CardSign } from "./Model/CardData";
@@ -39,7 +39,7 @@ export function PlayerNameView({ id }: PlayerNameProps) {
 
     const player = getPlayer(table, id);
     const user = getUser(users, player.user_id);
-    const username = getUsername(user);
+    const username = clipUsername(user.name);
     
     return <span className="player-name">{username}</span>;
 }

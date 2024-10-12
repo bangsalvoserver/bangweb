@@ -9,8 +9,12 @@ import { GameOptions } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyUser, { UserValue } from './LobbyUser';
 
-export function getUser(users: UserValue[], id: UserId): UserValue | undefined {
-  return users.find(user => user.id === id);
+export function getUser(users: UserValue[], id: UserId): UserValue {
+  const user = users.find(user => user.id === id);
+  if (!user) {
+    throw new Error('cannot find user ' + id);
+  }
+  return user;
 }
 
 export type SetGameOptions = (value: GameOptions) => void;
@@ -36,7 +40,7 @@ export default function LobbyScene({ lobbyInfo, setGameOptions, connection, lobb
         <div className='flex flex-col md:flex-row items-center md:items-start mb-24'>
           <GameOptionsEditor gameOptions={lobbyInfo.options} setGameOptions={setGameOptions} readOnly={!isLobbyOwner(lobbyState)} />
           <div className='flex flex-col -order-1 md:order-none'>
-            {lobbyState.users.flatMap((user, i) => {
+            {lobbyState.users.flatMap(user => {
               if (user.flags.includes('disconnected')) {
                 return [];
               }

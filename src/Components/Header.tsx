@@ -3,7 +3,6 @@ import getLabel from '../Locale/GetLabel';
 import AppSettings from '../Model/AppSettings';
 import { isLobbyOwner, SceneState } from '../Model/SceneState';
 import { BangConnection } from '../Model/UseBangConnection';
-import { getUser } from '../Scenes/Lobby/Lobby';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { loadFile, PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
@@ -30,8 +29,9 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
   const handleReturnLobby = () => connection.sendMessage({ lobby_return: {}});
 
-  const isSpectator = 'lobbyState' in scene && getUser(scene.lobbyState.users, scene.lobbyState.myUserId)?.flags.includes('spectator');
-  const handleToggleSpectate = () => connection.sendMessage({ user_spectate: !(isSpectator ?? false) });
+  const myUser = scene.type === 'lobby' ? scene.lobbyState.users.find(user => user.id === scene.lobbyState.myUserId) : undefined;
+  const isSpectator = myUser?.flags.includes('spectator') ?? false;
+  const handleToggleSpectate = () => connection.sendMessage({ user_spectate: !isSpectator });
 
   const handleDisconnect = () => {
     settings.setSessionId(undefined);

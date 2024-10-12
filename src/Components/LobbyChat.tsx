@@ -4,7 +4,7 @@ import { LobbyState } from "../Model/SceneState";
 import { ChatMessage } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
-import { getUsername } from "../Scenes/Lobby/LobbyUser";
+import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 import { countIf } from "../Utils/ArrayUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import usePrevious from "../Utils/UsePrevious";
@@ -80,7 +80,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
             }
         } else {
             const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return <p className={pClass}><span className='username'>{getUsername(getUser(users, props.user_id))}</span> : {props.message}</p>;
+            return <p className={pClass}><span className='username'>{clipUsername(getUser(users, props.user_id).name)}</span> : {props.message}</p>;
         }
     }, [users, myUserId]);
 
