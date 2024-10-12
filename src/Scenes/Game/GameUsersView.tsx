@@ -61,7 +61,7 @@ export default function GameUsersView() {
         });
 
         for (const user of users) {
-            if (players.every(([user_id, ]) => user_id !== user.id)) {
+            if (!user.flags.includes('disconnected') && players.every(([user_id, ]) => user_id !== user.id)) {
                 players.push([ user.id, undefined, user ]);
             }
         }

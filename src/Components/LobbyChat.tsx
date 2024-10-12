@@ -1,13 +1,14 @@
 import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
 import { LobbyState } from "../Model/SceneState";
+import { ChatMessage } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
-import { clipUsername } from "../Scenes/Lobby/LobbyUser";
+import { getUser } from "../Scenes/Lobby/Lobby";
+import { getUsername } from "../Scenes/Lobby/LobbyUser";
 import { countIf } from "../Utils/ArrayUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import usePrevious from "../Utils/UsePrevious";
 import "./Style/LobbyChat.css";
-import { ChatMessage } from "../Model/ServerMessage";
 
 export interface ChatProps {
     connection: BangConnection;
@@ -79,9 +80,9 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
             }
         } else {
             const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return <p className={pClass}><span className='username'>{clipUsername(props.username)}</span> : {props.message}</p>;
+            return <p className={pClass}><span className='username'>{getUsername(getUser(users, props.user_id))}</span> : {props.message}</p>;
         }
-    }, [myUserId]);
+    }, [users, myUserId]);
 
     return <div ref={chatRef} className="lobby-chat-outer">
         <button className='

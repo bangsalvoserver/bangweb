@@ -30,8 +30,8 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
   const handleReturnLobby = () => connection.sendMessage({ lobby_return: {}});
 
-  const isSpectator = 'lobbyState' in scene && getUser(scene.lobbyState.users, scene.lobbyState.myUserId)?.team === 'game_spectator';
-  const handleToggleSpectate = () => connection.sendMessage({ user_set_team: isSpectator ? 'game_player' : 'game_spectator' });
+  const isSpectator = 'lobbyState' in scene && getUser(scene.lobbyState.users, scene.lobbyState.myUserId)?.flags.includes('spectator');
+  const handleToggleSpectate = () => connection.sendMessage({ user_spectate: !(isSpectator ?? false) });
 
   const handleDisconnect = () => {
     settings.setSessionId(undefined);

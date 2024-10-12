@@ -11,7 +11,7 @@ import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { defaultCurrentScene, LobbyState, sceneReducer, UpdateFunction } from "./SceneState";
-import { ChatMessage, LobbyAddUser, LobbyUpdate, LobbyUserPropic, ServerMessage } from "./ServerMessage";
+import { ChatMessage, LobbyUserUpdate, LobbyUpdate, LobbyUserPropic, ServerMessage } from "./ServerMessage";
 
 function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_players, secure, state }: LobbyUpdate): UpdateFunction<LobbyValue[]> {
     return lobbies => {
@@ -27,12 +27,12 @@ function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_
     };
 }
 
-function handleLobbyAddUser({ user_id, username, team, lifetime }: LobbyAddUser): UpdateFunction<LobbyState> {
+function handleLobbyUserUpdate({ user_id, username, flags, lifetime }: LobbyUserUpdate): UpdateFunction<LobbyState> {
     return lobbyState => {
         let users = lobbyState.users.slice();
 
         const index = users.findIndex(user => user.id === user_id);
-        const newUser: UserValue = { id: user_id, name: username, team, lifetime }
+        const newUser: UserValue = { id: user_id, name: username, flags, lifetime }
         if (index >= 0) {
             users[index] = { ...users[index], ...newUser };
         } else {
@@ -48,13 +48,6 @@ function handleLobbyUserPropic({ user_id, propic }: LobbyUserPropic): UpdateFunc
         users: lobbyState.users.map(user => user.id === user_id
             ? { ...user, propic: deserializeImage(propic) }
             : user)
-    });
-}
-
-function handleLobbyRemoveUser(user_id: number): UpdateFunction<LobbyState> {
-    return lobbyState => ({
-        ...lobbyState,
-        users: lobbyState.users.filter(user => user.id !== user_id)
     });
 }
 
@@ -146,14 +139,11 @@ export default function useBangConnection() {
             lobby_removed({ lobby_id }) {
                 sceneDispatch({ updateLobbies: lobbies => lobbies.filter(lobby => lobby.id !== lobby_id) });
             },
-            lobby_add_user(message) {
-                sceneDispatch({ updateLobbyState: handleLobbyAddUser(message) });
+            lobby_user_update(message) {
+                sceneDispatch({ updateLobbyState: handleLobbyUserUpdate(message) });
             },
             lobby_user_propic(value) {
                 sceneDispatch({ updateLobbyState: handleLobbyUserPropic(value) })
-            },
-            lobby_remove_user(user_id) {
-                sceneDispatch({ updateLobbyState: handleLobbyRemoveUser(user_id) });
             },
             lobby_kick() {
                 sceneDispatch({ gotoWaitingArea: {} });
@@ -182,7 +172,7 @@ export default function useBangConnection() {
 
     const setGameOptions = useEvent(gameOptions => {
         if (scene.type !== 'lobby') {
-            throw new Error('Invalid scene type: ' + scene.type);
+            throw new Error('Invalid scene type for setGameOptions: ' + scene.type);
         }
         connection.sendMessage({ lobby_edit: { name: scene.lobbyInfo.name, options: gameOptions } });
         sceneDispatch({ updateLobbyInfo: lobbyInfo => ({ ...lobbyInfo, options: gameOptions }) });

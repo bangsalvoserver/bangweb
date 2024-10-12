@@ -13,8 +13,6 @@ export interface ClientAccepted {
 
 export type LobbyStateEnum = 'waiting' | 'playing' | 'finished';
 
-export type LobbyTeam = 'game_player' | 'game_spectator';
-
 export interface LobbyUpdate {
     lobby_id: LobbyId;
     name: string;
@@ -45,10 +43,12 @@ export interface LobbyRemoved {
 
 export type LobbyChatFlag = 'is_read' | 'server_message' | 'translated';
 
-export interface LobbyAddUser {
+export type LobbyUserFlag = 'disconnected' | 'spectator' | 'muted';
+
+export interface LobbyUserUpdate {
     user_id: UserId;
     username: string;
-    team: LobbyTeam;
+    flags: LobbyUserFlag[];
     lifetime: Milliseconds;
 }
 
@@ -59,7 +59,6 @@ export interface LobbyUserPropic {
 
 export interface ChatMessage {
     user_id: number;
-    username: string;
     message: string;
     args: string[];
     flags: LobbyChatFlag[];
@@ -73,9 +72,8 @@ export type ServerMessage =
     {lobby_entered: LobbyEntered} |
     {lobby_edited: LobbyEdited} |
     {lobby_removed: LobbyRemoved} |
-    {lobby_add_user: LobbyAddUser} |
+    {lobby_user_update: LobbyUserUpdate} |
     {lobby_user_propic: LobbyUserPropic} |
-    {lobby_remove_user: number} |
     {lobby_kick: Empty} |
     {lobby_chat: ChatMessage} |
     {game_update: GameUpdate} |

@@ -1,7 +1,7 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { ImagePixels } from "../Utils/ImageSerial";
-import { Empty, LobbyId, LobbyInfo, LobbyTeam, UserId } from "./ServerMessage";
+import { Empty, LobbyId, LobbyInfo, UserId } from "./ServerMessage";
 
 export interface ClientConnect {
     username: string;
@@ -31,7 +31,7 @@ export type ClientMessage =
     {lobby_leave: Empty } |
     {lobby_chat: { message: string }} |
     {lobby_return: Empty } |
-    {user_set_team: LobbyTeam} |
+    {user_spectate: boolean} |
     {game_start: Empty } |
     {game_rejoin: { user_id: UserId }} |
     {game_action: GameAction};

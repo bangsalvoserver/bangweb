@@ -68,7 +68,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
         RECONNECTING: "Reconnecting...", 
         UNKNOWN_CARD: "(Unknown card)",
         UNKNOWN_PLAYER: "(Unknown player)",
-        USER_DISCONNECTED: "(Disconnected)",
         USERNAME_EMPTY: "(Empty username)",
         STATUS_GAME_OVER: "Game Over",
         LABEL_USERNAME: "User Name",

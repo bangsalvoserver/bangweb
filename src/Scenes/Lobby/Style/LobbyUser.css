@@ -9,6 +9,10 @@
     justify-items: center;
 }
 
+.lobby-user-disconnected {
+    color: #505050;
+}
+
 .lobby-user .timer-widget {
     --timer-size: 1.5em;
 }

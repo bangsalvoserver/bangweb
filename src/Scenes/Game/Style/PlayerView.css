@@ -245,6 +245,11 @@
     --icon-color: #94a4af;
 }
 
+.icon-disconnected {
+    --icon-url: url('/media/icon_disconnected.png'); 
+    --icon-color: #ff0000;
+}
+
 .icon-sheriff {
     --icon-url: url('/media/icon_sheriff.png'); 
     --icon-color: #dfcc29;

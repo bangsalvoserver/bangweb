@@ -109,8 +109,9 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
     const isGhost = isPlayerGhost(player);
     const isWinner = player.status.flags.includes('winner');
     const isSkipTurn = player.status.flags.includes('skip_turn');
-
-    const canRejoin = !table.self_player && !user && !isGameOver;
+    
+    const isDisconnected = !user || user.flags.includes('disconnected');
+    const canRejoin = !table.self_player && isDisconnected && !isGameOver;
 
     let classes = ['player-view'];
     if (isWinner) {

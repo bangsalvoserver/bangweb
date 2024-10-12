@@ -19,7 +19,12 @@ export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
 }
 
 export function isLobbyOwner(lobby: LobbyState) {
-    return lobby.users.at(0)?.id === lobby.myUserId;
+    for (const user of lobby.users) {
+        if (!user.flags.includes('disconnected')) {
+            return user.id === lobby.myUserId;
+        }
+    }
+    return false;
 }
 
 export type ErrorState =
@@ -72,7 +77,7 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     },
     gotoGame() {
         if (this.type !== 'lobby') {
-            throw new Error('Invalid scene type: ' + this.type);
+            throw new Error('Invalid scene type for gotoGame: ' + this.type);
         }
         return { ...this, type: 'game' };
     },
@@ -80,19 +85,19 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         if ('lobbies' in this) {
             return { ...this, lobbies: mapper(this.lobbies) };
         }
-        throw new Error('Invalid scene type: ' + this.type);
+        throw new Error('Invalid scene type for updateLobbies: ' + this.type);
     },
     updateLobbyInfo(mapper) {
         if ('lobbyInfo' in this) {
             return { ...this, lobbyInfo: mapper(this.lobbyInfo) };
         }
-        throw new Error('Invalid scene type: ' + this.type);
+        throw new Error('Invalid scene type for updateLobbyInfo: ' + this.type);
     },
     updateLobbyState(mapper) {
         if ('lobbyState' in this) {
             return { ...this, lobbyState: mapper(this.lobbyState) };
         }
-        throw new Error('Invalid scene type: ' + this.type);
+        throw new Error('Invalid scene type for updateLobbyState: ' + this.type);
     },
     handleLobbyEntered({ user_id, lobby_id, name, options }) {
         if ('lobbies' in this) {
@@ -103,6 +108,6 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
                     : newLobbyState(lobby_id, user_id)
             };
         }
-        throw new Error('Invalid scene type: ' + this.type);
+        throw new Error('Invalid scene type for handleLobbyEntered: ' + this.type);
     }
 });
