@@ -55,19 +55,20 @@ export default function GameUsersView() {
     const { table } = useContext(GameStateContext);
 
     const gameUserPlayers = useMemo(() => {
-        let players: [UserId, Player | undefined, UserValue][] = table.players.map(player => {
-            const user = getUser(users, player.user_id);
-            return [ player.user_id, player, user];
-        });
+        let players: [UserValue, Player | undefined][] = [];
+        
+        for (const player of table.players) {
+            players.push([ getUser(users, player.user_id), player ]);
+        }
 
         for (const user of users) {
-            if (!user.flags.includes('disconnected') && players.every(([user_id, ]) => user_id !== user.id)) {
-                players.push([ user.id, undefined, user ]);
+            if (!user.flags.includes('disconnected') && user.flags.includes('spectator')) {
+                players.push([ user, undefined ]);
             }
         }
 
-        return players.map(([user_id, player, user]) =>
-            <GameUserPlayer key={user_id} player={player} user={user} myUserId={myUserId} />
+        return players.map(([user, player]) =>
+            <GameUserPlayer key={user.id} player={player} user={user} myUserId={myUserId} />
         );
     }, [users, myUserId, table.players]);
 
