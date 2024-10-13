@@ -79,7 +79,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     }), [users]);
 
     const MessageTag = useCallback((props: ChatMessage) => {
-        if (props.flags.includes('server_message')) {
+        if (props.user_id === 0) {
             if (props.flags.includes('translated')) {
                 return <p className='server-message'>{getLabel('chat', props.message, ...props.args.map(transformChatArg))}</p>;
             } else {

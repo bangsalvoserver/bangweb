@@ -41,7 +41,7 @@ export interface LobbyRemoved {
     lobby_id: LobbyId;
 }
 
-export type LobbyChatFlag = 'is_read' | 'server_message' | 'translated';
+export type LobbyChatFlag = 'is_read' | 'translated';
 
 export type LobbyUserFlag = 'disconnected' | 'spectator' | 'muted';
 
