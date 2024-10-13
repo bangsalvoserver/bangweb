@@ -40,8 +40,8 @@ export default function LobbyUser({ isSelf, user, align, children }: LobbyUserPr
       <div className='lobby-user-inner'>
         <img src={getPropic(user)} alt="" />
       </div>
-      <div className={`lobby-username ${isSelf ? 'lobby-username-self' : ''}`}>
-        {clipUsername(user.name)}
+      <div className='lobby-username'>
+        <span className={isSelf ? 'lobby-username-self' : ''}>{clipUsername(user.name)}</span>
         { isDisconnected ? <div className="mx-1 align-middle player-icon icon-disconnected"/>
         : isSpectator ? <div className="mx-1 align-middle player-icon icon-spectator"/>
         : null }
