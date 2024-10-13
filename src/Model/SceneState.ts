@@ -35,7 +35,7 @@ export type SceneState =
     { type: 'home', error?: ErrorState } |
     { type: 'loading', error?: ErrorState, message: string } |
     { type: 'waiting_area', error?: ErrorState, lobbies: LobbyValue[] } |
-    { type: 'lobby' | 'game', error?: ErrorState, lobbies: LobbyValue[], lobbyInfo: LobbyInfo, lobbyState: LobbyState };
+    { type: 'lobby' | 'game', error?: ErrorState, lobbyInfo: LobbyInfo, lobbyState: LobbyState };
 
 export type UpdateFunction<T> = (value: T) => T;
 
@@ -69,11 +69,7 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         return { type: 'loading', error: this.error, message };
     },
     gotoWaitingArea() {
-        if ('lobbies' in this) {
-            return { type: 'waiting_area', lobbies: this.lobbies };
-        } else {
-            return { type: 'waiting_area', lobbies: [] };
-        }
+        return { type: 'waiting_area', lobbies: [] };
     },
     gotoGame() {
         if (this.type !== 'lobby') {
@@ -100,14 +96,12 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         throw new Error('Invalid scene type for updateLobbyState: ' + this.type);
     },
     handleLobbyEntered({ user_id, lobby_id, name, options }) {
-        if ('lobbies' in this) {
-            return { ...this, type: 'lobby',
-                lobbyInfo: { name, options },
-                lobbyState: 'lobbyState' in this
-                    ? { ...this.lobbyState, users: this.lobbyState.users.filter(user => user.id >= 0) }
-                    : newLobbyState(lobby_id, user_id)
-            };
-        }
-        throw new Error('Invalid scene type for handleLobbyEntered: ' + this.type);
+        return {
+            ...this, type: 'lobby',
+            lobbyInfo: { name, options },
+            lobbyState: 'lobbyState' in this
+                ? { ...this.lobbyState, users: this.lobbyState.users.filter(user => user.id >= 0) }
+                : newLobbyState(lobby_id, user_id)
+        };
     }
 });
