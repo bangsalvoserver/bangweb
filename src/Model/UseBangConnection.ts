@@ -1,62 +1,15 @@
 import { useEffect, useReducer, useRef } from "react";
 import useEvent from "react-use-event-hook";
 import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
-import { UserValue } from "../Scenes/Lobby/LobbyUser";
-import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
-import { deserializeImage, PROPIC_SIZE, serializeImage } from "../Utils/ImageSerial";
+import { PROPIC_SIZE, serializeImage } from "../Utils/ImageSerial";
 import { createUnionDispatch } from "../Utils/UnionUtils";
 import useChannel, { Channel } from "../Utils/UseChannel";
 import useWebSocket, { WebSocketConnection } from "../Utils/UseWebSocket";
 import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
-import { defaultCurrentScene, LobbyState, sceneReducer, UpdateFunction } from "./SceneState";
-import { ChatMessage, LobbyUserUpdate, LobbyUpdate, LobbyUserPropic, ServerMessage } from "./ServerMessage";
-
-function handleUpdateLobbies({ lobby_id, name, num_players, num_spectators, max_players, secure, state }: LobbyUpdate): UpdateFunction<LobbyValue[]> {
-    return lobbies => {
-        let copy = [...lobbies];
-        const newLobby: LobbyValue = { id: lobby_id, name, num_players, num_spectators, max_players, secure, state };
-        let index = copy.findIndex(lobby => lobby.id === lobby_id);
-        if (index >= 0) {
-            copy[index] = newLobby;
-        } else {
-            copy.push(newLobby);
-        }
-        return copy;
-    };
-}
-
-function handleLobbyUserUpdate({ user_id, username, flags, lifetime }: LobbyUserUpdate): UpdateFunction<LobbyState> {
-    return lobbyState => {
-        let users = lobbyState.users.slice();
-
-        const index = users.findIndex(user => user.id === user_id);
-        const newUser: UserValue = { id: user_id, name: username, flags, lifetime }
-        if (index >= 0) {
-            users[index] = { ...users[index], ...newUser };
-        } else {
-            users.push(newUser);
-        }
-        return { ...lobbyState, users };
-    };
-}
-
-function handleLobbyUserPropic({ user_id, propic }: LobbyUserPropic): UpdateFunction<LobbyState> {
-    return lobbyState => ({
-        ...lobbyState,
-        users: lobbyState.users.map(user => user.id === user_id
-            ? { ...user, propic: deserializeImage(propic) }
-            : user)
-    });
-}
-
-function handleLobbyChat(message: ChatMessage): UpdateFunction<LobbyState> {
-    return lobbyState => ({
-        ...lobbyState,
-        chatMessages: lobbyState.chatMessages.concat(message)
-    });
-}
+import { defaultCurrentScene, sceneReducer } from "./SceneState";
+import { ServerMessage } from "./ServerMessage";
 
 export type GameChannel = Channel<GameUpdate>;
 
@@ -126,30 +79,30 @@ export default function useBangConnection() {
             lobby_error(message) {
                 sceneDispatch({ setError: { type:'lobby', message } });
             },
-            lobby_update(message: LobbyUpdate) {
-                sceneDispatch({ updateLobbies: handleUpdateLobbies(message) });
+            lobby_update(message) {
+                sceneDispatch({ updateLobbies: message });
             },
             lobby_entered(message) {
                 gameChannel.clear();
                 sceneDispatch({ handleLobbyEntered: message });
             },
-            lobby_edited(lobbyInfo) {
-                sceneDispatch({ updateLobbyInfo: _ => lobbyInfo });
+            lobby_edited(message) {
+                sceneDispatch({ setLobbyInfo: message });
             },
             lobby_removed({ lobby_id }) {
-                sceneDispatch({ updateLobbies: lobbies => lobbies.filter(lobby => lobby.id !== lobby_id) });
+                sceneDispatch({ removeLobby: lobby_id });
             },
             lobby_user_update(message) {
-                sceneDispatch({ updateLobbyState: handleLobbyUserUpdate(message) });
+                sceneDispatch({ updateLobbyUser: message });
             },
-            lobby_user_propic(value) {
-                sceneDispatch({ updateLobbyState: handleLobbyUserPropic(value) })
+            lobby_user_propic(message) {
+                sceneDispatch({ updateUserPropic: message })
             },
             lobby_kick() {
                 sceneDispatch({ gotoWaitingArea: {} });
             },
             lobby_chat(message) {
-                sceneDispatch({ updateLobbyState: handleLobbyChat(message) })
+                sceneDispatch({ addLobbyChatMessage: message })
             },
             game_update(update) {
                 gameChannel.update(update);
@@ -175,7 +128,7 @@ export default function useBangConnection() {
             throw new Error('Invalid scene type for setGameOptions: ' + scene.type);
         }
         connection.sendMessage({ lobby_edit: { name: scene.lobbyInfo.name, options: gameOptions } });
-        sceneDispatch({ updateLobbyInfo: lobbyInfo => ({ ...lobbyInfo, options: gameOptions }) });
+        sceneDispatch({ setGameOptions: gameOptions });
         settings.setGameOptions(gameOptions);
     });
 

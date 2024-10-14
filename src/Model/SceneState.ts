@@ -1,7 +1,10 @@
+import { Id } from "../Scenes/Game/Model/GameTable";
+import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
+import { deserializeImage } from "../Utils/ImageSerial";
 import { createUnionReducer } from "../Utils/UnionUtils";
-import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyInfo, UserId } from "./ServerMessage";
+import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyInfo, LobbyUpdate, LobbyUserPropic, LobbyUserUpdate, UserId } from "./ServerMessage";
 
 export interface LobbyState {
     lobbyId: LobbyId;
@@ -45,9 +48,13 @@ export type SceneUpdate =
     { gotoLoading: string } |
     { gotoWaitingArea: Empty } |
     { gotoGame: Empty } |
-    { updateLobbies: UpdateFunction<LobbyValue[]> } |
-    { updateLobbyInfo: UpdateFunction<LobbyInfo> } |
-    { updateLobbyState: UpdateFunction<LobbyState> } |
+    { updateLobbies: LobbyUpdate } |
+    { removeLobby: LobbyId } |
+    { setLobbyInfo: LobbyInfo } |
+    { setGameOptions: GameOptions } |
+    { updateLobbyUser: LobbyUserUpdate } |
+    { updateUserPropic: LobbyUserPropic } |
+    { addLobbyChatMessage: ChatMessage } |
     { handleLobbyEntered: LobbyEntered };
 
 export function defaultCurrentScene(sessionId?: number): SceneState {
@@ -56,6 +63,25 @@ export function defaultCurrentScene(sessionId?: number): SceneState {
     } else {
         return { type: 'home' };
     }
+}
+
+function handleListUpdate<T extends Id>(values: T[], newValue: T): T[] {
+    let copy = values.slice();
+    const index = copy.findIndex(value => value.id === newValue.id);
+    if (index >= 0) {
+        copy[index] = { ...copy[index], ...newValue };
+    } else {
+        copy.push(newValue);
+    }
+    return copy;
+}
+
+function newLobbyValue({ lobby_id, name, num_players, num_spectators, max_players, secure, state }: LobbyUpdate): LobbyValue {
+    return { id: lobby_id, name, num_players, num_spectators, max_players, secure, state };
+}
+
+function newUserValue({ user_id, username, flags, lifetime }: LobbyUserUpdate): UserValue {
+    return { id: user_id, name: username, flags, lifetime };
 }
 
 export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
@@ -77,23 +103,52 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         }
         return { ...this, type: 'game' };
     },
-    updateLobbies(mapper) {
-        if ('lobbies' in this) {
-            return { ...this, lobbies: mapper(this.lobbies) };
+    updateLobbies(update) {
+        if (this.type !== 'waiting_area') {
+            throw new Error('Invalid scene type for updateLobbies: ' + this.type);
         }
-        throw new Error('Invalid scene type for updateLobbies: ' + this.type);
+        return { ...this, lobbies: handleListUpdate(this.lobbies, newLobbyValue(update)) };
     },
-    updateLobbyInfo(mapper) {
-        if ('lobbyInfo' in this) {
-            return { ...this, lobbyInfo: mapper(this.lobbyInfo) };
+    removeLobby(lobby_id) {
+        if (this.type !== 'waiting_area') {
+            throw new Error('Invalid scene type for removeLobby: ' + this.type);
         }
-        throw new Error('Invalid scene type for updateLobbyInfo: ' + this.type);
+        return { ...this, lobbies: this.lobbies.filter(lobby => lobby.id !== lobby_id) };
     },
-    updateLobbyState(mapper) {
-        if ('lobbyState' in this) {
-            return { ...this, lobbyState: mapper(this.lobbyState) };
+    setLobbyInfo(lobbyInfo) {
+        if (this.type !== 'lobby') {
+            throw new Error('Invalid scene type for setLobbyInfo: ' + this.type);
         }
-        throw new Error('Invalid scene type for updateLobbyState: ' + this.type);
+        return { ...this, lobbyInfo };
+    },
+    setGameOptions(options) {
+        if (this.type !== 'lobby') {
+            throw new Error('Invalid scene type for setGameOptions: ' + this.type);
+        }
+        return { ...this, lobbyInfo: { ...this.lobbyInfo, options } };
+    },
+    updateLobbyUser(update) {
+        if (this.type !== 'lobby' && this.type !== 'game') {
+            throw new Error('Invalid scene type for updateLobbyUser: ' + this.type);
+        }
+        return { ...this, lobbyState: { ...this.lobbyState, users: handleListUpdate(this.lobbyState.users, newUserValue(update)) }};
+    },
+    updateUserPropic({ user_id, propic }) {
+        if (this.type !== 'lobby' && this.type !== 'game') {
+            throw new Error('Invalid scene type for updateUserPropic: ' + this.type);
+        }
+        return { ...this, lobbyState: { ...this.lobbyState,
+            users: this.lobbyState.users.map(user => user.id === user_id
+                ? { ...user, propic: deserializeImage(propic) }
+                : user 
+            )
+        }};
+    },
+    addLobbyChatMessage(message) {
+        if (this.type !== 'lobby' && this.type !== 'game') {
+            throw new Error('Invalid scene type for addLobbyChatMessage: ' + this.type);
+        }
+        return { ...this, lobbyState: { ...this.lobbyState, chatMessages: this.lobbyState.chatMessages.concat(message) }};
     },
     handleLobbyEntered({ user_id, lobby_id, name, options }) {
         return {
