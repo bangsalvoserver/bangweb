@@ -13,6 +13,10 @@
     color: #505050;
 }
 
+.lobby-user-disconnected img {
+    filter: grayscale(80%) contrast(70%);
+}
+
 .lobby-user .timer-widget {
     --timer-size: 1.5em;
 }
