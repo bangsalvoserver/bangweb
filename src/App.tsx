@@ -35,10 +35,10 @@ export default function App() {
         />;
       case 'lobby':
         return <LobbyScene
-          lobbyInfo={scene.lobbyInfo}
+          gameOptions={scene.gameOptions}
+          setGameOptions={setGameOptions}
           lobbyState={scene.lobbyState}
           connection={connection}
-          setGameOptions={setGameOptions}
         />;
       case 'game':
         return <GameScene

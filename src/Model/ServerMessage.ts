@@ -23,19 +23,12 @@ export interface LobbyUpdate {
     state: LobbyStateEnum;
 }
 
-export interface LobbyInfo {
-    name: string;
-    options: GameOptions;
-}
-
 export interface LobbyEntered {
     user_id: UserId;
     lobby_id: LobbyId;
     name: string;
     options: GameOptions;
 }
-
-export type LobbyEdited = LobbyInfo;
 
 export interface LobbyRemoved {
     lobby_id: LobbyId;
@@ -75,7 +68,7 @@ export type ServerMessage =
     {lobby_error: string} |
     {lobby_update: LobbyUpdate} |
     {lobby_entered: LobbyEntered} |
-    {lobby_edited: LobbyEdited} |
+    {lobby_edited: GameOptions} |
     {lobby_removed: LobbyRemoved} |
     {lobby_user_update: LobbyUserUpdate} |
     {lobby_user_propic: LobbyUserPropic} |

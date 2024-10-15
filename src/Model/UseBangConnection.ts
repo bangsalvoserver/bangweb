@@ -45,7 +45,7 @@ export default function useBangConnection() {
     });
 
     const disconnected = useEvent((code: number | null, reason: string | null) => {
-        sceneDispatch({ reset: {} });
+        sceneDispatch({ gotoHome: {} });
         if (reason) {
             sceneDispatch({ setError: { type: 'server', code, message: reason }});
         } else if (scene.type === 'loading') {
@@ -84,10 +84,10 @@ export default function useBangConnection() {
             },
             lobby_entered(message) {
                 gameChannel.clear();
-                sceneDispatch({ handleLobbyEntered: message });
+                sceneDispatch({ gotoLobby: message });
             },
-            lobby_edited(message) {
-                sceneDispatch({ setLobbyInfo: message });
+            lobby_edited(options) {
+                sceneDispatch({ setGameOptions: options });
             },
             lobby_removed({ lobby_id }) {
                 sceneDispatch({ removeLobby: lobby_id });
@@ -127,7 +127,7 @@ export default function useBangConnection() {
         if (scene.type !== 'lobby') {
             throw new Error('Invalid scene type for setGameOptions: ' + scene.type);
         }
-        connection.sendMessage({ lobby_edit: { name: scene.lobbyInfo.name, options: gameOptions } });
+        connection.sendMessage({ lobby_edit: gameOptions });
         sceneDispatch({ setGameOptions: gameOptions });
         settings.setGameOptions(gameOptions);
     });

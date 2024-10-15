@@ -65,8 +65,8 @@ function Header({ scene, settings, connection }: HeaderProps) {
         <div className="flex items-center">
           <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">{getLabel('ui', 'APP_TITLE')}</span>
         </div>
-        {'lobbyInfo' in scene && <div className="text-blue-500 font-medium whitespace-nowrap overflow-x-hidden text-ellipsis">
-          { scene.lobbyInfo.name }
+        { (scene.type === 'lobby' || scene.type === 'game') && <div className="text-blue-500 font-medium whitespace-nowrap overflow-x-hidden text-ellipsis">
+          { scene.lobbyName }
         </div>}
         <div className="flex items-center">
           <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-600">
@@ -89,7 +89,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
               <UserMenuItem onClick={handleToggleSounds}>{getLabel('ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
               { scene.type === 'game' && isLobbyOwner(scene.lobbyState) && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
               { scene.type === 'lobby' && <UserMenuItem onClick={handleToggleSpectate}>{getLabel('ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }
-              { 'lobbyInfo' in scene
+              { scene.type === 'game' || scene.type === 'lobby'
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
                 : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
             </UserMenu> }
