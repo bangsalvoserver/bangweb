@@ -2,7 +2,7 @@ import { UpdateFunction } from "../../../Model/SceneState";
 import { UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
-import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
+import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveFameUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
 
 export interface Id {
     id: number
@@ -68,6 +68,7 @@ interface CardBase<T extends CardDeckOrData> extends Id {
 
     inactive: boolean;
     num_cubes: number;
+    num_fame: number;
     
     animation: CardAnimation & AnimationKey;
 }
@@ -120,6 +121,7 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
         pocket,
         inactive: false,
         num_cubes: 0,
+        num_fame: 0,
         animation: { type: 'none', key: 0}
     };
 }
@@ -187,6 +189,7 @@ export type TableAnimation =
     { type: 'none' } |
     { type: 'move_card' } & MoveCardUpdate & Duration |
     { type: 'move_cubes' } & MoveCubesUpdate & Duration |
+    { type: 'move_fame' } & MoveFameUpdate & Duration |
     { type: 'deck_shuffle' } & DeckShuffledUpdate & DeckCards & Duration |
     { type: 'move_train' } & MoveTrainUpdate & Duration |
     { type: 'move_players' } & MovePlayersUpdate & Duration;
@@ -234,7 +237,10 @@ export function newGameTable(myUserId: UserId): GameTable {
             button_row: [],
             stations: [],
             train: [],
-            train_deck: []
+            train_deck: [],
+            feats_deck: [],
+            feats_discard: [],
+            feats: []
         },
 
         alive_players: [],

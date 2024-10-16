@@ -33,6 +33,9 @@ export default function AnimationView({ tracker }: AnimationProps) {
             target_card={animation.target_card ? getCard(table, animation.target_card) : null}
             duration={animation.duration}
         />;
+    case 'move_fame':
+        // TODO
+        break;
     case 'deck_shuffle':
         return <DeckShuffleAnimation
             key={animation.key}

@@ -50,6 +50,17 @@ export interface MoveCubesUpdate {
     target_card: CardId | null;
 }
 
+export interface AddFameUpdate {
+    num_fame: number;
+    target_card: CardId;
+}
+
+export interface MoveFameUpdate {
+    num_fame: number;
+    origin_card: CardId;
+    target_card: CardId | null;
+}
+
 export interface MoveTrainUpdate {
     position: number;
 }
@@ -188,6 +199,8 @@ export type GameTableUpdate =
     { short_pause: ShortPauseUpdate & Duration } |
     { add_cubes: AddCubesUpdate } |
     { move_cubes: MoveCubesUpdate & Duration } |
+    { add_fame: AddFameUpdate } |
+    { move_fame: MoveFameUpdate & Duration } |
     { move_train: MoveTrainUpdate & Duration } |
     { game_flags: GameFlag[] };
 
@@ -198,6 +211,7 @@ export type SyntheticTableUpdate =
     { deck_shuffled_end: DeckShuffledUpdate } |
     { card_animation_end: CardId } |
     { move_cubes_end: MoveCubesUpdate } |
+    { move_fame_end: MoveFameUpdate } |
     { move_train_end: MoveTrainUpdate };
 
 export type TableUpdate = GameTableUpdate | SyntheticTableUpdate;

@@ -355,6 +355,27 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         });
     },
 
+    add_fame({ num_fame, target_card }) {
+        return {
+            ...this,
+            cards: editById(this.cards, target_card, card => ({ ...card, num_fame: card.num_fame + num_fame }))
+        };
+    },
+
+    move_fame({ num_fame, origin_card, target_card, duration }) {
+        return setAnimation({
+            ...this,
+            cards: editById(this.cards, origin_card, card => ({ ...card, num_fame: card.num_fame - num_fame }))
+        }, { type: 'move_fame', num_fame, origin_card, target_card, duration });
+    },
+
+    move_fame_end({ num_fame, target_card }) {
+        return clearAnimation(target_card
+            ? { ...this, cards: editById(this.cards, target_card, card => ({ ...card, num_fame: card.num_fame + num_fame }))}
+            : this
+        );
+    },
+
     // Changes the train_position field
     move_train ({ position, duration }) {
         return setAnimation(this, { type: 'move_train', position, duration })

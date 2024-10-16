@@ -78,6 +78,9 @@ export type TablePocketType =
     'button_row' |
     'stations' |
     'train_deck' |
+    'feats_deck' |
+    'feats_discard' |
+    'feats' |
     'train';
 
 export type PocketType = 'none' | PlayerPocketType | TablePocketType;

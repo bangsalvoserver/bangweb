@@ -177,6 +177,15 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
                 delayDispatch(update.duration, () => tableDispatch({ move_cubes_end: update }));
             },
         
+            add_fame(update) {
+                tableDispatch({ add_fame: update });
+            },
+        
+            move_fame(update) {
+                tableDispatch({ move_fame: update });
+                delayDispatch(update.duration, () => tableDispatch({ move_fame_end: update }));
+            },
+        
             move_train(update) {
                 tableDispatch({ move_train: update });
                 delayDispatch(update.duration, () => tableDispatch({ move_train_end: update }));
