@@ -32,6 +32,7 @@ export type ExpansionType =
     'fistfulofcards' |
     'wildwestshow' |
     'thebullet' |
+    'legends' |
     'canyondiablo';
 
 export type DeckType =
