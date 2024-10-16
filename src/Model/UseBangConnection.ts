@@ -86,7 +86,7 @@ export default function useBangConnection() {
                 gameChannel.clear();
                 sceneDispatch({ gotoLobby: message });
             },
-            lobby_edited(options) {
+            lobby_game_options(options) {
                 sceneDispatch({ setGameOptions: options });
             },
             lobby_removed({ lobby_id }) {
@@ -127,7 +127,7 @@ export default function useBangConnection() {
         if (scene.type !== 'lobby') {
             throw new Error('Invalid scene type for setGameOptions: ' + scene.type);
         }
-        connection.sendMessage({ lobby_edit: gameOptions });
+        connection.sendMessage({ lobby_game_options: gameOptions });
         sceneDispatch({ setGameOptions: gameOptions });
         settings.setGameOptions(gameOptions);
     });

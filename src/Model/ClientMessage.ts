@@ -26,7 +26,7 @@ export type ClientMessage =
     {user_set_name: string} |
     {user_set_propic: ImagePixels | null} |
     {lobby_make: LobbyMakeArgs} |
-    {lobby_edit: GameOptions} |
+    {lobby_game_options: GameOptions} |
     {lobby_join: LobbyJoinArgs} |
     {lobby_leave: Empty } |
     {lobby_chat: { message: string }} |

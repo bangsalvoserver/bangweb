@@ -68,7 +68,7 @@ export type ServerMessage =
     {lobby_error: string} |
     {lobby_update: LobbyUpdate} |
     {lobby_entered: LobbyEntered} |
-    {lobby_edited: GameOptions} |
+    {lobby_game_options: GameOptions} |
     {lobby_removed: LobbyRemoved} |
     {lobby_user_update: LobbyUserUpdate} |
     {lobby_user_propic: LobbyUserPropic} |
