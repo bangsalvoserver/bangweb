@@ -6,16 +6,25 @@ import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import './Style/GameOptionsEditor.css';
 
+export type AddExpansion = (expansions: ExpansionType[], value: ExpansionType) => ExpansionType[];
+
 export interface GameOptionProps {
     gameOptions: GameOptions;
     setGameOptions: (gameOptions: GameOptions) => void;
     readOnly: boolean;
+    addExpansion?: AddExpansion;
 }
 
 type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
 type GameOptionsOf<T> = keyof { [Property in FilteredKeys<Required<GameOptions>, T>]: unknown };
 
-function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly }: GameOptionProps & { name: ExpansionType }) {
+const defaultAddExpansion: AddExpansion = (expansions, value) => expansions.concat(value);
+
+function addExpansionWithout(...without: ExpansionType[]): AddExpansion {
+    return (expansions, value) => expansions.filter(e => !without.includes(e)).concat(value);
+}
+
+function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, addExpansion }: GameOptionProps & { name: ExpansionType }) {
     const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
         const oldValue = gameOptions.expansions.includes(name);
         const newValue = event.target.checked;
@@ -23,7 +32,7 @@ function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly }: Game
             setGameOptions({
                 ...gameOptions,
                 expansions: newValue
-                    ? gameOptions.expansions.concat(name)
+                    ? (addExpansion ?? defaultAddExpansion)(gameOptions.expansions, name)
                     : gameOptions.expansions.filter(e => e !== name)
             });
         }
@@ -118,7 +127,8 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='goldrush' { ...props } />
             <ExpansionCheckbox name='armedanddangerous' { ...props } />
             <ExpansionCheckbox name='greattrainrobbery' { ...props } />
-            <ExpansionCheckbox name='valleyofshadows' { ...props } />
+            <ExpansionCheckbox name='valleyofshadows' addExpansion={addExpansionWithout('udolistinu')} { ...props } />
+            <ExpansionCheckbox name='udolistinu' addExpansion={addExpansionWithout('valleyofshadows')} { ...props } />
             <ExpansionCheckbox name='highnoon' { ...props } />
             <ExpansionCheckbox name='fistfulofcards' { ...props } />
             <ExpansionCheckbox name='wildwestshow' { ...props } />
@@ -130,7 +140,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 {expandOptions ? '+' : '-'} {getLabel('ui', 'GAME_OPTIONS')}
             </div>
             <div className={expandOptions ? "game-options-visible" : "game-options-collapsed"}>
-                <ConditionalOnExpansion expansions={['greattrainrobbery','valleyofshadows','highnoon','fistfulofcards','wildwestshow']}>
+                <ConditionalOnExpansion expansions={['greattrainrobbery','valleyofshadows','udolistinu','highnoon','fistfulofcards','wildwestshow']}>
                     <OptionCheckbox prop='enable_ghost_cards' { ...props } />
                 </ConditionalOnExpansion>
                 <OptionCheckbox prop='character_choice' { ...props } />
@@ -140,10 +150,10 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
                     <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
                 </ConditionalOnExpansion>
-                <ConditionalOnExpansion expansions={['valleyofshadows','canyondiablo']}>
+                <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu','canyondiablo']}>
                     <OptionNumber prop='damage_timer' max={5000} { ...props } />
                 </ConditionalOnExpansion>
-                <ConditionalOnExpansion expansions={['valleyofshadows']}>
+                <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu']}>
                     <OptionNumber prop='escape_timer' max={10000} { ...props } />
                 </ConditionalOnExpansion>
                 <ConditionalOnExpansion expansions={['armedanddangerous']}>
