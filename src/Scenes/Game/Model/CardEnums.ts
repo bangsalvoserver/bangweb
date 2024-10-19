@@ -28,6 +28,7 @@ export type ExpansionType =
     'armedanddangerous' |
     'greattrainrobbery' |
     'valleyofshadows' |
+    'udolistinu' |
     'highnoon' |
     'fistfulofcards' |
     'wildwestshow' |
