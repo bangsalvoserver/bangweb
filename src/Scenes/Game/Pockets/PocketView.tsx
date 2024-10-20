@@ -8,7 +8,6 @@ import { getCard } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import CardSlot, { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import "./Style/PocketView.css";
-import { curry2 } from "ts-curry";
 
 export interface PocketProps {
     pocketRef?: Ref<PocketRef>;
@@ -19,7 +18,7 @@ export default function PocketView({ pocketRef, cards }: PocketProps) {
     const { table } = useContext(GameStateContext);
     const divRef = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
-    const setPos = curry2(cardRefs.set);
+    const setPos = (key: CardId) => (value: CardRef | null) => cardRefs.set(key, value);
 
     useImperativeHandle(pocketRef, () => ({
         getPocketRect: () => divRef.current ? getDivRect(divRef.current) : null,
