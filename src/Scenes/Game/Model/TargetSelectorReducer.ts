@@ -100,6 +100,7 @@ function handleEndPreselection(table: GameTable, selector: TargetSelector, remov
         if (isCardModifier(selector.preselection.card, isResponse(selector))) {
             return {
                 ...selector,
+                prompt: { type: 'none' },
                 modifiers: [selector.preselection],
                 preselection: remove ? null : selector.preselection,
                 mode: 'middle'
@@ -107,6 +108,7 @@ function handleEndPreselection(table: GameTable, selector: TargetSelector, remov
         } else {
             return handleAutoTargets(table, {
                 ...selector,
+                prompt: { type: 'none' },
                 selection: selector.preselection,
                 preselection: null,
                 modifiers: [],

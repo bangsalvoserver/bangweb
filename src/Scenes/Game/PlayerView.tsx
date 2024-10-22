@@ -1,6 +1,7 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
-import { curry2 } from "ts-curry";
-import { Rect, getDivRect } from "../../Utils/Rect";
+import Button from "../../Components/Button";
+import getLabel from "../../Locale/GetLabel";
+import { getDivRect, Rect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
 import { GameStateContext } from "./GameScene";
@@ -16,8 +17,6 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import getLabel from "../../Locale/GetLabel";
-import Button from "../../Components/Button";
 
 export interface PlayerProps {
     playerRef?: Ref<PlayerRef>;
@@ -92,7 +91,7 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
         getPocket: pocket => pocketRefs.get(pocket)
     }));
 
-    const setRef = curry2(pocketRefs.set);
+    const setRef = (key: PocketType) => (value: PocketRef | null) => pocketRefs.set(key, value);
     const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
         return (pocket: PocketRef | null) => {
             pocketRefs.set(key, pocket ? clampedPocket(pocket, scrollRef) : null);

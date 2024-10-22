@@ -217,15 +217,13 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
     return selector.prompt.type === 'playpick' && selector.prompt.card.id === card.id;
 }
 
+function checkSelections(selector: TargetSelector, fn: (target: CardTarget) => boolean) {
+    return (selector.selection && selector.selection.targets.some(fn))
+        || selector.modifiers.some(selections => selections.targets.some(fn));
+}
+
 export function isCardSelected(selector: TargetSelector, card: CardId): boolean {
-    const check = (target: CardTarget) => targetDispatch.isCardSelected(target, card);
-    if (selector.selection?.targets.some(check)) {
-        return true;
-    }
-    if (selector.modifiers.some(({targets}) => targets.some(check))) {
-        return true;
-    }
-    return false;
+    return checkSelections(selector, target => targetDispatch.isCardSelected(target, card));
 }
 
 export function isHandSelected(table: GameTable, selector: TargetSelector, card: Card): boolean {
@@ -239,14 +237,7 @@ export function isHandSelected(table: GameTable, selector: TargetSelector, card:
 }
 
 export function isPlayerSelected(selector: TargetSelector, player: PlayerId): boolean {
-    const check = (target: CardTarget) => targetDispatch.isPlayerSelected(target, player);
-    if (selector.selection?.targets.some(check)) {
-        return true;
-    }
-    if (selector.modifiers.some(({targets}) => targets.some(check))) {
-        return true;
-    }
-    return false;
+    return checkSelections(selector, target => targetDispatch.isPlayerSelected(target, player));
 }
 
 export function countSelectedCubes(selector: TargetSelector, targetCard: Card): number {

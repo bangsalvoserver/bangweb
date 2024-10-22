@@ -39,6 +39,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         thebullet:              "Dynamite Box",
         dodgecity:              "Dodge City",
         valleyofshadows:        "Valley of Shadows",
+        udolistinu:             "Valley Of Shadows (original version)",
         greattrainrobbery:      "The Great Train Robbery",
         wildwestshow:           "Wild West Show",
         goldrush:               "Gold Rush",
