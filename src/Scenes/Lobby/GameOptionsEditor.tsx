@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, ReactNode, useCallback } from "react";
+import { ChangeEvent, ReactNode, useCallback } from "react";
 import Tooltip from "../../Components/Tooltip";
 import getLabel from "../../Locale/GetLabel";
 import { boolConverter, useLocalStorage } from "../../Utils/UseLocalStorage";
@@ -6,25 +6,27 @@ import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import './Style/GameOptionsEditor.css';
 
-export type AddExpansion = (expansions: ExpansionType[], value: ExpansionType) => ExpansionType[];
+export type AddExpansion = (value: ExpansionType, expansions: ExpansionType[]) => ExpansionType[];
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
     setGameOptions: (gameOptions: GameOptions) => void;
     readOnly: boolean;
-    addExpansion?: AddExpansion;
 }
 
 type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
 type GameOptionsOf<T> = keyof { [Property in FilteredKeys<Required<GameOptions>, T>]: unknown };
 
-const defaultAddExpansion: AddExpansion = (expansions, value) => expansions.concat(value);
-
-function addExpansionWithout(...without: ExpansionType[]): AddExpansion {
-    return (expansions, value) => expansions.filter(e => !without.includes(e)).concat(value);
+interface ExpansionProps extends GameOptionProps {
+    name: ExpansionType;
+    addExpansion: AddExpansion;
 }
 
-function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, addExpansion }: GameOptionProps & { name: ExpansionType }) {
+function addExpansionWithout(...without: ExpansionType[]): AddExpansion {
+    return (value, expansions) => expansions.filter(e => !without.includes(e)).concat(value);
+}
+
+function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, addExpansion }: ExpansionProps) {
     const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
         const oldValue = gameOptions.expansions.includes(name);
         const newValue = event.target.checked;
@@ -32,7 +34,7 @@ function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, addExp
             setGameOptions({
                 ...gameOptions,
                 expansions: newValue
-                    ? (addExpansion ?? defaultAddExpansion)(gameOptions.expansions, name)
+                    ? addExpansion(name, gameOptions.expansions)
                     : gameOptions.expansions.filter(e => e !== name)
             });
         }
@@ -48,15 +50,11 @@ function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, addExp
     </div>);
 }
 
-function UnofficialExpansionCheckbox(props: GameOptionProps & { enabled: boolean | undefined } & { name: ExpansionType }) {
-    if (props.gameOptions.expansions.includes(props.name) || props.enabled) {
-        return <ExpansionCheckbox { ...props } />;
-    } else {
-        return null;
-    }
+interface BoolGameOptionProps extends GameOptionProps {
+    prop: GameOptionsOf<boolean>;
 }
 
-function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<boolean> }) {
+function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: BoolGameOptionProps) {
     const handleOptionChange = (event: ChangeEvent<HTMLInputElement>) => {
         setGameOptions({
             ...gameOptions,
@@ -76,7 +74,12 @@ function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: GameOpt
     </div>)
 };
 
-function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: GameOptionProps & { prop: GameOptionsOf<number>, max?: number }) {
+interface IntGameOptionProps extends GameOptionProps {
+    prop: GameOptionsOf<number>;
+    max?: number;
+}
+
+function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: IntGameOptionProps) {
     const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length === 0) {
             setGameOptions({ ...gameOptions, [prop]: undefined });
@@ -103,14 +106,7 @@ function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: Game
 }
 
 export default function GameOptionsEditor(props: GameOptionProps) {
-    const [enableUnofficial, setEnableUnofficial] = useLocalStorage('enable_unofficial', boolConverter);
     const [expandOptions, setExpandOptions] = useLocalStorage('expand_options', boolConverter);
-
-    const handleKeyDown = (ev: KeyboardEvent<HTMLDivElement>) => {
-        if (ev.key === 'x') {
-            setEnableUnofficial(value => !value);
-        }
-    };
 
     const ConditionalOnExpansion = useCallback(({ expansions, children }: { expansions: ExpansionType[], children: ReactNode }) => {
         if (expansions.some(value => props.gameOptions.expansions.includes(value))) {
@@ -121,20 +117,20 @@ export default function GameOptionsEditor(props: GameOptionProps) {
     }, [props.gameOptions.expansions]);
 
     return (<div className="game-options-editor">
-        <div className="game-options-group" tabIndex={0} onKeyDown={handleKeyDown}>
+        <div className="game-options-group">
             <div className="game-options-group-header">{getLabel('GameOptions', 'expansions')}</div>
-            <ExpansionCheckbox name='dodgecity' { ...props } />
-            <ExpansionCheckbox name='goldrush' { ...props } />
-            <ExpansionCheckbox name='armedanddangerous' { ...props } />
-            <ExpansionCheckbox name='greattrainrobbery' { ...props } />
-            <ExpansionCheckbox name='valleyofshadows' addExpansion={addExpansionWithout('udolistinu')} { ...props } />
-            <ExpansionCheckbox name='udolistinu' addExpansion={addExpansionWithout('valleyofshadows')} { ...props } />
-            <ExpansionCheckbox name='highnoon' { ...props } />
-            <ExpansionCheckbox name='fistfulofcards' { ...props } />
-            <ExpansionCheckbox name='wildwestshow' { ...props } />
-            <ExpansionCheckbox name='legends' { ...props } />
-            <ExpansionCheckbox name='thebullet' { ...props } />
-            <UnofficialExpansionCheckbox name='canyondiablo' enabled={enableUnofficial} { ...props } />
+            <ExpansionCheckbox name='dodgecity' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='goldrush' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='armedanddangerous' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='greattrainrobbery' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='valleyofshadows' addExpansion={addExpansionWithout('legends', 'udolistinu')} { ...props } />
+            <ExpansionCheckbox name='udolistinu' addExpansion={addExpansionWithout('legends', 'valleyofshadows')} { ...props } />
+            <ExpansionCheckbox name='highnoon' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='fistfulofcards' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='wildwestshow' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='legends' addExpansion={value => [value]} { ...props } />
+            <ExpansionCheckbox name='thebullet' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='canyondiablo' addExpansion={addExpansionWithout('legends')} { ...props } />
         </div>
         <div className="game-options-group">
             <div className="game-options-group-header cursor-pointer" onClick={() => setExpandOptions(value => !value)}>
