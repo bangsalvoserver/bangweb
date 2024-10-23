@@ -145,6 +145,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 </ConditionalOnExpansion>
                 <OptionCheckbox prop='character_choice' { ...props } />
                 <OptionCheckbox prop='quick_discard_all' { ...props } />
+                <OptionCheckbox prop='auto_pick_predraw' { ...props } />
                 <OptionNumber prop='num_bots' max={8} { ...props } />
                 <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
                 <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
