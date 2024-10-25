@@ -2,9 +2,9 @@ import { Id } from "../Scenes/Game/Model/GameTable";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { UserValue } from "../Scenes/Lobby/LobbyUser";
 import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
-import { deserializeImage } from "../Utils/ImageSerial";
 import { createUnionReducer } from "../Utils/UnionUtils";
-import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyUpdate, LobbyUserPropic, LobbyUserUpdate, UserId } from "./ServerMessage";
+import Env from "./Env";
+import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyUpdate, LobbyUserUpdate, UserId } from "./ServerMessage";
 
 export interface LobbyState {
     lobbyId: LobbyId;
@@ -54,7 +54,6 @@ export type SceneUpdate =
     { removeLobby: LobbyId } |
     { setGameOptions: GameOptions } |
     { updateLobbyUser: LobbyUserUpdate } |
-    { updateUserPropic: LobbyUserPropic } |
     { addLobbyChatMessage: ChatMessage };
 
 export function defaultCurrentScene(sessionId?: number): SceneState {
@@ -80,8 +79,14 @@ function newLobbyValue({ lobby_id, name, num_players, num_spectators, max_player
     return { id: lobby_id, name, num_players, num_spectators, max_players, secure, state };
 }
 
-function newUserValue({ user_id, username, flags, lifetime }: LobbyUserUpdate): UserValue {
-    return { id: user_id, name: username, flags, lifetime };
+function getPropicUrl(propic: string | null): string | undefined {
+    if (propic) {
+        return `${Env.bangImageUrl}/${propic}`;
+    }
+}
+
+function newUserValue({ user_id, username, propic, flags, lifetime }: LobbyUserUpdate): UserValue {
+    return { id: user_id, name: username, propic: getPropicUrl(propic), flags, lifetime };
 }
 
 export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
@@ -136,17 +141,6 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
             throw new Error('Invalid scene type for updateLobbyUser: ' + this.type);
         }
         return { ...this, lobbyState: { ...this.lobbyState, users: handleListUpdate(this.lobbyState.users, newUserValue(update)) }};
-    },
-    updateUserPropic({ user_id, propic }) {
-        if (this.type !== 'lobby' && this.type !== 'game') {
-            throw new Error('Invalid scene type for updateUserPropic: ' + this.type);
-        }
-        return { ...this, lobbyState: { ...this.lobbyState,
-            users: this.lobbyState.users.map(user => user.id === user_id
-                ? { ...user, propic: deserializeImage(propic) }
-                : user 
-            )
-        }};
     },
     addLobbyChatMessage(message) {
         if (this.type !== 'lobby' && this.type !== 'game') {

@@ -1,11 +1,11 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
-import { ImagePixels } from "../Utils/ImageSerial";
+import { ImageSrc } from "../Utils/ImageSerial";
 import { Empty, LobbyId, UserId } from "./ServerMessage";
 
 export interface ClientConnect {
     username: string;
-    propic: ImagePixels | null;
+    propic: ImageSrc | null;
     session_id: number;
 }
 
@@ -24,7 +24,7 @@ export type ClientMessage =
     {pong: Empty} |
     {connect: ClientConnect} |
     {user_set_name: string} |
-    {user_set_propic: ImagePixels | null} |
+    {user_set_propic: ImageSrc | null} |
     {lobby_make: LobbyMakeArgs} |
     {lobby_game_options: GameOptions} |
     {lobby_join: LobbyJoinArgs} |
