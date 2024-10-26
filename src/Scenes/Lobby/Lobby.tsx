@@ -3,14 +3,14 @@ import useEvent from 'react-use-event-hook';
 import Button from '../../Components/Button';
 import getLabel from '../../Locale/GetLabel';
 import { LobbyState, isLobbyOwner, newLobbyState } from '../../Model/SceneState';
-import { UserId } from '../../Model/ServerMessage';
+import { UserId, UserValue } from '../../Model/ServerMessage';
 import { BangConnection } from '../../Model/UseBangConnection';
 import { GameOptions } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
-import LobbyUser, { UserValue } from './LobbyUser';
+import LobbyUser from './LobbyUser';
 
 export function getUser(users: UserValue[], id: UserId): UserValue {
-  const user = users.find(user => user.id === id);
+  const user = users.find(user => user.user_id === id);
   if (!user) {
     throw new Error('cannot find user ' + id);
   }
@@ -44,7 +44,7 @@ export default function LobbyScene({ gameOptions, setGameOptions, connection, lo
               if (user.flags.includes('disconnected')) {
                 return [];
               }
-              return <LobbyUser align='vertical' key={user.id} user={user} isSelf={user.id === lobbyState.myUserId} />;
+              return <LobbyUser align='vertical' key={user.user_id} user={user} isSelf={user.user_id === lobbyState.myUserId} />;
             })}
           </div>
         </div>

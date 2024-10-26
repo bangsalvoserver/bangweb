@@ -39,7 +39,7 @@ export function PlayerNameView({ id }: PlayerNameProps) {
 
     const player = getPlayer(table, id);
     const user = getUser(users, player.user_id);
-    const username = clipUsername(user.name);
+    const username = clipUsername(user.username);
     
     return <span className="player-name">{username}</span>;
 }

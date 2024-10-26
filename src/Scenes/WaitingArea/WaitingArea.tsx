@@ -3,9 +3,9 @@ import BangLogo from "../../Components/BangLogo";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
 import AppSettings, { MAX_LOBBY_NAME_LENGTH } from "../../Model/AppSettings";
-import { LobbyId } from "../../Model/ServerMessage";
+import { LobbyId, LobbyValue } from "../../Model/ServerMessage";
 import { BangConnection } from "../../Model/UseBangConnection";
-import LobbyElement, { LobbyValue } from "./LobbyElement";
+import LobbyElement from "./LobbyElement";
 import './Style/WaitingArea.css';
 
 export interface WaitingAreaProps {
@@ -81,7 +81,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
       </form>
       <div className='lobby-list'>
         {lobbies.map((lobby) => (
-          <LobbyElement key={lobby.id} lobby={lobby} onClickJoin={handleClickJoin} />
+          <LobbyElement key={lobby.lobby_id} lobby={lobby} onClickJoin={handleClickJoin} />
         ))}
       </div>
     </div>

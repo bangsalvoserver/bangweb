@@ -1,9 +1,10 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
+import { UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
-import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
+import LobbyUser from "../Lobby/LobbyUser";
 import { GameStateContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";

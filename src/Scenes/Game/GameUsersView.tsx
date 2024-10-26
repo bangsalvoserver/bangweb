@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react";
-import { UserId } from "../../Model/ServerMessage";
+import { UserId, UserValue } from "../../Model/ServerMessage";
 import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
 import { getUser, LobbyContext } from "../Lobby/Lobby";
-import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
+import LobbyUser from "../Lobby/LobbyUser";
 import { GameStateContext } from "./GameScene";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { Player } from "./Model/GameTable";
@@ -43,7 +43,7 @@ function GameUserPlayer({ player, user, myUserId }: GameUserProps) {
         </div>;
     }, [player]);
 
-    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user.id}>
+    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user.user_id}>
         { playerIcons }
     </LobbyUser>;
 }
@@ -68,7 +68,7 @@ export default function GameUsersView() {
         }
 
         return players.map(([user, player]) =>
-            <GameUserPlayer key={user.id} player={player} user={user} myUserId={myUserId} />
+            <GameUserPlayer key={user.user_id} player={player} user={user} myUserId={myUserId} />
         );
     }, [users, myUserId, table.players]);
 

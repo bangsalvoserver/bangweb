@@ -29,7 +29,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
   const handleReturnLobby = () => connection.sendMessage({ lobby_return: {}});
 
-  const myUser = scene.type === 'lobby' ? scene.lobbyState.users.find(user => user.id === scene.lobbyState.myUserId) : undefined;
+  const myUser = scene.type === 'lobby' ? scene.lobbyState.users.find(user => user.user_id === scene.lobbyState.myUserId) : undefined;
   const isSpectator = myUser?.flags.includes('spectator') ?? false;
   const handleToggleSpectate = () => connection.sendMessage({ user_spectate: !isSpectator });
 
