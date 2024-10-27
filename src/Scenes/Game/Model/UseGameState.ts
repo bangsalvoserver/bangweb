@@ -55,22 +55,22 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
     const tableDispatch = (update: TableUpdate) => stateDispatch({ table_update: update });
     const selectorDispatch = (update: SelectorUpdate) => stateDispatch({ selector_update: update });
 
-    useEffect(() => {
-        let timeout : number | undefined;
-        let extraTime: Milliseconds = 0;
+    const timeout = useRef<number>();
+    const extraTime = useRef<Milliseconds>(0);
 
+    useEffect(() => {
         const delayDispatch = (duration: Milliseconds, fn?: () => void) => {
-            duration -= extraTime;
+            duration -= extraTime.current;
             if (duration <= 0) {
                 if (fn) fn();
-                extraTime = -duration;
+                extraTime.current = -duration;
             } else {
                 const startTime = Date.now();
-                timeout = setTimeout(() => {
+                timeout.current = setTimeout(() => {
                     const timeElapsed = Date.now() - startTime;
-                    timeout = undefined;
+                    timeout.current = undefined;
                     if (fn) fn();
-                    extraTime = timeElapsed - duration;
+                    extraTime.current = timeElapsed - duration;
                     handleNextUpdate();
                 }, duration);
             }
@@ -205,10 +205,10 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
         });
 
         const handleNextUpdate = () => {
-            while (!timeout) {
+            while (!timeout.current) {
                 const update = gameUpdates.current.shift();
                 if (!update) {
-                    extraTime = 0;
+                    extraTime.current = 0;
                     break;
                 }
                 handleUpdate(update);
@@ -220,10 +220,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
             handleNextUpdate();
         });
 
-        return () => {
-            clearTimeout(timeout);
-            gameChannel.unsubscribe();
-        }
+        return gameChannel.unsubscribe;
     }, [gameChannel, playSound]);
 
     return { state, selectorDispatch, gameLogs, gameError, clearGameError } as const;
