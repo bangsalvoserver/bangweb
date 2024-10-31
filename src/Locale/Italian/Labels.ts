@@ -122,6 +122,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         KICK_DESCRIPTION: cmd => `${cmd} nome_utente_o_id : caccia un utente da questa lobby`,
         MUTE_DESCRIPTION: cmd => `${cmd} nome_utente_o_id : muta un utente in questa lobby`,
         UNMUTE_DESCRIPTION: cmd => `${cmd} nome_utente_o_id : smuta un utente in questa lobby`,
+        APPOINT_DESCRIPTION: cmd => `${cmd} nome_utente_o_id : cedi la proprietà di questa lobby`,
         GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : visualizza le opzioni di gioco`,
         SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : modifica un'opzione di gioco`,
         RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : resetta le opzioni di gioco`,

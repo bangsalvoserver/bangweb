@@ -35,7 +35,7 @@ export interface LobbyRemoved {
 
 export type LobbyChatFlag = 'is_read' | 'translated';
 
-export type LobbyUserFlag = 'disconnected' | 'spectator' | 'muted';
+export type LobbyUserFlag = 'disconnected' | 'lobby_owner' | 'spectator' | 'muted';
 
 export interface UserValue {
     user_id: UserId;

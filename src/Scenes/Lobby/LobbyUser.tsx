@@ -28,6 +28,7 @@ export function clipUsername(username: string): string {
 
 export default function LobbyUser({ user: { username, propic, flags, lifetime}, isSelf, align, children }: LobbyUserProps) {
   const timerWidget = lifetime > 0 && <TimerWidget duration={lifetime} />;
+  const isOwner = flags.includes('lobby_owner');
   const isSpectator = flags.includes('spectator');
   const isDisconnected = flags.includes('disconnected');
   return (
@@ -38,8 +39,11 @@ export default function LobbyUser({ user: { username, propic, flags, lifetime}, 
       <div className='lobby-username'>
         <span className={isSelf ? 'lobby-username-self' : ''}>{clipUsername(username)}</span>
         { isDisconnected ? <div className="mx-1 align-middle player-icon icon-disconnected"/>
-        : isSpectator ? <div className="mx-1 align-middle player-icon icon-spectator"/>
-        : null }
+        : <>
+          {isOwner && <div className="mx-1 align-middle player-icon icon-owner"/>}
+          {isSpectator && <div className="mx-1 align-middle player-icon icon-spectator"/>}
+          </>
+        }
         {timerWidget}
       </div>
       {children}

@@ -1,6 +1,6 @@
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { createUnionReducer } from "../Utils/UnionUtils";
-import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyValue, UserId, UserValue } from "./ServerMessage";
+import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyUserFlag, LobbyValue, UserId, UserValue } from "./ServerMessage";
 
 export interface LobbyState {
     lobbyId: LobbyId;
@@ -17,13 +17,9 @@ export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
     };
 }
 
-export function isLobbyOwner(lobby: LobbyState) {
-    for (const user of lobby.users) {
-        if (!user.flags.includes('disconnected')) {
-            return user.user_id === lobby.myUserId;
-        }
-    }
-    return false;
+export function checkMyUserFlag(lobbyState: LobbyState, flag: LobbyUserFlag) {
+    const myUser = lobbyState.users.find(user => user.user_id === lobbyState.myUserId);
+    return myUser !== undefined && myUser.flags.includes(flag);
 }
 
 export type ErrorState =

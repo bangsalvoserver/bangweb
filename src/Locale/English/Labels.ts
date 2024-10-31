@@ -122,6 +122,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         KICK_DESCRIPTION: cmd => `${cmd} username_or_id : kick an user in this lobby`,
         MUTE_DESCRIPTION: cmd => `${cmd} username_or_id : mute an user in this lobby`,
         UNMUTE_DESCRIPTION: cmd => `${cmd} username_or_id : unmute an user in this lobby`,
+        APPOINT_DESCRIPTION: cmd => `${cmd} username_or_id : give away ownership of this lobby`,
         GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : print game options`,
         SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : set a game option`,
         RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : reset game options`,

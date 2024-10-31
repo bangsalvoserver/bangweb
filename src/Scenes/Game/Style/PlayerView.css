@@ -240,6 +240,13 @@
     --icon-color: #ff0000ff;
 }
 
+.icon-owner {
+    /* TODO da capire */
+    display: none;
+    --icon-url: url('/media/icon_owner.png');
+    --icon-color: #94a4af;
+}
+
 .icon-spectator {
     --icon-url: url('/media/icon_spectator.png'); 
     --icon-color: #94a4af;
