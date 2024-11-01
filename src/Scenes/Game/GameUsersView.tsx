@@ -34,18 +34,16 @@ function GameUserPlayer({ player, user, myUserId }: GameUserProps) {
     const playerIcons = useMemo(() => {
         const role = getRoleIcon(player);
         const isWinner = player && player.status.flags.includes('winner');
-        return <div className="game-player-icons">
-            { role && <div className={`player-icon ${role}`}/> }
-            { isWinner && <div className="player-icon icon-winner"/> }
-            { player && isPlayerDead(player) && (isPlayerGhost(player)
-                ? <div className="player-icon icon-ghost"/>
-                : <div className="player-icon icon-dead"/> ) }
-        </div>;
+        let icons: string[] = [];
+        if (role) icons.push(role);
+        if (isWinner) icons.push('icon-winner');
+        if (player && isPlayerDead(player)) {
+            icons.push(isPlayerGhost(player) ? 'icon-ghost' : 'icon-dead');
+        }
+        return icons;
     }, [player]);
 
-    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user.user_id}>
-        { playerIcons }
-    </LobbyUser>;
+    return <LobbyUser align='horizontal' user={user} isSelf={myUserId === user.user_id} playerIcons={playerIcons} />;
 }
 
 export default function GameUsersView() {
