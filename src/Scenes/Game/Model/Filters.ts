@@ -121,12 +121,10 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (isPlayerSelected(selector, target.id)) return false;
 
-    if (!filter.includes('dead_or_alive')) {
-        if (filter.includes('dead')) {
-            if (!target.status.flags.includes('dead')) return false;
-        } else {
-            if (!isPlayerInGame(target)) return false;
-        }
+    if (!filter.includes('dead_or_alive')
+        && filter.includes('dead') === isPlayerInGame(target)
+    ) {
+        return false;
     }
 
     if (filter.includes('self') && target.id !== origin?.id) return false;
