@@ -2,15 +2,15 @@ import { useContext } from "react";
 import Button, { ButtonColor } from "../../Components/Button";
 import TimerWidget from "../../Components/TimerWidget";
 import getLabel from "../../Locale/GetLabel";
-import { isLobbyOwner } from "../../Model/SceneState";
+import { checkMyUserFlag } from "../../Model/SceneState";
 import { LobbyContext } from "../Lobby/Lobby";
 import { GameStateContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
+import { getTagValue } from "./Model/Filters";
 import { getCard, KnownCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
-import { getTagValue } from "./Model/Filters";
 
 export interface StatusProps {
   gameError: GameString | undefined;
@@ -60,7 +60,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
   if (isGameOver) {
     return <div className="status-bar">
       {getLabel('ui', 'STATUS_GAME_OVER')}
-      {isLobbyOwner(lobbyState) && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>}
+      {checkMyUserFlag(lobbyState, 'lobby_owner') && <Button color='green' onClick={handleReturnLobby}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</Button>}
     </div>
   } else if (gameError) {
     return <div className="status-bar status-bar-error">

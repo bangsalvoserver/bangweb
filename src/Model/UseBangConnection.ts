@@ -95,9 +95,6 @@ export default function useBangConnection() {
             lobby_user_update(message) {
                 sceneDispatch({ updateLobbyUser: message });
             },
-            lobby_user_propic(message) {
-                sceneDispatch({ updateUserPropic: message })
-            },
             lobby_kick() {
                 sceneDispatch({ gotoWaitingArea: {} });
             },

@@ -69,8 +69,7 @@ export function isPlayerInGame(player: Player): boolean {
 }
 
 export function isBangCard(table: GameTable, origin: Player, card: Card): boolean {
-    return table.status.flags.includes('treat_any_as_bang')
-        || origin.status.flags.includes('treat_any_as_bang')
+    return origin.status.flags.includes('treat_any_as_bang')
         || cardHasTag(card, 'bangcard')
         || (origin.status.flags.includes('treat_missed_as_bang') && cardHasTag(card, 'missed'));
 }
@@ -121,12 +120,10 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (isPlayerSelected(selector, target.id)) return false;
 
-    if (!filter.includes('dead_or_alive')) {
-        if (filter.includes('dead')) {
-            if (!target.status.flags.includes('dead')) return false;
-        } else {
-            if (!isPlayerInGame(target)) return false;
-        }
+    if (!filter.includes('dead_or_alive')
+        && filter.includes('dead') === isPlayerInGame(target)
+    ) {
+        return false;
     }
 
     if (filter.includes('self') && target.id !== origin?.id) return false;
@@ -223,6 +220,7 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
 
     if (filter.includes('beer') && !cardHasTag(target, 'beer')) return false;
     if (filter.includes('bang') && !isBangCard(table, origin, target)) return false;
+    if (filter.includes('used_bang') && !(table.status.flags.includes('showdown') || isBangCard(table, origin, target))) return false;
     if (filter.includes('bangcard') && !cardHasTag(target, 'bangcard')) return false;
     if (filter.includes('not_bangcard') && cardHasTag(target, 'bangcard')) return false;
     if (filter.includes('missed') && !cardHasTag(target, 'missed')) return false;

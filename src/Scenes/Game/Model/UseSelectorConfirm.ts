@@ -1,10 +1,9 @@
 import { Dispatch, DispatchWithoutAction, createContext, useEffect, useMemo, useRef } from "react";
 import { BangConnection } from "../../../Model/UseBangConnection";
 import { GameAction } from "./GameAction";
-import { Card, GameTable, Player, getCard, getPlayer } from "./GameTable";
+import { Card, GameTable, Player } from "./GameTable";
 import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
-import { getCardOwner, getCardPocket } from "./Filters";
 
 function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
     const bypass_prompt = selector.prompt.type === 'yesno' && selector.prompt.response;
@@ -37,16 +36,11 @@ export function useSendGameAction(selector: TargetSelector, connection: BangConn
 function getClickCardUpdate(table: GameTable, selector: TargetSelector, card: Card): SelectorUpdate | undefined {
     switch (selector.mode) {
     case 'target':
-    case 'modifier': {
-        let cardTarget = card;
-        if (getCardPocket(card) === 'player_character') {
-            cardTarget = getCard(table, getPlayer(table, getCardOwner(card)!).pockets.player_character[0]);
-        }
-        if (isValidCardTarget(table, selector, cardTarget)) {
-            return { addCardTarget: cardTarget };
+    case 'modifier':
+        if (isValidCardTarget(table, selector, card)) {
+            return { addCardTarget: card };
         }
         break;
-    }
     case 'preselect':  {
         const canPlay = selectorCanPlayCard(selector, card);
         const canPick = isValidCardTarget(table, selector, card);
@@ -60,11 +54,10 @@ function getClickCardUpdate(table: GameTable, selector: TargetSelector, card: Ca
         break;
     }
     case 'start':
-    case 'middle': {
+    case 'middle':
         if (selectorCanPlayCard(selector, card)) {
             return { selectPlayingCard: card };
         }
-    }
     }
 }
 

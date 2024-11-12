@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef } from "react";
-import useEvent from "react-use-event-hook";
 import { computeIfAbsent } from "./ArrayUtils";
 
 const soundsMap = new Map<string, HTMLAudioElement>();
@@ -24,7 +23,7 @@ export default function usePlaySound(muteSounds: boolean = false) {
         return clearCurrentAudio;
     }, [muteSounds, clearCurrentAudio]);
 
-    const playSound = useEvent((name: string) => {
+    const playSound = useCallback((name: string) => {
         if (!muteSounds) {
             clearCurrentAudio();
 
@@ -34,7 +33,7 @@ export default function usePlaySound(muteSounds: boolean = false) {
             sound.addEventListener('ended', clearCurrentAudio);
             sound.play();
         }
-    });
+    }, [muteSounds, clearCurrentAudio]);
 
     return playSound;
 }

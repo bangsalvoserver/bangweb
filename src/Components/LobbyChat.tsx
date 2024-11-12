@@ -73,7 +73,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     };
 
     const transformChatArg = useMemo(() => createUnionDispatch<LobbyChatArg, string>({
-        user: user_id => clipUsername(getUser(users, user_id).name),
+        user: user_id => clipUsername(getUser(users, user_id).username),
         integer: value => value.toString(),
         string: value => value
     }), [users]);
@@ -87,7 +87,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
             }
         } else {
             const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return <p className={pClass}><span className='username'>{clipUsername(getUser(users, props.user_id).name)}</span> : {props.message}</p>;
+            return <p className={pClass}><span className='username'>{clipUsername(getUser(users, props.user_id).username)}</span> : {props.message}</p>;
         }
     }, [users, myUserId, transformChatArg]);
 

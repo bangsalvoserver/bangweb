@@ -1,10 +1,6 @@
-import { Id } from "../Scenes/Game/Model/GameTable";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
-import { UserValue } from "../Scenes/Lobby/LobbyUser";
-import { LobbyValue } from "../Scenes/WaitingArea/LobbyElement";
-import { deserializeImage } from "../Utils/ImageSerial";
 import { createUnionReducer } from "../Utils/UnionUtils";
-import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyUpdate, LobbyUserPropic, LobbyUserUpdate, UserId } from "./ServerMessage";
+import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyUserFlag, LobbyValue, UserId, UserValue } from "./ServerMessage";
 
 export interface LobbyState {
     lobbyId: LobbyId;
@@ -21,13 +17,9 @@ export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
     };
 }
 
-export function isLobbyOwner(lobby: LobbyState) {
-    for (const user of lobby.users) {
-        if (!user.flags.includes('disconnected')) {
-            return user.id === lobby.myUserId;
-        }
-    }
-    return false;
+export function checkMyUserFlag(lobbyState: LobbyState, flag: LobbyUserFlag) {
+    const myUser = lobbyState.users.find(user => user.user_id === lobbyState.myUserId);
+    return myUser !== undefined && myUser.flags.includes(flag);
 }
 
 export type ErrorState =
@@ -50,11 +42,10 @@ export type SceneUpdate =
     { gotoLobby: LobbyEntered } |
     { gotoGame: Empty } |
     { setError: ErrorState | null } |
-    { updateLobbies: LobbyUpdate } |
+    { updateLobbies: LobbyValue } |
     { removeLobby: LobbyId } |
     { setGameOptions: GameOptions } |
-    { updateLobbyUser: LobbyUserUpdate } |
-    { updateUserPropic: LobbyUserPropic } |
+    { updateLobbyUser: UserValue } |
     { addLobbyChatMessage: ChatMessage };
 
 export function defaultCurrentScene(sessionId?: number): SceneState {
@@ -65,23 +56,15 @@ export function defaultCurrentScene(sessionId?: number): SceneState {
     }
 }
 
-function handleListUpdate<T extends Id>(values: T[], newValue: T): T[] {
+function handleListUpdate<T, U>(values: T[], newValue: T, getId: (value: T) => U): T[] {
     let copy = values.slice();
-    const index = copy.findIndex(value => value.id === newValue.id);
+    const index = copy.findIndex(value => getId(value) === getId(newValue));
     if (index >= 0) {
-        copy[index] = { ...copy[index], ...newValue };
+        copy[index] = newValue;
     } else {
         copy.push(newValue);
     }
     return copy;
-}
-
-function newLobbyValue({ lobby_id, name, num_players, num_spectators, max_players, secure, state }: LobbyUpdate): LobbyValue {
-    return { id: lobby_id, name, num_players, num_spectators, max_players, secure, state };
-}
-
-function newUserValue({ user_id, username, flags, lifetime }: LobbyUserUpdate): UserValue {
-    return { id: user_id, name: username, flags, lifetime };
 }
 
 export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
@@ -100,7 +83,7 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
             lobbyName: name,
             gameOptions: options,
             lobbyState: 'lobbyState' in this
-                ? { ...this.lobbyState, users: this.lobbyState.users.filter(user => user.id >= 0) }
+                ? { ...this.lobbyState, users: this.lobbyState.users.filter(user => user.user_id >= 0) }
                 : newLobbyState(lobby_id, user_id)
         };
     },
@@ -113,17 +96,17 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
     setError(error) {
         return { ...this, error: error ?? undefined };
     },
-    updateLobbies(update) {
+    updateLobbies(value) {
         if (this.type !== 'waiting_area') {
             throw new Error('Invalid scene type for updateLobbies: ' + this.type);
         }
-        return { ...this, lobbies: handleListUpdate(this.lobbies, newLobbyValue(update)) };
+        return { ...this, lobbies: handleListUpdate(this.lobbies, value, lobby => lobby.lobby_id) };
     },
     removeLobby(lobby_id) {
         if (this.type !== 'waiting_area') {
             throw new Error('Invalid scene type for removeLobby: ' + this.type);
         }
-        return { ...this, lobbies: this.lobbies.filter(lobby => lobby.id !== lobby_id) };
+        return { ...this, lobbies: this.lobbies.filter(lobby => lobby.lobby_id !== lobby_id) };
     },
     setGameOptions(gameOptions) {
         if (this.type !== 'lobby') {
@@ -131,22 +114,11 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         }
         return { ...this, gameOptions };
     },
-    updateLobbyUser(update) {
+    updateLobbyUser(value) {
         if (this.type !== 'lobby' && this.type !== 'game') {
             throw new Error('Invalid scene type for updateLobbyUser: ' + this.type);
         }
-        return { ...this, lobbyState: { ...this.lobbyState, users: handleListUpdate(this.lobbyState.users, newUserValue(update)) }};
-    },
-    updateUserPropic({ user_id, propic }) {
-        if (this.type !== 'lobby' && this.type !== 'game') {
-            throw new Error('Invalid scene type for updateUserPropic: ' + this.type);
-        }
-        return { ...this, lobbyState: { ...this.lobbyState,
-            users: this.lobbyState.users.map(user => user.id === user_id
-                ? { ...user, propic: deserializeImage(propic) }
-                : user 
-            )
-        }};
+        return { ...this, lobbyState: { ...this.lobbyState, users: handleListUpdate(this.lobbyState.users, value, value => value.user_id) }};
     },
     addLobbyChatMessage(message) {
         if (this.type !== 'lobby' && this.type !== 'game') {

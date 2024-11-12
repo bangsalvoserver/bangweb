@@ -1,9 +1,10 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
+import { UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
-import LobbyUser, { UserValue } from "../Lobby/LobbyUser";
+import LobbyUser from "../Lobby/LobbyUser";
 import { GameStateContext } from "./GameScene";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
@@ -216,7 +217,7 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
                 : <div className="player-icon icon-dead"/> ) }
         </div>
         <div className='player-propic'>
-            <LobbyUser user={user} align='horizontal'>
+            <LobbyUser user={user} align='horizontal' noUserIcons>
                 { canRejoin && <Button className="button-rejoin" onClick={handleRejoin} color="green">{getLabel('ui','BUTTON_REJOIN')}</Button> }
             </LobbyUser>
         </div>

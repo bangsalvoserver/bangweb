@@ -1,7 +1,7 @@
 import { ChangeEvent, useRef } from 'react';
 import getLabel from '../Locale/GetLabel';
 import AppSettings from '../Model/AppSettings';
-import { isLobbyOwner, SceneState } from '../Model/SceneState';
+import { checkMyUserFlag, SceneState } from '../Model/SceneState';
 import { BangConnection } from '../Model/UseBangConnection';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { loadFile, PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
@@ -29,8 +29,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const handleLeaveLobby = () => connection.sendMessage({ lobby_leave: {}});
   const handleReturnLobby = () => connection.sendMessage({ lobby_return: {}});
 
-  const myUser = scene.type === 'lobby' ? scene.lobbyState.users.find(user => user.id === scene.lobbyState.myUserId) : undefined;
-  const isSpectator = myUser?.flags.includes('spectator') ?? false;
+  const isSpectator = scene.type === 'lobby' && checkMyUserFlag(scene.lobbyState, 'spectator');
   const handleToggleSpectate = () => connection.sendMessage({ user_spectate: !isSpectator });
 
   const handleDisconnect = () => {
@@ -87,7 +86,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={handleSetUsername}>
               <UserMenuItem onClick={handleToggleSounds}>{getLabel('ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
-              { scene.type === 'game' && isLobbyOwner(scene.lobbyState) && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
+              { scene.type === 'game' && checkMyUserFlag(scene.lobbyState, 'lobby_owner') && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
               { scene.type === 'lobby' && <UserMenuItem onClick={handleToggleSpectate}>{getLabel('ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }
               { scene.type === 'game' || scene.type === 'lobby'
                 ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
