@@ -20,8 +20,8 @@ export interface MoveCubeProps {
 
 export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, origin_card, target_card, duration }: MoveCubeProps) {
     const [startRect, endRect] = useUpdateEveryFrame(() => [
-        tracker.getCubesRect(origin_card),
-        tracker.getCubesRect(target_card)
+        tracker.getTokensRect(token_type, origin_card),
+        tracker.getTokensRect(token_type, target_card)
     ]);
     
     if (startRect && endRect) {

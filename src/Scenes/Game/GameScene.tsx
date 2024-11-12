@@ -1,4 +1,4 @@
-import { RefObject, createContext, useRef, useState } from "react";
+import { RefObject, createContext, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
@@ -13,7 +13,7 @@ import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
 import GameUsersView from "./GameUsersView";
 import { PocketType } from "./Model/CardEnums";
-import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
+import { PlayerRef, PocketRef, TokenRefs, useCardTracker } from "./Model/CardTracker";
 import { getPlayer } from "./Model/GameTable";
 import { PlayerId } from "./Model/GameUpdate";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
@@ -59,7 +59,11 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
 
   const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
 
-  const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
+  const tokenRefs: TokenRefs = useMemo(() => ({
+    'cube': cubesRef.current,
+    'fame': null
+  }), []);
+  const tracker = useCardTracker(playerRefs, pocketRefs, tokenRefs);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
