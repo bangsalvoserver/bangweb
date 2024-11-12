@@ -145,7 +145,7 @@ const isValidCardTarget = <T>(table: GameTable, selector: TargetSelector, target
 
 const isValidCubeTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, card: Card) => {
     return getCardOwner(card) === table.self_player
-        && card.num_cubes > countSelectedCubes(selector, card);
+        && card.tokens.cube > countSelectedCubes(selector, card);
 };
 
 const getCubesSelected = (target: CardId[], effect: CardEffect, originCard: Card, targetCard: Card) => {
@@ -292,7 +292,7 @@ const targetDispatch = buildDispatch({
             return getCardOwner(card) === table.self_player
                 && getCardPocket(card) === 'player_table'
                 && getCardColor(card) === 'orange'
-                && card.num_cubes < 4 - count(target, card.id);
+                && card.tokens.cube < 4 - count(target, card.id);
         },
         isCardSelected: checkMultiTarget,
         isSelectionConfirmable: targetIsNotEmpty,
@@ -303,11 +303,11 @@ const targetDispatch = buildDispatch({
             for (const cardId of selfPlayer.pockets.player_table) {
                 const card = getCard(table, cardId);
                 if (getCardColor(card) === 'orange') {
-                    cubeSlots += 4 - card.num_cubes;
+                    cubeSlots += 4 - card.tokens.cube;
                 }
             }
             const firstCharacter = selfPlayer.pockets.player_character[0];
-            const characterCubes = getCard(table, firstCharacter).num_cubes;
+            const characterCubes = getCard(table, firstCharacter).tokens.cube;
             return reserveTargets(Math.min(effect.target_value, cubeSlots, characterCubes));
         }
     }),

@@ -11,8 +11,10 @@ import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
+import spriteFame from "/media/sprite_fame.png";
 
 export const SPRITE_CUBE = spriteCube;
+export const SPRITE_FAME = spriteFame;
 
 export function getCardUrl(image: string) {
     return `/cards/${image}.png`;
@@ -149,9 +151,9 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}
-                {card.num_cubes > 0 && <div className="card-cubes">
-                    {[...Array(card.num_cubes)].map((item, i) => (
-                        <img key={i} className={`card-cube${card.num_cubes - i <= selectedCubes ? ' card-cube-selected' : ''}`} src={SPRITE_CUBE} alt=""  />
+                {card.tokens.cube > 0 && <div className="card-cubes">
+                    {[...Array(card.tokens.cube)].map((item, i) => (
+                        <img key={i} className={`card-cube${card.tokens.cube - i <= selectedCubes ? ' card-cube-selected' : ''}`} src={SPRITE_CUBE} alt=""  />
                     ))}
                 </div>}
             </div> : <div className="card-back">

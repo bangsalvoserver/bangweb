@@ -1,8 +1,8 @@
 import { UpdateFunction } from "../../../Model/SceneState";
 import { UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
-import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveCubesUpdate, MoveFameUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
+import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType, TokenType } from "./CardEnums";
+import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveTokensUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
 
 export interface Id {
     id: number
@@ -60,6 +60,15 @@ export type CardAnimation =
     { type: 'flash' } & Duration |
     { type: 'short_pause' };
 
+type TokenCount = Record<TokenType, number>;
+
+function newTokenCount(): TokenCount {
+    return {
+        'cube': 0,
+        'fame': 0
+    };
+}
+
 type CardDeckOrData = { deck: DeckType } | CardData;
 
 interface CardBase<T extends CardDeckOrData> extends Id {
@@ -67,8 +76,7 @@ interface CardBase<T extends CardDeckOrData> extends Id {
     pocket: PocketId;
 
     inactive: boolean;
-    num_cubes: number;
-    num_fame: number;
+    tokens: TokenCount;
     
     animation: CardAnimation & AnimationKey;
 }
@@ -120,8 +128,7 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
         cardData: { deck },
         pocket,
         inactive: false,
-        num_cubes: 0,
-        num_fame: 0,
+        tokens: newTokenCount(),
         animation: { type: 'none', key: 0}
     };
 }
@@ -188,8 +195,7 @@ export interface MovePlayersUpdate {
 export type TableAnimation =
     { type: 'none' } |
     { type: 'move_card' } & MoveCardUpdate & Duration |
-    { type: 'move_cubes' } & MoveCubesUpdate & Duration |
-    { type: 'move_fame' } & MoveFameUpdate & Duration |
+    { type: 'move_tokens' } & MoveTokensUpdate & Duration |
     { type: 'deck_shuffle' } & DeckShuffledUpdate & DeckCards & Duration |
     { type: 'move_train' } & MoveTrainUpdate & Duration |
     { type: 'move_players' } & MovePlayersUpdate & Duration;
@@ -206,7 +212,7 @@ export interface GameTable {
     alive_players: PlayerId[];
 
     status: {
-        num_cubes: number;
+        tokens: TokenCount;
         train_position: number;
         flags: GameFlag[];
         current_turn?: PlayerId;
@@ -246,7 +252,7 @@ export function newGameTable(myUserId: UserId): GameTable {
         alive_players: [],
 
         status: {
-            num_cubes: 0,
+            tokens: newTokenCount(),
             train_position: 0,
             flags: [],
         },

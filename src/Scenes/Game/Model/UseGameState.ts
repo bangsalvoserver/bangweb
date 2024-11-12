@@ -168,22 +168,13 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
                 delayDispatch(duration, card ? () => tableDispatch({ card_animation_end: card }) : undefined);
             },
         
-            add_cubes(update) {
-                tableDispatch({ add_cubes: update });
+            add_tokens(update) {
+                tableDispatch({ add_tokens: update });
             },
         
-            move_cubes(update) {
-                tableDispatch({ move_cubes: update });
-                delayDispatch(update.duration, () => tableDispatch({ move_cubes_end: update }));
-            },
-        
-            add_fame(update) {
-                tableDispatch({ add_fame: update });
-            },
-        
-            move_fame(update) {
-                tableDispatch({ move_fame: update });
-                delayDispatch(update.duration, () => tableDispatch({ move_fame_end: update }));
+            move_tokens(update) {
+                tableDispatch({ move_tokens: update });
+                delayDispatch(update.duration, () => tableDispatch({ move_tokens_end: update }));
             },
         
             move_train(update) {

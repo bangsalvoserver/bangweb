@@ -96,6 +96,10 @@ export type PlayerRole =
     'outlaw_3p' |
     'renegade_3p';
 
+export type TokenType =
+    'cube' |
+    'fame';
+
 export type GameFlag = string;
 export type PlayerFlag = string;
 

@@ -301,79 +301,58 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         };
     },
 
-    // Adds cubes to a target_card (or the table if not set)
-    add_cubes ({ num_cubes, target_card }) {
+    // Adds tokens to a target_card (or the table if not set)
+    add_tokens ({ token_type, num_tokens, target_card }) {
         let tableCards = this.cards;
-        let tableCubes = this.status.num_cubes;
+        let tableTokens = this.status.tokens[token_type];
         if (target_card) {
-            tableCards = editById(this.cards, target_card, card => ({ ...card, num_cubes: card.num_cubes + num_cubes }));
+            tableCards = editById(this.cards, target_card, card => ({ ...card, tokens: { ...card.tokens, [token_type]: card.tokens[token_type] + num_tokens }}));
         } else {
-            tableCubes += num_cubes;
+            tableTokens += num_tokens;
         }
         return {
             ...this,
-            status: { ...this.status, num_cubes: tableCubes },
+            status: { ...this.status, tokens: { ...this.status.tokens, [token_type]: tableTokens }},
             cards: tableCards
         };
     },
 
-    // Moves `num_cubes` from origin_card (or the table if not set) to target_card (or the table if not set)
-    move_cubes ({ num_cubes, origin_card, target_card, duration }) {
-        let tableCubes = this.status.num_cubes;
+    // Moves `num_tokens` from origin_card (or the table if not set) to target_card (or the table if not set)
+    move_tokens ({ token_type, num_tokens, origin_card, target_card, duration }) {
+        let tableTokens = this.status.tokens[token_type];
         let tableCards = this.cards;
 
         if (origin_card) {
-            tableCards = editById(tableCards, origin_card, card => ({ ...card, num_cubes: card.num_cubes - num_cubes }));
+            tableCards = editById(tableCards, origin_card, card => ({ ...card, tokens: { ...card.tokens, [token_type]: card.tokens[token_type] - num_tokens }}));
         } else {
-            tableCubes -= num_cubes;
+            tableTokens -= num_tokens;
         }
         return setAnimation({
             ...this,
             status: {
                 ...this.status,
-                num_cubes: tableCubes
+                tokens: { ...this.status.tokens, [token_type]: tableTokens }
             },
             cards: tableCards
-        }, { type: 'move_cubes', num_cubes, origin_card, target_card, duration });
+        }, { type: 'move_tokens', token_type, num_tokens, origin_card, target_card, duration });
     },
 
-    move_cubes_end ({ num_cubes, target_card }) {
-        let tableCubes = this.status.num_cubes;
+    move_tokens_end ({ token_type, num_tokens, target_card }) {
+        let tableTokens = this.status.tokens[token_type];
         let tableCards = this.cards;
         if (target_card) {
-            tableCards = editById(tableCards, target_card, card => ({ ...card, num_cubes: card.num_cubes + num_cubes }));
+            tableCards = editById(tableCards, target_card, card => ({ ...card, tokens: { ...card.tokens, [token_type]: card.tokens[token_type] + num_tokens }}));
         } else {
-            tableCubes += num_cubes;
+            tableTokens += num_tokens;
         }
         return clearAnimation({
             ...this,
             status: {
                 ...this.status,
-                num_cubes: tableCubes
+                tokens: { ...this.status.tokens, [token_type]: tableTokens }
             },
             cards: tableCards
         });
-    },
-
-    add_fame({ num_fame, target_card }) {
-        return {
-            ...this,
-            cards: editById(this.cards, target_card, card => ({ ...card, num_fame: card.num_fame + num_fame }))
-        };
-    },
-
-    move_fame({ num_fame, origin_card, target_card, duration }) {
-        return setAnimation({
-            ...this,
-            cards: editById(this.cards, origin_card, card => ({ ...card, num_fame: card.num_fame - num_fame }))
-        }, { type: 'move_fame', num_fame, origin_card, target_card, duration });
-    },
-
-    move_fame_end({ num_fame, target_card }) {
-        return clearAnimation(target_card
-            ? { ...this, cards: editById(this.cards, target_card, card => ({ ...card, num_fame: card.num_fame + num_fame }))}
-            : this
-        );
     },
 
     // Changes the train_position field

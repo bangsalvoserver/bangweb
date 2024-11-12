@@ -85,9 +85,9 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
   );
 
   const tableCubes = <div className='table-cubes' ref={cubesRef}>
-    {table.status.num_cubes > 0 && <>
+    {table.status.tokens.cube > 0 && <>
       <img src={SPRITE_CUBE} alt="" />
-      <div>x{table.status.num_cubes}</div>
+      <div>x{table.status.tokens.cube}</div>
     </>}
   </div>;
 
