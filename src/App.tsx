@@ -54,8 +54,8 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header scene={scene} settings={settings} connection={connection} />
-      <OverlayButtons scene={scene} settings={settings} connection={connection} overlayRef={overlayRef} />
       <div className="current-scene">{currentScene()}</div>
+      <OverlayButtons scene={scene} settings={settings} connection={connection} overlayRef={overlayRef} />
       <ErrorPopup error={scene.error} clearError={clearError} />
     </div>
   );
