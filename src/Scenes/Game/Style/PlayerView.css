@@ -171,6 +171,7 @@
 }
 
 .player-icons {
+    pointer-events: none;
     position: absolute;
     top: var(--player-icon-position);
     right: var(--player-icon-position);
@@ -202,7 +203,6 @@
     background-repeat: no-repeat;
     background-blend-mode: multiply;
     background-color: var(--icon-color);
-    pointer-events: none;
 }
 
 .icon-winner {
