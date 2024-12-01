@@ -59,10 +59,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
 
   const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
 
-  const tokenRefs: TokenRefs = useMemo(() => ({
-    'cube': cubesRef.current,
-    'fame': null
-  }), []);
+  const tokenRefs: TokenRefs = useMemo(() => ({ 'cube': cubesRef }), []);
   const tracker = useCardTracker(playerRefs, pocketRefs, tokenRefs);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
