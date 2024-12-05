@@ -80,7 +80,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
         </Button>
       </form>
       <div className='lobby-list'>
-        {lobbies.map((lobby) => (
+        {lobbies.toReversed().map((lobby) => (
           <LobbyElement key={lobby.lobby_id} lobby={lobby} onClickJoin={handleClickJoin} />
         ))}
       </div>
