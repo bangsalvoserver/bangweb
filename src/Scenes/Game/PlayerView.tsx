@@ -10,7 +10,7 @@ import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { GameTable, Player } from "./Model/GameTable";
-import { CardId } from "./Model/GameUpdate";
+import { CardId, GameOptions } from "./Model/GameUpdate";
 import { isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import PocketView from "./Pockets/PocketView";
@@ -20,6 +20,7 @@ import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 
 export interface PlayerProps {
+    gameOptions: GameOptions;
     playerRef?: Ref<PlayerRef>;
     user: UserValue;
     player: Player;
@@ -77,7 +78,7 @@ function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>):
     };
 }
 
-export default function PlayerView({ playerRef, user, player, handleRejoin }: PlayerProps) {
+export default function PlayerView({ playerRef, gameOptions, user, player, handleRejoin }: PlayerProps) {
     const { table, selector } = useContext(GameStateContext);
     const { handleClickPlayer } = useContext(SelectorConfirmContext);
 
@@ -111,7 +112,8 @@ export default function PlayerView({ playerRef, user, player, handleRejoin }: Pl
     const isSkipTurn = player.status.flags.includes('skip_turn');
     
     const isDisconnected = user.flags.includes('disconnected');
-    const canRejoin = !table.self_player && isDisconnected && !isGameOver;
+    const isRejoinableBot = user.user_id < 0 && gameOptions.allow_bot_rejoin;
+    const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver;
 
     let classes = ['player-view'];
     if (isWinner) {

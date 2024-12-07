@@ -161,6 +161,7 @@ export interface GameOptions {
     allow_beer_in_duel: boolean;
     quick_discard_all: boolean;
     auto_pick_predraw: boolean;
+    allow_bot_rejoin: boolean;
     scenario_deck_size?: number;
     num_bots?: number;
     damage_timer?: Milliseconds;
