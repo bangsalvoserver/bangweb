@@ -20,7 +20,7 @@ import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 
 export interface PlayerProps {
-    gameOptions: GameOptions;
+    gameOptions?: GameOptions;
     playerRef?: Ref<PlayerRef>;
     user: UserValue;
     player: Player;
@@ -112,7 +112,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const isSkipTurn = player.status.flags.includes('skip_turn');
     
     const isDisconnected = user.flags.includes('disconnected');
-    const isRejoinableBot = user.user_id < 0 && gameOptions.allow_bot_rejoin;
+    const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
     const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver;
 
     let classes = ['player-view'];
