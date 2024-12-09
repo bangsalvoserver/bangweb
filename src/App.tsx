@@ -44,6 +44,7 @@ export default function App() {
         return <GameScene
           connection={connection}
           lobbyState={scene.lobbyState}
+          gameOptions={scene.gameOptions}
           gameChannel={gameChannel}
           overlayRef={overlayRef}
           muteSounds={settings.muteSounds}

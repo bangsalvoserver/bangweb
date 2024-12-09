@@ -15,7 +15,7 @@ import GameUsersView from "./GameUsersView";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, TokenRefs, useCardTracker } from "./Model/CardTracker";
 import { getPlayer } from "./Model/GameTable";
-import { PlayerId } from "./Model/GameUpdate";
+import { GameOptions, PlayerId } from "./Model/GameUpdate";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
 import useGameState, { newGameState } from "./Model/UseGameState";
 import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/UseSelectorConfirm";
@@ -35,6 +35,7 @@ import "./Style/PlayerGridMobile.css";
 export interface GameProps {
   connection: BangConnection;
   lobbyState: LobbyState;
+  gameOptions: GameOptions;
   gameChannel: GameChannel;
   overlayRef: RefObject<HTMLDivElement>;
   muteSounds?: boolean;
@@ -43,7 +44,7 @@ export interface GameProps {
 const EMPTY_GAME_STATE = newGameState(0);
 export const GameStateContext = createContext(EMPTY_GAME_STATE);
 
-export default function GameScene({ connection, lobbyState, gameChannel, overlayRef, muteSounds }: GameProps) {
+export default function GameScene({ connection, lobbyState, gameOptions, gameChannel, overlayRef, muteSounds }: GameProps) {
   const { state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId, muteSounds ?? false);
   const { table, selector } = state;
 
@@ -131,7 +132,7 @@ export default function GameScene({ connection, lobbyState, gameChannel, overlay
     return <div key={player_id} className="player-grid-item" player-index={index}>
       {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
-        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player} handleRejoin={handleRejoin(player.user_id)} />}
+        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} gameOptions={gameOptions} user={user} player={player} handleRejoin={handleRejoin(player.user_id)} />}
     </div>;
   });
 
