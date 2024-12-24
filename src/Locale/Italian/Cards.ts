@@ -329,6 +329,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     A_THOUSAND_WAYS_TO_DIE:     "Mille Modi Per Morire",
     FOR_A_FEW_CARDS_MORE:       "Per Qualche Carta In Più",
     A_QUICK_DEATH:              "Una Morte Veloce",
+    ESCAPE_JAIL:                "Fuggi di Prigione",
     GAME_PASS:                  "Termina il turno",
     GAME_CONFIRM:               "Conferma",
     GAME_DISMISS:               "Continua",

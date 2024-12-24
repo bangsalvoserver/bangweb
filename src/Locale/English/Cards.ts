@@ -329,6 +329,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     A_THOUSAND_WAYS_TO_DIE:     "A Thousand Ways To Die",
     FOR_A_FEW_CARDS_MORE:       "For A Few Cards More",
     A_QUICK_DEATH:              "A Quick Death",
+    ESCAPE_JAIL:                "Escape Jail",
     GAME_PASS:                  "End turn",
     GAME_CONFIRM:               "Confirm",
     GAME_DISMISS:               "Continue",
