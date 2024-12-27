@@ -139,6 +139,8 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     STATUS_MOST_WANTED_OTHER: (player, card) =>                             <>{card} contro {player}</>,
     STATUS_TRAIN_ROBBERY: (card) =>                                         <>{card} ... scegli, per ogni carta, se scartarla o ricevere un Bang</>,
     STATUS_TRAIN_ROBBERY_OTHER: (player, card) =>                           <>{card} ... {player} deve scegliere se scartare una carta o ricevere un Bang</>,
+    STATUS_KIT_CARLSON_LEGEND: (card) =>                                    <>{card} ... puoi dare una delle carte pescate a un altro giocatore</>,
+    STATUS_KIT_CARLSON_LEGEND_OTHER: (player, card) =>                      <>{card} ... {player} può dare una delle carte pescate a un altro giocatore</>,
 
     ERROR_INVALID_ACTION: () =>                                             <>Azione non valida</>,
     ERROR_TIMER_EXPIRED: () =>                                              <>Il tempo è scaduto</>,

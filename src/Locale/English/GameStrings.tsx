@@ -139,6 +139,8 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     STATUS_MOST_WANTED_OTHER: (arg0, arg1) =>                                   <>{arg1} against {arg0}</>,
     STATUS_TRAIN_ROBBERY: (arg0) =>                                             <>{arg0} ... choose, for each card, between discarding it or receiving a Bang</>,
     STATUS_TRAIN_ROBBERY_OTHER: (arg0, arg1) =>                                 <>{arg1} ... {arg0} must choose between discarding a card or receiving a Bang</>,
+    STATUS_KIT_CARLSON_LEGEND: (card) =>                                        <>{card} ... You can give one of the cards drawn to another player</>,
+    STATUS_KIT_CARLSON_LEGEND_OTHER: (player, card) =>                          <>{card} ... {player} can give one of the cards drawn to another player</>,
     
     ERROR_INVALID_ACTION: () =>                                                 <>Invalid action</>,
     ERROR_TIMER_EXPIRED: () =>                                                  <>Timer has expired</>,
