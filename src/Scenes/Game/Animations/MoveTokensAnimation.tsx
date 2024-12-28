@@ -47,7 +47,14 @@ export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, 
 
         switch (token_type) {
         case 'cube': tokenSprite = SPRITE_CUBE; break;
-        case 'fame': tokenSprite = SPRITE_FAME; break;
+        case 'fame1': tokenSprite = SPRITE_FAME; break;
+        case 'fame2': tokenSprite = SPRITE_FAME; break;
+        case 'fame3': tokenSprite = SPRITE_FAME; break;
+        case 'fame4': tokenSprite = SPRITE_FAME; break;
+        case 'fame5': tokenSprite = SPRITE_FAME; break;
+        case 'fame6': tokenSprite = SPRITE_FAME; break;
+        case 'fame7': tokenSprite = SPRITE_FAME; break;
+        case 'fame8': tokenSprite = SPRITE_FAME; break;
         default: throw new Error('invalid token_type');
         }
 

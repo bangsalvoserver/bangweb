@@ -65,7 +65,14 @@ type TokenCount = Record<TokenType, number>;
 function newTokenCount(): TokenCount {
     return {
         'cube': 0,
-        'fame': 0
+        'fame1': 0,
+        'fame2': 0,
+        'fame3': 0,
+        'fame4': 0,
+        'fame5': 0,
+        'fame6': 0,
+        'fame7': 0,
+        'fame8': 0
     };
 }
 

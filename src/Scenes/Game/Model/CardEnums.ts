@@ -98,7 +98,14 @@ export type PlayerRole =
 
 export type TokenType =
     'cube' |
-    'fame';
+    'fame1' |
+    'fame2' |
+    'fame3' |
+    'fame4' |
+    'fame5' |
+    'fame6' |
+    'fame7' |
+    'fame8';
 
 export type GameFlag = string;
 export type PlayerFlag = string;
