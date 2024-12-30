@@ -240,6 +240,11 @@
     --icon-color: #ff0000ff;
 }
 
+.icon-dynamite {
+    --icon-url: url('/media/icon_dynamite.png');
+    --icon-color: rgb(228, 64, 64);
+}
+
 .icon-owner {
     --icon-url: url('/media/icon_owner.png');
     --icon-color: #94a4af;
