@@ -182,16 +182,16 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     },
 
     // Adds a card to another pocket
-    move_card ({ card, player, pocket, front, duration }) {
+    move_card ({ card, player, pocket, position, duration }) {
         const fromPocket = getCard(this, card).pocket;
         let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id === card ? CARD_SLOT_ID_FROM : id));
 
         const toPocket = newPocketId(pocket, player);
-        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], front);
+        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], position);
 
         return setAnimation(
             { ...this, players, pockets },
-            { type: 'move_card', card, player, pocket, front, duration }
+            { type: 'move_card', card, player, pocket, position, duration }
         );
     },
 
@@ -244,8 +244,16 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Sets the cardData field
     show_card ({ card, info, duration }) {
+        let [pockets, players] = [this.pockets, this.players];
+
+        const cardObj = getCard(this, card);
+        switch (cardObj.pocket?.name) {
+        case 'main_deck':
+        case 'discard_pile':
+            [pockets, players] = editPocketMap(pockets, players, cardObj.pocket, cards => cards.filter(id => id !== card).concat(card));
+        }
         return {
-            ...this,
+            ...this, pockets, players,
             cards: editById(this.cards, card, card => setAnimation(
                 { ...card, cardData: info },
                 { type: 'flipping', duration }

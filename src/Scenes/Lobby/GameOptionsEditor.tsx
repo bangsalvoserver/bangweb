@@ -128,6 +128,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='highnoon' addExpansion={addExpansionWithout('legends')} { ...props } />
             <ExpansionCheckbox name='fistfulofcards' addExpansion={addExpansionWithout('legends')} { ...props } />
             <ExpansionCheckbox name='wildwestshow' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='stickofdynamite' addExpansion={addExpansionWithout('legends')} { ...props } />
             <ExpansionCheckbox name='legends' addExpansion={value => [value]} { ...props } />
             <ExpansionCheckbox name='thebullet' addExpansion={addExpansionWithout('legends')} { ...props } />
             <ExpansionCheckbox name='canyondiablo' addExpansion={addExpansionWithout('legends')} { ...props } />

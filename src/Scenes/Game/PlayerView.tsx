@@ -110,6 +110,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const isGhost = isPlayerGhost(player);
     const isWinner = player.status.flags.includes('winner');
     const isSkipTurn = player.status.flags.includes('skip_turn');
+    const hasDynamiteStick = player.status.flags.includes('stick_of_dynamite');
     
     const isDisconnected = user.flags.includes('disconnected');
     const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
@@ -213,6 +214,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                 { isTarget && <div className="player-icon icon-target"/> }
                 { isTurn && <div className="player-icon icon-turn"/> }
                 { isSkipTurn && <div className="player-icon icon-skip-turn"/> }
+                { hasDynamiteStick && <div className="player-icon icon-dynamite"/> }
             </>}
             { isDead && (isGhost
                 ? <div className="player-icon icon-ghost"/>
