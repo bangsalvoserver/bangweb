@@ -244,8 +244,16 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Sets the cardData field
     show_card ({ card, info, duration }) {
+        let [pockets, players] = [this.pockets, this.players];
+
+        const cardObj = getCard(this, card);
+        switch (cardObj.pocket?.name) {
+        case 'main_deck':
+        case 'discard_pile':
+            [pockets, players] = editPocketMap(pockets, players, cardObj.pocket, cards => cards.filter(id => id !== card).concat(card));
+        }
         return {
-            ...this,
+            ...this, pockets, players,
             cards: editById(this.cards, card, card => setAnimation(
                 { ...card, cardData: info },
                 { type: 'flipping', duration }
