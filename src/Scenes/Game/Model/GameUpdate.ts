@@ -32,13 +32,13 @@ export interface RemoveCardsUpdate {
     cards: CardId[];
 }
 
-export type MoveCardDestination = 'begin' | 'end' | 'random';
+export type PocketPosition = 'begin' | 'end' | 'random';
 
 export interface MoveCardUpdate {
     card: CardId;
     player: PlayerId | null;
     pocket: PocketType;
-    destination: MoveCardDestination;
+    position: PocketPosition;
 }
 
 export interface AddCubesUpdate {

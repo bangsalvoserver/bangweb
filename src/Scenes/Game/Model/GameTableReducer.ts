@@ -182,16 +182,16 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     },
 
     // Adds a card to another pocket
-    move_card ({ card, player, pocket, destination, duration }) {
+    move_card ({ card, player, pocket, position, duration }) {
         const fromPocket = getCard(this, card).pocket;
         let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id === card ? CARD_SLOT_ID_FROM : id));
 
         const toPocket = newPocketId(pocket, player);
-        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], destination);
+        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], position);
 
         return setAnimation(
             { ...this, players, pockets },
-            { type: 'move_card', card, player, pocket, destination, duration }
+            { type: 'move_card', card, player, pocket, position, duration }
         );
     },
 
