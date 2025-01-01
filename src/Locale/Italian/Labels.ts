@@ -137,6 +137,8 @@ export const LABELS_ITALIAN: LabelRegistry = {
         
         USER_JOINED_LOBBY: (username) => `${username} entra in lobby`,
         USER_LEFT_LOBBY: (username) => `${username} esce dalla lobby`,
+
+        GAME_ERROR: message => `GAME ERROR: ${message}`
     },
 
     server: {
