@@ -1,5 +1,5 @@
 .card-choice {
-    position: absolute;
+    position: fixed;
     left: var(--card-anchor-x);
     top: var(--card-anchor-y);
     height: var(--card-height);
