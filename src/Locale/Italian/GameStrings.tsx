@@ -143,6 +143,8 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     STATUS_KIT_CARLSON_LEGEND_OTHER: (player, card) =>                      <>{card} ... {player} può dare una delle carte pescate a un altro giocatore</>,
     STATUS_JESSE_JONES_LEGEND: (card, player) =>                            <>{card} ... devi scegliere quale carta prendere da {player}</>,
     STATUS_JESSE_JONES_LEGEND_OTHER: (card, player, target) =>              <>{card} ... {target} deve scegliere quale carta prendere da {player}</>,
+    STATUS_SID_KETCHUM_LEGEND: (card) =>                                    <>{card} ... puoi sparare un BANG! gratis</>,
+    STATUS_SID_KETCHUM_LEGEND_OTHER: (card, player) =>                      <>{card} ... {player} può sparare un BANG! gratis</>,
 
     ERROR_INVALID_ACTION: () =>                                             <>Azione non valida</>,
     ERROR_TIMER_EXPIRED: () =>                                              <>Il tempo è scaduto</>,
