@@ -13,8 +13,8 @@ export interface Point {
 export function getDivRect(div: HTMLDivElement): Rect {
     const rect = div.getBoundingClientRect();
     return {
-        x: rect.left + window.scrollX,
-        y: rect.top + window.scrollY,
+        x: rect.left,
+        y: rect.top,
         w: rect.width,
         h: rect.height
     };

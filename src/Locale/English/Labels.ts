@@ -138,6 +138,8 @@ export const LABELS_ENGLISH: LabelRegistry = {
         
         USER_JOINED_LOBBY: username => `${username} joined the lobby`,
         USER_LEFT_LOBBY: username => `${username} left the lobby`,
+
+        GAME_ERROR: message => `GAME ERROR: ${message}`
     },
 
     server: {

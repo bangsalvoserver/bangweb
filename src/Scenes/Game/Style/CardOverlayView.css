@@ -1,5 +1,5 @@
 .card-overlay {
-    position: absolute;
+    position: fixed;
     left: var(--card-overlay-x);
     top: var(--card-overlay-y);
     z-index: 30;
