@@ -31,7 +31,7 @@
     transform: rotateY(180deg);
 }
 
-.card-cubes {
+.card-tokens {
     position: absolute;
     width: 80%;
     left: 50%;
@@ -42,17 +42,17 @@
     line-height: 0;
 }
 
-.card-cubes img {
+.card-tokens img {
     display: inline;
     margin: 0 1px;
 }
 
 @media (max-width:1200px) {
-    .card-cubes {
+    .card-tokens {
         width: 100%
     }
 
-    .card-cubes img {
+    .card-tokens img {
         width: 10px;
     }
 }
