@@ -20,7 +20,7 @@ interface TargetDispatchOf<T extends U, U = T | undefined> extends BuildAutoTarg
     appendPlayerTarget: (target: U, effect: CardEffect, player: PlayerId) => T;
 
     isValidCubeTarget: (table: GameTable, selector: TargetSelector, target: U, effect: CardEffect, card: Card) => boolean;
-    getCubesSelected: (target: T, effect: CardEffect, originCard: Card, targetCard: Card) => number;
+    getCubesSelected: (table: GameTable, target: T, effect: CardEffect, originCard: Card, targetCard: Card) => number;
 
     isSelectionFinished: (target: T, effect: CardEffect) => boolean;
     isSelectionConfirmable: (target: T, effect: CardEffect) => boolean;
@@ -71,9 +71,9 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             const fn = getDispatch(effect.target).isValidCubeTarget;
             return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, card);
         },
-        getCubesSelected: (target, effect, originCard, targetCard) => {
+        getCubesSelected: (table, target, effect, originCard, targetCard) => {
             const fn = getDispatch(effect.target).getCubesSelected;
-            return fn ? fn(cardTargetValue(target), effect, originCard, targetCard) : 0;
+            return fn ? fn(table, cardTargetValue(target), effect, originCard, targetCard) : 0;
         },
         isSelectionFinished: (target, effect) => {
             const [key, value] = cardTargetKeyValue(target);
@@ -145,10 +145,10 @@ const isValidCardTarget = <T>(table: GameTable, selector: TargetSelector, target
 
 const isValidCubeTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, card: Card) => {
     return getCardOwner(card) === table.self_player
-        && card.num_cubes > countSelectedCubes(selector, card);
+        && card.num_cubes > countSelectedCubes(table, selector, card);
 };
 
-const getCubesSelected = (target: CardId[], effect: CardEffect, originCard: Card, targetCard: Card) => {
+const getCubesSelected = (table: GameTable, target: CardId[], effect: CardEffect, originCard: Card, targetCard: Card) => {
     return count(target, targetCard.id);
 };
 
@@ -207,7 +207,7 @@ const targetDispatch = buildDispatch({
             return getReservedLength(cubes) + effect.target_value > players.length
                 && isValidPlayerTarget(table, selector, players, effect, player);
         },
-        getCubesSelected: ([cubes, players], effect, originCard, targetCard) => getCubesSelected(cubes, effect, originCard, targetCard),
+        getCubesSelected: (table, [cubes, players], effect, originCard, targetCard) => getCubesSelected(table, cubes, effect, originCard, targetCard),
         isPlayerSelected: ([cubes, players], player) => checkMultiTarget(players, player),
         isSelectionFinished: ([cubes, players], effect) => isSelectionFinished(cubes) && targetIsSized(players, cubes.length + effect.target_value),
         isSelectionConfirmable: ([cubes, players], effect) => targetIsSized(players, getReservedLength(cubes) + effect.target_value),
@@ -297,6 +297,11 @@ const targetDispatch = buildDispatch({
         isCardSelected: checkMultiTarget,
         isSelectionConfirmable: targetIsNotEmpty,
         isSelectionFinished, confirmSelection,
+        getCubesSelected: (table, target, effect, originCard, targetCard) => {
+            const selfPlayer = getPlayer(table, table.self_player!);
+            const firstCharacter = selfPlayer.pockets.player_character[0];
+            return targetCard.id === firstCharacter ? getReservedLength(target) : 0;
+        },
         buildAutoTarget: (table, selector, effect) => {
             const selfPlayer = getPlayer(table, table.self_player!);
             let cubeSlots = 0;
@@ -337,7 +342,7 @@ const targetDispatch = buildDispatch({
         }
     }),
     self_cubes: {
-        getCubesSelected: (target, effect, originCard, targetCard) => originCard.id === targetCard.id ? effect.target_value : 0,
+        getCubesSelected: (table, target, effect, originCard, targetCard) => originCard.id === targetCard.id ? effect.target_value : 0,
         buildAutoTarget: () => ({})
     }
 });
