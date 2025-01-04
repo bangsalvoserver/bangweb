@@ -240,14 +240,14 @@ export function isPlayerSelected(selector: TargetSelector, player: PlayerId): bo
     return checkSelections(selector, target => targetDispatch.isPlayerSelected(target, player));
 }
 
-export function countSelectedCubes(selector: TargetSelector, targetCard: Card): number {
+export function countSelectedCubes(table: GameTable, selector: TargetSelector, targetCard: Card): number {
     let selected = 0;
     const doCount = ({ card, targets }: TargetSelection) => {
         const effects = getCardEffects(card, isResponse(selector));
         let index = 0;
         for (const effect of effects) {
             if (index >= targets.length) break;
-            selected += targetDispatch.getCubesSelected(targets[index], effect, card, targetCard);
+            selected += targetDispatch.getCubesSelected(table, targets[index], effect, card, targetCard);
             ++index;
         }
     };
@@ -264,7 +264,7 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
 export function countSelectableCubes(table: GameTable, selector: TargetSelector): number {
     const getCountCubes = (cardId: CardId) => {
         const card = getCard(table, cardId);
-        return card.tokens.cube - countSelectedCubes(selector, card);
+        return card.tokens.cube - countSelectedCubes(table, selector, card);
     };
     const selfPlayer = getPlayer(table, table.self_player!);
     return sum(selfPlayer.pockets.player_character, getCountCubes)
