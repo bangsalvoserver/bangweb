@@ -6,11 +6,14 @@ import { getCardUrl } from "./CardView";
 import { OverlayState } from "./Model/UseCardOverlay";
 import "./Style/CardOverlayView.css";
 
+const WINDOW_PADDING_X = 150;
+const WINDOW_PADDING_Y = 200;
+
 function CardOverlayInner({ divRef, cardImage, cardAlt }: OverlayState) {
   const rect = useUpdateEveryFrame(() => divRef.current ? getDivRect(divRef.current) : null);
   if (!rect) return null;
 
-  const rectCenter = clampPoint(getRectCenter(rect), shrinkRect(getWindowRect(), 150, 200));
+  const rectCenter = clampPoint(getRectCenter(rect), shrinkRect(getWindowRect(), WINDOW_PADDING_X, WINDOW_PADDING_Y));
   const cardOverlayStyle = {
       '--card-overlay-x': rectCenter.x + 'px',
       '--card-overlay-y': rectCenter.y + 'px'

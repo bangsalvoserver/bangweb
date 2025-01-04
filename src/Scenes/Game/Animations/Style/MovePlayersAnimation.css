@@ -6,7 +6,7 @@
 }
 
 .move-player-animation {
-    position: absolute;
+    position: fixed;
     left: var(--startX);
     top: var(--startY);
     animation-name: move-player;
