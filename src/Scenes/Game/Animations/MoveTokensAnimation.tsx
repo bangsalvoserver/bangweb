@@ -2,12 +2,11 @@ import { CSSProperties } from "react";
 import { Milliseconds } from "../../../Model/ServerMessage";
 import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
-import { SPRITE_CUBE } from "../CardView";
-import { SPRITE_FAME } from "../CardView";
+import { getTokenSprite } from "../CardView";
+import { TokenType } from "../Model/CardEnums";
 import { CardTracker } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
 import "./Style/MoveCubeAnimation.css";
-import { TokenType } from "../Model/CardEnums";
 
 export interface MoveCubeProps {
     tracker: CardTracker;
@@ -43,21 +42,7 @@ export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, 
             } as CSSProperties;
         };
 
-        let tokenSprite: string;
-
-        switch (token_type) {
-        case 'cube': tokenSprite = SPRITE_CUBE; break;
-        case 'fame1': tokenSprite = SPRITE_FAME; break;
-        case 'fame2': tokenSprite = SPRITE_FAME; break;
-        case 'fame3': tokenSprite = SPRITE_FAME; break;
-        case 'fame4': tokenSprite = SPRITE_FAME; break;
-        case 'fame5': tokenSprite = SPRITE_FAME; break;
-        case 'fame6': tokenSprite = SPRITE_FAME; break;
-        case 'fame7': tokenSprite = SPRITE_FAME; break;
-        case 'fame8': tokenSprite = SPRITE_FAME; break;
-        default: throw new Error('invalid token_type');
-        }
-
+        const tokenSprite = getTokenSprite(token_type);
         return (
             <div style={style} className='move-cubes-animation'>
                 {[...Array(num_tokens)].map((item, i) => (

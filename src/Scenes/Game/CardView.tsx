@@ -3,6 +3,7 @@ import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
+import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
@@ -11,10 +12,31 @@ import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
-import spriteFame from "/media/sprite_fame.png";
+import spriteFame1 from "/media/sprite_fame1.png";
+import spriteFame2 from "/media/sprite_fame2.png";
+import spriteFame3 from "/media/sprite_fame3.png";
+import spriteFame4 from "/media/sprite_fame4.png";
+import spriteFame5 from "/media/sprite_fame5.png";
+import spriteFame6 from "/media/sprite_fame6.png";
+import spriteFame7 from "/media/sprite_fame7.png";
+import spriteFame8 from "/media/sprite_fame8.png";
 
 export const SPRITE_CUBE = spriteCube;
-export const SPRITE_FAME = spriteFame;
+
+export function getTokenSprite(tokenType: TokenType) {
+    switch (tokenType) {
+    case 'cube': return spriteCube;
+    case 'fame1': return spriteFame1;
+    case 'fame2': return spriteFame2;
+    case 'fame3': return spriteFame3;
+    case 'fame4': return spriteFame4;
+    case 'fame5': return spriteFame5;
+    case 'fame6': return spriteFame6;
+    case 'fame7': return spriteFame7;
+    case 'fame8': return spriteFame8;
+    default: throw new Error('invalid tokenType');
+    }
+}
 
 export function getCardUrl(image: string) {
     return `/cards/${image}.png`;

@@ -5,11 +5,12 @@ import { UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser from "../Lobby/LobbyUser";
+import { getTokenSprite } from "./CardView";
 import { GameStateContext } from "./GameScene";
-import { PocketType } from "./Model/CardEnums";
+import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
-import { GameTable, Player } from "./Model/GameTable";
+import { GameTable, getCard, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
@@ -18,6 +19,7 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import iconGold from "/media/icon_gold.png";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;
@@ -157,6 +159,19 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     if (isPlayerSelf) {
         classes.push('player-view-self');
     }
+    
+    const [fameTokenSprite, numFame] = (() => {
+        const characterId = player.pockets.player_character.at(0);
+        if (characterId && characterId > 0) {
+            const card = getCard(table, characterId);
+            for (const [key, value] of Object.entries(card.tokens) as [TokenType, number][]) {
+                if (key !== 'cube' && value > 0) {
+                    return [getTokenSprite(key), value];
+                }
+            }
+        }
+        return [null, 0];
+    })();
 
     const buildCharacterRef = (character: PocketRef | null) => {
         pocketRefs.set('player_character', {
@@ -201,7 +216,14 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                     </div>
                 )}
             </div>
-            { player.status.gold > 0 && <div className='player-gold'>{player.status.gold}</div> }
+            { player.status.gold > 0 && <div className='player-tokens'>
+                <img src={iconGold} alt="" />
+                { player.status.gold }
+            </div> }
+            { fameTokenSprite !== null && <div className='player-tokens'>
+                <img src={fameTokenSprite} alt="" />
+                { numFame }
+            </div> }
         </div>
         <div className='player-table' ref={tableRef}>
             <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />

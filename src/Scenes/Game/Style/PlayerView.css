@@ -3,7 +3,7 @@
     --player-self-width: calc(var(--card-width) * 11);
     --player-height: calc(var(--card-height) * 2 + 4.5em);
     --player-icon-size: 32px;
-    --player-gold-size: 32px;
+    --player-tokens-size: 32px;
     --player-lifepoint-size: 2.5em;
     --player-lifepoint-spacing: 1.5em;
     --player-icon-position: 0.5em;
@@ -22,7 +22,7 @@
 
     :root {
         --player-icon-size: 20px;
-        --player-gold-size: 20px;
+        --player-tokens-size: 20px;
         --player-lifepoint-size: 1em;
         --player-lifepoint-spacing: 0.7em;
         --player-icon-position: 0.2em;
@@ -31,13 +31,13 @@
         --player-self-width: calc(var(--card-width) * 9.5);
     }
     
-    .player-gold {
+    .player-tokens {
         font-size: 10pt;
     }
 }
 
 @media (min-width:1200px) {
-    .player-gold {
+    .player-tokens {
         font-size: 16pt;
     }
 }
@@ -133,20 +133,24 @@
     overflow-y: hidden;
 }
 
-.player-gold {
+.player-tokens {
     position: absolute;
     left: 0.1em;
     bottom: 0.3em;
     transform: translateX(-50%);
 
-    width: var(--player-gold-size);
-    height: var(--player-gold-size);
+    width: var(--player-tokens-size);
+    height: var(--player-tokens-size);
     text-align: center;
     font-weight: bold;
-    background-image: url('/media/icon_gold.png');
-    background-repeat: no-repeat;
-    background-size: contain;
     z-index: 2;
+}
+
+.player-tokens img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
 }
 
 .player-lifepoints {
