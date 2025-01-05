@@ -48,7 +48,8 @@ export type DeckType =
     'wildwestshow' |
     'station' |
     'locomotive' |
-    'train';
+    'train' |
+    'feats';
 
 export type CardColor =
     'none' |

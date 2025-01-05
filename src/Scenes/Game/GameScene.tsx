@@ -87,6 +87,16 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     </div>
   );
 
+  const featsPockets = (table.pockets.feats_deck.length !== 0 || table.pockets.feats.length !== 0
+    || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'feats_deck')
+  ) && (
+    <div className="pocket-group feats-row">
+      <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={table.pockets.feats_discard} />
+      <StackPocket slice={2} showCount pocketRef={setRef('feats_deck')} cards={table.pockets.feats_deck} />
+      <PocketView pocketRef={setRef('feats')} cards={table.pockets.feats} />
+    </div>
+  );
+
   const tableCubes = <div className='table-cubes' ref={cubesRef}>
     {table.status.tokens.cube > 0 && <>
       <img src={SPRITE_CUBE} alt="" />
@@ -99,7 +109,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
   ) && (
     <div className="pocket-group">
       <StackPocket slice={10} pocketRef={setRef('discard_pile')} cards={table.pockets.discard_pile} />
-      <StackPocket showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} />
+      <StackPocket slice={2} showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} />
     </div>
   );
 
@@ -148,7 +158,11 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
             <SetCardOverlayContext.Provider value={setCardOverlayState}>
               <div className="main-deck-row">
                 <div>
-                  {shopPockets}{tableCubes}{mainDeck}{scenarioCards}
+                  {shopPockets}
+                  {tableCubes}
+                  {mainDeck}
+                  {scenarioCards}
+                  {featsPockets}
                 </div>
                 {trainPockets}
               </div>

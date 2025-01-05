@@ -13,6 +13,25 @@
     --card-highlight-size: 3px;
 }
 
+.feats-row * {
+    --card-scale: 0.3;
+    --card-width-unscaled: 423px;
+    --card-height-unscaled: 231px;
+    --card-width: calc(var(--card-scale) * var(--card-width-unscaled));
+    --card-height: calc(var(--card-scale) * var(--card-height-unscaled));
+}
+
+.feats-row .pocket-view {
+    --card-width-plus-margin: calc(var(--card-width) + 2 * var(--card-margin));
+    --card-height-plus-margin: calc(var(--card-height) + 2 * var(--card-margin));
+}
+
+@media (max-width:1200px) {
+    .feats-row * {
+        --card-scale: 0.18;
+    }
+}
+
 .card-view {
     display: inline-flex;
     position: relative;
