@@ -215,6 +215,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     LOG_GAME_OVER: () =>                                                        <>Game over</>,
     LOG_DECK_RESHUFFLED: () =>                                                  <>The deck is reshuffled</>,
     LOG_SHOP_RESHUFFLED: () =>                                                  <>The shop deck is reshuffled</>,
+    LOG_TRAIN_RESHUFFLED: () =>                                                 <>The train deck is reshuffled</>,
     LOG_TURN_START: (arg0) =>                                                   <>It's {arg0}'s turn</>,
     LOG_SOLD_BEER: (arg0, arg1) =>                                              <>{arg0} sells {arg1}</>,
     LOG_DISCARDED_CARD: (arg0, arg1, arg2) =>                                   <>{arg0} forces {arg1} to discard {arg2}</>,
