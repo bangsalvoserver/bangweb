@@ -241,7 +241,6 @@ export function newGameTable(myUserId: UserId): GameTable {
             selection: [],
             shop_deck: [],
             shop_selection: [],
-            shop_discard: [],
             hidden_deck: [],
             scenario_deck: [],
             scenario_card: [],
