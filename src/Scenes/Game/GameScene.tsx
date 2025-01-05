@@ -98,7 +98,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
   ) && (
     <div className="pocket-group">
       <StackPocket slice={10} pocketRef={setRef('discard_pile')} cards={table.pockets.discard_pile} />
-      <StackPocket showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} />
+      <StackPocket slice={2} showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} />
     </div>
   );
 

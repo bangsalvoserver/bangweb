@@ -191,7 +191,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                     ? <div className='player-hand-inner'>
                         <PocketView pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
                       </div>
-                    : <StackPocket showCount slice={0} pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
+                    : <StackPocket showCount pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
                 }
             </div>
             <div className='player-lifepoints'>
