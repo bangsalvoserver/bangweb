@@ -14,8 +14,28 @@
     top: 0;
 }
 
-.stack-pocket .card-view:not(:last-child) {
+.stack-pocket .card-view:not(:last-child).card-targetable {
     --card-highlight-color: unset !important;
+}
+
+@property --card-translate-y {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+}
+
+.stack-pocket .card-view {
+    transition-property: --card-translate-y;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
+    --card-translate-y: 0%;
+
+    transform: translateY(var(--card-translate-y));
+}
+
+.stack-pocket .card-view:not(:last-child).card-origin {
+    pointer-events: all;
+    --card-translate-y: -40%;
 }
 
 .pocket-count {
