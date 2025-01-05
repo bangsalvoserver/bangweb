@@ -221,6 +221,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     LOG_GAME_OVER: () =>                                                    <>La partita è terminata</>,
     LOG_DECK_RESHUFFLED: () =>                                              <>Il mazzo viene rimescolato</>,
     LOG_SHOP_RESHUFFLED: () =>                                              <>Il mazzo dello shop viene rimescolato</>,
+    LOG_TRAIN_RESHUFFLED: () =>                                             <>Le carte del treno vengono rimescolate</>,
     LOG_TURN_START: (player) =>                                             <>È il turno di {player}</>,
     LOG_SOLD_BEER: (player, card) =>                                        <>{player} vende {card}</>,
     LOG_DISCARDED_CARD: (player, target, target_card) =>                    <>{player} scarta {target_card} a {target}</>,
