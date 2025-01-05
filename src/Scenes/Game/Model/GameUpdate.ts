@@ -58,11 +58,12 @@ export interface MoveTrainUpdate {
     position: number;
 }
 
-export type ShufflePocket = 'main_deck' | 'shop_deck' | 'train_deck';
+export type ShufflePocket = 'main_deck' | 'shop_deck' | 'train_deck' | 'feats_deck';
 
 export function getShuffleOrigin(pocket: ShufflePocket): TablePocketType {
     switch (pocket) {
     case 'main_deck': return 'discard_pile';
+    case 'feats_deck': return 'feats_discard';
     default: return pocket;
     }
 }
