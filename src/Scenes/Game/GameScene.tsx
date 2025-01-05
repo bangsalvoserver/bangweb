@@ -63,17 +63,18 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
   const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
-  const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0) && (
-    <div className="pocket-group relative">
-      <div className="absolute card-faded">
-        <StackPocket pocketRef={setRef('shop_discard')} cards={table.pockets.shop_discard} />
-      </div>
+  const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0
+    || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'shop_deck')
+  ) && (
+    <div className="pocket-group">
       <StackPocket showCount pocketRef={setRef('shop_deck')} cards={table.pockets.shop_deck} />
       <PocketView pocketRef={setRef('shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} />
     </div>
   );
 
-  const trainPockets = (table.pockets.stations.length !== 0 || table.pockets.train_deck.length !== 0) && (
+  const trainPockets = (table.pockets.stations.length !== 0 || table.pockets.train_deck.length !== 0
+    || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'train_deck')
+  ) && (
     <div className="train-row">
       <div className="train-row-inner">
         <StackPocket showCount pocketRef={setRef('train_deck')} cards={table.pockets.train_deck} />
@@ -92,11 +93,14 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     </>}
   </div>;
 
-  const mainDeck = (table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0 || table.animation.type === 'deck_shuffle') &&
+  const mainDeck = ( table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0
+    || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'main_deck')
+  ) && (
     <div className="pocket-group">
       <StackPocket slice={10} pocketRef={setRef('discard_pile')} cards={table.pockets.discard_pile} />
       <StackPocket showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} />
-    </div>;
+    </div>
+  );
 
   const scenarioCards =
     (table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0

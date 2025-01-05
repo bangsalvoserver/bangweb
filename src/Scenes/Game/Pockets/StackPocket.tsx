@@ -2,7 +2,7 @@ import { Ref, useContext, useImperativeHandle, useRef } from "react";
 import { countIf } from "../../../Utils/ArrayUtils";
 import { GameStateContext } from "../GameScene";
 import { PocketRef } from "../Model/CardTracker";
-import { getCard } from "../Model/GameTable";
+import { getCard, isCardKnown } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
 import { DEFAULT_SELECTOR_CONFIRM, SelectorConfirmContext } from "../Model/UseSelectorConfirm";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
@@ -27,7 +27,10 @@ export default function StackPocket({ pocketRef, cards, slice, showCount }: Stac
         getCardRect: () => position.current?.getPocketRect() ?? null
     }));
 
-    const numCards = countIf(cards, id => id !== CARD_SLOT_ID_FROM && id !== CARD_SLOT_ID_TO);
+    const numCards = countIf(cards, id => 
+        id !== CARD_SLOT_ID_FROM && id !== CARD_SLOT_ID_TO
+        && !isCardKnown(getCard(table, id))
+    );
 
     const lastCard = cards.at(-1);
     const handleClickLastCard = lastCard && lastCard > 0 ? handleClickCard(getCard(table, lastCard)) : undefined;

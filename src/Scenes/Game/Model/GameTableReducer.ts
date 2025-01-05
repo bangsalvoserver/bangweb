@@ -5,7 +5,7 @@ import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { getCardPocket } from "./Filters";
 import { AnimationKey, GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
-import { TableUpdate } from "./GameUpdate";
+import { getShuffleOrigin, TableUpdate } from "./GameUpdate";
 
 function setAnimation<T extends { animation: U }, U extends AnimationKey>(value: T, animation: Omit<U, 'key'>): T {
     return {
@@ -212,7 +212,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
     deck_shuffled ({ pocket, duration }) {
-        const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
+        const fromPocket = getShuffleOrigin(pocket);
         return setAnimation({
             ...this,
             pockets: {
@@ -224,7 +224,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     },
 
     deck_shuffled_end ({ pocket }) {
-        const fromPocket = pocket === 'main_deck' ? 'discard_pile' : 'shop_discard';
+        const fromPocket = getShuffleOrigin(pocket);
         let animationCards = this.animation.type === 'deck_shuffle' ? this.animation.cards : [];
         return clearAnimation({
             ...this,
