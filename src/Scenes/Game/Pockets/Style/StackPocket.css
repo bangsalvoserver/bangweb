@@ -18,6 +18,14 @@
     --card-highlight-color: unset !important;
 }
 
+.stack-pocket .card-view:not(:last-child).card-selected {
+    --card-highlight-color: unset !important;
+}
+
+.stack-pocket .card-view:not(:last-child).card-highlight {
+    --card-highlight-color: unset !important;
+}
+
 @property --card-translate-y {
     syntax: "<percentage>";
     inherits: false;
