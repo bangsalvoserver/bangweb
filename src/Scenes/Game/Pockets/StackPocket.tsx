@@ -37,7 +37,7 @@ export default function StackPocket({ pocketRef, cards, slice, showCount }: Stac
 
     return <div className='stack-pocket' onClick={handleClickLastCard}>
         <SelectorConfirmContext.Provider value={DEFAULT_SELECTOR_CONFIRM}>
-            <PocketView pocketRef={position} cards={ cards.slice(-(slice ?? 2))} />
+            <PocketView pocketRef={position} cards={ slice ? cards.slice(-slice) : cards} />
         </SelectorConfirmContext.Provider>
         {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
     </div>;
