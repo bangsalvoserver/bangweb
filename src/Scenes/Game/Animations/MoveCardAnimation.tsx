@@ -34,7 +34,7 @@ export default function MoveCardAnimation({ tracker, card, destPocket, duration 
         } as CSSProperties;
 
         return (
-            <div style={style} className={`move-card-animation card-anchor ${card.cardData.deck === 'feats' ? 'feats-row' : ''}`}>
+            <div style={style} className={`move-card-animation card-anchor ${card.cardData.deck === 'feats' ? 'feats-cards' : ''}`}>
                 <CardView card={card} />
             </div>
         );

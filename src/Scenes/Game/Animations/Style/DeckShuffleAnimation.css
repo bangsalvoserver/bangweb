@@ -25,7 +25,7 @@
     }
 }
 
-.feats-row .deck-shuffle-animation-inner {
+.feats-cards .deck-shuffle-animation-inner {
     animation-name: move-and-flip-card-vertical;
 }
 

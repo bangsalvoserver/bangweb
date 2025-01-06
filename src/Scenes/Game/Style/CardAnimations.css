@@ -18,7 +18,7 @@
     }
 }
 
-.feats-row .card-animation-flip {
+.feats-cards .card-animation-flip {
     animation-name: flip-card-vertical;
 }
 
