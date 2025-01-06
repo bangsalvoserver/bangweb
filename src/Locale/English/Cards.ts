@@ -331,6 +331,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     A_QUICK_DEATH:              "A Quick Death",
     ESCAPE_JAIL:                "Escape Jail",
     BECOME_LEGEND:              "Become a Legend",
+    CLAIM_FEAT:                 "Claim a Feat",
     GAME_PASS:                  "End turn",
     GAME_CONFIRM:               "Confirm",
     GAME_DISMISS:               "Continue",

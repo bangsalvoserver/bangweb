@@ -331,6 +331,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     A_QUICK_DEATH:              "Una Morte Veloce",
     ESCAPE_JAIL:                "Fuggi di Prigione",
     BECOME_LEGEND:              "Diventa una Leggenda",
+    CLAIM_FEAT:                 "Rivendica un'Impresa",
     GAME_PASS:                  "Termina il turno",
     GAME_CONFIRM:               "Conferma",
     GAME_DISMISS:               "Continua",
