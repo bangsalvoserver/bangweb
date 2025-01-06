@@ -94,7 +94,9 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
       <div className="feats-row">
         <div className="feats-col">
           <StackPocket slice={2} showCount pocketRef={setRef('feats_deck')} cards={table.pockets.feats_deck} />
-          <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={table.pockets.feats_discard} />
+          <div className="card-faded">
+            <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={table.pockets.feats_discard} />
+          </div>
         </div>
         <div className="feats-pocket">
           <PocketView pocketRef={setRef('feats')} cards={table.pockets.feats} />
