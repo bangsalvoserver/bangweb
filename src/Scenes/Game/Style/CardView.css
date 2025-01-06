@@ -89,6 +89,25 @@
     }
 }
 
+.card-fame-tokens {
+    position: absolute;
+    width: 100%;
+    bottom: 0.2em;
+    text-align: center;
+    white-space: normal;
+    line-height: 0;
+}
+
+.card-fame-tokens img {
+    display: inline;
+}
+
+@media (max-width:1200px) {
+    .card-fame-tokens img {
+        width: 10px;
+    }
+}
+
 .card-horizontal {
     transform: rotate(90deg);
 }
