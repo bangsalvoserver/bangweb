@@ -49,6 +49,7 @@ export type DeckType =
     'station' |
     'locomotive' |
     'train' |
+    'legends' |
     'feats';
 
 export type CardColor =
