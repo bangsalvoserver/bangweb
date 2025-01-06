@@ -63,6 +63,10 @@
     transform: rotateY(180deg);
 }
 
+.feats-cards .card-back-flip {
+    transform: rotateX(180deg);
+}
+
 .card-cubes {
     position: absolute;
     width: 80%;
