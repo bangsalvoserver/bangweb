@@ -8,6 +8,7 @@ import { CardTracker } from "../Model/CardTracker";
 import { getCard, newPocketId } from "../Model/GameTable";
 import { CardId, getShuffleOrigin, ShufflePocket } from "../Model/GameUpdate";
 import "./Style/DeckShuffleAnimation.css";
+import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 
 export interface DeckShuffleProps {
     tracker: CardTracker;
@@ -21,10 +22,10 @@ const MAX_CARDS = isMobileDevice() ? 10 : 30;
 export default function DeckShuffleAnimation({ tracker, pocket, cards, duration }: DeckShuffleProps) {
     const { table } = useContext(GameStateContext);
     
-    const fromPocket = getShuffleOrigin(pocket);
-
-    const startRect = tracker.getTablePocket(newPocketId(fromPocket))?.getPocketRect();
-    const endRect = tracker.getTablePocket(newPocketId(pocket))?.getPocketRect();
+    const [startRect, endRect] = useUpdateEveryFrame(() => [
+        tracker.getTablePocket(newPocketId(getShuffleOrigin(pocket)))?.getPocketRect(),
+        tracker.getTablePocket(newPocketId(pocket))?.getPocketRect()
+    ]);
 
     if (startRect && endRect) {
         cards = cards.slice(-MAX_CARDS);
