@@ -229,6 +229,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     ERROR_TRAIN_NOT_IN_ANY_STATION: () =>                                       <>This railcar is not paired to any station</>,
     ERROR_TRAIN_NOT_IN_THIS_STATION: () =>                                      <>This railcar is not paired to this station</>,
     ERROR_DAMAGE_LEGEND_KILL: () =>                                             <>You can't force the legend to lose the last life point</>,
+    ERROR_DIFFERENT_SUITS: () =>                                                <>The cards must be of the same suit</>,
     
     LOG_GAME_START: () =>                                                       <>Game started</>,
     LOG_GAME_OVER: () =>                                                        <>Game over</>,
