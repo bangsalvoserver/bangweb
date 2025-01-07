@@ -3,7 +3,7 @@ import { GameStateContext } from "../GameScene";
 import { getCard, newPocketId } from "../Model/GameTable";
 import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import MoveCardAnimation from "./MoveCardAnimation";
-import MoveCubeAnimation from "./MoveCubeAnimations";
+import MoveTokensAnimation from "./MoveTokensAnimation";
 import { CardTracker } from "../Model/CardTracker";
 import MovePlayersAnimation from "./MovePlayersAnimation";
 
@@ -24,11 +24,12 @@ export default function AnimationView({ tracker }: AnimationProps) {
             destPocket={newPocketId(animation.pocket, animation.player)}
             duration={animation.duration}
         />;
-    case 'move_cubes':
-        return <MoveCubeAnimation
+    case 'move_tokens':
+        return <MoveTokensAnimation
             key={animation.key}
             tracker={tracker}
-            num_cubes={animation.num_cubes}
+            token_type={animation.token_type}
+            num_tokens={animation.num_tokens}
             origin_card={animation.origin_card ? getCard(table, animation.origin_card) : null}
             target_card={animation.target_card ? getCard(table, animation.target_card) : null}
             duration={animation.duration}

@@ -51,6 +51,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         highnoon:               "High Noon",
         fistfulofcards:         "A Fistful of Cards",
         stickofdynamite:        "Candelotto di Dinamite",
+        legends:                "Legends",
         canyondiablo:           "Canyon Diablo",
     },
 

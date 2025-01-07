@@ -9,12 +9,22 @@
 }
 
 .card-animation-flip {
-    animation-name: flip-card;
+    animation-name: flip-card-horizontal;
 }
 
-@keyframes flip-card {
+@keyframes flip-card-horizontal {
     to {
         transform: rotateY(180deg)
+    }
+}
+
+.feats-cards .card-animation-flip {
+    animation-name: flip-card-vertical;
+}
+
+@keyframes flip-card-vertical {
+    to {
+        transform: rotateX(180deg)
     }
 }
 

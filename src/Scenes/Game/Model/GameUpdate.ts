@@ -1,6 +1,6 @@
 import { Empty, Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, TablePocketType } from "./CardEnums";
+import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, TablePocketType, TokenType } from "./CardEnums";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -41,13 +41,15 @@ export interface MoveCardUpdate {
     position: PocketPosition;
 }
 
-export interface AddCubesUpdate {
-    num_cubes: number;
+export interface AddTokensUpdate {
+    token_type: TokenType;
+    num_tokens: number;
     target_card: CardId | null;
 }
 
-export interface MoveCubesUpdate {
-    num_cubes: number;
+export interface MoveTokensUpdate {
+    token_type: TokenType;
+    num_tokens: number;
     origin_card: CardId | null;
     target_card: CardId | null;
 }
@@ -56,11 +58,12 @@ export interface MoveTrainUpdate {
     position: number;
 }
 
-export type ShufflePocket = 'main_deck' | 'shop_deck' | 'train_deck';
+export type ShufflePocket = 'main_deck' | 'shop_deck' | 'train_deck' | 'feats_deck';
 
 export function getShuffleOrigin(pocket: ShufflePocket): TablePocketType {
     switch (pocket) {
     case 'main_deck': return 'discard_pile';
+    case 'feats_deck': return 'feats_discard';
     default: return pocket;
     }
 }
@@ -199,8 +202,8 @@ export type GameTableUpdate =
     { tap_card: TapCardUpdate & Duration } |
     { flash_card: FlashCardUpdate & Duration } |
     { short_pause: ShortPauseUpdate & Duration } |
-    { add_cubes: AddCubesUpdate } |
-    { move_cubes: MoveCubesUpdate & Duration } |
+    { add_tokens: AddTokensUpdate } |
+    { move_tokens: MoveTokensUpdate & Duration } |
     { move_train: MoveTrainUpdate & Duration } |
     { game_flags: GameFlag[] };
 
@@ -210,7 +213,7 @@ export type SyntheticTableUpdate =
     { move_card_end: MoveCardUpdate } |
     { deck_shuffled_end: DeckShuffledUpdate } |
     { card_animation_end: CardId } |
-    { move_cubes_end: MoveCubesUpdate } |
+    { move_tokens_end: MoveTokensUpdate } |
     { move_train_end: MoveTrainUpdate };
 
 export type TableUpdate = GameTableUpdate | SyntheticTableUpdate;

@@ -9,7 +9,7 @@
     position: fixed;
     left: var(--startX);
     top: var(--startY);
-    animation-name: move-and-flip-card;
+    animation-name: move-and-flip-card-horizontal;
     animation-fill-mode: both;
     transition: ease-in-out;
     animation-duration: calc(var(--duration) - var(--total-delay));
@@ -18,9 +18,20 @@
     transform-origin: 0 0;
 }
 
-@keyframes move-and-flip-card {
+@keyframes move-and-flip-card-horizontal {
     to {
         z-index: var(--card-index);
         transform: translate(var(--diffX), var(--diffY)) rotateY(180deg);
+    }
+}
+
+.feats-cards .deck-shuffle-animation-inner {
+    animation-name: move-and-flip-card-vertical;
+}
+
+@keyframes move-and-flip-card-vertical {
+    to {
+        z-index: var(--card-index);
+        transform: translate(var(--diffX), var(--diffY)) rotateX(180deg);
     }
 }

@@ -14,8 +14,8 @@
 
 .card-overlay-inner {
     position: relative;
-    width: var(--card-width-unscaled);
-    height: var(--card-height-unscaled);
+    width: max-content;
+    height: max-content;
     transform: translate(-50%, -50%);
 }
 

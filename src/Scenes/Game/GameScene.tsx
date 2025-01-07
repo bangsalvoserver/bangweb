@@ -1,4 +1,4 @@
-import { RefObject, createContext, useRef, useState } from "react";
+import { RefObject, createContext, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
@@ -13,7 +13,7 @@ import { SPRITE_CUBE } from "./CardView";
 import GameLogView from "./GameLogView";
 import GameUsersView from "./GameUsersView";
 import { PocketType } from "./Model/CardEnums";
-import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
+import { PlayerRef, PocketRef, TokenRefs, useCardTracker } from "./Model/CardTracker";
 import { getPlayer } from "./Model/GameTable";
 import { GameOptions, PlayerId } from "./Model/GameUpdate";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
@@ -60,7 +60,8 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
 
   const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
 
-  const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
+  const tokenRefs: TokenRefs = useMemo(() => ({ 'cube': cubesRef }), []);
+  const tracker = useCardTracker(playerRefs, pocketRefs, tokenRefs);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0
@@ -86,10 +87,28 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     </div>
   );
 
+  const featsPockets = (table.pockets.feats_deck.length !== 0 || table.pockets.feats.length !== 0
+    || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'feats_deck')
+  ) && (
+    <div className="pocket-group feats-cards">
+      <div className="feats-row">
+        <div className="feats-col">
+          <StackPocket slice={2} showCount pocketRef={setRef('feats_deck')} cards={table.pockets.feats_deck} />
+          <div className="card-faded">
+            <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={table.pockets.feats_discard} />
+          </div>
+        </div>
+        <div className="feats-pocket">
+          <PocketView pocketRef={setRef('feats')} cards={table.pockets.feats} />
+        </div>
+      </div>
+    </div>
+  );
+
   const tableCubes = <div className='table-cubes' ref={cubesRef}>
-    {table.status.num_cubes > 0 && <>
+    {table.status.tokens.cube > 0 && <>
       <img src={SPRITE_CUBE} alt="" />
-      <div>x{table.status.num_cubes}</div>
+      <div>x{table.status.tokens.cube}</div>
     </>}
   </div>;
 
@@ -147,7 +166,11 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
             <SetCardOverlayContext.Provider value={setCardOverlayState}>
               <div className="main-deck-row">
                 <div>
-                  {shopPockets}{tableCubes}{mainDeck}{scenarioCards}
+                  {shopPockets}
+                  {tableCubes}
+                  {mainDeck}
+                  {scenarioCards}
+                  {featsPockets}
                 </div>
                 {trainPockets}
               </div>

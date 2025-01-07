@@ -136,6 +136,9 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
     }
 
     if (filter.includes('notsheriff') && target.status.role === 'sheriff') return false;
+
+    if (filter.includes('legend') && getCard(table, target.pockets.player_character[0]).cardData.deck !== 'legends') return false;
+
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length === 0) return false;
 
     if (filter.includes('target_set') && isResponse(selector)) {
@@ -144,7 +147,10 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
         }
     }
 
-    if (!getModifierContext(selector, 'ignore_distances') && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))) {
+    if (!getModifierContext(selector, 'ignore_distances')
+        && !origin.status.flags.includes('ignore_distances')
+        && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))
+    ) {
         const distances = selector.request?.distances;
         
         let range = distances?.range_mod ?? 0;
@@ -159,7 +165,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
             range += 2;
         }
 
-        if (calcPlayerDistance(table, selector, table.self_player!, target.id) > range) return false;
+        if (calcPlayerDistance(table, selector, origin.id, target.id) > range) return false;
     }
 
     return true;

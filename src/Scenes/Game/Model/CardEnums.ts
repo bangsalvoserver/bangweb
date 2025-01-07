@@ -34,6 +34,7 @@ export type ExpansionType =
     'wildwestshow' |
     'thebullet' |
     'stickofdynamite' |
+    'legends' |
     'canyondiablo';
 
 export type DeckType =
@@ -47,7 +48,9 @@ export type DeckType =
     'wildwestshow' |
     'station' |
     'locomotive' |
-    'train';
+    'train' |
+    'legends' |
+    'feats';
 
 export type CardColor =
     'none' |
@@ -78,6 +81,9 @@ export type TablePocketType =
     'button_row' |
     'stations' |
     'train_deck' |
+    'feats_deck' |
+    'feats_discard' |
+    'feats' |
     'train';
 
 export type PocketType = 'none' | PlayerPocketType | TablePocketType;
@@ -91,6 +97,17 @@ export type PlayerRole =
     'deputy_3p' |
     'outlaw_3p' |
     'renegade_3p';
+
+export type TokenType =
+    'cube' |
+    'fame1' |
+    'fame2' |
+    'fame3' |
+    'fame4' |
+    'fame5' |
+    'fame6' |
+    'fame7' |
+    'fame8';
 
 export type GameFlag = string;
 export type PlayerFlag = string;

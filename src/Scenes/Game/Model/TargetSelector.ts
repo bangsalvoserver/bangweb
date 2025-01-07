@@ -264,7 +264,7 @@ export function countSelectedCubes(table: GameTable, selector: TargetSelector, t
 export function countSelectableCubes(table: GameTable, selector: TargetSelector): number {
     const getCountCubes = (cardId: CardId) => {
         const card = getCard(table, cardId);
-        return card.num_cubes - countSelectedCubes(table, selector, card);
+        return card.tokens.cube - countSelectedCubes(table, selector, card);
     };
     const selfPlayer = getPlayer(table, table.self_player!);
     return sum(selfPlayer.pockets.player_character, getCountCubes)

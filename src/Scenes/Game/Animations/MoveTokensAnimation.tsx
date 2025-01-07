@@ -2,23 +2,25 @@ import { CSSProperties } from "react";
 import { Milliseconds } from "../../../Model/ServerMessage";
 import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
-import { SPRITE_CUBE } from "../CardView";
+import { getTokenSprite } from "../CardView";
+import { TokenType } from "../Model/CardEnums";
 import { CardTracker } from "../Model/CardTracker";
 import { Card } from "../Model/GameTable";
 import "./Style/MoveCubeAnimation.css";
 
 export interface MoveCubeProps {
     tracker: CardTracker;
-    num_cubes: number;
+    token_type: TokenType;
+    num_tokens: number;
     origin_card: Card | null;
     target_card: Card | null;
     duration: Milliseconds;
 }
 
-export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, target_card, duration }: MoveCubeProps) {
+export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, origin_card, target_card, duration }: MoveCubeProps) {
     const [startRect, endRect] = useUpdateEveryFrame(() => [
-        tracker.getCubesRect(origin_card),
-        tracker.getCubesRect(target_card)
+        tracker.getTokensRect(token_type, origin_card),
+        tracker.getTokensRect(token_type, target_card)
     ]);
     
     if (startRect && endRect) {
@@ -31,7 +33,7 @@ export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, ta
             '--diffX': (endPoint.x - startPoint.x) + 'px',
             '--diffY': (endPoint.y - startPoint.y) + 'px',
             '--duration': duration + 'ms',
-            '--num-cubes': num_cubes
+            '--num-cubes': num_tokens
         } as CSSProperties;
 
         const moveCubeIndexStyle = (i: number) => {
@@ -40,12 +42,13 @@ export default function MoveCubeAnimation ({ tracker, num_cubes, origin_card, ta
             } as CSSProperties;
         };
 
+        const tokenSprite = getTokenSprite(token_type);
         return (
             <div style={style} className='move-cubes-animation'>
-                {[...Array(num_cubes)].map((item, i) => (
+                {[...Array(num_tokens)].map((item, i) => (
                     <div key={i} style={moveCubeIndexStyle(i)}
-                        className={`${num_cubes <= 1 ? 'total-delay-0' : ''} move-cubes-animation-inner`} >
-                        <img src={SPRITE_CUBE} alt="" />
+                        className={`${num_tokens <= 1 ? 'total-delay-0' : ''} move-cubes-animation-inner`} >
+                        <img src={tokenSprite} alt="" />
                     </div>
                 ))}
             </div>
