@@ -67,6 +67,10 @@
     transform: rotateX(180deg);
 }
 
+.feats-cards .pocket-view {
+    line-height: 0;
+}
+
 .card-cubes {
     position: absolute;
     width: 80%;

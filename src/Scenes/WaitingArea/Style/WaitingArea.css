@@ -30,11 +30,14 @@
 .lobby-element div#lobby-name {
     font-weight: bold;
     padding-right: 1em;
-    padding-bottom: 0.5em;
     max-width: 10em;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+}
+
+.lobby-element div#lobby-button-join {
+    padding-bottom: 0.4em;
 }
 
 .lobby-element div#num-players {
