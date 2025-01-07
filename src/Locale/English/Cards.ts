@@ -325,7 +325,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     WILHELM_SCREAM:             "Wilhelm Scream",
     SCRUGS_BALLAD:              "Scrugs Ballad",
     BORDERLANDS:                "Borderlands",
-    THE_OREGON_TRAIN:           "The Oregon Trail",
+    THE_OREGON_TRAIL:           "The Oregon Trail",
     A_THOUSAND_WAYS_TO_DIE:     "A Thousand Ways To Die",
     FOR_A_FEW_CARDS_MORE:       "For A Few Cards More",
     A_QUICK_DEATH:              "A Quick Death",

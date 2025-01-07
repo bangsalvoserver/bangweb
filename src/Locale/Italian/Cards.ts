@@ -325,7 +325,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     WILHELM_SCREAM:             "L'Urlo Di Wilhelm",
     SCRUGS_BALLAD:              "La Ballata Di Scrugs",
     BORDERLANDS:                "La Frontiera",
-    THE_OREGON_TRAIN:           "La Pista Dell'Oregon",
+    THE_OREGON_TRAIL:           "La Pista Dell'Oregon",
     A_THOUSAND_WAYS_TO_DIE:     "Mille Modi Per Morire",
     FOR_A_FEW_CARDS_MORE:       "Per Qualche Carta In Più",
     A_QUICK_DEATH:              "Una Morte Veloce",
