@@ -46,6 +46,16 @@
     --card-translate-y: -40%;
 }
 
+.stack-pocket .card-view:not(:last-child).card-modified {
+    pointer-events: all;
+    --card-translate-y: -40%;
+}
+
+.stack-pocket .card-view:not(:last-child).card-current {
+    pointer-events: all;
+    --card-translate-y: -40%;
+}
+
 .pocket-count {
     text-shadow: 0px 0px 4px white, 0px 0px 4px white, 0px 0px 4px white, 0px 0px 4px white;
     font-weight: bold;
