@@ -319,7 +319,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     BOTTLENECK:                 "Bottleneck",
     THE_CHUCK_A_LUCK:           "The Chuck-A-Luck",
     '3_15_TO_YOOMA':            "3-15 To Yooma",
-    IN_GOOD_COMPANY:            "In Good Company",
+    GOOD_COMPANY:               "Good Company",
     THE_LAST_HERO:              "The Last Hero",
     THE_MAN_WITH_NO_NAME:       "The Man With No Name",
     WILHELM_SCREAM:             "Wilhelm Scream",

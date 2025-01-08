@@ -319,7 +319,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     BOTTLENECK:                 "Il Collo Di Bottiglia",
     THE_CHUCK_A_LUCK:           "Il Mulino D'Oro",
     '3_15_TO_YOOMA':            "Il Treno Per Yooma",
-    IN_GOOD_COMPANY:            "In Buona Compagnia",
+    GOOD_COMPANY:               "In Buona Compagnia",
     THE_LAST_HERO:              "L'Ultimo Eroe",
     THE_MAN_WITH_NO_NAME:       "L'Uomo Senza Nome",
     WILHELM_SCREAM:             "L'Urlo Di Wilhelm",
