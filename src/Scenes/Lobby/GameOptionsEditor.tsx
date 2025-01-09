@@ -6,8 +6,6 @@ import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import './Style/GameOptionsEditor.css';
 
-export type AddExpansion = (value: ExpansionType, expansions: ExpansionType[]) => ExpansionType[];
-
 export interface GameOptionProps {
     gameOptions: GameOptions;
     setGameOptions: (gameOptions: GameOptions) => void;
@@ -19,14 +17,11 @@ type GameOptionsOf<T> = keyof { [Property in FilteredKeys<Required<GameOptions>,
 
 interface ExpansionProps extends GameOptionProps {
     name: ExpansionType;
-    addExpansion: AddExpansion;
+    include?: ExpansionType[];
+    exclude?: ExpansionType[];
 }
 
-function addExpansionWithout(...without: ExpansionType[]): AddExpansion {
-    return (value, expansions) => expansions.filter(e => !without.includes(e)).concat(value);
-}
-
-function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, addExpansion }: ExpansionProps) {
+function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, include, exclude }: ExpansionProps) {
     const handleExpansionChange = (event: ChangeEvent<HTMLInputElement>) => {
         const oldValue = gameOptions.expansions.includes(name);
         const newValue = event.target.checked;
@@ -34,7 +29,10 @@ function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, addExp
             setGameOptions({
                 ...gameOptions,
                 expansions: newValue
-                    ? addExpansion(name, gameOptions.expansions)
+                    ? gameOptions.expansions.filter(e => {
+                        return (!include || include.includes(e))
+                            && (!exclude || !exclude.includes(e));
+                    }).concat(name)
                     : gameOptions.expansions.filter(e => e !== name)
             });
         }
@@ -119,19 +117,19 @@ export default function GameOptionsEditor(props: GameOptionProps) {
     return (<div className="game-options-editor">
         <div className="game-options-group">
             <div className="game-options-group-header">{getLabel('GameOptions', 'expansions')}</div>
-            <ExpansionCheckbox name='dodgecity' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='goldrush' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='armedanddangerous' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='greattrainrobbery' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='valleyofshadows' addExpansion={addExpansionWithout('legends', 'udolistinu')} { ...props } />
-            <ExpansionCheckbox name='udolistinu' addExpansion={addExpansionWithout('legends', 'valleyofshadows')} { ...props } />
-            <ExpansionCheckbox name='highnoon' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='fistfulofcards' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='wildwestshow' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='stickofdynamite' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='legends' addExpansion={value => [value]} { ...props } />
-            <ExpansionCheckbox name='thebullet' addExpansion={addExpansionWithout('legends')} { ...props } />
-            <ExpansionCheckbox name='canyondiablo' addExpansion={addExpansionWithout('legends')} { ...props } />
+            <ExpansionCheckbox name='dodgecity' { ...props } />
+            <ExpansionCheckbox name='goldrush' { ...props } />
+            <ExpansionCheckbox name='armedanddangerous' { ...props } />
+            <ExpansionCheckbox name='greattrainrobbery' { ...props } />
+            <ExpansionCheckbox name='valleyofshadows' { ...props } exclude={['udolistinu']}/>
+            <ExpansionCheckbox name='udolistinu' { ...props } exclude={['valleyofshadows']} />
+            <ExpansionCheckbox name='highnoon' { ...props } />
+            <ExpansionCheckbox name='fistfulofcards' { ...props } />
+            <ExpansionCheckbox name='wildwestshow' { ...props } />
+            <ExpansionCheckbox name='stickofdynamite' { ...props } />
+            <ExpansionCheckbox name='legends' { ...props } />
+            <ExpansionCheckbox name='thebullet' { ...props } />
+            <ExpansionCheckbox name='canyondiablo' { ...props } />
         </div>
         <div className="game-options-group">
             <div className="game-options-group-header cursor-pointer" onClick={() => setExpandOptions(value => !value)}>
