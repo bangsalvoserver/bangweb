@@ -4,7 +4,7 @@ import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { getCardPocket } from "./Filters";
-import { AnimationKey, GameTable, Player, editById, getCard, getCardBackface, getCardImage, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
+import { AnimationKey, GameTable, Player, editById, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
 import { getShuffleOrigin, TableUpdate } from "./GameUpdate";
 
 function setAnimation<T extends { animation: U }, U extends AnimationKey>(value: T, animation: Omit<U, 'key'>): T {
@@ -79,9 +79,10 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Sets the player_death animation and/or the player_move animation
     player_order ({ players, duration }) {
-        const filteredPlayers = intersect(this.alive_players, players);
-        const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
-        const removedPlayers = subtract(this.alive_players, players);
+        const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.includes('removed'));
+        const filteredPlayers = intersect(this.alive_players, notRemovedPlayers);
+        const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
+        const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
 
         let newPlayers = this.players;
         if (removedPlayers.length !== 0) {
@@ -107,9 +108,10 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
     // Changes the order of how players are seated
     player_order_end ({ players }) {
-        const filteredPlayers = intersect(this.alive_players, players);
-        const rotatedPlayers = rotateToFirstOf(players, this.self_player, filteredPlayers.at(0));
-        const removedPlayers = subtract(this.alive_players, players);
+        const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.includes('removed'));
+        const filteredPlayers = intersect(this.alive_players, notRemovedPlayers);
+        const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
+        const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
 
         let newPlayers = this.players;
         if (removedPlayers.length !== 0) {
