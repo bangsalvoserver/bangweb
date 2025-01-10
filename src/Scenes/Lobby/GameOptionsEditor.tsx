@@ -125,6 +125,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='udolistinu' { ...props } exclude={['valleyofshadows']} />
             <ExpansionCheckbox name='highnoon' { ...props } />
             <ExpansionCheckbox name='fistfulofcards' { ...props } />
+            <ExpansionCheckbox name='wildwestshow_characters' { ...props } />
             <ExpansionCheckbox name='wildwestshow' { ...props } />
             <ExpansionCheckbox name='stickofdynamite' { ...props } />
             <ExpansionCheckbox name='legends' { ...props } />

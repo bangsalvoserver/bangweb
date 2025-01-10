@@ -31,6 +31,7 @@ export type ExpansionType =
     'udolistinu' |
     'highnoon' |
     'fistfulofcards' |
+    'wildwestshow_characters' |
     'wildwestshow' |
     'thebullet' |
     'stickofdynamite' |

@@ -45,6 +45,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         valleyofshadows:        "Valley Of Shadows",
         udolistinu:             "Valley Of Shadows (original version)",
         greattrainrobbery:      "The Great Train Robbery",
+        wildwestshow_characters:"Wild West Show (characters)",
         wildwestshow:           "Wild West Show",
         goldrush:               "Gold Rush",
         armedanddangerous:      "Armed & Dangerous",
