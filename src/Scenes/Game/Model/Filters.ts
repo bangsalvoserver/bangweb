@@ -137,8 +137,6 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (filter.includes('notsheriff') && target.status.role === 'sheriff') return false;
 
-    if (filter.includes('legend') && getCard(table, target.pockets.player_character[0]).cardData.deck !== 'legends') return false;
-
     if (filter.includes('not_empty_hand') && target.pockets.player_hand.length === 0) return false;
 
     if (filter.includes('target_set') && isResponse(selector)) {
