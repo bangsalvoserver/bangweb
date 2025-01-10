@@ -160,18 +160,19 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         classes.push('player-view-self');
     }
     
-    const [fameTokenSprite, numFame] = (() => {
-        const characterId = player.pockets.player_character.at(0);
-        if (characterId && characterId > 0) {
-            const card = getCard(table, characterId);
-            for (const [key, value] of Object.entries(card.tokens) as [TokenType, number][]) {
-                if (key !== 'cube' && value > 0) {
-                    return [getTokenSprite(key), value];
-                }
+    let fameTokenSprite = null;
+    let numFame = 0;
+    const characterId = player.pockets.player_character.at(0);
+    if (characterId && characterId > 0) {
+        const card = getCard(table, characterId);
+        for (const [key, value] of Object.entries(card.tokens)) {
+            if (key !== 'cube' && value > 0) {
+                fameTokenSprite = getTokenSprite(key as TokenType);
+                numFame = value;
+                break;
             }
         }
-        return [null, 0];
-    })();
+    }
 
     const buildCharacterRef = (character: PocketRef | null) => {
         pocketRefs.set('player_character', {
@@ -216,14 +217,14 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                     </div>
                 )}
             </div>
-            { player.status.gold > 0 && <div className='player-tokens'>
-                <img src={iconGold} alt="" />
-                { player.status.gold }
-            </div> }
-            { fameTokenSprite !== null && <div className='player-tokens'>
-                <img src={fameTokenSprite} alt="" />
-                { numFame }
-            </div> }
+            {(!isDead || isGhost) && (player.status.gold !== 0 || fameTokenSprite !== null) && <div className='player-tokens'>
+                { player.status.gold !== 0 && <div className='player-tokens-inner'>
+                    <img src={iconGold} alt="" />{ player.status.gold }
+                </div> }
+                { fameTokenSprite !== null && <div className='player-tokens-inner'>
+                    <img src={fameTokenSprite} alt="" />{ numFame }
+                </div> }
+            </div>}
         </div>
         <div className='player-table' ref={tableRef}>
             <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />
