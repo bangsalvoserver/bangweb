@@ -176,6 +176,7 @@ export interface GameOptions {
     quick_discard_all: boolean;
     auto_pick_predraw: boolean;
     allow_bot_rejoin: boolean;
+    only_base_characters: boolean;
     scenario_deck_size?: number;
     num_bots?: number;
     damage_timer?: Milliseconds;

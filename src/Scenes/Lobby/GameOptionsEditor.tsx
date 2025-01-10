@@ -142,6 +142,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 <OptionCheckbox prop='character_choice' { ...props } />
                 <OptionCheckbox prop='quick_discard_all' { ...props } />
                 <OptionCheckbox prop='auto_pick_predraw' { ...props } />
+                <OptionCheckbox prop='only_base_characters' { ...props  } />
                 <OptionCheckbox prop='allow_bot_rejoin' { ...props } />
                 <OptionNumber prop='num_bots' max={8} { ...props } />
                 <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
