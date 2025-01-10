@@ -154,9 +154,6 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu']}>
                     <OptionNumber prop='escape_timer' max={10000} { ...props } />
                 </ConditionalOnExpansion>
-                <ConditionalOnExpansion expansions={['armedanddangerous']}>
-                    <OptionNumber prop='tumbleweed_timer' max={10000} { ...props } />
-                </ConditionalOnExpansion>
                 <OptionNumber prop='game_seed' { ...props} />
             </div>
         </div>

@@ -20,7 +20,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
         damage_timer:           "Timer Danno",
         escape_timer:           "Timer Fuga",
         bot_play_timer:         "Timer Giocata Bot",
-        tumbleweed_timer:       "Timer Cespuglio",
         game_seed:              "Seed di Gioco",
     },
 
@@ -35,7 +34,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
         damage_timer:           "Timer (in ms) per permettere di giocare carte come Salvo!, quando qualcuno prende danno.",
         escape_timer:           "Timer (in ms) per permettere di giocare Fuga, prima che l'azione si risolva automaticamente.",
         bot_play_timer:         "Timer (in ms) per controllare la velocità di gioco dei bot.",
-        tumbleweed_timer:       "Timer (in ms) per permettere di giocare Cespuglio, prima che l'estrazione si risolva automaticamente. (Imposta a 0 per disattivare)",
         game_seed:              "Seme per il generatore di numeri casuali. (Imposta a 0 per usare un valore casuale)"
     },
 

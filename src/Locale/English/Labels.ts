@@ -20,7 +20,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
         damage_timer:           "Damage Timer",
         escape_timer:           "Escape Timer",
         bot_play_timer:         "Bot Play Timer",
-        tumbleweed_timer:       "Tumbleweed Timer",
         game_seed:              "Game Seed",
     },
 
@@ -35,7 +34,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
         damage_timer:           "Timer (in ms) to allow players to play cards like Saved!, when someone receives damage.",
         escape_timer:           "Timer (in ms) to allow players to play Escape, before the action is resolved automatically.",
         bot_play_timer:         "Timer (in ms) to change the speed of play of bots.",
-        tumbleweed_timer:       "Timer (in ms) to allow players to play Tumbleweed, before the \"draw\" is resolved automatically. (Set to 0 to disable)",
         game_seed:              "Random number generator seed. (Set to 0 to use a random value)"
     },
 
