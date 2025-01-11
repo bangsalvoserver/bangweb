@@ -119,6 +119,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <div className="game-options-group-header">{getLabel('GameOptions', 'expansions')}</div>
             <ExpansionCheckbox name='dodgecity' { ...props } />
             <ExpansionCheckbox name='goldrush' { ...props } />
+            <ExpansionCheckbox name='shadowgunslingers' { ...props } />
             <ExpansionCheckbox name='armedanddangerous' { ...props } />
             <ExpansionCheckbox name='greattrainrobbery' { ...props } />
             <ExpansionCheckbox name='valleyofshadows' { ...props } exclude={['udolistinu']}/>

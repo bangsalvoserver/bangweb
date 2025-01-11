@@ -25,6 +25,7 @@ export type CardRank =
 export type ExpansionType =
     'dodgecity' |
     'goldrush' |
+    'shadowgunslingers' |
     'armedanddangerous' |
     'greattrainrobbery' |
     'valleyofshadows' |

@@ -48,6 +48,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         wildwestshow_characters:"Wild West Show (characters)",
         wildwestshow:           "Wild West Show",
         goldrush:               "Gold Rush",
+        shadowgunslingers:      "Shadow Gunslingers",
         armedanddangerous:      "Armed & Dangerous",
         highnoon:               "High Noon",
         fistfulofcards:         "A Fistful of Cards",
