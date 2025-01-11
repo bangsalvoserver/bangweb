@@ -14,7 +14,7 @@ import GameLogView from "./GameLogView";
 import GameUsersView from "./GameUsersView";
 import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, TokenRefs, useCardTracker } from "./Model/CardTracker";
-import { getPlayer } from "./Model/GameTable";
+import { getCubeCount, getPlayer } from "./Model/GameTable";
 import { GameOptions, PlayerId } from "./Model/GameUpdate";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
 import useGameState, { newGameState } from "./Model/UseGameState";
@@ -105,10 +105,11 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     </div>
   );
 
+  const nCubes = getCubeCount(table.status.tokens);
   const tableCubes = <div className='table-cubes' ref={cubesRef}>
-    {table.status.tokens.cube > 0 && <>
+    {nCubes > 0 && <>
       <img src={SPRITE_CUBE} alt="" />
-      <div>x{table.status.tokens.cube}</div>
+      <div>x{nCubes}</div>
     </>}
   </div>;
 

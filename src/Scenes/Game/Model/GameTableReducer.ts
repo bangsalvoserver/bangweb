@@ -4,7 +4,7 @@ import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { getCardPocket } from "./Filters";
-import { AnimationKey, GameTable, Player, editById, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
+import { AnimationKey, GameTable, Player, addTokens, editById, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
 import { getShuffleOrigin, TableUpdate } from "./GameUpdate";
 
 function setAnimation<T extends { animation: U }, U extends AnimationKey>(value: T, animation: Omit<U, 'key'>): T {
@@ -314,53 +314,56 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Adds tokens to a target_card (or the table if not set)
     add_tokens ({ token_type, num_tokens, target_card }) {
         let tableCards = this.cards;
-        let tableTokens = this.status.tokens[token_type];
+        let tableTokens = this.status.tokens;
         if (target_card) {
-            tableCards = editById(this.cards, target_card, card => ({ ...card, tokens: { ...card.tokens, [token_type]: card.tokens[token_type] + num_tokens }}));
+            tableCards = editById(this.cards, target_card, card => ({
+                ...card,
+                tokens: addTokens(card.tokens, token_type, num_tokens)
+            }));
         } else {
-            tableTokens += num_tokens;
+            tableTokens = addTokens(tableTokens, token_type, num_tokens);
         }
         return {
             ...this,
-            status: { ...this.status, tokens: { ...this.status.tokens, [token_type]: tableTokens }},
+            status: { ...this.status, tokens: tableTokens},
             cards: tableCards
         };
     },
 
     // Moves `num_tokens` from origin_card (or the table if not set) to target_card (or the table if not set)
     move_tokens ({ token_type, num_tokens, origin_card, target_card, duration }) {
-        let tableTokens = this.status.tokens[token_type];
+        let tableTokens = this.status.tokens;
         let tableCards = this.cards;
 
         if (origin_card) {
-            tableCards = editById(tableCards, origin_card, card => ({ ...card, tokens: { ...card.tokens, [token_type]: card.tokens[token_type] - num_tokens }}));
+            tableCards = editById(tableCards, origin_card, card => ({
+                ...card,
+                tokens: addTokens(card.tokens, token_type, -num_tokens)
+            }));
         } else {
-            tableTokens -= num_tokens;
+            tableTokens = addTokens(tableTokens, token_type, -num_tokens);
         }
         return setAnimation({
             ...this,
-            status: {
-                ...this.status,
-                tokens: { ...this.status.tokens, [token_type]: tableTokens }
-            },
+            status: { ...this.status, tokens: tableTokens },
             cards: tableCards
         }, { type: 'move_tokens', token_type, num_tokens, origin_card, target_card, duration });
     },
 
     move_tokens_end ({ token_type, num_tokens, target_card }) {
-        let tableTokens = this.status.tokens[token_type];
+        let tableTokens = this.status.tokens;
         let tableCards = this.cards;
         if (target_card) {
-            tableCards = editById(tableCards, target_card, card => ({ ...card, tokens: { ...card.tokens, [token_type]: card.tokens[token_type] + num_tokens }}));
+            tableCards = editById(tableCards, target_card, card => ({
+                ...card,
+                tokens: addTokens(card.tokens, token_type, num_tokens)
+            }));
         } else {
-            tableTokens += num_tokens;
+            tableTokens = addTokens(tableTokens, token_type, num_tokens);
         }
         return clearAnimation({
             ...this,
-            status: {
-                ...this.status,
-                tokens: { ...this.status.tokens, [token_type]: tableTokens }
-            },
+            status: { ...this.status, tokens: tableTokens },
             cards: tableCards
         });
     },

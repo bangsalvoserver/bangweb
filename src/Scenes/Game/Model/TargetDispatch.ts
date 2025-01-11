@@ -2,7 +2,7 @@ import { count, countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isPlayerInGame } from "./Filters";
-import { Card, GameTable, getCard, getPlayer, Player } from "./GameTable";
+import { Card, GameTable, getCard, getCubeCount, getPlayer, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSelected, TargetSelector } from "./TargetSelector";
 
@@ -145,7 +145,7 @@ const isValidCardTarget = <T>(table: GameTable, selector: TargetSelector, target
 
 const isValidCubeTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, card: Card) => {
     return getCardOwner(card) === table.self_player
-        && card.tokens.cube > countSelectedCubes(table, selector, card);
+        && getCubeCount(card.tokens) > countSelectedCubes(table, selector, card);
 };
 
 const getCubesSelected = (table: GameTable, target: CardId[], effect: CardEffect, originCard: Card, targetCard: Card) => {
@@ -292,7 +292,7 @@ const targetDispatch = buildDispatch({
             return getCardOwner(card) === table.self_player
                 && getCardPocket(card) === 'player_table'
                 && getCardColor(card) === 'orange'
-                && card.tokens.cube < 4 - count(target, card.id);
+                && getCubeCount(card.tokens) < 4 - count(target, card.id);
         },
         isCardSelected: checkMultiTarget,
         isSelectionConfirmable: targetIsNotEmpty,
@@ -308,11 +308,11 @@ const targetDispatch = buildDispatch({
             for (const cardId of selfPlayer.pockets.player_table) {
                 const card = getCard(table, cardId);
                 if (getCardColor(card) === 'orange') {
-                    cubeSlots += 4 - card.tokens.cube;
+                    cubeSlots += 4 - getCubeCount(card.tokens);
                 }
             }
             const firstCharacter = selfPlayer.pockets.player_character[0];
-            const characterCubes = getCard(table, firstCharacter).tokens.cube;
+            const characterCubes = getCubeCount(getCard(table, firstCharacter).tokens);
             return reserveTargets(Math.min(effect.target_value, cubeSlots, characterCubes));
         }
     }),

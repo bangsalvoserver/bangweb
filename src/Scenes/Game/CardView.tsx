@@ -5,7 +5,7 @@ import { GameStateContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
-import { Card, CardImage, GameTable, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
+import { Card, CardImage, GameTable, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
@@ -165,13 +165,14 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         classes.push(getSelectorCardClass(table, selector, card));
     }
 
-    const cardCubes = card.tokens.cube > 0 && (
-        [...Array(card.tokens.cube)].map((_, i) => (
-            <img key={i} className={`card-cube ${card.tokens.cube - i <= selectedCubes ? 'card-cube-selected' : ''}`} src={SPRITE_CUBE} alt=""  />
+    const nCubes = getCubeCount(card.tokens);
+    const cardCubes = nCubes > 0 && (
+        [...Array(nCubes)].map((_, i) => (
+            <img key={i} className={`card-cube ${nCubes - i <= selectedCubes ? 'card-cube-selected' : ''}`} src={SPRITE_CUBE} alt=""  />
         ))
     );
 
-    const fameTokens = card.cardData.deck === 'feats' && Object.entries(card.tokens)
+    const fameTokens = card.cardData.deck === 'feats' && card.tokens
         .flatMap(([token, count]) => {
             if (token === 'cube' || count === 0) return [];
             return [...Array(count)].map((_, i) => (

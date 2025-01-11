@@ -60,21 +60,7 @@ export type CardAnimation =
     { type: 'flash' } & Duration |
     { type: 'short_pause' };
 
-type TokenCount = Record<TokenType, number>;
-
-function newTokenCount(): TokenCount {
-    return {
-        'cube': 0,
-        'fame1': 0,
-        'fame2': 0,
-        'fame3': 0,
-        'fame4': 0,
-        'fame5': 0,
-        'fame6': 0,
-        'fame7': 0,
-        'fame8': 0
-    };
-}
+export type TokenCount = [TokenType, number][];
 
 type CardDeckOrData = { deck: DeckType } | CardData;
 
@@ -135,13 +121,44 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
         cardData: { deck },
         pocket,
         inactive: false,
-        tokens: newTokenCount(),
+        tokens: [],
         animation: { type: 'none', key: 0}
     };
 }
 
 export function isCardKnown(card: Card): card is KnownCard {
     return 'name' in card.cardData;
+}
+
+export function getCubeCount(tokenCount: TokenCount) {
+    console.log(tokenCount);
+    
+    for (const [key, value] of tokenCount) {
+        if (key === 'cube') {
+            return value;
+        }
+    }
+    return 0;
+}
+
+export function addTokens(tokenCount: TokenCount, type: TokenType, count: number) {
+    let result = tokenCount.slice();
+    for (let i=0; i<result.length; ++i) {
+        let [key, value] = result[i];
+        if (key === type) {
+            value += count;
+            if (value > 0) {
+                result[i] = [key, value];
+            } else {
+                result.splice(i, 1);
+            }
+            return result;
+        }
+    }
+    if (count > 0) {
+        result.push([type, count]);
+    }
+    return result;
 }
 
 export type PlayerPockets = Record<PlayerPocketType, CardId[]>;
@@ -258,7 +275,7 @@ export function newGameTable(myUserId: UserId): GameTable {
         alive_players: [],
 
         status: {
-            tokens: newTokenCount(),
+            tokens: [],
             train_position: 0,
             flags: [],
         },

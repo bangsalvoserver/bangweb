@@ -165,7 +165,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const characterId = player.pockets.player_character.at(0);
     if (characterId && characterId > 0) {
         const card = getCard(table, characterId);
-        for (const [key, value] of Object.entries(card.tokens)) {
+        for (const [key, value] of card.tokens) {
             if (key !== 'cube' && value > 0) {
                 fameTokenSprite = getTokenSprite(key as TokenType);
                 numFame = value;

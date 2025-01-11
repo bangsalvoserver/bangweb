@@ -1,7 +1,7 @@
 import { sum } from "../../../Utils/ArrayUtils";
 import { CardTarget } from "./CardTarget";
 import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getPlayer, isCardKnown } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
@@ -264,7 +264,7 @@ export function countSelectedCubes(table: GameTable, selector: TargetSelector, t
 export function countSelectableCubes(table: GameTable, selector: TargetSelector): number {
     const getCountCubes = (cardId: CardId) => {
         const card = getCard(table, cardId);
-        return card.tokens.cube - countSelectedCubes(table, selector, card);
+        return getCubeCount(card.tokens) - countSelectedCubes(table, selector, card);
     };
     const selfPlayer = getPlayer(table, table.self_player!);
     return sum(selfPlayer.pockets.player_character, getCountCubes)
