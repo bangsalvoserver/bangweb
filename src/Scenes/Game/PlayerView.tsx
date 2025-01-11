@@ -217,7 +217,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                     </div>
                 )}
             </div>
-            {(!isDead || isGhost) && (player.status.gold !== 0 || fameTokenSprite !== null) && <div className='player-tokens'>
+            {(player.status.gold !== 0 || fameTokenSprite !== null) && <div className='player-tokens'>
                 { player.status.gold !== 0 && <div className='player-tokens-inner'>
                     <img src={iconGold} alt="" />{ player.status.gold }
                 </div> }
