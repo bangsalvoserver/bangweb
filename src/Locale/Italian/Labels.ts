@@ -64,7 +64,9 @@ export const LABELS_ITALIAN: LabelRegistry = {
         renegade:               "Rinnegato",
         deputy_3p:              "Vice",
         outlaw_3p:              "Fuorilegge",
-        renegade_3p:            "Rinnegato"
+        renegade_3p:            "Rinnegato",
+        shadow_deputy:          "Vice Ombra",
+        shadow_outlaw:          "Fuorilegge Ombra",
     },
 
     ui: {

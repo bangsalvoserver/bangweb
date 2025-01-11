@@ -97,7 +97,9 @@ export type PlayerRole =
     'renegade' |
     'deputy_3p' |
     'outlaw_3p' |
-    'renegade_3p';
+    'renegade_3p' |
+    'shadow_deputy' |
+    'shadow_outlaw';
 
 export type TokenType =
     'cube' |
