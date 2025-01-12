@@ -34,7 +34,7 @@ export type ExpansionType =
     'fistfulofcards' |
     'wildwestshow_characters' |
     'wildwestshow' |
-    'thebullet' |
+    'mostwanted' |
     'stickofdynamite' |
     'legends' |
     'canyondiablo';

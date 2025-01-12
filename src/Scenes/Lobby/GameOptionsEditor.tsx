@@ -132,7 +132,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='shadowgunslingers' { ...props } />
             <ExpansionCheckbox name='stickofdynamite' { ...props } />
             <div className="game-options-group-header">{getLabel('GameOptions', 'extras')}</div>
-            <ExpansionCheckbox name='thebullet' { ...props } />
+            <ExpansionCheckbox name='mostwanted' { ...props } />
             <ExpansionCheckbox name='canyondiablo' { ...props } />
         </div>
         <div className="game-options-group">

@@ -42,7 +42,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     ExpansionType: {
-        thebullet:              "Most Wanted",
+        mostwanted:             "Most Wanted",
         dodgecity:              "Dodge City",
         valleyofshadows:        "Valley Of Shadows",
         udolistinu:             "Valley Of Shadows (versione originale)",
