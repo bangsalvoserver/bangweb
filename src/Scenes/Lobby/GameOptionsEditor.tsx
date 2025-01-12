@@ -118,21 +118,21 @@ export default function GameOptionsEditor(props: GameOptionProps) {
         <div className="game-options-group">
             <div className="game-options-group-header">{getLabel('GameOptions', 'expansions')}</div>
             <ExpansionCheckbox name='dodgecity' { ...props } />
+            <ExpansionCheckbox name='wildwestshow_characters' { ...props } />
             <ExpansionCheckbox name='goldrush' { ...props } />
-            <ExpansionCheckbox name='armedanddangerous' { ...props } />
-            <ExpansionCheckbox name='greattrainrobbery' { ...props } />
             <ExpansionCheckbox name='valleyofshadows' { ...props } exclude={['udolistinu']}/>
             <ExpansionCheckbox name='udolistinu' { ...props } exclude={['valleyofshadows']} />
+            <ExpansionCheckbox name='armedanddangerous' { ...props } />
+            <ExpansionCheckbox name='greattrainrobbery' { ...props } />
+            <ExpansionCheckbox name='legends' { ...props } />
+            <div className="game-options-group-header">{getLabel('GameOptions', 'variations')}</div>
             <ExpansionCheckbox name='highnoon' { ...props } />
             <ExpansionCheckbox name='fistfulofcards' { ...props } />
-            <ExpansionCheckbox name='wildwestshow_characters' { ...props } />
             <ExpansionCheckbox name='wildwestshow' { ...props } />
-            <ExpansionCheckbox name='legends' { ...props } />
-            <ExpansionCheckbox name='thebullet' { ...props } />
-            <div className="game-options-group-header">{getLabel('GameOptions', 'variations')}</div>
             <ExpansionCheckbox name='shadowgunslingers' { ...props } />
             <ExpansionCheckbox name='stickofdynamite' { ...props } />
             <div className="game-options-group-header">{getLabel('GameOptions', 'extras')}</div>
+            <ExpansionCheckbox name='thebullet' { ...props } />
             <ExpansionCheckbox name='canyondiablo' { ...props } />
         </div>
         <div className="game-options-group">
