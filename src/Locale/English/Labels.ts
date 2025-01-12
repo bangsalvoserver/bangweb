@@ -10,6 +10,8 @@ export const LABELS_ENGLISH: LabelRegistry = {
 
     GameOptions: {
         expansions:             "Expansions",
+        variations:             "Variations",
+        extras:                 "Extras",
         character_choice:       "Character Choice",
         enable_ghost_cards:     "Enable Ghost cards",
         quick_discard_all:      "Quick Discard All",

@@ -10,6 +10,8 @@ export const LABELS_ITALIAN: LabelRegistry = {
 
     GameOptions: {
         expansions:             "Espansioni",
+        variations:             "Varianti",
+        extras:                 "Extra",
         character_choice:       "Scelta Dei Personaggi",
         enable_ghost_cards:     "Abilita Carte Fantasma",
         quick_discard_all:      "Scarta Tutto Veloce",
