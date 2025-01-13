@@ -95,7 +95,6 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         getPocket: pocket => pocketRefs.get(pocket)
     }));
 
-    const setRef = (key: PocketType) => (value: PocketRef | null) => pocketRefs.set(key, value);
     const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
         return (pocket: PocketRef | null) => {
             pocketRefs.set(key, pocket ? clampedPocket(pocket, scrollRef) : null);
@@ -190,10 +189,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     return <div ref={divRef} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer(player)}>
         <div className='player-top-row'>
             <div className='player-character'>
-                <div className='absolute'>
-                    <StackPocket pocketRef={buildCharacterRef} cards={player.pockets.player_backup} />
-                </div>
-                <StackPocket pocketRef={setRef('player_backup')} cards={player.pockets.player_character.slice(0, 1)} />
+                <StackPocket pocketRef={buildCharacterRef} cards={player.pockets.player_character.slice(0, 1)} />
             </div>
             <div className='player-hand' ref={handRef}>
                 <div className='player-role'>

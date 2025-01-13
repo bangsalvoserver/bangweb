@@ -66,8 +66,7 @@ export type CardColor =
 export type PlayerPocketType =
     'player_hand' |
     'player_table' |
-    'player_character' |
-    'player_backup';
+    'player_character';
 
 export type TablePocketType =
     'main_deck' |

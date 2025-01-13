@@ -196,8 +196,7 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
         pockets: {
             player_hand: [],
             player_table: [],
-            player_character: [],
-            player_backup: []
+            player_character: []
         },
         animation: { type: 'none', key: 0}
     };
