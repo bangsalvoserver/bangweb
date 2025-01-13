@@ -27,7 +27,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     GameOptionsTooltip: {
-        character_choice:       "Abilita la scelta su due personaggi prima dell'inizio della partita.",
+        character_choice:       "Abilita la scelta su N personaggi prima dell'inizio della partita.",
         enable_ghost_cards:     "Abilita le carte che possono riportare in gioco i giocatori eliminati.",
         quick_discard_all:      "Risolvi automaticamente azioni dove il giocatore deve scartare tutte le carte.",
         auto_pick_predraw:      "Scegli automaticamente per quale carta estrarre prima della fase 1 del turno.",

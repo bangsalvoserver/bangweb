@@ -74,16 +74,17 @@ function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: BoolGam
 
 interface IntGameOptionProps extends GameOptionProps {
     prop: GameOptionsOf<number>;
+    min?: number;
     max?: number;
 }
 
-function OptionNumber({ prop, max, gameOptions, setGameOptions, readOnly }: IntGameOptionProps) {
+function OptionNumber({ prop, min, max, gameOptions, setGameOptions, readOnly }: IntGameOptionProps) {
     const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length === 0) {
             setGameOptions({ ...gameOptions, [prop]: undefined });
         } else if (event.target.validity.valid) {
             const value = event.target.valueAsNumber;
-            if (value >= 0 && (max === undefined || value <= max)) {
+            if (value >= 0 && (min === undefined || value >= min) && (max === undefined || value <= max)) {
                 setGameOptions({ ...gameOptions, [prop]: value });
             }
         }
@@ -143,7 +144,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 <ConditionalOnExpansion expansions={['greattrainrobbery','valleyofshadows','udolistinu','highnoon','fistfulofcards','wildwestshow']}>
                     <OptionCheckbox prop='enable_ghost_cards' { ...props } />
                 </ConditionalOnExpansion>
-                <OptionCheckbox prop='character_choice' { ...props } />
+                <OptionNumber prop='character_choice' min={1} max={3} { ...props } />
                 <OptionCheckbox prop='quick_discard_all' { ...props } />
                 <OptionCheckbox prop='auto_pick_predraw' { ...props } />
                 <OptionCheckbox prop='only_base_characters' { ...props  } />

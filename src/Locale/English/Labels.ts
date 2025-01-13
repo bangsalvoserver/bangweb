@@ -27,7 +27,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
     },
 
     GameOptionsTooltip: {
-        character_choice:       "Enables the choice of two characters before the start of the game.",
+        character_choice:       "Enables the choice of N characters before the start of the game.",
         enable_ghost_cards:     "Enables cards that can bring back players that were eliminated.",
         quick_discard_all:      "Automatically resolve actions where the player must discard every card.",
         auto_pick_predraw:      "Automatically choose which card to \"draw\" for before phase 1 of your turn.",
