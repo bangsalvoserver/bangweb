@@ -141,19 +141,19 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 {expandOptions ? '+' : '-'} {getLabel('ui', 'GAME_OPTIONS')}
             </div>
             <div className={expandOptions ? "game-options-visible" : "game-options-collapsed"}>
+                <OptionNumber prop='character_choice' min={1} max={3} { ...props } />
+                <OptionNumber prop='num_bots' max={8} { ...props } />
+                <OptionCheckbox prop='allow_bot_rejoin' { ...props } />
                 <ConditionalOnExpansion expansions={['greattrainrobbery','valleyofshadows','udolistinu','highnoon','fistfulofcards','wildwestshow']}>
                     <OptionCheckbox prop='enable_ghost_cards' { ...props } />
                 </ConditionalOnExpansion>
-                <OptionNumber prop='character_choice' min={1} max={3} { ...props } />
+                <OptionCheckbox prop='only_base_characters' { ...props  } />
                 <OptionCheckbox prop='quick_discard_all' { ...props } />
                 <OptionCheckbox prop='auto_pick_predraw' { ...props } />
-                <OptionCheckbox prop='only_base_characters' { ...props  } />
-                <OptionCheckbox prop='allow_bot_rejoin' { ...props } />
-                <OptionNumber prop='num_bots' max={8} { ...props } />
-                <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
                 <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
                     <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
                 </ConditionalOnExpansion>
+                <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
                 <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu','canyondiablo']}>
                     <OptionNumber prop='damage_timer' max={5000} { ...props } />
                 </ConditionalOnExpansion>
