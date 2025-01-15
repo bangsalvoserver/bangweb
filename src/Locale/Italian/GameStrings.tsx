@@ -314,6 +314,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     LOG_POKER_REVEAL: (card, revealed) =>                                   <>Viene rivelata {revealed} per {card}</>,
     LOG_POKER_ACE: () =>                                                    <>C'è un Asso, tutte le carte sono scartate</>,
     LOG_REVIVE: (player, card) =>                                           <>{player} ritorna in gioco per {card}</>,
+    LOG_SHADOW_GUNSLINGER: (player) =>                                      <>{player} ritorna in gioco come pistolero ombra</>,
     LOG_SWAP_CARDS: (player, target, target_card, chosen_card) =>           <>{player} scambia {target_card} con {chosen_card} di {target}</>,
     LOG_PLAYER_IMMUNE_TO_CARD: (player, card, disabler) =>                  <>{player} è immune a {card} per {disabler}</>,
     LOG_DEFLECTED_BANG_TO: (card, player, target_card, target) =>           <>{player} usa {card} per deviare {target_card} contro {target}</>,

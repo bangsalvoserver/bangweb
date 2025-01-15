@@ -131,8 +131,6 @@ export function isCardKnown(card: Card): card is KnownCard {
 }
 
 export function getCubeCount(tokenCount: TokenCount) {
-    console.log(tokenCount);
-    
     for (const [key, value] of tokenCount) {
         if (key === 'cube') {
             return value;
