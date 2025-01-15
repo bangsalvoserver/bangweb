@@ -187,44 +187,51 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     };
 
     return <div ref={divRef} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer(player)}>
-        <div className='player-top-row'>
-            <div className='player-character'>
-                <StackPocket pocketRef={buildCharacterRef} cards={player.pockets.player_character.slice(0, 1)} />
+        { player.animation.type === 'player_death' ?
+            <div className='player-top-row'>
+                <StackPocket cards={player.pockets.player_character} />
+                <RoleView role={playerRole} />
             </div>
-            <div className='player-hand' ref={handRef}>
-                <div className='player-role'>
-                    { player.pockets.player_character.length > 1 && 
-                        <PocketView pocketRef={extraCharacters} cards={player.pockets.player_character.slice(1)} /> }
-                    <div className='stack-pocket'>
-                        <RoleView key={roleKey} flipDuration={flipDuration} role={playerRole} />
-                    </div>
+        : <>
+            <div className='player-top-row'>
+                <div className='player-character'>
+                    <StackPocket pocketRef={buildCharacterRef} cards={player.pockets.player_character.slice(0, 1)} />
                 </div>
-                { (isPlayerSelf || table.status.flags.includes('hands_shown'))
-                    ? <div className='player-hand-inner'>
-                        <PocketView pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
-                      </div>
-                    : <StackPocket showCount pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
-                }
-            </div>
-            <div className='player-lifepoints'>
-                {[...Array(Math.max(0, player.status.hp, fromPlayerHp))].map((_, i) =>
-                    <div key={i} className={'player-lifepoint' + (i >= fromPlayerHp ? ' lifepoint-fade-in' : i >= player.status.hp ? ' lifepoint-fade-out' : '')}>
-                        <div className='player-lifepoint-inner'><img src='/media/icon_lifepoint.png' alt="" /></div>
+                <div className='player-hand' ref={handRef}>
+                    <div className='player-role'>
+                        { player.pockets.player_character.length > 1 && 
+                            <PocketView pocketRef={extraCharacters} cards={player.pockets.player_character.slice(1)} /> }
+                        <div className='stack-pocket'>
+                            <RoleView key={roleKey} flipDuration={flipDuration} role={playerRole} />
+                        </div>
                     </div>
-                )}
+                    { (isPlayerSelf || table.status.flags.includes('hands_shown'))
+                        ? <div className='player-hand-inner'>
+                            <PocketView pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
+                        </div>
+                        : <StackPocket showCount pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
+                    }
+                </div>
+                <div className='player-lifepoints'>
+                    {[...Array(Math.max(0, player.status.hp, fromPlayerHp))].map((_, i) =>
+                        <div key={i} className={'player-lifepoint' + (i >= fromPlayerHp ? ' lifepoint-fade-in' : i >= player.status.hp ? ' lifepoint-fade-out' : '')}>
+                            <div className='player-lifepoint-inner'><img src='/media/icon_lifepoint.png' alt="" /></div>
+                        </div>
+                    )}
+                </div>
+                {(player.status.gold !== 0 || fameTokenSprite !== null) && <div className='player-tokens'>
+                    { player.status.gold !== 0 && <div className='player-tokens-inner'>
+                        <img src={iconGold} alt="" />{ player.status.gold }
+                    </div> }
+                    { fameTokenSprite !== null && <div className='player-tokens-inner'>
+                        <img src={fameTokenSprite} alt="" />{ numFame }
+                    </div> }
+                </div>}
             </div>
-            {(player.status.gold !== 0 || fameTokenSprite !== null) && <div className='player-tokens'>
-                { player.status.gold !== 0 && <div className='player-tokens-inner'>
-                    <img src={iconGold} alt="" />{ player.status.gold }
-                </div> }
-                { fameTokenSprite !== null && <div className='player-tokens-inner'>
-                    <img src={fameTokenSprite} alt="" />{ numFame }
-                </div> }
-            </div>}
-        </div>
-        <div className='player-table' ref={tableRef}>
-            <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />
-        </div>
+            <div className='player-table' ref={tableRef}>
+                <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />
+            </div>
+        </>}
         <div className='player-icons'>
             { isGameOver ? <>
                 { isWinner && <div className="player-icon icon-winner"/> }
