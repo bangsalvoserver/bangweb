@@ -1,7 +1,7 @@
-import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { SyntheticEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
 import { LobbyState } from "../Model/SceneState";
-import { ChatMessage, LobbyChatArg } from "../Model/ServerMessage";
+import { ChatMessage, ChatMessageInner, LobbyStringArg } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
@@ -72,24 +72,27 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
         }
     };
 
-    const transformChatArg = useMemo(() => createUnionDispatch<LobbyChatArg, string>({
-        user: user_id => clipUsername(getUser(users, user_id).username),
-        integer: value => value.toString(),
-        string: value => value
-    }), [users]);
+    const MessageTag = useMemo(() => {
+        const transformChatArg = createUnionDispatch<LobbyStringArg, string>({
+            user: user_id => clipUsername(getUser(users, user_id).username),
+            integer: value => value.toString(),
+            string: value => value
+        });
 
-    const MessageTag = useCallback((props: ChatMessage) => {
-        if (props.user_id === 0) {
-            if (props.flags.includes('translated')) {
-                return <p className='server-message'>{getLabel('chat', props.message, ...props.args.map(transformChatArg))}</p>;
-            } else {
-                return props.message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>);
-            }
-        } else {
-            const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return <p className={pClass}><span className='username'>{clipUsername(getUser(users, props.user_id).username)}</span> : {props.message}</p>;
-        }
-    }, [users, myUserId, transformChatArg]);
+        const transformChatMessage = createUnionDispatch<ChatMessageInner, React.JSX.Element>({
+            user: ({ user_id, message }) => <p className={user_id === myUserId ? 'text-right' : ''}>
+                <span className='username'>{clipUsername(getUser(users, user_id).username)}</span> : {message}
+            </p>,
+            server: message => <>{
+                message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>)
+            }</>,
+            lobby: ({ format_str, format_args }) => <p className='server-message'>{
+                getLabel('chat', format_str, ...format_args.map(transformChatArg))
+            }</p>
+        });
+
+        return ({ message }: ChatMessage) => transformChatMessage(message);
+    }, [users, myUserId]);
 
     return <div ref={chatRef} className="lobby-chat-outer">
         <button className='

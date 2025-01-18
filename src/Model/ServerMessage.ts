@@ -33,7 +33,7 @@ export interface LobbyRemoved {
     lobby_id: LobbyId;
 }
 
-export type LobbyChatFlag = 'is_read' | 'translated';
+export type LobbyChatFlag = 'is_read';
 
 export type LobbyUserFlag = 'disconnected' | 'lobby_owner' | 'spectator' | 'muted';
 
@@ -45,15 +45,25 @@ export interface UserValue {
     lifetime: Milliseconds;
 }
 
-export type LobbyChatArg =
+export type LobbyStringArg =
     {user: UserId} |
     {integer: number} |
     {string: string};
 
-export interface ChatMessage {
-    user_id: number;
+export interface UserString {
+    user_id: UserId;
     message: string;
-    args: LobbyChatArg[];
+}
+
+export interface LobbyString {
+    format_str: string;
+    format_args: LobbyStringArg[];
+}
+
+export type ChatMessageInner = { user: UserString } | { server: string } | { lobby: LobbyString };
+
+export interface ChatMessage {
+    message: ChatMessageInner;
     flags: LobbyChatFlag[];
 }
 
