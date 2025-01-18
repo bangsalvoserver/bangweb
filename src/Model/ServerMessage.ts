@@ -60,6 +60,7 @@ export interface LobbyVoteStatus {
     message: LobbyString;
     num_yes: number;
     num_no: number;
+    lifetime: Milliseconds;
 }
 
 export interface UserString {
