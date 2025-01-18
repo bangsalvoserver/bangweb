@@ -1,7 +1,7 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
 import Button from "../../Components/Button";
 import getLabel from "../../Locale/GetLabel";
-import { UserValue } from "../../Model/ServerMessage";
+import { isUserBot, UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LobbyUser from "../Lobby/LobbyUser";
@@ -22,7 +22,7 @@ import "./Style/PlayerView.css";
 import iconGold from "/media/icon_gold.png";
 
 export interface PlayerProps {
-    gameOptions?: GameOptions;
+    gameOptions?: GameOptions | null;
     playerRef?: Ref<PlayerRef>;
     user: UserValue;
     player: Player;
@@ -114,7 +114,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const hasDynamiteStick = player.status.flags.includes('stick_of_dynamite');
     
     const isDisconnected = user.flags.includes('disconnected');
-    const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
+    const isRejoinableBot = isUserBot(user) && (gameOptions?.allow_bot_rejoin ?? false);
     const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver;
 
     let classes = ['player-view'];

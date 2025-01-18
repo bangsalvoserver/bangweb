@@ -83,8 +83,10 @@ export default function useBangConnection() {
                 sceneDispatch({ updateLobbies: message });
             },
             lobby_entered(message) {
-                gameChannel.clear();
                 sceneDispatch({ gotoLobby: message });
+            },
+            lobby_returned() {
+                sceneDispatch({ returnLobby: {} });
             },
             lobby_game_options(options) {
                 sceneDispatch({ setGameOptions: options });
@@ -94,6 +96,12 @@ export default function useBangConnection() {
             },
             lobby_user_update(message) {
                 sceneDispatch({ updateLobbyUser: message });
+            },
+            lobby_vote_status(status) {
+                sceneDispatch({ setLobbyVoteStatus: status });
+            },
+            lobby_vote_clear() {
+                sceneDispatch({ setLobbyVoteStatus: null });
             },
             lobby_kick() {
                 sceneDispatch({ gotoWaitingArea: {} });
@@ -108,6 +116,7 @@ export default function useBangConnection() {
                 gameChannel.update(update);
             },
             game_started() {
+                gameChannel.clear();
                 sceneDispatch({ gotoGame: {} });
             },
         }));

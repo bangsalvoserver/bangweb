@@ -35,7 +35,7 @@ import "./Style/PlayerGridMobile.css";
 export interface GameProps {
   connection: BangConnection;
   lobbyState: LobbyState;
-  gameOptions: GameOptions;
+  gameOptions: GameOptions | null;
   gameChannel: GameChannel;
   overlayRef: RefObject<HTMLDivElement>;
   muteSounds?: boolean;
