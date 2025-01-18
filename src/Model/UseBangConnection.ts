@@ -99,7 +99,10 @@ export default function useBangConnection() {
                 sceneDispatch({ gotoWaitingArea: {} });
             },
             lobby_chat(message) {
-                sceneDispatch({ addLobbyChatMessage: message })
+                sceneDispatch({ addLobbyChatMessage: { ...message, history: false} });
+            },
+            lobby_chat_history(message) {
+                sceneDispatch({ addLobbyChatMessage: { ...message, history: true} });
             },
             game_update(update) {
                 gameChannel.update(update);

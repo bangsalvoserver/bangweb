@@ -33,8 +33,6 @@ export interface LobbyRemoved {
     lobby_id: LobbyId;
 }
 
-export type LobbyChatFlag = 'is_read';
-
 export type LobbyUserFlag = 'disconnected' | 'lobby_owner' | 'spectator' | 'muted';
 
 export interface UserValue {
@@ -60,12 +58,7 @@ export interface LobbyString {
     format_args: LobbyStringArg[];
 }
 
-export type ChatMessageInner = { user: UserString } | { server: string } | { lobby: LobbyString };
-
-export interface ChatMessage {
-    message: ChatMessageInner;
-    flags: LobbyChatFlag[];
-}
+export type ChatMessage = { user: UserString } | { server: string } | { lobby: LobbyString };
 
 export type ServerMessage =
     {ping: Empty} |
@@ -78,5 +71,6 @@ export type ServerMessage =
     {lobby_user_update: UserValue} |
     {lobby_kick: Empty} |
     {lobby_chat: ChatMessage} |
+    {lobby_chat_history: ChatMessage} |
     {game_update: GameUpdate} |
     {game_started: Empty};

@@ -2,11 +2,13 @@ import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { createUnionReducer } from "../Utils/UnionUtils";
 import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyUserFlag, LobbyValue, UserId, UserValue } from "./ServerMessage";
 
+export type LobbyChatMessage = ChatMessage & { history: boolean };
+
 export interface LobbyState {
     lobbyId: LobbyId;
     myUserId: UserId;
     users: UserValue[];
-    chatMessages: ChatMessage[];
+    chatMessages: LobbyChatMessage[];
 }
 
 export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
@@ -46,7 +48,7 @@ export type SceneUpdate =
     { removeLobby: LobbyId } |
     { setGameOptions: GameOptions } |
     { updateLobbyUser: UserValue } |
-    { addLobbyChatMessage: ChatMessage };
+    { addLobbyChatMessage: LobbyChatMessage };
 
 export function defaultCurrentScene(sessionId?: number): SceneState {
     if (sessionId) {

@@ -1,7 +1,7 @@
 import { SyntheticEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
 import { LobbyState } from "../Model/SceneState";
-import { ChatMessage, ChatMessageInner, LobbyStringArg } from "../Model/ServerMessage";
+import { ChatMessage, LobbyStringArg } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
@@ -22,7 +22,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     
     const [isChatOpen, setIsChatOpen, chatRef] = useCloseOnLoseFocus<HTMLDivElement>();
     
-    const countMessages = useMemo(() => countIf(messages, m => !m.flags.includes('is_read')), [messages]);
+    const countMessages = useMemo(() => countIf(messages, m => !m.history), [messages]);
     const prevCountMessages = usePrevious(countMessages) ?? 0;
 
     const [numReadMessages, setNumReadMessages] = useState(0);
@@ -79,7 +79,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
             string: value => value
         });
 
-        const transformChatMessage = createUnionDispatch<ChatMessageInner, React.JSX.Element>({
+        const transformChatMessage = createUnionDispatch<ChatMessage, React.JSX.Element>({
             user: ({ user_id, message }) => <p className={user_id === myUserId ? 'text-right' : ''}>
                 <span className='username'>{clipUsername(getUser(users, user_id).username)}</span> : {message}
             </p>,
@@ -91,7 +91,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
             }</p>
         });
 
-        return ({ message }: ChatMessage) => transformChatMessage(message);
+        return ({ message }: { message: ChatMessage }) => transformChatMessage(message);
     }, [users, myUserId]);
 
     return <div ref={chatRef} className="lobby-chat-outer">
@@ -118,12 +118,12 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
         {numBubbles > 0 && <div className="lobby-chat-bubble-outer"><div className="lobby-chat-bubble">
             {[...Array(numBubbles)].map((item, i) => {
                 const index = messages.length - numBubbles + i;
-                return <MessageTag key={index} {...messages[index]}/>;
+                return <MessageTag key={index} message={messages[index]}/>;
             })}
         </div></div>}
         <div className={'lobby-chat-box ' + (!isChatOpen ? 'invisible' : '')}>
             {messages.length !== 0 && <div className="lobby-chat-messages">
-                {messages.map((message, index) => <MessageTag key={index} {...message} />)}
+                {messages.map((message, index) => <MessageTag key={index} message={message} />)}
                 <div ref={messagesEnd} />
             </div>}
             <form className="lobby-chat-form" onSubmit={handleFormSubmit}>
