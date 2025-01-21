@@ -333,11 +333,11 @@ const targetDispatch = buildDispatch({
     select_cubes_repeat: reservedDispatch({
         appendCardTarget: appendReservedTarget,
         isValidCubeTarget, getCubesSelected,
-        isSelectionConfirmable: (target, effect) => getReservedLength(target) % (effect.target_value ?? 1) === 0,
+        isSelectionConfirmable: (target, effect) => getReservedLength(target) % (effect.target_value || 1) === 0,
         isSelectionFinished, confirmSelection,
         buildAutoTarget: (table, selector, effect) => {
             const cubeCount = countSelectableCubes(table, selector);
-            const maxCount = cubeCount - cubeCount % (effect.target_value ?? 1);
+            const maxCount = cubeCount - cubeCount % (effect.target_value || 1);
             return reserveTargets(maxCount);
         }
     }),
