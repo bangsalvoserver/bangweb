@@ -15,6 +15,8 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                     <>Giocare {card} per curarsi di {amount === 1 ? "un punto vita" : `${amount} punti vita`} sprecherebbe {max_amount === 1 ? "un punto vita" : `${max_amount} punti vita`}. Continuare?</>,
     PROMPT_SUICIDE: (card) =>                                               <>Giocare {card} porta al suicidio. Continuare?</>,
     PROMPT_DEATH: () =>                                                     <>Puoi giocare una birra per salvarti. Continuare?</>,
+    PROMPT_CANCEL_PERFORM_FEAT: () =>                                       <>Vuoi annullare il compiere un'impresa?</>,
+    PROMPT_CANCEL_BOAST_FEAT: () =>                                         <>Vuoi annullare il vantare un'impresa?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card} : Giocare la carta o scartarla?</>,
 
     STATUS_GAME_OVER: () =>                                                 <>Partita Finita</>,

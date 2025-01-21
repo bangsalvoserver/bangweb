@@ -15,6 +15,8 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                         <>Playing {card} to heal by {amount} hp would waste {max_amount} hp. Continue?</>,
     PROMPT_SUICIDE: (card) =>                                                   <>Playing {card} will lead to suicide. Continue?</>,
     PROMPT_DEATH: () =>                                                         <>You can play a beer to save yourself. Continue?</>,
+    PROMPT_CANCEL_PERFORM_FEAT: () =>                                           <>Are you sure you want to cancel performing a feat?</>,
+    PROMPT_CANCEL_BOAST_FEAT: () =>                                             <>Are you sure you want to cancel boasting about a feat?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                              <>{card} : Play or discard this card?</>,
     
     STATUS_GAME_OVER: () =>                                                     <>Game Over</>,
