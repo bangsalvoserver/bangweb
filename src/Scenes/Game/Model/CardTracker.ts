@@ -1,4 +1,4 @@
-import { RefObject, useMemo } from "react";
+import { useMemo } from "react";
 import { Rect, getDivRect } from "../../../Utils/Rect";
 import { MapRef } from "../../../Utils/UseMapRef";
 import { PocketType, TokenType } from "./CardEnums";
@@ -25,9 +25,7 @@ export interface CardTracker {
     getTokensRect: (token_type: TokenType, card: Card | null) => Rect | null;
 }
 
-export type TokenRefs = Partial<Record<TokenType, RefObject<HTMLDivElement>>>;
-
-export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, tokenRefs: TokenRefs): CardTracker {
+export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, tokenRefs: MapRef<TokenType, HTMLDivElement>): CardTracker {
     return useMemo(() => ({
       getPlayerPockets(player: PlayerId) {
         return playerRefs.get(player);
@@ -47,7 +45,7 @@ export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRe
         if (card) {
           return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
         } else {
-          const ref = tokenRefs[token_type]?.current;
+          const ref = tokenRefs.get(token_type);
           return ref ? getDivRect(ref) : null;
         }
       }
