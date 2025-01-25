@@ -23,14 +23,21 @@ const registries: Record<Language, Registry> = {
 };
 
 export function getSystemLanguage(): Language {
-    if (Env.language) {
-        return Env.language;
+    let language: string | undefined = Env.language;
+
+    if (!language) {
+        language = new URLSearchParams(window.location.search).get('language') || '';
     }
 
-    const locale = navigator.languages
-        ? navigator.languages[0] : navigator.language;
-        
-    switch (locale.toLowerCase()) {
+    if (!language && navigator.languages) {
+        language = navigator.languages[0];
+    }
+
+    if (!language) {
+        language = navigator.language;
+    }
+
+    switch (language.toLowerCase()) {
         case 'it-it':
         case 'it': return 'it';
         default: return 'en';
