@@ -1,5 +1,12 @@
 import { labelRegistry } from "./Registry";
 
+export function hasLabel(group: string, name: string) {
+    if (group in labelRegistry) {
+        return name in labelRegistry[group];
+    }
+    return false;
+}
+
 export default function getLabel(group: string, name: string, ...formatArgs: string[]): string {
     if (group in labelRegistry) {
         const labelGroup = labelRegistry[group];

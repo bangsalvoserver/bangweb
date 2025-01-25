@@ -13,7 +13,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
         variations:             "Variations",
         extras:                 "Extras",
         character_choice:       "Character Choice",
-        enable_ghost_cards:     "Enable Ghost cards",
         quick_discard_all:      "Quick Discard All",
         auto_pick_predraw:      "Auto Pick Predraw",
         only_base_characters:   "Only Base Characters",
@@ -28,7 +27,6 @@ export const LABELS_ENGLISH: LabelRegistry = {
 
     GameOptionsTooltip: {
         character_choice:       "Enables the choice of N characters before the start of the game.",
-        enable_ghost_cards:     "Enables cards that can bring back players that were eliminated.",
         quick_discard_all:      "Automatically resolve actions where the player must discard every card.",
         auto_pick_predraw:      "Automatically choose which card to \"draw\" for before phase 1 of your turn.",
         only_base_characters:   "Only add characters from the base game.",
@@ -42,6 +40,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
     },
 
     ExpansionType: {
+        ghost_cards:            "Ghost cards",
         mostwanted:             "Most Wanted",
         dodgecity:              "Dodge City",
         valleyofshadows:        "Valley Of Shadows",
@@ -57,6 +56,11 @@ export const LABELS_ENGLISH: LabelRegistry = {
         stickofdynamite:        "Stick Of Dynamite",
         legends:                "Legends",
         canyondiablo:           "Canyon Diablo",
+    },
+
+    ExpansionTooltip: {
+        ghost_cards:            "Enables cards that can bring back players that were eliminated.",
+        canyondiablo:           "This is an extra unofficial experimental expansion"
     },
 
     PlayerRole: {

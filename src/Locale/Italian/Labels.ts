@@ -13,7 +13,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
         variations:             "Varianti",
         extras:                 "Extra",
         character_choice:       "Scelta Dei Personaggi",
-        enable_ghost_cards:     "Abilita Carte Fantasma",
         quick_discard_all:      "Scarta Tutto Veloce",
         auto_pick_predraw:      "Scelta automatica estrazione",
         only_base_characters:   "Solo Personaggi Base",
@@ -28,7 +27,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
 
     GameOptionsTooltip: {
         character_choice:       "Abilita la scelta su N personaggi prima dell'inizio della partita.",
-        enable_ghost_cards:     "Abilita le carte che possono riportare in gioco i giocatori eliminati.",
         quick_discard_all:      "Risolvi automaticamente azioni dove il giocatore deve scartare tutte le carte.",
         auto_pick_predraw:      "Scegli automaticamente per quale carta estrarre prima della fase 1 del turno.",
         only_base_characters:   "Aggiungi solo i personaggi della versione base del gioco.",
@@ -42,6 +40,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     ExpansionType: {
+        ghost_cards:            "Carte Fantasma",
         mostwanted:             "Most Wanted",
         dodgecity:              "Dodge City",
         valleyofshadows:        "Valley Of Shadows",
@@ -57,6 +56,11 @@ export const LABELS_ITALIAN: LabelRegistry = {
         stickofdynamite:        "Candelotto di Dinamite",
         legends:                "Legends",
         canyondiablo:           "Canyon Diablo",
+    },
+
+    ExpansionTooltip: {
+        ghost_cards:            "Abilita le carte che possono riportare in gioco i giocatori eliminati.",
+        canyondiablo:           "Questa è un'espansione extra sperimentale non ufficiale"
     },
 
     PlayerRole: {

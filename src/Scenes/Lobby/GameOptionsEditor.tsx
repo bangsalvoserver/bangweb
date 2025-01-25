@@ -45,6 +45,7 @@ function ExpansionCheckbox({ name, gameOptions, setGameOptions, readOnly, includ
             readOnly={readOnly}
         />
         <label htmlFor={name}>{getLabel('ExpansionType', name)}</label>
+        <Tooltip group='ExpansionTooltip' name={name} />
     </div>);
 }
 
@@ -67,7 +68,7 @@ function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: BoolGam
         />
         <label htmlFor={prop}>
             {getLabel('GameOptions', prop)}
-            <Tooltip description={getLabel('GameOptionsTooltip', prop)} />
+            <Tooltip group='GameOptionsTooltip' name={prop} />
         </label>
     </div>)
 };
@@ -93,7 +94,7 @@ function OptionNumber({ prop, min, max, gameOptions, setGameOptions, readOnly }:
     return (<div className="option-number">
         <label htmlFor={prop}>
             {getLabel('GameOptions', prop)}
-            <Tooltip description={getLabel('GameOptionsTooltip', prop)} />
+            <Tooltip group='GameOptionsTooltip' name={prop} />
         </label>
         <input id={prop} type="number"
             value={gameOptions[prop] ?? ''}
@@ -127,6 +128,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
             <ExpansionCheckbox name='greattrainrobbery' { ...props } />
             <ExpansionCheckbox name='legends' { ...props } />
             <div className="game-options-group-header">{getLabel('GameOptions', 'variations')}</div>
+            <ExpansionCheckbox name='ghost_cards' { ...props } />
             <ExpansionCheckbox name='highnoon' { ...props } />
             <ExpansionCheckbox name='fistfulofcards' { ...props } />
             <ExpansionCheckbox name='wildwestshow' { ...props } />
@@ -144,9 +146,6 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 <OptionNumber prop='character_choice' min={1} max={3} { ...props } />
                 <OptionNumber prop='num_bots' max={8} { ...props } />
                 <OptionCheckbox prop='allow_bot_rejoin' { ...props } />
-                <ConditionalOnExpansion expansions={['greattrainrobbery','valleyofshadows','udolistinu','highnoon','fistfulofcards','wildwestshow']}>
-                    <OptionCheckbox prop='enable_ghost_cards' { ...props } />
-                </ConditionalOnExpansion>
                 <OptionCheckbox prop='only_base_characters' { ...props  } />
                 <OptionCheckbox prop='quick_discard_all' { ...props } />
                 <OptionCheckbox prop='auto_pick_predraw' { ...props } />

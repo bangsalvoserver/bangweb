@@ -23,6 +23,7 @@ export type CardRank =
 
 
 export type ExpansionType =
+    'ghost_cards' |
     'dodgecity' |
     'goldrush' |
     'shadowgunslingers' |
