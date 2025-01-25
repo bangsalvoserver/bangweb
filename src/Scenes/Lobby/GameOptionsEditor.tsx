@@ -66,10 +66,8 @@ function OptionCheckbox({ prop, gameOptions, setGameOptions, readOnly }: BoolGam
             onChange={readOnly ? undefined : handleOptionChange}
             readOnly={readOnly}
         />
-        <label htmlFor={prop}>
-            {getLabel('GameOptions', prop)}
-            <Tooltip group='GameOptionsTooltip' name={prop} />
-        </label>
+        <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+        <Tooltip group='GameOptionsTooltip' name={prop} />
     </div>)
 };
 
@@ -92,10 +90,10 @@ function OptionNumber({ prop, min, max, gameOptions, setGameOptions, readOnly }:
     };
 
     return (<div className="option-number">
-        <label htmlFor={prop}>
-            {getLabel('GameOptions', prop)}
+        <div className="option-left-column">
+            <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
             <Tooltip group='GameOptionsTooltip' name={prop} />
-        </label>
+        </div>
         <input id={prop} type="number"
             value={gameOptions[prop] ?? ''}
             pattern='[0-9]{0,5}'
