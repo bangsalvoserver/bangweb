@@ -44,7 +44,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         mostwanted:             "Most Wanted",
         dodgecity:              "Dodge City",
         valleyofshadows:        "Valley Of Shadows",
-        udolistinu:             "Valley Of Shadows (original version)",
+        udolistinu:             "Údolí Stínů",
         greattrainrobbery:      "The Great Train Robbery",
         wildwestshow_characters:"Wild West Show (characters)",
         wildwestshow:           "Wild West Show",
@@ -59,7 +59,8 @@ export const LABELS_ENGLISH: LabelRegistry = {
     },
 
     ExpansionTooltip: {
-        ghost_cards:            "Enables cards that can bring back players that were eliminated.",
+        ghost_cards:            "Enables cards that can bring back players that were eliminated",
+        udolistinu:             "Original Czech version of Valley Of Shadows",
         canyondiablo:           "This is an extra unofficial experimental expansion"
     },
 
