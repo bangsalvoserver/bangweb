@@ -81,13 +81,21 @@ function parseCardImage(image: string, deck: string): string {
     return image.includes('/') ? image : `${deck}/${image}`;
 }
 
-export function getCardImage(card: Card): CardImage | undefined {
+export function getCardFrontface(card: Card): string | undefined {
     if (isCardKnown(card)) {
         const cardData = card.cardData;
         const colonIndex = cardData.image.indexOf(':');
         const imageFront = colonIndex >= 0 ? cardData.image.substring(0, colonIndex) : cardData.image;
+        return parseCardImage(imageFront, cardData.deck);
+    }
+    return undefined;
+}
+
+export function getCardImage(card: Card): CardImage | undefined {
+    if (isCardKnown(card)) {
+        const cardData = card.cardData;
         return {
-            image: parseCardImage(imageFront, cardData.deck),
+            image: getCardFrontface(card)!,
             sign: cardData.sign.rank !== 'none' && cardData.sign.suit !== 'none' ? cardData.sign : undefined
         };
     }

@@ -19,11 +19,14 @@ function CardOverlayInner({ divRef, cardImage, cardAlt }: OverlayState) {
       '--card-overlay-y': rectCenter.y + 'px'
   } as CSSProperties;
 
+  const image = typeof cardImage === 'string' ? cardImage : cardImage.image;
+  const sign = typeof cardImage === 'string' ? undefined : cardImage.sign;
+
   return <div className="card-overlay" style={cardOverlayStyle}>
     <div className="card-overlay-inner">
-      <img className="card-overlay-img" src={getCardUrl(cardImage.image)} alt={cardAlt} />
-      {cardImage.sign && <div className="card-overlay-sign">
-        <CardSignView sign={cardImage.sign} />
+      <img className="card-overlay-img" src={getCardUrl(image)} alt={cardAlt} />
+      {sign && <div className="card-overlay-sign">
+        <CardSignView sign={sign} />
       </div> }
     </div>
   </div>;

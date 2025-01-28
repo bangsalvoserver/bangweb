@@ -124,21 +124,10 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         classes.push('current-turn');
     }
 
-    let flipDuration: number | undefined;
-    let playerRole = player.status.role;
-
     let playerStyle: CSSProperties | undefined = undefined;
     let fromPlayerHp = player.status.hp;
     
-    let roleKey: number | null = null;
     switch (player.animation.type) {
-    case 'flipping_role':
-        roleKey = player.animation.key;
-        flipDuration = player.animation.duration;
-        if (player.status.role === 'unknown') {
-            playerRole = player.animation.role;
-        }
-        break;
     case 'player_hp':
         fromPlayerHp = player.animation.hp;
         playerStyle = {
@@ -190,7 +179,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         { player.animation.type === 'player_death' ?
             <div className='player-top-row'>
                 <StackPocket cards={player.pockets.player_character} />
-                <RoleView role={playerRole} />
+                <RoleView player={player} />
             </div>
         : <>
             <div className='player-top-row'>
@@ -202,7 +191,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                         { player.pockets.player_character.length > 1 && 
                             <PocketView pocketRef={extraCharacters} cards={player.pockets.player_character.slice(1)} /> }
                         <div className='stack-pocket'>
-                            <RoleView key={roleKey} flipDuration={flipDuration} role={playerRole} />
+                            <RoleView player={player} />
                         </div>
                     </div>
                     { (isPlayerSelf || table.status.flags.includes('hands_shown'))

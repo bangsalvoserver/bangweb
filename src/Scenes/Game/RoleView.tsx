@@ -1,48 +1,56 @@
-import { CSSProperties, useMemo, useRef } from "react";
+import { CSSProperties, useRef } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { getCardUrl } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
+import { Player } from "./Model/GameTable";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardView.css";
-import { CardImage } from "./Model/GameTable";
-import { Milliseconds } from "../../Model/ServerMessage";
 
 export interface RoleProps {
-    role: PlayerRole;
-    flipDuration?: Milliseconds;
+    player: Player;
 }
 
-export default function RoleView({ role, flipDuration }: RoleProps) {
+function getRoleImage(role: PlayerRole) {
+    if (role === 'unknown') return 'backface/role';
+    return 'role/' + role;
+}
+
+export default function RoleView({ player }: RoleProps) {
     const divRef = useRef<HTMLDivElement>(null);
+    
+    let animationKey: number | undefined;
 
-    const [backfaceSrc, cardImage, cardAlt] = useMemo(() => {
-        const backfaceSrc = 'backface/role';
-        const cardImage: CardImage = { image: role === 'unknown' ? backfaceSrc : 'role/' + role };
-        const cardAlt = getLabel('PlayerRole', role);
-        return [backfaceSrc, cardImage, cardAlt] as const;
-    }, [role]);
-
-    useCardOverlay(cardImage, cardAlt, divRef);
-
-    let style: CSSProperties | undefined;
+    let frontRole: PlayerRole = player.status.role;
+    let backRole: PlayerRole = 'unknown';
 
     let classes = ['card-view'];
+    let style: CSSProperties | undefined;
 
-    if (flipDuration) {
+    if (player.animation.type === 'flipping_role') {
+        animationKey = player.animation.key;
+
+        backRole = frontRole;
+        frontRole = player.animation.role;
+
         style = {
-            '--duration': flipDuration + 'ms'
+            '--duration': player.animation.duration + 'ms'
         } as CSSProperties;
 
         classes.push('card-animation', 'card-animation-flip');
-        if (role !== 'unknown') classes.push('card-animation-reverse');
     }
 
+    const backfaceSrc = getRoleImage(backRole);
+    const frontfaceSrc = getRoleImage(frontRole);
+    const cardAlt = getLabel('PlayerRole', frontRole);
+
+    useCardOverlay(frontfaceSrc, cardAlt, divRef);
+
     return <div className='pocket-view'>
-        <div ref={divRef} style={style} className={classes.join(' ')}>
+        <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={cardAlt} />
+                <img className="card-view-img" src={getCardUrl(frontfaceSrc)} alt={cardAlt} />
             </div>
-            {flipDuration ? <div className="card-back-flip">
+            {animationKey ? <div className="card-back-flip">
                 <img className="card-view-img" src={getCardUrl(backfaceSrc)} alt="" />
             </div> : null}
         </div>

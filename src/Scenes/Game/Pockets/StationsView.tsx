@@ -1,10 +1,10 @@
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useRef } from "react";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameStateContext } from "../GameScene";
 import { getLocalizedCardName } from "../GameStringComponent";
-import { getCard, getCardImage, isCardKnown } from "../Model/GameTable";
-import { SelectorConfirmContext } from "../Model/UseSelectorConfirm";
+import { getCard, getCardFrontface, isCardKnown } from "../Model/GameTable";
 import useCardOverlay from "../Model/UseCardOverlay";
+import { SelectorConfirmContext } from "../Model/UseSelectorConfirm";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
 
@@ -13,17 +13,15 @@ function StationCardView({ card }: CardProps) {
     const { handleClickCard } = useContext(SelectorConfirmContext);
 
     const divRef = useRef<HTMLDivElement>(null);
-    const [cardImage, cardAlt] = useMemo(() => [
-        getCardImage(card) ?? { image: 'backface/station' },
-        isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : ""
-    ] as const, [card]);
+    const image = getCardFrontface(card) ?? 'backface/station';
+    const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : "";
 
-    useCardOverlay(cardImage, cardAlt, divRef);
+    useCardOverlay(image, cardAlt, divRef);
     
     const selectorCardClass = getSelectorCardClass(table, selector, card);
     return (
         <div ref={divRef} className={`station-card ${selectorCardClass ?? ''}`} onClick={handleClickCard(card)}>
-            <img className='station-card-img' src={getCardUrl(cardImage.image)} alt={cardAlt} />
+            <img className='station-card-img' src={getCardUrl(image)} alt={cardAlt} />
         </div>
     );
 }

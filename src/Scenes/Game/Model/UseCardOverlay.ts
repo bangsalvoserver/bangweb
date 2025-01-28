@@ -2,14 +2,14 @@ import { Dispatch, RefObject, SetStateAction, createContext, useContext, useEffe
 import { CardImage } from "./GameTable";
 
 export interface OverlayState {
-    cardImage: CardImage;
+    cardImage: CardImage | string;
     cardAlt: string;
     divRef: RefObject<HTMLDivElement>;
 };
 
 export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayState | undefined>> | null>(null);
 
-export default function useCardOverlay(cardImage: CardImage, cardAlt: string, divRef: RefObject<HTMLDivElement>) {
+export default function useCardOverlay(cardImage: CardImage | string, cardAlt: string, divRef: RefObject<HTMLDivElement>) {
     const setCardOverlay = useContext(SetCardOverlayContext);
 
     useEffect(() => {

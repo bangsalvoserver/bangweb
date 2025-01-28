@@ -5,7 +5,7 @@ import { GameStateContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
-import { Card, CardImage, GameTable, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
+import { Card, GameTable, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
@@ -108,12 +108,10 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
     }));
 
-    let [backfaceImage, cardImage, cardAlt] = useMemo(() => {
-        const backfaceImage: CardImage = { image: getCardBackface(card) };
-        const cardImage = getCardImage(card);
-        const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : "";
-        return [backfaceImage, cardImage, cardAlt] as const;
-    }, [card]);
+    let backfaceImage = getCardBackface(card);
+    let cardImage = useMemo(() => getCardImage(card), [card]);
+    
+    const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : "";
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
@@ -132,7 +130,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
         classes.push('card-animation', 'z-10', 'card-animation-flip');
         if (card.animation.backface) {
-            backfaceImage.image = card.animation.backface;
+            backfaceImage = card.animation.backface;
         }
         if (card.animation.cardImage) {
             cardImage = card.animation.cardImage;
@@ -191,10 +189,10 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
                 {cardCubes && <div className="card-cubes">{cardCubes}</div>}
                 {fameTokens && <div className="card-fame-tokens">{fameTokens}</div>}
             </div> : <div className="card-back">
-                <img className="card-view-img" src={getCardUrl(backfaceImage.image)} alt="" />
+                <img className="card-view-img" src={getCardUrl(backfaceImage)} alt="" />
             </div> }
             { showBackface && <div className="card-back-flip">
-                <img className="card-view-img" src={getCardUrl(backfaceImage.image)} alt=""  />
+                <img className="card-view-img" src={getCardUrl(backfaceImage)} alt=""  />
             </div> }
         </div>
     )
