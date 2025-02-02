@@ -177,6 +177,7 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     if (!filter.includes('can_target_self') && isCardCurrent(selector, target)) return false;
 
     const targetPocket = getCardPocket(target);
+    const targetOwner = getCardOwner(target);
 
     if (filter.includes('target_set')) {
         if (!isResponse(selector)) return false;
@@ -195,7 +196,6 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     } else if (filter.includes('cube_slot')) {
         switch (targetPocket) {
         case 'player_character': {
-            const targetOwner = getCardOwner(target);
             if (!targetOwner || getPlayer(table, targetOwner)?.pockets.player_character[0] !== target.id) {
                 return false;
             }
@@ -283,6 +283,7 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
 
     if (filter.includes('table') && targetPocket !== 'player_table') return false;
     if (filter.includes('hand') && targetPocket !== 'player_hand') return false;
+    if (filter.includes('not_self_hand') && targetPocket === 'player_hand' && targetOwner === table.self_player) return false;
 
     return true;
 }
