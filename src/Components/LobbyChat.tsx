@@ -5,6 +5,7 @@ import { ChatMessage, LobbyChatArg } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
+import { isMobileDevice} from "../Utils/MobileCheck";
 import { countIf } from "../Utils/ArrayUtils";
 import { createUnionDispatch } from "../Utils/UnionUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
@@ -52,7 +53,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     }, [isChatOpen, countMessages, prevCountMessages]);
 
     useLayoutEffect(() => {
-        if (isChatOpen) {
+        if (isChatOpen && !isMobileDevice()) {
             inputMessage.current?.focus();
         }
     }, [isChatOpen]);
