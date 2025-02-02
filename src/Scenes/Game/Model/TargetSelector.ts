@@ -1,6 +1,6 @@
 import { sum } from "../../../Utils/ArrayUtils";
 import { CardTarget } from "./CardTarget";
-import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
+import { checkPlayerFilter, getCardEffects, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
@@ -200,9 +200,9 @@ export function getModifierContext<K extends keyof EffectContext> (selector: Tar
     return result;
 }
 
-export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
+export function selectorCanPlayCard(table: GameTable, selector: TargetSelector, card: Card): card is KnownCard {
     return !isCardCurrent(selector, card)
-        && !isCardSelected(selector, card.id)
+        && !isCardSelected(table, selector, card.id)
         && isCardPlayable(selector, card.id)
         && isCardKnown(card);
 }
@@ -222,22 +222,12 @@ function checkSelections(selector: TargetSelector, fn: (target: CardTarget) => b
         || selector.modifiers.some(selections => selections.targets.some(fn));
 }
 
-export function isCardSelected(selector: TargetSelector, card: CardId): boolean {
-    return checkSelections(selector, target => targetDispatch.isCardSelected(target, card));
+export function isCardSelected(table: GameTable, selector: TargetSelector, card: CardId): boolean {
+    return checkSelections(selector, target => targetDispatch.isCardSelected(table, target, card));
 }
 
-export function isHandSelected(table: GameTable, selector: TargetSelector, card: Card): boolean {
-    const cardOwner = getCardOwner(card);
-    if (getCardPocket(card) === 'player_hand' && cardOwner !== table.self_player) {
-        const player = getPlayer(table, cardOwner!);
-        return player.pockets.player_hand.some(id => isCardSelected(selector, id));
-    } else {
-        return false;
-    }
-}
-
-export function isPlayerSelected(selector: TargetSelector, player: PlayerId): boolean {
-    return checkSelections(selector, target => targetDispatch.isPlayerSelected(target, player));
+export function isPlayerSelected(table: GameTable, selector: TargetSelector, player: PlayerId): boolean {
+    return checkSelections(selector, target => targetDispatch.isPlayerSelected(table, target, player));
 }
 
 export function countSelectedCubes(table: GameTable, selector: TargetSelector, targetCard: Card): number {

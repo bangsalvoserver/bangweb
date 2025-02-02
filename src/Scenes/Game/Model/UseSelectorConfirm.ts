@@ -42,7 +42,7 @@ function getClickCardUpdate(table: GameTable, selector: TargetSelector, card: Ca
         }
         break;
     case 'preselect':  {
-        const canPlay = selectorCanPlayCard(selector, card);
+        const canPlay = selectorCanPlayCard(table, selector, card);
         const canPick = isValidCardTarget(table, selector, card);
         if (canPlay && canPick) {
             return { setPrompt: { type: 'playpick', card }};
@@ -55,7 +55,7 @@ function getClickCardUpdate(table: GameTable, selector: TargetSelector, card: Ca
     }
     case 'start':
     case 'middle':
-        if (selectorCanPlayCard(selector, card)) {
+        if (selectorCanPlayCard(table, selector, card)) {
             return { selectPlayingCard: card };
         }
     }

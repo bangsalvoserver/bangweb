@@ -41,7 +41,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
 
   const buttonRow = table.pockets.button_row.flatMap(id => {
     const card = getCard(table, id);
-    if (selectorCanPlayCard(selector, card) || isCardCurrent(selector, card)) {
+    if (selectorCanPlayCard(table, selector, card) || isCardCurrent(selector, card)) {
       return (
         <Button key={id} color={getCardButtonColor(card)} onClick={handleClickCard(card)}>
           <LocalizedCardName name={card.cardData.name} />

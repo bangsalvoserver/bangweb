@@ -1,7 +1,7 @@
 import { count, countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, TargetType } from "./CardTarget";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardPocketOwner, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSelected, TargetSelector } from "./TargetSelector";
@@ -11,11 +11,11 @@ interface BuildAutoTarget<T> {
 }
 
 interface TargetDispatchOf<T extends U, U = T | undefined> extends BuildAutoTarget<U> {
-    isCardSelected: (target: T, card: CardId) => boolean;
+    isCardSelected: (table: GameTable, target: T, card: CardId) => boolean;
     isValidCardTarget: (table: GameTable, selector: TargetSelector, target: U, effect: CardEffect, card: Card) => boolean;
     appendCardTarget: (target: U, effect: CardEffect, card: CardId) => T;
 
-    isPlayerSelected: (target: T, player: PlayerId) => boolean;
+    isPlayerSelected: (table: GameTable, target: T, player: PlayerId) => boolean;
     isValidPlayerTarget: (table: GameTable, selector: TargetSelector, target: U, effect: CardEffect, player: Player) => boolean;
     appendPlayerTarget: (target: U, effect: CardEffect, player: PlayerId) => T;
 
@@ -39,10 +39,10 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
     const buildCardTarget = (key: TargetType, value: unknown) => ({ [key]: value } as CardTarget);
 
     return {
-        isCardSelected: (target, card) => {
+        isCardSelected: (table, target, card) => {
             const [key, value] = cardTargetKeyValue(target);
             const fn = getDispatch(key).isCardSelected;
-            return fn !== undefined && fn(value, card);
+            return fn !== undefined && fn(table, value, card);
         },
         isValidCardTarget: (table, selector, target, effect, card) => {
             const fn = getDispatch(effect.target).isValidCardTarget;
@@ -53,10 +53,10 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             if (!fn) throw new Error('Cannot add card target');
             return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, card));
         },
-        isPlayerSelected: (target, player) => {
+        isPlayerSelected: (table, target, player) => {
             const [key, value] = cardTargetKeyValue(target);
             const fn = getDispatch(key).isPlayerSelected;
-            return fn !== undefined && fn(value, player);
+            return fn !== undefined && fn(table, value, player);
         },
         isValidPlayerTarget: (table, selector, target, effect, player) => {
             const fn = getDispatch(effect.target).isValidPlayerTarget;
@@ -109,11 +109,11 @@ const reserveTargets = (count: number) => {
     return Array<number>(count).fill(PLACEHOLDER);
 };
 
-const checkSingleTarget = <T, U extends T>(target: T, value: U) => {
+const checkSingleTarget = <T, U extends T>(table: GameTable, target: T, value: U) => {
     return target === value;
 };
 
-const checkMultiTarget = <T>(target: T[], value: T) => {
+const checkMultiTarget = <T>(table: GameTable, target: T[], value: T) => {
     return target.includes(value);
 };
 
@@ -131,6 +131,15 @@ const appendReservedTarget = (target: number[], effect: CardEffect, value: numbe
     let copy = target.slice();
     copy[index] = value;
     return copy;
+};
+
+const isHandSelected = (table: GameTable, target: CardId, value: CardId) => {
+    const [targetPocket, targetOwner] = getCardPocketOwner(getCard(table, target));
+    if (targetPocket === 'player_hand') {
+        const [valuePocket, valueOwner] = getCardPocketOwner(getCard(table, value));
+        return targetPocket === valuePocket && targetOwner === valueOwner;
+    }
+    return target === value;
 };
 
 const isValidPlayerTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, player: Player) => {
@@ -208,7 +217,7 @@ const targetDispatch = buildDispatch({
                 && isValidPlayerTarget(table, selector, players, effect, player);
         },
         getCubesSelected: (table, [cubes, players], effect, originCard, targetCard) => getCubesSelected(table, cubes, effect, originCard, targetCard),
-        isPlayerSelected: ([cubes, players], player) => checkMultiTarget(players, player),
+        isPlayerSelected: (table, [cubes, players], player) => checkMultiTarget(table, players, player),
         isSelectionFinished: ([cubes, players], effect) => isSelectionFinished(cubes) && targetIsSized(players, cubes.length + effect.target_value),
         isSelectionConfirmable: ([cubes, players], effect) => targetIsSized(players, getReservedLength(cubes) + effect.target_value),
         confirmSelection: ([cubes, players]) => [confirmSelection(cubes), players],
@@ -219,6 +228,11 @@ const targetDispatch = buildDispatch({
             return [reserveTargets(maxCount), []];
         }
     }),
+    random_if_hand_card: {
+        isCardSelected: isHandSelected,
+        appendCardTarget: appendSingleTarget,
+        isValidCardTarget
+    },
     card: {
         isCardSelected: checkSingleTarget,
         appendCardTarget: appendSingleTarget,
@@ -265,12 +279,14 @@ const targetDispatch = buildDispatch({
         }
     }),
     card_per_player: reservedDispatch({
-        isCardSelected: checkMultiTarget,
+        isCardSelected: (table, target, card) => {
+            return target.some(selected => selected !== PLACEHOLDER && isHandSelected(table, selected, card));
+        },
         appendCardTarget: appendReservedTarget,
         isSelectionFinished,
         isValidCardTarget: (table, selector, target, effect, card) => {
             const player = getCardOwner(card);
-            return player !== undefined && !isPlayerSelected(selector, player)
+            return player !== undefined && !isPlayerSelected(table, selector, player)
                 && checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, player))
                 && checkCardFilter(table, selector, effect.card_filter, card)
                 && !target.some(targetCard => targetCard !== PLACEHOLDER && getCardOwner(getCard(table, targetCard)) === player);
@@ -279,7 +295,7 @@ const targetDispatch = buildDispatch({
             const cardIsValid = (card: CardId) => checkCardFilter(table, selector, effect.card_filter, getCard(table, card));
             const numTargetable = countIf(table.alive_players, target => {
                 const targetPlayer = getPlayer(table, target);
-                return !isPlayerSelected(selector, target)
+                return !isPlayerSelected(table, selector, target)
                     && checkPlayerFilter(table, selector, effect.player_filter, targetPlayer)
                     && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
             });

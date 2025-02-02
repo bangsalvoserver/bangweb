@@ -30,7 +30,7 @@ export interface PlayerProps {
 }
 
 function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player): string {
-    if (isPlayerSelected(selector, player.id)) {
+    if (isPlayerSelected(table, selector, player.id)) {
         return 'player-selected';
     }
     switch (selector.mode) {

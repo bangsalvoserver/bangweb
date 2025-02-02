@@ -6,7 +6,7 @@ import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { Card, GameTable, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
-import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isHandSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
+import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import "./Style/CardAnimations.css";
@@ -52,7 +52,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
     if (isCardPrompted(selector, card)) {
         return 'card-prompted';
     }
-    if (isHandSelected(table, selector, card) || isCardSelected(selector, card.id)) {
+    if (isCardSelected(table, selector, card.id)) {
         if (selectorIsTargeting(selector) && isValidCardTarget(table, selector, card)) {
             return 'card-retargetable';
         } else {
@@ -67,7 +67,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
                 return 'card-targetable-cubes';
             }
         } else if (isValidCardTarget(table, selector, card)) {
-            if (selectorCanPlayCard(selector, card)) {
+            if (selectorCanPlayCard(table, selector, card)) {
                 return 'card-playable card-targetable';
             } else {
                 return 'card-targetable';
@@ -76,7 +76,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
     }
     if (isCardCurrent(selector, card)) {
         return 'card-current';
-    } else if (selectorCanPlayCard(selector, card)) {
+    } else if (selectorCanPlayCard(table, selector, card)) {
         switch (selector.mode) {
         case 'start':
         case 'middle':

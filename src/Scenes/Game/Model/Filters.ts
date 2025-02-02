@@ -34,6 +34,10 @@ export function getCardOwner(card: Card): PlayerId | undefined {
     return card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 }
 
+export function getCardPocketOwner(card: Card): [PocketType, PlayerId| undefined] {
+    return [getCardPocket(card), getCardOwner(card)] as const;
+}
+
 export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
     return isResponse ? card.cardData.responses : card.cardData.effects;
 }
@@ -118,7 +122,7 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
 export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
     const origin = getPlayer(table, table.self_player!);
 
-    if (isPlayerSelected(selector, target.id)) return false;
+    if (isPlayerSelected(table, selector, target.id)) return false;
 
     if (!filter.includes('dead_or_alive')
         && filter.includes('dead') === isPlayerInGame(target)
@@ -172,7 +176,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
     const origin = getPlayer(table, table.self_player!);
 
-    if (isCardSelected(selector, target.id)) return false;
+    if (isCardSelected(table, selector, target.id)) return false;
 
     if (!filter.includes('can_target_self') && isCardCurrent(selector, target)) return false;
 
