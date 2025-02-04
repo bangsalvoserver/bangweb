@@ -2,7 +2,7 @@ import { sum } from "../../../Utils/ArrayUtils";
 import { CardTarget } from "./CardTarget";
 import { checkPlayerFilter, getCardEffects, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, isCardKnown } from "./GameTable";
-import { CardId, EffectContext, GameString, PlayableCardInfo, PlayerId, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
 export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | null;
@@ -202,7 +202,7 @@ export function getModifierContext<K extends keyof EffectContext> (selector: Tar
 
 export function selectorCanPlayCard(table: GameTable, selector: TargetSelector, card: Card): card is KnownCard {
     return !isCardCurrent(selector, card)
-        && !isCardSelected(table, selector, card.id)
+        && !isCardSelected(table, selector, card)
         && isCardPlayable(selector, card.id)
         && isCardKnown(card);
 }
@@ -222,11 +222,11 @@ function checkSelections(selector: TargetSelector, fn: (target: CardTarget) => b
         || selector.modifiers.some(selections => selections.targets.some(fn));
 }
 
-export function isCardSelected(table: GameTable, selector: TargetSelector, card: CardId): boolean {
+export function isCardSelected(table: GameTable, selector: TargetSelector, card: Card): boolean {
     return checkSelections(selector, target => targetDispatch.isCardSelected(table, target, card));
 }
 
-export function isPlayerSelected(table: GameTable, selector: TargetSelector, player: PlayerId): boolean {
+export function isPlayerSelected(table: GameTable, selector: TargetSelector, player: Player): boolean {
     return checkSelections(selector, target => targetDispatch.isPlayerSelected(table, target, player));
 }
 

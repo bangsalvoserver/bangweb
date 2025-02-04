@@ -52,7 +52,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
     if (isCardPrompted(selector, card)) {
         return 'card-prompted';
     }
-    if (isCardSelected(table, selector, card.id)) {
+    if (isCardSelected(table, selector, card)) {
         if (selectorIsTargeting(selector) && isValidCardTarget(table, selector, card)) {
             return 'card-retargetable';
         } else {

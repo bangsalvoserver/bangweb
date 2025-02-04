@@ -5,7 +5,6 @@ import { createContextUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardTarget";
 import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
-import { CardId, PlayerId } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 import { GamePrompt, RequestStatusUnion, TargetSelection, TargetSelector, TargetSelectorMode, getModifierContext, getTargetSelectorStatus, isCardCurrent, isCardPlayable, isResponse, newTargetSelector } from "./TargetSelector";
 
@@ -42,12 +41,12 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
     }
 }
 
-function appendCardTarget(selector: TargetSelector, card: CardId): TargetListMapper {
+function appendCardTarget(selector: TargetSelector, card: Card): TargetListMapper {
     const { effects, targets, index } = getTargetSelectorStatus(selector);
     return targets.slice(0, index).concat(targetDispatch.appendCardTarget(targets.at(index), effects[index], card));
 }
 
-function appendPlayerTarget(selector: TargetSelector, player: PlayerId): TargetListMapper {
+function appendPlayerTarget(selector: TargetSelector, player: Player): TargetListMapper {
     const { effects, targets, index } = getTargetSelectorStatus(selector);
     return targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(targets.at(index), effects[index], player));
 }
@@ -172,7 +171,7 @@ function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, car
     }
 }
 
-function handleAddEquipTarget(selector: TargetSelector, player: PlayerId): TargetSelector {
+function handleAddEquipTarget(selector: TargetSelector, player: Player): TargetSelector {
     if (selector.mode !== 'equip') {
         throw new Error('TargetSelector: not in equipping mode');
     }
@@ -180,7 +179,7 @@ function handleAddEquipTarget(selector: TargetSelector, player: PlayerId): Targe
         ...selector,
         selection: {
             ...selector.selection!,
-            targets: [{ player }]
+            targets: [{ player: player.id }]
         },
         mode: 'finish'
     };
@@ -208,15 +207,15 @@ const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTabl
     },
 
     addCardTarget (table, card) {
-        return handleEndPreselection(table, editSelectorTargets(this, appendCardTarget(this, card.id)));
+        return handleEndPreselection(table, editSelectorTargets(this, appendCardTarget(this, card)));
     },
 
     addPlayerTarget (table, player) {
-        return handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(this, player.id)));
+        return handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(this, player)));
     },
 
     addEquipTarget (table, player) {
-        return handleAddEquipTarget(this, player.id);
+        return handleAddEquipTarget(this, player);
     }
     
 });
