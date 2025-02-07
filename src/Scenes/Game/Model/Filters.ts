@@ -1,6 +1,6 @@
 import { CardEffect, CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, PocketType, TagType } from "./CardEnums";
-import { Card, GameTable, getCard, getPlayer, isCardKnown, KnownCard, Player } from "./GameTable";
+import { Card, GameTable, getCard, getCubeCount, getPlayer, isCardKnown, KnownCard, Player } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
 import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";
 
@@ -115,6 +115,29 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
     return Math.min(countCw, countCcw) + distanceMod;
 }
 
+function isEmptyHand(table: GameTable, player: Player) {
+    return player.pockets.player_hand.length === 0;
+}
+
+function isEmptyTable(table: GameTable, player: Player) {
+    for (const cardId of player.pockets.player_table) {
+        const card = getCard(table, cardId);
+        if (getCardColor(card) !== 'black') return false;
+    }
+    return true;
+}
+
+function isEmptyCubes(table: GameTable, player: Player) {
+    const characterId = player.pockets.player_character[0];
+    const character = getCard(table, characterId);
+    if (getCubeCount(character.tokens) !== 0) return false;
+    for (const cardId of player.pockets.player_table) {
+        const card = getCard(table, cardId);
+        if (getCardColor(card) === 'orange' && getCubeCount(card.tokens) !== 0) return false;
+    }
+    return true;
+}
+
 export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
     const origin = getPlayer(table, table.self_player!);
 
@@ -137,7 +160,11 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (filter.includes('notsheriff') && target.status.role === 'sheriff') return false;
 
-    if (filter.includes('not_empty_hand') && target.pockets.player_hand.length === 0) return false;
+    if (filter.includes('not_empty_hand') && isEmptyHand(table, target)) return false;
+
+    if (filter.includes('not_empty_table') && isEmptyTable(table, target)) return false;
+
+    if (filter.includes('not_empty_cubes') && isEmptyCubes(table, target)) return false;
 
     if (filter.includes('target_set') && isResponse(selector)) {
         if (!selector.request.target_set_players.includes(target.id)) {
