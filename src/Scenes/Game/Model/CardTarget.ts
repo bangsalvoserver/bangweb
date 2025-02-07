@@ -36,7 +36,7 @@ export type CardTargetTypes = {
         CardId | null
     ],
     players: [
-        Empty,
+        Player[],
         Empty
     ],
     cards: [

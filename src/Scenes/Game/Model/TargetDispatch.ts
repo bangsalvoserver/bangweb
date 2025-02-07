@@ -238,7 +238,10 @@ const targetDispatch = buildDispatch({
         generateTarget: card => card ? card.id : null
     },
     players: {
-        buildAutoTarget: () => ({}),
+        isPlayerSelected: (table, players, player) => containsId(players, player),
+        buildAutoTarget: (table, selector, effect) => table.players.filter(player => 
+            checkPlayerFilter(table, selector, effect.player_filter, player) && !isPlayerSkipped(table, selector, player)
+        ),
         generateTarget: () => ({})
     },
     cards: {
