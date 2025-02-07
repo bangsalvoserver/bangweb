@@ -71,6 +71,10 @@
     --player-border-color: #bba14f;
 }
 
+.player-skipped {
+    --player-border-color: rgb(170, 170, 170);
+}
+
 .player-selected {
     --player-border-color: red;
 }

@@ -4,7 +4,7 @@ import { CardTarget, CardTargetGenerated, CardTargetTypes, TargetType } from "./
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, Player } from "./GameTable";
 import { CardId } from "./GameUpdate";
-import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSelected, TargetSelector } from "./TargetSelector";
+import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSkipped, TargetSelector } from "./TargetSelector";
 
 interface BuildAutoTarget<T> {
     buildAutoTarget: (table: GameTable, selector: TargetSelector, effect: CardEffect) => T;
@@ -282,7 +282,7 @@ const targetDispatch = buildDispatch({
             if (playerId === undefined) return false;
             const player = getPlayer(table, playerId);
 
-            return !isPlayerSelected(table, selector, player)
+            return !isPlayerSkipped(table, selector, player)
                 && checkPlayerFilter(table, selector, effect.player_filter, player)
                 && checkCardFilter(table, selector, effect.card_filter, card)
                 && !cards.some(targetCard => getCardOwner(targetCard) === playerId);
@@ -291,7 +291,7 @@ const targetDispatch = buildDispatch({
             const cardIsValid = (card: CardId) => checkCardFilter(table, selector, effect.card_filter, getCard(table, card));
             const max_cards = countIf(table.alive_players, target => {
                 const targetPlayer = getPlayer(table, target);
-                return !isPlayerSelected(table, selector, targetPlayer)
+                return !isPlayerSkipped(table, selector, targetPlayer)
                     && checkPlayerFilter(table, selector, effect.player_filter, targetPlayer)
                     && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
             });

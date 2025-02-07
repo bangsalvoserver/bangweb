@@ -230,6 +230,20 @@ export function isPlayerSelected(table: GameTable, selector: TargetSelector, pla
     return checkSelections(selector, target => targetDispatch.isPlayerSelected(table, target, player));
 }
 
+export function isPlayerSkipped(table: GameTable, selector: TargetSelector, player: Player): boolean {
+    for (const { card, targets } of selector.modifiers) {
+        const effects = getCardEffects(card, isResponse(selector));
+        for (let i = 0; i < targets.length; ++i) {
+            const target = targets[i];
+            const effect = effects[i];
+            if ('player' in target && effect.type === 'skip_player') {
+                return target.player.id === player.id;
+            }
+        }
+    }
+    return false;
+}
+
 export function countSelectedCubes(table: GameTable, selector: TargetSelector, targetCard: Card): number {
     let selected = 0;
     const doCount = ({ card, targets }: TargetSelection) => {

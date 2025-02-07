@@ -12,7 +12,7 @@ import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { GameTable, getCard, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
-import { isPlayerSelected, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
+import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
@@ -30,6 +30,9 @@ export interface PlayerProps {
 }
 
 function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player): string {
+    if (isPlayerSkipped(table, selector, player)) {
+        return 'player-skipped';
+    }
     if (isPlayerSelected(table, selector, player)) {
         return 'player-selected';
     }
