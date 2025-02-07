@@ -1,7 +1,6 @@
 import { SetStateAction } from "react";
-import { Empty } from "../../../Model/ServerMessage";
 import { mapLast } from "../../../Utils/ArrayUtils";
-import { createContextUnionReducer } from "../../../Utils/UnionUtils";
+import { Empty, createContextUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardTarget";
 import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
@@ -179,7 +178,7 @@ function handleAddEquipTarget(selector: TargetSelector, player: Player): TargetS
         ...selector,
         selection: {
             ...selector.selection!,
-            targets: [{ player: player.id }]
+            targets: [{ player }]
         },
         mode: 'finish'
     };

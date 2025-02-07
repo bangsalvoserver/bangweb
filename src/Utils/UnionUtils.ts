@@ -1,7 +1,6 @@
+export type Empty = Record<string, never>;
 export type KeysOfUnion<T> = T extends T ? keyof T: never;
-export type ExtractKeys<T, U> = T extends T ? T[keyof T] extends U ? keyof T : never : never;
-export type FilteredKeys<T, U> = { [P in keyof T]: T[P] extends U ? P : never }[keyof T];
-export type SpreadUnion<T> = { [K in T as keyof K]: K[keyof K] };
+export type Distribute<T> = { [K in keyof T]: { [K1 in K]: T[K] } }[keyof T];
 
 type UnionUpdate = Record<string, unknown>;
 

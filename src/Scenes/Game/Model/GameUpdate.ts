@@ -1,4 +1,5 @@
-import { Empty, Milliseconds, UserId } from "../../../Model/ServerMessage";
+import { Milliseconds, UserId } from "../../../Model/ServerMessage";
+import { Empty } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, TablePocketType, TokenType } from "./CardEnums";
 

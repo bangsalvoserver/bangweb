@@ -1,7 +1,8 @@
 import { GameAction } from "../Scenes/Game/Model/GameAction";
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { ImageSrc } from "../Utils/ImageSerial";
-import { Empty, LobbyId, UserId } from "./ServerMessage";
+import { Empty } from "../Utils/UnionUtils";
+import { LobbyId, UserId } from "./ServerMessage";
 
 export interface ClientConnect {
     username: string;

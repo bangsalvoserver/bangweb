@@ -2,6 +2,7 @@ import { Dispatch, DispatchWithoutAction, createContext, useEffect, useMemo, use
 import { BangConnection } from "../../../Model/UseBangConnection";
 import { GameAction } from "./GameAction";
 import { Card, GameTable, Player } from "./GameTable";
+import targetDispatch from "./TargetDispatch";
 import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
@@ -10,8 +11,8 @@ function getSelectorGameAction(selector: TargetSelector): GameAction | undefined
     if (selector.mode === 'finish' && (selector.prompt.type !== 'yesno' || bypass_prompt)) {
         return {
             card: selector.selection!.card.id,
-            targets: selector.selection!.targets,
-            modifiers: selector.modifiers.map(({card, targets}) => ({ card: card.id, targets })),
+            targets: selector.selection!.targets.map(targetDispatch.generateTarget),
+            modifiers: selector.modifiers.map(({card, targets}) => ({ card: card.id, targets: targets.map(targetDispatch.generateTarget) })),
             timer_id: (isResponse(selector) && selector.request.timer?.timer_id) || null,
             bypass_prompt,
         };

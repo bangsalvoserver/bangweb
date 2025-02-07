@@ -4,11 +4,10 @@ import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import CardView from "../CardView";
 import { GameStateContext } from "../GameScene";
 import { CardTracker } from "../Model/CardTracker";
-import { Card, getCard } from "../Model/GameTable";
-import { CardId } from "../Model/GameUpdate";
-import { getModifierContext, getAllPlayableCards, isCardCurrent } from "../Model/TargetSelector";
-import "./Style/CardChoiceView.css";
 import { getCardPocket } from "../Model/Filters";
+import { Card, getCard } from "../Model/GameTable";
+import { getAllPlayableCards, getModifierContext, isCardCurrent } from "../Model/TargetSelector";
+import "./Style/CardChoiceView.css";
 
 export interface CardChoiceProps {
     tracker: CardTracker;
@@ -52,7 +51,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     if (!isCardCurrent(selector, anchor)) return null;
 
     if (getCardPocket(anchor) === 'hidden_deck') {
-        let lastTarget: CardId | undefined;
+        let lastTarget: Card | undefined;
         for (const { targets } of selector.modifiers) {
             for (const target of targets) {
                 if ('card' in target) {
@@ -61,7 +60,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
             }
         }
         if (lastTarget) {
-            anchor = getCard(table, lastTarget);
+            anchor = lastTarget;
         }
     }
 

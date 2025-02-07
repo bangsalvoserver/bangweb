@@ -1,6 +1,6 @@
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
-import { createUnionReducer } from "../Utils/UnionUtils";
-import { ChatMessage, Empty, LobbyEntered, LobbyId, LobbyUserFlag, LobbyValue, UserId, UserValue } from "./ServerMessage";
+import { createUnionReducer, Empty } from "../Utils/UnionUtils";
+import { ChatMessage, LobbyEntered, LobbyId, LobbyUserFlag, LobbyValue, UserId, UserValue } from "./ServerMessage";
 
 export interface LobbyState {
     lobbyId: LobbyId;

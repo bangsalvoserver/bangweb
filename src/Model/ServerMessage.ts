@@ -1,6 +1,5 @@
 import { GameOptions, GameUpdate } from "../Scenes/Game/Model/GameUpdate";
-
-export type Empty = Record<string, never>;
+import { Empty } from "../Utils/UnionUtils";
 
 export type LobbyId = number;
 export type UserId = number;

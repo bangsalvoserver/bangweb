@@ -34,10 +34,6 @@ export function getCardOwner(card: Card): PlayerId | undefined {
     return card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 }
 
-export function getCardPocketOwner(card: Card): [PocketType, PlayerId| undefined] {
-    return [getCardPocket(card), getCardOwner(card)] as const;
-}
-
 export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
     return isResponse ? card.cardData.responses : card.cardData.effects;
 }
