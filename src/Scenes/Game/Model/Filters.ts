@@ -1,6 +1,6 @@
 import { CardEffect, CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, PocketType, TagType } from "./CardEnums";
-import { Card, GameTable, getCard, getCubeCount, getPlayer, isCardKnown, KnownCard, Player } from "./GameTable";
+import { Card, GameTable, getCard, getPlayer, getPlayerCubes, isCardKnown, KnownCard, Player } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
 import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";
 
@@ -128,12 +128,8 @@ function isEmptyTable(table: GameTable, player: Player) {
 }
 
 function isEmptyCubes(table: GameTable, player: Player) {
-    const characterId = player.pockets.player_character[0];
-    const character = getCard(table, characterId);
-    if (getCubeCount(character.tokens) !== 0) return false;
-    for (const cardId of player.pockets.player_table) {
-        const card = getCard(table, cardId);
-        if (getCardColor(card) === 'orange' && getCubeCount(card.tokens) !== 0) return false;
+    for (const [, cubes] of getPlayerCubes(table, player)) {
+        if (cubes !== 0) return false;
     }
     return true;
 }

@@ -2,6 +2,7 @@ import { UpdateFunction } from "../../../Model/SceneState";
 import { UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType, TokenType } from "./CardEnums";
+import { getCardColor } from "./Filters";
 import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveTokensUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
 
 export interface Id {
@@ -111,6 +112,17 @@ export function getCardBackface(card: Card): string {
         }
     }
     return 'backface/' + card.cardData.deck;
+}
+
+export function *getPlayerCubes(table: GameTable, player: Player) {
+    const character = getCard(table, player.pockets.player_character[0]);
+    yield [character, getCubeCount(character.tokens)] as const;
+    for (const cardId of player.pockets.player_table) {
+        const card = getCard(table, cardId);
+        if (getCardColor(card) === 'orange') {
+            yield [card, getCubeCount(card.tokens)] as const;
+        }
+    }
 }
 
 export function newPocketId(pocketName: PocketType, player: PlayerId | null = null): PocketId {
