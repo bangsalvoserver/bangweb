@@ -225,9 +225,8 @@ export function *zipSelections(selector: TargetSelector, includeCard: boolean = 
         }
     }
     if (selector.selection && includeCard) {
-        const card = selector.selection.card;
+        const { card, targets } = selector.selection;
         const effects = getCardEffects(card, response);
-        const targets = selector.selection.targets;
         for (let i = 0; i < targets.length; ++i) {
             yield [card, targets[i], effects[i]] as const;
         }

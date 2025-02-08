@@ -79,8 +79,9 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, card);
         },
         getCubesSelected: (table, target, effect, originCard, targetCard) => {
-            const fn = getDispatch(effect.target).getCubesSelected;
-            return fn ? fn(table, cardTargetValue(target), effect, originCard, targetCard) : 0;
+            const [key, value] = cardTargetKeyValue(target);
+            const fn = getDispatch(key).getCubesSelected;
+            return fn ? fn(table, value, effect, originCard, targetCard) : 0;
         },
         isSelectionFinished: (target, effect) => {
             const [key, value] = cardTargetKeyValue(target);
