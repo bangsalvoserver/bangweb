@@ -2,7 +2,7 @@ import { CardEffect, CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, PocketType, TagType } from "./CardEnums";
 import { Card, GameTable, getCard, getPlayer, getPlayerCubes, isCardKnown, KnownCard, Player } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
-import { getModifierContext, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";
+import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     if (isCardKnown(card) && tagType in card.cardData.tags) {
@@ -195,7 +195,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
     const origin = getPlayer(table, table.self_player!);
 
-    if (isCardSelected(table, selector, target)) return false;
+    if (isCardSelected(table, selector, target) || isCardCurrent(selector, target)) return false;
 
     const targetPocket = getCardPocket(target);
     const targetOwner = getCardOwner(target);
