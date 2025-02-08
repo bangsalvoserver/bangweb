@@ -2,7 +2,7 @@ import { CardEffect, CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, PocketType, TagType } from "./CardEnums";
 import { Card, GameTable, getCard, getPlayer, getPlayerCubes, isCardKnown, KnownCard, Player } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
-import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";
+import { getModifierContext, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";
 
 export function getTagValue(card: Card, tagType: TagType): number | undefined {
     if (isCardKnown(card) && tagType in card.cardData.tags) {
@@ -197,8 +197,6 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
 
     if (isCardSelected(table, selector, target)) return false;
 
-    if (!filter.includes('can_target_self') && isCardCurrent(selector, target)) return false;
-
     const targetPocket = getCardPocket(target);
     const targetOwner = getCardOwner(target);
 
@@ -215,22 +213,6 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
             if (!selector.request.target_set_cards.includes(target.id)) {
                 return false;
             }
-        }
-    } else if (filter.includes('cube_slot')) {
-        switch (targetPocket) {
-        case 'player_character': {
-            if (!targetOwner || getPlayer(table, targetOwner)?.pockets.player_character[0] !== target.id) {
-                return false;
-            }
-            break;
-        }
-        case 'player_table':
-            if (getCardColor(target) !== 'orange') {
-                return false;
-            }
-            break;
-        default:
-            return false;
         }
     } else {
         if (filter.includes('selection') !== (targetPocket === 'selection')) return false;

@@ -303,6 +303,27 @@ const targetDispatch = buildDispatch({
         },
         generateTarget: ({ cards }) => mapIds(cards),
     }),
+    cube_slot: {
+        isCardSelected: (table, target, card) => target.id === card.id,
+        appendCardTarget: (target, effect, card) => card,
+        isValidCardTarget: (table, selector, target, effect, card) => {
+            const playerId = getCardOwner(card);
+            if (!playerId) return false;
+            
+            const player = getPlayer(table, playerId);
+            if (!checkPlayerFilter(table, selector, effect.player_filter, player)) return false;
+            
+            switch (getCardPocket(card)) {
+            case 'player_character':
+                return card.id === player.pockets.player_character[0];
+            case 'player_table':
+                return getCardColor(card) === 'orange';
+            default:
+                return false;
+            }
+        },
+        generateTarget: card => card.id
+    },
     move_cube_slot: reservedDispatch({
         appendCardTarget: ({ cards, max_cubes }, effect, card) => ({ cards: cards.concat(card), max_cubes }),
         isValidCardTarget: (table, selector, { cards }, effect, card) => {

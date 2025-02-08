@@ -51,6 +51,10 @@ export type CardTargetTypes = {
         { cards: Card[], max_cards: number },
         CardId[]
     ],
+    cube_slot: [
+        Card,
+        CardId
+    ],
     move_cube_slot: [
         { cards: Card[], max_cubes: number },
         CardId[]
