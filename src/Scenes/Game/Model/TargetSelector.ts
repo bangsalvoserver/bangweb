@@ -217,28 +217,42 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
     return selector.prompt.type === 'playpick' && selector.prompt.card.id === card.id;
 }
 
-function checkSelections(selector: TargetSelector, fn: (target: CardTarget) => boolean) {
-    return (selector.selection && selector.selection.targets.some(fn))
-        || selector.modifiers.some(selections => selections.targets.some(fn));
+export function *zipSelections(selector: TargetSelector, includeCard: boolean = true) {
+    const response = isResponse(selector);
+    for (const { card, targets } of selector.modifiers) {
+        const effects = getCardEffects(card, response);
+        for (let i = 0; i < targets.length; ++i) {
+            yield [card, targets[i], effects[i]] as const;
+        }
+    }
+    if (selector.selection && includeCard) {
+        const card = selector.selection.card;
+        const effects = getCardEffects(card, response);
+        const targets = selector.selection.targets;
+        for (let i = 0; i < targets.length; ++i) {
+            yield [card, targets[i], effects[i]] as const;
+        }
+    }
 }
 
 export function isCardSelected(table: GameTable, selector: TargetSelector, card: Card): boolean {
-    return checkSelections(selector, target => targetDispatch.isCardSelected(table, target, card));
+    for (const [, target] of zipSelections(selector)) {
+        if (targetDispatch.isCardSelected(table, target, card)) return true;
+    }
+    return false;
 }
 
 export function isPlayerSelected(table: GameTable, selector: TargetSelector, player: Player): boolean {
-    return checkSelections(selector, target => targetDispatch.isPlayerSelected(table, target, player));
+    for (const [, target] of zipSelections(selector)) {
+        if (targetDispatch.isPlayerSelected(table, target, player)) return true;
+    }
+    return false;
 }
 
 export function isPlayerSkipped(table: GameTable, selector: TargetSelector, player: Player): boolean {
-    for (const { card, targets } of selector.modifiers) {
-        const effects = getCardEffects(card, isResponse(selector));
-        for (let i = 0; i < targets.length; ++i) {
-            const target = targets[i];
-            const effect = effects[i];
-            if ('player' in target && effect.type === 'skip_player') {
-                return target.player.id === player.id;
-            }
+    for (const [, target, effect] of zipSelections(selector, false)) {
+        if ('player' in target && effect.type === 'skip_player') {
+            return target.player.id === player.id;
         }
     }
     return false;
@@ -246,21 +260,8 @@ export function isPlayerSkipped(table: GameTable, selector: TargetSelector, play
 
 export function countSelectedCubes(table: GameTable, selector: TargetSelector, targetCard: Card): number {
     let selected = 0;
-    const doCount = ({ card, targets }: TargetSelection) => {
-        const effects = getCardEffects(card, isResponse(selector));
-        let index = 0;
-        for (const effect of effects) {
-            if (index >= targets.length) break;
-            selected += targetDispatch.getCubesSelected(table, targets[index], effect, card, targetCard);
-            ++index;
-        }
-    };
-
-    if (selector.selection) {
-        doCount(selector.selection);
-    }
-    for (const selection of selector.modifiers) {
-        doCount(selection);
+    for (const [card, target, effect] of zipSelections(selector)) {
+        selected += targetDispatch.getCubesSelected(table, target, effect, card, targetCard);
     }
     return selected;
 }
@@ -271,7 +272,7 @@ export function countSelectableCubes(table: GameTable, selector: TargetSelector)
         return getCubeCount(card.tokens) - countSelectedCubes(table, selector, card);
     };
     const selfPlayer = getPlayer(table, table.self_player!);
-    return sum(selfPlayer.pockets.player_character, getCountCubes)
+    return getCountCubes(selfPlayer.pockets.player_character[0])
         + sum(selfPlayer.pockets.player_table, getCountCubes);
 }
 
