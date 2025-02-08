@@ -216,7 +216,7 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
     return selector.prompt.type === 'playpick' && selector.prompt.card.id === card.id;
 }
 
-export function *zipSelections(selector: TargetSelector, includeCard: boolean = true) {
+export function *zipSelections(selector: TargetSelector) {
     const response = isResponse(selector);
     for (const { card, targets } of selector.modifiers) {
         const effects = getCardEffects(card, response);
@@ -224,7 +224,7 @@ export function *zipSelections(selector: TargetSelector, includeCard: boolean = 
             yield [card, targets[i], effects.at(i)] as const;
         }
     }
-    if (selector.selection && includeCard) {
+    if (selector.selection) {
         const { card, targets } = selector.selection;
         const effects = getCardEffects(card, response);
         for (let i = 0; i < targets.length; ++i) {
@@ -248,7 +248,7 @@ export function isPlayerSelected(table: GameTable, selector: TargetSelector, pla
 }
 
 export function isPlayerSkipped(table: GameTable, selector: TargetSelector, player: Player): boolean {
-    for (const [, target, effect] of zipSelections(selector, false)) {
+    for (const [, target, effect] of zipSelections(selector)) {
         if ('player' in target && effect?.type === 'skip_player') {
             return target.player.id === player.id;
         }
