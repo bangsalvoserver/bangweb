@@ -315,9 +315,11 @@ const targetDispatch = buildDispatch({
             
             switch (getCardPocket(card)) {
             case 'player_character':
-                return card.id === player.pockets.player_character[0];
+                return card.id === player.pockets.player_character[0]
+                    && (effect.target_value === 0 || playerId !== table.self_player);
             case 'player_table':
-                return getCardColor(card) === 'orange';
+                return getCardColor(card) === 'orange'
+                    && (effect.target_value === 0 || getCubeCount(card.tokens) !== 0);
             default:
                 return false;
             }
