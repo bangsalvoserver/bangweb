@@ -2,7 +2,7 @@ import { countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, CardTargetGenerated, CardTargetTypes, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isPlayerInGame } from "./Filters";
-import { Card, GameTable, getCard, getCubeCount, getPlayer, Player } from "./GameTable";
+import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, Player } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSkipped, TargetSelector } from "./TargetSelector";
 
@@ -321,16 +321,16 @@ const targetDispatch = buildDispatch({
             return targetCard.id === firstCharacter ? cards.length : 0;
         },
         buildAutoTarget: (table, selector, effect) => {
-            const selfPlayer = getPlayer(table, table.self_player!);
+            const player = getPlayer(table, table.self_player!);
+            let characterCubes = 0;
             let cubeSlots = 0;
-            for (const cardId of selfPlayer.pockets.player_table) {
-                const card = getCard(table, cardId);
-                if (getCardColor(card) === 'orange') {
-                    cubeSlots += 4 - getCubeCount(card.tokens);
+            for (const [card, cubes] of getPlayerCubes(table, player)) {
+                if (card.pocket?.name === 'player_character') {
+                    characterCubes = cubes;
+                } else {
+                    cubeSlots += 4 - cubes;
                 }
             }
-            const firstCharacter = selfPlayer.pockets.player_character[0];
-            const characterCubes = getCubeCount(getCard(table, firstCharacter).tokens);
             const max_cubes = Math.min(effect.target_value, cubeSlots, characterCubes);
             return { cards: [], max_cubes };
         },
