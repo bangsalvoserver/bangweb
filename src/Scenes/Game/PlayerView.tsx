@@ -30,10 +30,10 @@ export interface PlayerProps {
 }
 
 function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player): string {
-    if (isPlayerSkipped(table, selector, player)) {
+    if (isPlayerSkipped(selector, player)) {
         return 'player-skipped';
     }
-    if (isPlayerSelected(table, selector, player)) {
+    if (isPlayerSelected(selector, player)) {
         return 'player-selected';
     }
     switch (selector.mode) {

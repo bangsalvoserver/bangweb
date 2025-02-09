@@ -201,7 +201,7 @@ export function getModifierContext<K extends keyof EffectContext> (selector: Tar
 
 export function selectorCanPlayCard(table: GameTable, selector: TargetSelector, card: Card): card is KnownCard {
     return !isCardCurrent(selector, card)
-        && !isCardSelected(table, selector, card)
+        && !isCardSelected(selector, card)
         && isCardPlayable(selector, card.id)
         && isCardKnown(card);
 }
@@ -233,21 +233,21 @@ export function *zipSelections(selector: TargetSelector) {
     }
 }
 
-export function isCardSelected(table: GameTable, selector: TargetSelector, card: Card): boolean {
+export function isCardSelected(selector: TargetSelector, card: Card): boolean {
     for (const [, target] of zipSelections(selector)) {
-        if (targetDispatch.isCardSelected(table, target, card)) return true;
+        if (targetDispatch.isCardSelected(target, card)) return true;
     }
     return false;
 }
 
-export function isPlayerSelected(table: GameTable, selector: TargetSelector, player: Player): boolean {
+export function isPlayerSelected(selector: TargetSelector, player: Player): boolean {
     for (const [, target] of zipSelections(selector)) {
-        if (targetDispatch.isPlayerSelected(table, target, player)) return true;
+        if (targetDispatch.isPlayerSelected(target, player)) return true;
     }
     return false;
 }
 
-export function isPlayerSkipped(table: GameTable, selector: TargetSelector, player: Player): boolean {
+export function isPlayerSkipped(selector: TargetSelector, player: Player): boolean {
     for (const [, target, effect] of zipSelections(selector)) {
         if ('player' in target && effect?.type === 'skip_player') {
             return target.player.id === player.id;
@@ -256,11 +256,11 @@ export function isPlayerSkipped(table: GameTable, selector: TargetSelector, play
     return false;
 }
 
-export function countSelectedCubes(table: GameTable, selector: TargetSelector, targetCard: Card): number {
+export function countSelectedCubes(selector: TargetSelector, targetCard: Card): number {
     let selected = 0;
     for (const [card, target, effect] of zipSelections(selector)) {
         if (effect) {
-            selected += targetDispatch.getCubesSelected(table, target, effect, card, targetCard);
+            selected += targetDispatch.getCubesSelected(target, effect, card, targetCard);
         }
     }
     return selected;
@@ -269,7 +269,7 @@ export function countSelectedCubes(table: GameTable, selector: TargetSelector, t
 export function countSelectableCubes(table: GameTable, selector: TargetSelector): number {
     let selectable = 0;
     for (const [card, cubes] of getPlayerCubes(table, getPlayer(table, table.self_player!))) {
-        selectable += cubes - countSelectedCubes(table, selector, card);
+        selectable += cubes - countSelectedCubes(selector, card);
     }
     return selectable;
 }

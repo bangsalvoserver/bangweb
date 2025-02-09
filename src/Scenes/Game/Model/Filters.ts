@@ -137,7 +137,7 @@ function isEmptyCubes(table: GameTable, player: Player) {
 export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
     const origin = getPlayer(table, table.self_player!);
 
-    if (isPlayerSelected(table, selector, target)) return false;
+    if (isPlayerSelected(selector, target)) return false;
 
     if (!filter.includes('dead_or_alive')
         && filter.includes('dead') === isPlayerInGame(target)
@@ -195,7 +195,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
     const origin = getPlayer(table, table.self_player!);
 
-    if (isCardSelected(table, selector, target) || isCardCurrent(selector, target)) return false;
+    if (isCardSelected(selector, target) || isCardCurrent(selector, target)) return false;
 
     const targetPocket = getCardPocket(target);
     const targetOwner = getCardOwner(target);

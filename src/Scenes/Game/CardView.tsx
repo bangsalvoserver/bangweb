@@ -52,7 +52,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
     if (isCardPrompted(selector, card)) {
         return 'card-prompted';
     }
-    if (isCardSelected(table, selector, card)) {
+    if (isCardSelected(selector, card)) {
         if (selectorIsTargeting(selector) && isValidCardTarget(table, selector, card)) {
             return 'card-retargetable';
         } else {
@@ -115,7 +115,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
-    const selectedCubes = countSelectedCubes(table, selector, card);
+    const selectedCubes = countSelectedCubes(selector, card);
 
     let style: CSSProperties | undefined;
     let classes = ['card-view'];
