@@ -67,7 +67,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
                 return 'card-targetable-cubes';
             }
         } else if (isValidCardTarget(table, selector, card)) {
-            if (selectorCanPlayCard(table, selector, card)) {
+            if (selectorCanPlayCard(selector, card)) {
                 return 'card-playable card-targetable';
             } else {
                 return 'card-targetable';
@@ -76,7 +76,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
     }
     if (isCardCurrent(selector, card)) {
         return 'card-current';
-    } else if (selectorCanPlayCard(table, selector, card)) {
+    } else if (selectorCanPlayCard(selector, card)) {
         switch (selector.mode) {
         case 'start':
         case 'middle':

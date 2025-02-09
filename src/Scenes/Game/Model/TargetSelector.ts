@@ -171,10 +171,10 @@ export function *getAllPlayableCards(selector: TargetSelector): Generator<[CardI
     }
 }
 
-export function isCardPlayable(selector: TargetSelector, card: CardId): boolean {
+export function isCardPlayable(selector: TargetSelector, card: Card): boolean {
     if (!selector.selection) {
         for (const [playableCard, ] of getAllPlayableCards(selector)) {
-            if (playableCard === card) {
+            if (playableCard === card.id) {
                 return true;
             }
         }
@@ -199,10 +199,10 @@ export function getModifierContext<K extends keyof EffectContext> (selector: Tar
     return result;
 }
 
-export function selectorCanPlayCard(table: GameTable, selector: TargetSelector, card: Card): card is KnownCard {
+export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
     return !isCardCurrent(selector, card)
         && !isCardSelected(selector, card)
-        && isCardPlayable(selector, card.id)
+        && isCardPlayable(selector, card)
         && isCardKnown(card);
 }
 

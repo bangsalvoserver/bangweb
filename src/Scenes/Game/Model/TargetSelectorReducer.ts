@@ -86,7 +86,7 @@ function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSel
     const cardId = getModifierContext(selector, 'playing_card') ?? getModifierContext(selector, 'repeat_card');
     if (cardId) {
         const card = getCard(table, cardId);
-        if (!isCardCurrent(selector, card) && isCardKnown(card) && isCardPlayable(selector, card.id)) {
+        if (!isCardCurrent(selector, card) && isCardKnown(card) && isCardPlayable(selector, card)) {
             return handleSelectPlayingCard(table, selector, card);
         }
     }
