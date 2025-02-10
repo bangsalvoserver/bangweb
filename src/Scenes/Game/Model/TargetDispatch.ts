@@ -316,17 +316,15 @@ const targetDispatch = buildDispatch({
             
             const player = getPlayer(table, playerId);
             if (!checkPlayerFilter(table, selector, effect.player_filter, player)) return false;
-            
-            switch (getCardPocket(card)) {
-            case 'player_character':
-                return card.id === player.pockets.player_character[0]
-                    && (effect.target_value === 0 || playerId !== table.self_player);
-            case 'player_table':
-                return getCardColor(card) === 'orange'
-                    && (effect.target_value === 0 || getCubeCount(card.tokens) !== 0);
-            default:
-                return false;
-            }
+
+            const pocket = getCardPocket(card);
+            return (
+                (pocket === 'player_character' && card.id === player.pockets.player_character[0])
+                || (pocket === 'player_table' && getCardColor(card) === 'orange')
+            ) && ( effect.target_value === 0 || (
+                (pocket !== 'player_character' || playerId !== table.self_player) 
+                && getCubeCount(card.tokens) !== 0
+            ));
         },
         generateTarget: card => card.id
     },
