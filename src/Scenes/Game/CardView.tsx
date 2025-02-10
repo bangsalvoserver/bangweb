@@ -115,7 +115,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
-    const selectedCubes = countSelectedCubes(selector, card);
+    const selectedCubes = countSelectedCubes(table, selector, card);
 
     let style: CSSProperties | undefined;
     let classes = ['card-view'];

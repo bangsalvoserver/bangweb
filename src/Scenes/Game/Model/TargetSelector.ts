@@ -1,6 +1,6 @@
 import { CardTarget } from "./CardTarget";
-import { checkPlayerFilter, getCardEffects, getEquipTarget, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getPlayer, getPlayerCubes, isCardKnown } from "./GameTable";
+import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
+import { Card, GameTable, KnownCard, Player, getCard, getPlayer, getPlayerCubes, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
@@ -256,12 +256,23 @@ export function isPlayerSkipped(selector: TargetSelector, player: Player): boole
     return false;
 }
 
-export function countSelectedCubes(selector: TargetSelector, targetCard: Card): number {
-    let selected = 0;
-    for (const [card, target, effect] of zipSelections(selector)) {
-        if (effect) {
-            selected += targetDispatch.getCubesSelected(target, effect, card, targetCard);
+function getCubeSlot(table: GameTable, card: Card) {
+    if (getCardPocket(card) === 'player_character') {
+        const player = getCardOwner(card);
+        if (player) {
+            const cardId = getPlayer(table, player).pockets.player_character[0];
+            if (cardId !== card.id) {
+                return getCard(table, cardId);
+            }
         }
+    }
+    return card;
+}
+
+export function countSelectedCubes(table: GameTable, selector: TargetSelector, targetCard: Card): number {
+    let selected = 0;
+    for (const [card, target] of zipSelections(selector)) {
+        selected += targetDispatch.getCubesSelected(target, getCubeSlot(table, card), targetCard);
     }
     return selected;
 }
@@ -269,7 +280,7 @@ export function countSelectedCubes(selector: TargetSelector, targetCard: Card): 
 export function countSelectableCubes(table: GameTable, selector: TargetSelector): number {
     let selectable = 0;
     for (const [card, cubes] of getPlayerCubes(table, getPlayer(table, table.self_player!))) {
-        selectable += cubes - countSelectedCubes(selector, card);
+        selectable += cubes - countSelectedCubes(table, selector, card);
     }
     return selectable;
 }
