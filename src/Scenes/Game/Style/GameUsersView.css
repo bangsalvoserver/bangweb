@@ -24,3 +24,7 @@
     padding: 0.2em;
     font-size: 10pt;
 }
+
+.game-users-box .lobby-user.lobby-user-winner {
+    outline-color: #bba14f;
+}

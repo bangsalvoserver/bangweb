@@ -43,8 +43,20 @@ export default function LobbyUser({ user: { username, propic, flags, lifetime}, 
   if (playerIcons) {
     icons.push(...playerIcons);
   }
+  let classes = 'lobby-user';
+  if (isDisconnected) {
+    classes += ' lobby-user-disconnected';
+  }
+  if (align === 'vertical') {
+    classes += ' flex-col';
+  } else {
+    classes += ' flex-row';
+  }
+  if (playerIcons && playerIcons.includes('icon-winner')) {
+    classes += ' lobby-user-winner';
+  }
   return (
-    <div className={`lobby-user ${isDisconnected ? 'lobby-user-disconnected ' : ''}${align === 'vertical' ? 'flex-col' : 'flex-row'}`}>
+    <div className={classes}>
       <div className='lobby-user-inner'>
         <img src={getPropicUrl(propic)} alt="" />
       </div>
