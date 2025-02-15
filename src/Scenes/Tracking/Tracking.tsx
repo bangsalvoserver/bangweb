@@ -84,30 +84,13 @@ function TrackingDataChart({ data }: { data: TrackingData }) {
     />;
 }
 
-function addQueryParams(url: string, params: Record<string, string | null>) {
-    let result = url;
-    let first = true;
-    for (const [key, value] of Object.entries(params)) {
-        if (value) {
-            if (first) {
-                result += '?';
-                first = false;
-            } else {
-                result += '&';
-            }
-            result += key + '=' + value;
-        }
-    }
-    return result;
-}
-
 export default function TrackingScene() {
     const params = new URLSearchParams(window.location.search);
-    const url = addQueryParams(Env.bangTrackingUrl, {
-        'length': params.get('length'),
-        'max_count': params.get('max_count')
+    const trackingParams = new URLSearchParams({
+        'length': params.get('length') || '',
+        'max_count': params.get('max_count') || ''
     });
-    const trackingData = useFetch<TrackingData>(url);
+    const trackingData = useFetch<TrackingData>(Env.bangTrackingUrl + '?' + trackingParams.toString());
 
     return <div className="flex flex-col items-center">
         {trackingData && <TrackingDataChart data={trackingData} /> }
