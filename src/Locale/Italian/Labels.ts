@@ -142,7 +142,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : modifica un'opzione di gioco`,
         RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : resetta le opzioni di gioco`,
         GIVE_CARD_DESCRIPTION: cmd => `${cmd} card_name : prendi una carta`,
-        GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : visualizza il seed di gioco (solo durante schermata di partita finita)`,
+        GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : visualizza il seed di gioco`,
         QUIT_DESCRIPTION: cmd => `${cmd} : disconnettiti dal server`,
         
         GAME_SEED: seed => `Il seed di gioco è ${seed}`,
