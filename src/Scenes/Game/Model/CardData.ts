@@ -5,13 +5,11 @@ export interface CardEffect {
     target: TargetType;
     player_filter: PlayerFilter[];
     card_filter: CardFilter[];
-    effect_value: number;
     target_value: number;
     type: EffectType;
 }
 
 export interface CardEquip {
-    effect_value: number;
     type: EquipType;
 }
 
