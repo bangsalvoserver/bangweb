@@ -55,13 +55,19 @@ export default function LobbyUser({ user: { username, propic, flags, lifetime}, 
   if (playerIcons && playerIcons.includes('icon-winner')) {
     classes += ' lobby-user-winner';
   }
+  if (isSpectator) {
+    classes += ' lobby-user-spectator';
+  }
+  if (isSelf) {
+    classes += ' lobby-user-self';
+  }
   return (
     <div className={classes}>
       <div className='lobby-user-inner'>
         <img src={getPropicUrl(propic)} alt="" />
       </div>
       <div className='lobby-username'>
-        <span className={isSelf ? 'lobby-username-self' : ''}>{clipUsername(username)}</span>
+        <span>{clipUsername(username)}</span>
         { icons.length !== 0 && <div className="lobby-user-icons">
           { icons.map(icon => <div className={`player-icon ${icon}`} key={icon}/>) }
         </div> }

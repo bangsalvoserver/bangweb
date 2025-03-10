@@ -54,7 +54,7 @@
     max-height: 100%;
 }
 
-.lobby-username-self {
+.lobby-user.lobby-user-self .lobby-username span {
     filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.6));
 }
 

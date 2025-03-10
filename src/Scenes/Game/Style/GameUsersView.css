@@ -18,7 +18,7 @@
 
 .game-users-box .lobby-user {
     outline: 2px solid #2d1000ff;
-    background-color: #cec9b8c5;
+    background-color: #cec9b8e0;
     border-radius: 0.5em;
     margin: 0.4em;
     padding: 0.2em;
@@ -27,4 +27,9 @@
 
 .game-users-box .lobby-user.lobby-user-winner {
     outline-color: #bba14f;
+}
+
+.game-users-box .lobby-user.lobby-user-spectator {
+    outline: none;
+    background-color: #cec9b888;
 }
