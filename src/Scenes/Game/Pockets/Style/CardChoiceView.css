@@ -1,9 +1,10 @@
 .card-choice {
-    position: fixed;
+    position: absolute;
     left: var(--card-anchor-x);
     top: var(--card-anchor-y);
     height: var(--card-height);
     z-index: 5;
+    max-width: calc(var(--card-width-plus-margin) * 3.5);
 }
 
 .card-choice-inner {

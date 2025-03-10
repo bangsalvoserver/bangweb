@@ -1,5 +1,5 @@
 import { CSSProperties, useContext } from "react";
-import { getRectCenter } from "../../../Utils/Rect";
+import { getRectCenter, relativeToWindow } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import CardView from "../CardView";
 import { GameStateContext } from "../GameScene";
@@ -23,7 +23,7 @@ function CardChoiceInner({ cards, anchor, tracker }: CardChoiceInnerProps) {
     const anchorRect = useUpdateEveryFrame(() => tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id));
     
     if (!anchorRect) return null;
-    const anchorCenter = getRectCenter(anchorRect);
+    const anchorCenter = relativeToWindow(getRectCenter(anchorRect));
 
     const cardChoiceStyle = {
         '--card-anchor-x': anchorCenter.x + 'px',

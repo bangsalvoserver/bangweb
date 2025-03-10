@@ -36,6 +36,13 @@ export function getWindowRect(): Rect {
     };
 }
 
+export function relativeToWindow(point: Point): Point {
+    return {
+        x: point.x + window.scrollX,
+        y: point.y + window.scrollY
+    };
+}
+
 export function shrinkRect(rect: Rect, padX: number, padY: number): Rect {
     return {
         x: rect.x + padX,
