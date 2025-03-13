@@ -4,7 +4,7 @@
     top: var(--card-anchor-y);
     height: var(--card-height);
     z-index: 5;
-    max-width: calc(var(--card-width-plus-margin) * 3.5);
+    max-width: calc(var(--card-width-plus-margin) * (var(--card-choice-num-cards) + 0.5));
 }
 
 .card-choice-inner {

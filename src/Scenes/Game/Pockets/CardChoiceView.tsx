@@ -25,7 +25,13 @@ function CardChoiceInner({ cards, anchor, tracker }: CardChoiceInnerProps) {
     if (!anchorRect) return null;
     const anchorCenter = relativeToWindow(getRectCenter(anchorRect));
 
+    let ncards = cards.length;
+    if (ncards > 4) {
+        ncards = Math.floor(ncards / 2);
+    }
+
     const cardChoiceStyle = {
+        '--card-choice-num-cards': ncards,
         '--card-anchor-x': anchorCenter.x + 'px',
         '--card-anchor-y': anchorCenter.y + 'px'
     } as CSSProperties;
