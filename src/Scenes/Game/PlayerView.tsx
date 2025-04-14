@@ -107,7 +107,10 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const isGameOver = table.status.flags.includes('game_over');
     const isTurn = player.id === table.status.current_turn;
 
-    const isPlayerSelf = player.id === table.self_player;
+    const isHandShown = player.id === table.self_player
+        || table.status.flags.includes('hands_shown')
+        || (player.status.flags.includes('show_hand_playing') && table.self_player === table.status.current_turn);
+    
     const isOrigin = isResponse(selector) && selector.request.origin === player.id;
     const isTarget = isResponse(selector) && selector.request.target === player.id;
     const isDead = isPlayerDead(player);
@@ -147,7 +150,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         classes.push(getSelectorPlayerClass(table, selector, player));
     }
 
-    if (isPlayerSelf) {
+    if (player.id === table.self_player) {
         classes.push('player-view-self');
     }
     
@@ -197,7 +200,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                             <RoleView player={player} />
                         </div>
                     </div>
-                    { (isPlayerSelf || table.status.flags.includes('hands_shown'))
+                    { isHandShown
                         ? <div className='player-hand-inner'>
                             <PocketView pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
                         </div>
