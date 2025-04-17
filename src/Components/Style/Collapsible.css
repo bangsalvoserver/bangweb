@@ -1,0 +1,19 @@
+.collapsible-header {
+    font-weight: bold;
+    text-align: center;
+    font-size: 15pt;
+    margin-bottom: 2pt;
+    cursor: pointer;
+}
+
+.collapsible-visible {
+    transition: max-height 300ms ease-in-out, visibility 200ms step-end;
+    visibility: visible;
+}
+
+.collapsible-collapsed {
+    transition: max-height 300ms ease-in-out, visibility 300ms step-end;
+    max-height: 0;
+    visibility: hidden;
+    overflow: hidden;
+}

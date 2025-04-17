@@ -40,7 +40,7 @@ export default function LobbyScene({ gameOptions, setGameOptions, connection, lo
           <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button>
         </div> }
         <div className='flex flex-col md:flex-row items-center md:items-start mb-24'>
-          <GameOptionsEditor gameOptions={gameOptions} setGameOptions={setGameOptions} readOnly={!isLobbyOwner} />
+          <GameOptionsEditor gameOptions={gameOptions} setGameOptions={isLobbyOwner ? setGameOptions : undefined} />
           <div className='flex flex-col -order-1 md:order-none'>
             {lobbyState.users.flatMap(user => {
               if (user.flags.includes('disconnected')) {

@@ -11,12 +11,14 @@ export const floatConverter: Converter<number> = { fromString: parseFloat, toStr
 export const boolConverter: Converter<boolean> = { fromString: str => str === 'true', toString: value => value ? 'true' : 'false' }
 export const jsonConverter: Converter<any> = { fromString: JSON.parse, toString: JSON.stringify };
 
-function useStorage<T>(key: string, converter: Converter<T>, storage: Storage) {
+function useStorage<T>(key: string, converter: Converter<T>, storage: Storage, defaultValue?: T) {
     const [value, setValue] = useState(() => {
         try {
             const stringValue = storage.getItem(key);
             if (stringValue) {
                 return converter.fromString(stringValue);
+            } else {
+                return defaultValue;
             }
         } catch (e) {
             console.error(`Cannot get value of ${key} in storage:`, e);
@@ -36,10 +38,10 @@ function useStorage<T>(key: string, converter: Converter<T>, storage: Storage) {
     return [value, setValue] as const;
 }
 
-export function useLocalStorage<T>(key: string, converter: Converter<T>) {
-    return useStorage(key, converter, localStorage);
+export function useLocalStorage<T>(key: string, converter: Converter<T>, defaultValue?: T) {
+    return useStorage(key, converter, localStorage, defaultValue);
 }
 
-export function useSessionStorage<T>(key: string, converter: Converter<T>) {
-    return useStorage(key, converter, sessionStorage);
+export function useSessionStorage<T>(key: string, converter: Converter<T>, defaultValue?: T) {
+    return useStorage(key, converter, sessionStorage, defaultValue);
 }
