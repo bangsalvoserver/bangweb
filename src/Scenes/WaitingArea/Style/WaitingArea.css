@@ -1,7 +1,8 @@
 .lobby-list {
-    display: table;
+    display: flex;
+    flex-direction: column;
     min-width: 10vw;
-    table-layout: fixed;
+    width: fit-content;
     margin-top: 0.5em;
     margin-left: auto;
     margin-right: auto;
@@ -19,12 +20,14 @@
     overflow: hidden;
 }
 
-.lobby-element {
-    display: table-row;
+.lobby-element-wrapper {
+    display: flex;
+    flex-direction: column;
 }
 
-.lobby-element div {
-    display: table-cell;
+.lobby-element {
+    display: flex;
+    flex-direction: row;
 }
 
 .lobby-element div#lobby-name {
@@ -34,6 +37,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    flex-grow: 1;
 }
 
 .lobby-element div#lobby-button-join {
