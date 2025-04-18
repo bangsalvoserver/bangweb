@@ -42,20 +42,16 @@ function LobbyElement({ lobby: { lobby_id, name, num_players, num_spectators, ma
 
   const handleClickJoin = useCallback(() => {
     if (secure) {
-      if (!isPasswordOpen) {
-        setIsPasswodOpen(true);
-        passwordInputRef?.current?.focus();
-      } else {
-        setIsPasswodOpen(false);
-      }
+      setIsPasswodOpen(true);
+      passwordInputRef?.current?.focus();
     } else {
       handleJoinLobby(lobby_id, '');
     }
-  }, [lobby_id, secure, handleJoinLobby, isPasswordOpen, setIsPasswodOpen]);
+  }, [lobby_id, secure, handleJoinLobby, setIsPasswodOpen]);
 
   const numPlayersStatus = `${num_players}/${max_players}` + (num_spectators > 0 ? `+${num_spectators}` : '');
   return (
-    <div ref={elemRef} className="lobby-element-wrapper">
+    <div ref={elemRef} className={`lobby-element-wrapper ${isPasswordOpen ? 'lobby-element-wrapper-expanded' : ''}`}>
       <div className="lobby-element">
         <div id='lobby-name'>{name}</div>
         <div id='num-players'>{numPlayersStatus}</div>

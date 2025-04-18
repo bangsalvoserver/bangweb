@@ -23,6 +23,18 @@
 .lobby-element-wrapper {
     display: flex;
     flex-direction: column;
+    padding: 0.2em;
+
+    transition: border 300ms ease-in-out, background-color 300ms ease-in-out;
+
+    border: 2px solid rgba(102, 36, 20, 0);
+    background-color: #ffffff00;
+    border-radius: 5px;
+}
+
+.lobby-element-wrapper-expanded {
+    border: 2px solid rgba(102, 36, 20, 0.589);
+    background-color: #ffffff33;
 }
 
 .lobby-element {
@@ -38,10 +50,6 @@
     overflow: hidden;
     white-space: nowrap;
     flex-grow: 1;
-}
-
-.lobby-element div#lobby-button-join {
-    padding-bottom: 0.4em;
 }
 
 .lobby-element div#num-players {
