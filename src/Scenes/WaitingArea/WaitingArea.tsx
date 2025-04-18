@@ -7,6 +7,7 @@ import { LobbyId, LobbyValue } from "../../Model/ServerMessage";
 import { BangConnection } from "../../Model/UseBangConnection";
 import LobbyElement from "./LobbyElement";
 import './Style/WaitingArea.css';
+import PasswordInput from "../../Components/PasswordInput";
 
 export interface WaitingAreaProps {
   lobbies: LobbyValue[];
@@ -22,16 +23,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
     }
   }, [connection, settings]);
 
-  const handleClickJoin = useCallback((lobby_id: LobbyId, secure: boolean) => {
-    let password = '';
-    if (secure) {
-      let result = window.prompt(getLabel('ui','PROMPT_LOBBY_PASSWORD'));
-      if (result) {
-        password = result;
-      } else {
-        return;
-      }
-    }
+  const handleJoinLobby = useCallback((lobby_id: LobbyId, password: string) => {
     connection.sendMessage({ lobby_join: { lobby_id, password }});
   }, [connection]);
 
@@ -60,20 +52,10 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
             {settings.expandLobbyOptions ? '+' : '-'}
           </button>
           </p>
-        <p className={settings.expandLobbyOptions ? 'lobby-options-visible' : 'lobby-options-collapsed'}><label htmlFor='lobby_password' className='font-bold text-xl'>{getLabel('ui', 'LABEL_LOBBY_PASSWORD')}</label>
-        <input type='text' id='lobby_password'
-          className='
-            border-2
-            border-gray-300
-            rounded-md
-            m-2
-            p-1
-            w-44
-            focus:outline-none
-            focus:ring-2
-            focus:ring-blue-500
-          '
-          value={settings.lobbyPassword} onChange={e => settings.setLobbyPassword(e.target.value)}></input></p>
+        <p className={settings.expandLobbyOptions ? 'lobby-options-visible' : 'lobby-options-collapsed'}>
+          <label htmlFor='lobby_password' className='font-bold text-xl'>{getLabel('ui', 'LABEL_LOBBY_PASSWORD')}</label>
+          <PasswordInput id="lobby_password" password={settings.lobbyPassword} setPassword={settings.setLobbyPassword} />
+        </p>
         <Button color='green' type='submit'>
           {getLabel('ui', 'BUTTON_CREATE_LOBBY')}
           {(settings.lobbyPassword ?? '') !== '' && <div className='lobby-secure-icon' />}
@@ -81,7 +63,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
       </form>
       <div className='lobby-list'>
         {lobbies.toReversed().map((lobby) => (
-          <LobbyElement key={lobby.lobby_id} lobby={lobby} onClickJoin={handleClickJoin} />
+          <LobbyElement key={lobby.lobby_id} lobby={lobby} handleJoinLobby={handleJoinLobby} />
         ))}
       </div>
     </div>

@@ -49,6 +49,23 @@
     text-align: center;
 }
 
+.lobby-password-input {
+    margin: auto;
+    width: fit-content;
+}
+
+.lobby-password-open {
+    transition: max-height 300ms ease-in-out, visibility 200ms step-end;
+    max-height: 4em;
+    overflow: hidden;
+}
+
+.lobby-password-closed {
+    transition: max-height 300ms ease-in-out, visibility 300ms step-end;
+    max-height: 0;
+    overflow: hidden;
+}
+
 .lobby-secure-icon {
     margin-left: 0.5em;
     width: 20px;
