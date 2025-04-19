@@ -29,7 +29,7 @@
 
     border: 2px solid rgba(102, 36, 20, 0);
     background-color: #ffffff00;
-    border-radius: 5px;
+    border-radius: 6px;
 }
 
 .lobby-element-wrapper-expanded {
@@ -42,21 +42,24 @@
     flex-direction: row;
 }
 
-.lobby-element div#lobby-name {
+.lobby-element .lobby-name {
     font-weight: bold;
     padding-right: 1em;
-    max-width: 10em;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    flex-grow: 1;
+    width: 7em;
 }
 
-.lobby-element div#num-players {
+.lobby-element .lobby-secure-icon {
+    align-self: center;
+}
+
+.lobby-element .num-players {
     width: 2em;
 }
 
-.lobby-element div#lobby-state {
+.lobby-element .lobby-state {
     width: 6em;
     text-align: center;
 }
@@ -79,6 +82,7 @@
 }
 
 .lobby-secure-icon {
+    display: inline-block;
     margin-left: 0.5em;
     width: 20px;
     height: 20px;

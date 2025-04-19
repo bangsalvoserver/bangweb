@@ -53,14 +53,13 @@ function LobbyElement({ lobby: { lobby_id, name, num_players, num_spectators, ma
   return (
     <div ref={elemRef} className={`lobby-element-wrapper ${isPasswordOpen ? 'lobby-element-wrapper-expanded' : ''}`}>
       <div className="lobby-element">
-        <div id='lobby-name'>{name}</div>
-        <div id='num-players'>{numPlayersStatus}</div>
-        <div id='lobby-state'>{getLabel('LobbyState', state)}</div>
-        <div id='lobby-button-join'>
-          <Button color='green' onClick={handleClickJoin}>
-            {getLabel('ui', 'BUTTON_JOIN')}{secure && <div className='lobby-secure-icon' />}
-          </Button>
-        </div>
+        <div className='lobby-name' title={name}>{name}</div>
+        <div className='num-players'>{numPlayersStatus}</div>
+        <div className='lobby-state'>{getLabel('LobbyState', state)}</div>
+        <Button color='green' onClick={handleClickJoin}>
+          {getLabel('ui', 'BUTTON_JOIN')}
+        </Button>
+        {secure && <div className='lobby-secure-icon' />}
       </div>
       { secure && <LobbyPasswordInput passwordInputRef={passwordInputRef} lobby_id={lobby_id} isPasswordOpen={isPasswordOpen} handleJoinLobby={handleJoinLobby} />}
     </div>
