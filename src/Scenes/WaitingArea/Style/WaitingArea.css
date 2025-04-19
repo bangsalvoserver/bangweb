@@ -44,24 +44,24 @@
 
 .lobby-element .lobby-name {
     font-weight: bold;
-    padding-right: 1em;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    width: 7em;
-}
-
-.lobby-element .lobby-secure-icon {
-    align-self: center;
+    width: 10em;
 }
 
 .lobby-element .num-players {
     width: 2em;
+    text-align: center;
 }
 
 .lobby-element .lobby-state {
-    width: 6em;
-    text-align: center;
+    margin-right: 0.5em;
+    cursor: help;
+}
+
+.lobby-element .lobby-secure-icon {
+    align-self: center;
 }
 
 .lobby-password-input {

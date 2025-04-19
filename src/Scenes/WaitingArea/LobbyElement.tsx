@@ -2,7 +2,7 @@ import { Ref, SyntheticEvent, useCallback, useRef, useState } from "react";
 import Button from "../../Components/Button";
 import PasswordInput from "../../Components/PasswordInput";
 import getLabel from "../../Locale/GetLabel";
-import { LobbyId, LobbyValue } from "../../Model/ServerMessage";
+import { LobbyId, LobbyStateEnum, LobbyValue } from "../../Model/ServerMessage";
 import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
 
 interface LobbyPasswordProps {
@@ -36,6 +36,12 @@ export interface LobbyElementProps {
   handleJoinLobby: (lobby_id: LobbyId, password: string) => void;
 }
 
+const LOBBY_STATE_ICONS: Record<LobbyStateEnum, string> = {
+  'waiting': "\uD83D\uDFE2", // green circle
+  'playing': "\uD83D\uDFE1", // yellow circle
+  'finished': "\uD83D\uDD34" // red circle
+};
+
 function LobbyElement({ lobby: { lobby_id, name, num_players, num_spectators, max_players, secure, state }, handleJoinLobby }: LobbyElementProps) {
   const [isPasswordOpen, setIsPasswodOpen, elemRef] = useCloseOnLoseFocus<HTMLDivElement>();
   const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -55,10 +61,8 @@ function LobbyElement({ lobby: { lobby_id, name, num_players, num_spectators, ma
       <div className="lobby-element">
         <div className='lobby-name' title={name}>{name}</div>
         <div className='num-players'>{numPlayersStatus}</div>
-        <div className='lobby-state'>{getLabel('LobbyState', state)}</div>
-        <Button color='green' onClick={handleClickJoin}>
-          {getLabel('ui', 'BUTTON_JOIN')}
-        </Button>
+        <div className='lobby-state' title={getLabel('LobbyState', state)}>{LOBBY_STATE_ICONS[state]}</div>
+        <Button color='green' onClick={handleClickJoin}>{getLabel('ui', 'BUTTON_JOIN')}</Button>
         {secure && <div className='lobby-secure-icon' />}
       </div>
       { secure && <LobbyPasswordInput passwordInputRef={passwordInputRef} lobby_id={lobby_id} isPasswordOpen={isPasswordOpen} handleJoinLobby={handleJoinLobby} />}
