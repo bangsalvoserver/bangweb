@@ -58,12 +58,3 @@ export function rotateToFirstOf<T>(arr: T[], ...values: (T | undefined)[]): T[] 
         return prevIndex;
     }, -1));
 }
-
-export function computeIfAbsent<K, V>(map: Map<K, V>, key: K, supplier: () => V) {
-    let value = map.get(key);
-    if (value === undefined) {
-        value = supplier();
-        map.set(key, value);
-    }
-    return value;
-}

@@ -20,6 +20,11 @@ export interface GameString {
     format_args: FormatArg[];
 }
 
+export interface PreloadAssets {
+    images: string[];
+    sounds: string[];
+}
+
 export interface AddCardsUpdate {
     card_ids: {
         id: CardId,
@@ -219,6 +224,7 @@ export type SyntheticTableUpdate =
 export type TableUpdate = GameTableUpdate | SyntheticTableUpdate;
 
 export type GameStateUpdate = 
+    { preload_assets: PreloadAssets } |
     { game_error: GameString } |
     { game_log: GameString } |
     { game_prompt: GameString } |

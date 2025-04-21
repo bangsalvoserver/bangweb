@@ -2,7 +2,7 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { GameChannel } from "../../../Model/UseBangConnection";
 import { createUnionDispatch, createUnionReducer } from "../../../Utils/UnionUtils";
-import usePlaySound from "../../../Utils/UsePlaySound";
+import useAssets from "../../../Utils/UseAssets";
 import { GameTable, newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
 import { GameString, GameUpdate, TableUpdate } from "./GameUpdate";
@@ -41,7 +41,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
     const [gameError, setGameError] = useState<GameString>();
     const gameUpdates = useRef<GameUpdate[]>([]);
 
-    const playSound = usePlaySound(muteSounds);
+    const assets = useAssets(muteSounds);
 
     const clearGameError = useCallback(() => {
         if (gameError) setGameError(undefined);
@@ -77,6 +77,10 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
         };
 
         const handleUpdate = createUnionDispatch<GameUpdate>({
+            preload_assets(message) {
+                assets.preloadAssets(message);
+            },
+
             game_error(message) {
                 setGameError(message);
                 selectorDispatch({ undoSelection: {} });
@@ -91,7 +95,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
             },
         
             play_sound(sound) {
-                playSound(sound);
+                assets.playSound(sound);
             },
         
             add_cards(update) {
@@ -221,7 +225,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
         });
 
         return gameChannel.unsubscribe;
-    }, [gameChannel, playSound]);
+    }, [gameChannel, assets]);
 
     return { state, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }
