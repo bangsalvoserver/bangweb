@@ -1,7 +1,7 @@
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { Empty } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, TablePocketType, TokenType } from "./CardEnums";
+import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, SoundId, TablePocketType, TokenType } from "./CardEnums";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -228,7 +228,7 @@ export type GameStateUpdate =
     { game_error: GameString } |
     { game_log: GameString } |
     { game_prompt: GameString } |
-    { play_sound: string } |
+    { play_sound: SoundId } |
     { request_status: RequestStatusArgs } | 
     { status_ready: StatusReadyArgs } |
     { status_clear: Empty } |

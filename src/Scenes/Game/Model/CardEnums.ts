@@ -113,6 +113,8 @@ export type TokenType =
     'fame7' |
     'fame8';
 
+export type SoundId = string;
+
 export type GameFlag = string;
 export type PlayerFlag = string;
 

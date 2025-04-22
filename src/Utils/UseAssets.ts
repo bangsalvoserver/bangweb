@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { PreloadAssets } from "../Scenes/Game/Model/GameUpdate";
 import { getCardUrl } from "../Scenes/Game/CardView";
 import makeMapCache from "./MapCache";
+import { SoundId } from "../Scenes/Game/Model/CardEnums";
 
 const loadImage = makeMapCache((name: string) => {
     const image = new Image();
@@ -9,7 +10,7 @@ const loadImage = makeMapCache((name: string) => {
     return image;
 });
 
-const loadSound = makeMapCache((name: string) => {
+const loadSound = makeMapCache((name: SoundId) => {
     return new Audio(`/sounds/${name}.mp3`);
 });
 
@@ -34,7 +35,7 @@ export default function useAssets(muteSounds: boolean = false) {
     }, [muteSounds, clearCurrentAudio]);
 
     return useMemo(() => ({
-        playSound: (name: string) => {
+        playSound: (name: SoundId) => {
             if (!muteSounds) {
                 clearCurrentAudio();
     
