@@ -31,6 +31,7 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
+import LoadingScene from "../Loading/Loading";
 
 export interface GameProps {
   connection: BangConnection;
@@ -45,7 +46,7 @@ const EMPTY_GAME_STATE = newGameState(0);
 export const GameStateContext = createContext(EMPTY_GAME_STATE);
 
 export default function GameScene({ connection, lobbyState, gameOptions, gameChannel, overlayRef, muteSounds }: GameProps) {
-  const { state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId, muteSounds ?? false);
+  const { loaded, state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId, muteSounds ?? false);
   const { table, selector } = state;
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
@@ -158,6 +159,10 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     </div>;
   });
 
+  if (!loaded) {
+    return <LoadingScene message="LOADING_CARDS" />
+  }
+  
   return (
     <LobbyContext.Provider value={lobbyState}>
       <GameStateContext.Provider value={state}>

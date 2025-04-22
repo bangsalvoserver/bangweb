@@ -11,10 +11,18 @@ export async function loadFile(file: File): Promise<string> {
 
 export async function loadImage(src: ImageSrc): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
-        let image = document.createElement('img');
+        let image = new Image();
         image.onload = () => resolve(image);
         image.onerror = reject;
         image.src = src;
+    });
+}
+
+export async function loadAudio(src: string): Promise<HTMLAudioElement> {
+    return new Promise((resolve, reject) => {
+        let audio = new Audio(src);
+        audio.addEventListener('canplaythrough', () => resolve(audio));
+        audio.onerror = reject;
     });
 }
 

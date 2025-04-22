@@ -35,6 +35,7 @@ export function newGameState(myUserId: UserId): GameState {
 }
 
 export default function useGameState(gameChannel: GameChannel, myUserId: UserId, muteSounds: boolean) {
+    const [loaded, setLoaded] = useState(false);
     const [state, stateDispatch] = useReducer(gameStateReducer, myUserId, newGameState);
 
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
@@ -77,8 +78,9 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
         };
 
         const handleUpdate = createUnionDispatch<GameUpdate>({
-            preload_assets(message) {
-                assets.preloadAssets(message);
+            async preload_assets(message) {
+                await assets.preloadAssets(message);
+                setLoaded(true);
             },
 
             game_error(message) {
@@ -227,5 +229,5 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
         return gameChannel.unsubscribe;
     }, [gameChannel, assets]);
 
-    return { state, selectorDispatch, gameLogs, gameError, clearGameError } as const;
+    return { loaded, state, selectorDispatch, gameLogs, gameError, clearGameError } as const;
 }

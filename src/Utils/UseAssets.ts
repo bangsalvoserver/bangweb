@@ -1,18 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { PreloadAssets } from "../Scenes/Game/Model/GameUpdate";
 import { getCardUrl } from "../Scenes/Game/CardView";
-import makeMapCache from "./MapCache";
 import { SoundId } from "../Scenes/Game/Model/CardEnums";
+import { PreloadAssets } from "../Scenes/Game/Model/GameUpdate";
+import { loadAudio, loadImage } from "./ImageSerial";
+import makeMapCache from "./MapCache";
 
-const loadImage = makeMapCache((name: string) => {
-    const image = new Image();
-    image.src = getCardUrl(name);
-    return image;
-});
-
-const loadSound = makeMapCache((name: SoundId) => {
-    return new Audio(`/sounds/${name}.mp3`);
-});
+const loadCardImage = makeMapCache((name: string) => loadImage(getCardUrl(name)));
+const loadGameSound = makeMapCache((name: SoundId) => loadAudio(`/sounds/${name}.mp3`));
 
 export default function useAssets(muteSounds: boolean = false) {
     const currentAudio = useRef<HTMLAudioElement>();
@@ -35,11 +29,11 @@ export default function useAssets(muteSounds: boolean = false) {
     }, [muteSounds, clearCurrentAudio]);
 
     return useMemo(() => ({
-        playSound: (name: SoundId) => {
+        playSound: async (name: SoundId) => {
             if (!muteSounds) {
                 clearCurrentAudio();
     
-                const sound = loadSound(name);
+                const sound = await loadGameSound(name);
                 currentAudio.current = sound;
     
                 sound.addEventListener('ended', clearCurrentAudio);
@@ -47,9 +41,11 @@ export default function useAssets(muteSounds: boolean = false) {
             }
         },
 
-        preloadAssets: ({ images, sounds }: PreloadAssets) => {
-            images.forEach(loadImage);
-            sounds.forEach(loadSound);
+        preloadAssets: async ({ images, sounds }: PreloadAssets) => {
+            return Promise.all([
+                Promise.all(images.map(loadCardImage)),
+                Promise.all(sounds.map(loadGameSound))
+            ]);
         }
     }), [muteSounds, clearCurrentAudio]);
 }

@@ -82,6 +82,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         APP_WELCOME: "Welcome to bang.salvoserver.it,\nBang! online with all expansions!\nPlay now for free with your friends!",
         DISCORD_LINK: "Join the official discord",
         LOADING: "Loading...",
+        LOADING_CARDS: "Loading cards...",
         RECONNECTING: "Reconnecting...", 
         UNKNOWN_CARD: "(Unknown card)",
         UNKNOWN_PLAYER: "(Unknown player)",
