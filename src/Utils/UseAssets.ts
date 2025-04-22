@@ -43,8 +43,8 @@ export default function useAssets(muteSounds: boolean = false) {
 
         preloadAssets: async ({ images, sounds }: PreloadAssets) => {
             return Promise.all([
-                Promise.all(images.map(loadCardImage)),
-                Promise.all(sounds.map(loadGameSound))
+                Promise.allSettled(images.map(loadCardImage)),
+                Promise.allSettled(sounds.map(loadGameSound))
             ]);
         }
     }), [muteSounds, clearCurrentAudio]);
