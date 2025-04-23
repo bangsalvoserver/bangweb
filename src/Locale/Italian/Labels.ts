@@ -33,9 +33,9 @@ export const LABELS_ITALIAN: LabelRegistry = {
         allow_bot_rejoin:       "Permetti agli altri giocatori di prendere controllo dei bot.",
         scenario_deck_size:     "I mazzi di High Noon e Fistful of Cards vengono mischiati assieme in un mazzetto di questa dimensione.",
         num_bots:               "Numero di bot per questa partita.",
-        damage_timer:           "Timer (in ms) per permettere di giocare carte come Salvo!, quando qualcuno prende danno.",
-        escape_timer:           "Timer (in ms) per permettere di giocare Fuga, prima che l'azione si risolva automaticamente.",
-        bot_play_timer:         "Timer (in ms) per controllare la velocità di gioco dei bot.",
+        damage_timer:           "Intervallo di tempo (in ms) per giocare carte come Salvo!, quando qualcuno prende danno.",
+        escape_timer:           "Intervallo di tempo (in ms) per giocare Fuga, prima che l'azione si risolva automaticamente.",
+        bot_play_timer:         "Intervallo di tempo (in ms) tra un'azione e l'altra dei bot.",
         game_seed:              "Seme per il generatore di numeri casuali. (Imposta a 0 per usare un valore casuale)"
     },
 

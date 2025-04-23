@@ -33,9 +33,9 @@ export const LABELS_ENGLISH: LabelRegistry = {
         allow_bot_rejoin:       "Allow players to take control of bots.",
         scenario_deck_size:     "The decks of High Noon and Fistful of Cards are shuffled together in a smaller deck of this size.",
         num_bots:               "Number of bots for this game.",
-        damage_timer:           "Timer (in ms) to allow players to play cards like Saved!, when someone receives damage.",
-        escape_timer:           "Timer (in ms) to allow players to play Escape, before the action is resolved automatically.",
-        bot_play_timer:         "Timer (in ms) to change the speed of play of bots.",
+        damage_timer:           "Time interval (in ms) to play cards like Saved!, when someone receives damage.",
+        escape_timer:           "Time interval (in ms) to play Escape, before the action is resolved automatically.",
+        bot_play_timer:         "Time interval (in ms) between each bot action.",
         game_seed:              "Random number generator seed. (Set to 0 to use a random value)"
     },
 
