@@ -2,11 +2,11 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getCardUrl } from "../Scenes/Game/CardView";
 import { SoundId } from "../Scenes/Game/Model/CardEnums";
 import { PreloadAssets } from "../Scenes/Game/Model/GameUpdate";
-import { loadAudio, loadImage } from "./ImageSerial";
+import { loadImage } from "./ImageSerial";
 import makeMapCache from "./MapCache";
 
 const loadCardImage = makeMapCache((name: string) => loadImage(getCardUrl(name)));
-const loadGameSound = makeMapCache((name: SoundId) => loadAudio(`/sounds/${name}.mp3`));
+const loadGameSound = makeMapCache((name: SoundId) => new Audio(`/sounds/${name}.mp3`));
 
 export default function useAssets(muteSounds: boolean = false) {
     const currentAudio = useRef<HTMLAudioElement>();
@@ -29,11 +29,11 @@ export default function useAssets(muteSounds: boolean = false) {
     }, [muteSounds, clearCurrentAudio]);
 
     return useMemo(() => ({
-        playSound: async (name: SoundId) => {
+        playSound: (name: SoundId) => {
             if (!muteSounds) {
                 clearCurrentAudio();
     
-                const sound = await loadGameSound(name);
+                const sound = loadGameSound(name);
                 currentAudio.current = sound;
     
                 sound.addEventListener('ended', clearCurrentAudio);
@@ -42,10 +42,14 @@ export default function useAssets(muteSounds: boolean = false) {
         },
 
         preloadAssets: async ({ images, sounds }: PreloadAssets) => {
-            return Promise.all([
-                Promise.allSettled(images.map(loadCardImage)),
-                Promise.allSettled(sounds.map(loadGameSound))
-            ]);
+            for (const sound of sounds) {
+                try {
+                    loadGameSound(sound);
+                } catch (e) {
+                    console.error('error preloading sound', e);
+                }
+            }
+            await Promise.allSettled(images.map(loadCardImage));
         }
     }), [muteSounds, clearCurrentAudio]);
 }

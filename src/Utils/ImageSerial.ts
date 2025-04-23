@@ -18,14 +18,6 @@ export async function loadImage(src: ImageSrc): Promise<HTMLImageElement> {
     });
 }
 
-export async function loadAudio(src: string): Promise<HTMLAudioElement> {
-    return new Promise((resolve, reject) => {
-        let audio = new Audio(src);
-        audio.addEventListener('canplaythrough', () => resolve(audio));
-        audio.onerror = reject;
-    });
-}
-
 export const PROPIC_SIZE = 512;
 
 export async function serializeImage(src: ImageSrc | undefined, scale?: number): Promise<ImageSrc | null> {
