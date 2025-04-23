@@ -184,6 +184,7 @@ export interface GameOptions {
     only_base_characters: boolean;
     scenario_deck_size?: number;
     num_bots?: number;
+    auto_resolve_timer?: Milliseconds;
     damage_timer?: Milliseconds;
     escape_timer?: Milliseconds;
     bot_play_timer?: Milliseconds;

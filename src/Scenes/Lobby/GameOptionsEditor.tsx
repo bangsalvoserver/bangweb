@@ -150,6 +150,7 @@ export default function GameOptionsEditor(props: GameOptionProps) {
                 <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
                     <OptionNumber prop='scenario_deck_size' max={100} { ...props } />
                 </ConditionalOnExpansion>
+                <OptionNumber prop='auto_resolve_timer' max={5000} { ...props } />
                 <OptionNumber prop='bot_play_timer' max={10000} { ...props } />
                 <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu','canyondiablo']}>
                     <OptionNumber prop='damage_timer' max={5000} { ...props } />
