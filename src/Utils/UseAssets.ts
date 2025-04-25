@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import useEvent from "react-use-event-hook";
 import { getCardUrl } from "../Scenes/Game/CardView";
 import { SoundId } from "../Scenes/Game/Model/CardEnums";
 import { PreloadAssets } from "../Scenes/Game/Model/GameUpdate";
@@ -8,7 +9,7 @@ import makeMapCache from "./MapCache";
 const loadCardImage = makeMapCache((name: string) => loadImage(getCardUrl(name)));
 const loadGameSound = makeMapCache((name: SoundId) => new Audio(`/sounds/${name}.mp3`));
 
-export default function useAssets(muteSounds: boolean = false) {
+export function usePlaySound(muteSounds: boolean = false) {
     const currentAudio = useRef<HTMLAudioElement>();
 
     const clearCurrentAudio = useCallback(() => {
@@ -28,28 +29,26 @@ export default function useAssets(muteSounds: boolean = false) {
         return clearCurrentAudio;
     }, [muteSounds, clearCurrentAudio]);
 
-    return useMemo(() => ({
-        playSound: (name: SoundId) => {
-            if (!muteSounds) {
-                clearCurrentAudio();
-    
-                const sound = loadGameSound(name);
-                currentAudio.current = sound;
-    
-                sound.addEventListener('ended', clearCurrentAudio);
-                sound.play();
-            }
-        },
+    return useEvent((name: SoundId) => {
+        if (!muteSounds) {
+            clearCurrentAudio();
 
-        preloadAssets: async ({ images, sounds }: PreloadAssets) => {
-            for (const sound of sounds) {
-                try {
-                    loadGameSound(sound);
-                } catch (e) {
-                    console.error('error preloading sound', e);
-                }
-            }
-            await Promise.allSettled(images.map(loadCardImage));
+            const sound = loadGameSound(name);
+            currentAudio.current = sound;
+
+            sound.addEventListener('ended', clearCurrentAudio);
+            sound.play();
         }
-    }), [muteSounds, clearCurrentAudio]);
+    });
+}
+
+export async function preloadAssets({ images, sounds }: PreloadAssets) {
+    for (const sound of sounds) {
+        try {
+            loadGameSound(sound);
+        } catch (e) {
+            console.error('error preloading sound', e);
+        }
+    }
+    await Promise.allSettled(images.map(loadCardImage));
 }
