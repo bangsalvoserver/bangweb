@@ -29,12 +29,15 @@
 .player-grid-item[player-index="7"] { --player-index: 7; }
 
 @media (min-width:768px) {
-    .game-scene * {
-        --card-scale: 0.24;
+    .game-scene {
+        transition: --num-players 800ms ease-in-out;
     }
 
-    .player-grid * {
-        --card-scale: clamp(0.2, calc((8 - var(--num-players)) * 0.2), 0.24);
+    .game-scene * {
+        --card-scale-max: 0.24;
+        --card-scale-mul: 0.015;
+
+        --card-scale: calc(min(0, (6 - var(--num-players)) * var(--card-scale-mul) ) + var(--card-scale-max));
     }
 
     .player-grid {
@@ -43,9 +46,7 @@
         --ellipse-x: 35vw;
         --ellipse-y: 10em;
         
-        height: 40em;
-        
-        transition: --num-players 800ms ease-in-out;
+        height: 42em;
     }
 
     .player-grid-item {

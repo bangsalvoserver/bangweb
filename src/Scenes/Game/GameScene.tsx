@@ -152,7 +152,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     const player = getPlayer(table, player_id);
     const user = getUser(lobbyState.users, player.user_id);
 
-    return <div key={player_id} className="player-grid-item" player-index={index}>
+    return <div key={movingPlayers.length === 0 ? player_id : `${player_id}-moving`} className='player-grid-item' player-index={index}>
       {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
         : <PlayerView playerRef={value => playerRefs.set(player_id, value)} gameOptions={gameOptions} user={user} player={player} handleRejoin={handleRejoin(player.user_id)} />}
