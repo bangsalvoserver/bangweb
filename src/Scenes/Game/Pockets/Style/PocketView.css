@@ -1,4 +1,4 @@
-:root {
+.game-scene * {
     --card-width-plus-margin: calc(var(--card-width) + 2 * var(--card-margin));
     --card-height-plus-margin: calc(var(--card-height) + 2 * var(--card-margin));
 }

@@ -166,7 +166,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
   return (
     <LobbyContext.Provider value={lobbyState}>
       <GameStateContext.Provider value={state}>
-        <div className="game-scene">
+        <div className="game-scene" num-players={table.alive_players.length}>
           <SelectorConfirmContext.Provider value={selectorConfirm}>
             <SetCardOverlayContext.Provider value={setCardOverlayState}>
               <div className="main-deck-row">
@@ -179,7 +179,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
                 </div>
                 {trainPockets}
               </div>
-              <div className="player-grid" num-players={table.alive_players.length}>
+              <div className="player-grid">
                 {playerViews}
               </div>
               {selectionPocket}

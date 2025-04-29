@@ -1,4 +1,4 @@
-:root {
+.game-scene * {
     --card-width-unscaled: 250px;
     --card-height-unscaled: 389px;
     --card-border-unscaled: 18px;
@@ -14,7 +14,7 @@
 }
 
 .feats-cards * {
-    --card-scale: 0.3;
+    --card-scale: 0.3 !important;
     --card-width-unscaled: 423px;
     --card-height-unscaled: 231px;
     --card-width: calc(var(--card-scale) * var(--card-width-unscaled));
@@ -39,9 +39,9 @@
     max-width: calc(var(--card-width-plus-margin) * 2);
 }
 
-@media (max-width:1200px) {
+@media (max-width:768px) {
     .feats-cards * {
-        --card-scale: 0.18;
+        --card-scale: 0.18 !important;
     }
 }
 
@@ -87,7 +87,7 @@
     margin: 0 1px;
 }
 
-@media (max-width:1200px) {
+@media (max-width:768px) {
     .card-cubes {
         width: 100%
     }
@@ -110,7 +110,7 @@
     display: inline;
 }
 
-@media (max-width:1200px) {
+@media (max-width:768px) {
     .card-fame-tokens img {
         width: 10px;
     }

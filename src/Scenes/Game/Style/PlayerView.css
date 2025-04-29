@@ -1,4 +1,4 @@
-:root {
+.game-scene * {
     --player-width: calc(var(--card-width) * 6.5);
     --player-self-width: calc(var(--card-width) * 11);
     --player-height: calc(var(--card-height) * 2 + 4.5em);
@@ -10,7 +10,7 @@
     --player-padding: 0.5em;
 }
 
-@media (max-width:1200px) {
+@media (max-width:768px) {
     .player-view {
         --profile-pic-size: 25px;
         --player-padding: 0.1em;
@@ -20,7 +20,7 @@
         font-size: 8pt;
     }
 
-    :root {
+    .game-scene * {
         --player-icon-size: 20px;
         --player-tokens-size: 20px;
         --player-lifepoint-size: 1em;
@@ -36,7 +36,7 @@
     }
 }
 
-@media (min-width:1200px) {
+@media (min-width:768px) {
     .player-tokens {
         font-size: 16pt;
     }
