@@ -42,7 +42,7 @@ const LOBBY_STATE_ICONS: Record<LobbyStateEnum, string> = {
   'finished': "\uD83D\uDD34" // red circle
 };
 
-function LobbyElement({ lobby: { lobby_id, name, num_players, num_spectators, max_players, secure, state }, handleJoinLobby }: LobbyElementProps) {
+function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spectators, max_players, secure, state }, handleJoinLobby }: LobbyElementProps) {
   const [isPasswordOpen, setIsPasswodOpen, elemRef] = useCloseOnLoseFocus<HTMLDivElement>();
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +55,11 @@ function LobbyElement({ lobby: { lobby_id, name, num_players, num_spectators, ma
     }
   }, [lobby_id, secure, handleJoinLobby, setIsPasswodOpen]);
 
-  const numPlayersStatus = `${num_players}/${max_players}` + (num_spectators > 0 ? `+${num_spectators}` : '');
+  const numPlayersStatus = `${num_players}`
+    + (num_bots > 0 ? `+${num_bots}` : '')
+    + `/${max_players}`
+    + (num_spectators > 0 ? `+${num_spectators}` : '');
+  
   return (
     <div ref={elemRef} className={`lobby-element-wrapper ${isPasswordOpen ? 'lobby-element-wrapper-expanded' : ''}`}>
       <div className="lobby-element">
