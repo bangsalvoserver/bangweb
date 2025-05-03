@@ -15,6 +15,7 @@ export interface LobbyValue {
     lobby_id: LobbyId;
     name: string;
     num_players: number;
+    num_bots: number;
     num_spectators: number;
     max_players: number;
     secure: boolean;
