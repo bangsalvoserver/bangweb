@@ -79,6 +79,19 @@ export const LABELS_ITALIAN: LabelRegistry = {
         shadow_outlaw:          "Fuorilegge Ombra",
     },
 
+    PlayerIcon: {
+        'icon-sheriff':         "Sceriffo",
+        'icon-outlaw':          "Fuorilegge",
+        'icon-deputy':          "Vice",
+        'icon-renegade':        "Rinnegato",
+        'icon-disconnected':    "Disconnesso",
+        'icon-owner':           "Proprietario della Lobby",
+        'icon-spectator':       "Spettatore",
+        'icon-winner':          "Vincitore",
+        'icon-dead':            "Morto",
+        'icon-ghost':           "Fantasma"
+    },
+
     ui: {
         APP_TITLE: "Bang!",
         APP_WELCOME: "Benvenuto in bang.salvoserver.it,\nBang! online con tutte le espansioni!\nGioca gratis adesso con i tuoi amici!",

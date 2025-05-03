@@ -69,7 +69,7 @@ export default function LobbyUser({ user: { username, propic, flags, lifetime}, 
       <div className='lobby-username'>
         <span>{clipUsername(username)}</span>
         { icons.length !== 0 && <div className="lobby-user-icons">
-          { icons.map(icon => <div className={`player-icon ${icon}`} key={icon}/>) }
+          { icons.map(icon => <div className={`player-icon ${icon}`} key={icon} title={getLabel('PlayerIcon', icon)} />) }
         </div> }
         {timerWidget}
       </div>

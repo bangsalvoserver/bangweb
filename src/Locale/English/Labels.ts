@@ -79,6 +79,19 @@ export const LABELS_ENGLISH: LabelRegistry = {
         shadow_outlaw:          "Shadow Outlaw",
     },
 
+    PlayerIcon: {
+        'icon-sheriff':         "Sheriff",
+        'icon-outlaw':          "Outlaw",
+        'icon-deputy':          "Deputy",
+        'icon-renegade':        "Renegade",
+        'icon-disconnected':    "Disconnected",
+        'icon-owner':           "Lobby Owner",
+        'icon-spectator':       "Spectator",
+        'icon-winner':          "Winner",
+        'icon-dead':            "Dead",
+        'icon-ghost':           "Ghost"
+    },
+
     ui: {
         APP_TITLE: "Bang!",
         APP_WELCOME: "Welcome to bang.salvoserver.it,\nBang! online with all expansions!\nPlay now for free with your friends!",
