@@ -66,7 +66,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
         </p>
         <Button color='green' type='submit'>
           {getLabel('ui', 'BUTTON_CREATE_LOBBY')}
-          {getLobbyPassword(settings) && <div className='lobby-secure-icon' />}
+          {getLobbyPassword(settings) && ' 🔒'}
         </Button>
       </form>
       <div className='lobby-list'>

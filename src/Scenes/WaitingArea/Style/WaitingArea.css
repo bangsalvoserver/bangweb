@@ -61,10 +61,6 @@
     cursor: help;
 }
 
-.lobby-element .lobby-secure-icon {
-    align-self: center;
-}
-
 .lobby-password-input {
     margin: auto;
     width: fit-content;
@@ -80,12 +76,4 @@
     transition: max-height 300ms ease-in-out, visibility 300ms step-end;
     max-height: 0;
     overflow: hidden;
-}
-
-.lobby-secure-icon {
-    display: inline-block;
-    margin-left: 0.5em;
-    width: 20px;
-    height: 20px;
-    background-image: url('/media/padlock.png');
 }
