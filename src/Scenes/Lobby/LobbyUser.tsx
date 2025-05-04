@@ -5,6 +5,7 @@ import Env from "../../Model/Env";
 import { UserValue } from "../../Model/ServerMessage";
 import "./Style/LobbyUser.css";
 import defaultUserPropic from "/media/icon_default_user.png";
+import PlayerIcon from "../../Components/PlayerIcon";
 
 export interface LobbyUserProps {
     user: UserValue;
@@ -69,7 +70,7 @@ export default function LobbyUser({ user: { username, propic, flags, lifetime}, 
       <div className='lobby-username'>
         <span>{clipUsername(username)}</span>
         { icons.length !== 0 && <div className="lobby-user-icons">
-          { icons.map(icon => <div className={`player-icon ${icon}`} key={icon} title={getLabel('PlayerIcon', icon)} />) }
+          { icons.map(icon => <PlayerIcon name={icon} key={icon} />) }
         </div> }
         {timerWidget}
       </div>

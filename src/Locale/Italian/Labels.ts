@@ -80,16 +80,21 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     PlayerIcon: {
+        'icon-winner':          "Vincitore",
+        'icon-origin':          "Giocatore origine",
+        'icon-target':          "Giocatore bersaglio",
+        'icon-turn':            "Giocatore di turno",
+        'icon-dead':            "Morto",
+        'icon-ghost':           "Fantasma",
+        'icon-skip-turn':       "Salterà il turno",
+        'icon-dynamite':        "Candelotto di dinamite",
+        'icon-owner':           "Proprietario della lobby",
+        'icon-spectator':       "Spettatore",
+        'icon-disconnected':    "Disconnesso",
         'icon-sheriff':         "Sceriffo",
         'icon-outlaw':          "Fuorilegge",
         'icon-deputy':          "Vice",
         'icon-renegade':        "Rinnegato",
-        'icon-disconnected':    "Disconnesso",
-        'icon-owner':           "Proprietario della Lobby",
-        'icon-spectator':       "Spettatore",
-        'icon-winner':          "Vincitore",
-        'icon-dead':            "Morto",
-        'icon-ghost':           "Fantasma"
     },
 
     ui: {

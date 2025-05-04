@@ -1,0 +1,105 @@
+.player-icon {
+    --player-icon-size: 32px;
+}
+
+@media (max-width:1200px) {
+    .player-icon {
+        --player-icon-size: 20px;
+    }
+}
+
+.player-icon-outer {
+    display: inline-block;
+    height: max-content;
+    width: max-content;
+}
+
+.player-icon {
+    pointer-events: none;
+    display: inline-block;
+    height: var(--player-icon-size);
+    width: var(--player-icon-size);
+    mask-image: var(--icon-url);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    background-image: var(--icon-url);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply;
+    background-color: var(--icon-color);
+}
+
+.icon-winner {
+    --icon-url: url('/media/icon_winner.png');
+    --icon-color: #bba14f;
+}
+
+.icon-origin {
+    --icon-url: url('/media/icon_origin.png');
+    --icon-color: #7bf7ffff;
+}
+
+.icon-target {
+    --icon-url: url('/media/icon_target.png');
+    --icon-color: #ff0000ff;
+}
+
+.icon-turn {
+    --icon-url: url('/media/icon_turn.png');
+    --icon-color: #4d7f21;
+}
+
+.icon-dead {
+    --icon-url: url('/media/icon_dead.png');
+    --icon-color: #dedbd3;
+}
+
+.icon-ghost {
+    --icon-url: url('/media/icon_ghost.png');
+    --icon-color: rgb(169, 189, 196);
+}
+
+.icon-skip-turn {
+    --icon-url: url('/media/icon_skip_turn.png');
+    --icon-color: #ff0000ff;
+}
+
+.icon-dynamite {
+    --icon-url: url('/media/icon_dynamite.png');
+    --icon-color: rgb(228, 64, 64);
+}
+
+.icon-owner {
+    --icon-url: url('/media/icon_owner.png');
+    --icon-color: #94a4af;
+}
+
+.icon-spectator {
+    --icon-url: url('/media/icon_spectator.png'); 
+    --icon-color: #94a4af;
+}
+
+.icon-disconnected {
+    --icon-url: url('/media/icon_disconnected.png'); 
+    --icon-color: #ff0000;
+}
+
+.icon-sheriff {
+    --icon-url: url('/media/icon_sheriff.png'); 
+    --icon-color: #dfcc29;
+}
+
+.icon-outlaw {
+    --icon-url: url('/media/icon_outlaw.png'); 
+    --icon-color: #e97070;
+}
+
+.icon-deputy {
+    --icon-url: url('/media/icon_deputy.png'); 
+    --icon-color: #afdf29;
+}
+
+.icon-renegade {
+    --icon-url: url('/media/icon_renegade.png'); 
+    --icon-color: #75a4da;
+}

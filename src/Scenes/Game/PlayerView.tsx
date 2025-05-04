@@ -20,6 +20,7 @@ import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 import iconGold from "/media/icon_gold.png";
+import PlayerIcon from "../../Components/PlayerIcon";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;
@@ -229,17 +230,15 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         </>}
         <div className='player-icons'>
             { isGameOver ? <>
-                { isWinner && <div className="player-icon icon-winner"/> }
+                { isWinner && <PlayerIcon name="icon-winner" /> }
             </> : <>
-                { isOrigin && <div className="player-icon icon-origin"/> }
-                { isTarget && <div className="player-icon icon-target"/> }
-                { isTurn && <div className="player-icon icon-turn"/> }
-                { isSkipTurn && <div className="player-icon icon-skip-turn"/> }
-                { hasDynamiteStick && <div className="player-icon icon-dynamite"/> }
+                { isOrigin && <PlayerIcon name="icon-origin"/> }
+                { isTarget && <PlayerIcon name="icon-target"/> }
+                { isTurn && <PlayerIcon name="icon-turn"/> }
+                { isSkipTurn && <PlayerIcon name="icon-skip-turn"/> }
+                { hasDynamiteStick && <PlayerIcon name="icon-dynamite"/> }
             </>}
-            { isDead && (isGhost
-                ? <div className="player-icon icon-ghost"/>
-                : <div className="player-icon icon-dead"/> ) }
+            { isDead && <PlayerIcon name={isGhost ? "icon-ghost" : "icon-dead"} /> }
         </div>
         <div className='player-propic'>
             <LobbyUser user={user} align='horizontal' noUserIcons>
