@@ -15,11 +15,19 @@ export interface WaitingAreaProps {
   settings: AppSettings;
 }
 
+function getLobbyPassword(settings: AppSettings) {
+  return (settings.expandLobbyOptions && settings.lobbyPassword) || '';
+}
+
 function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
   const handleCreateLobby = useCallback((event: SyntheticEvent) => {
     event.preventDefault();
     if (settings.lobbyName) {
-      connection.sendMessage({ lobby_make: { name: settings.lobbyName, options: settings.gameOptions ?? null, password: settings.lobbyPassword ?? '' }});
+      connection.sendMessage({ lobby_make: {
+        name: settings.lobbyName,
+        options: settings.gameOptions ?? null,
+        password: getLobbyPassword(settings),
+      }});
     }
   }, [connection, settings]);
 
@@ -58,7 +66,7 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
         </p>
         <Button color='green' type='submit'>
           {getLabel('ui', 'BUTTON_CREATE_LOBBY')}
-          {(settings.lobbyPassword ?? '') !== '' && <div className='lobby-secure-icon' />}
+          {getLobbyPassword(settings) && <div className='lobby-secure-icon' />}
         </Button>
       </form>
       <div className='lobby-list'>
