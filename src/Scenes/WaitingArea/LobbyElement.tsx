@@ -19,6 +19,7 @@ function LobbyPasswordInput({ passwordInputRef, lobby_id, isPasswordOpen, handle
     event.preventDefault();
     if (password) {
       handleJoinLobby(lobby_id, password);
+      setPassword('');
     }
   }, [lobby_id, password, handleJoinLobby]);
 
