@@ -45,9 +45,8 @@
 .lobby-list-header {
     display: flex;
     flex-direction: row;
-    margin-left: calc(0.2em + 2px);
+    margin: 0 calc(0.2em + 2px) 0.2em;
     padding-bottom: 0.2em;
-    margin-bottom: 0.2em;
     border-bottom: 2px solid rgba(70, 22, 0, 0.644);
 }
 
