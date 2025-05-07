@@ -177,6 +177,12 @@
     filter: drop-shadow(0px 1px 1px black);
 }
 
+@media (max-width: 768px) {
+    .player-icons {
+        pointer-events: none;
+    }
+}
+
 .player-icons {
     position: absolute;
     top: var(--player-icon-position);
