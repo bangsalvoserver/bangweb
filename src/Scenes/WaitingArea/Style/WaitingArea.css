@@ -42,21 +42,37 @@
     flex-direction: row;
 }
 
-.lobby-element .lobby-name {
-    text-align: center;
+.lobby-list-header {
+    display: flex;
+    flex-direction: row;
+    margin-left: calc(0.2em + 2px);
+    padding-bottom: 0.2em;
+    margin-bottom: 0.2em;
+    border-bottom: 2px solid rgba(70, 22, 0, 0.644);
+}
+
+.lobby-name {
     font-weight: bold;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    text-align: center;
     width: 10em;
 }
 
-.lobby-element .num-players {
-    width: 3em;
+.lobby-element .lobby-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.player-count {
+    width: 1.4em;
     text-align: center;
 }
 
-.lobby-element .lobby-state {
+.lobby-list-header .player-count {
+    cursor: help;
+}
+
+.lobby-state {
     margin-right: 0.5em;
     cursor: help;
 }

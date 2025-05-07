@@ -70,6 +70,13 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
         </Button>
       </form>
       <div className='lobby-list'>
+        {lobbies.length > 0 && <div className='lobby-list-header'>
+          <div className='lobby-name'>{getLabel('ui', 'LABEL_LOBBY_NAME')}</div>
+          <div className='player-count' title={getLabel('ui', 'NUM_PLAYERS')}>👤</div>
+          <div className='player-count' title={getLabel('ui', 'NUM_BOTS')}>🤖</div>
+          <div className='player-count' title={getLabel('ui', 'NUM_SPECTATORS')}>👁️</div>
+          <div className='lobby-state' title={getLabel('ui', 'LOBBY_STATE')}>⚪</div>
+        </div>}
         {lobbies.toReversed().map((lobby) => (
           <LobbyElement key={lobby.lobby_id} lobby={lobby} handleJoinLobby={handleJoinLobby} />
         ))}

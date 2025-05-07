@@ -55,17 +55,14 @@ function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spec
       handleJoinLobby(lobby_id, '');
     }
   }, [lobby_id, secure, handleJoinLobby, setIsPasswodOpen]);
-
-  const numPlayersStatus = `${num_players}`
-    + (num_bots > 0 ? `+${num_bots}` : '')
-    + `/${max_players}`
-    + (num_spectators > 0 ? `+${num_spectators}` : '');
   
   return (
     <div ref={elemRef} className={`lobby-element-wrapper ${isPasswordOpen ? 'lobby-element-wrapper-expanded' : ''}`}>
       <div className="lobby-element">
         <div className='lobby-name' title={name}>{name}</div>
-        <div className='num-players'>{numPlayersStatus}</div>
+        <div className='player-count'>{num_players}</div>
+        <div className='player-count'>{num_bots > 0 ? num_bots : null}</div>
+        <div className='player-count'>{num_spectators > 0 ? num_spectators : null}</div>
         <div className='lobby-state' title={getLabel('LobbyState', state)}>{LOBBY_STATE_ICONS[state]}</div>
         <Button color='green' onClick={handleClickJoin}>
           {getLabel('ui', 'BUTTON_JOIN')}
