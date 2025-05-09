@@ -1,5 +1,6 @@
-import { Dispatch, DispatchWithoutAction, createContext, useEffect, useMemo, useRef } from "react";
+import { Dispatch, DispatchWithoutAction, ReactNode, createContext, useContext, useEffect, useRef } from "react";
 import { BangConnection } from "../../../Model/UseBangConnection";
+import { GameStateContext } from "../GameScene";
 import { GameAction } from "./GameAction";
 import { Card, GameTable, Player } from "./GameTable";
 import targetDispatch from "./TargetDispatch";
@@ -87,35 +88,48 @@ export interface SelectorConfirm {
     handleUndo: OptionalDispatch;
 }
 
-export const DEFAULT_SELECTOR_CONFIRM: SelectorConfirm = {
+const DEFAULT_SELECTOR_CONFIRM: SelectorConfirm = {
     handleClickCard: card => undefined,
     handleClickPlayer: player => undefined,
     handleConfirm: undefined,
     handleUndo: undefined,
 };
 
-export const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SELECTOR_CONFIRM);
+const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SELECTOR_CONFIRM);
 
-export function isClickAllowed(table: GameTable, selector: TargetSelector) {
-    return !table.status.flags.includes('game_over')
-        && table.self_player !== undefined
-        && selector.mode !== 'finish'
-        && selector.prompt.type === 'none';
+export function useSelectorConfirm() {
+    return useContext(SelectorConfirmContext);
 }
 
-export function useSelectorConfirm(table: GameTable, selector: TargetSelector, selectorDispatch: Dispatch<SelectorUpdate>): SelectorConfirm {
-    return useMemo(() => {
-        if (!isClickAllowed(table, selector)) return DEFAULT_SELECTOR_CONFIRM;
-        
+export interface SelectorConfirmProps {
+    selectorDispatch: Dispatch<SelectorUpdate> | null;
+    children: ReactNode;
+}
+
+export function SelectorConfirmProvider({ selectorDispatch, children }: SelectorConfirmProps) {
+    const { table, selector } = useContext(GameStateContext);
+
+    let selectorConfirm: SelectorConfirm = DEFAULT_SELECTOR_CONFIRM;
+
+    if (selectorDispatch !== null
+        && !table.status.flags.includes('game_over')
+        && table.self_player !== undefined
+        && selector.mode !== 'finish'
+        && selector.prompt.type === 'none'
+    ) {
         const buildDispatch = (update: SelectorUpdate | undefined): OptionalDispatch => {
             if (update) return () => selectorDispatch(update);
         };
 
-        return {
+        selectorConfirm = {
             handleClickCard: card => buildDispatch(getClickCardUpdate(table, selector, card)),
             handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, selector, player)),
             handleConfirm: buildDispatch(selectorCanConfirm(selector) ? { confirmSelection: {} } : undefined),
             handleUndo: buildDispatch(selectorCanUndo(selector) ? { undoSelection: {} } : undefined)
         } as const;
-    }, [table, selector, selectorDispatch]);
-}
+    }
+
+    return <SelectorConfirmContext.Provider value={selectorConfirm}>
+        {children}
+    </SelectorConfirmContext.Provider>
+};

@@ -4,13 +4,13 @@ import { GameStateContext } from "../GameScene";
 import { getLocalizedCardName } from "../GameStringComponent";
 import { getCard, getCardFrontface, isCardKnown } from "../Model/GameTable";
 import useCardOverlay from "../Model/UseCardOverlay";
-import { SelectorConfirmContext } from "../Model/UseSelectorConfirm";
+import { useSelectorConfirm } from "../Model/SelectorConfirm";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
 
 function StationCardView({ card }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
-    const { handleClickCard } = useContext(SelectorConfirmContext);
+    const { handleClickCard } = useSelectorConfirm();
 
     const divRef = useRef<HTMLDivElement>(null);
     const image = getCardFrontface(card) ?? 'backface/station';

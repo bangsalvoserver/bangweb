@@ -13,7 +13,7 @@ import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { GameTable, getCard, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
-import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
+import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
@@ -86,7 +86,7 @@ function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>):
 
 export default function PlayerView({ playerRef, gameOptions, user, player, handleRejoin }: PlayerProps) {
     const { table, selector } = useContext(GameStateContext);
-    const { handleClickPlayer } = useContext(SelectorConfirmContext);
+    const { handleClickPlayer } = useSelectorConfirm();
 
     const pocketRefs = useMapRef<PocketType, PocketRef>();
     const divRef = useRef<HTMLDivElement>(null);

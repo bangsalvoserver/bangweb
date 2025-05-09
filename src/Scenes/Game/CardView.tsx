@@ -8,7 +8,7 @@ import { CardRef } from "./Model/CardTracker";
 import { Card, GameTable, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
-import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
+import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
@@ -100,7 +100,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
 
-    const { handleClickCard } = useContext(SelectorConfirmContext);
+    const { handleClickCard } = useSelectorConfirm();
 
     const divRef = useRef<HTMLDivElement>(null);
 

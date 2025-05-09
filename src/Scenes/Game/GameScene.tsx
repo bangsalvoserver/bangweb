@@ -18,7 +18,7 @@ import { getCubeCount, getPlayer } from "./Model/GameTable";
 import { GameOptions, PlayerId } from "./Model/GameUpdate";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
 import useGameState, { newGameState } from "./Model/UseGameState";
-import { SelectorConfirmContext, useSelectorConfirm, useSendGameAction } from "./Model/UseSelectorConfirm";
+import { SelectorConfirmProvider, useSendGameAction } from "./Model/SelectorConfirm";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import CardChoiceView from "./Pockets/CardChoiceView";
@@ -56,7 +56,6 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
   const handleReturnLobby = useEvent(() => connection.sendMessage({ lobby_return: {} }));
   const setRef = (key: PocketType) => (value: PocketRef | null) => pocketRefs.set(key, value);
 
-  const selectorConfirm = useSelectorConfirm(table, selector, selectorDispatch);
   useSendGameAction(selector, connection);
 
   const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
@@ -163,7 +162,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     <LobbyContext.Provider value={lobbyState}>
       <GameStateContext.Provider value={state}>
         { loaded ? <div className="game-scene">
-          <SelectorConfirmContext.Provider value={selectorConfirm}>
+          <SelectorConfirmProvider selectorDispatch={selectorDispatch}>
             <SetCardOverlayContext.Provider value={setCardOverlayState}>
               <div className="main-deck-row">
                 <div>
@@ -187,7 +186,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
                 handleReturnLobby={handleReturnLobby}
               />
             </SetCardOverlayContext.Provider>
-          </SelectorConfirmContext.Provider>
+          </SelectorConfirmProvider>
 
           <AnimationView tracker={tracker} />
           { isMobileDevice() || <CardOverlayView overlayState={overlayState} /> }

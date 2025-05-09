@@ -4,7 +4,7 @@ import { GameStateContext } from "../GameScene";
 import { PocketRef } from "../Model/CardTracker";
 import { getCard, isCardKnown } from "../Model/GameTable";
 import { CardId } from "../Model/GameUpdate";
-import { DEFAULT_SELECTOR_CONFIRM, SelectorConfirmContext } from "../Model/UseSelectorConfirm";
+import { SelectorConfirmProvider, useSelectorConfirm } from "../Model/SelectorConfirm";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "./CardSlot";
 import PocketView from "./PocketView";
 import "./Style/StackPocket.css";
@@ -18,7 +18,7 @@ export interface StackPocketProps {
 
 export default function StackPocket({ pocketRef, cards, slice, showCount }: StackPocketProps) {
     const { table } = useContext(GameStateContext);
-    const { handleClickCard } = useContext(SelectorConfirmContext);
+    const { handleClickCard } = useSelectorConfirm();
 
     const position = useRef<PocketRef>(null);
 
@@ -36,9 +36,9 @@ export default function StackPocket({ pocketRef, cards, slice, showCount }: Stac
     const handleClickLastCard = lastCard && lastCard > 0 ? handleClickCard(getCard(table, lastCard)) : undefined;
 
     return <div className='stack-pocket' onClick={handleClickLastCard}>
-        <SelectorConfirmContext.Provider value={DEFAULT_SELECTOR_CONFIRM}>
+        <SelectorConfirmProvider selectorDispatch={null}>
             <PocketView pocketRef={position} cards={ slice ? cards.slice(-slice) : cards} />
-        </SelectorConfirmContext.Provider>
+        </SelectorConfirmProvider>
         {showCount && numCards > 0 ? <div className="pocket-count">{numCards}</div> : null}
     </div>;
 }

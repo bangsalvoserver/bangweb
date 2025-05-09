@@ -10,7 +10,7 @@ import { getTagValue } from "./Model/Filters";
 import { getCard, KnownCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
-import { SelectorConfirmContext } from "./Model/UseSelectorConfirm";
+import { useSelectorConfirm } from "./Model/SelectorConfirm";
 
 export interface StatusProps {
   gameError: GameString | undefined;
@@ -33,7 +33,7 @@ function getCardButtonColor(card: KnownCard): ButtonColor {
 export default function StatusBar({ gameError, handleClearGameError, handleReturnLobby }: StatusProps) {
   const lobbyState = useContext(LobbyContext);
   const { table, selector } = useContext(GameStateContext);
-  const { handleClickCard, handleConfirm, handleUndo } = useContext(SelectorConfirmContext);
+  const { handleClickCard, handleConfirm, handleUndo } = useSelectorConfirm();
 
   const isGameOver = table.status.flags.includes('game_over');
 
