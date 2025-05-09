@@ -158,15 +158,11 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
         : <PlayerView playerRef={value => playerRefs.set(player_id, value)} gameOptions={gameOptions} user={user} player={player} handleRejoin={handleRejoin(player.user_id)} />}
     </div>;
   });
-
-  if (!loaded) {
-    return <LoadingScene message="LOADING_CARDS" />
-  }
   
   return (
     <LobbyContext.Provider value={lobbyState}>
       <GameStateContext.Provider value={state}>
-        <div className="game-scene">
+        { loaded ? <div className="game-scene">
           <SelectorConfirmContext.Provider value={selectorConfirm}>
             <SetCardOverlayContext.Provider value={setCardOverlayState}>
               <div className="main-deck-row">
@@ -196,6 +192,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
           <AnimationView tracker={tracker} />
           { isMobileDevice() || <CardOverlayView overlayState={overlayState} /> }
         </div>
+        : <LoadingScene message="LOADING_CARDS" /> }
         
         { overlayRef.current && createPortal(
           <>
