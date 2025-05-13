@@ -97,7 +97,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     useImperativeHandle(playerRef, () => ({
         getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null,
         getPocket: pocket => pocketRefs.get(pocket)
-    }));
+    }), [pocketRefs]);
 
     const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
         return (pocket: PocketRef | null) => {

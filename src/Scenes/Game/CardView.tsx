@@ -106,7 +106,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useImperativeHandle(cardRef, () => ({
         getRect: () => divRef.current ? getDivRect(divRef.current) : null
-    }));
+    }), []);
 
     let backfaceImage = getCardBackface(card);
     let cardImage = useMemo(() => getCardImage(card), [card]);

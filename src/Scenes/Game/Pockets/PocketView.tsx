@@ -23,7 +23,7 @@ export default function PocketView({ pocketRef, cards }: PocketProps) {
     useImperativeHandle(pocketRef, () => ({
         getPocketRect: () => divRef.current ? getDivRect(divRef.current) : null,
         getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
-    }));
+    }), [cardRefs]);
 
     return <div ref={divRef} className='pocket-view'>
         { cards.map(id => {

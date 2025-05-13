@@ -19,7 +19,7 @@ export default function CardSlot({ cardRef, stretch, duration }: CardSlotProps) 
 
     useImperativeHandle(cardRef, () => ({
         getRect: () => slotRef.current ? getDivRect(slotRef.current) : null
-    }));
+    }), []);
 
     const style = {
         '--duration': duration + 'ms'

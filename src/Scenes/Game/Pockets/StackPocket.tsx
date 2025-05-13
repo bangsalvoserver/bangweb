@@ -25,7 +25,7 @@ export default function StackPocket({ pocketRef, cards, slice, showCount }: Stac
     useImperativeHandle(pocketRef, () => ({
         getPocketRect: () => position.current?.getPocketRect() ?? null,
         getCardRect: () => position.current?.getPocketRect() ?? null
-    }));
+    }), []);
 
     const numCards = countIf(cards, id => 
         id !== CARD_SLOT_ID_FROM && id !== CARD_SLOT_ID_TO
