@@ -1,11 +1,13 @@
 import { Dispatch, useMemo, useRef } from "react";
 
-export interface Channel<T> {
+export interface ChannelBase<T> {
+    subscribe: (fn: Dispatch<T>) => () => void;
+}
+
+export interface Channel<T> extends ChannelBase<T> {
     update: (message: T) => void;
     clear: () => void;
-    subscribe: (fn: Dispatch<T>) => void;
-    unsubscribe: () => void;
-};
+}
 
 export default function useChannel<T>(): Channel<T> {
     const messages = useRef<T[]>([]);
@@ -31,13 +33,10 @@ export default function useChannel<T>(): Channel<T> {
         const subscribe = (fn: Dispatch<T>) => {
             subscriber.current = fn;
             flushMessages();
+            return () => subscriber.current = undefined;
         };
     
-        const unsubscribe = () => {
-            subscriber.current = undefined;
-        };
-    
-        return { update, clear, subscribe, unsubscribe } as const;
+        return { update, clear, subscribe } as const;
     }, []);
 
 }

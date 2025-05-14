@@ -67,49 +67,46 @@ export default function useBangConnection() {
         }
     }, [connection, initial, connected, disconnected]);
 
-    useEffect(() => {
-        connection.subscribe(createUnionDispatch<ServerMessage>({
-            ping() {
-                connection.sendMessage({ pong: {} });
-            },
-            client_accepted({ session_id }) {
-                settings.setSessionId(session_id);
-                sceneDispatch({ gotoWaitingArea: {} });
-            },
-            lobby_error(message) {
-                sceneDispatch({ setError: { type:'lobby', message } });
-            },
-            lobby_update(message) {
-                sceneDispatch({ updateLobbies: message });
-            },
-            lobby_entered(message) {
-                gameChannel.clear();
-                sceneDispatch({ gotoLobby: message });
-            },
-            lobby_game_options(options) {
-                sceneDispatch({ setGameOptions: options });
-            },
-            lobby_removed({ lobby_id }) {
-                sceneDispatch({ removeLobby: lobby_id });
-            },
-            lobby_user_update(message) {
-                sceneDispatch({ updateLobbyUser: message });
-            },
-            lobby_kick() {
-                sceneDispatch({ gotoWaitingArea: {} });
-            },
-            lobby_chat(message) {
-                sceneDispatch({ addLobbyChatMessage: message })
-            },
-            game_update(update) {
-                gameChannel.update(update);
-            },
-            game_started() {
-                sceneDispatch({ gotoGame: {} });
-            },
-        }));
-        return connection.unsubscribe;
-    }, [connection, settings, gameChannel]);
+    useEffect(() => connection.subscribe(createUnionDispatch<ServerMessage>({
+        ping() {
+            connection.sendMessage({ pong: {} });
+        },
+        client_accepted({ session_id }) {
+            settings.setSessionId(session_id);
+            sceneDispatch({ gotoWaitingArea: {} });
+        },
+        lobby_error(message) {
+            sceneDispatch({ setError: { type:'lobby', message } });
+        },
+        lobby_update(message) {
+            sceneDispatch({ updateLobbies: message });
+        },
+        lobby_entered(message) {
+            gameChannel.clear();
+            sceneDispatch({ gotoLobby: message });
+        },
+        lobby_game_options(options) {
+            sceneDispatch({ setGameOptions: options });
+        },
+        lobby_removed({ lobby_id }) {
+            sceneDispatch({ removeLobby: lobby_id });
+        },
+        lobby_user_update(message) {
+            sceneDispatch({ updateLobbyUser: message });
+        },
+        lobby_kick() {
+            sceneDispatch({ gotoWaitingArea: {} });
+        },
+        lobby_chat(message) {
+            sceneDispatch({ addLobbyChatMessage: message })
+        },
+        game_update(update) {
+            gameChannel.update(update);
+        },
+        game_started() {
+            sceneDispatch({ gotoGame: {} });
+        },
+    })), [connection, settings, gameChannel]);
 
     const handleConnect = useEvent(() => {
         if (connection.connectionState.state !== 'connected') {

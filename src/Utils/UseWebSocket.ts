@@ -1,14 +1,12 @@
-import { Dispatch, useMemo, useRef, useState } from "react";
-import useChannel from "./UseChannel";
+import { useMemo, useRef, useState } from "react";
+import useChannel, { ChannelBase } from "./UseChannel";
 
 export type ConnectionState =
     { state: 'initial' } |
     { state: 'connected' } |
     { state: 'disconnected', code: number | null, reason: string | null };
 
-export interface WebSocketConnection<ServerMessage, ClientMessage> {
-    subscribe: (handler: Dispatch<ServerMessage>) => void;
-    unsubscribe: () => void;
+export interface WebSocketConnection<ServerMessage, ClientMessage> extends ChannelBase<ServerMessage> {
     connectionState: ConnectionState;
     connect: () => void;
     disconnect: () => void;
@@ -22,7 +20,6 @@ export default function useWebSocket<ServerMessage, ClientMessage>(url: string):
 
     return useMemo(() => ({
         subscribe: channel.subscribe,
-        unsubscribe: channel.unsubscribe,
         connectionState,
 
         connect: () => {

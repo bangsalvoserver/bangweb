@@ -221,12 +221,10 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
             }
         };
 
-        gameChannel.subscribe(update => {
+        return gameChannel.subscribe(update => {
             gameUpdates.current.push(update);
             handleNextUpdate();
         });
-
-        return gameChannel.unsubscribe;
     }, [gameChannel, playSound]);
 
     return { loaded, state, selectorDispatch, gameLogs, gameError, clearGameError } as const;
