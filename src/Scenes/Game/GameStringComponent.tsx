@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { JSX, useContext } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
 import { createUnionDispatch } from "../../Utils/UnionUtils";

@@ -15,7 +15,7 @@ export interface WebSocketConnection<ServerMessage, ClientMessage> extends Chann
 
 export default function useWebSocket<ServerMessage, ClientMessage>(url: string): WebSocketConnection<ServerMessage, ClientMessage> {
     const channel = useChannel<ServerMessage>();
-    const socket = useRef<WebSocket>();
+    const socket = useRef<WebSocket>(undefined);
     const [connectionState, setConnectionState] = useState<ConnectionState>({ state: 'initial' });
 
     return useMemo(() => ({

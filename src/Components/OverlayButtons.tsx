@@ -9,7 +9,7 @@ export interface OverlayProps {
     scene: SceneState;
     settings: AppSettings;
     connection: BangConnection;
-    overlayRef?: RefObject<HTMLDivElement>;
+    overlayRef?: RefObject<HTMLDivElement | null>;
 }
 
 export default function OverlayButtons({ scene, settings, connection, overlayRef }: OverlayProps) {

@@ -1,3 +1,4 @@
+import { JSX } from "react";
 import Env, { Language } from "../Model/Env";
 import { CARDS_ENGLISH } from "./English/Cards";
 import { GAME_STRINGS_ENGLISH } from "./English/GameStrings";

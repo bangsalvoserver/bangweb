@@ -6,7 +6,7 @@ export interface MapRef<Key, Value> {
 };
 
 export function useMapRef<Key, Value>(): MapRef<Key, Value> {
-    const ref = useRef<Map<Key, Value>>();
+    const ref = useRef<Map<Key, Value>>(undefined);
 
     return useMemo(() => ({
         get: key => ref.current?.get(key) ?? null,
@@ -34,7 +34,7 @@ export interface SetRef<Value> {
 }
 
 export function useSetRef<Value>(): SetRef<Value> {
-    const ref = useRef<Set<Value>>();
+    const ref = useRef<Set<Value>>(undefined);
 
     return useMemo(() => ({
         add: value => {

@@ -10,7 +10,7 @@ const loadCardImage = makeMapCache((name: string) => loadImage(getCardUrl(name))
 const loadGameSound = makeMapCache((name: SoundId) => new Audio(`/sounds/${name}.mp3`));
 
 export function usePlaySound(muteSounds: boolean = false) {
-    const currentAudio = useRef<HTMLAudioElement>();
+    const currentAudio = useRef<HTMLAudioElement>(undefined);
 
     const clearCurrentAudio = useCallback(() => {
         if (currentAudio.current) {

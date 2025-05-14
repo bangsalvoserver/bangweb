@@ -38,7 +38,7 @@ export interface GameProps {
   lobbyState: LobbyState;
   gameOptions: GameOptions;
   gameChannel: GameChannel;
-  overlayRef: RefObject<HTMLDivElement>;
+  overlayRef: RefObject<HTMLDivElement | null>;
   muteSounds?: boolean;
 }
 

@@ -69,7 +69,7 @@ function clampCardRect(cardRect: Rect, pocketRect: Rect | null): Rect {
     return cardRect;
 }
 
-function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>): PocketRef {
+function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement | null>): PocketRef {
     const getScrollRect = () => scrollRef.current ? getDivRect(scrollRef.current) : null;
     return {
         getPocketRect: getScrollRect,
@@ -99,7 +99,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         getPocket: pocket => pocketRefs.get(pocket)
     }), [pocketRefs]);
 
-    const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
+    const setRefScroll = (scrollRef: RefObject<HTMLDivElement | null>, key: PocketType) => {
         return (pocket: PocketRef | null) => {
             pocketRefs.set(key, pocket ? clampedPocket(pocket, scrollRef) : null);
         }

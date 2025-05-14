@@ -56,7 +56,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
     const tableDispatch = (update: TableUpdate) => stateDispatch({ table_update: update });
     const selectorDispatch = (update: SelectorUpdate) => stateDispatch({ selector_update: update });
 
-    const timeout = useRef<number>();
+    const timeout = useRef<number>(undefined);
     const extraTime = useRef<Milliseconds>(0);
 
     useEffect(() => {

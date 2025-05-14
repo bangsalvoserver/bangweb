@@ -11,7 +11,7 @@ export interface Channel<T> extends ChannelBase<T> {
 
 export default function useChannel<T>(): Channel<T> {
     const messages = useRef<T[]>([]);
-    const subscriber = useRef<Dispatch<T>>();
+    const subscriber = useRef<Dispatch<T>>(undefined);
 
     return useMemo(() => {
         const flushMessages = () => {

@@ -23,7 +23,7 @@ export default function useBangConnection() {
 
     const connection = useWebSocket<ServerMessage, ClientMessage>(Env.bangServerUrl);
 
-    const reconnecting = useRef<number>();
+    const reconnecting = useRef<number>(undefined);
 
     const initial = useEvent(() => {
         if (settings.sessionId) {
