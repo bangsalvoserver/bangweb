@@ -49,6 +49,13 @@ export interface CardProps {
     showBackface?: boolean;
 }
 
+function isHighlight(selector: TargetSelector, card: Card): boolean {
+    if (isResponse(selector)) {
+        return selector.request.highlight_cards.includes(card.id);
+    }
+    return false;
+}
+
 function isOriginCard(table: GameTable, selector: TargetSelector, card: Card): boolean {
     if (isResponse(selector)) {
         const originCard = selector.request.origin_card;
@@ -102,13 +109,11 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
             return 'card-modified';
         }
     }
-    if (isResponse(selector)) {
-        if (selector.request.highlight_cards.includes(card.id)) {
-            return 'card-highlight';
-        }
-        if (isOriginCard(table, selector, card)) {
-            return 'card-origin';
-        }
+    if (isHighlight(selector, card)) {
+        return 'card-highlight';
+    }
+    if (isOriginCard(table, selector, card)) {
+        return 'card-origin';
     }
     return '';
 }
