@@ -5,7 +5,7 @@ import { GameStateContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
-import { getTagValue } from "./Model/Filters";
+import { cardHasTag } from "./Model/Filters";
 import { Card, GameTable, getCard, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
@@ -58,14 +58,16 @@ function isHighlight(selector: TargetSelector, card: Card): boolean {
 
 function isOriginCard(table: GameTable, selector: TargetSelector, card: Card): boolean {
     if (isResponse(selector)) {
-        const originCard = selector.request.origin_card;
-        if (originCard !== null) {
-            const cardChoice = getTagValue(card, 'card_choice');
-            if (cardChoice !== undefined) {
-                return getTagValue(getCard(table, originCard), 'card_choice') === cardChoice;
-            } else {
-                return originCard === card.id;
+        let originCardId = selector.request.origin_card;
+        if (originCardId !== null) {
+            const originCard = getCard(table, originCardId);
+            if (cardHasTag(originCard, 'card_choice')) {
+                switch (originCard.cardData.deck) {
+                    case 'goldrush': originCardId = table.pockets.shop_deck[0]; break;
+                    case 'train': originCardId = table.pockets.train_deck[0]; break;
+                }
             }
+            return originCardId === card.id;
         }
     }
     return false;
