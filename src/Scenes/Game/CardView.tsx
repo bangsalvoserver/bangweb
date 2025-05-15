@@ -5,10 +5,11 @@ import { GameStateContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
-import { Card, GameTable, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
+import { getTagValue } from "./Model/Filters";
+import { Card, GameTable, getCard, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
+import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
-import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import spriteCube from "/media/sprite_cube.png";
@@ -46,6 +47,21 @@ export interface CardProps {
     cardRef?: Ref<CardRef>;
     card: Card;
     showBackface?: boolean;
+}
+
+function isOriginCard(table: GameTable, selector: TargetSelector, card: Card): boolean {
+    if (isResponse(selector)) {
+        const originCard = selector.request.origin_card;
+        if (originCard !== null) {
+            const cardChoice = getTagValue(card, 'card_choice');
+            if (cardChoice !== undefined) {
+                return getTagValue(getCard(table, originCard), 'card_choice') === cardChoice;
+            } else {
+                return originCard === card.id;
+            }
+        }
+    }
+    return false;
 }
 
 export function getSelectorCardClass(table: GameTable, selector: TargetSelector, card: Card): string {
@@ -90,7 +106,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
         if (selector.request.highlight_cards.includes(card.id)) {
             return 'card-highlight';
         }
-        if (selector.request.origin_card === card.id) {
+        if (isOriginCard(table, selector, card)) {
             return 'card-origin';
         }
     }
