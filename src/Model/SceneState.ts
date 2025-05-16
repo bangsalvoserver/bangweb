@@ -33,8 +33,6 @@ export type SceneState = { error?: ErrorState } & (
     { type: 'lobby' | 'game', lobbyName: string, gameOptions: GameOptions, lobbyState: LobbyState }
 );
 
-export type UpdateFunction<T> = (value: T) => T;
-
 export type SceneUpdate =
     { gotoHome: Empty } |
     { gotoLoading: string } |

@@ -1,47 +1,8 @@
-import { UpdateFunction } from "../../../Model/SceneState";
 import { UserId } from "../../../Model/ServerMessage";
 import { CardData, CardSign } from "./CardData";
 import { DeckType, GameFlag, PlayerFlag, PlayerPocketType, PlayerRole, PocketType, TablePocketType, TokenType } from "./CardEnums";
 import { getCardColor } from "./Filters";
 import { CardId, DeckShuffledUpdate, Duration, MoveCardUpdate, MoveTokensUpdate, MoveTrainUpdate, PlayerId } from "./GameUpdate";
-
-export interface Id {
-    id: number
-};
-
-/// players and cards are sorted by id so that finding an object in those arrays is O(log n)
-export function searchIndexById<T extends Id>(values: T[], target: number): number {
-    let left: number = 0;
-    let right: number = values.length - 1;
-  
-    while (left <= right) {
-      const mid: number = Math.floor((left + right) / 2);
-  
-      if (values[mid].id === target) return mid;
-      if (target < values[mid].id) right = mid - 1;
-      else left = mid + 1;
-    }
-  
-    return left;
-}
-
-export function searchById<T extends Id>(values: T[], target: number): T | null {
-    const value = values.at(searchIndexById(values, target));
-    return value?.id === target ? value : null;
-}
-
-/// Takes as arguments an array of values, an id and a mapping function
-/// This function finds the element with the specified id and returns a new array of values
-/// with the found object modified according to the mapper function
-export function editById<T extends Id>(values: T[], id: number | number[], mapper: UpdateFunction<T>): T[] {
-    return values.map(value => {
-        if (typeof(id) === 'number' ? value.id === id : id.includes(value.id)) {
-            return mapper(value);
-        } else {
-            return value;
-        }
-    });
-}
 
 export type PocketId = { name: TablePocketType } | { name: PlayerPocketType, player: PlayerId } | null;
 
@@ -65,7 +26,9 @@ export type TokenCount = [TokenType, number][];
 
 type CardDeckOrData = { deck: DeckType } | CardData;
 
-interface CardBase<T extends CardDeckOrData> extends Id {
+interface CardBase<T extends CardDeckOrData> {
+    id: CardId;
+
     cardData: T;
     pocket: PocketId;
 
@@ -189,8 +152,10 @@ export type PlayerAnimation =
     { type: 'player_hp', hp: number} & Duration |
     { type: 'player_death' } & Duration;
 
-export interface Player extends Id {
+export interface Player {
+    id: PlayerId;
     user_id: UserId;
+    
     status: {
         role: PlayerRole,
         hp: number,
@@ -241,12 +206,15 @@ export type TableAnimation =
     { type: 'move_train' } & MoveTrainUpdate & Duration |
     { type: 'move_players' } & MovePlayersUpdate & Duration;
 
+export type PlayerRecord = Record<PlayerId, Player>;
+export type CardRecord = Record<CardId, Card>
+
 export interface GameTable {
     myUserId: UserId;
     self_player?: PlayerId;
 
-    players: Player[];
-    cards: Card[];
+    players: PlayerRecord;
+    cards: CardRecord;
     
     pockets: TablePockets;
 
@@ -302,17 +270,15 @@ export function newGameTable(myUserId: UserId): GameTable {
 }
 
 export function getCard(table: GameTable, id: CardId): Card {
-    const card = searchById(table.cards, id);
-    if (!card) {
-        throw new Error(`Card not found: ${id}`);
+    if (id in table.cards) {
+        return table.cards[id];
     }
-    return card;
+    throw new Error(`Card not found: ${id}`);
 }
 
 export function getPlayer(table: GameTable, id: PlayerId): Player {
-    const player = searchById(table.players, id);
-    if (!player) {
-        throw new Error(`Player not found: ${id}`);
+    if (id in table.players) {
+        return table.players[id];
     }
-    return player;
+    throw new Error(`Player not found: ${id}`);
 }

@@ -55,7 +55,7 @@ export default function GameUsersView() {
     const gameUserPlayers = useMemo(() => {
         let players: [UserValue, Player | undefined][] = [];
         
-        for (const player of table.players) {
+        for (const player of Object.values(table.players)) {
             players.push([ getUser(users, player.user_id), player ]);
         }
 

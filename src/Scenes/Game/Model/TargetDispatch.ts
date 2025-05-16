@@ -244,7 +244,7 @@ const targetDispatch = buildDispatch({
     },
     players: {
         isPlayerSelected: containsId,
-        buildAutoTarget: (table, selector, effect) => table.players.filter(player => 
+        buildAutoTarget: (table, selector, effect) => Object.values(table.players).filter(player => 
             checkPlayerFilter(table, selector, effect.player_filter, player) && !isPlayerSkipped(selector, player)
         ),
         generateTarget: () => ({})
@@ -266,7 +266,7 @@ const targetDispatch = buildDispatch({
         buildAutoTarget: (table, selector, effect) => {
             const cardTargetable = (card: CardId) => checkCardFilter(table, selector, effect.card_filter, getCard(table, card));
             let max_cards = 0;
-            for (const player of table.players) {
+            for (const player of Object.values(table.players)) {
                 if (checkPlayerFilter(table, selector, effect.player_filter, player)) {
                     max_cards += countIf(player.pockets.player_hand, cardTargetable);
                     max_cards += countIf(player.pockets.player_table, cardTargetable);

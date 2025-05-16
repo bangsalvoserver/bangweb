@@ -1,10 +1,10 @@
 import { group, intersect, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
+import { editById, removeById } from "../../../Utils/RecordUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
-import { getCardPocket } from "./Filters";
-import { AnimationKey, GameTable, Player, addTokens, editById, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, searchIndexById } from "./GameTable";
+import { addTokens, AnimationKey, CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
 import { getShuffleOrigin, TableUpdate } from "./GameUpdate";
 
 function setAnimation<T extends { animation: U }, U extends AnimationKey>(value: T, animation: Omit<U, 'key'>): T {
@@ -27,11 +27,11 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     add_cards ({ card_ids, pocket, player }) {
         const pocketRef = newPocketId(pocket, player);
         const [pockets, players] = addToPocket(this.pockets, this.players, pocketRef, card_ids.map(card => card.id));
-        let cards = this.cards.slice();
+        let newCards: CardRecord = { ...this.cards };
         for (const { id, deck } of card_ids) {
-            cards.splice(searchIndexById(cards, id), 0, newCard(id, deck, pocketRef));
+            newCards[id] = newCard(id, deck, pocketRef);
         }
-        return { ...this, cards, pockets, players };
+        return { ...this, cards: newCards, pockets, players };
     },
 
     /// Removes the specified cards
@@ -50,25 +50,27 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         // ... and remove the cards themselves
         return {
             ...this,
-            cards: this.cards.filter(card => !cards.includes(card.id)),
+            cards: removeById(this.cards, cards),
             pockets, players
         };
     },
 
     // Creates new players or updates existing players with specified player_id and user_id
     player_add ({ players }) {
-        let newPlayers: Player[] = this.players.slice();
+        let newPlayers: PlayerRecord = { ...this.players };
         let newAlivePlayers = this.alive_players;
+        let selfPlayer = this.self_player;
         for (const { player_id, user_id } of players) {
-            const playerIndex = searchIndexById(newPlayers, player_id);
-            if (newPlayers.at(playerIndex)?.id === player_id) {
-                newPlayers[playerIndex] = { ...newPlayers[playerIndex], user_id };
+            if (player_id in newPlayers) {
+                newPlayers[player_id] = { ...newPlayers[player_id], user_id };
             } else {
-                newPlayers.splice(playerIndex, 0, newPlayer(player_id, user_id));
+                newPlayers[player_id] = newPlayer(player_id, user_id);
                 newAlivePlayers = newAlivePlayers.concat(player_id);
             }
+            if (user_id === this.myUserId) {
+                selfPlayer = player_id;
+            }
         }
-        const selfPlayer = newPlayers.find(p => p.user_id === this.myUserId)?.id;
         return {
             ...this,
             players: newPlayers,
@@ -226,20 +228,17 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     },
 
     deck_shuffled_end ({ pocket }) {
-        const fromPocket = getShuffleOrigin(pocket);
-        let animationCards = this.animation.type === 'deck_shuffle' ? this.animation.cards : [];
+        if (this.animation.type !== 'deck_shuffle') {
+            throw new Error('Invalid game table state for deck_shuffled_end')
+        }
         return clearAnimation({
             ...this,
-            cards: this.cards.map(card => {
-                if (getCardPocket(card) === fromPocket) {
-                    return { ...card, cardData: { deck: card.cardData.deck }, pocket: { name: pocket } };
-                } else {
-                    return card;
-                }
-            }),
+            cards: editById(this.cards, this.animation.cards,
+                card => ({ ...card, cardData: { deck: card.cardData.deck }, pocket: { name: pocket } })
+            ),
             pockets: {
                 ...this.pockets,
-                [pocket]: animationCards
+                [pocket]: this.animation.cards
             }
         });
     },
