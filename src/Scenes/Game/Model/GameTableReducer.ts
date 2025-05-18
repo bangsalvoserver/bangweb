@@ -2,10 +2,10 @@ import { group, intersect, rotateToFirstOf, subtract } from "../../../Utils/Arra
 import { editById, removeById } from "../../../Utils/RecordUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
-import { GameFlag } from "./CardEnums";
+import { GameFlag, TablePocketType } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { addTokens, AnimationKey, CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
-import { getShuffleOrigin, TableUpdate } from "./GameUpdate";
+import { TableUpdate } from "./GameUpdate";
 
 function setAnimation<T extends { animation: U }, U extends AnimationKey>(value: T, animation: Omit<U, 'key'>): T {
     return {
@@ -216,7 +216,11 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Moves all cards from discard_pile to main_deck or from shop_discard to shop_deck
     deck_shuffled ({ pocket, duration }) {
-        const fromPocket = getShuffleOrigin(pocket);
+        let fromPocket = pocket as TablePocketType;
+        switch (pocket) {
+        case 'main_deck': fromPocket = 'discard_pile'; break;
+        case 'feats_deck': fromPocket = 'feats_discard'; break;
+        }
         return setAnimation({
             ...this,
             pockets: {
@@ -224,7 +228,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
                 [fromPocket]: [],
                 [pocket]: [],
             }
-        }, { type: 'deck_shuffle', pocket, duration, cards: this.pockets[fromPocket] });
+        }, { type: 'deck_shuffle', pocket, fromPocket, duration, cards: this.pockets[fromPocket] });
     },
 
     deck_shuffled_end ({ pocket }) {

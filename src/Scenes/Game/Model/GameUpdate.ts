@@ -1,7 +1,7 @@
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { Empty } from "../../../Utils/UnionUtils";
 import { CardData, CardSign } from "./CardData";
-import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, SoundId, TablePocketType, TokenType } from "./CardEnums";
+import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, SoundId, TokenType } from "./CardEnums";
 
 export type CardId = number;
 export type PlayerId = number;
@@ -65,14 +65,6 @@ export interface MoveTrainUpdate {
 }
 
 export type ShufflePocket = 'main_deck' | 'shop_deck' | 'train_deck' | 'feats_deck';
-
-export function getShuffleOrigin(pocket: ShufflePocket): TablePocketType {
-    switch (pocket) {
-    case 'main_deck': return 'discard_pile';
-    case 'feats_deck': return 'feats_discard';
-    default: return pocket;
-    }
-}
 
 export interface DeckShuffledUpdate {
     pocket: ShufflePocket;

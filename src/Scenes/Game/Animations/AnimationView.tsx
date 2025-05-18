@@ -39,6 +39,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
             key={animation.key}
             tracker={tracker}
             cards={animation.cards}
+            fromPocket={animation.fromPocket}
             pocket={animation.pocket}
             duration={animation.duration}
         />;

@@ -2,28 +2,30 @@ import { CSSProperties, useContext } from "react";
 import { Milliseconds } from "../../../Model/ServerMessage";
 import { isMobileDevice } from "../../../Utils/MobileCheck";
 import { getRectCenter } from "../../../Utils/Rect";
+import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import CardView from "../CardView";
 import { GameStateContext } from "../GameScene";
+import { TablePocketType } from "../Model/CardEnums";
 import { CardTracker } from "../Model/CardTracker";
 import { getCard, newPocketId } from "../Model/GameTable";
-import { CardId, getShuffleOrigin, ShufflePocket } from "../Model/GameUpdate";
+import { CardId, ShufflePocket } from "../Model/GameUpdate";
 import "./Style/DeckShuffleAnimation.css";
-import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 
 export interface DeckShuffleProps {
     tracker: CardTracker;
     cards: CardId[];
+    fromPocket: TablePocketType;
     pocket: ShufflePocket;
     duration: Milliseconds;
 }
 
 const MAX_CARDS = isMobileDevice() ? 10 : 30;
 
-export default function DeckShuffleAnimation({ tracker, pocket, cards, duration }: DeckShuffleProps) {
+export default function DeckShuffleAnimation({ tracker, fromPocket, pocket, cards, duration }: DeckShuffleProps) {
     const { table } = useContext(GameStateContext);
     
     const [startRect, endRect] = useUpdateEveryFrame(() => [
-        tracker.getTablePocket(newPocketId(getShuffleOrigin(pocket)))?.getPocketRect(),
+        tracker.getTablePocket(newPocketId(fromPocket))?.getPocketRect(),
         tracker.getTablePocket(newPocketId(pocket))?.getPocketRect()
     ]);
 

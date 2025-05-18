@@ -185,7 +185,8 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
     };
 }
 
-export interface DeckCards {
+export interface DeckShuffleAnimation extends DeckShuffledUpdate {
+    fromPocket: TablePocketType;
     cards: CardId[];
 }
 
@@ -202,7 +203,7 @@ export type TableAnimation =
     { type: 'none' } |
     { type: 'move_card' } & MoveCardUpdate & Duration |
     { type: 'move_tokens' } & MoveTokensUpdate & Duration |
-    { type: 'deck_shuffle' } & DeckShuffledUpdate & DeckCards & Duration |
+    { type: 'deck_shuffle' } & DeckShuffleAnimation & Duration |
     { type: 'move_train' } & MoveTrainUpdate & Duration |
     { type: 'move_players' } & MovePlayersUpdate & Duration;
 
