@@ -1,15 +1,18 @@
 export type UpdateFunction<T> = (value: T) => T;
 
 export function editById<K extends keyof any, V>(values: Record<K, V>, keys: K | K[], mapper: UpdateFunction<V>): Record<K, V> {
-    let newRecord: Record<K, V> = { ...values };
     if (Array.isArray(keys)) {
+        let newRecord: Record<K, V> = { ...values };
         for (const key of keys) {
-            newRecord[key] = mapper(values[key]);
+            newRecord[key] = mapper(newRecord[key]);
         }
+        return newRecord;
     } else {
-        newRecord[keys] = mapper(values[keys]);
+        return {
+            ...values,
+            [keys]: mapper(values[keys])
+        };
     }
-    return newRecord;
 }
 
 export function removeById<K extends keyof any, V>(values: Record<K, V>, keys: K | K[]): Record<K, V> {
