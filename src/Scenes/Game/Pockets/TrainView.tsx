@@ -21,7 +21,7 @@ export default function TrainView({ pocketRef }: TrainProps) {
     let trainKey: number | null = null;
     switch (table.animation.type) {
     case 'move_train':
-        trainKey = table.animation.key;
+        trainKey = table.animationKey;
 
         classes.push('train-container-move');
         trainPositionStyle = {

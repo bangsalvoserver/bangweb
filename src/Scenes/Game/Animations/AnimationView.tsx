@@ -14,11 +14,12 @@ export interface AnimationProps {
 export default function AnimationView({ tracker }: AnimationProps) {
     const { table } = useContext(GameStateContext);
     const animation = table.animation;
+    const animationKey = table.animationKey;
     
     switch (animation.type) {
     case 'move_card':
         return <MoveCardAnimation
-            key={animation.key}
+            key={animationKey}
             tracker={tracker}
             card={getCard(table, animation.card)}
             destPocket={newPocketId(animation.pocket, animation.player)}
@@ -26,7 +27,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
         />;
     case 'move_tokens':
         return <MoveTokensAnimation
-            key={animation.key}
+            key={animationKey}
             tracker={tracker}
             token_type={animation.token_type}
             num_tokens={animation.num_tokens}
@@ -36,7 +37,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
         />;
     case 'deck_shuffle':
         return <DeckShuffleAnimation
-            key={animation.key}
+            key={animationKey}
             tracker={tracker}
             cards={animation.cards}
             fromPocket={animation.fromPocket}
@@ -45,7 +46,7 @@ export default function AnimationView({ tracker }: AnimationProps) {
         />;
     case 'move_players':
         return <MovePlayersAnimation
-            key={animation.key}
+            key={animationKey}
             tracker={tracker}
             players={animation.players}
             duration={animation.duration}

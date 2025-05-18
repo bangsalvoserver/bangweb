@@ -11,10 +11,6 @@ export interface CardImage {
     sign?: CardSign;
 }
 
-export interface AnimationKey {
-    key: number;
-}
-
 export type CardAnimation =
     { type: 'none' } |
     { type: 'flipping', cardImage?: CardImage, backface?: string } & Duration |
@@ -35,7 +31,8 @@ interface CardBase<T extends CardDeckOrData> {
     inactive: boolean;
     tokens: TokenCount;
     
-    animation: CardAnimation & AnimationKey;
+    animation: CardAnimation;
+    animationKey: number;
 }
 
 export type Card = CardBase<CardDeckOrData>;
@@ -105,7 +102,8 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
         pocket,
         inactive: false,
         tokens: [],
-        animation: { type: 'none', key: 0}
+        animation: { type: 'none' },
+        animationKey: 0
     };
 }
 
@@ -164,7 +162,8 @@ export interface Player {
     };
     pockets: PlayerPockets;
 
-    animation: PlayerAnimation & AnimationKey;
+    animation: PlayerAnimation;
+    animationKey: number;
 }
 
 export function newPlayer(id: PlayerId, user_id: UserId): Player {
@@ -181,7 +180,8 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
             player_table: [],
             player_character: []
         },
-        animation: { type: 'none', key: 0}
+        animation: { type: 'none' },
+        animationKey: 0
     };
 }
 
@@ -228,7 +228,8 @@ export interface GameTable {
         current_turn?: PlayerId;
     };
     
-    animation: TableAnimation & AnimationKey;
+    animation: TableAnimation;
+    animationKey: number;
 }
 
 export function newGameTable(myUserId: UserId): GameTable {
@@ -266,7 +267,8 @@ export function newGameTable(myUserId: UserId): GameTable {
             flags: [],
         },
 
-        animation: { type: 'none', key: 0 }
+        animation: { type: 'none' },
+        animationKey: 0
     };
 }
 

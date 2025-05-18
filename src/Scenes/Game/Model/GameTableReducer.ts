@@ -4,21 +4,15 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { GameFlag, TablePocketType } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
-import { addTokens, AnimationKey, CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
+import { addTokens, CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
 
-function setAnimation<T extends { animation: U }, U extends AnimationKey>(value: T, animation: Omit<U, 'key'>): T {
-    return {
-        ...value,
-        animation: { ...animation, key: value.animation.key + 1 }
-    };
+function setAnimation<T extends { animation: unknown, animationKey: number }>(value: T, animation: T['animation']): T {
+    return { ...value, animation, animationKey: value.animationKey + 1 };
 }
 
-function clearAnimation<T extends { animation: U }, U extends AnimationKey>(value: T): T {
-    return {
-        ...value,
-        animation: { type: 'none', key: value.animation.key }
-    };
+function clearAnimation<T extends { animation: unknown }>(value: T): T {
+    return { ...value, animation: { type: 'none' } };
 }
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({

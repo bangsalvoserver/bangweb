@@ -27,7 +27,7 @@ export default function RoleView({ player }: RoleProps) {
     let style: CSSProperties | undefined;
 
     if (player.animation.type === 'flipping_role') {
-        animationKey = player.animation.key;
+        animationKey = player.animationKey;
 
         backRole = frontRole;
         frontRole = player.animation.role;
