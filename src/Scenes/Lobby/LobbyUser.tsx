@@ -31,9 +31,9 @@ export function clipUsername(username: string): string {
 
 export default function LobbyUser({ user: { username, propic, flags, lifetime}, isSelf, align, noUserIcons, playerIcons, children }: LobbyUserProps) {
   const timerWidget = lifetime > 0 && <TimerWidget duration={lifetime} />;
-  const isOwner = flags.includes('lobby_owner');
-  const isSpectator = flags.includes('spectator');
-  const isDisconnected = flags.includes('disconnected');
+  const isOwner = flags.has('lobby_owner');
+  const isSpectator = flags.has('spectator');
+  const isDisconnected = flags.has('disconnected');
   let icons: string[] = [];
   if (isDisconnected) {
     icons.push('icon-disconnected');

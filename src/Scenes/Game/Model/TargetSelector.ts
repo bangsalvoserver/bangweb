@@ -1,10 +1,10 @@
 import { CardTarget } from "./CardTarget";
 import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getPlayer, getPlayerCubes, isCardKnown } from "./GameTable";
-import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatusArgs, StatusReadyArgs } from "./GameUpdate";
+import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatus, StatusReady } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
-export type RequestStatusUnion = RequestStatusArgs | StatusReadyArgs | null;
+export type RequestStatusUnion = RequestStatus | StatusReady | null;
 
 export type GamePrompt =
     { type: 'none' } |
@@ -81,11 +81,11 @@ export function newTargetSelector(request: RequestStatusUnion = null): TargetSel
     };
 }
 
-export function isResponse(selector: TargetSelector): selector is TargetSelectorBase<RequestStatusArgs> {
+export function isResponse(selector: TargetSelector): selector is TargetSelectorBase<RequestStatus> {
     return selector.request !== null && 'respond_cards' in selector.request;
 }
 
-export function isStatusReady(selector: TargetSelector): selector is TargetSelectorBase<StatusReadyArgs> {
+export function isStatusReady(selector: TargetSelector): selector is TargetSelectorBase<StatusReady> {
     return selector.request !== null && 'play_cards' in selector.request;
 }
 

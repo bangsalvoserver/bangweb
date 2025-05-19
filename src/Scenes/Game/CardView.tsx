@@ -51,7 +51,7 @@ export interface CardProps {
 
 function isHighlight(selector: TargetSelector, card: Card): boolean {
     if (isResponse(selector)) {
-        return selector.request.highlight_cards.includes(card.id);
+        return selector.request.highlight_cards.has(card.id);
     }
     return false;
 }

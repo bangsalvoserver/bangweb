@@ -158,7 +158,7 @@ export interface Player {
         role: PlayerRole,
         hp: number,
         gold: number,
-        flags: PlayerFlag[]
+        flags: Set<PlayerFlag>
     };
     pockets: PlayerPockets;
 
@@ -173,7 +173,7 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
             role: 'unknown',
             hp: 0,
             gold: 0,
-            flags: []
+            flags: new Set()
         },
         pockets: {
             player_hand: [],
@@ -224,7 +224,7 @@ export interface GameTable {
     status: {
         tokens: TokenCount;
         train_position: number;
-        flags: GameFlag[];
+        flags: Set<GameFlag>;
         current_turn?: PlayerId;
     };
     
@@ -264,7 +264,7 @@ export function newGameTable(myUserId: UserId): GameTable {
         status: {
             tokens: [],
             train_position: 0,
-            flags: [],
+            flags: new Set(),
         },
 
         animation: { type: 'none' },

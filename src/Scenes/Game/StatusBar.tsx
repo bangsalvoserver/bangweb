@@ -35,7 +35,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
   const { table, selector } = useContext(GameStateContext);
   const { handleClickCard, handleConfirm, handleUndo } = useSelectorConfirm();
 
-  const isGameOver = table.status.flags.includes('game_over');
+  const isGameOver = table.status.flags.has('game_over');
 
   const statusText = isResponse(selector) && <GameStringComponent message={selector.request.status_text} />;
 

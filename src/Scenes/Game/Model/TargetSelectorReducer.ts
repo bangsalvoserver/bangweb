@@ -149,7 +149,7 @@ function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, car
             prompt: { type: 'none' },
             preselection: null,
             selection: { card, targets: [] },
-            mode: card.cardData.equip_target.length === 0 ? 'finish' : 'equip'
+            mode: card.cardData.equip_target.size === 0 ? 'finish' : 'equip'
         };
     } else if (isCardModifier(card, isResponse(selector))) {
         return handleAutoTargets(table, {

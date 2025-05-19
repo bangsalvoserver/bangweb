@@ -5,7 +5,7 @@ import { createUnionDispatch, createUnionReducer } from "../../../Utils/UnionUti
 import { preloadAssets, usePlaySound } from "../../../Utils/UseAssets";
 import { GameTable, newGameTable } from "./GameTable";
 import gameTableReducer from "./GameTableReducer";
-import { GameString, GameUpdate, TableUpdate } from "./GameUpdate";
+import { GameString, GameUpdate, parseRequestStatus, parseStatusReady, TableUpdate } from "./GameUpdate";
 import { newTargetSelector, TargetSelector } from "./TargetSelector";
 import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
 
@@ -193,11 +193,11 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
             },
         
             request_status(status) {
-                selectorDispatch({ setRequest: status });
+                selectorDispatch({ setRequest: parseRequestStatus(status) });
             },
         
             status_ready(status) {
-                selectorDispatch({ setRequest: status });
+                selectorDispatch({ setRequest: parseStatusReady(status) });
             },
         
             status_clear() {

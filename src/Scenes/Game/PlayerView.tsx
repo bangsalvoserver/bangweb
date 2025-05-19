@@ -105,22 +105,22 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         }
     };
 
-    const isGameOver = table.status.flags.includes('game_over');
+    const isGameOver = table.status.flags.has('game_over');
     const isTurn = player.id === table.status.current_turn;
 
     const isHandShown = player.id === table.self_player
-        || table.status.flags.includes('hands_shown')
-        || (player.status.flags.includes('show_hand_playing') && table.self_player === table.status.current_turn);
+        || table.status.flags.has('hands_shown')
+        || (player.status.flags.has('show_hand_playing') && table.self_player === table.status.current_turn);
     
     const isOrigin = isResponse(selector) && selector.request.origin === player.id;
     const isTarget = isResponse(selector) && selector.request.target === player.id;
     const isDead = isPlayerDead(player);
     const isGhost = isPlayerGhost(player);
-    const isWinner = player.status.flags.includes('winner');
-    const isSkipTurn = player.status.flags.includes('skip_turn');
-    const hasDynamiteStick = player.status.flags.includes('stick_of_dynamite');
+    const isWinner = player.status.flags.has('winner');
+    const isSkipTurn = player.status.flags.has('skip_turn');
+    const hasDynamiteStick = player.status.flags.has('stick_of_dynamite');
     
-    const isDisconnected = user.flags.includes('disconnected');
+    const isDisconnected = user.flags.has('disconnected');
     const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
     const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver;
 

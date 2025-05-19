@@ -23,7 +23,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     
     const [isChatOpen, setIsChatOpen, chatRef] = useCloseOnLoseFocus<HTMLDivElement>();
     
-    const countMessages = useMemo(() => countIf(messages, m => !m.flags.includes('is_read')), [messages]);
+    const countMessages = useMemo(() => countIf(messages, m => !m.flags.has('is_read')), [messages]);
     const prevCountMessages = usePrevious(countMessages) ?? 0;
 
     const [numReadMessages, setNumReadMessages] = useState(0);
@@ -81,7 +81,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
 
     const MessageTag = useCallback((props: ChatMessage) => {
         if (props.user_id === 0) {
-            if (props.flags.includes('translated')) {
+            if (props.flags.has('translated')) {
                 return <p className='server-message'>{getLabel('chat', props.message, ...props.args.map(transformChatArg))}</p>;
             } else {
                 return props.message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>);

@@ -19,7 +19,7 @@ export function newLobbyState(lobbyId: LobbyId, myUserId: UserId): LobbyState {
 
 export function checkMyUserFlag(lobbyState: LobbyState, flag: LobbyUserFlag) {
     const myUser = lobbyState.users.find(user => user.user_id === lobbyState.myUserId);
-    return myUser !== undefined && myUser.flags.includes(flag);
+    return myUser !== undefined && myUser.flags.has(flag);
 }
 
 export type ErrorState =

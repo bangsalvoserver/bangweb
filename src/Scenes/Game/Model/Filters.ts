@@ -14,8 +14,8 @@ export function cardHasTag(card: Card, tagType: TagType): card is KnownCard {
     return getTagValue(card, tagType) !== undefined;
 }
 
-export function getEquipTarget(card: Card): PlayerFilter[] {
-    return isCardKnown(card) ? card.cardData.equip_target : [];
+export function getEquipTarget(card: Card): Set<PlayerFilter> {
+    return isCardKnown(card) ? card.cardData.equip_target : new Set();
 }
 
 export function getCardColor(card: Card): CardColor {
@@ -55,13 +55,12 @@ export function isEquipCard(card: Card): boolean {
 }
 
 export function isPlayerDead(player: Player): boolean {
-    return player.status.flags.includes('dead');
+    return player.status.flags.has('dead');
 }
 
 export function isPlayerGhost(player: Player): boolean {
-    return player.status.flags.some(flag =>
-        ['ghost_1', 'ghost_2', 'temp_ghost', 'shadow'].includes(flag)
-    );
+    return ['ghost_1', 'ghost_2', 'temp_ghost', 'shadow']
+        .some(flag => player.status.flags.has(flag));
 }
 
 export function isPlayerInGame(player: Player): boolean {
@@ -69,9 +68,9 @@ export function isPlayerInGame(player: Player): boolean {
 }
 
 export function isBangCard(table: GameTable, origin: Player, card: Card): boolean {
-    return origin.status.flags.includes('treat_any_as_bang')
+    return origin.status.flags.has('treat_any_as_bang')
         || cardHasTag(card, 'bangcard')
-        || (origin.status.flags.includes('treat_missed_as_bang') && cardHasTag(card, 'missed'));
+        || (origin.status.flags.has('treat_missed_as_bang') && cardHasTag(card, 'missed'));
 }
 
 export function calcPlayerDistance(table: GameTable, selector: TargetSelector, from: PlayerId, to: PlayerId): number {
@@ -81,7 +80,7 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
     
     const distanceMod = selector.request?.distances.distance_mods.find(item => item.player === to)?.value ?? 0;
 
-    if (table.status.flags.includes('disable_player_distances')) {
+    if (table.status.flags.has('disable_player_distances')) {
         return 1 + distanceMod;
     }
 
@@ -134,55 +133,55 @@ function isEmptyCubes(table: GameTable, player: Player) {
     return true;
 }
 
-export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
+export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: Set<PlayerFilter>, target: Player): boolean {
     const origin = getPlayer(table, table.self_player!);
 
     if (isPlayerSelected(selector, target)) return false;
 
-    if (!filter.includes('dead_or_alive')
-        && filter.includes('dead') === isPlayerInGame(target)
+    if (!filter.has('dead_or_alive')
+        && filter.has('dead') === isPlayerInGame(target)
     ) {
         return false;
     }
 
-    if (filter.includes('self') && target.id !== origin?.id) return false;
-    if (filter.includes('notself') && target.id === origin?.id) return false;
+    if (filter.has('self') && target.id !== origin?.id) return false;
+    if (filter.has('notself') && target.id === origin?.id) return false;
 
-    if (filter.includes('notorigin')) {
+    if (filter.has('notorigin')) {
         if (!isResponse(selector) || selector.request.origin === target.id) {
             return false;
         }
     }
 
-    if (filter.includes('notsheriff') && target.status.role === 'sheriff') return false;
+    if (filter.has('notsheriff') && target.status.role === 'sheriff') return false;
 
-    if (filter.includes('not_empty_hand') && isEmptyHand(table, target)) return false;
+    if (filter.has('not_empty_hand') && isEmptyHand(table, target)) return false;
 
-    if (filter.includes('not_empty_table') && isEmptyTable(table, target)) return false;
+    if (filter.has('not_empty_table') && isEmptyTable(table, target)) return false;
 
-    if (filter.includes('not_empty_cubes') && isEmptyCubes(table, target)) return false;
+    if (filter.has('not_empty_cubes') && isEmptyCubes(table, target)) return false;
 
-    if (filter.includes('target_set') && isResponse(selector)) {
-        if (!selector.request.target_set_players.includes(target.id)) {
+    if (filter.has('target_set') && isResponse(selector)) {
+        if (!selector.request.target_set_players.has(target.id)) {
             return false;
         }
     }
 
     if (!getModifierContext(selector, 'ignore_distances')
-        && !origin.status.flags.includes('ignore_distances')
-        && (filter.includes('reachable') || filter.includes('range_1') || filter.includes('range_2'))
+        && !origin.status.flags.has('ignore_distances')
+        && (filter.has('reachable') || filter.has('range_1') || filter.has('range_2'))
     ) {
         const distances = selector.request?.distances;
         
         let range = distances?.range_mod ?? 0;
-        if (filter.includes('reachable')) {
+        if (filter.has('reachable')) {
             if (!distances?.weapon_range) {
                 return false;
             }
             range += distances.weapon_range;
-        } else if (filter.includes('range_1')) {
+        } else if (filter.has('range_1')) {
             ++range;
-        } else if (filter.includes('range_2')) {
+        } else if (filter.has('range_2')) {
             range += 2;
         }
 
@@ -192,7 +191,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
     return true;
 }
 
-export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
+export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: Set<CardFilter>, target: Card): boolean {
     const origin = getPlayer(table, table.self_player!);
 
     if (isCardSelected(selector, target) || isCardCurrent(selector, target)) return false;
@@ -200,22 +199,27 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     const targetPocket = getCardPocket(target);
     const targetOwner = getCardOwner(target);
 
-    if (filter.includes('target_set')) {
+    if (filter.has('target_set')) {
         if (!isResponse(selector)) return false;
         switch (targetPocket) {
         case 'main_deck':
         case 'discard_pile':
-            if (!selector.request.target_set_cards.some(pickCard => getCardPocket(getCard(table, pickCard)) === targetPocket)) {
-                return false;
+            let found = false;
+            for (const pickCard of selector.request.target_set_cards) {
+                if (getCardPocket(getCard(table, pickCard)) === targetPocket) {
+                    found = true;
+                    break;
+                }
             }
+            if (!found) return false;
             break;
         default:
-            if (!selector.request.target_set_cards.includes(target.id)) {
+            if (!selector.request.target_set_cards.has(target.id)) {
                 return false;
             }
         }
     } else {
-        if (filter.includes('selection') !== (targetPocket === 'selection')) return false;
+        if (filter.has('selection') !== (targetPocket === 'selection')) return false;
 
         switch (targetPocket) {
         case 'player_hand':
@@ -227,30 +231,30 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
         }
     }
 
-    if (filter.includes('beer') && !cardHasTag(target, 'beer')) return false;
-    if (filter.includes('bang') && !isBangCard(table, origin, target)) return false;
-    if (filter.includes('used_bang') && !(table.status.flags.includes('showdown') || isBangCard(table, origin, target))) return false;
-    if (filter.includes('bangcard') && !cardHasTag(target, 'bangcard')) return false;
-    if (filter.includes('not_bangcard') && cardHasTag(target, 'bangcard')) return false;
-    if (filter.includes('missed') && !cardHasTag(target, 'missed')) return false;
-    if (filter.includes('missedcard') && !cardHasTag(target, 'missedcard')) return false;
-    if (filter.includes('not_missedcard') && cardHasTag(target, 'missedcard')) return false;
-    if (filter.includes('bronco') && !cardHasTag(target, 'bronco')) return false;
-    if (filter.includes('catbalou_panic') && !cardHasTag(target, 'catbalou_panic')) return false;
+    if (filter.has('beer') && !cardHasTag(target, 'beer')) return false;
+    if (filter.has('bang') && !isBangCard(table, origin, target)) return false;
+    if (filter.has('used_bang') && !(table.status.flags.has('showdown') || isBangCard(table, origin, target))) return false;
+    if (filter.has('bangcard') && !cardHasTag(target, 'bangcard')) return false;
+    if (filter.has('not_bangcard') && cardHasTag(target, 'bangcard')) return false;
+    if (filter.has('missed') && !cardHasTag(target, 'missed')) return false;
+    if (filter.has('missedcard') && !cardHasTag(target, 'missedcard')) return false;
+    if (filter.has('not_missedcard') && cardHasTag(target, 'missedcard')) return false;
+    if (filter.has('bronco') && !cardHasTag(target, 'bronco')) return false;
+    if (filter.has('catbalou_panic') && !cardHasTag(target, 'catbalou_panic')) return false;
 
     const color = getCardColor(target);
-    if (filter.includes('blue') && color !== 'blue') return false;
-    if (filter.includes('train') && color !== 'train') return false;
-    if (filter.includes('blue_or_train') && color !== 'blue' && color !== 'train') return false;
-    if (filter.includes('black') !== (color === 'black')) return false;
+    if (filter.has('blue') && color !== 'blue') return false;
+    if (filter.has('train') && color !== 'train') return false;
+    if (filter.has('blue_or_train') && color !== 'blue' && color !== 'train') return false;
+    if (filter.has('black') !== (color === 'black')) return false;
 
     const sign = getCardSign(target);
-    if (filter.includes('hearts') && sign.suit !== 'hearts') return false;
-    if (filter.includes('diamonds') && sign.suit !== 'diamonds') return false;
-    if (filter.includes('clubs') && sign.suit !== 'clubs') return false;
-    if (filter.includes('spades') && sign.suit !== 'spades') return false;
+    if (filter.has('hearts') && sign.suit !== 'hearts') return false;
+    if (filter.has('diamonds') && sign.suit !== 'diamonds') return false;
+    if (filter.has('clubs') && sign.suit !== 'clubs') return false;
+    if (filter.has('spades') && sign.suit !== 'spades') return false;
 
-    if (filter.includes('two_to_nine')) {
+    if (filter.has('two_to_nine')) {
         switch (sign.rank) {
         case 'rank_2':
         case 'rank_3':
@@ -266,7 +270,7 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
         }
     }
 
-    if (filter.includes('ten_to_ace')) {
+    if (filter.has('ten_to_ace')) {
         switch (sign.rank) {
         case 'rank_10':
         case 'rank_J':
@@ -279,16 +283,16 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
         }
     }
 
-    if (filter.includes('origin_card_suit')) {
+    if (filter.has('origin_card_suit')) {
         if (!isResponse(selector)) return false;
         if (!selector.request.origin_card) return false;
         const reqOriginCard = getCard(table, selector.request.origin_card);
         if (!(isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit === sign.suit)) return false;
     }
 
-    if (filter.includes('table') && targetPocket !== 'player_table') return false;
-    if (filter.includes('hand') && targetPocket !== 'player_hand') return false;
-    if (filter.includes('not_self_hand') && targetPocket === 'player_hand' && targetOwner === table.self_player) return false;
+    if (filter.has('table') && targetPocket !== 'player_table') return false;
+    if (filter.has('hand') && targetPocket !== 'player_hand') return false;
+    if (filter.has('not_self_hand') && targetPocket === 'player_hand' && targetOwner === table.self_player) return false;
 
     return true;
 }

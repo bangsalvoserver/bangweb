@@ -33,7 +33,7 @@ function getRoleIcon(player: Player | undefined): string | undefined {
 function GameUserPlayer({ player, user, myUserId }: GameUserProps) {
     const playerIcons = useMemo(() => {
         const role = getRoleIcon(player);
-        const isWinner = player && player.status.flags.includes('winner');
+        const isWinner = player && player.status.flags.has('winner');
         let icons: string[] = [];
         if (role) icons.push(role);
         if (isWinner) icons.push('icon-winner');
@@ -60,7 +60,7 @@ export default function GameUsersView() {
         }
 
         for (const user of users) {
-            if (!user.flags.includes('disconnected') && user.flags.includes('spectator')) {
+            if (!user.flags.has('disconnected') && user.flags.has('spectator')) {
                 players.push([ user, undefined ]);
             }
         }

@@ -58,3 +58,11 @@ export function rotateToFirstOf<T>(arr: T[], ...values: (T | undefined)[]): T[] 
         return prevIndex;
     }, -1));
 }
+
+type ContainerTypes<T> = {
+    array: T[];
+    set: Set<T>;
+}
+
+export type ContainerKey = keyof ContainerTypes<unknown>;
+export type Container<K extends ContainerKey, T> = ContainerTypes<T>[K];

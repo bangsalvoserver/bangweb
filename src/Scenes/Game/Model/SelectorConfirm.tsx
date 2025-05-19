@@ -112,7 +112,7 @@ export function SelectorConfirmProvider({ selectorDispatch, children }: Selector
     let selectorConfirm: SelectorConfirm = DEFAULT_SELECTOR_CONFIRM;
 
     if (selectorDispatch !== null
-        && !table.status.flags.includes('game_over')
+        && !table.status.flags.has('game_over')
         && table.self_player !== undefined
         && selector.mode !== 'finish'
         && selector.prompt.type === 'none'

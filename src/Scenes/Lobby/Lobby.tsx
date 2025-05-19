@@ -43,7 +43,7 @@ export default function LobbyScene({ gameOptions, setGameOptions, connection, lo
           <GameOptionsEditor gameOptions={gameOptions} setGameOptions={isLobbyOwner ? setGameOptions : undefined} />
           <div className='flex flex-col -order-1 md:order-none'>
             {lobbyState.users.flatMap(user => {
-              if (user.flags.includes('disconnected')) {
+              if (user.flags.has('disconnected')) {
                 return [];
               }
               return <LobbyUser align='vertical' key={user.user_id} user={user} isSelf={user.user_id === lobbyState.myUserId} />;

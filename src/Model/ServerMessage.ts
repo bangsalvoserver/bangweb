@@ -1,4 +1,5 @@
 import { GameOptions, GameUpdate } from "../Scenes/Game/Model/GameUpdate";
+import { Container, ContainerKey } from "../Utils/ArrayUtils";
 import { Empty } from "../Utils/UnionUtils";
 
 export type LobbyId = number;
@@ -37,12 +38,19 @@ export type LobbyChatFlag = 'is_read' | 'translated';
 
 export type LobbyUserFlag = 'disconnected' | 'lobby_owner' | 'spectator' | 'muted';
 
-export interface UserValue {
+interface UserValueBase<K extends ContainerKey> {
     user_id: UserId;
     username: string;
     propic: string | null;
-    flags: LobbyUserFlag[];
+    flags: Container<K, LobbyUserFlag>;
     lifetime: Milliseconds;
+}
+
+export type UserValue = UserValueBase<'set'>;
+export type UserValueArgs = UserValueBase<'array'>;
+
+export function parseUserValue(user: UserValueArgs): UserValue {
+    return { ...user, flags: new Set(user.flags) };
 }
 
 export type LobbyChatArg =
@@ -50,11 +58,18 @@ export type LobbyChatArg =
     {integer: number} |
     {string: string};
 
-export interface ChatMessage {
+interface ChatMessageBase<K extends ContainerKey> {
     user_id: number;
     message: string;
     args: LobbyChatArg[];
-    flags: LobbyChatFlag[];
+    flags: Container<K, LobbyChatFlag>;
+}
+
+export type ChatMessage = ChatMessageBase<'set'>;
+export type ChatMessageArgs = ChatMessageBase<'array'>;
+
+export function parseChatMessage(message: ChatMessageArgs): ChatMessage {
+    return { ...message, flags: new Set(message.flags) };
 }
 
 export type ServerMessage =
@@ -65,8 +80,8 @@ export type ServerMessage =
     {lobby_entered: LobbyEntered} |
     {lobby_game_options: GameOptions} |
     {lobby_removed: LobbyRemoved} |
-    {lobby_user_update: UserValue} |
+    {lobby_user_update: UserValueArgs} |
     {lobby_kick: Empty} |
-    {lobby_chat: ChatMessage} |
+    {lobby_chat: ChatMessageArgs} |
     {game_update: GameUpdate} |
     {game_started: Empty};

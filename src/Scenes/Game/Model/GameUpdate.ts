@@ -1,6 +1,7 @@
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
+import { Container, ContainerKey } from "../../../Utils/ArrayUtils";
 import { Empty } from "../../../Utils/UnionUtils";
-import { CardData, CardSign } from "./CardData";
+import { CardDataArgs, CardSign } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, SoundId, TokenType } from "./CardEnums";
 
 export type CardId = number;
@@ -72,7 +73,7 @@ export interface DeckShuffledUpdate {
 
 export interface ShowCardUpdate {
     card: CardId;
-    info: CardData;
+    info: CardDataArgs;
 }
 
 export interface HideCardUpdate {
@@ -148,22 +149,40 @@ export interface PlayableCardInfo {
     context: EffectContext | null;
 }
 
-export interface RequestStatusArgs {
+interface RequestStatusBase<K extends ContainerKey> {
     origin_card: CardId | null;
     origin: PlayerId | null;
     target: PlayerId | null;
     status_text: GameString;
     respond_cards: PlayableCardInfo[];
-    highlight_cards: CardId[];
+    highlight_cards: Container<K, CardId>;
     distances: PlayerDistances;
-    target_set_players: PlayerId[];
-    target_set_cards: CardId[];
+    target_set_players: Container<K, PlayerId>;
+    target_set_cards: Container<K, CardId>;
     timer: TimerStatusArgs | null;
 }
 
-export interface StatusReadyArgs {
+export type RequestStatus = RequestStatusBase<'set'>;
+export type RequestStatusArgs = RequestStatusBase<'array'>;
+
+export function parseRequestStatus(request: RequestStatusArgs): RequestStatus {
+    return {
+        ...request,
+        highlight_cards: new Set(request.highlight_cards),
+        target_set_players: new Set(request.target_set_players),
+        target_set_cards: new Set(request.target_set_cards)
+    }
+}
+
+export interface StatusReady {
     play_cards: PlayableCardInfo[];
     distances: PlayerDistances;
+}
+
+export type StatusReadyArgs = StatusReady;
+
+export function parseStatusReady(request: StatusReadyArgs): StatusReady {
+    return request;
 }
 
 export interface GameOptions {

@@ -9,7 +9,7 @@ import { useSettings } from "./AppSettings";
 import { ClientMessage } from "./ClientMessage";
 import Env from "./Env";
 import { defaultCurrentScene, sceneReducer } from "./SceneState";
-import { ServerMessage } from "./ServerMessage";
+import { parseChatMessage, parseUserValue, ServerMessage } from "./ServerMessage";
 
 export type GameChannel = Channel<GameUpdate>;
 
@@ -92,13 +92,13 @@ export default function useBangConnection() {
             sceneDispatch({ removeLobby: lobby_id });
         },
         lobby_user_update(message) {
-            sceneDispatch({ updateLobbyUser: message });
+            sceneDispatch({ updateLobbyUser: parseUserValue(message) });
         },
         lobby_kick() {
             sceneDispatch({ gotoWaitingArea: {} });
         },
         lobby_chat(message) {
-            sceneDispatch({ addLobbyChatMessage: message })
+            sceneDispatch({ addLobbyChatMessage: parseChatMessage(message) });
         },
         game_update(update) {
             gameChannel.update(update);

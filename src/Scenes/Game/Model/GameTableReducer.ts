@@ -2,6 +2,7 @@ import { group, intersect, rotateToFirstOf, subtract } from "../../../Utils/Arra
 import { editById, removeById } from "../../../Utils/RecordUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
+import { parseCardData } from "./CardData";
 import { GameFlag, TablePocketType } from "./CardEnums";
 import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
 import { addTokens, CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
@@ -75,7 +76,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Sets the player_death animation and/or the player_move animation
     player_order ({ players, duration }) {
-        const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.includes('removed'));
+        const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.has('removed'));
         const filteredPlayers = intersect(this.alive_players, notRemovedPlayers);
         const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
@@ -104,7 +105,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
     // Changes the order of how players are seated
     player_order_end ({ players }) {
-        const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.includes('removed'));
+        const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.has('removed'));
         const filteredPlayers = intersect(this.alive_players, notRemovedPlayers);
         const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
@@ -163,7 +164,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             players: editById(this.players, player, p => ({
-                ...p, status: { ...p.status, flags }
+                ...p, status: { ...p.status, flags: new Set(flags) }
             }))
         };
     },
@@ -254,7 +255,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this, pockets, players,
             cards: editById(this.cards, card, card => setAnimation(
-                { ...card, cardData: info },
+                { ...card, cardData: parseCardData(info) },
                 { type: 'flipping', duration }
             ))
         };
@@ -386,7 +387,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             ...this,
             status: {
                 ...this.status,
-                flags
+                flags: new Set(flags)
             }
         };
     }
