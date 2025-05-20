@@ -200,23 +200,8 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     const targetOwner = getCardOwner(target);
 
     if (filter.has('target_set')) {
-        if (!isResponse(selector)) return false;
-        switch (targetPocket) {
-        case 'main_deck':
-        case 'discard_pile':
-            let found = false;
-            for (const pickCard of selector.request.target_set_cards) {
-                if (getCardPocket(getCard(table, pickCard)) === targetPocket) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) return false;
-            break;
-        default:
-            if (!selector.request.target_set_cards.has(target.id)) {
-                return false;
-            }
+        if (!isResponse(selector) || !selector.request.target_set_cards.has(target.id)) {
+            return false;
         }
     } else {
         if (filter.has('selection') !== (targetPocket === 'selection')) return false;
