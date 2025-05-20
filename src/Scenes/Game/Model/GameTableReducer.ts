@@ -12,7 +12,8 @@ function setAnimation<T extends { animation: unknown, animationKey: number }>(va
     return { ...value, animation, animationKey: value.animationKey + 1 };
 }
 
-function clearAnimation<T extends { animation: unknown }>(value: T): T {
+function clearAnimation<T extends { animation: A }, A extends { type: string }>(value: T): T {
+    if (value.animation.type === 'none') return value;
     return { ...value, animation: { type: 'none' } };
 }
 
