@@ -136,7 +136,7 @@ const isValidCardTarget = <T>(table: GameTable, selector: TargetSelector, target
 
 const isValidCubeTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardEffect, card: Card) => {
     return getCardOwner(card) === table.self_player
-        && getCubeCount(card.tokens) > countSelectedCubes(table, selector, card);
+        && getCubeCount(card) > countSelectedCubes(table, selector, card);
 };
 
 const checkId = <T extends {id: U}, U>(target: T, value: T): boolean => {
@@ -323,7 +323,7 @@ const targetDispatch = buildDispatch({
                 || (pocket === 'player_table' && getCardColor(card) === 'orange')
             ) && ( effect.target_value === 0 || (
                 (pocket !== 'player_character' || playerId !== table.self_player) 
-                && getCubeCount(card.tokens) !== 0
+                && getCubeCount(card) !== 0
             ));
         },
         generateTarget: card => card.id
@@ -334,7 +334,7 @@ const targetDispatch = buildDispatch({
             return getCardOwner(card) === table.self_player
                 && getCardPocket(card) === 'player_table'
                 && getCardColor(card) === 'orange'
-                && getCubeCount(card.tokens) < 4 - countIds(cards, card);
+                && getCubeCount(card) < 4 - countIds(cards, card);
         },
         isCardSelected: ({cards}, card) => containsId(cards, card),
         isSelectionConfirmable: ({ cards }) => cards.length !== 0,

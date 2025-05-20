@@ -18,7 +18,7 @@ export type CardAnimation =
     { type: 'flash' } & Duration |
     { type: 'short_pause' };
 
-export type TokenCount = [TokenType, number][];
+export type TokenCount = Partial<Record<TokenType, number>>;
 
 type CardDeckOrData = { deck: DeckType } | CardData;
 
@@ -76,11 +76,11 @@ export function getCardBackface(card: Card): string {
 
 export function *getPlayerCubes(table: GameTable, player: Player) {
     const character = getCard(table, player.pockets.player_character[0]);
-    yield [character, getCubeCount(character.tokens)] as const;
+    yield [character, getCubeCount(character)] as const;
     for (const cardId of player.pockets.player_table) {
         const card = getCard(table, cardId);
         if (getCardColor(card) === 'orange') {
-            yield [card, getCubeCount(card.tokens)] as const;
+            yield [card, getCubeCount(card)] as const;
         }
     }
 }
@@ -101,7 +101,7 @@ export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
         cardData: { deck },
         pocket,
         inactive: false,
-        tokens: [],
+        tokens: {},
         animation: { type: 'none' },
         animationKey: 0
     };
@@ -111,33 +111,23 @@ export function isCardKnown(card: Card): card is KnownCard {
     return 'name' in card.cardData;
 }
 
-export function getCubeCount(tokenCount: TokenCount) {
-    for (const [key, value] of tokenCount) {
-        if (key === 'cube') {
-            return value;
-        }
-    }
-    return 0;
+export function getCubeCount(value: { tokens: TokenCount }): number {
+    return value.tokens.cube ?? 0;
 }
 
-export function addTokens(tokenCount: TokenCount, type: TokenType, count: number) {
-    let result = tokenCount.slice();
-    for (let i=0; i<result.length; ++i) {
-        let [key, value] = result[i];
-        if (key === type) {
-            value += count;
-            if (value > 0) {
-                result[i] = [key, value];
-            } else {
-                result.splice(i, 1);
-            }
-            return result;
-        }
+export function getFameTokens(value: { tokens: TokenCount }): TokenCount {
+    const { cube: _, ...rest } = value.tokens;
+    return rest;
+}
+
+export function addTokens<T extends { tokens: TokenCount }>(value: T, type: TokenType, count: number): T {
+    const newCount = (value.tokens[type] ?? 0) + count;
+    if (newCount <= 0) {
+        const { [type]: _, ...rest } = value.tokens;
+        return { ...value, tokens: rest };
+    } else {
+        return { ...value, tokens: { ...value.tokens, [type]: newCount } };
     }
-    if (count > 0) {
-        result.push([type, count]);
-    }
-    return result;
 }
 
 export type PlayerPockets = Record<PlayerPocketType, CardId[]>;
@@ -262,7 +252,7 @@ export function newGameTable(myUserId: UserId): GameTable {
         alive_players: [],
 
         status: {
-            tokens: [],
+            tokens: {},
             train_position: 0,
             flags: new Set(),
         },

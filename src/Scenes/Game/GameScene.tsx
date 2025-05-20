@@ -6,19 +6,20 @@ import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { isMobileDevice } from "../../Utils/MobileCheck";
 import { useMapRef } from "../../Utils/UseMapRef";
+import LoadingScene from "../Loading/Loading";
 import { LobbyContext, getUser } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardOverlayView from "./CardOverlayView";
-import { SPRITE_CUBE } from "./CardView";
+import { getTokenSprite } from "./CardView";
 import GameLogView from "./GameLogView";
 import GameUsersView from "./GameUsersView";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
 import { getCubeCount, getPlayer } from "./Model/GameTable";
 import { GameOptions, PlayerId } from "./Model/GameUpdate";
+import { SelectorConfirmProvider, useSendGameAction } from "./Model/SelectorConfirm";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
 import useGameState, { newGameState } from "./Model/UseGameState";
-import { SelectorConfirmProvider, useSendGameAction } from "./Model/SelectorConfirm";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import CardChoiceView from "./Pockets/CardChoiceView";
@@ -31,7 +32,6 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import LoadingScene from "../Loading/Loading";
 
 export interface GameProps {
   connection: BangConnection;
@@ -104,10 +104,10 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     </div>
   );
 
-  const nCubes = getCubeCount(table.status.tokens);
+  const nCubes = getCubeCount(table.status);
   const tableCubes = <div className='table-cubes' ref={cubesRef => tokenRefs.set('cube', cubesRef)}>
     {nCubes > 0 && <>
-      <img src={SPRITE_CUBE} alt="" />
+      <img src={getTokenSprite('cube')} alt="" />
       <div>x{nCubes}</div>
     </>}
   </div>;

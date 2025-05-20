@@ -305,59 +305,40 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
     // Adds tokens to a target_card (or the table if not set)
     add_tokens ({ token_type, num_tokens, target_card }) {
-        let tableCards = this.cards;
-        let tableTokens = this.status.tokens;
+        let newCards = this.cards;
+        let newStatus = this.status;
         if (target_card) {
-            tableCards = editById(this.cards, target_card, card => ({
-                ...card,
-                tokens: addTokens(card.tokens, token_type, num_tokens)
-            }));
+            newCards = editById(this.cards, target_card, card => addTokens(card, token_type, num_tokens));
         } else {
-            tableTokens = addTokens(tableTokens, token_type, num_tokens);
+            newStatus = addTokens(newStatus, token_type, num_tokens);
         }
-        return {
-            ...this,
-            status: { ...this.status, tokens: tableTokens},
-            cards: tableCards
-        };
+        return { ...this, status: newStatus, cards: newCards };
     },
 
     // Moves `num_tokens` from origin_card (or the table if not set) to target_card (or the table if not set)
     move_tokens ({ token_type, num_tokens, origin_card, target_card, duration }) {
-        let tableTokens = this.status.tokens;
-        let tableCards = this.cards;
-
+        let newStatus = this.status;
+        let newCards = this.cards;
         if (origin_card) {
-            tableCards = editById(tableCards, origin_card, card => ({
-                ...card,
-                tokens: addTokens(card.tokens, token_type, -num_tokens)
-            }));
+            newCards = editById(newCards, origin_card, card => addTokens(card, token_type, -num_tokens));
         } else {
-            tableTokens = addTokens(tableTokens, token_type, -num_tokens);
+            newStatus = addTokens(newStatus, token_type, -num_tokens);
         }
-        return setAnimation({
-            ...this,
-            status: { ...this.status, tokens: tableTokens },
-            cards: tableCards
-        }, { type: 'move_tokens', token_type, num_tokens, origin_card, target_card, duration });
+        return setAnimation(
+            { ...this, status: newStatus, cards: newCards },
+            { type: 'move_tokens', token_type, num_tokens, origin_card, target_card, duration }
+        );
     },
 
     move_tokens_end ({ token_type, num_tokens, target_card }) {
-        let tableTokens = this.status.tokens;
-        let tableCards = this.cards;
+        let newStatus = this.status;
+        let newCards = this.cards;
         if (target_card) {
-            tableCards = editById(tableCards, target_card, card => ({
-                ...card,
-                tokens: addTokens(card.tokens, token_type, num_tokens)
-            }));
+            newCards = editById(newCards, target_card, card => addTokens(card, token_type, num_tokens));
         } else {
-            tableTokens = addTokens(tableTokens, token_type, num_tokens);
+            newStatus = addTokens(newStatus, token_type, num_tokens);
         }
-        return clearAnimation({
-            ...this,
-            status: { ...this.status, tokens: tableTokens },
-            cards: tableCards
-        });
+        return clearAnimation({ ...this, status: newStatus, cards: newCards });
     },
 
     // Changes the train_position field

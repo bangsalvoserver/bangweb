@@ -6,7 +6,7 @@ import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
-import { Card, GameTable, getCard, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
+import { Card, GameTable, getCard, getCardBackface, getCardImage, getCubeCount, getFameTokens, isCardKnown } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -22,21 +22,20 @@ import spriteFame6 from "/media/sprite_fame6.png";
 import spriteFame7 from "/media/sprite_fame7.png";
 import spriteFame8 from "/media/sprite_fame8.png";
 
-export const SPRITE_CUBE = spriteCube;
+const TOKEN_SPRITES: Record<TokenType, string> = {
+    'cube': spriteCube,
+    'fame1': spriteFame1,
+    'fame2': spriteFame2,
+    'fame3': spriteFame3,
+    'fame4': spriteFame4,
+    'fame5': spriteFame5,
+    'fame6': spriteFame6,
+    'fame7': spriteFame7,
+    'fame8': spriteFame8,
+};
 
 export function getTokenSprite(tokenType: TokenType) {
-    switch (tokenType) {
-    case 'cube': return spriteCube;
-    case 'fame1': return spriteFame1;
-    case 'fame2': return spriteFame2;
-    case 'fame3': return spriteFame3;
-    case 'fame4': return spriteFame4;
-    case 'fame5': return spriteFame5;
-    case 'fame6': return spriteFame6;
-    case 'fame7': return spriteFame7;
-    case 'fame8': return spriteFame8;
-    default: throw new Error('invalid tokenType');
-    }
+    return TOKEN_SPRITES[tokenType];
 }
 
 export function getCardUrl(image: string) {
@@ -186,16 +185,15 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         classes.push(getSelectorCardClass(table, selector, card));
     }
 
-    const nCubes = getCubeCount(card.tokens);
+    const nCubes = getCubeCount(card);
     const cardCubes = nCubes > 0 && (
         [...Array(nCubes)].map((_, i) => (
-            <img key={i} className={`card-cube ${nCubes - i <= selectedCubes ? 'card-cube-selected' : ''}`} src={SPRITE_CUBE} alt=""  />
+            <img key={i} className={`card-cube ${nCubes - i <= selectedCubes ? 'card-cube-selected' : ''}`} src={spriteCube} alt=""  />
         ))
     );
 
-    const fameTokens = card.cardData.deck === 'feats' && card.tokens
+    const fameTokens = card.cardData.deck === 'feats' && Object.entries(getFameTokens(card))
         .flatMap(([token, count]) => {
-            if (token === 'cube' || count === 0) return [];
             return [...Array(count)].map((_, i) => (
                 <img key={token + i} className="card-fame" src={getTokenSprite(token as TokenType)} alt="" />
             ));

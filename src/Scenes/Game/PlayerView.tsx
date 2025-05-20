@@ -1,5 +1,6 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
 import Button from "../../Components/Button";
+import PlayerIcon from "../../Components/PlayerIcon";
 import getLabel from "../../Locale/GetLabel";
 import { UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
@@ -10,17 +11,16 @@ import { GameStateContext } from "./GameScene";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
-import { GameTable, getCard, Player } from "./Model/GameTable";
+import { GameTable, getCard, getFameTokens, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
-import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
+import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 import iconGold from "/media/icon_gold.png";
-import PlayerIcon from "../../Components/PlayerIcon";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;
@@ -159,13 +159,11 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     let numFame = 0;
     const characterId = player.pockets.player_character.at(0);
     if (characterId && characterId > 0) {
-        const card = getCard(table, characterId);
-        for (const [key, value] of card.tokens) {
-            if (key !== 'cube' && value > 0) {
-                fameTokenSprite = getTokenSprite(key as TokenType);
-                numFame = value;
-                break;
-            }
+        const fameTokens = Object.entries(getFameTokens(getCard(table, characterId)));
+        if (fameTokens.length === 1) {
+            const [token, count] = fameTokens[0];
+            fameTokenSprite = getTokenSprite(token as TokenType);
+            numFame = count;
         }
     }
 
