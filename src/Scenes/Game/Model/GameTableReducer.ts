@@ -1,5 +1,5 @@
 import { group, intersect, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
-import { editById, removeById } from "../../../Utils/RecordUtils";
+import { editById, editByIds, removeByIds } from "../../../Utils/RecordUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { parseCardData } from "./CardData";
@@ -45,7 +45,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         // ... and remove the cards themselves
         return {
             ...this,
-            cards: removeById(this.cards, cards),
+            cards: removeByIds(this.cards, cards),
             pockets, players
         };
     },
@@ -83,7 +83,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
         let newPlayers = this.players;
         if (removedPlayers.length !== 0) {
-            newPlayers = editById(newPlayers, removedPlayers, player => setAnimation(player, { type: 'player_death', duration }))
+            newPlayers = editByIds(newPlayers, removedPlayers, player => setAnimation(player, { type: 'player_death', duration }))
         }
 
         const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
@@ -112,7 +112,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
 
         let newPlayers = this.players;
         if (removedPlayers.length !== 0) {
-            newPlayers = editById(newPlayers, removedPlayers, clearAnimation)
+            newPlayers = editByIds(newPlayers, removedPlayers, clearAnimation)
         }
 
         return clearAnimation({
@@ -232,7 +232,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         }
         return clearAnimation({
             ...this,
-            cards: editById(this.cards, this.animation.cards,
+            cards: editByIds(this.cards, this.animation.cards,
                 card => ({ ...card, cardData: { deck: card.cardData.deck }, pocket: { name: pocket } })
             ),
             pockets: {

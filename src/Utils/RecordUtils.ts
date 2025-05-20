@@ -1,31 +1,25 @@
 export type UpdateFunction<T> = (value: T) => T;
 
-export function editById<K extends keyof any, V>(values: Record<K, V>, keys: K | K[], mapper: UpdateFunction<V>): Record<K, V> {
-    if (Array.isArray(keys)) {
-        let newRecord: Record<K, V> = { ...values };
-        for (const key of keys) {
-            newRecord[key] = mapper(newRecord[key]);
-        }
-        return newRecord;
-    } else {
-        return {
-            ...values,
-            [keys]: mapper(values[keys])
-        };
-    }
+export function editById<K extends keyof any, V>(values: Record<K, V>, key: K, mapper: UpdateFunction<V>): Record<K, V> {
+    return {
+        ...values,
+        [key]: mapper(values[key])
+    };
 }
 
-export function removeById<K extends keyof any, V>(values: Record<K, V>, keys: K | K[]): Record<K, V> {
-    if (Array.isArray(keys)) {
-        let removed = values;
-        for (const key of keys) {
-            const { [key]: _, ...rest } = removed;
-            removed = rest as Record<K, V>;
-        }
-        return removed;
-    } else {
-        const { [keys]: _, ...rest } = values;
-        return rest as Record<K, V>;
+export function editByIds<K extends keyof any, V>(values: Record<K, V>, keys: K[], mapper: UpdateFunction<V>): Record<K, V> {
+    let newValues = { ...values };
+    for (const key of keys) {
+        newValues[key] = mapper(newValues[key]);
     }
+    return newValues;
 }
 
+export function removeById<K extends keyof any, V>(values: Record<K, V>, key: K): Record<K, V> {
+    const { [key]: _, ...rest } = values;
+    return rest as Record<K, V>;
+}
+
+export function removeByIds<K extends keyof any, V>(values: Record<K, V>, keys: K[]): Record<K, V> {
+    return keys.reduce(removeById, values);
+}

@@ -1,5 +1,4 @@
 import { editById, UpdateFunction } from "../../../Utils/RecordUtils";
-import { PocketType } from "./CardEnums";
 import { PlayerRecord, PocketId, TablePockets } from "./GameTable";
 import { CardId, PocketPosition } from "./GameUpdate";
 
@@ -9,14 +8,13 @@ export function editPocketMap(
     pockets: TablePockets, players: PlayerRecord, pocket: PocketId,
     cardMapper: CardMapper): [TablePockets, PlayerRecord]
 {
-    const mapper = <Key extends PocketType, T extends Record<Key, CardId[]>>(pocketMap: T, pocketName: Key): T => {
-        return { ...pocketMap, [pocketName]: cardMapper(pocketMap[pocketName]) };
-    };
     if (pocket) {
         if ('player' in pocket) {
-            players = editById(players, pocket.player, player => ({ ...player, pockets: mapper(player.pockets, pocket.name)}));
+            players = editById(players, pocket.player, player => ({
+                ...player, pockets: editById(player.pockets, pocket.name, cardMapper)
+            }));
         } else {
-            pockets = mapper(pockets, pocket.name);
+            pockets = editById(pockets, pocket.name, cardMapper);
         }
     }
     return [pockets, players];
