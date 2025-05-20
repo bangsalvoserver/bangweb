@@ -8,6 +8,9 @@ export function editById<K extends keyof any, V>(values: Record<K, V>, key: K, m
 }
 
 export function editByIds<K extends keyof any, V>(values: Record<K, V>, keys: K[], mapper: UpdateFunction<V>): Record<K, V> {
+    if (keys.length === 0) {
+        return values;
+    }
     let newValues = { ...values };
     for (const key of keys) {
         newValues[key] = mapper(newValues[key]);

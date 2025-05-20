@@ -81,11 +81,6 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
 
-        let newPlayers = this.players;
-        if (removedPlayers.length !== 0) {
-            newPlayers = editByIds(newPlayers, removedPlayers, player => setAnimation(player, { type: 'player_death', duration }))
-        }
-
         const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
             if (rotatedPlayers[i] === player_id) {
                 return [];
@@ -95,7 +90,10 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             }
         });
 
-        const newTable: GameTable = { ...this, players: newPlayers };
+        const newTable: GameTable = { ...this, players: editByIds(this.players, removedPlayers,
+            player => setAnimation(player, { type: 'player_death', duration }))
+        };
+        
         if (movedPlayers.length === 0) {
             return clearAnimation(newTable);
         } else {
@@ -110,14 +108,9 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
         const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
 
-        let newPlayers = this.players;
-        if (removedPlayers.length !== 0) {
-            newPlayers = editByIds(newPlayers, removedPlayers, clearAnimation)
-        }
-
         return clearAnimation({
             ...this,
-            players: newPlayers,
+            players: editByIds(this.players, removedPlayers, clearAnimation),
             alive_players: rotatedPlayers
         })
     },
