@@ -60,10 +60,10 @@ function WaitingArea({ lobbies, connection, settings }: WaitingAreaProps) {
             {settings.expandLobbyOptions ? '+' : '-'}
           </button>
           </p>
-        <p className={settings.expandLobbyOptions ? 'lobby-options-visible' : 'lobby-options-collapsed'}>
+        <div className={settings.expandLobbyOptions ? 'lobby-options-visible' : 'lobby-options-collapsed'}>
           <label htmlFor='lobby_password' className='font-bold text-xl'>{getLabel('ui', 'LABEL_LOBBY_PASSWORD')}</label>
           <PasswordInput id="lobby_password" password={settings.lobbyPassword} setPassword={settings.setLobbyPassword} />
-        </p>
+        </div>
         <Button color='green' type='submit'>
           {getLabel('ui', 'BUTTON_CREATE_LOBBY')}
           {getLobbyPassword(settings) && ' 🔒'}
