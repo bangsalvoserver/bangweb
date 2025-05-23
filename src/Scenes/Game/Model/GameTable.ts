@@ -115,11 +115,6 @@ export function getCubeCount(value: { tokens: TokenCount }): number {
     return value.tokens.cube ?? 0;
 }
 
-export function getFameTokens(value: { tokens: TokenCount }): TokenCount {
-    const { cube: _, ...rest } = value.tokens;
-    return rest;
-}
-
 export function addTokens<T extends { tokens: TokenCount }>(value: T, type: TokenType, count: number): T {
     const newCount = (value.tokens[type] ?? 0) + count;
     if (newCount <= 0) {
@@ -147,7 +142,6 @@ export interface Player {
     status: {
         role: PlayerRole,
         hp: number,
-        gold: number,
         flags: Set<PlayerFlag>
     };
     pockets: PlayerPockets;
@@ -162,7 +156,6 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
         status: {
             role: 'unknown',
             hp: 0,
-            gold: 0,
             flags: new Set()
         },
         pockets: {

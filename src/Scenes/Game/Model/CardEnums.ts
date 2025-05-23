@@ -103,6 +103,7 @@ export type PlayerRole =
     'shadow_outlaw';
 
 export type TokenType =
+    'gold' |
     'cube' |
     'fame1' |
     'fame2' |

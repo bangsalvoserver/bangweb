@@ -6,12 +6,13 @@ import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
-import { Card, GameTable, getCard, getCardBackface, getCardImage, getCubeCount, getFameTokens, isCardKnown } from "./Model/GameTable";
+import { Card, GameTable, getCard, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
+import spriteGold from "/media/icon_gold.png";
 import spriteCube from "/media/sprite_cube.png";
 import spriteFame1 from "/media/sprite_fame1.png";
 import spriteFame2 from "/media/sprite_fame2.png";
@@ -23,6 +24,7 @@ import spriteFame7 from "/media/sprite_fame7.png";
 import spriteFame8 from "/media/sprite_fame8.png";
 
 const TOKEN_SPRITES: Record<TokenType, string> = {
+    'gold': spriteGold,
     'cube': spriteCube,
     'fame1': spriteFame1,
     'fame2': spriteFame2,
@@ -192,7 +194,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         ))
     );
 
-    const fameTokens = card.cardData.deck === 'feats' && Object.entries(getFameTokens(card))
+    const fameTokens = card.cardData.deck === 'feats' && Object.entries(card.tokens)
         .flatMap(([token, count]) => {
             return [...Array(count)].map((_, i) => (
                 <img key={token + i} className="card-fame" src={getTokenSprite(token as TokenType)} alt="" />

@@ -122,10 +122,6 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
                 delayDispatch(update.duration, () => tableDispatch({ player_animation_end: update.player }));
             },
         
-            player_gold(update) {
-                tableDispatch({ player_gold: update });
-            },
-        
             player_show_role(update) {
                 tableDispatch({ player_show_role: update });
                 delayDispatch(update.duration, () => tableDispatch({ player_animation_end: update.player }));

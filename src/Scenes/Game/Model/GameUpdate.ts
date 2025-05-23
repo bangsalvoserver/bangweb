@@ -208,7 +208,6 @@ export type GameTableUpdate =
     { player_add: PlayerAddUpdate } |
     { player_order: PlayerOrderUpdate & Duration } |
     { player_hp: PlayerHpUpdate & Duration } |
-    { player_gold: PlayerGoldUpdate } |
     { player_show_role: PlayerShowRoleUpdate & Duration } |
     { player_flags: PlayerFlagsUpdate } |
     { switch_turn: PlayerId } |

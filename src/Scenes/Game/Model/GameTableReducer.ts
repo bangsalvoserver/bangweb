@@ -127,14 +127,6 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         };
     },
 
-    // Changes a player's gold
-    player_gold ({ player, gold }) {
-        return {
-            ...this,
-            players: editById(this.players, player, p => ({ ...p, status: { ...p.status, gold } }))
-        };
-    },
-
     // Changes a player's role
     player_show_role ({ player, role, duration }) {
         return {

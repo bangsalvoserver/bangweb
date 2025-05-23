@@ -11,7 +11,7 @@ import { GameStateContext } from "./GameScene";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
-import { GameTable, getCard, getFameTokens, Player } from "./Model/GameTable";
+import { GameTable, getCard, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
@@ -20,7 +20,6 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import iconGold from "/media/icon_gold.png";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;
@@ -155,23 +154,18 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         classes.push('player-view-self');
     }
     
-    let fameTokenSprite = null;
-    let numFame = 0;
+    let tokens: [TokenType, number][] = [];
     const characterId = player.pockets.player_character.at(0);
     if (characterId && characterId > 0) {
-        const fameTokens = Object.entries(getFameTokens(getCard(table, characterId)));
-        if (fameTokens.length === 1) {
-            const [token, count] = fameTokens[0];
-            fameTokenSprite = getTokenSprite(token as TokenType);
-            numFame = count;
-        }
+        tokens = Object.entries(getCard(table, characterId).tokens)
+            .filter(([token, count]) => token !== 'cube' && count > 0) as [TokenType, number][];
     }
 
     const buildCharacterRef = (character: PocketRef | null) => {
         pocketRefs.set('player_character', {
             getPocketRect: () => null,
             getCardRect: (card: CardId) => {
-                if (!extraCharacters.current || card === player.pockets.player_character.at(0)) {
+                if (!extraCharacters.current || card === characterId) {
                     return character?.getCardRect(card) ?? null;
                 } else {
                     return extraCharacters.current.getCardRect(card);
@@ -213,13 +207,10 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                         </div>
                     )}
                 </div>
-                {(player.status.gold !== 0 || fameTokenSprite !== null) && <div className='player-tokens'>
-                    { player.status.gold !== 0 && <div className='player-tokens-inner'>
-                        <img src={iconGold} alt="" />{ player.status.gold }
-                    </div> }
-                    { fameTokenSprite !== null && <div className='player-tokens-inner'>
-                        <img src={fameTokenSprite} alt="" />{ numFame }
-                    </div> }
+                {(tokens.length !== 0) && <div className='player-tokens'>
+                    {tokens.map(([token, count]) => <div className='player-tokens-inner'>
+                        <img key={token} src={getTokenSprite(token)} alt="" />{ count }
+                    </div>)}
                 </div>}
             </div>
             <div className='player-table' ref={tableRef}>
