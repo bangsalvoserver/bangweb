@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Rect, getDivRect } from "../../../Utils/Rect";
+import { RefObject, useMemo } from "react";
+import { getDivRect, Rect } from "../../../Utils/Rect";
 import { MapRef } from "../../../Utils/UseMapRef";
 import { PocketType, TokenType } from "./CardEnums";
 import { Card, PocketId } from "./GameTable";
@@ -13,6 +13,7 @@ export interface PocketRef {
 export type PlayerRef = {
     getPlayerRect: () => Rect | null;
     getPocket: (pocket: PocketType) => PocketRef | null;
+    getTokensRect: () => Rect | null;
 };
 
 export interface CardRef {
@@ -25,7 +26,7 @@ export interface CardTracker {
     getTokensRect: (token_type: TokenType, card: Card | null) => Rect | null;
 }
 
-export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, tokenRefs: MapRef<TokenType, HTMLDivElement>): CardTracker {
+export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, cubesRef: RefObject<HTMLDivElement>): CardTracker {
     return useMemo(() => ({
       getPlayerPockets(player: PlayerId) {
         return playerRefs.get(player);
@@ -43,11 +44,16 @@ export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRe
   
       getTokensRect(token_type: TokenType, card: Card | null) {
         if (card) {
-          return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
+          if (token_type !== 'cube' && card.cardData.deck === 'character' && card.pocket && 'player' in card.pocket) {
+            return this.getPlayerPockets(card.pocket.player)?.getTokensRect() ?? null;
+          } else {
+            return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
+          }
+        } else if (token_type === 'cube' && cubesRef.current) {
+          return getDivRect(cubesRef.current);
         } else {
-          const ref = tokenRefs.get(token_type);
-          return ref ? getDivRect(ref) : null;
+          return null;
         }
       }
-    }), [playerRefs, pocketRefs, tokenRefs]);
+    }), [playerRefs, pocketRefs, cubesRef]);
   }

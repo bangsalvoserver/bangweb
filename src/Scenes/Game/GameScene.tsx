@@ -1,4 +1,4 @@
-import { RefObject, createContext, useState } from "react";
+import { RefObject, createContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
@@ -13,7 +13,7 @@ import CardOverlayView from "./CardOverlayView";
 import { getTokenSprite } from "./CardView";
 import GameLogView from "./GameLogView";
 import GameUsersView from "./GameUsersView";
-import { PocketType, TokenType } from "./Model/CardEnums";
+import { PocketType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
 import { getCubeCount, getPlayer } from "./Model/GameTable";
 import { GameOptions, PlayerId } from "./Model/GameUpdate";
@@ -51,7 +51,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();
   const playerRefs = useMapRef<PlayerId, PlayerRef>();
-  const tokenRefs = useMapRef<TokenType, HTMLDivElement>();
+  const cubesRef = useRef<HTMLDivElement>(null);
 
   const handleReturnLobby = useEvent(() => connection.sendMessage({ lobby_return: {} }));
   const setRef = (key: PocketType) => (value: PocketRef | null) => pocketRefs.set(key, value);
@@ -60,7 +60,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
 
   const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
 
-  const tracker = useCardTracker(playerRefs, pocketRefs, tokenRefs);
+  const tracker = useCardTracker(playerRefs, pocketRefs, cubesRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
   const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0
@@ -105,7 +105,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
   );
 
   const nCubes = getCubeCount(table.status);
-  const tableCubes = <div className='table-cubes' ref={cubesRef => tokenRefs.set('cube', cubesRef)}>
+  const tableCubes = <div className='table-cubes' ref={cubesRef}>
     {nCubes > 0 && <>
       <img src={getTokenSprite('cube')} alt="" />
       <div>x{nCubes}</div>

@@ -91,11 +91,13 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const divRef = useRef<HTMLDivElement>(null);
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
+    const tokensRef = useRef<HTMLDivElement>(null);
     const extraCharacters = useRef<PocketRef>(null);
 
     useImperativeHandle(playerRef, () => ({
         getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null,
-        getPocket: pocket => pocketRefs.get(pocket)
+        getPocket: pocket => pocketRefs.get(pocket),
+        getTokensRect: () => tokensRef.current ? getDivRect(tokensRef.current) : null,
     }), [pocketRefs]);
 
     const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
@@ -207,11 +209,11 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                         </div>
                     )}
                 </div>
-                {(tokens.length !== 0) && <div className='player-tokens'>
+                <div className='player-tokens' ref={tokensRef}>
                     {tokens.map(([token, count]) => <div className='player-tokens-inner'>
                         <img key={token} src={getTokenSprite(token)} alt="" />{ count }
                     </div>)}
-                </div>}
+                </div>
             </div>
             <div className='player-table' ref={tableRef}>
                 <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />
