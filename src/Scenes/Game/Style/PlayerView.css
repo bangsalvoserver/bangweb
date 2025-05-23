@@ -136,12 +136,16 @@
 }
 
 .player-tokens {
+    pointer-events: none;
     position: absolute;
     left: -0.8em;
     bottom: 0.3em;
     text-align: center;
     font-weight: bold;
     z-index: 2;
+
+    min-width: var(--player-tokens-size);
+    height: var(--player-tokens-size);
 }
 
 .player-tokens-inner {
@@ -160,6 +164,7 @@
 }
 
 .player-lifepoints {
+    pointer-events: none;
     display: flex;
     flex-direction: row;
     position: absolute;

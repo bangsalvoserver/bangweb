@@ -156,12 +156,15 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         classes.push('player-view-self');
     }
     
-    let tokens: [TokenType, number][] = [];
     const characterId = player.pockets.player_character.at(0);
-    if (characterId && characterId > 0) {
-        tokens = Object.entries(getCard(table, characterId).tokens)
-            .filter(([token, count]) => token !== 'cube' && count > 0) as [TokenType, number][];
-    }
+    const tokens = characterId && characterId > 0
+        ? Object.entries(getCard(table, characterId).tokens)
+            .filter(([token, count]) => token !== 'cube' && count > 0) as [TokenType, number][]
+        : [];
+    const showTokens = tokens.length !== 0
+        || (table.animation.type === 'move_tokens' && table.animation.token_type !== 'cube'
+            && (table.animation.origin_card === characterId
+            || table.animation.target_card === characterId));
 
     const buildCharacterRef = (character: PocketRef | null) => {
         pocketRefs.set('player_character', {
@@ -209,11 +212,11 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                         </div>
                     )}
                 </div>
-                <div className='player-tokens' ref={tokensRef}>
+                {showTokens && <div className='player-tokens' ref={tokensRef}>
                     {tokens.map(([token, count]) => <div className='player-tokens-inner'>
                         <img key={token} src={getTokenSprite(token)} alt="" />{ count }
                     </div>)}
-                </div>
+                </div>}
             </div>
             <div className='player-table' ref={tableRef}>
                 <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />
