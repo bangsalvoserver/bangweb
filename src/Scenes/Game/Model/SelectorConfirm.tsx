@@ -124,7 +124,7 @@ export function SelectorConfirmProvider({ selectorDispatch, children }: Selector
         selectorConfirm = {
             handleClickCard: card => buildDispatch(getClickCardUpdate(table, selector, card)),
             handleClickPlayer: player => buildDispatch(getClickPlayerUpdate(table, selector, player)),
-            handleConfirm: buildDispatch(selectorCanConfirm(selector) ? { confirmSelection: {} } : undefined),
+            handleConfirm: buildDispatch(selectorCanConfirm(table, selector) ? { confirmSelection: {} } : undefined),
             handleUndo: buildDispatch(selectorCanUndo(selector) ? { undoSelection: {} } : undefined)
         } as const;
     }

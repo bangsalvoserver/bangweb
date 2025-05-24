@@ -47,6 +47,10 @@ export type CardTargetTypes = {
         { cards: Card[], max_cards: number },
         CardId[]
     ],
+    bang_or_cards: [
+        { cards: Card[], confirmed: boolean },
+        CardId[]
+    ],
     card_per_player: [
         { cards: Card[], max_cards: number },
         CardId[]
