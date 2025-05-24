@@ -43,7 +43,7 @@ const LOBBY_STATE_ICONS: Record<LobbyStateEnum, string> = {
   'finished': '🔴'
 };
 
-function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spectators, max_players, secure, state }, handleJoinLobby }: LobbyElementProps) {
+function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spectators, secure, state }, handleJoinLobby }: LobbyElementProps) {
   const [isPasswordOpen, setIsPasswodOpen, elemRef] = useCloseOnLoseFocus<HTMLDivElement>();
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
