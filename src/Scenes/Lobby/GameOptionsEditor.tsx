@@ -23,24 +23,24 @@ interface ExpansionProps extends GameOptionProps {
 function ExpansionCheckbox({ name, gameOptions, setGameOptions, include, exclude }: ExpansionProps) {
     const readOnly = setGameOptions === undefined;
     const handleExpansionChange = readOnly ? undefined : (event: ChangeEvent<HTMLInputElement>) => {
-        const oldValue = gameOptions.expansions.includes(name);
+        const oldValue = gameOptions.expansions?.includes(name);
         const newValue = event.target.checked;
         if (oldValue !== newValue) {
             setGameOptions({
                 ...gameOptions,
                 expansions: newValue
-                    ? gameOptions.expansions.filter(e => {
+                    ? gameOptions.expansions?.filter(e => {
                         return (!include || include.includes(e))
                             && (!exclude || !exclude.includes(e));
                     }).concat(name)
-                    : gameOptions.expansions.filter(e => e !== name)
+                    : gameOptions.expansions?.filter(e => e !== name)
             });
         }
     };
 
     return (<div className="option-checkbox">
         <input id={name} type="checkbox"
-            checked={gameOptions.expansions.includes(name)}
+            checked={gameOptions.expansions?.includes(name)}
             onChange={handleExpansionChange}
             readOnly={readOnly}
         />
@@ -107,7 +107,7 @@ function OptionNumber({ prop, min, max, gameOptions, setGameOptions }: IntGameOp
 
 export default function GameOptionsEditor(props: GameOptionProps) {
     const ConditionalOnExpansion = useCallback(({ expansions, children }: { expansions: ExpansionType[], children: ReactNode }) => {
-        if (expansions.some(value => props.gameOptions.expansions.includes(value))) {
+        if (expansions.some(value => props.gameOptions.expansions?.includes(value))) {
             return children;
         } else {
             return null;
@@ -142,7 +142,8 @@ export default function GameOptionsEditor(props: GameOptionProps) {
         <div className="game-options-group">
             <Collapsible label={getLabel('ui', 'GAME_OPTIONS')} storageKey="expand_options">
                 <OptionNumber prop='character_choice' min={1} max={3} { ...props } />
-                <OptionNumber prop='num_bots' max={8} { ...props } />
+                <OptionNumber prop='max_players' min={3} max={8} { ...props } />
+                <OptionCheckbox prop='add_bots' { ...props } />
                 <OptionCheckbox prop='allow_bot_rejoin' { ...props } />
                 <OptionCheckbox prop='only_base_characters' { ...props  } />
                 <OptionCheckbox prop='quick_discard_all' { ...props } />

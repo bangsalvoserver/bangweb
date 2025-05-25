@@ -185,22 +185,23 @@ export function parseStatusReady(request: StatusReadyArgs): StatusReady {
     return request;
 }
 
-export interface GameOptions {
+export type GameOptions = Partial<{
     expansions: ExpansionType[];
     character_choice: number;
+    max_players: number;
+    add_bots: boolean;
     allow_beer_in_duel: boolean;
     quick_discard_all: boolean;
     auto_pick_predraw: boolean;
     allow_bot_rejoin: boolean;
     only_base_characters: boolean;
-    scenario_deck_size?: number;
-    num_bots?: number;
-    auto_resolve_timer?: Milliseconds;
-    damage_timer?: Milliseconds;
-    escape_timer?: Milliseconds;
-    bot_play_timer?: Milliseconds;
-    game_seed?: number;
-}
+    scenario_deck_size: number;
+    auto_resolve_timer: Milliseconds;
+    damage_timer: Milliseconds;
+    escape_timer: Milliseconds;
+    bot_play_timer: Milliseconds;
+    game_seed: number;
+}>;
 
 export type GameTableUpdate = 
     { add_cards: AddCardsUpdate } |
