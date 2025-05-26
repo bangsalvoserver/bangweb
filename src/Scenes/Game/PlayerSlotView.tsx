@@ -10,7 +10,7 @@ export default function PlayerSlotView({ playerRef }: PlayerSlotProps) {
     const divRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(playerRef, () => ({
-        getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null,
+        getPlayerRect: () => getDivRect(divRef.current),
         getPocket: () => null,
         getTokensRect: () => null
     }), []);

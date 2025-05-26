@@ -4,23 +4,22 @@ import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import { getTokenSprite } from "../CardView";
 import { TokenType } from "../Model/CardEnums";
-import { CardTracker } from "../Model/CardTracker";
-import { Card } from "../Model/GameTable";
+import { CardTracker, TokenPositionValue } from "../Model/CardTracker";
 import "./Style/MoveCubeAnimation.css";
 
 export interface MoveCubeProps {
     tracker: CardTracker;
     token_type: TokenType;
     num_tokens: number;
-    origin_card: Card | null;
-    target_card: Card | null;
+    origin: TokenPositionValue;
+    target: TokenPositionValue;
     duration: Milliseconds;
 }
 
-export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, origin_card, target_card, duration }: MoveCubeProps) {
+export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, origin, target, duration }: MoveCubeProps) {
     const [startRect, endRect] = useUpdateEveryFrame(() => [
-        tracker.getTokensRect(token_type, origin_card),
-        tracker.getTokensRect(token_type, target_card)
+        tracker.getTokensRect(token_type, origin),
+        tracker.getTokensRect(token_type, target)
     ]);
     
     if (startRect && endRect) {

@@ -10,7 +10,7 @@ const WINDOW_PADDING_X = 150;
 const WINDOW_PADDING_Y = 200;
 
 function CardOverlayInner({ divRef, cardImage, cardAlt }: OverlayState) {
-  const rect = useUpdateEveryFrame(() => divRef.current ? getDivRect(divRef.current) : null);
+  const rect = useUpdateEveryFrame(() => getDivRect(divRef.current));
   if (!rect) return null;
 
   const rectCenter = clampPoint(getRectCenter(rect), shrinkRect(getWindowRect(), WINDOW_PADDING_X, WINDOW_PADDING_Y));

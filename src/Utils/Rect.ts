@@ -10,7 +10,8 @@ export interface Point {
     y: number
 }
 
-export function getDivRect(div: HTMLDivElement): Rect {
+export function getDivRect(div: HTMLDivElement | null): Rect | null {
+    if (div === null) return null;
     const rect = div.getBoundingClientRect();
     return {
         x: rect.left,

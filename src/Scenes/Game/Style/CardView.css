@@ -71,7 +71,7 @@
     line-height: 0;
 }
 
-.card-cubes {
+.card-tokens {
     position: absolute;
     width: 80%;
     left: 50%;
@@ -82,7 +82,7 @@
     line-height: 0;
 }
 
-.card-cubes img {
+.card-tokens img {
     display: inline;
     margin: 0 1px;
 }
@@ -97,21 +97,22 @@
     }
 }
 
-.card-fame-tokens {
+.feats-pocket .card-tokens {
     position: absolute;
     width: 100%;
+    top: unset;
     bottom: 0.2em;
     text-align: center;
     white-space: normal;
     line-height: 0;
 }
 
-.card-fame-tokens img {
+.feats-pocket .card-tokens img {
     display: inline;
 }
 
 @media (max-width:1200px) {
-    .card-fame-tokens img {
+    .feats-pocket .card-tokens img {
         width: 10px;
     }
 }

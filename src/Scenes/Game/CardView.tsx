@@ -6,7 +6,7 @@ import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
-import { Card, GameTable, getCard, getCardBackface, getCardImage, getCubeCount, isCardKnown } from "./Model/GameTable";
+import { Card, GameTable, getCard, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -129,7 +129,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
     const divRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(cardRef, () => ({
-        getRect: () => divRef.current ? getDivRect(divRef.current) : null
+        getRect: () => getDivRect(divRef.current)
     }), []);
 
     let backfaceImage = getCardBackface(card);
@@ -187,19 +187,18 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         classes.push(getSelectorCardClass(table, selector, card));
     }
 
-    const nCubes = getCubeCount(card);
-    const cardCubes = nCubes > 0 && (
-        [...Array(nCubes)].map((_, i) => (
-            <img key={i} className={`card-cube ${nCubes - i <= selectedCubes ? 'card-cube-selected' : ''}`} src={spriteCube} alt=""  />
-        ))
-    );
-
-    const fameTokens = card.cardData.deck === 'feats' && Object.entries(card.tokens)
-        .flatMap(([token, count]) => {
-            return [...Array(count)].map((_, i) => (
-                <img key={token + i} className="card-fame" src={getTokenSprite(token as TokenType)} alt="" />
-            ));
+    const tokens = (Object.entries(card.tokens) as [TokenType, number][]).flatMap(([token, count]) => {
+        return [...Array(count)].map((_,i) => {
+            let className = 'card-token';
+            if (token === 'cube') {
+                className += ' card-cube';
+                if (count - i <= selectedCubes) {
+                    className += ' card-cube-selected';
+                }
+            }
+            return <img key={token + i} className={className} src={getTokenSprite(token)} alt="" />
         });
+    })
 
     return (
         <div ref={divRef} style={style} className={classes.join(' ')}
@@ -209,8 +208,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}
-                {cardCubes && <div className="card-cubes">{cardCubes}</div>}
-                {fameTokens && <div className="card-fame-tokens">{fameTokens}</div>}
+                {tokens.length !== 0 && <div className="card-tokens">{tokens}</div>}
             </div> : <div className="card-back">
                 <img className="card-view-img" src={getCardUrl(backfaceImage)} alt="" />
             </div> }

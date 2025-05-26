@@ -1,9 +1,10 @@
-import { RefObject, useMemo } from "react";
+import { useMemo } from "react";
 import { getDivRect, Rect } from "../../../Utils/Rect";
+import { matchUnion } from "../../../Utils/UnionUtils";
 import { MapRef } from "../../../Utils/UseMapRef";
 import { PocketType, TokenType } from "./CardEnums";
-import { Card, PocketId } from "./GameTable";
-import { CardId, PlayerId } from "./GameUpdate";
+import { Card, GameTable, getCard, getPlayer, Player, PocketId } from "./GameTable";
+import { CardId, PlayerId, TokenPosition } from "./GameUpdate";
 
 export interface PocketRef {
     getPocketRect: () => Rect | null;
@@ -13,20 +14,30 @@ export interface PocketRef {
 export type PlayerRef = {
     getPlayerRect: () => Rect | null;
     getPocket: (pocket: PocketType) => PocketRef | null;
-    getTokensRect: () => Rect | null;
+    getTokensRect: (token_type: TokenType) => Rect | null;
 };
 
 export interface CardRef {
     getRect: () => Rect | null;
 }
 
+export type TokenPositionValue = { type: 'table' } | { type: 'card', card: Card } | { type: 'player', player: Player };
+
+export function getTokenPositionValue(table: GameTable, position: TokenPosition): TokenPositionValue {
+  return matchUnion<TokenPosition, TokenPositionValue>(position, {
+    table: () => ({ type: 'table' }),
+    card: cardId => ({ type: 'card', card: getCard(table, cardId) }),
+    player: playerId => ({ type: 'player', player: getPlayer(table, playerId) }),
+  });
+}
+
 export interface CardTracker {
     getPlayerPockets: (player: PlayerId) => PlayerRef | null;
     getTablePocket: (pocket: PocketId) => PocketRef | null;
-    getTokensRect: (token_type: TokenType, card: Card | null) => Rect | null;
+    getTokensRect: (token_type: TokenType, position: TokenPositionValue) => Rect | null;
 }
 
-export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, cubesRef: RefObject<HTMLDivElement>): CardTracker {
+export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, tokensRef: MapRef<TokenType, HTMLDivElement>): CardTracker {
     return useMemo(() => ({
       getPlayerPockets(player: PlayerId) {
         return playerRefs.get(player);
@@ -42,18 +53,12 @@ export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRe
         }
       },
   
-      getTokensRect(token_type: TokenType, card: Card | null) {
-        if (card) {
-          if (token_type !== 'cube' && card.cardData.deck === 'character' && card.pocket && 'player' in card.pocket) {
-            return this.getPlayerPockets(card.pocket.player)?.getTokensRect() ?? null;
-          } else {
-            return this.getTablePocket(card.pocket)?.getCardRect(card.id) ?? null;
-          }
-        } else if (token_type === 'cube' && cubesRef.current) {
-          return getDivRect(cubesRef.current);
-        } else {
-          return null;
+      getTokensRect(token_type: TokenType, position: TokenPositionValue) {
+        switch (position.type) {
+        case 'table': return getDivRect(tokensRef.get(token_type));
+        case 'card': return this.getTablePocket(position.card.pocket)?.getCardRect(position.card.id) ?? null;
+        case 'player': return this.getPlayerPockets(position.player.id)?.getTokensRect(token_type) ?? null;
         }
       }
-    }), [playerRefs, pocketRefs, cubesRef]);
+    }), [playerRefs, pocketRefs, tokensRef]);
   }

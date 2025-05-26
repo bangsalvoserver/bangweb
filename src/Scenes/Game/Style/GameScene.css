@@ -66,7 +66,7 @@
     }
 }
 
-.table-cubes {
+.table-tokens {
     display: inline-flex;
     align-items: center;
     font-weight: bold;
@@ -75,32 +75,32 @@
     justify-content: center;
 }
 
-.table-cubes img {
+.table-tokens img {
     height: 2em;
 }
 
 @media (min-width: 1200px) {
-    .table-cubes {
+    .table-tokens {
         flex-direction: row;
         margin: 0 0.2em;
     }
 
-    .table-cubes img {
+    .table-tokens img {
         margin-right: 0.2em;
     }
 }
 
 @media (max-width: 1200px) {
-    .table-cubes {
+    .table-tokens {
         flex-direction: column;
         font-size: 10pt;
     }
 
-    .table-cubes img {
+    .table-tokens img {
         height: 1.8em;
     }
 
-    .table-cubes * {
+    .table-tokens * {
         display: block;
     }
 }

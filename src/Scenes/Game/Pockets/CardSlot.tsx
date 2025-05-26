@@ -18,7 +18,7 @@ export default function CardSlot({ cardRef, stretch, duration }: CardSlotProps) 
     const slotRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(cardRef, () => ({
-        getRect: () => slotRef.current ? getDivRect(slotRef.current) : null
+        getRect: () => getDivRect(slotRef.current),
     }), []);
 
     const style = {

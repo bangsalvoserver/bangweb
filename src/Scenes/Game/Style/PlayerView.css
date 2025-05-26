@@ -154,6 +154,7 @@
     height: var(--player-tokens-size);
     position: relative;
     margin-right: -0.2em;
+    vertical-align: middle;
 }
 
 .player-tokens-inner img {

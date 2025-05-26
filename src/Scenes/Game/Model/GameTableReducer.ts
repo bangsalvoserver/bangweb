@@ -4,18 +4,10 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { parseCardData } from "./CardData";
 import { GameFlag, TablePocketType } from "./CardEnums";
-import { addToPocket, editPocketMap, removeFromPocket } from "./EditPocketMap";
-import { addTokens, CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
+import { addToPocket, clearAnimation, editPocketMap, removeFromPocket, setAnimation } from "./GameTableEdit";
+import { addTokens } from "./GameTableEdit";
+import { CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
-
-function setAnimation<T extends { animation: unknown, animationKey: number }>(value: T, animation: T['animation']): T {
-    return { ...value, animation, animationKey: value.animationKey + 1 };
-}
-
-function clearAnimation<T extends { animation: A }, A extends { type: string }>(value: T): T {
-    if (value.animation.type === 'none') return value;
-    return { ...value, animation: { type: 'none' } };
-}
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     
@@ -296,41 +288,21 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     },
 
     // Adds tokens to a target_card (or the table if not set)
-    add_tokens ({ token_type, num_tokens, target_card }) {
-        let newCards = this.cards;
-        let newStatus = this.status;
-        if (target_card) {
-            newCards = editById(this.cards, target_card, card => addTokens(card, token_type, num_tokens));
-        } else {
-            newStatus = addTokens(newStatus, token_type, num_tokens);
-        }
-        return { ...this, status: newStatus, cards: newCards };
+    add_tokens ({ token_type, num_tokens, target }) {
+        return addTokens(this, token_type, num_tokens, target);
     },
 
     // Moves `num_tokens` from origin_card (or the table if not set) to target_card (or the table if not set)
-    move_tokens ({ token_type, num_tokens, origin_card, target_card, duration }) {
-        let newStatus = this.status;
-        let newCards = this.cards;
-        if (origin_card) {
-            newCards = editById(newCards, origin_card, card => addTokens(card, token_type, -num_tokens));
-        } else {
-            newStatus = addTokens(newStatus, token_type, -num_tokens);
-        }
-        return setAnimation(
-            { ...this, status: newStatus, cards: newCards },
-            { type: 'move_tokens', token_type, num_tokens, origin_card, target_card, duration }
-        );
+    move_tokens ({ token_type, num_tokens, origin, target, duration }) {
+        let table = addTokens(this, token_type, -num_tokens, origin, true);
+        table = addTokens(table, token_type, 0, target, true);
+        return setAnimation(table, { type: 'move_tokens', token_type, num_tokens, origin, target, duration });
     },
 
-    move_tokens_end ({ token_type, num_tokens, target_card }) {
-        let newStatus = this.status;
-        let newCards = this.cards;
-        if (target_card) {
-            newCards = editById(newCards, target_card, card => addTokens(card, token_type, num_tokens));
-        } else {
-            newStatus = addTokens(newStatus, token_type, num_tokens);
-        }
-        return clearAnimation({ ...this, status: newStatus, cards: newCards });
+    move_tokens_end ({ token_type, num_tokens, origin, target }) {
+        let table = addTokens(this, token_type, 0, origin);
+        table = addTokens(table, token_type, num_tokens, target);
+        return clearAnimation(table);
     },
 
     // Changes the train_position field

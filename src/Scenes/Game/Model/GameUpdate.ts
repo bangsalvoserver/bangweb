@@ -48,17 +48,19 @@ export interface MoveCardUpdate {
     position: PocketPosition;
 }
 
+export type TokenPosition = { table: Empty } | { card: CardId } | { player: PlayerId };
+
 export interface AddTokensUpdate {
     token_type: TokenType;
     num_tokens: number;
-    target_card: CardId | null;
+    target: TokenPosition;
 }
 
 export interface MoveTokensUpdate {
     token_type: TokenType;
     num_tokens: number;
-    origin_card: CardId | null;
-    target_card: CardId | null;
+    origin: TokenPosition;
+    target: TokenPosition;
 }
 
 export interface MoveTrainUpdate {

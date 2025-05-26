@@ -39,12 +39,14 @@ type UnionDispatchMap<Update extends UnionUpdate, RetType> = {
     [K in Update as keyof K]: UnionDispatchFunction<K[keyof K], RetType>
 };
 
-export function createUnionDispatch<Update extends UnionUpdate, RetType = void>(functions: UnionDispatchMap<Update, RetType>) {
-    return (update: Update) => {
-        const [updateType, updateValue] = Object.entries(update)[0] as [KeysOfUnion<Update>, unknown];
-        const fn = functions[updateType as KeysOfUnion<Update>] as UnionDispatchFunction<unknown, RetType>;
-        if (!fn) throw new Error("Invalid updateType: " + updateType);
+export function matchUnion<Update extends UnionUpdate, RetType = unknown>(update: Update, functions: UnionDispatchMap<Update, RetType>) {
+    const [updateType, updateValue] = Object.entries(update)[0] as [KeysOfUnion<Update>, unknown];
+    const fn = functions[updateType as KeysOfUnion<Update>] as UnionDispatchFunction<unknown, RetType>;
+    if (!fn) throw new Error("Invalid updateType: " + updateType);
 
-        return fn(updateValue);
-    };
+    return fn(updateValue);
+}
+
+export function createUnionDispatch<Update extends UnionUpdate, RetType = void>(functions: UnionDispatchMap<Update, RetType>) {
+    return (update: Update) => matchUnion(update, functions);
 }

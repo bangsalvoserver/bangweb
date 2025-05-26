@@ -111,18 +111,8 @@ export function isCardKnown(card: Card): card is KnownCard {
     return 'name' in card.cardData;
 }
 
-export function getCubeCount(value: { tokens: TokenCount }): number {
-    return value.tokens.cube ?? 0;
-}
-
-export function addTokens<T extends { tokens: TokenCount }>(value: T, type: TokenType, count: number): T {
-    const newCount = (value.tokens[type] ?? 0) + count;
-    if (newCount <= 0) {
-        const { [type]: _, ...rest } = value.tokens;
-        return { ...value, tokens: rest };
-    } else {
-        return { ...value, tokens: { ...value.tokens, [type]: newCount } };
-    }
+export function getCubeCount(card: Card): number {
+    return card.tokens.cube ?? 0;
 }
 
 export type PlayerPockets = Record<PlayerPocketType, CardId[]>;
@@ -144,6 +134,7 @@ export interface Player {
         hp: number,
         flags: Set<PlayerFlag>
     };
+    tokens: TokenCount;
     pockets: PlayerPockets;
 
     animation: PlayerAnimation;
@@ -158,6 +149,7 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
             hp: 0,
             flags: new Set()
         },
+        tokens: {},
         pockets: {
             player_hand: [],
             player_table: [],

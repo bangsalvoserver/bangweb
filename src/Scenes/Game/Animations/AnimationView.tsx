@@ -4,7 +4,7 @@ import { getCard, newPocketId } from "../Model/GameTable";
 import DeckShuffleAnimation from "./DeckShuffleAnimation";
 import MoveCardAnimation from "./MoveCardAnimation";
 import MoveTokensAnimation from "./MoveTokensAnimation";
-import { CardTracker } from "../Model/CardTracker";
+import { CardTracker, getTokenPositionValue } from "../Model/CardTracker";
 import MovePlayersAnimation from "./MovePlayersAnimation";
 
 export interface AnimationProps {
@@ -31,8 +31,8 @@ export default function AnimationView({ tracker }: AnimationProps) {
             tracker={tracker}
             token_type={animation.token_type}
             num_tokens={animation.num_tokens}
-            origin_card={animation.origin_card ? getCard(table, animation.origin_card) : null}
-            target_card={animation.target_card ? getCard(table, animation.target_card) : null}
+            origin={getTokenPositionValue(table, animation.origin)}
+            target={getTokenPositionValue(table, animation.target)}
             duration={animation.duration}
         />;
     case 'deck_shuffle':

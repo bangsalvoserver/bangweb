@@ -11,7 +11,7 @@ import { GameStateContext } from "./GameScene";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
-import { GameTable, getCard, Player } from "./Model/GameTable";
+import { GameTable, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
@@ -69,7 +69,7 @@ function clampCardRect(cardRect: Rect, pocketRect: Rect | null): Rect {
 }
 
 function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>): PocketRef {
-    const getScrollRect = () => scrollRef.current ? getDivRect(scrollRef.current) : null;
+    const getScrollRect = () => getDivRect(scrollRef.current);
     return {
         getPocketRect: getScrollRect,
         getCardRect: (card: CardId) => {
@@ -91,14 +91,14 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const divRef = useRef<HTMLDivElement>(null);
     const handRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLDivElement>(null);
-    const tokensRef = useRef<HTMLDivElement>(null);
+    const tokensRef = useMapRef<TokenType, HTMLDivElement>();
     const extraCharacters = useRef<PocketRef>(null);
 
     useImperativeHandle(playerRef, () => ({
         getPlayerRect: () => divRef.current ? getDivRect(divRef.current) : null,
         getPocket: pocket => pocketRefs.get(pocket),
-        getTokensRect: () => tokensRef.current ? getDivRect(tokensRef.current) : null,
-    }), [pocketRefs]);
+        getTokensRect: (token_type) => getDivRect(tokensRef.get(token_type)),
+    }), [pocketRefs, tokensRef]);
 
     const setRefScroll = (scrollRef: RefObject<HTMLDivElement>, key: PocketType) => {
         return (pocket: PocketRef | null) => {
@@ -155,22 +155,14 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     if (player.id === table.self_player) {
         classes.push('player-view-self');
     }
-    
-    const characterId = player.pockets.player_character.at(0);
-    const tokens = characterId && characterId > 0
-        ? Object.entries(getCard(table, characterId).tokens)
-            .filter(([token, count]) => token !== 'cube' && count > 0) as [TokenType, number][]
-        : [];
-    const showTokens = tokens.length !== 0
-        || (table.animation.type === 'move_tokens' && table.animation.token_type !== 'cube'
-            && (table.animation.origin_card === characterId
-            || table.animation.target_card === characterId));
+
+    const tokens = Object.entries(player.tokens) as [TokenType, number][];
 
     const buildCharacterRef = (character: PocketRef | null) => {
         pocketRefs.set('player_character', {
             getPocketRect: () => null,
             getCardRect: (card: CardId) => {
-                if (!extraCharacters.current || card === characterId) {
+                if (!extraCharacters.current || card === player.pockets.player_character.at(0)) {
                     return character?.getCardRect(card) ?? null;
                 } else {
                     return extraCharacters.current.getCardRect(card);
@@ -212,9 +204,9 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                         </div>
                     )}
                 </div>
-                {showTokens && <div className='player-tokens' ref={tokensRef}>
-                    {tokens.map(([token, count]) => <div className='player-tokens-inner'>
-                        <img key={token} src={getTokenSprite(token)} alt="" />{ count }
+                {tokens.length !== 0 && <div className='player-tokens'>
+                    {tokens.map(([token, count]) => <div className='player-tokens-inner' ref={ref => tokensRef.set(token, ref)}>
+                        { count > 0 && <><img key={token} src={getTokenSprite(token)} alt="" />{ count }</> }
                     </div>)}
                 </div>}
             </div>

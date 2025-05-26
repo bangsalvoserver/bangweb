@@ -21,7 +21,7 @@ export default function PocketView({ pocketRef, cards }: PocketProps) {
     const setPos = (key: CardId) => (value: CardRef | null) => cardRefs.set(key, value);
 
     useImperativeHandle(pocketRef, () => ({
-        getPocketRect: () => divRef.current ? getDivRect(divRef.current) : null,
+        getPocketRect: () => getDivRect(divRef.current),
         getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
     }), [cardRefs]);
 
