@@ -88,11 +88,11 @@
 }
 
 @media (max-width:1200px) {
-    .card-cubes {
+    .card-tokens {
         width: 100%
     }
 
-    .card-cubes img {
+    .card-tokens img {
         width: 10px;
     }
 }

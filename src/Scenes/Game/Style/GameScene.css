@@ -68,6 +68,8 @@
 
 .table-tokens {
     display: inline-flex;
+    flex-direction: row;
+    
     align-items: center;
     font-weight: bold;
     height: var(--card-height-plus-margin);
@@ -81,7 +83,6 @@
 
 @media (min-width: 1200px) {
     .table-tokens {
-        flex-direction: row;
         margin: 0 0.2em;
     }
 
@@ -92,7 +93,6 @@
 
 @media (max-width: 1200px) {
     .table-tokens {
-        flex-direction: column;
         font-size: 10pt;
     }
 
