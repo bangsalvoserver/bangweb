@@ -116,8 +116,6 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
-    const selectedCubes = countSelectedCubes(table, selector, card);
-
     let style: CSSProperties | undefined;
     let classes = ['card-view'];
 
@@ -164,8 +162,9 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         classes.push(getSelectorCardClass(table, selector, card));
     }
 
-    const tokens = (Object.entries(card.tokens) as [TokenType, number][]).flatMap(([token, count]) => {
-        return [...Array(count)].map((_,i) => {
+    const selectedCubes = countSelectedCubes(table, selector, card);
+    const tokens = (Object.entries(card.tokens) as [TokenType, number][])
+        .flatMap(([token, count]) => [...Array(count)].map((_,i) => {
             let className = 'card-token';
             if (token === 'cube') {
                 className += ' card-cube';
@@ -174,8 +173,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
                 }
             }
             return <img key={token + i} className={className} src={getTokenSprite(token)} alt="" />
-        });
-    })
+        }));
 
     return (
         <div ref={divRef} style={style} className={classes.join(' ')}

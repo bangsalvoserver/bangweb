@@ -156,7 +156,12 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         classes.push('player-view-self');
     }
 
-    const tokens = Object.entries(player.tokens) as [TokenType, number][];
+    const tokens = (Object.entries(player.tokens) as [TokenType, number][])
+        .map(([token, count]) => (
+            <div className='player-tokens-inner' ref={ref => tokensRef.set(token, ref)}>
+                { count > 0 && <><img key={token} src={getTokenSprite(token)} alt="" />{ count }</> }
+            </div>
+        ));
 
     const buildCharacterRef = (character: PocketRef | null) => {
         pocketRefs.set('player_character', {
@@ -204,11 +209,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                         </div>
                     )}
                 </div>
-                {tokens.length !== 0 && <div className='player-tokens'>
-                    {tokens.map(([token, count]) => <div className='player-tokens-inner' ref={ref => tokensRef.set(token, ref)}>
-                        { count > 0 && <><img key={token} src={getTokenSprite(token)} alt="" />{ count }</> }
-                    </div>)}
-                </div>}
+                {tokens.length !== 0 && <div className='player-tokens'>{tokens}</div>}
             </div>
             <div className='player-table' ref={tableRef}>
                 <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />

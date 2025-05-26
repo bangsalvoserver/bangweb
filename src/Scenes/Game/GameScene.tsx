@@ -104,7 +104,13 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     </div>
   );
 
-  const tokens = Object.entries(table.status.tokens) as [TokenType,number][];
+  const tokens = (Object.entries(table.status.tokens) as [TokenType,number][])
+    .map(([token, count]) => (
+      <div key={token} ref={ref => tokensRef.set(token, ref)}>
+        <img src={getTokenSprite(token)} alt="" />
+        {count > 0 && <div>x{count}</div>}
+      </div>
+    ));
 
   const mainDeck = ( table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0
     || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'main_deck')
@@ -161,14 +167,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
               <div className="main-deck-row">
                 <div>
                   {shopPockets}
-                  {tokens.length !== 0 && <div className='table-tokens'>
-                    {tokens.map(([token, count]) => (
-                      <div key={token} ref={ref => tokensRef.set(token, ref)}>
-                        <img src={getTokenSprite(token)} alt="" />
-                        {count > 0 && <div>x{count}</div>}
-                      </div>
-                    ))}
-                  </div>}
+                  {tokens.length !== 0 && <div className='table-tokens'>{tokens}</div>}
                   {mainDeck}
                   {scenarioCards}
                   {featsPockets}
