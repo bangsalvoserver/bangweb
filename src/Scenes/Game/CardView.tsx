@@ -12,32 +12,9 @@ import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isRe
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
-import spriteGold from "/media/icon_gold.png";
-import spriteCube from "/media/sprite_cube.png";
-import spriteFame1 from "/media/sprite_fame1.png";
-import spriteFame2 from "/media/sprite_fame2.png";
-import spriteFame3 from "/media/sprite_fame3.png";
-import spriteFame4 from "/media/sprite_fame4.png";
-import spriteFame5 from "/media/sprite_fame5.png";
-import spriteFame6 from "/media/sprite_fame6.png";
-import spriteFame7 from "/media/sprite_fame7.png";
-import spriteFame8 from "/media/sprite_fame8.png";
-
-const TOKEN_SPRITES: Record<TokenType, string> = {
-    'gold': spriteGold,
-    'cube': spriteCube,
-    'fame1': spriteFame1,
-    'fame2': spriteFame2,
-    'fame3': spriteFame3,
-    'fame4': spriteFame4,
-    'fame5': spriteFame5,
-    'fame6': spriteFame6,
-    'fame7': spriteFame7,
-    'fame8': spriteFame8,
-};
 
 export function getTokenSprite(tokenType: TokenType) {
-    return TOKEN_SPRITES[tokenType];
+    return `/media/sprite_${tokenType}.png`;
 }
 
 export function getCardUrl(image: string) {
