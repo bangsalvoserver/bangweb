@@ -82,7 +82,7 @@
     line-height: 0;
 }
 
-.card-tokens img {
+.card-tokens .card-token {
     display: inline;
     margin: 0 1px;
 }
@@ -92,7 +92,7 @@
         width: 100%
     }
 
-    .card-tokens img {
+    .card-token {
         width: 10px;
     }
 }
@@ -105,16 +105,6 @@
     text-align: center;
     white-space: normal;
     line-height: 0;
-}
-
-.feats-pocket .card-tokens img {
-    display: inline;
-}
-
-@media (max-width:1200px) {
-    .feats-pocket .card-tokens img {
-        width: 10px;
-    }
 }
 
 .card-horizontal {

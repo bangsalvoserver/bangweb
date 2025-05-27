@@ -5,9 +5,9 @@ import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import { getTokenSprite } from "../CardView";
 import { TokenType } from "../Model/CardEnums";
 import { CardTracker, TokenPositionValue } from "../Model/CardTracker";
-import "./Style/MoveCubeAnimation.css";
+import "./Style/MoveTokensAnimation.css";
 
-export interface MoveCubeProps {
+export interface MoveTokensProps {
     tracker: CardTracker;
     token_type: TokenType;
     num_tokens: number;
@@ -16,7 +16,7 @@ export interface MoveCubeProps {
     duration: Milliseconds;
 }
 
-export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, origin, target, duration }: MoveCubeProps) {
+export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, origin, target, duration }: MoveTokensProps) {
     const [startRect, endRect] = useUpdateEveryFrame(() => [
         tracker.getTokensRect(token_type, origin),
         tracker.getTokensRect(token_type, target)
@@ -32,22 +32,22 @@ export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, 
             '--diffX': (endPoint.x - startPoint.x) + 'px',
             '--diffY': (endPoint.y - startPoint.y) + 'px',
             '--duration': duration + 'ms',
-            '--num-cubes': num_tokens
+            '--num-tokens': num_tokens
         } as CSSProperties;
 
-        const moveCubeIndexStyle = (i: number) => {
+        const moveTokenIndexStyle = (i: number) => {
             return {
-                '--move-cube-index': i
+                '--move-token-index': i
             } as CSSProperties;
         };
 
         const tokenSprite = getTokenSprite(token_type);
         return (
-            <div style={style} className='move-cubes-animation'>
+            <div style={style} className='move-tokens-animation'>
                 {[...Array(num_tokens)].map((item, i) => (
-                    <div key={i} style={moveCubeIndexStyle(i)}
-                        className={`${num_tokens <= 1 ? 'total-delay-0' : ''} move-cubes-animation-inner`} >
-                        <img src={tokenSprite} alt="" />
+                    <div key={i} style={moveTokenIndexStyle(i)}
+                        className={`${num_tokens <= 1 ? 'total-delay-0' : ''} card-token move-tokens-animation-inner`} >
+                        <img className='card-token' src={tokenSprite} alt="" />
                     </div>
                 ))}
             </div>

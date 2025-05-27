@@ -1,30 +1,30 @@
-.move-cubes-animation {
+.move-tokens-animation {
     z-index: 15;
     pointer-events: none;
     --total-delay: calc(var(--duration) * 0.2);
-    --delay-per-cube: calc(var(--total-delay) / var(--num-cubes));
+    --delay-per-token: calc(var(--total-delay) / var(--num-tokens));
 }
 
 .total-delay-0 {
     --total-delay: 0ms;
 }
 
-.move-cubes-animation-inner {
+.move-tokens-animation-inner {
     position: fixed;
     left: var(--startX);
     top: var(--startY);
-    animation-name: move-cube;
+    animation-name: move-token;
     animation-fill-mode: both;
     animation-duration: calc(var(--duration) - var(--total-delay));
-    animation-delay: calc(var(--move-cube-index) * var(--delay-per-cube));
+    animation-delay: calc(var(--move-token-index) * var(--delay-per-token));
     transition: ease-in-out;
 }
 
-.move-cubes-animation-inner img {
+.move-tokens-animation-inner .card-token {
     transform: translate(-50%, -50%);
 }
 
-@keyframes move-cube {
+@keyframes move-token {
     to {
         transform: translate(var(--diffX), var(--diffY));
     }
