@@ -1,6 +1,6 @@
 import { CardTarget } from "./CardTarget";
 import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getPlayer, getPlayerCubes, isCardKnown } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, getPlayerCubes, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatus, StatusReady } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
@@ -271,8 +271,10 @@ function getCubeSlot(table: GameTable, card: Card) {
 
 export function countSelectedCubes(table: GameTable, selector: TargetSelector, targetCard: Card): number {
     let selected = 0;
-    for (const [card, target] of zipSelections(selector)) {
-        selected += targetDispatch.getCubesSelected(target, getCubeSlot(table, card), targetCard);
+    if (getCubeCount(targetCard) > 0) {
+        for (const [card, target] of zipSelections(selector)) {
+            selected += targetDispatch.getCubesSelected(target, getCubeSlot(table, card), targetCard);
+        }
     }
     return selected;
 }
