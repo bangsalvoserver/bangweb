@@ -1,25 +1,29 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useContext } from "react";
 import { Milliseconds } from "../../../Model/ServerMessage";
 import { getRectCenter } from "../../../Utils/Rect";
 import useUpdateEveryFrame from "../../../Utils/UseUpdateEveryFrame";
 import { getTokenSprite } from "../CardView";
+import { GameStateContext } from "../GameScene";
 import { TokenType } from "../Model/CardEnums";
-import { CardTracker, TokenPositionValue } from "../Model/CardTracker";
+import { CardTracker } from "../Model/CardTracker";
+import { TokenPosition } from "../Model/GameUpdate";
 import "./Style/MoveTokensAnimation.css";
 
 export interface MoveTokensProps {
     tracker: CardTracker;
     token_type: TokenType;
     num_tokens: number;
-    origin: TokenPositionValue;
-    target: TokenPositionValue;
+    origin: TokenPosition;
+    target: TokenPosition;
     duration: Milliseconds;
 }
 
 export default function MoveTokensAnimation ({ tracker, token_type, num_tokens, origin, target, duration }: MoveTokensProps) {
+    const { table } = useContext(GameStateContext);
+
     const [startRect, endRect] = useUpdateEveryFrame(() => [
-        tracker.getTokensRect(token_type, origin),
-        tracker.getTokensRect(token_type, target)
+        tracker.getTokensRect(table, token_type, origin),
+        tracker.getTokensRect(table, token_type, target)
     ]);
     
     if (startRect && endRect) {

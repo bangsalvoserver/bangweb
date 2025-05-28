@@ -20,7 +20,7 @@ interface CardChoiceInnerProps {
 }
 
 function CardChoiceInner({ cards, anchor, tracker }: CardChoiceInnerProps) {
-    const anchorRect = useUpdateEveryFrame(() => tracker.getTablePocket(anchor.pocket)?.getCardRect(anchor.id));
+    const anchorRect = useUpdateEveryFrame(() => tracker.getCardRect(anchor));
     
     if (!anchorRect) return null;
     const anchorCenter = relativeToWindow(getRectCenter(anchorRect));
