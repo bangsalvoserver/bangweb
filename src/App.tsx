@@ -53,7 +53,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen">
       <Header scene={scene} settings={settings} connection={connection} />
       <div className="current-scene">{currentScene()}</div>
       <OverlayButtons scene={scene} settings={settings} connection={connection} overlayRef={overlayRef} />

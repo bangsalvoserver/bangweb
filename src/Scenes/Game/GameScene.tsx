@@ -1,4 +1,4 @@
-import { RefObject, createContext, useState } from "react";
+import { RefObject, createContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
@@ -174,8 +174,10 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
                 </div>
                 {trainPockets}
               </div>
-              <div className="player-grid" num-players={table.alive_players.length}>
-                {playerViews}
+              <div className="player-grid-outer">
+                <div className="player-grid" num-players={table.alive_players.length}>
+                  {playerViews}
+                </div>
               </div>
               {selectionPocket}
               <PromptView prompt={selector.prompt} selectorDispatch={selectorDispatch} />
