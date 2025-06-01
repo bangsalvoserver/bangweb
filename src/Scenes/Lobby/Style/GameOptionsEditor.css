@@ -1,5 +1,7 @@
-.game-options-editor {
-    margin-right: 1em;
+@media (min-width: 768px) {
+    .game-options-editor {
+        margin-right: 1em;
+    }
 }
 
 .game-options-group {
@@ -37,6 +39,12 @@
     width: 10em;
     display: flex;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    .option-right-column {
+        width: 7.5em;
+    }
 }
 
 .option-right-column input {
