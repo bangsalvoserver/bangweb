@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef } from "react";
 import useEvent from "react-use-event-hook";
-import { GameUpdate } from "../Scenes/Game/Model/GameUpdate";
+import { GameOptions, GameUpdate } from "../Scenes/Game/Model/GameUpdate";
 import { PROPIC_SIZE, serializeImage } from "../Utils/ImageSerial";
 import { createUnionDispatch } from "../Utils/UnionUtils";
 import useChannel, { Channel } from "../Utils/UseChannel";
@@ -117,10 +117,11 @@ export default function useBangConnection() {
         }
     });
 
-    const setGameOptions = useEvent(gameOptions => {
+    const setGameOptions = useEvent((newOptions: GameOptions) => {
         if (scene.type !== 'lobby') {
             throw new Error('Invalid scene type for setGameOptions: ' + scene.type);
         }
+        const gameOptions: GameOptions = { ...scene.gameOptions, ...newOptions };
         connection.sendMessage({ lobby_game_options: gameOptions });
         sceneDispatch({ setGameOptions: gameOptions });
         settings.setGameOptions(gameOptions);
