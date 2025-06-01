@@ -34,7 +34,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
             }
         };
 
-        return (<div className="option-checkbox">
+        return (<div className="option-row">
             <input id={name} type="checkbox"
                 checked={gameOptions.expansions?.includes(name)}
                 onChange={handleExpansionChange}
@@ -53,9 +53,8 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         }
     }, [gameOptions.expansions]);
 
-    const OptionNumber = useCallback(({ prop, value, min, max }: GameOptionsOf<number> & { min?: number, max?: number }) => {
-        const readOnly = setGameOptions === undefined;
-        const handleNumberChange = readOnly ? undefined : (event: ChangeEvent<HTMLInputElement>) => {
+    const numberSetter = useCallback((prop: GameOptionsOf<number>['prop'], min?: number, max?: number) => {
+        if (setGameOptions) return (event: ChangeEvent<HTMLInputElement>) => {
             if (event.target.value.length === 0) {
                 setGameOptions({ [prop]: undefined });
             } else if (event.target.validity.valid) {
@@ -65,27 +64,56 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 }
             }
         };
+    }, [setGameOptions]);
 
-        return (<div className="option-number">
+    const OptionNumber = useCallback(({ prop, value, min, max }: GameOptionsOf<number> & { min?: number, max?: number }) => {
+        const handleNumberChange = numberSetter(prop, min, max);
+        return (<div className="option-row">
             <div className="option-left-column">
                 <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
                 <Tooltip group='GameOptionsTooltip' name={prop} />
             </div>
-            <input id={prop} type="number"
-                value={value ?? ''}
-                pattern='[0-9]{0,5}'
-                onChange={handleNumberChange}
-                readOnly={readOnly}
-            />
+            <div className="option-right-column">
+                <input id={prop} type="number"
+                    value={value ?? ''}
+                    pattern='[0-9]{0,5}'
+                    onChange={handleNumberChange}
+                    readOnly={handleNumberChange === undefined}
+                />
+            </div>
         </div>);
-    }, [setGameOptions]);
+    }, [numberSetter]);
+
+    const OptionSlider = useCallback(({ prop, value, min, max, step }: GameOptionsOf<number> & { min?: number, max?: number, step?: number }) => {
+        const handleNumberChange = numberSetter(prop, min, max);
+        return (<div className="option-row">
+            <div className="option-left-column">
+                <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+                <Tooltip group='GameOptionsTooltip' name={prop} />
+            </div>
+            <div className="option-right-column">
+                <input id={prop} type="range"
+                    min={min} max={max} step={step}
+                    value={value}
+                    onChange={handleNumberChange}
+                    readOnly={handleNumberChange === undefined}
+                />
+                <input id={prop} type="number"
+                    value={value}
+                    pattern='[0-9]{0,5}'
+                    onChange={handleNumberChange}
+                    readOnly={handleNumberChange === undefined}
+                />
+            </div>
+        </div>);
+    }, [numberSetter]);
 
     const OptionCheckbox = useCallback(({ prop, value }: GameOptionsOf<boolean>) => {
         const readOnly = setGameOptions === undefined;
         const handleOptionChange = readOnly ? undefined : (event: ChangeEvent<HTMLInputElement>) => {
             setGameOptions({ [prop]: event.target.checked });
         };
-        return (<div className="option-checkbox">
+        return (<div className="option-row">
             <input id={prop} type="checkbox"
                 checked={value}
                 onChange={handleOptionChange}
@@ -131,23 +159,23 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         </div>
         <div className="game-options-group">
             <Collapsible label={getLabel('ui', 'GAME_OPTIONS')} storageKey="expand_options">
-                <OptionNumber {...getOption('character_choice')} min={1} max={3} />
-                <OptionNumber {...getOption('max_players')} min={3} max={8} />
+                <OptionSlider {...getOption('character_choice')} min={1} max={3} />
+                <OptionSlider {...getOption('max_players')} min={3} max={8} />
                 <OptionCheckbox {...getOption('add_bots')} />
                 <OptionCheckbox {...getOption('allow_bot_rejoin')} />
                 <OptionCheckbox {...getOption('only_base_characters')} />
                 <OptionCheckbox {...getOption('quick_discard_all')} />
                 <OptionCheckbox {...getOption('auto_pick_predraw')} />
                 <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
-                    <OptionNumber {...getOption('scenario_deck_size')} max={100} />
+                    <OptionSlider {...getOption('scenario_deck_size')} max={30} />
                 </ConditionalOnExpansion>
-                <OptionNumber {...getOption('auto_resolve_timer')} max={5000} />
-                <OptionNumber {...getOption('bot_play_timer')} max={10000} />
+                <OptionSlider {...getOption('auto_resolve_timer')} max={5000} step={50} />
+                <OptionSlider {...getOption('bot_play_timer')} max={10000} step={50} />
                 <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu','canyondiablo']}>
-                    <OptionNumber {...getOption('damage_timer')} max={5000} />
+                    <OptionSlider {...getOption('damage_timer')} max={5000} step={50} />
                 </ConditionalOnExpansion>
                 <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu']}>
-                    <OptionNumber {...getOption('escape_timer')} max={10000} />
+                    <OptionSlider {...getOption('escape_timer')} max={10000} step={50} />
                 </ConditionalOnExpansion>
                 <OptionNumber {...getOption('game_seed')} />
             </Collapsible>

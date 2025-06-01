@@ -15,19 +15,41 @@
     max-height: 22em;
 }
 
-.option-checkbox label {
-    margin-left: 0.3em;
+.game-options-group label {
+    margin: 0 0.3em;
+}
+
+.option-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .option-left-column {
-    display: inline-block;
-    margin-right: 0.3em;
-    width: 14em;
+    width: 12em;
 }
 
-.option-number input {
-    padding: 0.1em;
-    margin: 0.1em;
+.option-left-column label {
+    margin-left: 0;
+}
+
+.option-right-column {
+    width: 10em;
+    display: flex;
+    align-items: center;
+}
+
+.option-right-column input {
+    min-width: 0;
     border-radius: 0.2em;
-    width: 3.5em;
+    margin: 0.1em;
+}
+
+.option-right-column input[type="range"] {
+    flex: 3 1 0;
+}
+
+.option-right-column input[type="number"] {
+    padding: 0.1em;
+    flex: 2 1 0;
 }
