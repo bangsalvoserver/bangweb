@@ -42,6 +42,14 @@ export function usePlaySound(muteSounds: boolean = false) {
     });
 }
 
+async function asyncTimer(timeout: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+       setTimeout(resolve, timeout);
+    });
+}
+
+const PRELOAD_TIMEOUT = 10000;
+
 export async function preloadAssets({ images, sounds }: PreloadAssets) {
     for (const sound of sounds) {
         try {
@@ -50,5 +58,8 @@ export async function preloadAssets({ images, sounds }: PreloadAssets) {
             console.error('error preloading sound', e);
         }
     }
-    await Promise.allSettled(images.map(loadCardImage));
+    return Promise.race([
+        Promise.allSettled(images.map(loadCardImage)),
+        asyncTimer(PRELOAD_TIMEOUT)
+    ]);
 }
