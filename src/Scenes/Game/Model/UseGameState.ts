@@ -80,8 +80,11 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
 
         const handleUpdate = createUnionDispatch<GameUpdate>({
             async preload_assets(message) {
+                animating.current = true;
                 await preloadAssets(message);
                 setLoaded(true);
+                animating.current = false;
+                handleNextUpdate();
             },
 
             game_error(message) {
