@@ -56,8 +56,8 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
     const tableDispatch = (update: TableUpdate) => stateDispatch({ table_update: update });
     const selectorDispatch = (update: SelectorUpdate) => stateDispatch({ selector_update: update });
 
-    const timeout = useRef<number>();
-    const extraTime = useRef<Milliseconds>(0);
+    const animating = useRef(false);
+    const extraTime = useRef(0 as Milliseconds);
 
     useEffect(() => {
         const delayDispatch = (duration: Milliseconds, fn?: () => void) => {
@@ -67,9 +67,10 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
                 extraTime.current = -duration;
             } else {
                 const startTime = Date.now();
-                timeout.current = setTimeout(() => {
+                animating.current = true;
+                setTimeout(() => {
                     const timeElapsed = Date.now() - startTime;
-                    timeout.current = undefined;
+                    animating.current = false;
                     if (fn) fn();
                     extraTime.current = timeElapsed - duration;
                     handleNextUpdate();
@@ -207,7 +208,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
         });
 
         const handleNextUpdate = () => {
-            while (!timeout.current) {
+            while (!animating.current) {
                 const update = gameUpdates.current.shift();
                 if (!update) {
                     extraTime.current = 0;
