@@ -388,6 +388,22 @@ const targetDispatch = buildDispatch({
         },
         generateTarget: ({cubes}) => mapIds(cubes),
     }),
+    select_cubes_player: reservedDispatch({
+        appendCardTarget: ({ cubes, max_cubes, player }, effect, card) => ({ cubes: cubes.concat(card), max_cubes, player }),
+        isValidCubeTarget,
+        getCubesSelected: ({ cubes }, cubeSlot, card) => countIds(cubes, card),
+        appendPlayerTarget: ({ cubes, max_cubes }, effect, player) => ({ cubes, max_cubes, player }),
+        isValidPlayerTarget: (table, selector, { player }, effect, target) => player === null && checkPlayerFilter(table, selector, effect.player_filter, target),
+        isPlayerSelected: ({ player }, target) => player?.id === target.id,
+        isSelectionConfirmable: (table, {cubes, player}) => cubes.length === 0 && player !== null,
+        isSelectionFinished: ({cubes, max_cubes, player}) => cubes.length === max_cubes && player !== null,
+        confirmSelection: ({player}) => ({ cubes: [], max_cubes: 0, player }),
+        buildAutoTarget: (table, selector, effect) => {
+            const max_cubes = countSelectableCubes(table, selector) >= effect.target_value ? effect.target_value : 0;
+            return { cubes: [], max_cubes, player: null };
+        },
+        generateTarget: ({cubes, player}) => [mapIds(cubes), player!.id],
+    }),
     select_cubes_repeat: reservedDispatch({
         appendCardTarget: ({ cubes, max_cubes }, effect, card) => ({ cubes: cubes.concat(card), max_cubes }),
         isValidCubeTarget,

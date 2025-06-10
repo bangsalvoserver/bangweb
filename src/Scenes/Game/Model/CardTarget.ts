@@ -71,6 +71,10 @@ export type CardTargetTypes = {
         { cubes: Card[], max_cubes: number },
         CardId[]
     ],
+    select_cubes_player: [
+        { cubes: Card[], max_cubes: number, player: Player | null },
+        [CardId[], PlayerId]
+    ],
     select_cubes_repeat: [
         { cubes: Card[], max_cubes: number },
         CardId[]
