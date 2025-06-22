@@ -390,7 +390,7 @@ const targetDispatch = buildDispatch({
     }),
     select_cubes_player: reservedDispatch({
         appendCardTarget: ({ cubes, max_cubes, player }, effect, card) => ({ cubes: cubes.concat(card), max_cubes, player }),
-        isValidCubeTarget,
+        isValidCubeTarget: (table, selector, { cubes, max_cubes }, effect, card) => cubes.length < max_cubes && isValidCubeTarget(table, selector, null, effect, card),
         getCubesSelected: ({ cubes }, cubeSlot, card) => countIds(cubes, card),
         appendPlayerTarget: ({ cubes, max_cubes }, effect, player) => ({ cubes, max_cubes, player }),
         isValidPlayerTarget: (table, selector, { player }, effect, target) => player === null && checkPlayerFilter(table, selector, effect.player_filter, target),
