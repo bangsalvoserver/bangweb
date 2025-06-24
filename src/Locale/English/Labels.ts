@@ -114,6 +114,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         LABEL_LOBBY_NAME: "Lobby Name",
         LABEL_LOBBY_PASSWORD: "Password",
         NUM_PLAYERS: "Number of players",
+        NUM_BOTS: "Number of bots",
         NUM_SPECTATORS: "Number of spectators",
         LOBBY_STATE: "Lobby state",
         GAME_OPTIONS: "Game Options",
