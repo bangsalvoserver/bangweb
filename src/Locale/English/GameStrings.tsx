@@ -5,6 +5,7 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     PROMPT_CARD_NO_EFFECT: (card) =>                                            <>Playing {card} would have no effect. Continue?</>,
     PROMPT_PASS_DISCARD: (ncards) =>                                            <>You must discard {ncards === 1 ? "a card" : `${ncards} cards`}. Continue?</>,
     PROMPT_MOVE_BOMB_TO_SELF: (card) =>                                         <>You're keeping {card} on yourself. Continue?</>,
+    PROMPT_EXPLODE_BOMB: (card) =>                                              <>You're gonna make {card} explode! Continue?</>,
     PROMPT_REPLACE: (card, target_card) =>                                      <>Do you want to play {card} to replace {target_card}?</>,
     PROMPT_TARGET_SELF: (card) =>                                               <>Do you want to play {card} on yourself?</>,
     PROMPT_TARGET_GHOST: (card, player) =>                                      <>{player} is a ghost, playing {card} would have no effect. Continue?</>,
