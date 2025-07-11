@@ -211,8 +211,8 @@ export function newGameTable(myUserId: UserId): GameTable {
     return {
         myUserId,
         
-        players: [],
-        cards: [],
+        players: {},
+        cards: {},
 
         pockets: {
             main_deck: [],
