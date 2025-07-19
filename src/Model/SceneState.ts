@@ -54,9 +54,9 @@ export function defaultCurrentScene(sessionId?: number): SceneState {
     }
 }
 
-function handleListUpdate<T, U>(values: T[], newValue: T, getId: (value: T) => U): T[] {
+function handleListUpdate<T>(values: T[], newValue: T, idProperty: keyof T): T[] {
     let copy = values.slice();
-    const index = copy.findIndex(value => getId(value) === getId(newValue));
+    const index = copy.findIndex(value => value[idProperty] === newValue[idProperty]);
     if (index >= 0) {
         copy[index] = newValue;
     } else {
@@ -98,7 +98,7 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         if (this.type !== 'waiting_area') {
             throw new Error('Invalid scene type for updateLobbies: ' + this.type);
         }
-        return { ...this, lobbies: handleListUpdate(this.lobbies, value, lobby => lobby.lobby_id) };
+        return { ...this, lobbies: handleListUpdate(this.lobbies, value, 'lobby_id') };
     },
     removeLobby(lobby_id) {
         if (this.type !== 'waiting_area') {
@@ -116,7 +116,7 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
         if (this.type !== 'lobby' && this.type !== 'game') {
             throw new Error('Invalid scene type for updateLobbyUser: ' + this.type);
         }
-        return { ...this, lobbyState: { ...this.lobbyState, users: handleListUpdate(this.lobbyState.users, value, value => value.user_id) }};
+        return { ...this, lobbyState: { ...this.lobbyState, users: handleListUpdate(this.lobbyState.users, value, 'user_id') }};
     },
     addLobbyChatMessage(message) {
         if (this.type !== 'lobby' && this.type !== 'game') {
