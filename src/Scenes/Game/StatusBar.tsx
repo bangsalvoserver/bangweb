@@ -7,7 +7,7 @@ import { LobbyContext } from "../Lobby/Lobby";
 import { GameStateContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { getTagValue } from "./Model/Filters";
-import { getCard, KnownCard } from "./Model/GameTable";
+import { getCard, getTablePocket, KnownCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
@@ -39,7 +39,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
 
   const statusText = isResponse(selector) && <GameStringComponent message={selector.request.status_text} />;
 
-  const buttonRow = table.pockets.button_row.flatMap(id => {
+  const buttonRow = getTablePocket(table, 'button_row').flatMap(id => {
     const card = getCard(table, id);
     if (selectorCanPlayCard(selector, card) || isCardCurrent(selector, card)) {
       return (

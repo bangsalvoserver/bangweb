@@ -6,7 +6,7 @@ import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
-import { Card, GameTable, getCard, getCardBackface, getCardImage, isCardKnown } from "./Model/GameTable";
+import { Card, GameTable, getCard, getCardBackface, getCardImage, getTablePocket, isCardKnown } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -41,8 +41,8 @@ function isOriginCard(table: GameTable, selector: TargetSelector, card: Card): b
             const originCard = getCard(table, originCardId);
             if (cardHasTag(originCard, 'card_choice')) {
                 switch (originCard.cardData.deck) {
-                    case 'goldrush': originCardId = table.pockets.shop_deck[0]; break;
-                    case 'train': originCardId = table.pockets.train_deck[0]; break;
+                    case 'goldrush': originCardId = getTablePocket(table, 'shop_deck')[0]; break;
+                    case 'train': originCardId = getTablePocket(table, 'train_deck')[0]; break;
                 }
             }
             return originCardId === card.id;

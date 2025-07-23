@@ -10,13 +10,18 @@ export function editPocketMap(
     pockets: TablePockets, players: PlayerRecord, pocket: PocketId,
     cardMapper: CardMapper): [TablePockets, PlayerRecord]
 {
+    const mapper = (cards: CardId[] | undefined) => {
+        const value = cardMapper(cards ?? []);
+        if (value.length === 0) return undefined;
+        return value;
+    };
     if (pocket) {
         if ('player' in pocket) {
             players = editById(players, pocket.player, player => ({
-                ...player, pockets: editById(player.pockets, pocket.name, cardMapper)
+                ...player, pockets: editById(player.pockets, pocket.name, mapper)
             }));
         } else {
-            pockets = editById(pockets, pocket.name, cardMapper);
+            pockets = editById(pockets, pocket.name, mapper);
         }
     }
     return [pockets, players];
@@ -43,15 +48,13 @@ export function clearAnimation<T extends { animation: A; }, A extends { type: st
 }
 
 export function addTokens(table: GameTable, token_type: TokenType, count: number, position: TokenPosition, keepZero: boolean = false): GameTable {
-    const doAddTokens = <T extends { tokens: TokenCount; }>(value: T, type: TokenType, count: number) => {
-        const newCount = (value.tokens[type] ?? 0) + count;
-        if (newCount <= 0 && !keepZero) {
-            const { [type]: _, ...rest } = value.tokens;
-            return { ...value, tokens: rest };
-        } else {
-            return { ...value, tokens: { ...value.tokens, [type]: newCount } };
-        }
-    };
+    const doAddTokens = <T extends { tokens: TokenCount; }>(value: T, type: TokenType, count: number) => (
+        { ...value, tokens: editById(value.tokens, type, oldCount => {
+            const newCount = (oldCount ?? 0) + count;
+            if (newCount <= 0 && !keepZero) return undefined;
+            return newCount;
+        }) }
+    );
 
     return matchUnion<TokenPosition, GameTable>(position, {
         table: () => ({ ...table, status: doAddTokens(table.status, token_type, count) }),

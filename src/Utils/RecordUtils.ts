@@ -1,28 +1,25 @@
 export type UpdateFunction<T> = (value: T) => T;
 
-export function editById<K extends keyof any, V>(values: Record<K, V>, key: K, mapper: UpdateFunction<V>): Record<K, V> {
-    return {
-        ...values,
-        [key]: mapper(values[key])
-    };
-}
+export type PartialRecord = { [k in keyof any]?: unknown };
 
-export function editByIds<K extends keyof any, V>(values: Record<K, V>, keys: K[], mapper: UpdateFunction<V>): Record<K, V> {
-    if (keys.length === 0) {
-        return values;
-    }
-    let newValues = { ...values };
-    for (const key of keys) {
-        newValues[key] = mapper(newValues[key]);
-    }
-    return newValues;
-}
-
-export function removeById<K extends keyof any, V>(values: Record<K, V>, key: K): Record<K, V> {
+export function removeById<T extends PartialRecord>(values: T, key: keyof T): T {
     const { [key]: _, ...rest } = values;
-    return rest as Record<K, V>;
+    return rest as T;
 }
 
-export function removeByIds<K extends keyof any, V>(values: Record<K, V>, keys: K[]): Record<K, V> {
+export function removeByIds<T extends PartialRecord>(values: T, keys: (keyof T)[]): T {
     return keys.reduce(removeById, values);
+}
+
+export function editById<T extends PartialRecord>(values: T, key: keyof T, mapper: UpdateFunction<T[keyof T]>): T {
+    const newValue = mapper(values[key]);
+    if (newValue === undefined) {
+        return removeById(values, key);
+    } else {
+        return { ...values, [key]: newValue };
+    }
+}
+
+export function editByIds<T extends PartialRecord>(values: T, keys: (keyof T)[], mapper: UpdateFunction<T[keyof T]>): T {
+    return keys.reduce((curValues, key) => editById(curValues, key, mapper), values);
 }

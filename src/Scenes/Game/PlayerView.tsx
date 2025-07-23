@@ -11,7 +11,7 @@ import { GameStateContext } from "./GameScene";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
-import { GameTable, Player } from "./Model/GameTable";
+import { GameTable, getPlayerPocket, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
@@ -167,7 +167,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         pocketRefs.set('player_character', {
             getPocketRect: () => null,
             getCardRect: (card: CardId) => {
-                if (!extraCharacters.current || card === player.pockets.player_character.at(0)) {
+                if (!extraCharacters.current || card === getPlayerPocket(player, 'player_character').at(0)) {
                     return character?.getCardRect(card) ?? null;
                 } else {
                     return extraCharacters.current.getCardRect(card);
@@ -179,27 +179,27 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     return <div ref={divRef} className={classes.join(' ')} style={playerStyle} onClick={handleClickPlayer(player)}>
         { player.animation.type === 'player_death' ?
             <div className='player-top-row'>
-                <StackPocket cards={player.pockets.player_character} />
+                <StackPocket cards={getPlayerPocket(player, 'player_character')} />
                 <RoleView player={player} />
             </div>
         : <>
             <div className='player-top-row'>
                 <div className='player-character'>
-                    <StackPocket pocketRef={buildCharacterRef} cards={player.pockets.player_character.slice(0, 1)} />
+                    <StackPocket pocketRef={buildCharacterRef} cards={getPlayerPocket(player, 'player_character').slice(0, 1)} />
                 </div>
                 <div className='player-hand' ref={handRef}>
                     <div className='player-role'>
-                        { player.pockets.player_character.length > 1 && 
-                            <PocketView pocketRef={extraCharacters} cards={player.pockets.player_character.slice(1)} /> }
+                        { getPlayerPocket(player, 'player_character').length > 1 && 
+                            <PocketView pocketRef={extraCharacters} cards={getPlayerPocket(player, 'player_character').slice(1)} /> }
                         <div className='stack-pocket'>
                             <RoleView player={player} />
                         </div>
                     </div>
                     { isHandShown
                         ? <div className='player-hand-inner'>
-                            <PocketView pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
+                            <PocketView pocketRef={setRefScroll(handRef, 'player_hand')} cards={getPlayerPocket(player, 'player_hand')} />
                         </div>
-                        : <StackPocket showCount pocketRef={setRefScroll(handRef, 'player_hand')} cards={player.pockets.player_hand} />
+                        : <StackPocket showCount pocketRef={setRefScroll(handRef, 'player_hand')} cards={getPlayerPocket(player, 'player_hand')} />
                     }
                 </div>
                 <div className='player-lifepoints'>
@@ -212,7 +212,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                 {tokens.length !== 0 && <div className='player-tokens'>{tokens}</div>}
             </div>
             <div className='player-table' ref={tableRef}>
-                <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={player.pockets.player_table} />
+                <PocketView pocketRef={setRefScroll(tableRef, 'player_table')} cards={getPlayerPocket(player, 'player_table')} />
             </div>
         </>}
         <div className='player-icons'>

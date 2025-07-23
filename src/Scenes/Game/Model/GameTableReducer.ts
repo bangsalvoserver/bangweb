@@ -6,7 +6,7 @@ import { parseCardData } from "./CardData";
 import { GameFlag, TablePocketType } from "./CardEnums";
 import { addToPocket, clearAnimation, editPocketMap, removeFromPocket, setAnimation } from "./GameTableEdit";
 import { addTokens } from "./GameTableEdit";
-import { CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
+import { CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, getTablePocket, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
 import { TableUpdate } from "./GameUpdate";
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
@@ -201,7 +201,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
                 [fromPocket]: [],
                 [pocket]: [],
             }
-        }, { type: 'deck_shuffle', pocket, fromPocket, duration, cards: this.pockets[fromPocket] });
+        }, { type: 'deck_shuffle', pocket, fromPocket, duration, cards: getTablePocket(this, fromPocket) });
     },
 
     deck_shuffled_end ({ pocket }) {

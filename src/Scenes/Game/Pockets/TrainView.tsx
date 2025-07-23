@@ -4,6 +4,7 @@ import { PocketRef } from "../Model/CardTracker";
 import PocketView from "./PocketView";
 import "./Style/TrainView.css";
 import { getModifierContext } from "../Model/TargetSelector";
+import { getTablePocket } from "../Model/GameTable";
 
 export interface TrainProps {
     pocketRef?: Ref<PocketRef>;
@@ -45,7 +46,7 @@ export default function TrainView({ pocketRef }: TrainProps) {
     return (
         <div className={classes.join(' ')} style={trainPositionStyle}>
             <div className="train-container-inner" key={trainKey}>
-                <PocketView pocketRef={pocketRef} cards={table.pockets.train.slice().reverse()} />
+                <PocketView pocketRef={pocketRef} cards={getTablePocket(table, 'train').slice().reverse()} />
             </div>
         </div>
     );

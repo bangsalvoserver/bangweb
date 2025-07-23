@@ -15,7 +15,7 @@ import GameLogView from "./GameLogView";
 import GameUsersView from "./GameUsersView";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef, useCardTracker } from "./Model/CardTracker";
-import { getPlayer } from "./Model/GameTable";
+import { getPlayer, getTablePocket } from "./Model/GameTable";
 import { GameOptions, PlayerId } from "./Model/GameUpdate";
 import { SelectorConfirmProvider, useSendGameAction } from "./Model/SelectorConfirm";
 import { OverlayState, SetCardOverlayContext } from "./Model/UseCardOverlay";
@@ -63,42 +63,42 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
   const tracker = useCardTracker(playerRefs, pocketRefs, tokensRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
 
-  const shopPockets = (table.pockets.shop_deck.length !== 0 || table.pockets.shop_selection.length !== 0
+  const shopPockets = (getTablePocket(table, 'shop_deck').length !== 0 || getTablePocket(table, 'shop_selection').length !== 0
     || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'shop_deck')
   ) && (
     <div className="pocket-group">
-      <StackPocket showCount pocketRef={setRef('shop_deck')} cards={table.pockets.shop_deck} />
-      <PocketView pocketRef={setRef('shop_selection')} cards={table.pockets.shop_selection.slice(0).reverse()} />
+      <StackPocket showCount pocketRef={setRef('shop_deck')} cards={getTablePocket(table, 'shop_deck')} />
+      <PocketView pocketRef={setRef('shop_selection')} cards={getTablePocket(table, 'shop_selection').slice(0).reverse()} />
     </div>
   );
 
-  const trainPockets = (table.pockets.stations.length !== 0 || table.pockets.train_deck.length !== 0
+  const trainPockets = (getTablePocket(table, 'stations').length !== 0 || getTablePocket(table, 'train_deck').length !== 0
     || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'train_deck')
   ) && (
     <div className="train-row">
       <div className="train-row-inner">
-        <StackPocket showCount pocketRef={setRef('train_deck')} cards={table.pockets.train_deck} />
+        <StackPocket showCount pocketRef={setRef('train_deck')} cards={getTablePocket(table, 'train_deck')} />
         <div className="train-stations-container">
-          <StationsView cards={table.pockets.stations} />
+          <StationsView cards={getTablePocket(table, 'stations')} />
           <TrainView pocketRef={setRef('train')} />
         </div>
       </div>
     </div>
   );
 
-  const featsPockets = (table.pockets.feats_deck.length !== 0 || table.pockets.feats.length !== 0
+  const featsPockets = (getTablePocket(table, 'feats_deck').length !== 0 || getTablePocket(table, 'feats').length !== 0
     || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'feats_deck')
   ) && (
     <div className="pocket-group feats-cards">
       <div className="feats-row">
         <div className="feats-col">
-          <StackPocket slice={2} showCount pocketRef={setRef('feats_deck')} cards={table.pockets.feats_deck} />
+          <StackPocket slice={2} showCount pocketRef={setRef('feats_deck')} cards={getTablePocket(table, 'feats_deck')} />
           <div className="card-faded">
-            <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={table.pockets.feats_discard} />
+            <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={getTablePocket(table, 'feats_discard')} />
           </div>
         </div>
         <div className="feats-pocket">
-          <PocketView pocketRef={setRef('feats')} cards={table.pockets.feats} />
+          <PocketView pocketRef={setRef('feats')} cards={getTablePocket(table, 'feats')} />
         </div>
       </div>
     </div>
@@ -112,36 +112,36 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
       </div>
     ));
 
-  const mainDeck = ( table.pockets.discard_pile.length !== 0 || table.pockets.main_deck.length !== 0
+  const mainDeck = ( getTablePocket(table, 'discard_pile').length !== 0 || getTablePocket(table, 'main_deck').length !== 0
     || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'main_deck')
   ) && (
     <div className="pocket-group">
-      <StackPocket slice={10} pocketRef={setRef('discard_pile')} cards={table.pockets.discard_pile} />
-      <StackPocket slice={2} showCount pocketRef={setRef('main_deck')} cards={table.pockets.main_deck} />
+      <StackPocket slice={10} pocketRef={setRef('discard_pile')} cards={getTablePocket(table, 'discard_pile')} />
+      <StackPocket slice={2} showCount pocketRef={setRef('main_deck')} cards={getTablePocket(table, 'main_deck')} />
     </div>
   );
 
   const scenarioCards =
-    (table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0
-      || table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0)
+    (getTablePocket(table, 'scenario_deck').length !== 0 || getTablePocket(table, 'scenario_card').length !== 0
+      || getTablePocket(table, 'wws_scenario_deck').length !== 0 || getTablePocket(table, 'wws_scenario_card').length !== 0)
     && <div className="pocket-group">
-      {(table.pockets.scenario_deck.length !== 0 || table.pockets.scenario_card.length !== 0) && <>
+      {(getTablePocket(table, 'scenario_deck').length !== 0 || getTablePocket(table, 'scenario_card').length !== 0) && <>
         <div className="inline-block card-faded">
-          <StackPocket slice={2} showCount pocketRef={setRef('scenario_deck')} cards={table.pockets.scenario_deck} />
+          <StackPocket slice={2} showCount pocketRef={setRef('scenario_deck')} cards={getTablePocket(table, 'scenario_deck')} />
         </div>
         <StackPocket slice={2}
           pocketRef={setRef('scenario_card')}
-          cards={table.pockets.scenario_card} />
+          cards={getTablePocket(table, 'scenario_card')} />
       </>}
-      {(table.pockets.wws_scenario_deck.length !== 0 || table.pockets.wws_scenario_card.length !== 0) && <>
-        <StackPocket slice={2} showCount pocketRef={setRef('wws_scenario_deck')} cards={table.pockets.wws_scenario_deck} />
-        <StackPocket slice={2} pocketRef={setRef('wws_scenario_card')} cards={table.pockets.wws_scenario_card} />
+      {(getTablePocket(table, 'wws_scenario_deck').length !== 0 || getTablePocket(table, 'wws_scenario_card').length !== 0) && <>
+        <StackPocket slice={2} showCount pocketRef={setRef('wws_scenario_deck')} cards={getTablePocket(table, 'wws_scenario_deck')} />
+        <StackPocket slice={2} pocketRef={setRef('wws_scenario_card')} cards={getTablePocket(table, 'wws_scenario_card')} />
       </>}
     </div>;
 
-  const selectionPocket = table.pockets.selection.length !== 0 && (
+  const selectionPocket = getTablePocket(table, 'selection').length !== 0 && (
     <div className="selection-view whitespace-nowrap">
-      <PocketView pocketRef={setRef('selection')} cards={table.pockets.selection} />
+      <PocketView pocketRef={setRef('selection')} cards={getTablePocket(table, 'selection')} />
     </div>
   );
 

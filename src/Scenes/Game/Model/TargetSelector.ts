@@ -1,6 +1,6 @@
 import { CardTarget } from "./CardTarget";
 import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, getPlayerCubes, isCardKnown } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatus, StatusReady } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
@@ -260,7 +260,7 @@ function getCubeSlot(table: GameTable, card: Card) {
     if (getCardPocket(card) === 'player_character') {
         const player = getCardOwner(card);
         if (player) {
-            const cardId = getPlayer(table, player).pockets.player_character[0];
+            const cardId = getPlayerPocket(getPlayer(table, player), 'player_character')[0];
             if (cardId !== card.id) {
                 return getCard(table, cardId);
             }

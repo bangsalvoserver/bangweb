@@ -18,7 +18,7 @@ export type CardAnimation =
     { type: 'flash' } & Duration |
     { type: 'short_pause' };
 
-export type TokenCount = Partial<Record<TokenType, number>>;
+export type TokenCount = { [k in TokenType]?: number };
 
 type CardDeckOrData = { deck: DeckType } | CardData;
 
@@ -75,9 +75,9 @@ export function getCardBackface(card: Card): string {
 }
 
 export function *getPlayerCubes(table: GameTable, player: Player) {
-    const character = getCard(table, player.pockets.player_character[0]);
+    const character = getCard(table, getPlayerPocket(player, 'player_character')[0]);
     yield [character, getCubeCount(character)] as const;
-    for (const cardId of player.pockets.player_table) {
+    for (const cardId of getPlayerPocket(player, 'player_table')) {
         const card = getCard(table, cardId);
         if (getCardColor(card) === 'orange') {
             yield [card, getCubeCount(card)] as const;
@@ -115,9 +115,9 @@ export function getCubeCount(card: Card): number {
     return card.tokens.cube ?? 0;
 }
 
-export type PlayerPockets = Record<PlayerPocketType, CardId[]>;
+export type PlayerPockets = { [k in PlayerPocketType]?: CardId[] };
 
-export type TablePockets = Record<TablePocketType, CardId[]>;
+export type TablePockets = { [k in TablePocketType]?: CardId[] };
 
 export type PlayerAnimation =
     { type: 'none' } |
@@ -150,14 +150,14 @@ export function newPlayer(id: PlayerId, user_id: UserId): Player {
             flags: new Set()
         },
         tokens: {},
-        pockets: {
-            player_hand: [],
-            player_table: [],
-            player_character: []
-        },
+        pockets: {},
         animation: { type: 'none' },
         animationKey: 0
     };
+}
+
+export function getPlayerPocket(player: Player, pocket: PlayerPocketType) {
+    return player.pockets[pocket] ?? [];
 }
 
 export interface DeckShuffleAnimation extends DeckShuffledUpdate {
@@ -214,25 +214,7 @@ export function newGameTable(myUserId: UserId): GameTable {
         players: {},
         cards: {},
 
-        pockets: {
-            main_deck: [],
-            discard_pile: [],
-            selection: [],
-            shop_deck: [],
-            shop_selection: [],
-            hidden_deck: [],
-            scenario_deck: [],
-            scenario_card: [],
-            wws_scenario_deck: [],
-            wws_scenario_card: [],
-            button_row: [],
-            stations: [],
-            train: [],
-            train_deck: [],
-            feats_deck: [],
-            feats_discard: [],
-            feats: []
-        },
+        pockets: {},
 
         alive_players: [],
 
@@ -245,6 +227,10 @@ export function newGameTable(myUserId: UserId): GameTable {
         animation: { type: 'none' },
         animationKey: 0
     };
+}
+
+export function getTablePocket(table: GameTable, pocket: TablePocketType) {
+    return table.pockets[pocket] ?? [];
 }
 
 export function getCard(table: GameTable, id: CardId): Card {

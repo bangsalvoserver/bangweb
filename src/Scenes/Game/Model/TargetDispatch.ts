@@ -2,7 +2,7 @@ import { countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, CardTargetGenerated, CardTargetTypes, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isBangCard, isPlayerInGame } from "./Filters";
-import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, Player } from "./GameTable";
+import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSkipped, TargetSelector } from "./TargetSelector";
 
@@ -268,8 +268,8 @@ const targetDispatch = buildDispatch({
             let max_cards = 0;
             for (const player of Object.values(table.players)) {
                 if (checkPlayerFilter(table, selector, effect.player_filter, player)) {
-                    max_cards += countIf(player.pockets.player_hand, cardTargetable);
-                    max_cards += countIf(player.pockets.player_table, cardTargetable);
+                    max_cards += countIf(getPlayerPocket(player, 'player_hand'), cardTargetable);
+                    max_cards += countIf(getPlayerPocket(player, 'player_table'), cardTargetable);
                 }
             }
             if (effect.target_value !== 0 && max_cards > effect.target_value) {
@@ -310,7 +310,7 @@ const targetDispatch = buildDispatch({
                 const targetPlayer = getPlayer(table, target);
                 return !isPlayerSkipped(selector, targetPlayer)
                     && checkPlayerFilter(table, selector, effect.player_filter, targetPlayer)
-                    && (targetPlayer.pockets.player_hand.some(cardIsValid) || targetPlayer.pockets.player_table.some(cardIsValid));
+                    && (getPlayerPocket(targetPlayer, 'player_hand').some(cardIsValid) || getPlayerPocket(targetPlayer, 'player_table').some(cardIsValid));
             });
             return { cards:[], max_cards };
         },
@@ -328,7 +328,7 @@ const targetDispatch = buildDispatch({
 
             const pocket = getCardPocket(card);
             return (
-                (pocket === 'player_character' && card.id === player.pockets.player_character[0])
+                (pocket === 'player_character' && card.id === getPlayerPocket(player, 'player_character')[0])
                 || (pocket === 'player_table' && getCardColor(card) === 'orange')
             ) && ( effect.target_value === 0 || (
                 (pocket !== 'player_character' || playerId !== table.self_player) 
