@@ -9,5 +9,5 @@ export interface GameAction {
     }[],
     targets: CardTargetGenerated[];
     bypass_prompt: boolean;
-    timer_id: number | null;
+    timer_id?: number;
 }

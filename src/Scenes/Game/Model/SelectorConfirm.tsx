@@ -14,7 +14,7 @@ function getSelectorGameAction(selector: TargetSelector): GameAction | undefined
             card: selector.selection!.card.id,
             targets: selector.selection!.targets.map(targetDispatch.generateTarget),
             modifiers: selector.modifiers.map(({card, targets}) => ({ card: card.id, targets: targets.map(targetDispatch.generateTarget) })),
-            timer_id: (isResponse(selector) && selector.request.timer?.timer_id) || null,
+            timer_id: isResponse(selector) ? selector.request.timer?.timer_id : undefined,
             bypass_prompt,
         };
     }
