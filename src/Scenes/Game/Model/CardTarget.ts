@@ -1,4 +1,3 @@
-import { Distribute } from "../../../Utils/UnionUtils";
 import { Card, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 
@@ -87,5 +86,5 @@ export type CardTargetTypes = {
 
 export type TargetType = keyof CardTargetTypes;
 
-export type CardTarget = Distribute<{ [ K in TargetType ] : CardTargetTypes[K][0] }>;
+export type CardTarget = { [ K in TargetType ] : { type: K, value: CardTargetTypes[K][0] } }[TargetType];
 export type CardTargetGenerated = CardTargetTypes[TargetType][1];

@@ -249,8 +249,8 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
 
 export function isPlayerSkipped(selector: TargetSelector, player: Player): boolean {
     for (const [, target, effect] of zipSelections(selector)) {
-        if ('player' in target && effect?.type === 'skip_player') {
-            return target.player.id === player.id;
+        if (target.type === 'player' && effect?.type === 'skip_player') {
+            return target.value.id === player.id;
         }
     }
     return false;

@@ -39,64 +39,56 @@ type DispatchMap = {
 };
 
 function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
-    const getDispatch = (key: TargetType) => dispatchMap[key] as PartialDispatch<unknown, unknown>;
-
-    const cardTargetKeyValue = (target: CardTarget) => Object.entries(target)[0] as [TargetType, unknown];
-    const cardTargetValue = (target: CardTarget | undefined) => target ? Object.values(target)[0] as unknown : undefined;
-    const buildCardTarget = (key: TargetType, value: unknown) => ({ [key]: value } as CardTarget);
+    const getDispatch = (type: TargetType) => dispatchMap[type] as PartialDispatch<unknown, unknown>;
+    const buildCardTarget = (type: TargetType, value: unknown) => ({ type, value } as CardTarget);
 
     return {
         isCardSelected: (target, card) => {
-            const [key, value] = cardTargetKeyValue(target);
-            const fn = getDispatch(key).isCardSelected;
-            return fn !== undefined && fn(value, card);
+            const fn = getDispatch(target.type).isCardSelected;
+            return fn !== undefined && fn(target.value, card);
         },
         isValidCardTarget: (table, selector, target, effect, card) => {
             const fn = getDispatch(effect.target).isValidCardTarget;
-            return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, card);
+            return fn !== undefined && fn(table, selector, target?.value, effect, card);
         },
         appendCardTarget: (target, effect, card) => {
             const fn = getDispatch(effect.target).appendCardTarget;
             if (!fn) throw new Error('Cannot add card target');
-            return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, card));
+            return buildCardTarget(effect.target, fn(target?.value, effect, card));
         },
         isPlayerSelected: (target, player) => {
-            const [key, value] = cardTargetKeyValue(target);
-            const fn = getDispatch(key).isPlayerSelected;
-            return fn !== undefined && fn(value, player);
+            const fn = getDispatch(target.type).isPlayerSelected;
+            return fn !== undefined && fn(target.value, player);
         },
         isValidPlayerTarget: (table, selector, target, effect, player) => {
             const fn = getDispatch(effect.target).isValidPlayerTarget;
-            return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, player);
+            return fn !== undefined && fn(table, selector, target?.value, effect, player);
         },
         appendPlayerTarget: (target, effect, player) => {
             const fn = getDispatch(effect.target).appendPlayerTarget;
             if (!fn) throw new Error('Cannot add player target');
-            return buildCardTarget(effect.target, fn(cardTargetValue(target), effect, player));
+            return buildCardTarget(effect.target, fn(target?.value, effect, player));
         },
         isValidCubeTarget: (table, selector, target, effect, card) => {
             const fn = getDispatch(effect.target).isValidCubeTarget;
-            return fn !== undefined && fn(table, selector, cardTargetValue(target), effect, card);
+            return fn !== undefined && fn(table, selector, target?.value, effect, card);
         },
         getCubesSelected: (target, cubeSlot, card) => {
-            const [key, value] = cardTargetKeyValue(target);
-            const fn = getDispatch(key).getCubesSelected;
-            return fn ? fn(value, cubeSlot, card) : 0;
+            const fn = getDispatch(target.type).getCubesSelected;
+            return fn ? fn(target.value, cubeSlot, card) : 0;
         },
         isSelectionFinished: (target, effect) => {
-            const [key, value] = cardTargetKeyValue(target);
-            const fn = getDispatch(key).isSelectionFinished;
-            return fn === undefined || fn(value, effect);
+            const fn = getDispatch(target.type).isSelectionFinished;
+            return fn === undefined || fn(target.value, effect);
         },
         isSelectionConfirmable: (table, target, effect) => {
             const fn = getDispatch(effect.target).isSelectionConfirmable;
-            return fn !== undefined && fn(table, cardTargetValue(target), effect);
+            return fn !== undefined && fn(table, target.value, effect);
         },
         confirmSelection: target => {
-            const [key, value] = cardTargetKeyValue(target);
-            const fn = getDispatch(key).confirmSelection;
+            const fn = getDispatch(target.type).confirmSelection;
             if (!fn) throw new Error('Cannot confirm selection');
-            return buildCardTarget(key, fn(value));
+            return buildCardTarget(target.type, fn(target.value));
         },
         buildAutoTarget: (table, selector, effect) => {
             const fn = getDispatch(effect.target).buildAutoTarget;
@@ -105,9 +97,8 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             return targetValue !== undefined ? buildCardTarget(effect.target, targetValue) : undefined;
         },
         generateTarget: target => {
-            const [key, value] = cardTargetKeyValue(target);
-            const fn = getDispatch(key).generateTarget;
-            return fn(value) as CardTargetGenerated;
+            const fn = getDispatch(target.type).generateTarget;
+            return fn(target.value) as CardTargetGenerated;
         },
     }
 }

@@ -178,7 +178,7 @@ function handleAddEquipTarget(selector: TargetSelector, player: Player): TargetS
         ...selector,
         selection: {
             ...selector.selection!,
-            targets: [{ player }]
+            targets: [{ type: 'player', value: player }]
         },
         mode: 'finish'
     };

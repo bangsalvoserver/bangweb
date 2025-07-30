@@ -60,8 +60,8 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
         let lastTarget: Card | undefined;
         for (const { targets } of selector.modifiers) {
             for (const target of targets) {
-                if ('card' in target) {
-                    lastTarget = target.card;
+                if (target.type === 'card') {
+                    lastTarget = target.value;
                 }
             }
         }
