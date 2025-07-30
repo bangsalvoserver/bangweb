@@ -1,11 +1,11 @@
-import { Distribute, Empty } from "../../../Utils/UnionUtils";
+import { Distribute } from "../../../Utils/UnionUtils";
 import { Card, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 
 export type CardTargetTypes = {
     none: [
-        Empty,
-        Empty
+        null,
+        null
     ],
     player: [
         Player,
@@ -37,7 +37,7 @@ export type CardTargetTypes = {
     ],
     players: [
         Player[],
-        Empty
+        null
     ],
     cards: [
         Card[],
@@ -81,7 +81,7 @@ export type CardTargetTypes = {
     ],
     self_cubes: [
         { num_cubes: number },
-        Empty
+        null
     ]
 };
 

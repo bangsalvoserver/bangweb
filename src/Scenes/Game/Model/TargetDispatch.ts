@@ -157,8 +157,8 @@ const mapIds = <T extends {id: U}, U>(targets: T[]): U[] => {
 
 const targetDispatch = buildDispatch({
     none: {
-        buildAutoTarget: () => ({}),
-        generateTarget: () => ({}),
+        buildAutoTarget: () => null,
+        generateTarget: () => null,
     },
     player: {
         isPlayerSelected: checkId,
@@ -247,7 +247,7 @@ const targetDispatch = buildDispatch({
         buildAutoTarget: (table, selector, effect) => Object.values(table.players).filter(player => 
             checkPlayerFilter(table, selector, effect.player_filter, player) && !isPlayerSkipped(selector, player)
         ),
-        generateTarget: () => ({})
+        generateTarget: () => null
     },
     cards: {
         isCardSelected: containsId,
@@ -421,7 +421,7 @@ const targetDispatch = buildDispatch({
     self_cubes: {
         getCubesSelected: ({ num_cubes }, cubeSlot, card) => cubeSlot.id === card.id ? num_cubes : 0,
         buildAutoTarget: (table, selector, effect) => ({ num_cubes: effect.target_value }),
-        generateTarget: () => ({})
+        generateTarget: () => null
     }
 });
 
