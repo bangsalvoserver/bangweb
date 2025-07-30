@@ -87,5 +87,5 @@ export type CardTargetTypes = {
 
 export type TargetType = keyof CardTargetTypes;
 
-export type CardTarget =            Distribute<{ [ K in TargetType ] : CardTargetTypes[K] extends [infer T, unknown] ? T : never }>;
-export type CardTargetGenerated =   Distribute<{ [ K in TargetType ] : CardTargetTypes[K] extends [unknown, infer T] ? T : never }>;
+export type CardTarget = Distribute<{ [ K in TargetType ] : CardTargetTypes[K][0] }>;
+export type CardTargetGenerated = CardTargetTypes[TargetType][1];

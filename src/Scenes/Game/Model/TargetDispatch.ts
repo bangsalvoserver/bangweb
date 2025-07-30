@@ -43,7 +43,7 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
 
     const cardTargetKeyValue = (target: CardTarget) => Object.entries(target)[0] as [TargetType, unknown];
     const cardTargetValue = (target: CardTarget | undefined) => target ? Object.values(target)[0] as unknown : undefined;
-    const buildCardTarget = <T>(key: TargetType, value: unknown) => ({ [key]: value } as T);
+    const buildCardTarget = (key: TargetType, value: unknown) => ({ [key]: value } as CardTarget);
 
     return {
         isCardSelected: (target, card) => {
@@ -107,7 +107,7 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
         generateTarget: target => {
             const [key, value] = cardTargetKeyValue(target);
             const fn = getDispatch(key).generateTarget;
-            return buildCardTarget(key, fn(value));
+            return fn(value) as CardTargetGenerated;
         },
     }
 }
