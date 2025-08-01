@@ -54,6 +54,10 @@ export type CardTargetTypes = {
         { cards: Card[], max_cards: number },
         CardId[]
     ],
+    missed_and_same_suit: [
+        { cards: Card[], possible_targets: Card[] },
+        CardId[]
+    ],
     cube_slot: [
         Card,
         CardId

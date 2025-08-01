@@ -67,10 +67,16 @@ export function isPlayerInGame(player: Player): boolean {
     return !isPlayerDead(player) || isPlayerGhost(player);
 }
 
-export function isBangCard(table: GameTable, origin: Player, card: Card): boolean {
+export function isBangCard(origin: Player, card: Card): boolean {
     return origin.status.flags.has('treat_any_as_bang')
         || cardHasTag(card, 'bangcard')
         || (origin.status.flags.has('treat_missed_as_bang') && cardHasTag(card, 'missed'));
+}
+
+export function isMissedCard(origin: Player, card: Card): boolean {
+    return origin.status.flags.has('treat_any_as_missed')
+        || cardHasTag(card, 'missedcard')
+        || (origin.status.flags.has('treat_missed_as_bang') && cardHasTag(card, 'bangcard'));
 }
 
 export function calcPlayerDistance(table: GameTable, selector: TargetSelector, from: PlayerId, to: PlayerId): number {
@@ -217,8 +223,8 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     }
 
     if (filter.has('beer') && !cardHasTag(target, 'beer')) return false;
-    if (filter.has('bang') && !isBangCard(table, origin, target)) return false;
-    if (filter.has('used_bang') && !(table.status.flags.has('showdown') || isBangCard(table, origin, target))) return false;
+    if (filter.has('bang') && !isBangCard(origin, target)) return false;
+    if (filter.has('used_bang') && !(table.status.flags.has('showdown') || isBangCard(origin, target))) return false;
     if (filter.has('bangcard') && !cardHasTag(target, 'bangcard')) return false;
     if (filter.has('not_bangcard') && cardHasTag(target, 'bangcard')) return false;
     if (filter.has('missed') && !cardHasTag(target, 'missed')) return false;

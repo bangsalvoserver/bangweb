@@ -1,7 +1,7 @@
 import { countIf } from "../../../Utils/ArrayUtils";
 import { CardEffect } from "./CardData";
 import { CardTarget, CardTargetGenerated, CardTargetTypes, TargetType } from "./CardTarget";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, isBangCard, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSkipped, TargetSelector } from "./TargetSelector";
@@ -275,7 +275,7 @@ const targetDispatch = buildDispatch({
         appendCardTarget: (target, effect, card) => ({ cards: (target?.cards ?? []).concat(card), confirmed: false }),
         isSelectionFinished: ({ cards, confirmed }, effect) => confirmed || cards.length === effect.target_value,
         isValidCardTarget,
-        isSelectionConfirmable: (table, { cards }) => cards.length === 1 && isBangCard(table, getPlayer(table, table.self_player!), cards[0]),
+        isSelectionConfirmable: (table, { cards }) => cards.length === 1 && isBangCard(getPlayer(table, table.self_player!), cards[0]),
         confirmSelection: ({ cards }) => ({ cards, confirmed: true }),
         generateTarget: ({ cards }) => mapIds(cards)
     },
@@ -306,6 +306,40 @@ const targetDispatch = buildDispatch({
             return { cards:[], max_cards };
         },
         generateTarget: ({ cards }) => mapIds(cards),
+    }),
+    missed_and_same_suit: reservedDispatch({
+        isCardSelected: ({cards}, card) => containsId(cards, card),
+        appendCardTarget: ({cards, possible_targets}, effect, card) => ({
+            cards: cards.concat(card),
+            possible_targets: possible_targets.filter(c => c.id !== card.id && getCardSign(c).suit === getCardSign(card).suit)
+        }),
+        isSelectionFinished: ({cards}, effect) => cards.length === effect.target_value,
+        isValidCardTarget: (table, selector, {cards, possible_targets}, effect, card) => {
+            if (containsId(possible_targets, card)) {
+                const filteredCards = cards.length === 0
+                    ? possible_targets.filter(c => getCardSign(c).suit === getCardSign(card).suit)
+                    : possible_targets;
+                if ((cards.length + filteredCards.length) >= effect.target_value) {
+                    const origin = getPlayer(table, table.self_player!);
+                    const cardIsMissed = (c: Card) => isMissedCard(origin, c);
+                    if (cards.some(cardIsMissed)) {
+                        return true;
+                    } else if (cards.length < effect.target_value - 1) {
+                        return filteredCards.some(cardIsMissed);
+                    } else {
+                        return cardIsMissed(card);
+                    }
+                }
+            }
+            return false;
+        },
+        buildAutoTarget: (table, selector, effect) => ({
+            cards: [],
+            possible_targets: Object.values(table.cards).filter(card => 
+                isValidCardTarget(table, selector, null, effect, card)
+            )
+        }),
+        generateTarget: ({ cards }) => mapIds(cards)
     }),
     cube_slot: {
         isCardSelected: checkId,
