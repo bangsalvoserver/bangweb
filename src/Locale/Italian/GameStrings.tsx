@@ -3,6 +3,7 @@ import { GameStringRegistry } from "../Registry";
 export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
 
     PROMPT_CARD_NO_EFFECT: (card) =>                                        <>Giocare {card} non avrebbe effetto. Continuare?</>,
+    PROMPT_CARD_NO_TARGET: (card) =>                                        <>Stai giocando {card} senza bersagliare nessuno. Continuare?</>,
     PROMPT_PASS_DISCARD: (ncards) =>                                        <>Devi scartare {ncards === 1 ? "una carta" : `${ncards} carte` }. Continuare?</>,
     PROMPT_MOVE_BOMB_TO_SELF: (card) =>                                     <>Stai lasciando {card} su te stesso. Continuare?</>,
     PROMPT_EXPLODE_BOMB: (card) =>                                          <>Farai esplodere {card}! Continuare?</>,
