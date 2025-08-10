@@ -1,4 +1,5 @@
 import { countIf } from "../../../Utils/ArrayUtils";
+import { Identity } from "../../../Utils/UnionUtils";
 import { CardEffect, CardEffectArgs, CardEffectOf, CardTarget, CardTargetArgs, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
@@ -41,12 +42,12 @@ type PartialDispatch<T extends U, R, EArgs = CardEffectArgs, E = CardEffect, U =
 
 type DispatchMap = {
     [K in TargetType]: CardTargetTypes[K] extends {value: infer From, target: infer To}
-        ? PartialDispatch<From, To, CardEffectOf<K, 'array'>, CardEffectOf<K, 'set'>>
+        ? PartialDispatch<From, To, Identity<CardEffectOf<K, 'array'>>, Identity<CardEffectOf<K, 'set'>>>
         : never
 };
 
 function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
-    const getDispatch = (type: TargetType) => dispatchMap[type] as PartialDispatch<unknown, unknown, unknown, unknown>;
+    const getDispatch = (type: TargetType) => dispatchMap[type] as PartialDispatch<unknown, unknown>;
     const buildCardTarget = (type: TargetType, value: unknown) => ({ type, value } as CardTarget);
 
     return {
