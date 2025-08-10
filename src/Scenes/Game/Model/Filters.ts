@@ -1,5 +1,6 @@
-import { CardEffect, CardSign } from "./CardData";
+import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, PocketType, TagType } from "./CardEnums";
+import { CardEffect } from "./CardTarget";
 import { Card, GameTable, getCard, getPlayer, getPlayerCubes, getPlayerPocket, isCardKnown, KnownCard, Player } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
 import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";

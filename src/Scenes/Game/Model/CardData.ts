@@ -1,25 +1,7 @@
 import { Container, ContainerKey } from "../../../Utils/ArrayUtils";
-import { CardColor, CardFilter, CardRank, CardSuit, DeckType, EffectType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType } from "./CardEnums";
-import { TargetType } from "./CardTarget";
-
-interface CardEffectBase<K extends ContainerKey> {
-    target: TargetType;
-    player_filter: Container<K, PlayerFilter>;
-    card_filter: Container<K, CardFilter>;
-    target_value: number;
-    type: EffectType;
-}
-
-export type CardEffect = CardEffectBase<'set'>;
-export type CardEffectArgs = CardEffectBase<'array'>;
-
-export function parseCardEffect(effect: CardEffectArgs): CardEffect {
-    return {
-        ...effect,
-        player_filter: new Set(effect.player_filter),
-        card_filter: new Set(effect.card_filter)
-    };
-}
+import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType } from "./CardEnums";
+import { CardEffectBase } from "./CardTarget";
+import targetDispatch from "./TargetDispatch";
 
 export interface CardEquip {
     type: EquipType;
@@ -62,8 +44,8 @@ export type CardDataArgs = CardDataBase<'array'>;
 export function parseCardData(info: CardDataArgs): CardData {
     return {
         ...info,
-        effects: info.effects.map(parseCardEffect),
-        responses: info.responses.map(parseCardEffect),
+        effects: info.effects.map(targetDispatch.parseCardEffect),
+        responses: info.responses.map(targetDispatch.parseCardEffect),
         equip_target: new Set(info.equip_target)
     };
 }
