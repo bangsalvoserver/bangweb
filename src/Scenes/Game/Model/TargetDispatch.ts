@@ -390,13 +390,17 @@ const targetDispatch = buildDispatch({
             if (!checkPlayerFilter(table, selector, effect.player_filter, player)) return false;
 
             const pocket = getCardPocket(card);
-            return (
-                (pocket === 'player_character' && card.id === getPlayerPocket(player, 'player_character')[0])
-                || (pocket === 'player_table' && getCardColor(card) === 'orange')
-            ) && ( !effect.stealing || (
-                (pocket !== 'player_character' || playerId !== table.self_player) 
-                && getCubeCount(card) !== 0
-            ));
+
+            if (!(pocket === 'player_character' && card.id === getPlayerPocket(player, 'player_character')[0])
+                && !(pocket === 'player_table' && getCardColor(card) === 'orange')
+            ) return false;
+
+            if (effect.stealing) {
+                return !(pocket === 'player_character' && playerId === table.self_player)
+                    && getCubeCount(card) !== 0;
+            }
+
+            return true;
         },
         generateTarget: card => card.id,
         parseCardEffect
