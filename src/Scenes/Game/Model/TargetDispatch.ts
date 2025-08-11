@@ -1,6 +1,6 @@
 import { countIf } from "../../../Utils/ArrayUtils";
 import { Identity } from "../../../Utils/UnionUtils";
-import { CardEffect, CardEffectArgs, CardEffectOf, CardTarget, CardTargetArgs, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, TargetType } from "./CardTarget";
+import { CardEffect, CardEffectArgs, CardEffectOf, CardTarget, CardTargetArgs, CardTargetArgsArray, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, PlayerTargetArgsArray, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
 import { CardId } from "./GameUpdate";
@@ -127,11 +127,11 @@ const isHandSelected = (target: Card, value: Card) => {
     return target.id === value.id;
 };
 
-const isValidPlayerTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: PlayerTargetArgs<'set'>, player: Player) => {
+const isValidPlayerTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: PlayerTargetArgs, player: Player) => {
     return checkPlayerFilter(table, selector, effect.player_filter, player);
 };
 
-const isValidCardTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardTargetArgs<'set'>, card: Card) => {
+const isValidCardTarget = <T>(table: GameTable, selector: TargetSelector, target: T, effect: CardTargetArgs, card: Card) => {
     const player = getCardOwner(card);
     return (!player || checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, player)))
         && checkCardFilter(table, selector, effect.card_filter, card);
@@ -142,7 +142,7 @@ const isValidCubeTarget = <T>(table: GameTable, selector: TargetSelector, target
         && getCubeCount(card) > countSelectedCubes(table, selector, card);
 };
 
-const getValidCardTargets = (table: GameTable, selector: TargetSelector, effect: CardTargetArgs<'set'>) => {
+const getValidCardTargets = (table: GameTable, selector: TargetSelector, effect: CardTargetArgs) => {
     return Object.values(table.players)
         .filter(player => checkPlayerFilter(table, selector, effect.player_filter, player))
         .flatMap(player => getPlayerPocket(player, 'player_hand').concat(getPlayerPocket(player, 'player_table')))
@@ -166,24 +166,18 @@ const mapIds = <T extends {id: U}, U>(targets: T[]): U[] => {
     return targets.map(target => target.id);
 };
 
-function parseNoneEffect<T>(effect: T) {
-    return effect;
-}
+const parseNoneEffect = <T>(effect: T) => effect;
 
-function parsePlayerEffect<T extends PlayerTargetArgs<'array'>>(effect: T) {
-    return {
-        ...effect,
-        player_filter: new Set(effect.player_filter)
-    };
-}
+const parsePlayerEffect = <T extends PlayerTargetArgsArray>(effect: T) => ({
+    ...effect,
+    player_filter: new Set(effect.player_filter)
+});
 
-function parseCardEffect<T extends CardTargetArgs<'array'>>(effect: T) {
-    return {
-        ...effect,
-        player_filter: new Set(effect.player_filter),
-        card_filter: new Set(effect.card_filter)
-    };
-}
+const parseCardEffect = <T extends CardTargetArgsArray>(effect: T) => ({
+    ...effect,
+    player_filter: new Set(effect.player_filter),
+    card_filter: new Set(effect.card_filter)
+});
 
 const targetDispatch = buildDispatch({
     none: {
