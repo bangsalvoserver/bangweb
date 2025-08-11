@@ -142,6 +142,14 @@ const isValidCubeTarget = <T>(table: GameTable, selector: TargetSelector, target
         && getCubeCount(card) > countSelectedCubes(table, selector, card);
 };
 
+const getValidCardTargets = (table: GameTable, selector: TargetSelector, effect: CardTargetArgs<'set'>) => {
+    return Object.values(table.players)
+        .filter(player => checkPlayerFilter(table, selector, effect.player_filter, player))
+        .flatMap(player => getPlayerPocket(player, 'player_hand').concat(getPlayerPocket(player, 'player_table')))
+        .map(card => getCard(table, card))
+        .filter(card => checkCardFilter(table, selector, effect.card_filter, card));
+};
+
 const checkId = <T extends {id: U}, U>(target: T, value: T): boolean => {
     return target.id === value.id;
 };
@@ -296,14 +304,7 @@ const targetDispatch = buildDispatch({
         isSelectionFinished: ({ cards, max_cards }, effect) => cards.length === max_cards,
         confirmSelection: ({ cards }) => ({ cards, max_cards: cards.length }),
         buildAutoTarget: (table, selector, effect) => {
-            const cardTargetable = (card: CardId) => checkCardFilter(table, selector, effect.card_filter, getCard(table, card));
-            let max_cards = 0;
-            for (const player of Object.values(table.players)) {
-                if (checkPlayerFilter(table, selector, effect.player_filter, player)) {
-                    max_cards += countIf(getPlayerPocket(player, 'player_hand'), cardTargetable);
-                    max_cards += countIf(getPlayerPocket(player, 'player_table'), cardTargetable);
-                }
-            }
+            let max_cards = getValidCardTargets(table, selector, effect).length;
             if (effect.ncards !== 0 && max_cards > effect.ncards) {
                 max_cards = effect.ncards;
             }
@@ -379,9 +380,7 @@ const targetDispatch = buildDispatch({
         },
         buildAutoTarget: (table, selector, effect) => ({
             cards: [],
-            possible_targets: Object.values(table.cards).filter(card => 
-                isValidCardTarget(table, selector, null, effect, card)
-            )
+            possible_targets: getValidCardTargets(table, selector, effect)
         }),
         generateTarget: ({ cards }) => mapIds(cards),
         parseCardEffect
