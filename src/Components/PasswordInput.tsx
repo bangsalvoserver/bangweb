@@ -16,6 +16,7 @@ export default function PasswordInput({ inputRef, id, password, setPassword }: P
         <div className="password-input-wrapper">
             <input id={id} ref={inputRef}
                 type={isPasswordVisible ? 'text' : 'password'}
+                autoComplete="off"
                 className='
                     border-2
                     border-gray-300
