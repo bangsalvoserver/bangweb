@@ -43,18 +43,18 @@ const LOBBY_STATE_ICONS: Record<LobbyStateEnum, string> = {
   'finished': '🔴'
 };
 
-function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spectators, secure, state }, handleJoinLobby }: LobbyElementProps) {
+function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spectators, security, state }, handleJoinLobby }: LobbyElementProps) {
   const [isPasswordOpen, setIsPasswodOpen, elemRef] = useCloseOnLoseFocus<HTMLDivElement>();
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
   const handleClickJoin = useCallback(() => {
-    if (secure) {
+    if (security === 'locked') {
       setIsPasswodOpen(true);
       passwordInputRef?.current?.focus();
     } else {
       handleJoinLobby(lobby_id, '');
     }
-  }, [lobby_id, secure, handleJoinLobby, setIsPasswodOpen]);
+  }, [lobby_id, security, handleJoinLobby, setIsPasswodOpen]);
   
   return (
     <div ref={elemRef} className={`lobby-element-wrapper ${isPasswordOpen ? 'lobby-element-wrapper-expanded' : ''}`}>
@@ -66,10 +66,10 @@ function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spec
         <div className='lobby-state' title={getLabel('LobbyState', state)}>{LOBBY_STATE_ICONS[state]}</div>
         <Button color='green' onClick={handleClickJoin}>
           {getLabel('ui', 'BUTTON_JOIN')}
-          {secure && ' 🔒'}
+          {security === 'locked' ? ' 🔒' : security === 'unlocked' ? ' 🔓' : null}
         </Button>
       </div>
-      { secure && <LobbyPasswordInput passwordInputRef={passwordInputRef} lobby_id={lobby_id} isPasswordOpen={isPasswordOpen} handleJoinLobby={handleJoinLobby} />}
+      { security === 'locked' && <LobbyPasswordInput passwordInputRef={passwordInputRef} lobby_id={lobby_id} isPasswordOpen={isPasswordOpen} handleJoinLobby={handleJoinLobby} />}
     </div>
   )
 }

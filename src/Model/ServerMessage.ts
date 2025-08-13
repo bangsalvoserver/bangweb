@@ -10,6 +10,8 @@ export interface ClientAccepted {
     session_id: number;
 }
 
+export type LobbySecurityEnum = 'open' | 'unlocked' | 'locked';
+
 export type LobbyStateEnum = 'waiting' | 'playing' | 'finished';
 
 export interface LobbyValue {
@@ -18,7 +20,7 @@ export interface LobbyValue {
     num_players: number;
     num_bots: number;
     num_spectators: number;
-    secure: boolean;
+    security: LobbySecurityEnum;
     state: LobbyStateEnum;
 }
 
