@@ -1,5 +1,4 @@
 import { countIf } from "../../../Utils/ArrayUtils";
-import { Identity } from "../../../Utils/UnionUtils";
 import { CardEffect, CardEffectArgs, CardEffectOf, CardTarget, CardTargetArgs, CardTargetArgsArray, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, PlayerTargetArgsArray, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
@@ -42,7 +41,7 @@ type PartialDispatch<T extends U, R, EArgs = CardEffectArgs, E = CardEffect, U =
 
 type DispatchMap = {
     [K in TargetType]: CardTargetTypes[K] extends {value: infer From, target: infer To}
-        ? PartialDispatch<From, To, Identity<CardEffectOf<K, 'array'>>, Identity<CardEffectOf<K, 'set'>>>
+        ? PartialDispatch<From, To, CardEffectOf<K, 'array'>, CardEffectOf<K, 'set'>>
         : never
 };
 
