@@ -168,8 +168,8 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (filter.has('not_empty_cubes') && isEmptyCubes(table, target)) return false;
 
-    if (filter.has('target_set') && isResponse(selector)) {
-        if (!selector.request.target_set_players.has(target.id)) {
+    if (filter.has('target_set')) {
+        if (!isResponse(selector) || !selector.request.target_set_players.has(target.id)) {
             return false;
         }
     }
