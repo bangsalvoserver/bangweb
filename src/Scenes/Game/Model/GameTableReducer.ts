@@ -1,4 +1,4 @@
-import { group, intersect, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
+import { group, intersect, parseContainer, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
 import { editById, editByIds, removeByIds } from "../../../Utils/RecordUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
@@ -142,7 +142,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             players: editById(this.players, player, p => ({
-                ...p, status: { ...p.status, flags: new Set(flags) }
+                ...p, status: { ...p.status, flags: parseContainer(flags) }
             }))
         };
     },
@@ -326,7 +326,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             ...this,
             status: {
                 ...this.status,
-                flags: new Set(flags)
+                flags: parseContainer(flags)
             }
         };
     }

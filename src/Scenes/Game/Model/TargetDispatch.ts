@@ -1,4 +1,4 @@
-import { countIf } from "../../../Utils/ArrayUtils";
+import { countIf, parseContainer } from "../../../Utils/ArrayUtils";
 import { CardSuit } from "./CardEnums";
 import { CardEffect, CardEffectArgs, CardEffectOf, CardTarget, CardTargetArgs, CardTargetArgsArray, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, PlayerTargetArgsArray, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
@@ -170,13 +170,13 @@ const parseNoneEffect = <T>(effect: T) => effect;
 
 const parsePlayerEffect = <T extends PlayerTargetArgsArray>(effect: T) => ({
     ...effect,
-    player_filter: new Set(effect.player_filter)
+    player_filter: parseContainer(effect.player_filter)
 });
 
 const parseCardEffect = <T extends CardTargetArgsArray>(effect: T) => ({
     ...effect,
-    player_filter: new Set(effect.player_filter),
-    card_filter: new Set(effect.card_filter)
+    player_filter: parseContainer(effect.player_filter),
+    card_filter: parseContainer(effect.card_filter)
 });
 
 const targetDispatch = buildDispatch({

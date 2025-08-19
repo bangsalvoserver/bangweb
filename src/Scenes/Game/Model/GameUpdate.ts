@@ -1,5 +1,5 @@
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
-import { Container, ContainerKey } from "../../../Utils/ArrayUtils";
+import { Container, ContainerKey, parseContainer } from "../../../Utils/ArrayUtils";
 import { Empty } from "../../../Utils/UnionUtils";
 import { CardDataArgs, CardSign } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, SoundId, TokenType } from "./CardEnums";
@@ -170,9 +170,9 @@ export type RequestStatusArgs = RequestStatusBase<'array'>;
 export function parseRequestStatus(request: RequestStatusArgs): RequestStatus {
     return {
         ...request,
-        highlight_cards: new Set(request.highlight_cards),
-        target_set_players: new Set(request.target_set_players),
-        target_set_cards: new Set(request.target_set_cards)
+        highlight_cards: parseContainer(request.highlight_cards),
+        target_set_players: parseContainer(request.target_set_players),
+        target_set_cards: parseContainer(request.target_set_cards)
     }
 }
 

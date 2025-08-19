@@ -1,4 +1,4 @@
-import { Container, ContainerKey } from "../../../Utils/ArrayUtils";
+import { Container, ContainerKey, parseContainer } from "../../../Utils/ArrayUtils";
 import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType } from "./CardEnums";
 import { CardEffectBase } from "./CardTarget";
 import targetDispatch from "./TargetDispatch";
@@ -46,6 +46,6 @@ export function parseCardData(info: CardDataArgs): CardData {
         ...info,
         effects: info.effects.map(targetDispatch.parseCardEffect),
         responses: info.responses.map(targetDispatch.parseCardEffect),
-        equip_target: new Set(info.equip_target)
+        equip_target: parseContainer(info.equip_target)
     };
 }

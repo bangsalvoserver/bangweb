@@ -1,5 +1,5 @@
 import { GameOptions, GameUpdate } from "../Scenes/Game/Model/GameUpdate";
-import { Container, ContainerKey } from "../Utils/ArrayUtils";
+import { Container, ContainerKey, parseContainer } from "../Utils/ArrayUtils";
 import { Empty } from "../Utils/UnionUtils";
 
 export type LobbyId = number;
@@ -51,7 +51,7 @@ export type UserValue = UserValueBase<'set'>;
 export type UserValueArgs = UserValueBase<'array'>;
 
 export function parseUserValue(user: UserValueArgs): UserValue {
-    return { ...user, flags: new Set(user.flags) };
+    return { ...user, flags: parseContainer(user.flags) };
 }
 
 export type LobbyChatArg =
@@ -70,7 +70,7 @@ export type ChatMessage = ChatMessageBase<'set'>;
 export type ChatMessageArgs = ChatMessageBase<'array'>;
 
 export function parseChatMessage(message: ChatMessageArgs): ChatMessage {
-    return { ...message, flags: new Set(message.flags) };
+    return { ...message, flags: parseContainer(message.flags) };
 }
 
 export type ServerMessage =

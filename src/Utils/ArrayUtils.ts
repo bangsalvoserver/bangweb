@@ -66,3 +66,7 @@ type ContainerTypes<T> = {
 
 export type ContainerKey = keyof ContainerTypes<unknown>;
 export type Container<K extends ContainerKey, T> = ContainerTypes<T>[K];
+
+export function parseContainer<T>(value: Container<'array', T>): Container<'set', T> {
+    return new Set<T>(value);
+}
