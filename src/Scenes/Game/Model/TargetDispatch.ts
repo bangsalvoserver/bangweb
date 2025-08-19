@@ -1,4 +1,5 @@
 import { countIf } from "../../../Utils/ArrayUtils";
+import { CardSuit } from "./CardEnums";
 import { CardEffect, CardEffectArgs, CardEffectOf, CardTarget, CardTargetArgs, CardTargetArgsArray, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, PlayerTargetArgsArray, TargetType } from "./CardTarget";
 import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
@@ -347,34 +348,39 @@ const targetDispatch = buildDispatch({
     }),
     missed_and_same_suit: reservedDispatch({
         isCardSelected: ({cards}, card) => containsId(cards, card),
-        appendCardTarget: ({cards, possible_targets}, effect, card) => ({
-            cards: cards.concat(card),
-            possible_targets: possible_targets.filter(c => c.id !== card.id && getCardSign(c).suit === getCardSign(card).suit)
-        }),
+        appendCardTarget: ({cards, targets_by_suit}, effect, card) => {
+            const suit = getCardSign(card).suit;
+            const targets = (targets_by_suit[suit] ?? []).filter(c => c.id !== card.id);
+            return {
+                cards: cards.concat(card),
+                targets_by_suit: { [suit]: targets }
+            };
+        },
         isSelectionFinished: ({cards}, effect) => cards.length === effect.ncards,
-        isValidCardTarget: (table, selector, {cards, possible_targets}, effect, card) => {
-            if (containsId(possible_targets, card)) {
-                const filteredCards = cards.length === 0
-                    ? possible_targets.filter(c => getCardSign(c).suit === getCardSign(card).suit)
-                    : possible_targets;
-                if ((cards.length + filteredCards.length) >= effect.ncards) {
-                    const origin = getPlayer(table, table.self_player!);
-                    const cardIsMissed = (c: Card) => isMissedCard(origin, c);
-                    if (cards.some(cardIsMissed)) {
-                        return true;
-                    } else if (cards.length < effect.ncards - 1) {
-                        return filteredCards.some(cardIsMissed);
-                    } else {
-                        return cardIsMissed(card);
-                    }
+        isValidCardTarget: (table, selector, {cards, targets_by_suit}, effect, card) => {
+            const suit = getCardSign(card).suit;
+            const targets = (targets_by_suit[suit] ?? []);
+            if (containsId(targets, card) && (cards.length + targets.length) >= effect.ncards) {
+                const origin = getPlayer(table, table.self_player!);
+                const cardIsMissed = (c: Card) => isMissedCard(origin, c);
+                if (cards.some(cardIsMissed)) {
+                    return true;
+                } else if (cards.length < effect.ncards - 1) {
+                    return targets.some(cardIsMissed);
+                } else {
+                    return cardIsMissed(card);
                 }
             }
             return false;
         },
-        buildAutoTarget: (table, selector, effect) => ({
-            cards: [],
-            possible_targets: getValidCardTargets(table, selector, effect)
-        }),
+        buildAutoTarget: (table, selector, effect) => {
+            let targets_by_suit: Partial<Record<CardSuit, Card[]>> = {};
+            for (const card of getValidCardTargets(table, selector, effect)) {
+                const suit = getCardSign(card).suit;
+                (targets_by_suit[suit] ??= []).push(card);
+            }
+            return { cards: [], targets_by_suit };
+        },
         generateTarget: ({ cards }) => mapIds(cards),
         parseCardEffect
     }),

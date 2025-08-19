@@ -1,5 +1,5 @@
 import { Container, ContainerKey } from "../../../Utils/ArrayUtils";
-import { CardFilter, EffectType, PlayerFilter } from "./CardEnums";
+import { CardFilter, CardSuit, EffectType, PlayerFilter } from "./CardEnums";
 import { Card, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 
@@ -84,7 +84,7 @@ export type CardTargetTypes = {
         effect: { [K in ContainerKey]: CardTargetArgsBase<K> }
     },
     missed_and_same_suit: {
-        value: { cards: Card[], possible_targets: Card[] },
+        value: { cards: Card[], targets_by_suit: Partial<Record<CardSuit, Card[]>> },
         target: CardId[],
         effect: { [K in ContainerKey]: CardTargetArgsBase<K> & { ncards: number } }
     },
