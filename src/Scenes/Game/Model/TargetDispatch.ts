@@ -408,7 +408,7 @@ const targetDispatch = buildDispatch({
             return true;
         },
         generateTarget: card => card.id,
-        parseCardEffect
+        parseCardEffect: parsePlayerEffect
     },
     move_cube_slot: reservedDispatch({
         appendCardTarget: ({ cards, max_cubes }, effect, card) => ({ cards: cards.concat(card), max_cubes }),

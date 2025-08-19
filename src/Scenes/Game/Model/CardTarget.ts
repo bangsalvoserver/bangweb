@@ -91,7 +91,7 @@ export type CardTargetTypes = {
     cube_slot: {
         value: Card,
         target: CardId,
-        effect: { [K in ContainerKey]: CardTargetArgsBase<K> & { stealing: boolean } }
+        effect: { [K in ContainerKey]: PlayerTargetArgsBase<K> & { stealing: boolean } }
     },
     move_cube_slot: {
         value: { cards: Card[], max_cubes: number },
