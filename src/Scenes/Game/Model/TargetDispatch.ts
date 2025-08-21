@@ -6,48 +6,64 @@ import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getP
 import { CardId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSkipped, TargetSelector } from "./TargetSelector";
 
-interface BuildAutoTarget<T, E> {
-    buildAutoTarget: (table: GameTable, selector: TargetSelector, effect: E) => T;
+interface BuildAutoTarget<
+    TargetValueType = CardTarget | undefined,
+    CardEffectType = CardEffect
+> {
+    buildAutoTarget: (table: GameTable, selector: TargetSelector, effect: CardEffectType) => TargetValueType;
 }
 
-interface TargetDispatchOf<T extends U, E = CardEffect, U = T | undefined> extends BuildAutoTarget<U, E> {
-    isCardSelected: (target: T, card: Card) => boolean;
-    isValidCardTarget: (table: GameTable, selector: TargetSelector, target: U, effect: E, card: Card) => boolean;
-    appendCardTarget: (target: U, effect: E, card: Card) => T;
+interface TargetDispatchOf<
+    TargetValueType = CardTarget,
+    CardEffectType = CardEffect,
+    OptionalTarget = TargetValueType | undefined
+>
+    extends BuildAutoTarget<OptionalTarget, CardEffectType>
+{
+    isCardSelected: (target: TargetValueType, card: Card) => boolean;
+    isValidCardTarget: (table: GameTable, selector: TargetSelector, target: OptionalTarget, effect: CardEffectType, card: Card) => boolean;
+    appendCardTarget: (target: OptionalTarget, effect: CardEffectType, card: Card) => TargetValueType;
 
-    isPlayerSelected: (target: T, player: Player) => boolean;
-    isValidPlayerTarget: (table: GameTable, selector: TargetSelector, target: U, effect: E, player: Player) => boolean;
-    appendPlayerTarget: (target: U, effect: E, player: Player) => T;
+    isPlayerSelected: (target: TargetValueType, player: Player) => boolean;
+    isValidPlayerTarget: (table: GameTable, selector: TargetSelector, target: OptionalTarget, effect: CardEffectType, player: Player) => boolean;
+    appendPlayerTarget: (target: OptionalTarget, effect: CardEffectType, player: Player) => TargetValueType;
 
-    isValidCubeTarget: (table: GameTable, selector: TargetSelector, target: U, effect: E, card: Card) => boolean;
-    getCubesSelected: (target: T, cubeSlot: Card, card: Card) => number;
+    isValidCubeTarget: (table: GameTable, selector: TargetSelector, target: OptionalTarget, effect: CardEffectType, card: Card) => boolean;
+    getCubesSelected: (target: TargetValueType, cubeSlot: Card, card: Card) => number;
 
-    isSelectionFinished: (target: T, effect: E) => boolean;
-    isSelectionConfirmable: (table: GameTable, target: T, effect: E) => boolean;
-    confirmSelection: (target: T) => T;
+    isSelectionFinished: (target: TargetValueType, effect: CardEffectType) => boolean;
+    isSelectionConfirmable: (table: GameTable, target: TargetValueType, effect: CardEffectType) => boolean;
+    confirmSelection: (target: TargetValueType) => TargetValueType;
 }
 
-interface GenerateTarget<From, To> {
+interface GenerateTarget<From = CardTarget, To = CardTargetGenerated> {
     generateTarget: (target: From) => To;
 }
 
-interface ParseCardEffect<From, To> {
+interface ParseCardEffect<From = CardEffectArgs, To = CardEffect> {
     parseCardEffect: (effect: From) => To;
 }
 
-export type TargetDispatch = TargetDispatchOf<CardTarget> & GenerateTarget<CardTarget, CardTargetGenerated> & ParseCardEffect<CardEffectArgs, CardEffect>;
+export type TargetDispatch = TargetDispatchOf & GenerateTarget & ParseCardEffect;
 
-type PartialDispatch<T extends U, R, EArgs = CardEffectArgs, E = CardEffect, U = T | undefined> =
-    Partial<TargetDispatchOf<T, E, U>> & GenerateTarget<T, R> & ParseCardEffect<EArgs, E>;
+type PartialDispatch<
+    TargetValueType = CardTarget,
+    GeneratedType = CardTargetGenerated,
+    CardEffectArgsType = CardEffectArgs,
+    CardEffectType = CardEffect,
+    OptionalTarget = TargetValueType | undefined
+>   = Partial<TargetDispatchOf<TargetValueType, CardEffectType, OptionalTarget>>
+    & GenerateTarget<TargetValueType, GeneratedType>
+    & ParseCardEffect<CardEffectArgsType, CardEffectType>;
 
 type DispatchMap = {
-    [K in TargetType]: CardTargetTypes[K] extends {value: infer From, target: infer To}
-        ? PartialDispatch<From, To, CardEffectOf<K, 'array'>, CardEffectOf<K, 'set'>>
+    [K in TargetType]: CardTargetTypes[K] extends {value: infer TargetValueType, target: infer GeneratedType}
+        ? PartialDispatch<TargetValueType, GeneratedType, CardEffectOf<K, 'array'>, CardEffectOf<K, 'set'>>
         : never
 };
 
 function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
-    const getDispatch = (type: TargetType) => dispatchMap[type] as PartialDispatch<unknown, unknown>;
+    const getDispatch = (type: TargetType) => dispatchMap[type] as PartialDispatch<unknown>;
     const buildCardTarget = (type: TargetType, value: unknown) => ({ type, value } as CardTarget);
 
     return {
@@ -105,19 +121,17 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             return targetValue !== undefined ? buildCardTarget(effect.target, targetValue) : undefined;
         },
         generateTarget: target => {
-            const fn = getDispatch(target.type).generateTarget;
-            return fn(target.value) as CardTargetGenerated;
+            return getDispatch(target.type).generateTarget(target.value);
         },
         parseCardEffect: effect => {
-            const fn = getDispatch(effect.target).parseCardEffect;
-            return fn(effect) as CardEffect;
+            return getDispatch(effect.target).parseCardEffect(effect);
         },
     }
 }
 
-const reservedDispatch = <T, R, EArgs, E>(dispatch: PartialDispatch<T, R, EArgs, E, T> & BuildAutoTarget<T, E>) => {
-    return dispatch as PartialDispatch<T, R, EArgs, E>;
-};
+const reservedDispatch = <TargetValueType, GeneratedType, CardEffectArgsType, CardEffectType>
+    (dispatch: PartialDispatch<TargetValueType, GeneratedType, CardEffectArgsType, CardEffectType, TargetValueType> & BuildAutoTarget<TargetValueType, CardEffectType>) =>
+        dispatch as PartialDispatch<TargetValueType, GeneratedType, CardEffectArgsType, CardEffectType>;
 
 const isHandSelected = (target: Card, value: Card) => {
     const targetPocket = getCardPocket(target);
