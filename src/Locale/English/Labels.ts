@@ -153,6 +153,7 @@ export const LABELS_ENGLISH: LabelRegistry = {
         ERROR_LOBBY_NOT_FINISHED: "Lobby not finished" ,
         ERROR_PASSWORD_INCORRECT: "Password incorrect",
         ERROR_GAME_CHEATS_NOT_ENABLED: "Cheats are not enabled",
+        ERROR_TIMER_EXPIRED: "Timer has expired",
         INVALID_COMMAND_NAME: "Invalid command name",
     },
 

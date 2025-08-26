@@ -175,7 +175,6 @@ export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
     STATUS_DAMAGE_LEGEND_OTHER: (player) =>                                     <>{player} can force a legend player to lose a life point</>,
     
     ERROR_INVALID_ACTION: () =>                                                 <>Invalid action</>,
-    ERROR_TIMER_EXPIRED: () =>                                                  <>Timer has expired</>,
     ERROR_NOT_ENOUGH_GOLD: () =>                                                <>Not enough gold nuggets</>,
     ERROR_NOT_ENOUGH_CUBES: () =>                                               <>Not enough cubes</>,
     ERROR_NOT_ENOUGH_CUBES_ON: (card) =>                                        <>Not enough cubes on {card}</>,

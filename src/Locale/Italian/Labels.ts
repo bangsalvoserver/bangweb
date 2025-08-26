@@ -153,6 +153,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         ERROR_LOBBY_NOT_FINISHED: "Lobby non in partita finita",
         ERROR_PASSWORD_INCORRECT: "Password non corretta",
         ERROR_GAME_CHEATS_NOT_ENABLED: "I trucchi non sono abilitati",
+        ERROR_TIMER_EXPIRED: "Il tempo è scaduto",
         INVALID_COMMAND_NAME: "Comando non valido",
     },
 

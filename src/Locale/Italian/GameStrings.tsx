@@ -175,7 +175,6 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     STATUS_DAMAGE_LEGEND_OTHER: (player) =>                                 <>{player} può far perdere un punto vita a una leggenda</>,
 
     ERROR_INVALID_ACTION: () =>                                             <>Azione non valida</>,
-    ERROR_TIMER_EXPIRED: () =>                                              <>Il tempo è scaduto</>,
     ERROR_NOT_ENOUGH_GOLD: () =>                                            <>Non hai abbastanza pepite</>,
     ERROR_NOT_ENOUGH_CUBES: () =>                                           <>Non ci sono abbastanza cubetti</>,
     ERROR_NOT_ENOUGH_CUBES_ON: (card) =>                                    <>Non ci sono abbastanza cubetti su {card}</>,
