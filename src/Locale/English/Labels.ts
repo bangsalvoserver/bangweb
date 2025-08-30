@@ -60,12 +60,14 @@ export const LABELS_ENGLISH: LabelRegistry = {
         stickofdynamite:        "Stick Of Dynamite",
         legends:                "Legends",
         canyondiablo:           "Canyon Diablo",
+        crazy_greygory:         "Crazy Greygory",
     },
 
     ExpansionTooltip: {
         ghost_cards:            "Enables cards that can bring back players that were eliminated",
         udolistinu:             "Original Czech version of Valley Of Shadows",
-        canyondiablo:           "This is an extra unofficial experimental expansion"
+        canyondiablo:           "This is an extra unofficial experimental expansion",
+        crazy_greygory:         "Every player is Greygory Deck without limitations",
     },
 
     PlayerRole: {

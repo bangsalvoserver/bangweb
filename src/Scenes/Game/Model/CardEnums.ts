@@ -38,7 +38,8 @@ export type ExpansionType =
     'mostwanted' |
     'stickofdynamite' |
     'legends' |
-    'canyondiablo';
+    'canyondiablo' |
+    'crazy_greygory';
 
 export type DeckType =
     'none' |

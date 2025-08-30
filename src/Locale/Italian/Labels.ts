@@ -60,12 +60,14 @@ export const LABELS_ITALIAN: LabelRegistry = {
         stickofdynamite:        "Candelotto di Dinamite",
         legends:                "Legends",
         canyondiablo:           "Canyon Diablo",
+        crazy_greygory:         "Crazy Greygory",
     },
 
     ExpansionTooltip: {
         ghost_cards:            "Abilita le carte che possono riportare in gioco i giocatori eliminati",
         udolistinu:             "Versione originale ceca di Valley Of Shadows",
-        canyondiablo:           "Questa è un'espansione extra sperimentale non ufficiale"
+        canyondiablo:           "Questa è un'espansione extra sperimentale non ufficiale",
+        crazy_greygory:         "Tutti i giocatori sono Greygory Deck senza limitazioni",
     },
 
     PlayerRole: {

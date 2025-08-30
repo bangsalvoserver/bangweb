@@ -155,6 +155,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
             <Collapsible label={getLabel('GameOptions', 'extras')} storageKey="expand_extras">
                 <ExpansionCheckbox name='mostwanted' />
                 <ExpansionCheckbox name='canyondiablo' />
+                <ExpansionCheckbox name='crazy_greygory' />
             </Collapsible>
         </div>
         <div className="game-options-group">
