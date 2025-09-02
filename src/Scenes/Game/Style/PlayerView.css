@@ -102,8 +102,12 @@
     display: inline-block;
 }
 
+.player-role-inner {
+    width: max-content;
+}
+
 .player-view-self .player-role {
-    min-width: min-content;
+    min-width: var(--card-width-plus-margin);
     max-width: calc(2.5 * var(--card-width));
     overflow-x: auto;
     overflow-y: hidden;

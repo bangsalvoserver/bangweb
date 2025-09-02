@@ -189,10 +189,12 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                 </div>
                 <div className='player-hand' ref={handRef}>
                     <div className='player-role'>
-                        { getPlayerPocket(player, 'player_character').length > 1 && 
-                            <PocketView pocketRef={extraCharacters} cards={getPlayerPocket(player, 'player_character').slice(1)} /> }
-                        <div className='stack-pocket'>
-                            <RoleView player={player} />
+                        <div className='player-role-inner'>
+                            { getPlayerPocket(player, 'player_character').length > 1 && 
+                                <PocketView pocketRef={extraCharacters} cards={getPlayerPocket(player, 'player_character').slice(1)} /> }
+                            <div className='stack-pocket'>
+                                <RoleView player={player} />
+                            </div>
                         </div>
                     </div>
                     { isHandShown
