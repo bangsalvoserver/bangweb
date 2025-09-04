@@ -127,7 +127,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     && <div className="pocket-group">
       {(getTablePocket(table, 'scenario_deck').length !== 0 || getTablePocket(table, 'scenario_card').length !== 0) && <>
         <div className="inline-block card-faded">
-          <StackPocket slice={2} showCount pocketRef={setRef('scenario_deck')} cards={getTablePocket(table, 'scenario_deck')} />
+          <StackPocket showCount pocketRef={setRef('scenario_deck')} cards={getTablePocket(table, 'scenario_deck')} />
         </div>
         <StackPocket slice={2}
           pocketRef={setRef('scenario_card')}
