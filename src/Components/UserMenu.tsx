@@ -2,6 +2,7 @@ import { ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 import "./Style/UserMenu.css";
 import { MAX_USERNAME_LENGTH } from "../Model/AppSettings";
+import getLabel from "../Locale/GetLabel";
 
 export interface UserMenuItemProps {
   onClick: () => void;
@@ -15,10 +16,11 @@ export function UserMenuItem({ onClick, children }: UserMenuItemProps) {
 export interface UserMenuProps {
   username?: string;
   setUsername: (value: string) => void;
+  clearPropic?: () => void;
   children: ReactNode;
 }
 
-export default function UserMenu({ username, setUsername, children }: UserMenuProps) {
+export default function UserMenu({ username, setUsername, clearPropic, children }: UserMenuProps) {
   const usernameRef = useRef<HTMLInputElement>(null);
   const [showInput, setShowInput] = useState(false);
 
@@ -36,7 +38,7 @@ export default function UserMenu({ username, setUsername, children }: UserMenuPr
       <div className="px-4 py-3">
         <div className={showInput ? 'username-input' : 'username-span'}
           onClick={() => setShowInput(true)}>
-          <span className="block text-sm text-white">{clipUsername(username ?? '')}</span>
+          <span className="block text-sm text-white w-max h-5">{clipUsername(username ?? '')}</span>
           <input ref={usernameRef} value={username}
             maxLength={MAX_USERNAME_LENGTH}
             onChange={e => setUsername(e.target.value)}
@@ -44,7 +46,10 @@ export default function UserMenu({ username, setUsername, children }: UserMenuPr
           />
         </div>
       </div>
-      <ul className="py-2" aria-labelledby="user-menu-button">{children}</ul>
+      <ul className="py-2" aria-labelledby="user-menu-button">
+        {clearPropic && <UserMenuItem onClick={clearPropic}>{getLabel('ui', 'BUTTON_CLEAR_PROPIC')}</UserMenuItem>}
+        {children}
+      </ul>
     </div>
   )
 }

@@ -124,6 +124,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         BUTTON_START_GAME: "Avvia Partita",
         BUTTON_SPECTATE_ON: "Unisciti come spettatore",
         BUTTON_SPECTATE_OFF: "Unisciti come giocatore",
+        BUTTON_CLEAR_PROPIC: "Rimuovi immagine del profilo",
         BUTTON_ENABLE_SOUNDS: "Abilita Souni",
         BUTTON_DISABLE_SOUNDS: "Disabilita Suoni",
         BUTTON_RETURN_LOBBY: "Ritorna alla Lobby",

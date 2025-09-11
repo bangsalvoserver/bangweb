@@ -47,6 +47,11 @@ function Header({ scene, settings, connection }: HeaderProps) {
     }
   };
 
+  const handleClearPropic = () => {
+    settings.setPropic(undefined);
+    connection.sendMessage({ user_set_propic: null });
+  };
+
   const handleToggleSounds = () => {
     settings.setMuteSounds(value => !value);
   };
@@ -84,7 +89,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
             <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd"></path></svg>
           </button>
           { isMenuOpen &&
-            <UserMenu username={settings.username} setUsername={handleSetUsername}>
+            <UserMenu username={settings.username} setUsername={handleSetUsername} clearPropic={settings.propic ? handleClearPropic : undefined}>
               <UserMenuItem onClick={handleToggleSounds}>{getLabel('ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
               { scene.type === 'game' && checkMyUserFlag(scene.lobbyState, 'lobby_owner') && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
               { scene.type === 'lobby' && <UserMenuItem onClick={handleToggleSpectate}>{getLabel('ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }
