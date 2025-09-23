@@ -174,10 +174,7 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
         }
     }
 
-    if (!getModifierContext(selector, 'ignore_distances')
-        && !origin.status.flags.has('ignore_distances')
-        && (filter.has('reachable') || filter.has('range_1') || filter.has('range_2'))
-    ) {
+    if (filter.has('reachable') || filter.has('range_1') || filter.has('range_2')) {
         const distances = selector.request?.distances;
         
         let range = distances?.range_mod ?? 0;
@@ -192,7 +189,12 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
             range += 2;
         }
 
-        if (calcPlayerDistance(table, selector, origin.id, target.id) > range) return false;
+        if (!getModifierContext(selector, 'ignore_distances')
+            && !origin.status.flags.has('ignore_distances')
+            && calcPlayerDistance(table, selector, origin.id, target.id) > range
+        ) {
+            return false;
+        }
     }
 
     return true;
