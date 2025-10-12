@@ -132,6 +132,15 @@ export interface PlayerDistances {
     weapon_range: number;
 }
 
+export interface GameStatusBase<K extends ContainerKey> {
+    target_set_players: Container<K, PlayerId>;
+    target_set_cards: Container<K, CardId>;
+    distances: PlayerDistances;
+}
+
+export type GameStatusArgs = GameStatusBase<'array'>;
+export type GameStatus = GameStatusBase<'set'>;
+
 export interface TimerStatusArgs {
     timer_id: number;
     duration: Milliseconds;
@@ -159,32 +168,42 @@ interface RequestStatusBase<K extends ContainerKey> {
     respond_cards: PlayableCardInfo[];
     highlight_cards: Container<K, CardId>;
     distances: PlayerDistances;
-    target_set_players: Container<K, PlayerId>;
-    target_set_cards: Container<K, CardId>;
     timer: TimerStatusArgs | null;
+    status: GameStatusBase<K>;
 }
 
 export type RequestStatus = RequestStatusBase<'set'>;
 export type RequestStatusArgs = RequestStatusBase<'array'>;
 
+function parseGameStatus(status: GameStatusArgs): GameStatus {
+    return {
+        ...status,
+        target_set_players: parseContainer(status.target_set_players),
+        target_set_cards: parseContainer(status.target_set_cards)
+    };
+}
+
 export function parseRequestStatus(request: RequestStatusArgs): RequestStatus {
     return {
         ...request,
         highlight_cards: parseContainer(request.highlight_cards),
-        target_set_players: parseContainer(request.target_set_players),
-        target_set_cards: parseContainer(request.target_set_cards)
+        status: parseGameStatus(request.status)
     }
 }
 
-export interface StatusReady {
+export interface StatusReadyBase<K extends ContainerKey> {
     play_cards: PlayableCardInfo[];
-    distances: PlayerDistances;
+    status: GameStatusBase<K>;
 }
 
-export type StatusReadyArgs = StatusReady;
+export type StatusReady = StatusReadyBase<'set'>;
+export type StatusReadyArgs = StatusReadyBase<'array'>;
 
 export function parseStatusReady(request: StatusReadyArgs): StatusReady {
-    return request;
+    return {
+        ...request,
+        status: parseGameStatus(request.status)
+    };
 }
 
 export type GameOptions = Partial<{

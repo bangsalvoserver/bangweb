@@ -85,7 +85,7 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
         return 0;
     }
     
-    const distanceMod = selector.request?.distances.distance_mods.find(item => item.player === to)?.value ?? 0;
+    const distanceMod = selector.request?.status.distances.distance_mods.find(item => item.player === to)?.value ?? 0;
 
     if (table.status.flags.has('disable_player_distances')) {
         return 1 + distanceMod;
@@ -168,14 +168,12 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (filter.has('not_empty_cubes') && isEmptyCubes(table, target)) return false;
 
-    if (filter.has('target_set')) {
-        if (!isResponse(selector) || !selector.request.target_set_players.has(target.id)) {
-            return false;
-        }
+    if (filter.has('target_set') && !selector.request?.status.target_set_players.has(target.id)) {
+        return false;
     }
 
     if (filter.has('reachable') || filter.has('range_1') || filter.has('range_2')) {
-        const distances = selector.request?.distances;
+        const distances = selector.request?.status.distances;
         
         let range = distances?.range_mod ?? 0;
         if (filter.has('reachable')) {
@@ -209,7 +207,7 @@ export function checkCardFilter(table: GameTable, selector: TargetSelector, filt
     const targetOwner = getCardOwner(target);
 
     if (filter.has('target_set')) {
-        if (!isResponse(selector) || !selector.request.target_set_cards.has(target.id)) {
+        if (!selector.request?.status.target_set_cards.has(target.id)) {
             return false;
         }
     } else {
