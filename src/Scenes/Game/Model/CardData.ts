@@ -1,5 +1,5 @@
 import { Container, ContainerKey, parseContainer } from "../../../Utils/ArrayUtils";
-import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType } from "./CardEnums";
+import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, PlayerFilter, TagType } from "./CardEnums";
 import { CardEffectBase } from "./CardTarget";
 import targetDispatch from "./TargetDispatch";
 
@@ -26,12 +26,6 @@ interface CardDataBase<K extends ContainerKey> {
     };
     modifier_response: {
         type: ModifierType | null
-    };
-    mth_effect: {
-        type: MthType | null
-    };
-    mth_response: {
-        type: MthType | null
     };
     equip_target: Container<K, PlayerFilter>;
     color: CardColor;

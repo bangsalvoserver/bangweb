@@ -126,4 +126,3 @@ export type EffectType = string;
 export type EquipType = string;
 export type TagType = string;
 export type ModifierType = string;
-export type MthType = string;
