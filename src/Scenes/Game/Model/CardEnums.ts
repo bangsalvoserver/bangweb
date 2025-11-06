@@ -37,6 +37,7 @@ export type ExpansionType =
     'wildwestshow' |
     'mostwanted' |
     'stickofdynamite' |
+    'legends_basemod' |
     'legends' |
     'canyondiablo' |
     'crazy_greygory';

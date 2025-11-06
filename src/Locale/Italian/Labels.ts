@@ -59,6 +59,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         fistfulofcards:         "A Fistful of Cards",
         stickofdynamite:        "Candelotto di Dinamite",
         legends:                "Legends",
+        legends_basemod:        "Legends (Modifiche gioco Base)",
         canyondiablo:           "Canyon Diablo",
         crazy_greygory:         "Crazy Greygory",
     },

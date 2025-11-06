@@ -16,21 +16,28 @@ type GameOptionsOf<T> = {
     [K in keyof Required<GameOptions>]: Required<GameOptions>[K] extends T ? { prop: K, value?: T } : never;
 }[keyof GameOptions];
 
+interface ExpansionProps {
+    name: ExpansionType;
+    onSelect?: (expansions: Set<ExpansionType>) => void;
+    onDeselect?: (expansions: Set<ExpansionType>) => void;
+}
+
 export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameOptionProps) {
-    const ExpansionCheckbox = useCallback(({ name, include, exclude }: { name: ExpansionType, include?: ExpansionType[], exclude?: ExpansionType[] }) => {
+    const ExpansionCheckbox = useCallback(({ name, onSelect, onDeselect }: ExpansionProps) => {
         const readOnly = setGameOptions === undefined;
         const handleExpansionChange = readOnly ? undefined : (event: ChangeEvent<HTMLInputElement>) => {
             const oldValue = gameOptions.expansions?.includes(name);
             const newValue = event.target.checked;
             if (oldValue !== newValue) {
-                setGameOptions({
-                    expansions: newValue
-                        ? gameOptions.expansions?.filter(e => {
-                            return (!include || include.includes(e))
-                                && (!exclude || !exclude.includes(e));
-                        }).concat(name)
-                        : gameOptions.expansions?.filter(e => e !== name)
-                });
+                const expansions = new Set(gameOptions.expansions ?? []);
+                if (newValue) {
+                    expansions.add(name);
+                    if (onSelect) onSelect(expansions);
+                } else {
+                    expansions.delete(name);
+                    if (onDeselect) onDeselect(expansions);
+                }
+                setGameOptions({ expansions: [...expansions] });
             }
         };
 
@@ -138,11 +145,12 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='dodgecity' />
                 <ExpansionCheckbox name='wildwestshow_characters' />
                 <ExpansionCheckbox name='goldrush' />
-                <ExpansionCheckbox name='valleyofshadows' exclude={['udolistinu']}/>
-                <ExpansionCheckbox name='udolistinu' exclude={['valleyofshadows']} />
+                <ExpansionCheckbox name='valleyofshadows' onSelect={e => e.delete('udolistinu')} />
+                <ExpansionCheckbox name='udolistinu' onSelect={e => e.delete('valleyofshadows')} />
                 <ExpansionCheckbox name='armedanddangerous' />
                 <ExpansionCheckbox name='greattrainrobbery' />
-                <ExpansionCheckbox name='legends' />
+                <ExpansionCheckbox name='legends' onSelect={e => e.add('legends_basemod')} />
+                <ExpansionCheckbox name='legends_basemod' onDeselect={e => e.delete('legends')} />
             </Collapsible>
             <Collapsible label={getLabel('GameOptions', 'variations')} storageKey="expand_variations" defaultExpanded>
                 <ExpansionCheckbox name='ghost_cards' />
