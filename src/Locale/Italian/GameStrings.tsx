@@ -247,6 +247,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     ERROR_TRAIN_NOT_IN_THIS_STATION: () =>                                  <>Il vagone non è accoppiato a questa stazione</>,
     ERROR_DAMAGE_LEGEND_KILL: () =>                                         <>Non puoi togliere l'ultimo punto vita alla leggenda</>,
     ERROR_DIFFERENT_SUITS: () =>                                            <>Le carte devono essere dello stesso seme</>,
+    ERROR_CARDS_NOT_SAME_NAME: (card1, card2) =>                            <>La carta {card2} non ha lo stesso nome di {card1}</>,
 
     LOG_GAME_START: () =>                                                   <>La partita è iniziata</>,
     LOG_GAME_OVER: () =>                                                    <>La partita è terminata</>,
