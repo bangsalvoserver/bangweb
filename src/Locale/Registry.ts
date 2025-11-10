@@ -1,4 +1,7 @@
 import Env, { Language } from "../Model/Env";
+import { CARDS_CZECH } from "./Czech/Cards";
+import { GAME_STRINGS_CZECH } from "./Czech/GameStrings";
+import { LABELS_CZECH } from "./Czech/Labels";
 import { CARDS_ENGLISH } from "./English/Cards";
 import { GAME_STRINGS_ENGLISH } from "./English/GameStrings";
 import { LABELS_ENGLISH } from "./English/Labels";
@@ -20,6 +23,7 @@ export type Registry = [CardRegistry, LabelRegistry, GameStringRegistry];
 const registries: Record<Language, Registry> = {
     'it': [CARDS_ITALIAN, LABELS_ITALIAN, GAME_STRINGS_ITALIAN],
     'en': [CARDS_ENGLISH, LABELS_ENGLISH, GAME_STRINGS_ENGLISH],
+    'cs': [CARDS_CZECH, LABELS_CZECH, GAME_STRINGS_CZECH],
 };
 
 export function getSystemLanguage(): Language {
@@ -40,6 +44,8 @@ export function getSystemLanguage(): Language {
     switch (language.toLowerCase()) {
         case 'it-it':
         case 'it': return 'it';
+        case 'cs-cz':
+        case 'cs': return 'cs';
         default: return 'en';
     }
 }

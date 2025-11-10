@@ -1,4 +1,4 @@
-export type Language = 'en' | 'it';
+export type Language = 'en' | 'it' | 'cs';
 
 const Env = (() => {
     const bangServerUrl = import.meta.env.VITE_BANG_SERVER_URL as string | undefined;
