@@ -2,20 +2,26 @@ import { CardRegistry } from "../Registry";
 
 export const CARDS_ITALIAN: CardRegistry = {
     
+    // Base game cards
+
     BARREL: {
         "name": "Barile",
     },
     DYNAMITE: {
         "name": "Dinamite",
+        "description": <div className="draw-description">Perdi 3 punti vita. Se no passa la Dinamite a sinistra.</div>
     },
     SCOPE: {
         "name": "Mirino",
+        "description": <>Tu vedi gli altri a distanza -1.</>
     },
     MUSTANG: {
         "name": "Mustang",
+        "description": <>Gli altri ti vedono a distanza +1.</>
     },
     JAIL: {
         "name": "Prigione",
+        "description": <div className="draw-description">Scarta la Prigione e gioca. Altrimenti scarta la Prigione e salta il turno.</div>
     },
     REMINGTON: {
         "name": "Remington",
@@ -28,9 +34,10 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     VOLCANIC: {
         "name": "Volcanic",
+        "description": <div className="weapon-description">Puoi giocare quanti BANG! vuoi.</div>
     },
     WINCHESTER: {
-        "name": "Winchester",   
+        "name": "Winchester"
     },
     BANG: {
         "name": "Bang!",
@@ -46,15 +53,18 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DUEL: {
         "name": "Duello",
+        "description": <>Un giocatore scarta un BANG!, poi tu, ecc. Il primo che non lo fa perde 1 punto vita.</>
     },
     GENERAL_STORE: {
         "name": "Emporio",
+        "description": <>Rivela carte quanti i giocatori. Ognuno ne pesca una.</>
     },
     GATLING: {
         "name": "Gatling",
     },
     INDIANS: {
         "name": "Indiani!",
+        "description": <>Tutti gli altri scartano un BANG! o perdono 1 punto vita.</>
     },
     MISSED: {
         "name": "Mancato!",
@@ -68,11 +78,16 @@ export const CARDS_ITALIAN: CardRegistry = {
     WELLS_FARGO: {
         "name": "Wells Fargo",  
     },
+
+    // Dodge City cards
+
     BINOCULAR: {
         "name": "Binocolo",
+        "description": <>Tu vedi gli altri a distanza -1.</>
     },
     HIDEOUT: {
         "name": "Riparo",
+        "description": <>Gli altri ti vedono a distanza +1.</>
     },
     PUNCH: {
         "name": "Pugno",
@@ -134,51 +149,94 @@ export const CARDS_ITALIAN: CardRegistry = {
     SOMBRERO: {
         "name": "Sombrero",
     },
+
+    // Valley of Shadows cards
+
     GHOST: {
         "name": "Fantasma",
+        "description": <>Gioca su un giocatore eliminato. Quel giocatore torna in gioco, ma non può guadagnare né perdere punti vita.</>
+    },
+    GHOST_2: {
+        "name": "Fantasma",
+        "description": <>Giocala su un giocatore eliminato. Quel giocatore è di nuovo in gioco senza l'abilità del suo personaggio, non può guadagnare né perdere punti vita e gioca normalmente finché ha questa carta in gioco.</>
     },
     LEMAT: {
         "name": "Lemat",
+        "description": <div className="weapon-description">Nel tuo turno, puoi usare ogni carta in mano come carta BANG!.</div>
+    },
+    LEMAT_2: {
+        "name": "Lemat",
+        "description": <div className="weapon-description">Nel tuo turno, puoi usare una qualunque carta (tranne il Mancato!) come una carta BANG!.</div>
     },
     RATTLESNAKE: {
         "name": "Serpente a Sonagli",
+        "description": <>Gioca su chiunque. All'inizio del turno, quel giocatore "estrae!": se è Picche, perde 1 punto vita.</>
     },
     SHOTGUN: {
         "name": "Shotgun",
+        "description": <div className="weapon-description">Ogni volta che colpisci un giocatore, deve scartare una carta a scelta dalla mano.</div>
     },
     BOUNTY: {
         "name": "Taglia",
+        "description": <>Gioca su chiunque. Se quel giocatore è colpito da una carta BANG!, chi ha sparato pesca una carta dal mazzo.</>
     },
     BANDIDOS: {
         "name": "Bandidos",
+        "description": <>Ogni giocatore sceglie se scartare 2 carte dalla mano (o 1 se ne ha solo 1) o perdere 1 punto vita.</>
+    },
+    BANDIDOS_2: {
+        "name": "Bandidos",
+        "description": <>Tutti gli altri giocatori scartano una carta BANG! oppure 2 carte dalla loro mano a scelta.</>
     },
     ESCAPE: {
         "name": "Fuga",
+        "description": <>Può essere giocata fuori turno. Evita l'effetto di una carta marrone (non BANG!) di cui sei uno dei bersagli.</>
+    },
+    ESCAPE_2: {
+        "name": "Fuga",
+        "description": <>Se sei l'unico bersaglio di una carta diversa da un BANG!, evita l'effetto di quella carta.</>
     },
     AIM: {
         "name": "Mira",
+        "description": <>Gioca questa carta assieme a una carta BANG!. Se il bersaglio viene colpito, perde 2 punti vita.</>
     },
     POKER: {
         "name": "Poker",
+        "description": <>Tutti gli altri scartano una carta dalla mano, allo stesso tempo. Se non c'è alcun Asso, pesca fino a 2 di quelle carte.</>
     },
     BACKFIRE: {
         "name": "Ritorno di Fiamma",
+        "description": <>Vale una carta Mancato!<br/>Il giocatore che ha sparato è bersaglio di un BANG!.</>
     },
     SAVED: {
         "name": "Salvo!",
+        "description": <>Può essere giocata fuori turno. Previeni la perdita di 1 punto vita di un altro giocatore. Se sopravvive, pesca 2 carte dalla sua mano o dal mazzo (scegli).</>
+    },
+    SAVED_2: {
+        "name": "Salvo!",
+        "description": <>Giocala solo fuori dal tuo turno<br/>Impedisce a un giocatore di perdere 1 punto vita. Se salvi un giocatore dall'eliminazione, pesca 2 carte dalla mano di quel giocatore.</>,
     },
     FANNING: {
         "name": "Sventagliata",
+        "description": <>Conta come l'unico BANG! del turno. Anche un giocatore a tua scelta a distanza 1 dal bersaglio (se c'è, te escluso) è bersaglio di un BANG!.</>
     },
     TOMAHAWK: {
         "name": "Tomahawk",
     },
     TORNADO: {
         "name": "Tornado",
+        "description": <>Tutti scartano una carta dalla mano (se possibile), poi pescano 2 carte dal mazzo.</>
+    },
+    TORNADO_2: {
+        "name": "Tornado",
+        "description": <>Ogni giocatore deve dare 2 carte dalla mano al giocatore alla propria sinistra.</>
     },
     LAST_CALL: {
         "name": "Ultimo Giro",
     },
+
+    // Armed & Dangerous cards
+
     CARAVAN: {
         "name": "Carovana",
     },
@@ -187,120 +245,155 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     QUICK_SHOT: {
         "name": "Colpo Rapido",
+        "description": <div className="cube-description">Colpisci un ulteriore giocatore.</div>
     },
     FLINTLOCK: {
         "name": "Flintlock",
+        "description": <div className="cube-description">Se annullato, riprendi questa carta.</div>
     },
     ARROW: {
         "name": "Freccia",
+        "description": <>Un giocatore bersaglio scarta una carta BANG! dalla mano o perde 1 punto vita.<div className="cube-description">Colpisci un ulteriore giocatore.</div></>
     },
     DUCK: {
         "name": "Giù la Testa!",
+        "description": <div className="cube-description">Riprendi questa carta.</div>
     },
     RELOAD: {
         "name": "Ricarica",
+        "description": <>Aggiungi 3 <div className="cube"/> sulle tue carte e/o sul tuo personaggio.</>
     },
     RUST: {
         "name": "Ruggine",
+        "description": <>Gli altri spostano 1 <div className="cube"/> dal personaggio e da ogni carta Dangerous sul tuo personaggio.</>
     },
     SQUAW: {
         "name": "Squaw",
+        "description": <>Scarta una carta in gioco.<div className="cube-description">Aggiungi la carta scartata alla tua mano.</div></>
     },
     ACE_UP_THE_SLEEVE: {
         "name": "Asso nella Manica",
     },
     BANDOLIER: {
         "name": "Bandoliera",
+        "description": <div className="cube-description">Una volta nel tuo turno, puoi giocare una carta BANG! extra.</div>
     },
     BIG_FIFTY: {
         "name": "Big Fifty",
+        "description": <div className="cube-description">Annulla le carte in gioco e l'abilità del personaggio del bersaglio.</div>
     },
     BOMB: {
         "name": "Bomba",
+        "description": <>Gioca su chiunque. All'inizio del tuo turno, "estrai!":<br/>♥♦=Passa la Bomba a chi vuoi.<br/>♣♠=scarta 2 <div className="cube"/>: se finiscono, perdi 2 punti vita.</>
     },
     BUNTLINE_SPECIAL: {
         "name": "Buntline Special",
+        "description": <div className="cube-description">Se il BANG! viene annullato il bersaglio deve scartare una carta a scelta dalla mano.</div>
     },
     BELL_TOWER: {
         "name": "Campanile",
+        "description": <div className="cube-description">Vedi tutti a distanza 1 per la prossima carta che giochi.</div>
     },
     CRATE: {
         "name": "Cassa",
     },
     TUMBLEWEED: {
         "name": "Cespuglio",
+        "description": <div className="cube-description">Ripeti o fai ripetere un "estrarre!".</div>
     },
     DOUBLE_BARREL: {
         "name": "Doppia Canna",
+        "description": <div className="cube-description">Se giochi un BANG! di Quadri non può essere annullato.</div>
     },
     WHIP: {
         "name": "Frusta",
+        "description": <div className="cube-description">Scarta una carta in gioco.</div>
     },
     BEER_KEG: {
         "name": Math.random() < 0.95 ? "Fusto di Birra" : "Busto di Firra",
     },
     LOCKPICK: {
         "name": "Grimaldello",
+        "description": <div className="cube-description">Pesca 1 carta dalla mano di un giocatore.</div>
     },
     THUNDERER: {
         "name": "Thunderer",
+        "description": <div className="cube-description">Riprendi la carta BANG! giocata.</div>
     },
+
+    // Canyon Diablo cards
+
     GRAVE_ROBBER: {
         "name": "Tombarolo",
+        "description": <>Metti sul tavolo tante carte dalla cima degli scarti quanti sono i giocatori. Ognuno ne sceglie una.</>
     },
     CARD_SHARPER: {
         "name": "Baro",
+        "description": <>Scambia una carta a bordo blu in gioco di fronte a te con un'altra dello stesso colore in gioco di fronte ad un altro giocatore.</>
     },
     MIRAGE: {
         "name": "Miraggio",
+        "description": <>Vale una carta Mancato!<br/>Inoltre il giocatore che ha sparato termina immediatamente il proprio turno.</>
     },
     BLOOD_PACT: {
         "name": "Patto di Sangue",
     },
     SACRIFICE: {
         "name": "Sacrificio",
+        "description": <>Può essere giocata fuori turno. Previeni la perdita di 1 punto vita di un altro giocatore subendola tu stesso. Se possibile, poi, pesca 2 carte dal mazzo (3, se si previene un colpo fatale).</>
     },
     DISARM: {
         "name": "Disarmare",
+        "description": <>Vale una carta Mancato!<br/>Inoltre fai scartare una carta dalla mano al giocatore che ha sparato.</>
     },
     MOLOTOV: {
         "name": "Molotov",
     },
     BULLDOG: {
         "name": "Bulldog",
+        "description": <div className="weapon-description">Una sola volta per turno, puoi giocare una carta BANG! come Gatling scartando un'altra carta con essa.</div>
     },
     LAST_WILL: {
         "name": "Ultime Volontà",
+        "description": <>Gioca su chiunque. Se il giocatore viene eliminato, può dare fino a 3 carte (dalla mano o in gioco) a un giocatore ancora in gioco.</>
     },
     INDIAN_GUIDE: {
         "name": "Guida Indiana",
+        "description": <>Gioca su te stesso. Gli Indiani! e il Sentiero di Guerra non hanno effetto su di te.</>
     },
     TAXMAN: {
         "name": "Esattore",
+        "description": <>Gioca su chiunque. All'inizio del turno, quel giocatore "estrae!": se è Picche o Fiori, pesca una carta in meno in fase 1.</>
     },
     BROTHEL: {
         "name": "Bordello",
+        "description": <div className="draw-description">Scarta e gioca, ma perdi la tua abilità fino all'inizio del tuo prossimo turno. Altrimenti scarta e gioca normalmente.</div>
     },
     BRONCO: {
         "name": "Bronco",
+        "description": <>Gli altri ti vedono a distanza +1. Non può essere in gioco insieme a Mustang. Può essere rimosso anche scartando 2 carte dalla mano.</>
     },
     PACK_MULE: {
         "name": "Mulo",
+        "description": <>Puoi tenere in mano una carta in più rispetto ai tuoi punti vita correnti. Non può essere in gioco insieme a Mustang o Bronco.</>
     },
     WAR_PATH: {
         "name": "Sentiero di Guerra",
+        "description": <>Tutti gli altri giocatori scartano una carta BANG! o perdono 1 punto vita.</>
     },
     ARSON: {
         "name": "Incendio",
     },
     FLYING_BULLET: {
         "name": "Proiettile Vagante",
+        "description": <>Vale una carta Mancato!<br/>Inoltre un giocatore a tua scelta a distanza 1 da te (se c'è) è bersaglio del BANG!.</>
     },
     ON_THE_HOUSE: {
         "name": "Offre La Casa",
     },
     GUITAR: {
         "name": "Chitarra",
+        "description": <>Gioca su chiunque. Finché è in gioco, quel giocatore non può giocare carte BANG! (o carte che dipendono dalla gittata dell'arma).</>
     },
     SCRAPPER: {
         "name": "Attaccabrighe",
@@ -308,6 +401,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     SHYLOCK: {
         "name": "Strozzino",
     },
+
+    // Base game characters
+
     BART_CASSIDY: {
         "name": "Bart Cassidy",
     },
@@ -356,6 +452,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     WILLY_THE_KID: {
         "name": "Willy the Kid",
     },
+
+    // Most Wanted characters
+
     CLAUS_THE_SAINT: {
         "name": "Claus \"The Saint\"",
     },
@@ -371,6 +470,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     EMILIANO: {
         "name": "Emiliano",
     },
+
+    // Dodge City characters
+
     APACHE_KID: {
         "name": "Apache Kid",
     },
@@ -416,6 +518,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     VERA_CUSTER: {
         "name": "Vera Custer",
     },
+
+    // Valley of Shadows characters
+
     BLACK_FLOWER: {
         "name": "Black Flower",
     },
@@ -440,6 +545,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     TUCO_FRANZISKANER: {
         "name": "Tuco Franziskaner",
     },
+
+    // Wild West Show characters
+
     BIG_SPENCER: {
         "name": "Big Spencer",
     },
@@ -464,6 +572,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     YOUL_GRINNER: {
         "name": "Youl Grinner",
     },
+
+    // Armed & Dangerous characters
+
     AL_PREACHER: {
         "name": "Al Preacher",
     },
@@ -488,6 +599,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     RED_RINGO: {
         "name": "Red Ringo",
     },
+
+    // Gold Rush characters
+
     DON_BELL: {
         "name": "Don Bell",
     },
@@ -512,6 +626,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     SIMEON_PICOS: {
         "name": "Simeon Picos",
     },
+
+    // High Noon cards
+
     BLESSING: {
         "name": "Benedizione",
     },
@@ -569,6 +686,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     HIGH_NOON: {
         "name": "Mezzogiorno di Fuoco",
     },
+
+    // Fistful of Cards cards
+
     AMBUSH: {
         "name": "Agguato",
     },
@@ -620,6 +740,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     A_FISTFUL_OF_CARDS: {
         "name": "Per un Pugno di Carte",
     },
+
+    // Wild West Show cards
+
     GAG: {
         "name": "Bavaglio",
     },
@@ -650,6 +773,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     WILD_WEST_SHOW: {
         "name": "Wild West Show",
     },
+
+    // Gold Rush cards
+
     SHOT: {
         "name": "Bicchierino",
     },
@@ -713,17 +839,23 @@ export const CARDS_ITALIAN: CardRegistry = {
     RUCKSACK: {
         "name": "Zaino",
     },
+
+    // The Great Train Robbery cards
+
     CACTUS: {
         "name": "Cactus",
     },
     DRAGOON: {
         "name": "Dragoon",
+        "description": <>Puoi giocare un BANG! extra a turno.</>
     },
     EVADED: {
         "name": "Per Un Pelo!",
+        "description": <>Pesca la carta che hai Mancato!</>
     },
     FULL_STEAM: {
         "name": "A Tutto Vapore",
+        "description": <>Manda il treno al capolinea.<br/>Raddoppia o annulla l'effetto della locomotiva.</>
     },
     FULL_STEAM_NO_EFFECT: {
         "name": "A Tutto Vapore: Ignora effetti locomotiva",
@@ -733,30 +865,39 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     KNIFE_REVOLVER: {
         "name": "Knife Revolver",
+        "description": <>Conta come il BANG! del turno.<br/>"Estrai!": J, Q, K, A = riprendi questa carta in mano.</>
     },
     MAP: {
         "name": "Mappa",
+        "description": <>Al tuo turno, prima di pescare, guarda le prime 2 carte del mazzo: puoi scartarne 1.</>
     },
     MONEY_BAG: {
         "name": "Sacco Di Soldi",
+        "description": <>Se la carta in cima agli scarti è a bordo marrone, copiane l'effetto.</>
     },
     MOST_WANTED: {
         "name": "Most Wanted",
+        "description": <div className="description-low">Ogni giocatore "estrae!":<br/>♠=perde 1 punto vita.</div>
     },
     NEXT_STOP: {
         "name": "Prossima Fermata",
+        "description": <div>Fai avanzare il treno di 1 stazione.</div>
     },
     REFUND: {
         "name": "Rimborso",
+        "description": <>Quando un altro giocatore pesca o scarta una tua carta, tranne questa, pesca una carta.</>
     },
     STRONGBOX: {
         "name": "Cassaforte",
+        "description": <>Alla fine del tuo turno, pesca una carta.</>
     },
     SWITCH: {
         "name": "Scambio",
+        "description": <>Scambia una tua carta in gioco con un'altra carta in gioco.</>
     },
     TRAIN_ROBBERY: {
         "name": "Rapina Al Treno",
+        "description": <>Conta come il BANG! del turno.<br/>Il bersaglio sceglie per ogni sua carta in gioco: la scarta o è colpito da un BANG!</>
     },
     TRAIN_ROBBERY_DISCARD: {
         "name": "Rapina Al Treno: Scarta una carta",
@@ -766,7 +907,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     WATER_TOWER: {
         "name": "Serbatoio",
+        "description": <>Prendi gratis un vagone a scelta dal treno.</>
     },
+
+    // The Great Train Robbery characters
+
     BENNY_BRAWLER: {
         "name": "Benny Brawler",
     },
@@ -791,6 +936,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     ZIPPY_ROY: {
         "name": "Zippy Roy",
     },
+
+    // Canyon Diablo characters
+
     ANNIE_OAKEY: {
         "name": "Annie Oakey",
     },
@@ -848,6 +996,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     WYATT_EARL: {
         "name": "Wyatt Earl",
     },
+
+    // The Great Train Robbery railcar cards
+
     BAGGAGE_CAR: {
         "name": "Baggage Car",
     },
@@ -908,12 +1059,18 @@ export const CARDS_ITALIAN: CardRegistry = {
     SLEEPER_CAR: {
         "name": "Sleeper Car",
     },
+
+    // The Great Train Robbery locomotive cards
+
     IRONHORSE: {
         "name": "Ironhorse",
     },
     LELAND: {
         "name": "Leland",
     },
+
+    // The Great Train Robbery station cards
+
     BOOM_TOWN: {
         "name": "Boom Town",
     },
@@ -953,6 +1110,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     YOOMA: {
         "name": "Yooma",
     },
+
+    // Legends feats cards
+
     FIFTY_GUNS: {
         "name": "Cinquanta Pistole",
     },
@@ -1001,6 +1161,9 @@ export const CARDS_ITALIAN: CardRegistry = {
     A_QUICK_DEATH: {
         "name": "Una Morte Veloce",
     },
+
+    // Button row virtual cards
+
     ESCAPE_JAIL: {
         "name": "Fuggi di Prigione",
     },
