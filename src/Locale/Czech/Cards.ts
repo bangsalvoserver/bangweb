@@ -235,7 +235,7 @@ export const CARDS_CZECH: CardRegistry = {
     RHUM:                       "Rum",
     GOLD_PAN:                   "Rýžovací mísa",
     BOOTS:                      "Boty",
-    LUCKY_CHARM:                "Talismán",
+    LUCKY_CHARM:                "Talisman",
     UNION_PACIFIC:              "Union Pacific",
     RUCKSACK:                   "Batoh",
     CACTUS:                     "Kaktus",
