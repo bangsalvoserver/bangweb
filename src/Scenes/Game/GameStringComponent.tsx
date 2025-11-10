@@ -17,7 +17,7 @@ export interface CardNameProps {
 }
 
 export function getLocalizedCardName(name: string): string {
-    return name in cardRegistry ? cardRegistry[name] : name;
+    return name in cardRegistry ? cardRegistry[name].name : name;
 }
 
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
