@@ -28,7 +28,7 @@
 }
 
 .option-left-column {
-    width: 12em;
+    width: 13.5em;
 }
 
 .option-left-column label {
@@ -42,6 +42,10 @@
 }
 
 @media (max-width: 768px) {
+    .game-options-group {
+        font-size: 11pt;
+    }
+
     .option-right-column {
         width: 7.5em;
     }
