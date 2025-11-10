@@ -226,7 +226,7 @@ export const CARDS_CZECH: CardRegistry = {
     GUN_BELT:                   "Nábojový pás",
     PARDNER:                    "Komplic",
     PARDNER_GENERAL_STORE:      "Komplic jako Obchod",
-    PARDNER_DUEL:               "Komplic jako Souboj",
+    PARDNER_DUEL:               "Komplic jako Duel",
     PARDNER_CAT_BALOU:          "Komplic jako Cat Balou",
     GOLD_RUSH:                  "Zlatá horečka",
     HORSESHOE:                  "Podkova",
