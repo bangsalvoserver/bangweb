@@ -775,7 +775,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     NEW_IDENTITY: {
         "name": "Nuova Identità",
-        "description": <>Ciascuno, all'inizio del proprio turno, prende un altro personaggio a caso: può sostituirlo per sempre al proprio, ripartendo da 2 punti vita.</> // modifica al testo
+        // EDIT: the original card said that you should change the character with the one used to display your hp, which is not the case any more.
+        "description": <>Ciascuno, all'inizio del proprio turno, prende un altro personaggio a caso: può sostituirlo per sempre al proprio, ripartendo da 2 punti vita.</>
     },
     HIGH_NOON: {
         "name": "Mezzogiorno di Fuoco",
@@ -855,42 +856,55 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     GAG: {
         "name": "Bavaglio",
+        "description": <>I giocatori non possono parlare (ma possono gesticolare, mugugnare...). Chi parla perde 1 punto vita.</>
     },
     BONE_ORCHARD: {
         "name": "Camposanto",
+        "description": <>All'inizio del proprio turno, ogni giocatore eliminato torna in gioco con 1 punto vita. Pesca il ruolo a caso fra quelli dei giocatori eliminati.</>
     },
     DARLING_VALENTINE: {
         "name": "Darling Valentine",
+        "description": <>All'inizio del proprio turno, ogni giocatore scarta le carte in mano e ne pesca dal mazzo altrettante.</>
     },
     DOROTHY_RAGE: {
         "name": "Dorothy Rage",
+        "description": <>Nel proprio turno, ogni giocatore può obbligarne un altro a giocare una carta.</>
     },
     HELENA_ZONTERO: {
         "name": "Helena Zontero",
+        "description": <>Quando Helena entra in gioco, "estrai!": se esce Cuori o Quadri, rimescola i ruoli attivi tranne lo Sceriffo, e ridistribuiscili a caso.</>
     },
     LADY_ROSA_OF_TEXAS: {
         "name": "Lady Rosa del Texas",
+        "description": <>Nel proprio turno, ogni giocatore può scambiarsi di posto con quello alla sua destra, il quale salta il prossimo turno.</>
     },
     MISS_SUSANNA: {
         "name": "Miss Susanna",
+        "description": <>Nel proprio turno ogni giocatore deve giocare almeno 3 carte. Se non lo fa, perde 1 punto vita.</>
     },
     SHOWDOWN: {
         "name": "Regolamento di Conti",
+        // EDIT: BANG! cards can *only* be played as Missed!
+        "description": <>Tutte le carte possono essere giocare come se fossero BANG!. Le carte BANG! solo come se fossero Mancato!</>
     },
     SACAGAWAY: {
         "name": "Sacagaway",
+        "description": <>Tutti i giocatori giocano a carte scoperte (tranne il ruolo!).</>
     },
     WILD_WEST_SHOW: {
         "name": "Wild West Show",
+        "description": <>L'obiettivo di ogni giocatore diventa: "Rimani l'ultimo in gioco!"</>
     },
 
     // Gold Rush cards
 
     SHOT: {
         "name": "Bicchierino",
+        "description": <>Un giocatore a scelta (anche tu) recupera 1 punto vita.</>
     },
     BOTTLE: {
         "name": "Bottiglia",
+        "description": <>Può essere giocata come Panico!, Birra o BANG!</>
     },
     BOTTLE_PANIC: {
         "name": "Bottiglia come Panico!",
@@ -903,12 +917,15 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     CALUMET: {
         "name": "Calumet",
+        "description": <>Le carte di quadri giocate dagli altri non hanno effetto su di te.</>
     },
     GUN_BELT: {
         "name": "Cinturone",
+        "description": <>Alla fine del tuo turno puoi tenere in mano fino a 8 carte.</>
     },
     PARDNER: {
         "name": "Complice",
+        "description": <>Può essere giocato come Emporio, Duello o Cat Balou.</>
     },
     PARDNER_GENERAL_STORE: {
         "name": "Complice come Emporio",
@@ -921,33 +938,43 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     GOLD_RUSH: {
         "name": "Corsa all'Oro",
+        "description": <>Il tuo turno termina. Recupera tutti i tuoi punti vita, poi gioca un altro turno.</>
     },
     HORSESHOE: {
         "name": "Ferro di Cavallo",
+        "description": <>Ogni volta che "estrai!, scopri una carta in più e scegli il risultato.</>
     },
     PICKAXE: {
         "name": "Piccone",
+        "description": <>Pesca una carta in più nella tua fase 1.</>
     },
     WANTED: {
         "name": "Ricercato",
+        "description": <>Giocala su chi vuoi. Chi elimina quel giocatore pesca 2 carte e prende 1 pepita.</>
     },
     RHUM: {
         "name": "Rum",
+        "description": <>"Estrai!" 4 carte: guadagni 1 punto vita per ogni seme diverso.</>
     },
     GOLD_PAN: {
         "name": "Setaccio",
+        "description": <>Paga 1 pepita per pescare una carta dal mazzo. Usa questa abilità fino a 2 volte per turno.</>
     },
     BOOTS: {
         "name": "Stivali",
+        "description": <>Ogni volta che perdi 1 punto vita, pesca una carta dal mazzo.</>
     },
     LUCKY_CHARM: {
         "name": "Talismano",
+        "description": <>Ogni volta che perdi 1 punto vita, prendi una pepita.</>
     },
     UNION_PACIFIC: {
         "name": "Union Pacific",
+        "description": <>Pesca 4 carte dal mazzo.</>
     },
     RUCKSACK: {
         "name": "Zaino",
+        "description": <>Paga 2 pepite per recuperare 1 punto vita.</>
     },
 
     // The Great Train Robbery cards
@@ -1044,7 +1071,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SGT_BLAZE: {
         "name": "Sgt. Blaze",
-        "description": <>Quando giochi una carta o un effetto che bersaglia più giocatori, puoi escluderne uno.</> // dvGiochi made a typo here!
+        // EDIT: dvGiochi made a typo here
+        "description": <>Quando giochi una carta o un effetto che bersaglia più giocatori, puoi escluderne uno.</>
     },
     SHADE_OCONNOR: {
         "name": "Shade O'Connor",
