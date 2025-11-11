@@ -9,7 +9,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DYNAMITE: {
         "name": "Dinamite",
-        "description": <>Perdi 3 punti vita. Se no passa la Dinamite a sinistra.</>,
+        "description": <>Perdi 3 punti vita. Se no passa la <i>Dinamite</i> a sinistra.</>,
         "descriptionClass": "draw-description",
     },
     SCOPE: {
@@ -22,7 +22,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     JAIL: {
         "name": "Prigione",
-        "description": <>Scarta la Prigione e gioca. Altrimenti scarta la Prigione e salta il turno.</>,
+        "description": <>Scarta la <i>Prigione</i> e gioca. Altrimenti scarta la <i>Prigione</i> e salta il turno.</>,
         "descriptionClass": "draw-description",
     },
     REMINGTON: {
@@ -36,7 +36,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     VOLCANIC: {
         "name": "Volcanic",
-        "description": <>Puoi giocare quanti BANG! vuoi.</>,
+        "description": <>Puoi giocare quanti <i>BANG!</i> vuoi.</>,
         "descriptionClass": "weapon-description",
     },
     WINCHESTER: {
@@ -56,7 +56,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DUEL: {
         "name": "Duello",
-        "description": <>Un giocatore scarta un BANG!, poi tu, ecc. Il primo che non lo fa perde 1 punto vita.</>
+        "description": <>Un giocatore scarta un <i>BANG!</i>, poi tu, ecc. Il primo che non lo fa perde 1 punto vita.</>
     },
     GENERAL_STORE: {
         "name": "Emporio",
@@ -67,7 +67,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     INDIANS: {
         "name": "Indiani!",
-        "description": <>Tutti gli altri scartano un BANG! o perdono 1 punto vita.</>
+        "description": <>Tutti gli altri scartano un <i>BANG!</i> o perdono 1 punto vita.</>
     },
     MISSED: {
         "name": "Mancato!",
@@ -165,12 +165,12 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     LEMAT: {
         "name": "Lemat",
-        "description": <>Nel tuo turno, puoi usare ogni carta in mano come carta BANG!.</>,
+        "description": <>Nel tuo turno, puoi usare ogni carta in mano come carta <i>BANG!</i>.</>,
         "descriptionClass": "weapon-description",
     },
     LEMAT_2: {
         "name": "Lemat",
-        "description": <>Nel tuo turno, puoi usare una qualunque carta (tranne il Mancato!) come una carta BANG!.</>,
+        "description": <>Nel tuo turno, puoi usare una qualunque carta (tranne il Mancato!) come una carta <i>BANG!</i>.</>,
         "descriptionClass": "weapon-description",
     },
     RATTLESNAKE: {
@@ -184,7 +184,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BOUNTY: {
         "name": "Taglia",
-        "description": <>Gioca su chiunque. Se quel giocatore è colpito da una carta BANG!, chi ha sparato pesca una carta dal mazzo.</>
+        "description": <>Gioca su chiunque. Se quel giocatore è colpito da una carta <i>BANG!</i>, chi ha sparato pesca una carta dal mazzo.</>
     },
     BANDIDOS: {
         "name": "Bandidos",
@@ -192,19 +192,19 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BANDIDOS_2: {
         "name": "Bandidos",
-        "description": <>Tutti gli altri giocatori scartano una carta BANG! oppure 2 carte dalla loro mano a scelta.</>
+        "description": <>Tutti gli altri giocatori scartano una carta <i>BANG!</i> oppure 2 carte dalla loro mano a scelta.</>
     },
     ESCAPE: {
         "name": "Fuga",
-        "description": <>Può essere giocata fuori turno. Evita l'effetto di una carta marrone (non BANG!) di cui sei uno dei bersagli.</>
+        "description": <>Può essere giocata fuori turno. Evita l'effetto di una carta marrone (non <i>BANG!</i>) di cui sei uno dei bersagli.</>
     },
     ESCAPE_2: {
         "name": "Fuga",
-        "description": <>Se sei l'unico bersaglio di una carta diversa da un BANG!, evita l'effetto di quella carta.</>
+        "description": <>Se sei l'unico bersaglio di una carta diversa da un <i>BANG!</i>, evita l'effetto di quella carta.</>
     },
     AIM: {
         "name": "Mira",
-        "description": <>Gioca questa carta assieme a una carta BANG!. Se il bersaglio viene colpito, perde 2 punti vita.</>
+        "description": <>Gioca questa carta assieme a una carta <i>BANG!</i>. Se il bersaglio viene colpito, perde 2 punti vita.</>
     },
     POKER: {
         "name": "Poker",
@@ -212,7 +212,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BACKFIRE: {
         "name": "Ritorno di Fiamma",
-        "description": <>Vale una carta Mancato!<br/>Il giocatore che ha sparato è bersaglio di un BANG!.</>
+        "description": <>Vale una carta <i>Mancato!</i><br/>Il giocatore che ha sparato è bersaglio di un <i>BANG!</i>.</>
     },
     SAVED: {
         "name": "Salvo!",
@@ -224,7 +224,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     FANNING: {
         "name": "Sventagliata",
-        "description": <>Conta come l'unico BANG! del turno. Anche un giocatore a tua scelta a distanza 1 dal bersaglio (se c'è, te escluso) è bersaglio di un BANG!.</>
+        "description": <>Conta come l'unico <i>BANG!</i> del turno. Anche un giocatore a tua scelta a distanza 1 dal bersaglio (se c'è, te escluso) è bersaglio di un <i>BANG!</i>.</>
     },
     TOMAHAWK: {
         "name": "Tomahawk",
@@ -261,7 +261,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     ARROW: {
         "name": "Freccia",
-        "description": <><p>Un giocatore bersaglio scarta una carta BANG! dalla mano o perde 1 punto vita.</p><p>Colpisci un ulteriore giocatore.</p></>,
+        "description": <><p>Un giocatore bersaglio scarta una carta <i>BANG!</i> dalla mano o perde 1 punto vita.</p><p>Colpisci un ulteriore giocatore.</p></>,
         "descriptionClass": "cube-description-double",
     },
     DUCK: {
@@ -287,7 +287,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BANDOLIER: {
         "name": "Bandoliera",
-        "description": <>Una volta nel tuo turno, puoi giocare una carta BANG! extra.</>,
+        "description": <>Una volta nel tuo turno, puoi giocare una carta <i>BANG!</i> extra.</>,
         "descriptionClass": "cube-description",
     },
     BIG_FIFTY: {
@@ -297,11 +297,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BOMB: {
         "name": "Bomba",
-        "description": <>Gioca su chiunque. All'inizio del tuo turno, "estrai!":<br/>♥♦=Passa la Bomba a chi vuoi.<br/>♣♠=scarta 2 📦: se finiscono, perdi 2 punti vita.</>
+        "description": <>Gioca su chiunque. All'inizio del tuo turno, "estrai!":<br/>♥♦=Passa la <i>Bomba</i> a chi vuoi.<br/>♣♠=scarta 2 📦: se finiscono, perdi 2 punti vita.</>
     },
     BUNTLINE_SPECIAL: {
         "name": "Buntline Special",
-        "description": <>Se il BANG! viene annullato il bersaglio deve scartare una carta a scelta dalla mano.</>,
+        "description": <>Se il <i>BANG!</i> viene annullato il bersaglio deve scartare una carta a scelta dalla mano.</>,
         "descriptionClass": "cube-description",
     },
     BELL_TOWER: {
@@ -319,7 +319,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DOUBLE_BARREL: {
         "name": "Doppia Canna",
-        "description": <>Se giochi un BANG! di Quadri non può essere annullato.</>,
+        "description": <>Se giochi un <i>BANG!</i> di Quadri non può essere annullato.</>,
         "descriptionClass": "cube-description",
     },
     WHIP: {
@@ -337,7 +337,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     THUNDERER: {
         "name": "Thunderer",
-        "description": <>Riprendi la carta BANG! giocata.</>,
+        "description": <>Riprendi la carta <i>BANG!</i> giocata.</>,
         "descriptionClass": "cube-description",
     },
 
@@ -353,7 +353,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     MIRAGE: {
         "name": "Miraggio",
-        "description": <>Vale una carta Mancato!<br/>Inoltre il giocatore che ha sparato termina immediatamente il proprio turno.</>
+        "description": <>Vale una carta <i>Mancato!</i><br/>Inoltre il giocatore che ha sparato termina immediatamente il proprio turno.</>
     },
     BLOOD_PACT: {
         "name": "Patto di Sangue",
@@ -364,14 +364,14 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DISARM: {
         "name": "Disarmare",
-        "description": <>Vale una carta Mancato!<br/>Inoltre fai scartare una carta dalla mano al giocatore che ha sparato.</>
+        "description": <>Vale una carta <i>Mancato!</i><br/>Inoltre fai scartare una carta dalla mano al giocatore che ha sparato.</>
     },
     MOLOTOV: {
         "name": "Molotov",
     },
     BULLDOG: {
         "name": "Bulldog",
-        "description": <>Una sola volta per turno, puoi giocare una carta BANG! come Gatling scartando un'altra carta con essa.</>,
+        "description": <>Una sola volta per turno, puoi giocare una carta <i>BANG!</i> come <i>Gatling</i> scartando un'altra carta con essa.</>,
         "descriptionClass": "weapon-description",
     },
     LAST_WILL: {
@@ -380,7 +380,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     INDIAN_GUIDE: {
         "name": "Guida Indiana",
-        "description": <>Gioca su te stesso. Gli Indiani! e il Sentiero di Guerra non hanno effetto su di te.</>
+        "description": <>Gioca su te stesso. Gli <i>Indiani!</i> e il <i>Sentiero di Guerra</i> non hanno effetto su di te.</>
     },
     TAXMAN: {
         "name": "Esattore",
@@ -393,29 +393,29 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BRONCO: {
         "name": "Bronco",
-        "description": <>Gli altri ti vedono a distanza +1. Non può essere in gioco insieme a Mustang. Può essere rimosso anche scartando 2 carte dalla mano.</>
+        "description": <>Gli altri ti vedono a distanza +1. Non può essere in gioco insieme a <i>Mustang</i>. Può essere rimosso anche scartando 2 carte dalla mano.</>
     },
     PACK_MULE: {
         "name": "Mulo",
-        "description": <>Puoi tenere in mano una carta in più rispetto ai tuoi punti vita correnti. Non può essere in gioco insieme a Mustang o Bronco.</>
+        "description": <>Puoi tenere in mano una carta in più rispetto ai tuoi punti vita correnti. Non può essere in gioco insieme a <i>Mustang</i> o <i>Bronco</i>.</>
     },
     WAR_PATH: {
         "name": "Sentiero di Guerra",
-        "description": <>Tutti gli altri giocatori scartano una carta BANG! o perdono 1 punto vita.</>
+        "description": <>Tutti gli altri giocatori scartano una carta <i>BANG!</i> o perdono 1 punto vita.</>
     },
     ARSON: {
         "name": "Incendio",
     },
     FLYING_BULLET: {
         "name": "Proiettile Vagante",
-        "description": <>Vale una carta Mancato!<br/>Inoltre un giocatore a tua scelta a distanza 1 da te (se c'è) è bersaglio del BANG!.</>
+        "description": <>Vale una carta <i>Mancato!</i><br/>Inoltre un giocatore a tua scelta a distanza 1 da te (se c'è) è bersaglio del <i>BANG!</i>.</>
     },
     ON_THE_HOUSE: {
         "name": "Offre La Casa",
     },
     GUITAR: {
         "name": "Chitarra",
-        "description": <>Gioca su chiunque. Finché è in gioco, quel giocatore non può giocare carte BANG! (o carte che dipendono dalla gittata dell'arma).</>
+        "description": <>Gioca su chiunque. Finché è in gioco, quel giocatore non può giocare carte <i>BANG!</i> (o carte che dipendono dalla gittata dell'arma).</>
     },
     SCRAPPER: {
         "name": "Attaccabrighe",
@@ -436,7 +436,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     CALAMITY_JANET: {
         "name": "Calamity Janet",
-        "description": <>Può giocare le carte BANG! come carte Mancato!, e viceversa.</>
+        "description": <>Può giocare le carte <i>BANG!</i> come carte <i>Mancato!</i>, e viceversa.</>
     },
     EL_GRINGO: {
         "name": "El Gringo",
@@ -448,7 +448,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     JOURDONNAIS: {
         "name": "Jourdonnais",
-        "description": <>Ogni volta che è bersaglio di un BANG!, può "estrarre!": se esce Cuori, viene mancato.</>
+        "description": <>Ogni volta che è bersaglio di un <i>BANG!</i>, può "estrarre!": se esce Cuori, viene mancato.</>
     },
     KIT_CARLSON: {
         "name": "Kit Carlson",
@@ -476,7 +476,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SLAB_THE_KILLER: {
         "name": "Slab the Killer",
-        "description": <>Per evitare i suoi BANG! occorrono due carte Mancato!.</>
+        "description": <>Per evitare i suoi <i>BANG!</i> occorrono due carte <i>Mancato!</i>.</>
     },
     SUZY_LAFAYETTE: {
         "name": "Suzy Lafayette",
@@ -488,7 +488,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     WILLY_THE_KID: {
         "name": "Willy the Kid",
-        "description": <>Può giocare un numero qualsiasi di carte BANG!</>
+        "description": <>Può giocare un numero qualsiasi di carte <i>BANG!</i></>
     },
 
     // Most Wanted characters
@@ -503,15 +503,15 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     UNCLE_WILL: {
         "name": "Uncle Will",
-        "description": <>Una volta per turno, può giocare una carta qualsiasi dalla mano come un Emporio.</>
+        "description": <>Una volta per turno, può giocare una carta qualsiasi dalla mano come un <i>Emporio</i>.</>
     },
     ANNIE_VERSARY: {
         "name": "Annie Versary",
-        "description": <>Può giocare una carta qualunque come fosse una carta BANG!</>
+        "description": <>Può giocare una carta qualunque come fosse una carta <i>BANG!</i></>
     },
     EMILIANO: {
         "name": "Emiliano",
-        "description": <>Quando un tuo BANG! viene Mancato!, pesca quel Mancato!; quandi manchi un BANG!, pesca quel BANG!</>
+        "description": <>Quando un tuo <i>BANG!</i> viene <i>Mancato!</i>, pesca quel <i>Mancato!</i>; quandi manchi un <i>BANG!</i>, pesca quel <i>BANG!</i></>
     },
 
     // Dodge City characters
@@ -534,11 +534,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DOC_HOLYDAY: {
         "name": "Doc Holyday",
-        "description": <>Nel suo turno può scartare una sola volta due carte per sparare un BANG!.</>
+        "description": <>Nel suo turno può scartare una sola volta due carte per sparare un <i>BANG!</i>.</>
     },
     ELENA_FUENTE: {
         "name": "Elena Fuente",
-        "description": <>Può usare una carta qualsiasi come Mancato!.</>
+        "description": <>Può usare una carta qualsiasi come <i>Mancato!</i>.</>
     },
     GREG_DIGGER: {
         "name": "Greg Digger",
@@ -570,7 +570,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     TEQUILA_JOE: {
         "name": "Tequila Joe",
-        "description": <>Quando gioca una Birra, recupera 2 punti vita.</>
+        "description": <>Quando gioca una <i>Birra</i>, recupera 2 punti vita.</>
     },
     VERA_CUSTER: {
         "name": "Vera Custer",
@@ -581,43 +581,43 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BLACK_FLOWER: {
         "name": "Black Flower",
-        "description": <>Una volta nel tuo turno, puoi usare una carta di fiori per sparare un BANG! extra.</>
+        "description": <>Una volta nel tuo turno, puoi usare una carta di fiori per sparare un <i>BANG!</i> extra.</>
     },
     COLORADO_BILL: {
         "name": "Colorado Bill",
-        "description": <>Ogni volta che giochi una carta BANG!, "estrai!": se è Picche, il colpo non può essere evitato.</>
+        "description": <>Ogni volta che giochi una carta <i>BANG!</i>, "estrai!": se è Picche, il colpo non può essere evitato.</>
     },
     COLORADO_BILL_2: {
         "name": "Colorado Bill",
-        "description": <>Ogni volta che un altro giocatore gioca una carta Mancato! su una carta BANG! giocata da Colorado Bill, "estrai!": se esce Picche la carta Mancato! non ha effetto e il giocatore attaccato perde 1 punto vita.</>
+        "description": <>Ogni volta che un altro giocatore gioca una carta Mancato! su una carta <i>BANG!</i> giocata da <i>Colorado Bill</i>, "estrai!": se esce Picche la carta Mancato! non ha effetto e il giocatore attaccato perde 1 punto vita.</>
     },
     DER_SPOT_BURST_RINGER: {
         "name": "Der Spot - Burst Ringer",
-        "description": <>Una volta nel tuo turno, puoi usare una carta BANG! come Gatling.</>
+        "description": <>Una volta nel tuo turno, puoi usare una carta <i>BANG!</i> come <i>Gatling</i>.</>
     },
     EVELYN_SHEBANG: {
         "name": "Evelyn Shebang",
-        "description": <>Puoi rinunciare a pescare carte nella tua fase di pesca. Per ogni carta non pescata, spari un BANG! a distanza raggiungibile, a un diverso bersaglio.</>
+        "description": <>Puoi rinunciare a pescare carte nella tua fase di pesca. Per ogni carta non pescata, spari un <i>BANG!</i> a distanza raggiungibile, a un diverso bersaglio.</>
     },
     EVELYN_SHEBANG_2: {
         "name": "Evelyn Shebang",
-        "description": <>Può pescare una carta in meno del normale per sparare un BANG! extra a distanza 1.</>
+        "description": <>Può pescare una carta in meno del normale per sparare un <i>BANG!</i> extra a distanza 1.</>
     },
     HENRY_BLOCK: {
         "name": "Henry Block",
-        "description": <>Chiunque peschi o scarti una tua carta (in gioco o in mano) è bersaglio di un BANG!.</>
+        "description": <>Chiunque peschi o scarti una tua carta (in gioco o in mano) è bersaglio di un <i>BANG!</i>.</>
     },
     LEMONADE_JIM: {
         "name": "Lemonade Jim",
-        "description": <>Ogni volta che un altro giocatore gioca una Birra, puoi scartare una carta dalla mano per riguadagnare anche tu 1 punto vita.</>
+        "description": <>Ogni volta che un altro giocatore gioca una <i>Birra</i>, puoi scartare una carta dalla mano per riguadagnare anche tu 1 punto vita.</>
     },
     MICK_DEFENDER: {
         "name": "Mick Defender",
-        "description": <>Se sei bersaglio di una carta marrone (non BANG!), puoi usare una carta Mancato! per evitarne gli effetti.</>
+        "description": <>Se sei bersaglio di una carta marrone (non <i>BANG!</i>), puoi usare una carta <i>Mancato!</i> per evitarne gli effetti.</>
     },
     MICK_DEFENDER_2: {
         "name": "Mick Defender",
-        "description": <>Se è l'unico bersaglio di una carta, può usare un Mancato! per evitare l'effetto di quella carta.</>
+        "description": <>Se è l'unico bersaglio di una carta, può usare un <i>Mancato!</i> per evitare l'effetto di quella carta.</>
     },
     TUCO_FRANZISKANER: {
         "name": "Tuco Franziskaner",
@@ -628,7 +628,7 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BIG_SPENCER: {
         "name": "Big Spencer",
-        "description": <>Inizia con 5 carte. Non può giocare Mancato!</>
+        "description": <>Inizia con 5 carte. Non può giocare <i>Mancato!</i></>
     },
     FLINT_WESTWOOD: {
         "name": "Flint Westwood",
@@ -648,11 +648,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     LEE_VAN_KLIFF: {
         "name": "Lee Van Kliff",
-        "description": <>Nel suo turno, può scartare un BANG! per ripetere l'effetto di una carta a bordo marrone che ha appena giocato.</>
+        "description": <>Nel suo turno, può scartare un <i>BANG!</i> per ripetere l'effetto di una carta a bordo marrone che ha appena giocato.</>
     },
     TEREN_KILL: {
         "name": "Teren Kill",
-        "description": <>Ogni volta che sarebbe eliminato "estrai!": se non è Picche, Teren resta a 1 punto vita e pesca 1 carta.</>
+        "description": <>Ogni volta che sarebbe eliminato "estrai!": se non è Picche, <i>Teren</i> resta a 1 punto vita e pesca 1 carta.</>
     },
     YOUL_GRINNER: {
         "name": "Youl Grinner",
@@ -671,7 +671,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BLOODY_MARY: {
         "name": "Bloody Mary",
-        "description": <>Ogni volta che una tua carta BANG! è annullata, pesca 1 carta dal mazzo.</>
+        "description": <>Ogni volta che una tua carta <i>BANG!</i> è annullata, pesca 1 carta dal mazzo.</>
     },
     FRANKIE_CANTON: {
         "name": "Frankie Canton",
@@ -679,11 +679,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     JULIE_CUTTER: {
         "name": "Julie Cutter",
-        "description": <>Ogni volta che un giocatore ti fa perdere almeno 1 punto vita, "estrai!":♥♦=è bersaglio di un BANG!<br/></>
+        "description": <>Ogni volta che un giocatore ti fa perdere almeno 1 punto vita, "estrai!":<br/>♥♦=è bersaglio di un <i>BANG!</i><br/></>
     },
     MEXICALI_KID: {
         "name": "Mexicali Kid",
-        "description": <>Una volta nel tuo turno, puoi pagare 2 📦 per sparare 1 BANG! extra (non serve la carta).</>
+        "description": <>Una volta nel tuo turno, puoi pagare 2 📦 per sparare 1 <i>BANG!</i> extra (non serve la carta).</>
     },
     MS_ABIGAIL: {
         "name": "Ms. Abigail",
@@ -706,7 +706,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     JACKY_MURIETA: {
         "name": "Jacky Murieta",
-        "description": <>Nel suo turno può pagare 2 pepite per sparare 1 BANG! extra.</>
+        "description": <>Nel suo turno può pagare 2 pepite per sparare 1 <i>BANG!</i> extra.</>
     },
     JOSH_MCCLOUD: {
         "name": "Josh McCloud",
@@ -714,7 +714,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     MADAME_YTO: {
         "name": "Madame Yto",
-        "description": <>Ogni volta che viene giocata una Birra, pesca 1 carta dal mazzo.</>
+        "description": <>Ogni volta che viene giocata una <i>Birra</i>, pesca 1 carta dal mazzo.</>
     },
     PRETTY_LUZENA: {
         "name": "Pretty Luzena",
@@ -741,19 +741,19 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     INVERT_ROTATION: {
         "name": "Corsa all'Oro",
-        "description": <>Si gioca un giro in senso antiorario, sempre a partire dallo Sceriff. Gli effetti delle carte restano in senso orario.</>
+        "description": <>Si gioca un giro in senso antiorario, sempre a partire dallo Sceriffo. Gli effetti delle carte restano in senso orario.</>
     },
     THE_DALTONS: {
         "name": "I Dalton",
-        "description": <>Quando I Dalton entrano in gioco, chi ha carte blu di fronte a sé ne scarta una a sua scelta.</>
+        "description": <>Quando <i>I Dalton</i> entrano in gioco, chi ha carte blu di fronte a sé ne scarta una a sua scelta.</>
     },
     THE_DOCTOR: {
         "name": "Il Dottore",
-        "description": <>Quando Il Dottore entra in gioco, il/i personaggio/i in gioco che ha meno punti vita correnti recupera 1 punto vita.</>
+        "description": <>Quando <i>Il Dottore</i> entra in gioco, il/i personaggio/i in gioco che ha meno punti vita correnti recupera 1 punto vita.</>
     },
     THE_REVEREND: {
         "name": "Il Reverendo",
-        "description": <>Non si possono giocare carte Birra.</>
+        "description": <>Non si possono giocare carte <i>Birra</i>.</>
     },
     TRAIN_ARRIVAL: {
         "name": "Il Treno",
@@ -769,7 +769,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SERMON: {
         "name": "Sermone",
-        "description": <>Il giocatore non può usare carte BANG! durante il proprio turno.</>
+        "description": <>Il giocatore non può usare carte <i>BANG!</i> durante il proprio turno.</>
     },
     THIRST: {
         "name": "Sete",
@@ -777,7 +777,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SHOOTOUT: {
         "name": "Sparatoria",
-        "description": <>Il giocatore può giocare una seconda carta BANG! durante il proprio turno.</>
+        "description": <>Il giocatore può giocare una seconda carta <i>BANG!</i> durante il proprio turno.</>
     },
     HANDCUFFS: {
         "name": "Manette",
@@ -813,7 +813,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SNIPER: {
         "name": "Cecchino",
-        "description": <>Il giocatore di turno può scartare 2 carte BANG! insieme contro un giocatore: vale come un BANG!, ma è annullabile solo con 2 Mancato!.</>
+        "description": <>Il giocatore di turno può scartare 2 carte <i>BANG!</i> insieme contro un giocatore: vale come un <i>BANG!</i>, ma è annullabile solo con 2 <i>Mancato!</i>.</>
     },
     DEAD_MAN: {
         "name": "Dead Man",
@@ -859,11 +859,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     RICOCHET: {
         "name": "Rimbalzo",
-        "description": <>Il giocatore può scartare BANG! contro carte in gioco di fronte agli altri: ogni carta è scartata se il proprietario non gioca un Mancato! per ciascuna.</>
+        "description": <>Il giocatore può scartare <i>BANG!</i> contro carte in gioco di fronte agli altri: ogni carta è scartata se il proprietario non gioca un <i>Mancato!</i> per ciascuna.</>
     },
     RUSSIAN_ROULETTE: {
         "name": "Roulette Russa",
-        "description": <>Quando la Roulette Russa entra in gioco, a partire dallo Sceriffo ognuno scarta un Mancato!, a oltranza: il primo che non lo fa perde 2 punti vita, e la Roulette si interrompe.</>
+        "description": <>Quando la <i>Roulette Russa</i> entra in gioco, a partire dallo Sceriffo ognuno scarta un <i>Mancato!</i>, a oltranza: il primo che non lo fa perde 2 punti vita, e la <i>Roulette</i> si interrompe.</>
     },
     VENDETTA: {
         "name": "Vendetta",
@@ -871,7 +871,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     A_FISTFUL_OF_CARDS: {
         "name": "Per un Pugno di Carte",
-        "description": <>All'inizio del proprio turno, il giocatore subisce tanti BANG! quante sono le carte che ha in mano.</>
+        "description": <>All'inizio del proprio turno, il giocatore subisce tanti <i>BANG!</i> quante sono le carte che ha in mano.</>
     },
 
     // Wild West Show cards
@@ -894,7 +894,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     HELENA_ZONTERO: {
         "name": "Helena Zontero",
-        "description": <>Quando Helena entra in gioco, "estrai!": se esce Cuori o Quadri, rimescola i ruoli attivi tranne lo Sceriffo, e ridistribuiscili a caso.</>
+        "description": <>Quando <i>Helena</i> entra in gioco, "estrai!": se esce Cuori o Quadri, rimescola i ruoli attivi tranne lo Sceriffo, e ridistribuiscili a caso.</>
     },
     LADY_ROSA_OF_TEXAS: {
         "name": "Lady Rosa del Texas",
@@ -907,7 +907,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     SHOWDOWN: {
         "name": "Regolamento di Conti",
         // EDIT: BANG! cards can *only* be played as Missed!
-        "description": <>Tutte le carte possono essere giocare come se fossero BANG!. Le carte BANG! solo come se fossero Mancato!</>
+        "description": <>Tutte le carte possono essere giocare come se fossero <i>BANG!</i>. Le carte <i>BANG!</i> solo come se fossero <i>Mancato!</i></>
     },
     SACAGAWAY: {
         "name": "Sacagaway",
@@ -926,7 +926,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BOTTLE: {
         "name": "Bottiglia",
-        "description": <>Può essere giocata come Panico!, Birra o BANG!</>
+        "description": <>Può essere giocata come <i>Panico!</i>, <i>Birra</i> o <i>BANG!</i></>
     },
     BOTTLE_PANIC: {
         "name": "Bottiglia come Panico!",
@@ -947,7 +947,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     PARDNER: {
         "name": "Complice",
-        "description": <>Può essere giocato come Emporio, Duello o Cat Balou.</>
+        "description": <>Può essere giocato come <i>Emporio</i>, <i>Duello</i> o <i>Cat Balou.</i></>
     },
     PARDNER_GENERAL_STORE: {
         "name": "Complice come Emporio",
@@ -964,7 +964,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     HORSESHOE: {
         "name": "Ferro di Cavallo",
-        "description": <>Ogni volta che "estrai!, scopri una carta in più e scegli il risultato.</>
+        "description": <>Ogni volta che "estrai!", scopri una carta in più e scegli il risultato.</>
     },
     PICKAXE: {
         "name": "Piccone",
@@ -1006,11 +1006,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DRAGOON: {
         "name": "Dragoon",
-        "description": <>Puoi giocare un BANG! extra a turno.</>
+        "description": <>Puoi giocare un <i>BANG!</i> extra a turno.</>
     },
     EVADED: {
         "name": "Per Un Pelo!",
-        "description": <>Pesca la carta che hai Mancato!</>
+        "description": <>Pesca la carta che hai <i>Mancato!</i></>
     },
     FULL_STEAM: {
         "name": "A Tutto Vapore",
@@ -1024,7 +1024,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     KNIFE_REVOLVER: {
         "name": "Knife Revolver",
-        "description": <>Conta come il BANG! del turno.<br/>"Estrai!": J, Q, K, A = riprendi questa carta in mano.</>
+        "description": <>Conta come il <i>BANG!</i> del turno.<br/>"Estrai!": J, Q, K, A = riprendi questa carta in mano.</>
     },
     MAP: {
         "name": "Mappa",
@@ -1057,7 +1057,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     TRAIN_ROBBERY: {
         "name": "Rapina Al Treno",
-        "description": <>Conta come il BANG! del turno.<br/>Il bersaglio sceglie per ogni sua carta in gioco: la scarta o è colpito da un BANG!</>
+        "description": <>Conta come il <i>BANG!</i> del turno.<br/>Il bersaglio sceglie per ogni sua carta in gioco: la scarta o è colpito da un <i>BANG!</i></>
     },
     TRAIN_ROBBERY_DISCARD: {
         "name": "Rapina Al Treno: Scarta una carta",
@@ -1078,7 +1078,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     EVAN_BABBIT: {
         "name": "Evan Babbit",
-        "description": <>Se sei bersaglio di una carta BANG!, puoi deviarla a un giocatore a distanza 1 scartando dalla mano una carta dello stesso seme.</>
+        "description": <>Se sei bersaglio di una carta <i>BANG!</i>, puoi deviarla a un giocatore a distanza 1 scartando dalla mano una carta dello stesso seme.</>
     },
     JIMMY_TEXAS: {
         "name": "Jimmy Texas",
@@ -1136,7 +1136,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BUFFALO_BELL: {
         "name": "Buffalo Bell",
-        "description": <>Ogni volta che viene attaccato da un giocatore, può scartare una carta dalla mano per evitare il colpo. Carta giocata + carta schivata: se ≥ 13 = Mancato!; se ≥ 17 = Schivata; se ≥ 20 = Ritorno di fiamma.</>
+        "description": <>Ogni volta che viene attaccato da un giocatore, può scartare una carta dalla mano per evitare il colpo. Carta giocata + carta schivata: se ≥ 13 = <i>Mancato!</i>; se ≥ 17 = <i>Schivata</i>; se ≥ 20 = <i>Ritorno di Fiamma.</i></>
     },
     CLASH_THE_STAMPEDE: {
         "name": "Clash The Stampede",
@@ -1168,11 +1168,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SOUNDANCE_KID: {
         "name": "Soundance Kid",
-        "description": <>Ogni volta che ferisce un giocatore con un BANG!, pesca una carta dal mazzo.</>
+        "description": <>Ogni volta che ferisce un giocatore con un <i>BANG!</i>, pesca una carta dal mazzo.</>
     },
     SPIKE_SPIEZEL: {
         "name": "Spike Spiezel",
-        "description": <>Una volta nel suo turno, può scartare una carta BANG! per ripetere l'effetto dell'ultima carta a bordo marrone da lui giocata.</>
+        "description": <>Una volta nel suo turno, può scartare una carta <i>BANG!</i> per ripetere l'effetto dell'ultima carta a bordo marrone da lui giocata.</>
     },
     TEREN_KILL_2: {
         "name": "Teren Kill",
@@ -1187,7 +1187,7 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BAGGAGE_CAR: {
         "name": "Baggage Car",
-        "description": <>Scartalo: ottieni l'effetto di un Mancato!, Panico!, Cat Balou o di un BANG! extra.</>,
+        "description": <>Scartalo: ottieni l'effetto di un <i>Mancato!</i>, <i>Panico!</i>, <i>Cat Balou</i> o di un <i>BANG!</i> extra.</>,
         "descriptionClass": "train-description",
     },
     BAGGAGE_CAR_MISSED: {
@@ -1204,7 +1204,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     CABOOSE: {
         "name": "Caboose",
-        "description": <>Puoi scartare un'altra tua carta a bordo blu (incluso un vagone) come se fosse un Mancato!</>,
+        "description": <>Puoi scartare un'altra tua carta a bordo blu (incluso un vagone) come se fosse un <i>Mancato!</i></>,
         "descriptionClass": "train-description",
     },
     CATTLE_TRUCK: {
@@ -1269,12 +1269,12 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     PRIVATE_CAR: {
         "name": "Private Car",
-        "description": <>Se non hai carte in mano, non puoi essere bersaglio di carte BANG!</>,
+        "description": <>Se non hai carte in mano, non puoi essere bersaglio di carte <i>BANG!</i></>,
         "descriptionClass": "train-description",
     },
     SLEEPER_CAR: {
         "name": "Sleeper Car",
-        "description": <>Una volta per turno, poi scartare un'altra tua carta a bordo blu (incluso un vagone) come un BANG! extra.</>,
+        "description": <>Una volta per turno, poi scartare un'altra tua carta a bordo blu (incluso un vagone) come un <i>BANG!</i> extra.</>,
         "descriptionClass": "train-description",
     },
 
@@ -1282,12 +1282,12 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     IRONHORSE: {
         "name": "Ironhorse",
-        "description": <>Al capolinea ogni gioctore è bersaglio di un BANG!</>,
+        "description": <>Al capolinea ogni gioctore è bersaglio di un <i>BANG!</i></>,
         "descriptionClass": "train-description",
     },
     LELAND: {
         "name": "Leland",
-        "description": <>Al capolinea ha l'effetto di un Emporio</>,
+        "description": <>Al capolinea ha l'effetto di un <i>Emporio</i></>,
         "descriptionClass": "train-description",
     },
 
@@ -1347,7 +1347,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     LEGEND_CALAMITY_JANET: {
         "name": "Calamity Janet",
-        "description": <>Ogni tua carta vale come BANG! o Mancato!</>,
+        "description": <>Ogni tua carta vale come <i>BANG!</i> o <i>Mancato!</i></>,
         "descriptionClass": "legends-description",
     },
     LEGEND_EL_GRINGO: {
@@ -1377,7 +1377,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     LEGEND_PAUL_REGRET: {
         "name": "Paul Regret",
-        "description": <>Gli altri ti vedono a distanza +1.<br/>Per giocarti un BANG! contro, occorre scartare una carta aggiuntiva dalla mano.</>,
+        "description": <>Gli altri ti vedono a distanza +1.<br/>Per giocarti un <i>BANG!</i> contro, occorre scartare una carta aggiuntiva dalla mano.</>,
         "descriptionClass": "legends-description",
     },
     LEGEND_PEDRO_RAMIREZ: {
@@ -1387,17 +1387,17 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     LEGEND_ROSE_DOOLAN: {
         "name": "Rose Doolan",
-        "description": <>Puoi vedere tutti a distanza 1.<br/>Una volta nel tuo turno, puoi scartare una tua carta blu, in mano i in gioco, come Panico!</>,
+        "description": <>Puoi vedere tutti a distanza 1.<br/>Una volta nel tuo turno, puoi scartare una tua carta blu, in mano o in gioco, come <i>Panico!</i></>,
         "descriptionClass": "legends-description",
     },
     LEGEND_SID_KETCHUM: {
         "name": "Sid Ketchum",
-        "description": <>Puoi scartare 2 carte per recuperare un punto vita. Una volta nel tuo turno, se recuperi un punto vita, puoi sparare un BANG! gratis.</>,
+        "description": <>Puoi scartare 2 carte per recuperare un punto vita. Una volta nel tuo turno, se recuperi un punto vita, puoi sparare un <i>BANG!</i> gratis.</>,
         "descriptionClass": "legends-description",
     },
     LEGEND_SLAB_THE_KILLER: {
         "name": "Slab the Killer",
-        "description": <>I tuoi BANG! non possono essere annullati.<br/>Se rivendichi un'Impresa puoi rimuovere anche l'ultimo punto vita.</>,
+        "description": <>I tuoi <i>BANG!</i> non possono essere annullati.<br/>Se rivendichi un'Impresa puoi rimuovere anche l'ultimo punto vita.</>,
         "descriptionClass": "legends-description",
     },
     LEGEND_SUZY_LAFAYETTE: {
@@ -1412,7 +1412,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     LEGEND_WILLY_THE_KID: {
         "name": "Willy the Kid",
-        "description": <>Puoi giocare quante carte BANG! vuoi.<br/>Invece di rivendicare un'Impresa, puoi sparare un BANG! gratis.</>,
+        "description": <>Puoi giocare quante carte <i>BANG!</i> vuoi.<br/>Invece di rivendicare un'Impresa, puoi sparare un <i>BANG!</i> gratis.</>,
         "descriptionClass": "legends-description",
     },
 
@@ -1425,7 +1425,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     WOUNDED_PRIDE: {
         "name": "Ferito Nell'Orgoglio",
-        "description": <>Un altro giocatore manca una tua carta BANG!</>,
+        "description": <>Un altro giocatore manca una tua carta <i>BANG!</i></>,
         "descriptionClass": "feats-description",
     },
     OLD_WEST_GANG: {
@@ -1435,12 +1435,12 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BOTTLENECK: {
         "name": "Il Collo Di Bottiglia",
-        "description": <>Scarta una Birra.</>,
+        "description": <>Scarta una <i>Birra</i>.</>,
         "descriptionClass": "feats-description",
     },
     THE_CHUCK_A_LUCK: {
         "name": "Il Mulino D'Oro",
-        "description": <>Scarta una carta BANG!</>,
+        "description": <>Scarta una carta <i>BANG!</i></>,
         "descriptionClass": "feats-description",
     },
     '3_15_TO_YOOMA': {
@@ -1465,12 +1465,12 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     WILHELM_SCREAM: {
         "name": "L'Urlo Di Wilhelm",
-        "description": <>Gioca una carta BANG! a distanza 2 o più.</>,
+        "description": <>Gioca una carta <i>BANG!</i> a distanza 2 o più.</>,
         "descriptionClass": "feats-description",
     },
     SCRUGS_BALLAD: {
         "name": "La Ballata Di Scrugs",
-        "description": <>Perdi un duello.</>,
+        "description": <>Perdi un <i>Duello</i>.</>,
         "descriptionClass": "feats-description",
     },
     BORDERLANDS: {
@@ -1485,7 +1485,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     A_THOUSAND_WAYS_TO_DIE: {
         "name": "Mille Modi Per Morire",
-        "description": <>Mostra dalla mano un Mancato! e una carta dello stesso seme.</>,
+        "description": <>Mostra dalla mano un <i>Mancato!</i> e una carta dello stesso seme.</>,
         "descriptionClass": "feats-description",
     },
     FOR_A_FEW_CARDS_MORE: {
@@ -1495,7 +1495,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     A_QUICK_DEATH: {
         "name": "Una Morte Veloce",
-        "description": <>Ferisci con una carta BANG! un altro giocatore al massimo dei suoi punti vita.</>,
+        "description": <>Ferisci con una carta <i>BANG!</i> un altro giocatore al massimo dei suoi punti vita.</>,
         "descriptionClass": "feats-description",
     },
 
