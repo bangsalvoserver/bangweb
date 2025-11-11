@@ -711,42 +711,55 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BLESSING: {
         "name": "Benedizione",
+        "description": <>Tutte le carte sono considerate di Cuori.</>
     },
     GHOST_TOWN: {
         "name": "Città Fantasma",
+        "description": <>Ogni giocatore eliminato torna, al proprio turno, come fantasma: pesca 3 carte invece di 2, e non può morire. Al termine del proprio turno è eliminato di nuovo.</>
     },
     INVERT_ROTATION: {
         "name": "Corsa all'Oro",
+        "description": <>Si gioca un giro in senso antiorario, sempre a partire dallo Sceriff. Gli effetti delle carte restano in senso orario.</>
     },
     THE_DALTONS: {
         "name": "I Dalton",
+        "description": <>Quando I Dalton entrano in gioco, chi ha carte blu di fronte a sé ne scarta una a sua scelta.</>
     },
     THE_DOCTOR: {
         "name": "Il Dottore",
+        "description": <>Quando Il Dottore entra in gioco, il/i personaggio/i in gioco che ha meno punti vita correnti recupera 1 punto vita.</>
     },
     THE_REVEREND: {
         "name": "Il Reverendo",
+        "description": <>Non si possono giocare carte Birra.</>
     },
     TRAIN_ARRIVAL: {
         "name": "Il Treno",
+        "description": <>Ogni giocatore pesca una carta extra al termine della fase 1 del proprio turno.</>
     },
     CURSE: {
         "name": "Maledizione",
+        "description": <>Tutte le carte sono considerate di Picche.</>
     },
     HANGOVER: {
         "name": "Sbornia",
+        "description": <>I presonaggio perdono le loro abilità speciali.</>
     },
     SERMON: {
         "name": "Sermone",
+        "description": <>Il giocatore non può usare carte BANG! durante il proprio turno.</>
     },
     THIRST: {
         "name": "Sete",
+        "description": <>Ogni giocatore pesca solo la prima carta, e non la seconda, nella fase 1 del proprio turno.</>
     },
     SHOOTOUT: {
         "name": "Sparatoria",
+        "description": <>Il giocatore può giocare una seconda carta BANG! durante il proprio turno.</>
     },
     HANDCUFFS: {
         "name": "Manette",
+        "description": <>Dopo aver pescato in fase 1, il giocatore di turno dichiara un seme: nel suo turno può giocare solo carte di quel seme.</>
     },
     HANDCUFFS_HEARTS: {
         "name": "Manette: Dichiaro Cuori",
@@ -762,42 +775,54 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     NEW_IDENTITY: {
         "name": "Nuova Identità",
+        "description": <>Ciascuno, all'inizio del proprio turno, prende un altro personaggio a caso: può sostituirlo per sempre al proprio, ripartendo da 2 punti vita.</> // modifica al testo
     },
     HIGH_NOON: {
         "name": "Mezzogiorno di Fuoco",
+        "description": <>Ogni giocatore perde 1 punto vita all'inizio del proprio turno.</>
     },
 
     // Fistful of Cards cards
 
     AMBUSH: {
         "name": "Agguato",
+        "description": <>La distanza fra due giocatori qualunque è 1; è modificata solo dalle carte in gioco.</>
     },
     SNIPER: {
         "name": "Cecchino",
+        "description": <>Il giocatore di turno può scartare 2 carte BANG! insieme contro un giocatore: vale come un BANG!, ma è annullabile solo con 2 Mancato!.</>
     },
     DEAD_MAN: {
         "name": "Dead Man",
+        "description": <>Al proprio turno, il giocatore che è stato eliminato per primo rientra in gioco con 2 punti vita e 2 carte.</>
     },
     BLOOD_BROTHERS: {
         "name": "Fratelli di Sangue",
+        "description": <>All'inizio del proprio turno, il giocatore può perdere un punto vita (tranne l'ultimo) per fare recuperare un punto vita a un giocatore a sua scelta.</>
     },
     THE_JUDGE: {
         "name": "Il Giudice",
+        "description": <>Non si possono giocare carte di fronte a sé o agli altri.</>
     },
     LASSO: {
         "name": "Lazo",
+        "description": <>Le carte in gioco di fronte ai giocatori non hanno effetto.</>
     },
     LAW_OF_THE_WEST: {
         "name": "Legge del West",
+        "description": <>Nella propria fase 1, il giocatore mostra la seconda carta che pesca: se può, è obbligato a giocarla nella fase 2.</>
     },
     HARD_LIQUOR: {
         "name": "Liquore Forte",
+        "description": <>Il giocatore può saltare la propria fase 1 per recuperare 1 punto vita.</>
     },
     ABANDONED_MINE: {
         "name": "Miniera Abbandonata",
+        "description": <>Nella propria fase 1, il giocatore pesca dagli scarti (se finiscono, pesca dal mazzo). Nella propria fase 3, scarta a faccia in giù sul mazzo.</>
     },
     PEYOTE: {
         "name": "Peyote",
+        "description": <>Invece di pescare nella fase 1, il giocatore prova a indovinare se il seme della carta in cima al mazzo è rosso o nero. Poi pesca e mostra la carta: se ha indovinato, la tiene e può indovinare ancora, altrimentri passa alla fase 2.</>
     },
     PEYOTE_RED: {
         "name": "Peyote: Dichiaro Rosso",
@@ -807,18 +832,23 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     RANCH: {
         "name": "Ranch",
+        "description": <>Alla fine della propria fase 1, il giocatore per una volta può scartare un qualsiasi numero di carte dalla mano per pescarne altrettante dal mazzo.</>
     },
     RICOCHET: {
         "name": "Rimbalzo",
+        "description": <>Il giocatore può scartare BANG! contro carte in gioco di fronte agli altri: ogni carta è scartata se il proprietario non gioca un Mancato! per ciascuna.</>
     },
     RUSSIAN_ROULETTE: {
         "name": "Roulette Russa",
+        "description": <>Quando la Roulette Russa entra in gioco, a partire dallo Sceriffo ognuno scarta un Mancato!, a oltranza: il primo che non lo fa perde 2 punti vita, e la Roulette si interrompe.</>
     },
     VENDETTA: {
         "name": "Vendetta",
+        "description": <>Alla fine del proprio turno, il giocatore "estrae!": se è Cuori, gioca un altro turno (ma non "estrae!" di nuovo).</>
     },
     A_FISTFUL_OF_CARDS: {
         "name": "Per un Pugno di Carte",
+        "description": <>All'inizio del proprio turno, il giocatore subisce tanti BANG! quante sono le carte che ha in mano.</>
     },
 
     // Wild West Show cards
@@ -890,7 +920,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         "name": "Complice come Cat Balou",
     },
     GOLD_RUSH: {
-        "name": "Corsa all' Oro",
+        "name": "Corsa all'Oro",
     },
     HORSESHOE: {
         "name": "Ferro di Cavallo",
