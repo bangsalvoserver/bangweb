@@ -464,226 +464,378 @@ export const CARDS_ENGLISH: CardRegistry = {
     // Base game characters
 
     BART_CASSIDY: {
-        name: "Bart Cassidy"
+        name: "Bart Cassidy",
+        hideTitle: true,
+        description: <>Each time he is hit, he draws a card.</>
     },
     BLACK_JACK: {
-        name: "Black Jack"
+        name: "Black Jack",
+        hideTitle: true,
+        description: <>He shows the second card he draws. On Heart or Diamonds, he draws one more card.</>
     },
     CALAMITY_JANET: {
-        name: "Calamity Janet"
+        name: "Calamity Janet",
+        hideTitle: true,
+        description: <>She can play <i>BANG!</i> cards as <i>Missed!</i> cards and vice versa.</>
     },
     EL_GRINGO: {
-        name: "El Gringo"
+        name: "El Gringo",
+        hideTitle: true,
+        description: <>Each time he is hit by a player, he draws a card from the hand of that player.</>
     },
     JESSE_JONES: {
-        name: "Jesse Jones"
+        name: "Jesse Jones",
+        hideTitle: true,
+        description: <>He may draw his first card from the hand of a player.</>
     },
     JOURDONNAIS: {
-        name: "Jourdonnais"
+        name: "Jourdonnais",
+        hideTitle: true,
+        description: <>Whenever he is the target of a <i>BANG!</i>, he may "draw!": on a Heart, he is missed.</>
     },
     KIT_CARLSON: {
-        name: "Kit Carlson"
+        name: "Kit Carlson",
+        hideTitle: true,
+        description: <>He looks at the top three cards of the deck and chooses the 2 to draw.</>
     },
     LUCKY_DUKE: {
-        name: "Lucky Duke"
+        name: "Lucky Duke",
+        hideTitle: true,
+        description: <>Each time he "draws!", he flips the top two cards and chooses one.</>
     },
     PAUL_REGRET: {
-        name: "Paul Regret"
+        name: "Paul Regret",
+        hideTitle: true,
+        description: <>All players see him at a distance increased by 1.</>
     },
     PEDRO_RAMIREZ: {
-        name: "Pedro Ramirez"
+        name: "Pedro Ramirez",
+        hideTitle: true,
+        description: <>He may draw his first card from the discard pile.</>
     },
     ROSE_DOOLAN: {
-        name: "Rose Doolan"
+        name: "Rose Doolan",
+        hideTitle: true,
+        description: <>She sees all players at a distance decreased by 1.</>
     },
     SID_KETCHUM: {
-        name: "Sid Ketchum"
+        name: "Sid Ketchum",
+        hideTitle: true,
+        description: <>He may discard 2 cards to regain one life point.</>
     },
     SLAB_THE_KILLER: {
-        name: "Slab the Killer"
+        name: "Slab the Killer",
+        hideTitle: true,
+        // EDIT: fix grammar
+        description: <>Players need 2 <i>Missed!</i> cards to cancel his <i>BANG!</i> cards.</>
     },
     SUZY_LAFAYETTE: {
-        name: "Suzy Lafayette"
+        name: "Suzy Lafayette",
+        hideTitle: true,
+        description: <>As soon as she has no cards in hand, she draws a card.</>
     },
     VULTURE_SAM: {
-        name: "Vulture Sam"
+        name: "Vulture Sam",
+        hideTitle: true,
+        description: <>Whenever a player is eliminated from play, he takes in hand all the cards of that player.</>
     },
     WILLY_THE_KID: {
-        name: "Willy the Kid"
+        name: "Willy the Kid",
+        hideTitle: true,
+        description: <>He can play any number of <i>BANG!</i> cards.</>
     },
 
     // Most Wanted characters
 
     CLAUS_THE_SAINT: {
-        name: "Claus \"The Saint\""
+        name: "Claus \"The Saint\"",
+        hideTitle: true,
+        description: <>He draws one card more than the number of players, keeps 2 for himself, then gives 1 to each player.</>
     },
     JOHNNY_KISCH: {
-        name: "Johnny Kisch"
+        name: "Johnny Kisch",
+        hideTitle: true,
+        description: <>Each time he puts a card into play, all other cards in play with the same name are discarded.</>
     },
     UNCLE_WILL: {
-        name: "Uncle Will"
+        name: "Uncle Will",
+        hideTitle: true,
+        description: <>Once during his turn, he may play any card from hand as a <i>General Store</i>.</>
     },
     ANNIE_VERSARY: {
-        name: "Annie Versary"
+        name: "Annie Versary",
+        hideTitle: true,
+        description: <>She may use any card as a <i>BANG!</i> card.</>
     },
     EMILIANO: {
-        name: "Emiliano"
+        name: "Emiliano",
+        hideTitle: true,
+        description: <>Each time your <i>BANG!</i> is <i>Missed!</i>, draw that <i>Missed!</i> card. When you miss a <i>BANG!</i>, draw that <i>BANG!</i> card.</>
     },
 
     // Dodge City characters
 
     APACHE_KID: {
-        name: "Apache Kid"
+        name: "Apache Kid",
+        hideTitle: true,
+        description: <>Cards of Diamonds played by other players do not affect him.</>
     },
     BELLE_STAR: {
-        name: "Belle Star"
+        name: "Belle Star",
+        hideTitle: true,
+        description: <>During her turn, cards in play in front of other players have no effect.</>
     },
     BILL_NOFACE: {
-        name: "Bill Noface"
+        name: "Bill Noface",
+        hideTitle: true,
+        description: <>He draws 1 card, plus 1 card for each wound he has.</>
     },
     CHUCK_WENGAM: {
-        name: "Chuck Wengam"
+        name: "Chuck Wengam",
+        hideTitle: true,
+        description: <>During his turn, he may choose to lose 1 life point to draw 2 cards.</>
     },
     DOC_HOLYDAY: {
-        name: "Doc Holyday"
+        name: "Doc Holyday",
+        hideTitle: true,
+        description: <>During his turn, he may discard once 2 cards from the hand to shoot a <i>BANG!</i>.</>
     },
     ELENA_FUENTE: {
-        name: "Elena Fuente"
+        name: "Elena Fuente",
+        hideTitle: true,
+        description: <>She may use any card as <i>Missed!</i>.</>
     },
     GREG_DIGGER: {
-        name: "Greg Digger"
+        name: "Greg Digger",
+        hideTitle: true,
+        description: <>Each time another player is eliminated, he regains 2 life points.</>
     },
     HERB_HUNTER: {
-        name: "Herb Hunter"
+        name: "Herb Hunter",
+        hideTitle: true,
+        description: <>Each time another player is eliminated, he draws 2 extra cards.</>
     },
     JOSE_DELGADO: {
-        name: "Josè Delgado"
+        name: "Josè Delgado",
+        hideTitle: true,
+        description: <>Twice in his turn, he may discard a blue card from the hand to draw 2 cards.</>
     },
     MOLLY_STARK: {
-        name: "Molly Stark"
+        name: "Molly Stark",
+        hideTitle: true,
+        description: <>Each time she uses a card from her hand out of turn, she draws a card.</>
     },
     PAT_BRENNAN: {
-        name: "Pat Brennan"
+        name: "Pat Brennan",
+        hideTitle: true,
+        description: <>He may draw only one card in play in front of any one player.</>
     },
     PIXIE_PETE: {
-        name: "Pixie Pete"
+        name: "Pixie Pete",
+        hideTitle: true,
+        description: <>He draws 3 cards instead of 2.</>
     },
     SEAN_MALLORY: {
-        name: "Sean Mallory"
+        name: "Sean Mallory",
+        hideTitle: true,
+        description: <>He may hold in his hand up to 10 cards.</>
     },
     TEQUILA_JOE: {
-        name: "Tequila Joe"
+        name: "Tequila Joe",
+        hideTitle: true,
+        description: <>Each time he plays a <i>Beer</i>, he regains 2 life points instead of 1.</>
     },
     VERA_CUSTER: {
-        name: "Vera Custer"
+        name: "Vera Custer",
+        hideTitle: true,
+        description: <>For one whole round, she gains the same ability of another character in play of her choice.</>
     },
 
     // Valley of Shadows characters
 
     BLACK_FLOWER: {
-        name: "Black Flower"
+        name: "Black Flower",
+        hideTitle: true,
+        description: <>Once during your turn, you may use any Clubs card as an extra <i>BANG!</i>.</>
     },
     COLORADO_BILL: {
-        name: "Colorado Bill"
+        name: "Colorado Bill",
+        hideTitle: true,
+        description: <>Each time you play a <i>BANG!</i> card, "draw!": on Spades, this shot cannot be avoided.</>
+    },
+    COLORADO_BILL_2: {
+        name: "Colorado Bill",
+        hideTitle: true,
+        description: <>Each time another player plays a <i>Missed!</i> card on a <i>BANG!</i> card from <i>Colorado Bill</i>, "draw!": on Spades the <i>Missed!</i> card has no effect and the attacked player loses 1 life point.</>  
     },
     DER_SPOT_BURST_RINGER: {
-        name: "Der Spot - Burst Ringer"
+        name: "Der Spot - Burst Ringer",
+        hideTitle: true,
+        description: <>Once during your turn, you may use a <i>BANG!</i> card as a <i>Gatling</i>.</>
     },
     EVELYN_SHEBANG: {
-        name: "Evelyn Shebang"
+        name: "Evelyn Shebang",
+        hideTitle: true,
+        description: <>You may refuse to draw cards in your draw phase. For each card skipped, shoot a <i>BANG!</i> at a different target in reachable distance.</>
+    },
+    EVELYN_SHEBANG_2: {
+        name: "Evelyn Shebang",
+        hideTitle: true,
+        description: <>She may draw 1 card less than normal to shoot an extra <i>BANG!</i> at distance 1.</>
     },
     HENRY_BLOCK: {
-        name: "Henry Block"
+        name: "Henry Block",
+        hideTitle: true,
+        description: <>Any player drawing or discarding one of your cards (in hand or in play) is the target of a <i>BANG!</i>.</>
     },
     LEMONADE_JIM: {
-        name: "Lemonade Jim"
+        name: "Lemonade Jim",
+        hideTitle: true,
+        description: <>Each time another player plays a <i>Beer</i> card, you may discard any card from hand to also regain 1 life point.</>
     },
     MICK_DEFENDER: {
-        name: "Mick Defender"
+        name: "Mick Defender",
+        hideTitle: true,
+        description: <>If you are the target of a brown card other than <i>BANG!</i>, you may use a <i>Missed!</i> card to avoid that card.</>
+    },
+    MICK_DEFENDER_2: {
+        name: "Mick Defender",
+        hideTitle: true,
+        description: <>If he is the only target of a card, he may use a <i>Missed!</i> card to avoid that card.</>
     },
     TUCO_FRANZISKANER: {
-        name: "Tuco Franziskaner"
+        name: "Tuco Franziskaner",
+        hideTitle: true,
+        description: <>During your draw phase, if you have no blue cards in play, draw 2 extra cards.</>
     },
 
     // Wild West Show characters
 
     BIG_SPENCER: {
-        name: "Big Spencer"
+        name: "Big Spencer",
+        hideTitle: true,
+        description: <>He starts with 5 cards. He can't play <i>Missed!</i></>
     },
     FLINT_WESTWOOD: {
-        name: "Flint Westwood"
+        name: "Flint Westwood",
+        hideTitle: true,
+        description: <>During his turn, he may trade one card from hand with 2 cards at random from the hand of another player.</>
     },
     GARY_LOOTER: {
-        name: "Gary Looter"
+        name: "Gary Looter",
+        hideTitle: true,
+        description: <>He draws all excess cards discarded by other players at the end of their turn.</>
     },
     GREYGORY_DECK: {
-        name: "Greygory Deck"
+        name: "Greygory Deck",
+        hideTitle: true,
+        description: <>At the start of his turn, he may draw 2 characters at random. He has all the abilities of the drawn characters.</>
     },
     JOHN_PAIN: {
-        name: "John Pain"
+        name: "John Pain",
+        hideTitle: true,
+        description: <>If he has less than 6 cards in hand, each time any player "draws!", John adds the card just drawn to his hand.</>
     },
     LEE_VAN_KLIFF: {
-        name: "Lee Van Kliff"
+        name: "Lee Van Kliff",
+        hideTitle: true,
+        description: <>During his turn, he may discard a <i>BANG!</i> to repeat the effect of a brown-bordered card he just played.</>
     },
     TEREN_KILL: {
-        name: "Teren Kill"
+        name: "Teren Kill",
+        hideTitle: true,
+        description: <>Each time he would be eliminated, "draw!": if it is not Spades, <i>Teren</i> stays at 1 life point, and draws 1 card.</>
     },
     YOUL_GRINNER: {
-        name: "Youl Grinner"
+        name: "Youl Grinner",
+        hideTitle: true,
+        description: <>Before drawing, players with more hand cards than him must give him one card of their choice.</>
     },
 
     // Armed & Dangerous characters
 
     AL_PREACHER: {
-        name: "Al Preacher"
+        name: "Al Preacher",
+        hideTitle: true,
+        description: <>If another player plays a blue or orange-bordered card, you may pay 2 📦 to draw 1 card from the deck.</>
     },
     BASS_GREEVES: {
-        name: "Bass Greeves"
+        name: "Bass Greeves",
+        hideTitle: true,
+        description: <>Once during your turn, you may discard 1 card from your hand to add 2 📦 to one of your cards.</>
     },
     BLOODY_MARY: {
-        name: "Bloody Mary"
+        name: "Bloody Mary",
+        hideTitle: true,
+        description: <>Each time your <i>BANG!</i> card is canceled, draw 1 card from the deck.</>
     },
     FRANKIE_CANTON: {
-        name: "Frankie Canton"
+        name: "Frankie Canton",
+        hideTitle: true,
+        description: <>Once during your turn, you may take 1 📦 from any card and move it here.</>
     },
     JULIE_CUTTER: {
-        name: "Julie Cutter"
+        name: "Julie Cutter",
+        hideTitle: true,
+        description: <>Each time a player makes you lose at least 1 life point, "draw!":<br/>♥♦=they are the target of a <i>BANG!</i></>
     },
     MEXICALI_KID: {
-        name: "Mexicali Kid"
+        name: "Mexicali Kid",
+        hideTitle: true,
+        description: <>Once during your turn, you may pay 2 📦 to shoot 1 extra <i>BANG!</i> (no card required).</>
     },
     MS_ABIGAIL: {
-        name: "Ms. Abigail"
+        name: "Ms. Abigail",
+        hideTitle: true,
+        description: <>You may ignore the effects of brown-bordered cards with values J, Q, K, and A if you are the only target.</>
     },
     RED_RINGO: {
-        name: "Red Ringo"
+        name: "Red Ringo",
+        hideTitle: true,
+        description: <>Start with 4 📦. Once during your turn, you may move up to 2 📦 from here to your cards.</>
     },
 
     // Gold Rush characters
 
     DON_BELL: {
-        name: "Don Bell"
+        name: "Don Bell",
+        hideTitle: true,
+        description: <>At the end of his turn, he "draws!": on Hearts or Diamonds, he plays an extra turn.</>
     },
     DUTCH_WILL: {
-        name: "Dutch Will"
+        name: "Dutch Will",
+        hideTitle: true,
+        description: <>He draws 2 cards, discards 1, and takes 1 gold nugget.</>
     },
     JACKY_MURIETA: {
-        name: "Jacky Murieta"
+        name: "Jacky Murieta",
+        hideTitle: true,
+        description: <>During his turn, he may pay 2 gold nuggets to shoot 1 extra <i>BANG!</i></>
     },
     JOSH_MCCLOUD: {
-        name: "Josh McCloud"
+        name: "Josh McCloud",
+        hideTitle: true,
+        description: <>He may draw the top equipment from the deck by paying 2 gold nuggets.</>
     },
     MADAME_YTO: {
-        name: "Madame Yto"
+        name: "Madam Yto",
+        hideTitle: true,
+        description: <>Each time a Beer card is played, she draws 1 card from the deck.</>
     },
     PRETTY_LUZENA: {
-        name: "Pretty Luzena"
+        name: "Pretty Luzena",
+        hideTitle: true,
+        description: <>Once per turn, she may buy 1 equipment at a cost reduced by 1 gold nugget.</>
     },
     RADDIE_SNAKE: {
-        name: "Raddie Snake"
+        name: "Raddie Snake",
+        hideTitle: true,
+        description: <>During his turn, he may discard 1 gold nugget to draw 1 card from the deck (up to 2 times).</>
     },
     SIMEON_PICOS: {
-        name: "Simeon Picos"
+        name: "Simeon Picos",
+        hideTitle: true,
+        description: <>Each time he loses 1 life point, he takes 1 gold nugget.</>
     },
 
     // High Noon cards
@@ -990,88 +1142,141 @@ export const CARDS_ENGLISH: CardRegistry = {
     // The Great Train Robbery characters
 
     BENNY_BRAWLER: {
-        name: "Benny Brawler"
+        name: "Benny Brawler",
+        hideTitle: true,
+        description: <>During your turn, you may take any number of Railcards from the train.</>
     },
     EVAN_BABBIT: {
-        name: "Evan Babbit"
+        name: "Evan Babbit",
+        hideTitle: true,
+        description: <>If you are the target of a <i>BANG!</i> card, you may discard a card of the same suit from your hand to divert it to another player at distance 1.</>
     },
     JIMMY_TEXAS: {
-        name: "Jimmy Texas"
+        name: "Jimmy Texas",
+        hideTitle: true,
+        description: <>At the end of your turn, draw 1 card.</>
     },
     MANUELITA: {
-        name: "Manuelita"
+        name: "Manuelita",
+        hideTitle: true,
+        description: <>Each time the train reaches the End of the Line, draw 2 cards.</>
     },
     SANCHO: {
-        name: "Sancho"
+        name: "Sancho",
+        hideTitle: true,
+        description: <>Once during your turn, you may take 1 Railcard of your choice from the train for free.</>
     },
     SGT_BLAZE: {
-        name: "Sgt. Blaze"
+        name: "Sgt. Blaze",
+        hideTitle: true,
+        description: <>When targeting multiple players with a card or an effect, you may exempt 1 player.</>
     },
     SHADE_OCONNOR: {
-        name: "Shade O'Connor"
+        name: "Shade O'Connor",
+        hideTitle: true,
+        description: <>Each time the train advances when it is not your turn, you may discard 1 card from your hand to draw 1 card.</>
     },
     ZIPPY_ROY: {
-        name: "Zippy Roy"
+        name: "Zippy Roy",
+        hideTitle: true,
+        description: <>Once during your turn, you may advance the train 1 Station.</>
     },
 
     // Canyon Diablo characters
 
     ANNIE_OAKEY: {
-        name: "Annie Oakey"
+        name: "Annie Oakey",
+        hideTitle: true,
+        description: <>She may try to guess the color or the suit of each drawn card in her phase 1: she draws 1 extra card for every "color" guessed (2, for every "suit").</>
     },
     ANNIE_OAKEY_RED: {
-        name: "Annie Oakey: Declare Red"
+        name: "Annie Oakey: Declare Red",
+        hideTitle: true
     },
     ANNIE_OAKEY_HEARTS: {
-        name: "Annie Oakey: Declare Hearts"
+        name: "Annie Oakey: Declare Hearts",
+        hideTitle: true
     },
     ANNIE_OAKEY_DIAMONDS: {
-        name: "Annie Oakey: Declare Diamonds"
+        name: "Annie Oakey: Declare Diamonds",
+        hideTitle: true
     },
     ANNIE_OAKEY_BLACK: {
-        name: "Annie Oakey: Declare Black"
+        name: "Annie Oakey: Declare Black",
+        hideTitle: true
     },
     ANNIE_OAKEY_CLUBS: {
-        name: "Annie Oakey: Declare Clubs"
+        name: "Annie Oakey: Declare Clubs",
+        hideTitle: true
     },
     ANNIE_OAKEY_SPADES: {
-        name: "Annie Oakey: Declare Spades"
+        name: "Annie Oakey: Declare Spades",
+        hideTitle: true
     },
     PAT_BARRETT: {
-        name: "Pat Barrett"
+        name: "Pat Barrett",
+        hideTitle: true,
+        description: <>For each life point he is missing, the distance by which he is seen by others is increased by 1.</>
     },
     BIG_SPENCER_2: {
-        name: "Big Spencer"
+        name: "Big Spencer",
+        hideTitle: true,
+        description: <>He may increase his life points up to a maximum of 6.</>
     },
     BUFFALO_BELL: {
-        name: "Buffalo Bell"
+        name: "Buffalo Bell",
+        hideTitle: true,
+        description: <>Whenever he'd be hit, he may discard an hand card to avoid the hit. Played card + discarded card: if ≥ 13 = <i>Missed!</i>, ≥ 17 = <i>Dodge</i>; ≥ 20 = <i>Backfire</i>.</>
     },
     CLASH_THE_STAMPEDE: {
-        name: "Clash The Stampede"
+        name: "Clash The Stampede",
+        hideTitle: true,
+        description: <>Before drawing, the player with most hand cards must give him one of his choice.</>
     },
     CRAZY_HOG: {
-        name: "Crazy Hog"
+        name: "Crazy Hog",
+        hideTitle: true,
+        description: <>Once in his turn, he may discard a blue-bordered card from his hand to draw 2 cards.</>
     },
     EVA_PLACE: {
-        name: "Eva Place"
+        name: "Eva Place",
+        hideTitle: true,
+        description: <>Once in her turn she may discard an hand card to draw another one from the deck. On a Diamond, she may draw again.</>
     },
     JOSEY_BASSETT: {
-        name: "Josey Bassett"
+        name: "Josey Bassett",
+        hideTitle: true,
+        description: <>For one whole round, she may benefit from the effect of a blue-bordered card in front of another player.</>
     },
     LAURA_BILLION: {
-        name: "Laura Billion"
+        name: "Laura Billion",
+        hideTitle: true,
+        description: <>Whenever a card is "drawn!", she may discard an hand card to get the drawn card.</>
     },
     SID_CURRY: {
-        name: "Sid Curry"
+        name: "Sid Curry",
+        hideTitle: true,
+        description: <>Each time he puts a card into play, all other cards in play with the same name are discarded.</>
+    },
+    SOUNDANCE_KID: {
+        name: "Soundance Kid",
+        hideTitle: true,
+        description: <>Each time he hits a player with a <i>BANG!</i>, he draws a card.</>
     },
     SPIKE_SPIEZEL: {
-        name: "Spike Spiezel"
+        name: "Spike Spiezel",
+        hideTitle: true,
+        description: <>Once in his turn, he may discard a <i>BANG!</i> card to repeat the effect of a brown-bordered card he just played.</>
     },
     TEREN_KILL_2: {
-        name: "Teren Kill"
+        name: "Teren Kill",
+        hideTitle: true,
+        description: <>Each time he would be eliminated, "draws!": if it isn't Spades, stays at 1 life point and draws 1 card.</>
     },
     WYATT_EARL: {
-        name: "Wyatt Earl"
+        name: "Wyatt Earl",
+        hideTitle: true,
+        description: <>Cards that can affect more than one player don't have effect on him.</>
     },
 
     // The Great Train Robbery wagon cards
@@ -1190,6 +1395,105 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     YOOMA: {
         name: "Yooma"
+    },
+
+    // Legends characters
+
+    LEGEND_BART_CASSIDY: {
+        name: "Bart Cassidy",
+        hideTitle: true,
+        description: <>If you are hit, draw 2 cards.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_BLACK_JACK: {
+        name: "Black Jack",
+        hideTitle: true,
+        description: <>You may flip cards until their sum is higher than 21. Draw all those cards</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_CALAMITY_JANET: {
+        name: "Calamity Janet",
+        hideTitle: true,
+        description: <>Each of your cards counts as a <i>BANG!</i> or <i>Missed!</i></>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_EL_GRINGO: {
+        name: "El Gringo",
+        hideTitle: true,
+        description: <>If you are hit by a plyer, draw 1 card from their hand and the card that hit you.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_JESSE_JONES: {
+        name: "Jesse Jones",
+        hideTitle: true,
+        description: <>Look at any player's hand, draw 1 card from there, then draw 1 from the deck.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_JOURDONNAIS: {
+        name: "Jourdonnais",
+        hideTitle: true,
+        description: <>If you are the target of a brown card, you may "Draw!":<br/>J, Q, K, A = ignore the card.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_KIT_CARLSON: {
+        name: "Kit Carlson",
+        hideTitle: true,
+        description: <>Draw 3 cards. You may give 1 of them to any other player.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_LUCKY_DUKE: {
+        name: "Lucky Duke",
+        hideTitle: true,
+        description: <>If a card requires a "Draw!", you flip 2 cards and choose 1 to use. If it's your turn, then draw the chosen card.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_PAUL_REGRET: {
+        name: "Paul Regret",
+        hideTitle: true,
+        description: <>Others see you at distance +1.<br/>To play a <i>BANG!</i> against you, a player must discard an extra card from their hand.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_PEDRO_RAMIREZ: {
+        name: "Pedro Ramirez",
+        hideTitle: true,
+        description: <>Draw 2 cards plus the top card from the discard pile</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_ROSE_DOOLAN: {
+        name: "Rose Doolan",
+        hideTitle: true,
+        description: <>You may see all players at distance 1. Once during your turn, you may discard one of your blue cards, in hand or inplay, as a <i>Panic!</i></>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_SID_KETCHUM: {
+        name: "Sid Ketchum",
+        hideTitle: true,
+        description: <>You may discard 2 cards to gain 1 life point. Once during your turn, if you gain 1 life point, you may shoot a free <i>BANG!</i></>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_SLAB_THE_KILLER: {
+        name: "Slab the Killer",
+        hideTitle: true,
+        description: <>Your <i>BANG!</i> cannot be canceled.<br/>If you claim a Feat, you may remove even a player's last life point.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_SUZY_LAFAYETTE: {
+        name: "Suzy Lafayette",
+        hideTitle: true,
+        description: <>If you have less than 2 cards in hand, draw until you are back to 2 cards.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_VULTURE_SAM: {
+        name: "Vulture Sam",
+        hideTitle: true,
+        description: <>If a player is eliminated, take in hand all of their cards. If you are eliminated, stay in play with 4 life points, but return to the normal side.</>,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_WILLY_THE_KID: {
+        name: "Willy the Kid",
+        hideTitle: true,
+        description: <>You may play any number of <i>BANG!</i> cards.<br/>Instead of claiming a Feat, you may shoot a free <i>BANG!</i></>,
+        descriptionClass: "legends-description",
     },
 
     // Legends feats cards

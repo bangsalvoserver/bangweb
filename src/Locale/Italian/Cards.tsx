@@ -888,7 +888,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         description: <>Può pescare il primo equipaggiamento del mazzetto pagando 2 pepite.</>
     },
     MADAME_YTO: {
-        name: "Madame Yto",
+        name: "Madam Yto",
         hideTitle: true,
         description: <>Ogni volta che viene giocata una <i>Birra</i>, pesca 1 carta dal mazzo.</>
     },
@@ -1685,7 +1685,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     LEGEND_JOURDONNAIS: {
         name: "Jourdonnais",
         hideTitle: true,
-        description: <>Se sei bersaglio di una carta marrone, puoi "estrarre!": J, Q, K, A = ignora la carta.</>,
+        description: <>Se sei bersaglio di una carta marrone, puoi "estrarre!":<br/>J, Q, K, A = ignora la carta.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_KIT_CARLSON: {
