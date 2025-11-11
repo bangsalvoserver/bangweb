@@ -1,13 +1,15 @@
 import { CardRegistry } from "../Registry";
 
 export const CARDS_ENGLISH: CardRegistry = {
+
+    // Base game cards
     
     BARREL: {
         name: "Barrel"
     },
     DYNAMITE: {
         name: "Dynamite",
-        description: <>Lose 3 life points. Else pass the Dynamite on your left.</>,
+        description: <>Lose 3 life points. Else pass the <i>Dynamite</i> on your left.</>,
         descriptionClass: "draw-description"
     },
     SCOPE: {
@@ -20,46 +22,60 @@ export const CARDS_ENGLISH: CardRegistry = {
         description: <>Others view you at distance +1.</>
     },
     JAIL: {
-        name: "Jail"
+        name: "Jail",
+        description: <>Discard the <i>Jail</i>, play normally. Else discard the <i>Jail</i> and skip your turn.</>,
+        descriptionClass: "draw-description"
     },
     REMINGTON: {
-        name: "Remington"
+        name: "Remington",
+        hideTitle: true
     },
     REV_CARABINE: {
-        name: "Rev. Carabine"
+        name: "Rev. Carabine",
+        hideTitle: true
     },
     SCHOFIELD: {
-        name: "Schofield"
+        name: "Schofield",
+        hideTitle: true
     },
     VOLCANIC: {
-        name: "Volcanic"
+        name: "Volcanic",
+        hideTitle: true,
+        description: <>You can play any number of <i>BANG!</i></>,
+        descriptionClass: "weapon-description"
     },
     WINCHESTER: {
-        name: "Winchester"
+        name: "Winchester",
+        hideTitle: true
     },
     BANG: {
-        name: "Bang!"
+        name: "Bang!",
+        hideTitle: true
     },
     BEER: {
         name: "Beer"
     },
     CAT_BALOU: {
-        name: "Cat Balou"
+        name: "Cat Balou",
+        hideTitle: true
     },
     STAGECOACH: {
         name: "Stagecoach"
     },
     DUEL: {
-        name: "Duel"
+        name: "Duel",
+        description: <>A target player discards a <i>BANG!</i>, then you, etc. First player failing to discard a <i>BANG!</i> loses 1 life point.</>
     },
     GENERAL_STORE: {
-        name: "General Store"
+        name: "General Store",
+        description: <>Reveal as many cards as players. Each player draws one.</>
     },
     GATLING: {
         name: "Gatling"
     },
     INDIANS: {
-        name: "Indians!"
+        name: "Indians!",
+        description: <>All other players discard a <i>BANG!</i> or lose 1 life point.</>
     },
     MISSED: {
         name: "Missed!"
@@ -68,22 +84,30 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Panic!"
     },
     SALOON: {
-        name: "Saloon"
+        name: "Saloon",
+        hideTitle: true
     },
     WELLS_FARGO: {
-        name: "Wells Fargo"
+        name: "Wells Fargo",
+        hideTitle: true
     },
+
+    // Dodge City cards
+
     BINOCULAR: {
-        name: "Binocular"
+        name: "Binocular",
+        description: <>You view others at distance -1.</>
     },
     HIDEOUT: {
-        name: "Hideout"
+        name: "Hideout",
+        description: <>Others view you at distance +1.</>
     },
     PUNCH: {
         name: "Punch"
     },
     RAG_TIME: {
-        name: "Rag Time"
+        name: "Rag Time",
+        hideTitle: true
     },
     BRAWL: {
         name: "Brawl"
@@ -92,13 +116,16 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Dodge"
     },
     SPRINGFIELD: {
-        name: "Springfield"
+        name: "Springfield",
+        hideTitle: true
     },
     TEQUILA: {
-        name: "Tequila"
+        name: "Tequila",
+        hideTitle: true
     },
     WHISKY: {
-        name: "Whisky"
+        name: "Whisky",
+        hideTitle: true
     },
     BIBLE: {
         name: "Bible"
@@ -107,83 +134,145 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Canteen"
     },
     CAN_CAN: {
-        name: "Can Can"
+        name: "Can Can",
+        hideTitle: true
     },
     TEN_GALLON_HAT: {
         name: "Ten Gallon Hat"
     },
     CONESTOGA: {
-        name: "Conestoga"
+        name: "Conestoga",
+        hideTitle: true
     },
     DERRINGER: {
-        name: "Derringer"
+        name: "Derringer",
+        hideTitle: true
     },
     BUFFALO_RIFLE: {
         name: "Buffalo Rifle"
     },
     HOWITZER: {
-        name: "Howitzer"
+        name: "Howitzer",
+        hideTitle: true
     },
     PEPPERBOX: {
-        name: "Pepperbox"
+        name: "Pepperbox",
+        hideTitle: true
     },
     IRON_PLATE: {
         name: "Iron Plate"
     },
     PONY_EXPRESS: {
-        name: "Pony Express"
+        name: "Pony Express",
+        hideTitle: true
     },
     KNIFE: {
         name: "Knife"
     },
     SOMBRERO: {
-        name: "Sombrero"
+        name: "Sombrero",
+        hideTitle: true
     },
+
+    // Valley of Shadows cards
+
     GHOST: {
-        name: "Ghost"
+        name: "Ghost",
+        description: <>Play on any eliminated player. That player is back in the game, but cannot gain nor lose life points.</>
+    },
+    GHOST_2: {
+        name: "Ghost",
+        description: <>Play on any eliminated player. That player is alive again without his character's ability, cannot gain nor lose life points and plays as a normal player.</>
     },
     LEMAT: {
-        name: "Lemat"
+        name: "Lemat",
+        hideTitle: true,
+        description: <>During your turn, you may use any card in your hand as a <i>BANG!</i> card.</>,
+        descriptionClass: "weapon-description"
+    },
+    LEMAT_2: {
+        name: "Lemat",
+        hideTitle: true,
+        description: <>In your turn, you may use any card (except <i>Missed!</i>) in your hand as a <i>BANG!</i> card.</>,
+        descriptionClass: "weapon-description"
     },
     RATTLESNAKE: {
-        name: "Rattlesnake"
+        name: "Rattlesnake",
+        description: <>Play on any player. At the beginning of his turn, that player "draws!": on Spades, he loses 1 life point.</>
     },
     SHOTGUN: {
-        name: "Shotgun"
+        name: "Shotgun",
+        hideTitle: true,
+        description: <>Each time you hit a player, he must discard a card of his choice from his hand.</>,
+        descriptionClass: "weapon-description"
     },
     BOUNTY: {
-        name: "Bounty"
+        name: "Bounty",
+        description: <>Play on any player. If that player is hit by a <i>BANG!</i> card, the player who shot him draws a card from the deck.</>
     },
     BANDIDOS: {
-        name: "Bandidos"
+        name: "Bandidos",
+        hideTitle: true,
+        description: <>Each player chooses one: discard 2 cards from his hand (1 if he only has 1) or lose 1 life point.</>
+    },
+    BANDIDOS_2: {
+        name: "Bandidos",
+        hideTitle: true,
+        description: <>All other players discard either a <i>BANG!</i> card or 2 cards of their choice from their hand.</>
     },
     ESCAPE: {
-        name: "Escape"
+        name: "Escape",
+        description: <>May be played out of turn. Avoid the effects of a brown card (other than <i>BANG!</i>) that includes you as a target.</>
+    },
+    ESCAPE_2: {
+        name: "Escape",
+        description: <>If you are the only target of a card other than <i>BANG!</i>, discard this card to avoid that effect.</>
     },
     AIM: {
-        name: "Aim"
+        name: "Aim",
+        description: <>Play this card together with a <i>BANG!</i> card. If the target is hit, he loses 2 life points.</>
     },
     POKER: {
-        name: "Poker"
+        name: "Poker",
+        hideTitle: true,
+        description: <>All other players discard 1 card from their hand at the same time. If no Ace was discarded, you draw up to 2 of those cards.</>
     },
     BACKFIRE: {
-        name: "Backfire"
+        name: "Backfire",
+        description: <>Counts as a <i>Missed!</i> card.<br/>The player who shot is the target of a <i>BANG!</i>.</>
     },
     SAVED: {
-        name: "Saved!"
+        name: "Saved!",
+        description: <>May be played out of turn. Prevent another player from losing 1 life. If he survives, draw 2 cards from his hand or from the deck (your choice).</>
+    },
+    SAVED_2: {
+        name: "Saved!",
+        description: <>Play out of your turn only. Prevent any other player to lose a life point. If you save any player from elimination, draw 2 cards from that player's hand.</>
     },
     FANNING: {
-        name: "Fanning"
+        name: "Fanning",
+        description: <>Counts as your normal one <i>BANG!</i> per turn. Also targets the player of your choice at distance 1 from the first target (if any, excluding you) with a <i>BANG!</i>.</>
     },
     TOMAHAWK: {
-        name: "Tomahawk"
+        name: "Tomahawk",
+        hideTitle: true
     },
     TORNADO: {
-        name: "Tornado"
+        name: "Tornado",
+        hideTitle: true,
+        description: <>Each player discards a card from their hand (if possible), then draws 2 cards from the deck.</>
+    },
+    TORNADO_2: {
+        name: "Tornado",
+        hideTitle: true,
+        description: <>Each player must give 2 cards from his hand to the player on his left.</>
     },
     LAST_CALL: {
         name: "Last Call"
     },
+
+    // Armed & Dangerous cards
+
     CARAVAN: {
         name: "Caravan"
     },
@@ -191,121 +280,179 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "A Little Nip"
     },
     QUICK_SHOT: {
-        name: "Quick Shot"
+        name: "Quick Shot",
+        description: <>Shoot an additional different player.</>,
+        descriptionClass: "cube-description"
     },
     FLINTLOCK: {
-        name: "Flintlock"
+        name: "Flintlock",
+        hideTitle: true,
+        description: <>If canceled, take this card back in hand.</>,
+        descriptionClass: "cube-description"
     },
     ARROW: {
-        name: "Arrow"
+        name: "Arrow",
+        description: <><p>A target player discards a <i>BANG!</i> card from hand or loses 1 life point.</p><p>Target on additional different player.</p></>,
+        descriptionClass: "cube-description-double"
     },
     DUCK: {
-        name: "Duck!"
+        name: "Duck!",
+        description: <>Take this card back in hand.</>,
+        descriptionClass: "cube-description"
     },
     RELOAD: {
-        name: "Reload"
+        name: "Reloading",
+        description: <>Add 3 📦 to your cards and/or your character.</>
     },
     RUST: {
-        name: "Rust"
+        name: "Rust",
+        description: <>All others move 1 📦 from each Dangerous card and their character to your character.</>
     },
     SQUAW: {
-        name: "Squaw"
+        name: "Squaw",
+        description: <><p>Discard any card from play.</p><p>Add the discarded card to your hand.</p></>,
+        descriptionClass: "cube-description-double"
     },
     ACE_UP_THE_SLEEVE: {
         name: "Ace Up The Sleeve"
     },
     BANDOLIER: {
-        name: "Bandolier"
+        name: "Bandolier",
+        description: <>Once during your turn, you may play one extra <i>BANG!</i> card.</>,
+        descriptionClass: "cube-description"
     },
     BIG_FIFTY: {
-        name: "Big Fifty"
+        name: "Big Fifty",
+        hideTitle: true,
+        description: <>Cancel the target player's character ability and cards in play.</>,
+        descriptionClass: "cube-description"
     },
     BOMB: {
-        name: "Bomb"
+        name: "Bomb",
+        description: <>Play on any player. At the start of your turn, "draw!":<br/>♥♦=pass <i>Bomb</i> to any player.<br/>♣♠=discard 2 📦: if they run out, lose 2 life points.</>
     },
     BUNTLINE_SPECIAL: {
-        name: "Buntline Special"
+        name: "Buntline Special",
+        hideTitle: true,
+        description: <>If the <i>BANG!</i> is canceled the target player must discard a card of his choice from hand.</>,
+        descriptionClass: "cube-description"
     },
     BELL_TOWER: {
-        name: "Bell Tower"
+        name: "Bell Tower",
+        description: <>You see all players at distance 1 for the next card you play.</>,
+        descriptionClass: "cube-description"
     },
     CRATE: {
         name: "Crate"
     },
     TUMBLEWEED: {
-        name: "Tumbleweed"
+        name: "Tumbleweed",
+        description: <>Make any player repeat a "draw!"</>,
+        descriptionClass: "cube-description"
     },
     DOUBLE_BARREL: {
-        name: "Double Barrel"
+        name: "Double Barrel",
+        description: <>If you play a Diamond-suited <i>BANG!</i>, it can't be canceled.</>,
+        descriptionClass: "cube-description"
     },
     WHIP: {
-        name: "Whip"
+        name: "Whip",
+        description: <>Discard any card from play.</>,
+        descriptionClass: "cube-description"
     },
     BEER_KEG: {
         name: "Beer Keg"
     },
     LOCKPICK: {
-        name: "Lockpick"
+        name: "Lockpick",
+        description: <>Draw 1 card from the hand of any player.</>,
+        descriptionClass: "cube-description"
     },
     THUNDERER: {
-        name: "Thunderer"
+        name: "Thunderer",
+        hideTitle: true,
+        description: <>Take the <i>BANG!</i> card back in hand.</>,
+        descriptionClass: "cube-description"
     },
+
+    // Canyon Diablo cards
+
     GRAVE_ROBBER: {
-        name: "Graverobber"
+        name: "Graverobber",
+        description: <>Put on the table as many discarded cards as players.<br/>Each player draws one.</>
     },
     CARD_SHARPER: {
-        name: "Card Sharper"
+        name: "Card Sharper",
+        description: <>Switch a blue-bordered card you have in play with one of the same colour in front of another player.</>
     },
     MIRAGE: {
-        name: "Mirage"
+        name: "Mirage",
+        description: <>Count as a <i>Missed!</i> card.<br/>Also the player who shot ends his turn immediately.</>
     },
     BLOOD_PACT: {
         name: "Blood Pact"
     },
     SACRIFICE: {
-        name: "Sacrifice"
+        name: "Sacrifice",
+        description: <>May be played out of turn. Prevent another player from losing 1 life point by taking the hit yourself. Then, if possible, draw 2 cards from the deck (3, if he survives).</>
     },
     DISARM: {
-        name: "Disarm"
+        name: "Disarm",
+        description: <>Counts as a <i>Missed!</i> card.<br/>Also the player who shot must discard an hand card.</>
     },
     MOLOTOV: {
-        name: "Molotov"
+        name: "Molotov",
+        hideTitle: true
     },
     BULLDOG: {
-        name: "Bulldog"
+        name: "Bulldog",
+        hideTitle: true,
+        description: <>Once in your turn, you may play a <i>BANG!</i> card as <i>Gatling</i> by discarding another card with it.</>,
+        descriptionClass: "weapon-description"
     },
     LAST_WILL: {
-        name: "Last Will"
+        name: "Last Will",
+        description: <>Play on any player. If he is eliminated, he may give up to 3cards (in hand or in play) to another player.</>
     },
     INDIAN_GUIDE: {
-        name: "Indian Guide"
+        name: "Indian Guide",
+        description: <>Play on yourself. <i>Indians!</i> and <i>War Path</i> have no effect on you.</>
     },
     TAXMAN: {
-        name: "Taxman"
+        name: "Taxman",
+        description: <>Play on any player. At the beginnning of his turn, he must "draw!": on Spades or Clubs, he draws one card less in phase 1.</>
     },
     BROTHEL: {
-        name: "Brothel"
+        name: "Brothel",
+        description: <>Discard and play, but lose your ability 'til your next turn. Else, discard and play normally.</>,
+        descriptionClass: "draw-description"
     },
     BRONCO: {
-        name: "Bronco"
+        name: "Bronco",
+        hideTitle: true,
+        description: <>Others view you at distance +1. It can't be in play with <i>Mustang</i>. It can be removed by discarding 2 cards too.</>
     },
     PACK_MULE: {
-        name: "Pack Mule"
+        name: "Pack Mule",
+        description: <>You may hold one card more than your current life points. It can't be in play with <i>Mustang</i> or <i>Bronco</i>.</>
     },
     WAR_PATH: {
-        name: "War Path"
+        name: "War Path",
+        description: <>All other players discard a <i>BANG!</i> card or lose 1 life point.</>
     },
     ARSON: {
         name: "Arson"
     },
     FLYING_BULLET: {
-        name: "Flying Bullet"
+        name: "Flying Bullet",
+        description: <>Count as a <i>Missed!</i> card.<br/>Also a player of your choice at distance 1 from you (if any) is the target of the <i>BANG!</i>.</>
     },
     ON_THE_HOUSE: {
         name: "On The House"
     },
     GUITAR: {
-        name: "Guitar"
+        name: "Guitar",
+        description: <>Play on any player. 'til it is removed, he cannot play <i>BANG!</i> cards (or cards which depend on gun's reachable distance).</>
     },
     SCRAPPER: {
         name: "Scrapper"
@@ -313,6 +460,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     SHYLOCK: {
         name: "Shylock"
     },
+
+    // Base game characters
+
     BART_CASSIDY: {
         name: "Bart Cassidy"
     },
@@ -361,6 +511,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     WILLY_THE_KID: {
         name: "Willy the Kid"
     },
+
+    // Most Wanted characters
+
     CLAUS_THE_SAINT: {
         name: "Claus \"The Saint\""
     },
@@ -376,6 +529,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     EMILIANO: {
         name: "Emiliano"
     },
+
+    // Dodge City characters
+
     APACHE_KID: {
         name: "Apache Kid"
     },
@@ -421,6 +577,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     VERA_CUSTER: {
         name: "Vera Custer"
     },
+
+    // Valley of Shadows characters
+
     BLACK_FLOWER: {
         name: "Black Flower"
     },
@@ -445,6 +604,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     TUCO_FRANZISKANER: {
         name: "Tuco Franziskaner"
     },
+
+    // Wild West Show characters
+
     BIG_SPENCER: {
         name: "Big Spencer"
     },
@@ -469,6 +631,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     YOUL_GRINNER: {
         name: "Youl Grinner"
     },
+
+    // Armed & Dangerous characters
+
     AL_PREACHER: {
         name: "Al Preacher"
     },
@@ -493,6 +658,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     RED_RINGO: {
         name: "Red Ringo"
     },
+
+    // Gold Rush characters
+
     DON_BELL: {
         name: "Don Bell"
     },
@@ -517,6 +685,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     SIMEON_PICOS: {
         name: "Simeon Picos"
     },
+
+    // High Noon cards
+
     BLESSING: {
         name: "Blessing"
     },
@@ -574,6 +745,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     HIGH_NOON: {
         name: "High Noon"
     },
+
+    // Fistful of Cards cards
+
     AMBUSH: {
         name: "Ambush"
     },
@@ -625,6 +799,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     A_FISTFUL_OF_CARDS: {
         name: "A Fistful Of Cards"
     },
+
+    // Wild West Show cards
+
     GAG: {
         name: "Gag"
     },
@@ -655,6 +832,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     WILD_WEST_SHOW: {
         name: "Wild West Show"
     },
+
+    // Gold Rush cards
+
     SHOT: {
         name: "Shot"
     },
@@ -718,60 +898,89 @@ export const CARDS_ENGLISH: CardRegistry = {
     RUCKSACK: {
         name: "Rucksack"
     },
+
+    // The Great Train Robbery cards
+
     CACTUS: {
-        name: "Cactus"
+        name: "Cactus",
+        hideTitle: true
     },
     DRAGOON: {
-        name: "Dragoon"
+        name: "Dragoon",
+        hideTitle: true,
+        description: <>You may play 1 additional <i>BANG!</i> during your turn.</>
     },
     EVADED: {
-        name: "Evaded!"
+        name: "Evaded!",
+        description: <>Draw the card you just <i>Missed!</i></>
     },
     FULL_STEAM: {
-        name: "Full Steam"
+        name: "Full Steam",
+        description: <>Send the train to the End of the Line.<br/>Double or cancel the Locomotive effect.</>
     },
     FULL_STEAM_NO_EFFECT: {
-        name: "Full Steam: Cancel Locomotive effect"
+        name: "Full Steam: Cancel Locomotive effect",
+        hideTitle: true
     },
     FULL_STEAM_DOUBLE_EFFECT: {
-        name: "Full Steam: Double Locomotive effect"
+        name: "Full Steam: Double Locomotive effect",
+        hideTitle: true
     },
     KNIFE_REVOLVER: {
-        name: "Knife Revolver"
+        name: "Knife Revolver",
+        hideTitle: true,
+        description: <>Counts as your 1 <i>BANG!</i> per turn. "Draw!": J, Q, K, A = take this card back into your hand.</>
     },
     MAP: {
-        name: "Map"
+        name: "Map",
+        description: <>On your turn, before drawing, look at the top 2 cards of the deck: you may discard 1.</>
     },
     MONEY_BAG: {
-        name: "Money Bag"
+        name: "Money Bag",
+        description: <>If the top card in the discard pile has a brown border, copy its effect.</>
     },
     MOST_WANTED: {
-        name: "Most Wanted"
+        name: "Most Wanted",
+        hideTitle: true,
+        description: <>Each player must "draw!":<br/>♠=that player loses 1 life point.</>,
+        descriptionClass: "description-low"
     },
     NEXT_STOP: {
-        name: "Next Stop"
+        name: "Next Stop",
+        description: <>Advance the train 1 Station.</>,
+        descriptionClass: "description-low"
     },
     REFUND: {
-        name: "Refund"
+        name: "Refund",
+        description: <>When another player draws or discards 1 of your other cards, draw 1 card.</>
     },
     STRONGBOX: {
-        name: "Strongbox"
+        name: "Strongbox",
+        description: <>At the end of your turn, draw 1 card.</>
     },
     SWITCH: {
-        name: "Switch"
+        name: "Switch",
+        description: <>Switch 1 of your cards in play with another card in play.</>
     },
     TRAIN_ROBBERY: {
-        name: "Train Robbery"
+        name: "Train Robbery",
+        description: <>Counts as your 1 <i>BANG!</i> per turn.<br/>For each of their cards in play, the target chooses: discard it or be the target of a BANG!</>
     },
     TRAIN_ROBBERY_DISCARD: {
-        name: "Train Robbery: Discard a card"
+        name: "Train Robbery: Discard a card",
+        hideTitle: true
     },
     TRAIN_ROBBERY_BANG: {
-        name: "Train Robbery: Receive a Bang"
+        name: "Train Robbery: Receive a Bang",
+        hideTitle: true
     },
     WATER_TOWER: {
-        name: "Water Tower"
+        name: "Water Tower",
+        description: <>Take 1 Railcar of your choice from the train for free.</>
     },
+
+    // The Great Train Robbery characters
+
     BENNY_BRAWLER: {
         name: "Benny Brawler"
     },
@@ -796,6 +1005,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     ZIPPY_ROY: {
         name: "Zippy Roy"
     },
+
+    // Canyon Diablo characters
+
     ANNIE_OAKEY: {
         name: "Annie Oakey"
     },
@@ -853,6 +1065,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     WYATT_EARL: {
         name: "Wyatt Earl"
     },
+
+    // The Great Train Robbery wagon cards
+
     BAGGAGE_CAR: {
         name: "Baggage Car"
     },
@@ -913,12 +1128,18 @@ export const CARDS_ENGLISH: CardRegistry = {
     SLEEPER_CAR: {
         name: "Sleeper Car"
     },
+
+    // The Great Train Robbery locomotive cards
+
     IRONHORSE: {
         name: "Ironhorse"
     },
     LELAND: {
         name: "Leland"
     },
+
+    // The Great Train Robbery station cards
+
     BOOM_TOWN: {
         name: "Boom Town"
     },
@@ -958,6 +1179,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     YOOMA: {
         name: "Yooma"
     },
+
+    // Legends feats cards
+
     FIFTY_GUNS: {
         name: "Fifty Guns"
     },
@@ -1006,6 +1230,9 @@ export const CARDS_ENGLISH: CardRegistry = {
     A_QUICK_DEATH: {
         name: "A Quick Death"
     },
+
+    // Button row virtual cards
+
     ESCAPE_JAIL: {
         name: "Escape Jail"
     },

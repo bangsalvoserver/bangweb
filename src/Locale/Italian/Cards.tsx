@@ -1037,11 +1037,12 @@ export const CARDS_ITALIAN: CardRegistry = {
     MOST_WANTED: {
         name: "Most Wanted",
         description: <>Ogni giocatore "estrae!":<br/>♠=perde 1 punto vita.</>,
-        descriptionClass: "description-low",
+        descriptionClass: "description-low"
     },
     NEXT_STOP: {
         name: "Prossima Fermata",
-        description: <>Fai avanzare il treno di 1 stazione.</>
+        description: <>Fai avanzare il treno di 1 stazione.</>,
+        descriptionClass: "description-low"
     },
     REFUND: {
         name: "Rimborso",
