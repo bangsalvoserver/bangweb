@@ -1292,55 +1292,138 @@ export const CARDS_ITALIAN: CardRegistry = {
         "name": "Yooma",
     },
 
+    // Legends characters
+
+    LEGEND_BART_CASSIDY: {
+        "name": "Bart Cassidy",
+        "description": <div className="legends-description">Se vieni ferito, peschi 2 carte.</div>
+    },
+    LEGEND_BLACK_JACK: {
+        "name": "Black Jack",
+        "description": <div className="legends-description">Puoi scoprire carte finché la loro somma non supera 21, poi pescale.</div>
+    },
+    LEGEND_CALAMITY_JANET: {
+        "name": "Calamity Janet",
+        "description": <div className="legends-description">Ogni tua carta vale come BANG! o Mancato!</div>
+    },
+    LEGEND_EL_GRINGO: {
+        "name": "El Gringo",
+        "description": <div className="legends-description">Se vieni ferito da un giocatore, peschi una carta dalla sua mano e la carta che ti ha ferito.</div>
+    },
+    LEGEND_JESSE_JONES: {
+        "name": "Jesse Jones",
+        "description": <div className="legends-description">Guarda le carte in mano a un giocatore, pescane una ,poi pescane un'altra dal mazzo.</div>
+    },
+    LEGEND_JOURDONNAIS: {
+        "name": "Jourdonnais",
+        "description": <div className="legends-description">Se sei bersaglio di una carta marrone, puoi "estrarre!": J, Q, K, A = ignora la carta.</div>
+    },
+    LEGEND_KIT_CARLSON: {
+        "name": "Kit Carlson",
+        "description": <div className="legends-description">Peschi 3 carte. Puoi darne 1 di esse a un altro giocatore.</div>
+    },
+    LEGEND_LUCKY_DUKE: {
+        "name": "Lucky Duke",
+        "description": <div className="legends-description">Se una carta fa "estrarre!", scopri tu 2 carte e scegli quella da usare. Se è il tuo turno, pescala.</div>
+    },
+    LEGEND_PAUL_REGRET: {
+        "name": "Paul Regret",
+        "description": <div className="legends-description">Gli altri ti vedono a distanza +1.<br/>Per giocarti un BANG! contro, occorre scartare una carta aggiuntiva dalla mano.</div>
+    },
+    LEGEND_PEDRO_RAMIREZ: {
+        "name": "Pedro Ramirez",
+        "description": <div className="legends-description">Peschi 2 carte più quella in cima agli scarti.</div>
+    },
+    LEGEND_ROSE_DOOLAN: {
+        "name": "Rose Doolan",
+        "description": <div className="legends-description">Puoi vedere tutti a distanza 1.<br/>Una volta nel tuo turno, puoi scartare una tua carta blu, in mano i in gioco, come Panico!</div>
+    },
+    LEGEND_SID_KETCHUM: {
+        "name": "Sid Ketchum",
+        "description": <div className="legends-description">Puoi scartare 2 carte per recuperare un punto vita. Una volta nel tuo turno, se recuperi un punto vita, puoi sparare un BANG! gratis.</div>
+    },
+    LEGEND_SLAB_THE_KILLER: {
+        "name": "Slab the Killer",
+        "description": <div className="legends-description">I tuoi BANG! non possono essere annullati.<br/>Se rivendichi un'Impresa puoi rimuovere anche l'ultimo punto vita.</div>
+    },
+    LEGEND_SUZY_LAFAYETTE: {
+        "name": "Suzy Lafayette",
+        "description": <div className="legends-description">Se rimani con meno di 2 carte in mano, peschi fino a tornare a 2.</div>
+    },
+    LEGEND_VULTURE_SAM: {
+        "name": "Vulture Sam",
+        "description": <div className="legends-description">Se un personaggio è eliminato, prendi in mano tutte le sue carte. Se vieni eliminato, resti in gioco con 4 punti vita, ma torni sul lato normale.</div>
+    },
+    LEGEND_WILLY_THE_KID: {
+        "name": "Willy the Kid",
+        "description": <div className="legends-description">Puoi giocare quante carte BANG! vuoi.<br/>Invece di rivendicare un'Impresa, puoi sparare un BANG! gratis.</div>
+    },
+
     // Legends feats cards
 
     FIFTY_GUNS: {
         "name": "Cinquanta Pistole",
+        "description": <div className="feats-description">Prendi o scarta un'arma.</div>
     },
     WOUNDED_PRIDE: {
         "name": "Ferito Nell'Orgoglio",
+        "description": <div className="feats-description">Un altro giocatore manca una tua carta BANG!</div>
     },
     OLD_WEST_GANG: {
         "name": "Gang Del Vecchio West",
+        "description": <div className="feats-description">Ferisci 2 o più giocatori nello stesso turno.</div>
     },
     BOTTLENECK: {
         "name": "Il Collo Di Bottiglia",
+        "description": <div className="feats-description">Scarta una Birra.</div>
     },
     THE_CHUCK_A_LUCK: {
         "name": "Il Mulino D'Oro",
+        "description": <div className="feats-description">Scarta una carta BANG!</div>
     },
     '3_15_TO_YOOMA': {
         "name": "Il Treno Per Yooma",
+        "description": <div className="feats-description">Attiva o fai attivare un "estrarre!" (anche a inizio turno).</div>
     },
     GOOD_COMPANY: {
         "name": "In Buona Compagnia",
+        "description": <div className="feats-description">Scarta una carta, poi gioca una carta con lo stesso nome (o viceversa).</div>
     },
     THE_LAST_HERO: {
         "name": "L'Ultimo Eroe",
+        "description": <div className="feats-description">Scarta una carta blu in gioco.</div>
     },
     THE_MAN_WITH_NO_NAME: {
         "name": "L'Uomo Senza Nome",
+        "description": <div className="feats-description">Perdi un punto vita (non l'ultimo).</div>
     },
     WILHELM_SCREAM: {
         "name": "L'Urlo Di Wilhelm",
+        "description": <div className="feats-description">Gioca una carta BANG! a distanza 2 o più.</div>
     },
     SCRUGS_BALLAD: {
         "name": "La Ballata Di Scrugs",
+        "description": <div className="feats-description">Perdi un duello.</div>
     },
     BORDERLANDS: {
         "name": "La Frontiera",
+        "description": <div className="feats-description">Scarta la tua mano (anche se è di zero carte).</div>
     },
     THE_OREGON_TRAIL: {
         "name": "La Pista Dell'Oregon",
+        "description": <div className="feats-description">Durante la fase di pesca, rinuncia alla prima carta che dovresti pescare.</div>
     },
     A_THOUSAND_WAYS_TO_DIE: {
         "name": "Mille Modi Per Morire",
+        "description": <div className="feats-description">Mostra dalla mano un Mancato! e una carta dello stesso seme.</div>
     },
     FOR_A_FEW_CARDS_MORE: {
         "name": "Per Qualche Carta In Più",
+        "description": <div className="feats-description">Scarta almeno una carta in eccesso a fine turno.</div>
     },
     A_QUICK_DEATH: {
         "name": "Una Morte Veloce",
+        "description": <div className="feats-description">Ferisci con una carta BANG! un altro giocatore al massimo dei suoi punti vita.</div>
     },
 
     // Button row virtual cards
