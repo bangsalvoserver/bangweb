@@ -841,148 +841,201 @@ export const CARDS_ENGLISH: CardRegistry = {
     // High Noon cards
 
     BLESSING: {
-        name: "Blessing"
+        name: "Blessing",
+        description: <>The suit of all cards is Hearts.</>
     },
     GHOST_TOWN: {
-        name: "Ghost Town"
+        name: "Ghost Town",
+        description: <>During their turn, eliminated players return to the game as ghosts. They draw 3 cards instead of 2, and they cannot die. At the end of their turn, they are eliminated again.</>
     },
     INVERT_ROTATION: {
-        name: "Gold Rush"
+        name: "Gold Rush",
+        description: <>The game proceeds counter-clockwise for one round, always starting with the Sheriff. All card effects proceed clockwise.</>
     },
     THE_DALTONS: {
-        name: "The Daltons"
+        name: "The Daltons",
+        description: <>When <i>The Daltons</i> enter play, each player who has any blue cards in fron of him, chooses one of them and discards it.</>
     },
     THE_DOCTOR: {
-        name: "The Doctor"
+        name: "The Doctor",
+        description: <>When <i>The Doctor</i> enters play, the player(s) still in the game with the fewest current life points regain(s) 1 life point.</>
     },
     THE_REVEREND: {
-        name: "The Reverend"
+        name: "The Reverend",
+        description: <>Players cannot play any <i>Beer</i> cards.</>
     },
     TRAIN_ARRIVAL: {
-        name: "Train Arrival"
+        name: "Train Arrival",
+        description: <>Each player draws one extra card at te end of phase 1 of his turn.</>
     },
     CURSE: {
-        name: "Curse"
+        name: "Curse",
+        description: <>The suit of all cards is Spades.</>
     },
     HANGOVER: {
-        name: "Hangover"
+        name: "Hangover",
+        description: <>All characters lose their special abilities.</>
     },
     SERMON: {
-        name: "Sermon"
+        name: "Sermon",
+        description: <>Each player cannot use <i>BANG!</i> cards during his turn.</>
     },
     THIRST: {
-        name: "Thirst"
+        name: "Thirst",
+        description: <>Each player only draws his first card, not the second one, during phase 1 of his turn.</>
     },
     SHOOTOUT: {
-        name: "Shootout"
+        name: "Shootout",
+        description: <>Each player can play a second <i>BANG!</i> card during his turn.</>
     },
     HANDCUFFS: {
-        name: "Handcuffs"
+        name: "Handcuffs",
+        description: <>After drawing his cards in phase 1, the player whose turn it is names a suit: he can only play cards of that suit during his turn.</>
     },
     HANDCUFFS_HEARTS: {
-        name: "Handcuffs: Declare Hearts"
+        name: "Handcuffs: Declare Hearts",
+        hideTitle: true
     },
     HANDCUFFS_DIAMONDS: {
-        name: "Handcuffs: Declare Diamonds"
+        name: "Handcuffs: Declare Diamonds",
+        hideTitle: true
     },
     HANDCUFFS_CLUBS: {
-        name: "Handcuffs: Declare Clubs"
+        name: "Handcuffs: Declare Clubs",
+        hideTitle: true
     },
     HANDCUFFS_SPADES: {
-        name: "Handcuffs: Declare Spades"
+        name: "Handcuffs: Declare Spades",
+        hideTitle: true
     },
     NEW_IDENTITY: {
-        name: "New Identity"
+        name: "New Identity",
+        description: <>At the beginning of their turn, each player picks up another character at random. He may switch to the new identity for the rest of the game, starting with 2 life points.</>
     },
     HIGH_NOON: {
-        name: "High Noon"
+        name: "High Noon",
+        description: <>Each player loses 1 life point at the start of his turn.</>
     },
 
     // Fistful of Cards cards
 
     AMBUSH: {
-        name: "Ambush"
+        name: "Ambush",
+        description: <>The distance between any two players is 1. This is modified only by cards in play.</>
     },
     SNIPER: {
-        name: "Sniper"
+        name: "Sniper",
+        description: <>During his turn, the player may discard 2 <i>BANG!</i> cards together against a player: this counts as a <i>BANG!</i> but it may be cancelled only by 2 <i>Missed!</i>.</>
     },
     DEAD_MAN: {
-        name: "Dead Man"
+        name: "Dead Man",
+        description: <>During his turn, the player who has been eliminated first comes back in play with 2 life points and 2 cards.</>
     },
     BLOOD_BROTHERS: {
-        name: "Blood Brothers"
+        name: "Blood Brothers",
+        description: <>At the beginning of his turn, each player may lose one life point (except the last one) to give one life point to any player of his choice.</>
     },
     THE_JUDGE: {
-        name: "The Judge"
+        name: "The Judge",
+        description: <>You cannot play cards in front of you or any other player.</>
     },
     LASSO: {
-        name: "Lasso"
+        name: "Lasso",
+        description: <>Cards in play in front of players have no effect.</>
     },
     LAW_OF_THE_WEST: {
-        name: "Law Of The West"
+        name: "Law Of The West",
+        description: <>During his phase 1, each player shows the second card he draws: if he can, he must play it during his phase 2.</>
     },
     HARD_LIQUOR: {
-        name: "Hard Liquor"
+        name: "Hard Liquor",
+        description: <>Each player may skip his phase 1 to regain 1 life point.</>
     },
     ABANDONED_MINE: {
-        name: "Abandoned Mine"
+        name: "Abandoned Mine",
+        description: <>During his phase 1, each player draws from the discards (if they run out, from the deck). In his phase 3, he discards face down on the deck.</>
     },
     PEYOTE: {
-        name: "Peyote"
+        name: "Peyote",
+        hideTitle: false,
+        description: <>Instead of drawing in his phase 1, each player guesses if the suit of the top card of the deck is red or black. He them draws and shows it: if he guessed right, he keeps it and may guess again, otherwise he proceeds to phase 2.</>
     },
     PEYOTE_RED: {
-        name: "Peyote: Declare Red"
+        name: "Peyote: Declare Red",
+        hideTitle: true
     },
     PEYOTE_BLACK: {
-        name: "Peyote: Declare Black"
+        name: "Peyote: Declare Black",
+        hideTitle: true
     },
     RANCH: {
         name: "Ranch"
     },
     RICOCHET: {
-        name: "Ricochet"
+        name: "Ricochet",
+        description: <>Each player may discard <i>BANG!</i> cards against cards in play in front of any player: each card is discarded if its owner does not play a <i>Missed!</i> for each one.</>
     },
     RUSSIAN_ROULETTE: {
-        name: "Russian Roulette"
+        name: "Russian Roulette",
+        description: <>When <i>Russian Roulette</i> enters play, starting from the Sheriff each player discards a <i>Missed!</i>, until one player does not: he loses 2 life points and the Roulette stops.</>
     },
     VENDETTA: {
-        name: "Vendetta"
+        name: "Vendetta",
+        hideTitle: false,
+        description: <>At the end of his turn, each player "draws!": on a Heart, he plays another turn (but he does not "draw!" again).</>
     },
     A_FISTFUL_OF_CARDS: {
-        name: "A Fistful Of Cards"
+        name: "A Fistful Of Cards",
+        description: <>At the beginning of his turn, the player is the target of as many <i>BANG!</i> as the number of cards in his hand.</>
     },
 
     // Wild West Show cards
 
     GAG: {
-        name: "Gag"
+        name: "Gag",
+        description: <>Players may not talk (they can gesture, moan, ...). Whoever talks loses 1 life point.</>
     },
     BONE_ORCHARD: {
-        name: "Bone Orchard"
+        name: "Bone Orchard",
+        description: <>At the start of their turn, all eliminated players return to play with 1 life points. Deal their roles at random from those of the eliminated players.</>
     },
     DARLING_VALENTINE: {
-        name: "Darling Valentine"
+        name: "Darling Valentine",
+        hideTitle: false,
+        description: <>At the start of his turn, each player discards his hand and draws the same number of cards from the deck.</>
     },
     DOROTHY_RAGE: {
-        name: "Dorothy Rage"
+        name: "Dorothy Rage",
+        hideTitle: false,
+        description: <>During his turn, each player can force another player to play one of his cards.</>
     },
     HELENA_ZONTERO: {
-        name: "Helena Zontero"
+        name: "Helena Zontero",
+        hideTitle: false,
+        description: <>When <i>Helena</i> comes into play, "draw!": on Hearts or Diamonds, shuffle all active roles, except the Sheriff, and deal them at random.</>
     },
     LADY_ROSA_OF_TEXAS: {
-        name: "Lady Rosa Of Texas"
+        name: "Lady Rosa Of Texas",
+        description: <>During his turn, each player can swap places with the player on his right, who will skip his next turn.</>
     },
     MISS_SUSANNA: {
-        name: "Miss Susanna"
+        name: "Miss Susanna",
+        hideTitle: false,
+        description: <>During his turn, each player must play at least 3 cards. If he does not, he loses 1 life point.</>
     },
     SHOWDOWN: {
-        name: "Showdown"
+        name: "Showdown",
+        description: <>All cards may be played as they were <i>BANG!</i> All <i>BANG!</i> may only be played as they were <i>Missed!</i></>
     },
     SACAGAWAY: {
-        name: "Sacagaway"
+        name: "Sacagaway",
+        hideTitle: false,
+        description: <>All players play with their hands revealed (excluding their roles!).</>
     },
     WILD_WEST_SHOW: {
-        name: "Wild West Show"
+        name: "Wild West Show",
+        hideTitle: false,
+        description: <>The goal of each player becomes: "Be the last one in play!"</>
     },
 
     // Gold Rush cards
