@@ -1041,10 +1041,12 @@ export const CARDS_ENGLISH: CardRegistry = {
     // Gold Rush cards
 
     SHOT: {
-        name: "Shot"
+        name: "Shot",
+        description: <>A player of your choice (even you) regains 1 life point.</>
     },
     BOTTLE: {
-        name: "Bottle"
+        name: "Bottle",
+        description: <>May be played as a <i>Panic!</i>, <i>Beer</i>, or <i>BANG!</i></>
     },
     BOTTLE_PANIC: {
         name: "Bottle as Panic!",
@@ -1059,13 +1061,17 @@ export const CARDS_ENGLISH: CardRegistry = {
         hideTitle: true
     },
     CALUMET: {
-        name: "Calumet"
+        name: "Calumet",
+        hideTitle: false,
+        description: <>Cards of Diamonds played by the other players have no effect on you.</>
     },
     GUN_BELT: {
-        name: "Gun Belt"
+        name: "Gun Belt",
+        description: <>Your hand size limit at the end of your turn is 8 cards.</>
     },
     PARDNER: {
-        name: "Pardner"
+        name: "Pardner",
+        description: <>May be played as a <i>General Store</i>, <i>Duel</i>, or <i>Cat Balou</i>.</>
     },
     PARDNER_GENERAL_STORE: {
         name: "Pardner as General Store",
@@ -1082,34 +1088,45 @@ export const CARDS_ENGLISH: CardRegistry = {
         hideTitle: true
     },
     GOLD_RUSH: {
-        name: "Gold Rush"
+        name: "Gold Rush",
+        description: <>Your turn ends. Regain all of your life points then play another turn.</>
     },
     HORSESHOE: {
-        name: "Horseshoe"
+        name: "Horseshoe",
+        description: <>Each time you "draw!", flip one additinal card and choose the result.</>
     },
     PICKAXE: {
-        name: "Pickaxe"
+        name: "Pickaxe",
+        description: <>During phase 1 of your turn, draw 1 additional card.</>
     },
     WANTED: {
-        name: "Wanted"
+        name: "Wanted",
+        description: <>Play on any player. Whoever eliminates that player draws 2 cards and takes 1 gold nugget.</>
     },
     RHUM: {
-        name: "Rhum"
+        name: "Rhum",
+        description: <>"Draw!" 4 cards: you regain 1 life point for each different suit.</>
     },
     GOLD_PAN: {
-        name: "Gold Pan"
+        name: "Gold Pan",
+        description: <>Pay 1 gold nugget to draw 1 card from the deck. You may use this ability up to 2 times per turn.</>
     },
     BOOTS: {
-        name: "Boots"
+        name: "Boots",
+        description: <>Each time you lose 1 life point, draw 1 card from the deck.</>
     },
     LUCKY_CHARM: {
-        name: "Lucky Charm"
+        name: "Lucky Charm",
+        description: <>Each time you lose 1 life point, take 1 gold nugget.</>
     },
     UNION_PACIFIC: {
-        name: "Union Pacific"
+        name: "Union Pacific",
+        hideTitle: false,
+        description: <>Draw 4 cards from the deck.</>
     },
     RUCKSACK: {
-        name: "Rucksack"
+        name: "Rucksack",
+        description: <>Pay 2 gold nuggets to regain 1 life point.</>
     },
 
     // The Great Train Robbery cards
