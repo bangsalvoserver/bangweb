@@ -292,7 +292,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     ARROW: {
         name: "Arrow",
-        description: <><p>A target player discards a <i>BANG!</i> card from hand or loses 1 life point.</p><p>Target on additional different player.</p></>,
+        description: <><p>A target player discards a <i>BANG!</i> card from hand or loses 1 life point.</p><p>Target one additional different player.</p></>,
         descriptionClass: "cube-description-double"
     },
     DUCK: {
