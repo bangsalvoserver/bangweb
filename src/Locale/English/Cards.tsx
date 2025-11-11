@@ -1352,7 +1352,10 @@ export const CARDS_ENGLISH: CardRegistry = {
     // The Great Train Robbery wagon cards
 
     BAGGAGE_CAR: {
-        name: "Baggage Car"
+        name: "Baggage Car",
+        hideTitle: true,
+        description: <>Discard this for a <i>Missed!</i>, <i>Panic!</i>, <i>Cat Balou</i>, or an extra <i>BANG!</i></>,
+        descriptionClass: "train-description"
     },
     BAGGAGE_CAR_MISSED: {
         name: "Baggage Car as Missed!",
@@ -1371,58 +1374,109 @@ export const CARDS_ENGLISH: CardRegistry = {
         hideTitle: true
     },
     CABOOSE: {
-        name: "Caboose"
+        name: "Caboose",
+        hideTitle: true,
+        description: <>You may discard one of your other blue-bordered cards (including a Railcar) as a <i>Missed!</i></>,
+        descriptionClass: "train-description"
     },
     CATTLE_TRUCK: {
-        name: "Cattle Truck"
+        name: "Cattle Truck",
+        hideTitle: true,
+        description: <>Discard this to look at the top 3 discarded cards and draw 1.</>,
+        descriptionClass: "train-description"
     },
     CIRCUS_WAGON: {
-        name: "Circus Wagon"
+        name: "Circus Wagon",
+        hideTitle: true,
+        description: <>Discard this to make each other player discard one of their cards in play.</>,
+        descriptionClass: "train-description"
     },
     COAL_HOPPER: {
-        name: "Coal Hopper"
+        name: "Coal Hopper",
+        hideTitle: true,
+        description: <>Discard this to draw 1 card and discard 1 Railcar in play in front of any player of your choice.</>,
+        descriptionClass: "train-description"
     },
     DINING_CAR: {
-        name: "Dining Car"
+        name: "Dining Car",
+        hideTitle: true,
+        description: <>At the start of your turn, "draw!":<br/>on Hearts, regain 1 life point.</>,
+        descriptionClass: "train-description"
     },
     EXPRESS_CAR: {
-        name: "Express Car"
+        name: "Express Car",
+        hideTitle: true,
+        description: <>Discard this card: Your turn ends immediately. Discard all the cards in your hand, then play another turn.</>,
+        descriptionClass: "train-description"
     },
     GHOST_CAR: {
-        name: "Ghost Car"
+        name: "Ghost Car",
+        hideTitle: true,
+        description: <>Play on anyone except the Sheriff.<br/>If you are eliminated, you stay in play instead, but you cannot gain or lose any life points.</>,
+        descriptionClass: "train-description"
     },
     LOUNGE_CAR: {
-        name: "Lounge Car"
+        name: "Lounge Car",
+        hideTitle: true,
+        description: <>Discard this to draw 2 Railcars from the deck, put 1 into play in front of you and put the other in front of another player.</>,
+        descriptionClass: "train-description"
     },
     LUMBER_FLATCAR: {
-        name: "Lumber Flatcar"
+        name: "Lumber Flatcar",
+        hideTitle: true,
+        description: <>Play on anyone.<br/>You see all other players at distance +1.</>,
+        descriptionClass: "train-description"
     },
     MAIL_CAR: {
-        name: "Mail Car"
+        name: "Mail Car",
+        hideTitle: true,
+        description: <>Discard this to draw 3 cards and give 1 of them to a player of your choice.</>,
+        descriptionClass: "train-description"
     },
     OBSERVATION_CAR: {
-        name: "Observation Car"
+        name: "Observation Car",
+        hideTitle: true,
+        description: <>You view others at distance -1.<br/>Others view you at distance +1.</>,
+        descriptionClass: "train-description"
     },
     PASSENGER_CAR: {
-        name: "Passenger Car"
+        name: "Passenger Car",
+        hideTitle: true,
+        description: <>Discard this to draw 1 card (in play or in hand) from any other player of your choice.</>,
+        descriptionClass: "train-description"
     },
     PRISONER_CAR: {
-        name: "Prisoner Car"
+        name: "Prisoner Car",
+        hideTitle: true,
+        description: <>You are not affected by <i>Indians!</i> and <i>Duel</i> cards played by other players.</>,
+        descriptionClass: "train-description"
     },
     PRIVATE_CAR: {
-        name: "Private Car"
+        name: "Private Car",
+        hideTitle: true,
+        description: <>While your hand is empty, you cannot be target of <i>BANG!</i> cards.</>,
+        descriptionClass: "train-description"
     },
     SLEEPER_CAR: {
-        name: "Sleeper Car"
+        name: "Sleeper Car",
+        hideTitle: true,
+        description: <>Once each turn, you may discard one of your other blue-bordered cards (including a Railcar) as an additional <i>BANG!</i></>,
+        descriptionClass: "train-description"
     },
 
     // The Great Train Robbery locomotive cards
 
     IRONHORSE: {
-        name: "Ironhorse"
+        name: "Ironhorse",
+        hideTitle: true,
+        description: <>At the End of the Line, each player is the target of a <i>BANG!</i></>,
+        descriptionClass: "train-description"
     },
     LELAND: {
-        name: "Leland"
+        name: "Leland",
+        hideTitle: true,
+        description: <>At the End of the Line, this acts as a <i>General Store</i>.</>,
+        descriptionClass: "train-description"
     },
 
     // The Great Train Robbery station cards

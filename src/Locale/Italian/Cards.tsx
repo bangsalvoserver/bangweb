@@ -1529,7 +1529,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     DINING_CAR: {
         name: "Dining Car",
         hideTitle: true,
-        description: <>A inizio turno, "estrai!": se è Cuori, recuperi 1 punto vita.</>,
+        description: <>A inizio turno, "estrai!":<br/>se è Cuori, recuperi 1 punto vita.</>,
         descriptionClass: "train-description",
     },
     EXPRESS_CAR: {
@@ -1541,7 +1541,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     GHOST_CAR: {
         name: "Ghost Car",
         hideTitle: true,
-        description: <>Giocalo su chiunque tranne lo Sceriffo. Se vieni eliminato, invece resti in gioco, ma non puoi guadagnare né perdere punti vita.</>,
+        description: <>Giocalo su chiunque tranne lo Sceriffo.<br/>Se vieni eliminato, invece resti in gioco, ma non puoi guadagnare né perdere punti vita.</>,
         descriptionClass: "train-description",
     },
     LOUNGE_CAR: {
