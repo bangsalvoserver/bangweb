@@ -15,6 +15,7 @@ export interface CardRegistryEntry {
     name: string;
     hideTitle?: boolean;
     description?: JSX.Element;
+    descriptionClass?: string;
 }
 
 export type CardRegistry = Record<string, CardRegistryEntry>;

@@ -9,7 +9,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     DYNAMITE: {
         "name": "Dinamite",
-        "description": <div className="draw-description">Perdi 3 punti vita. Se no passa la Dinamite a sinistra.</div>
+        "description": <>Perdi 3 punti vita. Se no passa la Dinamite a sinistra.</>,
+        "descriptionClass": "draw-description",
     },
     SCOPE: {
         "name": "Mirino",
@@ -21,7 +22,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     JAIL: {
         "name": "Prigione",
-        "description": <div className="draw-description">Scarta la Prigione e gioca. Altrimenti scarta la Prigione e salta il turno.</div>
+        "description": <>Scarta la Prigione e gioca. Altrimenti scarta la Prigione e salta il turno.</>,
+        "descriptionClass": "draw-description",
     },
     REMINGTON: {
         "name": "Remington",
@@ -34,7 +36,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     VOLCANIC: {
         "name": "Volcanic",
-        "description": <div className="weapon-description">Puoi giocare quanti BANG! vuoi.</div>
+        "description": <>Puoi giocare quanti BANG! vuoi.</>,
+        "descriptionClass": "weapon-description",
     },
     WINCHESTER: {
         "name": "Winchester"
@@ -162,11 +165,13 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     LEMAT: {
         "name": "Lemat",
-        "description": <div className="weapon-description">Nel tuo turno, puoi usare ogni carta in mano come carta BANG!.</div>
+        "description": <>Nel tuo turno, puoi usare ogni carta in mano come carta BANG!.</>,
+        "descriptionClass": "weapon-description",
     },
     LEMAT_2: {
         "name": "Lemat",
-        "description": <div className="weapon-description">Nel tuo turno, puoi usare una qualunque carta (tranne il Mancato!) come una carta BANG!.</div>
+        "description": <>Nel tuo turno, puoi usare una qualunque carta (tranne il Mancato!) come una carta BANG!.</>,
+        "descriptionClass": "weapon-description",
     },
     RATTLESNAKE: {
         "name": "Serpente a Sonagli",
@@ -174,7 +179,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SHOTGUN: {
         "name": "Shotgun",
-        "description": <div className="weapon-description">Ogni volta che colpisci un giocatore, deve scartare una carta a scelta dalla mano.</div>
+        "description": <>Ogni volta che colpisci un giocatore, deve scartare una carta a scelta dalla mano.</>,
+        "descriptionClass": "weapon-description",
     },
     BOUNTY: {
         "name": "Taglia",
@@ -245,19 +251,23 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     QUICK_SHOT: {
         "name": "Colpo Rapido",
-        "description": <div className="cube-description">Colpisci un ulteriore giocatore.</div>
+        "description": <>Colpisci un ulteriore giocatore.</>,
+        "descriptionClass": "cube-description",
     },
     FLINTLOCK: {
         "name": "Flintlock",
-        "description": <div className="cube-description">Se annullato, riprendi questa carta.</div>
+        "description": <>Se annullato, riprendi questa carta.</>,
+        "descriptionClass": "cube-description",
     },
     ARROW: {
         "name": "Freccia",
-        "description": <>Un giocatore bersaglio scarta una carta BANG! dalla mano o perde 1 punto vita.<div className="cube-description">Colpisci un ulteriore giocatore.</div></>
+        "description": <><p>Un giocatore bersaglio scarta una carta BANG! dalla mano o perde 1 punto vita.</p><p>Colpisci un ulteriore giocatore.</p></>,
+        "descriptionClass": "cube-description-double",
     },
     DUCK: {
         "name": "Giù la Testa!",
-        "description": <div className="cube-description">Riprendi questa carta.</div>
+        "description": <>Riprendi questa carta.</>,
+        "descriptionClass": "cube-description",
     },
     RELOAD: {
         "name": "Ricarica",
@@ -269,18 +279,21 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     SQUAW: {
         "name": "Squaw",
-        "description": <>Scarta una carta in gioco.<div className="cube-description">Aggiungi la carta scartata alla tua mano.</div></>
+        "description": <><p>Scarta una carta in gioco.</p><p>Aggiungi la carta scartata alla tua mano.</p></>,
+        "descriptionClass": "cube-description-double",
     },
     ACE_UP_THE_SLEEVE: {
         "name": "Asso nella Manica",
     },
     BANDOLIER: {
         "name": "Bandoliera",
-        "description": <div className="cube-description">Una volta nel tuo turno, puoi giocare una carta BANG! extra.</div>
+        "description": <>Una volta nel tuo turno, puoi giocare una carta BANG! extra.</>,
+        "descriptionClass": "cube-description",
     },
     BIG_FIFTY: {
         "name": "Big Fifty",
-        "description": <div className="cube-description">Annulla le carte in gioco e l'abilità del personaggio del bersaglio.</div>
+        "description": <>Annulla le carte in gioco e l'abilità del personaggio del bersaglio.</>,
+        "descriptionClass": "cube-description",
     },
     BOMB: {
         "name": "Bomba",
@@ -288,37 +301,44 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BUNTLINE_SPECIAL: {
         "name": "Buntline Special",
-        "description": <div className="cube-description">Se il BANG! viene annullato il bersaglio deve scartare una carta a scelta dalla mano.</div>
+        "description": <>Se il BANG! viene annullato il bersaglio deve scartare una carta a scelta dalla mano.</>,
+        "descriptionClass": "cube-description",
     },
     BELL_TOWER: {
         "name": "Campanile",
-        "description": <div className="cube-description">Vedi tutti a distanza 1 per la prossima carta che giochi.</div>
+        "description": <>Vedi tutti a distanza 1 per la prossima carta che giochi.</>,
+        "descriptionClass": "cube-description",
     },
     CRATE: {
         "name": "Cassa",
     },
     TUMBLEWEED: {
         "name": "Cespuglio",
-        "description": <div className="cube-description">Ripeti o fai ripetere un "estrarre!".</div>
+        "description": <>Ripeti o fai ripetere un "estrarre!".</>,
+        "descriptionClass": "cube-description",
     },
     DOUBLE_BARREL: {
         "name": "Doppia Canna",
-        "description": <div className="cube-description">Se giochi un BANG! di Quadri non può essere annullato.</div>
+        "description": <>Se giochi un BANG! di Quadri non può essere annullato.</>,
+        "descriptionClass": "cube-description",
     },
     WHIP: {
         "name": "Frusta",
-        "description": <div className="cube-description">Scarta una carta in gioco.</div>
+        "description": <>Scarta una carta in gioco.</>,
+        "descriptionClass": "cube-description",
     },
     BEER_KEG: {
         "name": Math.random() < 0.95 ? "Fusto di Birra" : "Busto di Firra",
     },
     LOCKPICK: {
         "name": "Grimaldello",
-        "description": <div className="cube-description">Pesca 1 carta dalla mano di un giocatore.</div>
+        "description": <>Pesca 1 carta dalla mano di un giocatore.</>,
+        "descriptionClass": "cube-description",
     },
     THUNDERER: {
         "name": "Thunderer",
-        "description": <div className="cube-description">Riprendi la carta BANG! giocata.</div>
+        "description": <>Riprendi la carta BANG! giocata.</>,
+        "descriptionClass": "cube-description",
     },
 
     // Canyon Diablo cards
@@ -351,7 +371,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BULLDOG: {
         "name": "Bulldog",
-        "description": <div className="weapon-description">Una sola volta per turno, puoi giocare una carta BANG! come Gatling scartando un'altra carta con essa.</div>
+        "description": <>Una sola volta per turno, puoi giocare una carta BANG! come Gatling scartando un'altra carta con essa.</>,
+        "descriptionClass": "weapon-description",
     },
     LAST_WILL: {
         "name": "Ultime Volontà",
@@ -367,7 +388,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BROTHEL: {
         "name": "Bordello",
-        "description": <div className="draw-description">Scarta e gioca, ma perdi la tua abilità fino all'inizio del tuo prossimo turno. Altrimenti scarta e gioca normalmente.</div>
+        "description": <>Scarta e gioca, ma perdi la tua abilità fino all'inizio del tuo prossimo turno. Altrimenti scarta e gioca normalmente.</>,
+        "descriptionClass": "draw-description",
     },
     BRONCO: {
         "name": "Bronco",
@@ -1014,11 +1036,12 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     MOST_WANTED: {
         "name": "Most Wanted",
-        "description": <div className="description-low">Ogni giocatore "estrae!":<br/>♠=perde 1 punto vita.</div>
+        "description": <>Ogni giocatore "estrae!":<br/>♠=perde 1 punto vita.</>,
+        "descriptionClass": "description-low",
     },
     NEXT_STOP: {
         "name": "Prossima Fermata",
-        "description": <div>Fai avanzare il treno di 1 stazione.</div>
+        "description": <>Fai avanzare il treno di 1 stazione.</>
     },
     REFUND: {
         "name": "Rimborso",
@@ -1164,7 +1187,8 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BAGGAGE_CAR: {
         "name": "Baggage Car",
-        "description": <div className="train-description">Scartalo: ottieni l'effetto di un Mancato!, Panico!, Cat Balou o di un BANG! extra.</div>
+        "description": <>Scartalo: ottieni l'effetto di un Mancato!, Panico!, Cat Balou o di un BANG! extra.</>,
+        "descriptionClass": "train-description",
     },
     BAGGAGE_CAR_MISSED: {
         "name": "Baggage Car come Mancato!",
@@ -1180,74 +1204,91 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     CABOOSE: {
         "name": "Caboose",
-        "description": <div className="train-description">Puoi scartare un'altra tua carta a bordo blu (incluso un vagone) come se fosse un Mancato!</div>
+        "description": <>Puoi scartare un'altra tua carta a bordo blu (incluso un vagone) come se fosse un Mancato!</>,
+        "descriptionClass": "train-description",
     },
     CATTLE_TRUCK: {
         "name": "Cattle Truck",
-        "description": <div className="train-description">Scartalo: guarda le 3 carte in cima agli scarti e pescane 1.</div>
+        "description": <>Scartalo: guarda le 3 carte in cima agli scarti e pescane 1.</>,
+        "descriptionClass": "train-description",
     },
     CIRCUS_WAGON: {
         "name": "Circus Wagon",
-        "description": <div className="train-description">Scartalo: ogni altro giocatore deve scartare una carta che ha in gioco.</div>
+        "description": <>Scartalo: ogni altro giocatore deve scartare una carta che ha in gioco.</>,
+        "descriptionClass": "train-description",
     },
     COAL_HOPPER: {
         "name": "Coal Hopper",
-        "description": <div className="train-description">Scartalo: pesca una carta e scarta un vagone in gioco davanti a un giocatore a tua scelta.</div>
+        "description": <>Scartalo: pesca una carta e scarta un vagone in gioco davanti a un giocatore a tua scelta.</>,
+        "descriptionClass": "train-description",
     },
     DINING_CAR: {
         "name": "Dining Car",
-        "description": <div className="train-description">A inizio turno, "estrai!": se è Cuori, recuperi 1 punto vita.</div>
+        "description": <>A inizio turno, "estrai!": se è Cuori, recuperi 1 punto vita.</>,
+        "descriptionClass": "train-description",
     },
     EXPRESS_CAR: {
         "name": "Express Car",
-        "description": <div className="train-description">Scartalo: il tuo turno termina. Scarta tutte le carte in mano, poi gioca un altro turno.</div>
+        "description": <>Scartalo: il tuo turno termina. Scarta tutte le carte in mano, poi gioca un altro turno.</>,
+        "descriptionClass": "train-description",
     },
     GHOST_CAR: {
         "name": "Ghost Car",
-        "description": <div className="train-description">Giocalo su chiunque tranne lo Sceriffo. Se vieni eliminato, invece resti in gioco, ma non puoi guadagnare né perdere punti vita.</div>
+        "description": <>Giocalo su chiunque tranne lo Sceriffo. Se vieni eliminato, invece resti in gioco, ma non puoi guadagnare né perdere punti vita.</>,
+        "descriptionClass": "train-description",
     },
     LOUNGE_CAR: {
         "name": "Lounge Car",
-        "description": <div className="train-description">Scartalo: pesca 2 vagoni dal mazzo, mettine 1 in gioco di fronte a te e 1 di fronte a un altro giocatore.</div>
+        "description": <>Scartalo: pesca 2 vagoni dal mazzo, mettine 1 in gioco di fronte a te e 1 di fronte a un altro giocatore.</>,
+        "descriptionClass": "train-description",
     },
     LUMBER_FLATCAR: {
         "name": "Lumber Flatcar",
-        "description": <div className="train-description">Giocalo su chiunque.<br/>Vedi tutti gli altri a distanza +1.</div>
+        "description": <>Giocalo su chiunque.<br/>Vedi tutti gli altri a distanza +1.</>,
+        "descriptionClass": "train-description",
     },
     MAIL_CAR: {
         "name": "Mail Car",
-        "description": <div className="train-description">Scartalo: pesca 3 carte e dai 1 di esse a un altro giocatore a tua scelta.</div>
+        "description": <>Scartalo: pesca 3 carte e dai 1 di esse a un altro giocatore a tua scelta.</>,
+        "descriptionClass": "train-description",
     },
     OBSERVATION_CAR: {
         "name": "Observation Car",
-        "description": <div className="train-description">Tu vedi gli altri a distanza -1.<br/>Gli altri ti vedono a distanza +1.</div>
+        "description": <>Tu vedi gli altri a distanza -1.<br/>Gli altri ti vedono a distanza +1.</>,
+        "descriptionClass": "train-description",
     },
     PASSENGER_CAR: {
         "name": "Passenger Car",
-        "description": <div className="train-description">Scartalo: pesca una carta (in mano o in gioco) da un altro giocatore.</div>
+        "description": <>Scartalo: pesca una carta (in mano o in gioco) da un altro giocatore.</>,
+        "descriptionClass": "train-description",
     },
     PRISONER_CAR: {
         "name": "Prisoner Car",
-        "description": <div className="train-description">Le carte Duello e Indiani! giocate dagli altri giocatori non hanno effetto su di te.</div>
+        "description": <>Le carte Duello e Indiani! giocate dagli altri giocatori non hanno effetto su di te.</>,
+        "descriptionClass": "train-description",
     },
     PRIVATE_CAR: {
         "name": "Private Car",
-        "description": <div className="train-description">Se non hai carte in mano, non puoi essere bersaglio di carte BANG!</div>
+        "description": <>Se non hai carte in mano, non puoi essere bersaglio di carte BANG!</>,
+        "descriptionClass": "train-description",
     },
     SLEEPER_CAR: {
         "name": "Sleeper Car",
-        "description": <div className="train-description">Una volta per turno, poi scartare un'altra tua carta a bordo blu (incluso un vagone) come un BANG! extra.</div>
+        "description": <>Una volta per turno, poi scartare un'altra tua carta a bordo blu (incluso un vagone) come un BANG! extra.</>,
+        "descriptionClass": "train-description",
     },
 
     // The Great Train Robbery locomotive cards
 
     IRONHORSE: {
         "name": "Ironhorse",
-        "description": <div className="train-description">Al capolinea ogni gioctore è bersaglio di un BANG!</div>
+        "description": <>Al capolinea ogni gioctore è bersaglio di un BANG!</>,
+        "descriptionClass": "train-description",
     },
     LELAND: {
         "name": "Leland",
-        "description": <div className="train-description">Al capolinea ha l'effetto di un Emporio</div>
+        "description": <>Al capolinea ha l'effetto di un Emporio</>,
+        "descriptionClass": "train-description",
     },
 
     // The Great Train Robbery station cards
@@ -1296,134 +1337,166 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     LEGEND_BART_CASSIDY: {
         "name": "Bart Cassidy",
-        "description": <div className="legends-description">Se vieni ferito, peschi 2 carte.</div>
+        "description": <>Se vieni ferito, peschi 2 carte.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_BLACK_JACK: {
         "name": "Black Jack",
-        "description": <div className="legends-description">Puoi scoprire carte finché la loro somma non supera 21, poi pescale.</div>
+        "description": <>Puoi scoprire carte finché la loro somma non supera 21, poi pescale.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_CALAMITY_JANET: {
         "name": "Calamity Janet",
-        "description": <div className="legends-description">Ogni tua carta vale come BANG! o Mancato!</div>
+        "description": <>Ogni tua carta vale come BANG! o Mancato!</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_EL_GRINGO: {
         "name": "El Gringo",
-        "description": <div className="legends-description">Se vieni ferito da un giocatore, peschi una carta dalla sua mano e la carta che ti ha ferito.</div>
+        "description": <>Se vieni ferito da un giocatore, peschi una carta dalla sua mano e la carta che ti ha ferito.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_JESSE_JONES: {
         "name": "Jesse Jones",
-        "description": <div className="legends-description">Guarda le carte in mano a un giocatore, pescane una ,poi pescane un'altra dal mazzo.</div>
+        "description": <>Guarda le carte in mano a un giocatore, pescane una ,poi pescane un'altra dal mazzo.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_JOURDONNAIS: {
         "name": "Jourdonnais",
-        "description": <div className="legends-description">Se sei bersaglio di una carta marrone, puoi "estrarre!": J, Q, K, A = ignora la carta.</div>
+        "description": <>Se sei bersaglio di una carta marrone, puoi "estrarre!": J, Q, K, A = ignora la carta.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_KIT_CARLSON: {
         "name": "Kit Carlson",
-        "description": <div className="legends-description">Peschi 3 carte. Puoi darne 1 di esse a un altro giocatore.</div>
+        "description": <>Peschi 3 carte. Puoi darne 1 di esse a un altro giocatore.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_LUCKY_DUKE: {
         "name": "Lucky Duke",
-        "description": <div className="legends-description">Se una carta fa "estrarre!", scopri tu 2 carte e scegli quella da usare. Se è il tuo turno, pescala.</div>
+        "description": <>Se una carta fa "estrarre!", scopri tu 2 carte e scegli quella da usare. Se è il tuo turno, pescala.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_PAUL_REGRET: {
         "name": "Paul Regret",
-        "description": <div className="legends-description">Gli altri ti vedono a distanza +1.<br/>Per giocarti un BANG! contro, occorre scartare una carta aggiuntiva dalla mano.</div>
+        "description": <>Gli altri ti vedono a distanza +1.<br/>Per giocarti un BANG! contro, occorre scartare una carta aggiuntiva dalla mano.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_PEDRO_RAMIREZ: {
         "name": "Pedro Ramirez",
-        "description": <div className="legends-description">Peschi 2 carte più quella in cima agli scarti.</div>
+        "description": <>Peschi 2 carte più quella in cima agli scarti.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_ROSE_DOOLAN: {
         "name": "Rose Doolan",
-        "description": <div className="legends-description">Puoi vedere tutti a distanza 1.<br/>Una volta nel tuo turno, puoi scartare una tua carta blu, in mano i in gioco, come Panico!</div>
+        "description": <>Puoi vedere tutti a distanza 1.<br/>Una volta nel tuo turno, puoi scartare una tua carta blu, in mano i in gioco, come Panico!</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_SID_KETCHUM: {
         "name": "Sid Ketchum",
-        "description": <div className="legends-description">Puoi scartare 2 carte per recuperare un punto vita. Una volta nel tuo turno, se recuperi un punto vita, puoi sparare un BANG! gratis.</div>
+        "description": <>Puoi scartare 2 carte per recuperare un punto vita. Una volta nel tuo turno, se recuperi un punto vita, puoi sparare un BANG! gratis.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_SLAB_THE_KILLER: {
         "name": "Slab the Killer",
-        "description": <div className="legends-description">I tuoi BANG! non possono essere annullati.<br/>Se rivendichi un'Impresa puoi rimuovere anche l'ultimo punto vita.</div>
+        "description": <>I tuoi BANG! non possono essere annullati.<br/>Se rivendichi un'Impresa puoi rimuovere anche l'ultimo punto vita.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_SUZY_LAFAYETTE: {
         "name": "Suzy Lafayette",
-        "description": <div className="legends-description">Se rimani con meno di 2 carte in mano, peschi fino a tornare a 2.</div>
+        "description": <>Se rimani con meno di 2 carte in mano, peschi fino a tornare a 2.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_VULTURE_SAM: {
         "name": "Vulture Sam",
-        "description": <div className="legends-description">Se un personaggio è eliminato, prendi in mano tutte le sue carte. Se vieni eliminato, resti in gioco con 4 punti vita, ma torni sul lato normale.</div>
+        "description": <>Se un personaggio è eliminato, prendi in mano tutte le sue carte. Se vieni eliminato, resti in gioco con 4 punti vita, ma torni sul lato normale.</>,
+        "descriptionClass": "legends-description",
     },
     LEGEND_WILLY_THE_KID: {
         "name": "Willy the Kid",
-        "description": <div className="legends-description">Puoi giocare quante carte BANG! vuoi.<br/>Invece di rivendicare un'Impresa, puoi sparare un BANG! gratis.</div>
+        "description": <>Puoi giocare quante carte BANG! vuoi.<br/>Invece di rivendicare un'Impresa, puoi sparare un BANG! gratis.</>,
+        "descriptionClass": "legends-description",
     },
 
     // Legends feats cards
 
     FIFTY_GUNS: {
         "name": "Cinquanta Pistole",
-        "description": <div className="feats-description">Prendi o scarta un'arma.</div>
+        "description": <>Prendi o scarta un'arma.</>,
+        "descriptionClass": "feats-description",
     },
     WOUNDED_PRIDE: {
         "name": "Ferito Nell'Orgoglio",
-        "description": <div className="feats-description">Un altro giocatore manca una tua carta BANG!</div>
+        "description": <>Un altro giocatore manca una tua carta BANG!</>,
+        "descriptionClass": "feats-description",
     },
     OLD_WEST_GANG: {
         "name": "Gang Del Vecchio West",
-        "description": <div className="feats-description">Ferisci 2 o più giocatori nello stesso turno.</div>
+        "description": <>Ferisci 2 o più giocatori nello stesso turno.</>,
+        "descriptionClass": "feats-description",
     },
     BOTTLENECK: {
         "name": "Il Collo Di Bottiglia",
-        "description": <div className="feats-description">Scarta una Birra.</div>
+        "description": <>Scarta una Birra.</>,
+        "descriptionClass": "feats-description",
     },
     THE_CHUCK_A_LUCK: {
         "name": "Il Mulino D'Oro",
-        "description": <div className="feats-description">Scarta una carta BANG!</div>
+        "description": <>Scarta una carta BANG!</>,
+        "descriptionClass": "feats-description",
     },
     '3_15_TO_YOOMA': {
         "name": "Il Treno Per Yooma",
-        "description": <div className="feats-description">Attiva o fai attivare un "estrarre!" (anche a inizio turno).</div>
+        "description": <>Attiva o fai attivare un "estrarre!" (anche a inizio turno).</>,
+        "descriptionClass": "feats-description",
     },
     GOOD_COMPANY: {
         "name": "In Buona Compagnia",
-        "description": <div className="feats-description">Scarta una carta, poi gioca una carta con lo stesso nome (o viceversa).</div>
+        "description": <>Scarta una carta, poi gioca una carta con lo stesso nome (o viceversa).</>,
+        "descriptionClass": "feats-description",
     },
     THE_LAST_HERO: {
         "name": "L'Ultimo Eroe",
-        "description": <div className="feats-description">Scarta una carta blu in gioco.</div>
+        "description": <>Scarta una carta blu in gioco.</>,
+        "descriptionClass": "feats-description",
     },
     THE_MAN_WITH_NO_NAME: {
         "name": "L'Uomo Senza Nome",
-        "description": <div className="feats-description">Perdi un punto vita (non l'ultimo).</div>
+        "description": <>Perdi un punto vita (non l'ultimo).</>,
+        "descriptionClass": "feats-description",
     },
     WILHELM_SCREAM: {
         "name": "L'Urlo Di Wilhelm",
-        "description": <div className="feats-description">Gioca una carta BANG! a distanza 2 o più.</div>
+        "description": <>Gioca una carta BANG! a distanza 2 o più.</>,
+        "descriptionClass": "feats-description",
     },
     SCRUGS_BALLAD: {
         "name": "La Ballata Di Scrugs",
-        "description": <div className="feats-description">Perdi un duello.</div>
+        "description": <>Perdi un duello.</>,
+        "descriptionClass": "feats-description",
     },
     BORDERLANDS: {
         "name": "La Frontiera",
-        "description": <div className="feats-description">Scarta la tua mano (anche se è di zero carte).</div>
+        "description": <>Scarta la tua mano (anche se è di zero carte).</>,
+        "descriptionClass": "feats-description",
     },
     THE_OREGON_TRAIL: {
         "name": "La Pista Dell'Oregon",
-        "description": <div className="feats-description">Durante la fase di pesca, rinuncia alla prima carta che dovresti pescare.</div>
+        "description": <>Durante la fase di pesca, rinuncia alla prima carta che dovresti pescare.</>,
+        "descriptionClass": "feats-description",
     },
     A_THOUSAND_WAYS_TO_DIE: {
         "name": "Mille Modi Per Morire",
-        "description": <div className="feats-description">Mostra dalla mano un Mancato! e una carta dello stesso seme.</div>
+        "description": <>Mostra dalla mano un Mancato! e una carta dello stesso seme.</>,
+        "descriptionClass": "feats-description",
     },
     FOR_A_FEW_CARDS_MORE: {
         "name": "Per Qualche Carta In Più",
-        "description": <div className="feats-description">Scarta almeno una carta in eccesso a fine turno.</div>
+        "description": <>Scarta almeno una carta in eccesso a fine turno.</>,
+        "descriptionClass": "feats-description",
     },
     A_QUICK_DEATH: {
         "name": "Una Morte Veloce",
-        "description": <div className="feats-description">Ferisci con una carta BANG! un altro giocatore al massimo dei suoi punti vita.</div>
+        "description": <>Ferisci con una carta BANG! un altro giocatore al massimo dei suoi punti vita.</>,
+        "descriptionClass": "feats-description",
     },
 
     // Button row virtual cards
