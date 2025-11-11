@@ -473,66 +473,86 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     CLAUS_THE_SAINT: {
         "name": "Claus \"The Saint\"",
+        "description": <>Pesca tante carte quanti sono i giocatori più una. Ne tiene due per sé, poi ne dà una ad ognuno.</>
     },
     JOHNNY_KISCH: {
         "name": "Johnny Kisch",
+        "description": <>Quando mette una carta in gioco, tutte le altre carte in gioco con lo stesso nome sono scartate.</>
     },
     UNCLE_WILL: {
         "name": "Uncle Will",
+        "description": <>Una volta per turno, può giocare una carta qualsiasi dalla mano come un Emporio.</>
     },
     ANNIE_VERSARY: {
         "name": "Annie Versary",
+        "description": <>Può giocare una carta qualunque come fosse una carta BANG!</>
     },
     EMILIANO: {
         "name": "Emiliano",
+        "description": <>Quando un tuo BANG! viene Mancato!, pesca quel Mancato!; quandi manchi un BANG!, pesca quel BANG!</>
     },
 
     // Dodge City characters
 
     APACHE_KID: {
         "name": "Apache Kid",
+        "description": <>Le carte di Quadri giocate dagli avversari non hanno effeto su di lui.</>
     },
     BELLE_STAR: {
         "name": "Belle Star",
+        "description": <>Nel suo turno, le carte in gioco degli altri giocatori non hanno effetto.</>
     },
     BILL_NOFACE: {
         "name": "Bill Noface",
+        "description": <>Pesca 1 carta, più 1 carta per ogni ferita che ha.</>
     },
     CHUCK_WENGAM: {
         "name": "Chuck Wengam",
+        "description": <>Nel suo turno può perdere 1 punto vita per pescare 2 carte.</>
     },
     DOC_HOLYDAY: {
         "name": "Doc Holyday",
+        "description": <>Nel suo turno può scartare una sola volta due carte per sparare un BANG!.</>
     },
     ELENA_FUENTE: {
         "name": "Elena Fuente",
+        "description": <>Può usare una carta qualsiasi come Mancato!.</>
     },
     GREG_DIGGER: {
         "name": "Greg Digger",
+        "description": <>Quando un personaggio è eliminato, recupera 2 punti vita.</>
     },
     HERB_HUNTER: {
         "name": "Herb Hunter",
+        "description": <>Quando un peronaggio è eliminato, pesca 2 carte extra.</>
     },
     JOSE_DELGADO: {
         "name": Math.random() < 0.95 ? "Josè Delgado" : "Josè Degrado",
+        "description": <>Due volte nel suo turno può scartare una carta blu dalla mano per pescare 2 carte.</>
     },
     MOLLY_STARK: {
         "name": "Molly Stark",
+        "description": <>Quando usa una carta dalla mano fuori turno, pesca un'altra carta.</>
     },
     PAT_BRENNAN: {
         "name": "Pat Brennan",
+        "description": <>Invece di pescare, può prendere una carta in gioco di fronte a un giocatore.</>
     },
     PIXIE_PETE: {
         "name": "Pixie Pete",
+        "description": <>Pesca 3 carte invece di 2.</>
     },
     SEAN_MALLORY: {
         "name": "Sean Mallory",
+        "description": <>Può rimanere con 10 carte in mano.</>
     },
     TEQUILA_JOE: {
         "name": "Tequila Joe",
+        "description": <>Quando gioca una Birra, recupera 2 punti vita.</>
     },
     VERA_CUSTER: {
         "name": "Vera Custer",
+        "description": <>Per un intero giro, acquisisce l'abilità di un altro personaggio in gioco a sua scelta.</>
     },
 
     // Valley of Shadows characters
@@ -586,81 +606,105 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BIG_SPENCER: {
         "name": "Big Spencer",
+        "description": <>Inizia con 5 carte. Non può giocare Mancato!</>
     },
     FLINT_WESTWOOD: {
         "name": "Flint Westwood",
+        "description": <>Nel suo turno può scambiare una carta dalla mano con 2 carte a caso dalla mano di un altro giocatore.</>
     },
     GARY_LOOTER: {
         "name": "Gary Looter",
+        "description": <>Pesca tutte le carte in eccesso scartate dagli altri giocatori a fine turno.</>
     },
     GREYGORY_DECK: {
         "name": "Greygory Deck",
+        "description": <>All'inizio del suo turno può pescare 2 personaggi a caso. Ha tutte le abilità dei personaggi pescati.</>
     },
     JOHN_PAIN: {
         "name": "John Pain",
+        "description": <>Se ha meno di 6 carte in mano, quando un giocatore "estrae!", John aggiunge alla mano la carta appena estratta.</>
     },
     LEE_VAN_KLIFF: {
         "name": "Lee Van Kliff",
+        "description": <>Nel suo turno, può scartare un BANG! per ripetere l'effetto di una carta a bordo marrone che ha appena giocato.</>
     },
     TEREN_KILL: {
         "name": "Teren Kill",
+        "description": <>Ogni volta che sarebbe eliminato "estrai!": se non è Picche, Teren resta a 1 punto vita e pesca 1 carta.</>
     },
     YOUL_GRINNER: {
         "name": "Youl Grinner",
+        "description": <>Prima di pescare, i giocatori con più carte in mano di lui devono dargli una carta a scelta.</>
     },
 
     // Armed & Dangerous characters
 
     AL_PREACHER: {
         "name": "Al Preacher",
+        "description": <>Se un altro giocatore gioca una carta a bordo blu o arancione, puoi pagare 2 📦 per pescare 1 carta dal mazzo.</>
     },
     BASS_GREEVES: {
         "name": "Bass Greeves",
+        "description": <>Una volta nel tuo turno, puoi scartare 1 carta dalla mano per aggiungere 2 📦 su una tua carta.</>
     },
     BLOODY_MARY: {
         "name": "Bloody Mary",
+        "description": <>Ogni volta che una tua carta BANG! è annullata, pesca 1 carta dal mazzo.</>
     },
     FRANKIE_CANTON: {
         "name": "Frankie Canton",
+        "description": <>Una volta nel tuo turno, puoi prendere 1 📦 da qualunque carta e metterla qui.</>
     },
     JULIE_CUTTER: {
         "name": "Julie Cutter",
+        "description": <>Ogni volta che un giocatore ti fa perdere almeno 1 punto vita, "estrai!":♥♦=è bersaglio di un BANG!<br/></>
     },
     MEXICALI_KID: {
         "name": "Mexicali Kid",
+        "description": <>Una volta nel tuo turno, puoi pagare 2 📦 per sparare 1 BANG! extra (non serve la carta).</>
     },
     MS_ABIGAIL: {
         "name": "Ms. Abigail",
+        "description": <>Puoi ignorare gli effetti delle carte a bordo marrone di valore J, Q, K e A se sei l'unico bersaglio.</>
     },
     RED_RINGO: {
         "name": "Red Ringo",
+        "description": <>Inizi con 4 📦. Una volta nel tuo turno puoi spostare fino a 2 📦 da qui alle tue carte.</>
     },
 
     // Gold Rush characters
 
     DON_BELL: {
         "name": "Don Bell",
+        "description": <>Alla fine del suo turno, "estrae!": se esce Cuori o Quadri, gioca un turno extra.</>
     },
     DUTCH_WILL: {
         "name": "Dutch Will",
+        "description": <>Pesca 2 pepite, ne scarta 1, e prende 1 pepita.</>
     },
     JACKY_MURIETA: {
         "name": "Jacky Murieta",
+        "description": <>Nel suo turno può pagare 2 pepite per sparare 1 BANG! extra.</>
     },
     JOSH_MCCLOUD: {
         "name": "Josh McCloud",
+        "description": <>Può pescare il primo equipaggiamento del mazzetto pagando 2 pepite.</>
     },
     MADAME_YTO: {
         "name": "Madame Yto",
+        "description": <>Ogni volta che viene giocata una Birra, pesca 1 carta dal mazzo.</>
     },
     PRETTY_LUZENA: {
         "name": "Pretty Luzena",
+        "description": <>Una volte per turno può pagare un equipaggiamento a costo diminuito di 1.</>
     },
     RADDIE_SNAKE: {
         "name": "Raddie Snake",
+        "description": <>Nel suo turno, può scartare 1 pepita per pescare 1 carta dal mazzo (fino a 2 volte).</>
     },
     SIMEON_PICOS: {
         "name": "Simeon Picos",
+        "description": <>Ogni volta che perde 1 punto vita, prende 1 pepita.</>
     },
 
     // High Noon cards
@@ -950,33 +994,42 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BENNY_BRAWLER: {
         "name": "Benny Brawler",
+        "description": <>Nel tuo turno, puoi prendere un qualunque numero di vagoni.</>
     },
     EVAN_BABBIT: {
         "name": "Evan Babbit",
+        "description": <>Se sei bersaglio di una carta BANG!, puoi deviarla a un giocatore a distanza 1 scartando dalla mano una carta dello stesso seme.</>
     },
     JIMMY_TEXAS: {
         "name": "Jimmy Texas",
+        "description": <>Alla fine del tuo turno, pesca una carta.</>
     },
     MANUELITA: {
         "name": "Manuelita",
+        "description": <>Ogni volta che il treno arriva al capolinea, pesca 2 carte.</>
     },
     SANCHO: {
         "name": "Sancho",
+        "description": <>Una volta nel tuo turno, puoi prendere gratis un vagone a scelta dal treno.</>
     },
     SGT_BLAZE: {
         "name": "Sgt. Blaze",
+        "description": <>Quando giochi una carta o un effetto che bersaglia più giocatori, puoi escluderne uno.</> // dvGiochi made a typo here!
     },
     SHADE_OCONNOR: {
         "name": "Shade O'Connor",
+        "description": <>Ogni volta che il treno avanza fuori dal tuo turno, puoi scartare una carta dalla mano per pescarne un'altra.</>
     },
     ZIPPY_ROY: {
         "name": "Zippy Roy",
+        "description": <>Una volta nel tuo turno, puoi far avanzare il treno di 1 stazione.</>
     },
 
     // Canyon Diablo characters
 
     ANNIE_OAKEY: {
         "name": "Annie Oakey",
+        "description": <>Può provare a indovinare il colore o il seme di ogni carta pescata in fase 1: pesca + 1 carta per ogni "colore" indovinato (+ 2 per ogni "seme").</>
     },
     ANNIE_OAKEY_RED: {
         "name": "Annie Oakey: Dichiaro Rosso",
@@ -996,41 +1049,57 @@ export const CARDS_ITALIAN: CardRegistry = {
     ANNIE_OAKEY_SPADES: {
         "name": "Annie Oakey: Dichiaro Picche",
     },
-    PAT_BARRETT: {
-        "name": "Pat Barrett",
-    },
     BIG_SPENCER_2: {
         "name": "Big Spencer",
+        "description": <>Può incrementare i suoi punti vita fino a un massimo di 6.</>
     },
     BUFFALO_BELL: {
         "name": "Buffalo Bell",
+        "description": <>Ogni volta che viene attaccato da un giocatore, può scartare una carta dalla mano per evitare il colpo. Carta giocata + carta schivata: se ≥ 13 = Mancato!; se ≥ 17 = Schivata; se ≥ 20 = Ritorno di fiamma.</>
     },
     CLASH_THE_STAMPEDE: {
         "name": "Clash The Stampede",
+        "description": <>Prima di pescare, il giocatore con più carte in mano deve dargliene una a sua scelta.</>
     },
     CRAZY_HOG: {
         "name": "Crazy Hog",
+        "description": <>Una volta nel suo turno può scartare una carta a bordo blu dalla mano per pescare 2 carte.</>
     },
     EVA_PLACE: {
         "name": "Eva Place",
+        "description": <>Una volta nel suo turno, può scartare una carta dalla mano per pescarne un'altra dal mazzo. Se è Quadri, può pescare ancora.</>
     },
     JOSEY_BASSETT: {
         "name": "Josey Bassett",
+        "description": <>Per un intero giro, può beneficiare dell'effetto di una qualsiasi carta a bordo blu in gioco di fronte ad un altro giocatore.</>
     },
     LAURA_BILLION: {
         "name": "Laura Billion",
+        "description": <>Ogni volta che una carta è "estratta!", può scartare una carta dalla mano per pescare la carta estratta.</>
+    },
+    PAT_BARRETT: {
+        "name": "Pat Barrett",
+        "description": <>Per ogni punto vita in meno, la distanza a cui gli altri giocatori lo vedono è aumentata di 1.</>
     },
     SID_CURRY: {
         "name": "Sid Curry",
+        "description": <>Quando mette una carta in gioco, tutte le altre carte in gioco con lo stesso nome vengono scartate.</>
+    },
+    SOUNDANCE_KID: {
+        "name": "Soundance Kid",
+        "description": <>Ogni volta che ferisce un giocatore con un BANG!, pesca una carta dal mazzo.</>
     },
     SPIKE_SPIEZEL: {
         "name": "Spike Spiezel",
+        "description": <>Una volta nel suo turno, può scartare una carta BANG! per ripetere l'effetto dell'ultima carta a bordo marrone da lui giocata.</>
     },
     TEREN_KILL_2: {
         "name": "Teren Kill",
+        "description": <>Ogni volta che sarebbe eliminato, "estrae!": se non è Picche, resta a 1 punto vita e pesca 1 carta.</>
     },
     WYATT_EARL: {
         "name": "Wyatt Earl",
+        "description": <>Le carte che possono avere effetto su più giocatori non hanno effetto su di lui.</>
     },
 
     // The Great Train Robbery railcar cards
