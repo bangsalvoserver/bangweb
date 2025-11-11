@@ -1164,6 +1164,7 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BAGGAGE_CAR: {
         "name": "Baggage Car",
+        "description": <div className="train-description">Scartalo: ottieni l'effetto di un Mancato!, Panico!, Cat Balou o di un BANG! extra.</div>
     },
     BAGGAGE_CAR_MISSED: {
         "name": "Baggage Car come Mancato!",
@@ -1179,57 +1180,74 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     CABOOSE: {
         "name": "Caboose",
+        "description": <div className="train-description">Puoi scartare un'altra tua carta a bordo blu (incluso un vagone) come se fosse un Mancato!</div>
     },
     CATTLE_TRUCK: {
         "name": "Cattle Truck",
+        "description": <div className="train-description">Scartalo: guarda le 3 carte in cima agli scarti e pescane 1.</div>
     },
     CIRCUS_WAGON: {
         "name": "Circus Wagon",
+        "description": <div className="train-description">Scartalo: ogni altro giocatore deve scartare una carta che ha in gioco.</div>
     },
     COAL_HOPPER: {
         "name": "Coal Hopper",
+        "description": <div className="train-description">Scartalo: pesca una carta e scarta un vagone in gioco davanti a un giocatore a tua scelta.</div>
     },
     DINING_CAR: {
         "name": "Dining Car",
+        "description": <div className="train-description">A inizio turno, "estrai!": se è Cuori, recuperi 1 punto vita.</div>
     },
     EXPRESS_CAR: {
         "name": "Express Car",
+        "description": <div className="train-description">Scartalo: il tuo turno termina. Scarta tutte le carte in mano, poi gioca un altro turno.</div>
     },
     GHOST_CAR: {
         "name": "Ghost Car",
+        "description": <div className="train-description">Giocalo su chiunque tranne lo Sceriffo. Se vieni eliminato, invece resti in gioco, ma non puoi guadagnare né perdere punti vita.</div>
     },
     LOUNGE_CAR: {
         "name": "Lounge Car",
+        "description": <div className="train-description">Scartalo: pesca 2 vagoni dal mazzo, mettine 1 in gioco di fronte a te e 1 di fronte a un altro giocatore.</div>
     },
     LUMBER_FLATCAR: {
         "name": "Lumber Flatcar",
+        "description": <div className="train-description">Giocalo su chiunque.<br/>Vedi tutti gli altri a distanza +1.</div>
     },
     MAIL_CAR: {
         "name": "Mail Car",
+        "description": <div className="train-description">Scartalo: pesca 3 carte e dai 1 di esse a un altro giocatore a tua scelta.</div>
     },
     OBSERVATION_CAR: {
         "name": "Observation Car",
+        "description": <div className="train-description">Tu vedi gli altri a distanza -1.<br/>Gli altri ti vedono a distanza +1.</div>
     },
     PASSENGER_CAR: {
         "name": "Passenger Car",
+        "description": <div className="train-description">Scartalo: pesca una carta (in mano o in gioco) da un altro giocatore.</div>
     },
     PRISONER_CAR: {
         "name": "Prisoner Car",
+        "description": <div className="train-description">Le carte Duello e Indiani! giocate dagli altri giocatori non hanno effetto su di te.</div>
     },
     PRIVATE_CAR: {
         "name": "Private Car",
+        "description": <div className="train-description">Se non hai carte in mano, non puoi essere bersaglio di carte BANG!</div>
     },
     SLEEPER_CAR: {
         "name": "Sleeper Car",
+        "description": <div className="train-description">Una volta per turno, poi scartare un'altra tua carta a bordo blu (incluso un vagone) come un BANG! extra.</div>
     },
 
     // The Great Train Robbery locomotive cards
 
     IRONHORSE: {
         "name": "Ironhorse",
+        "description": <div className="train-description">Al capolinea ogni gioctore è bersaglio di un BANG!</div>
     },
     LELAND: {
         "name": "Leland",
+        "description": <div className="train-description">Al capolinea ha l'effetto di un Emporio</div>
     },
 
     // The Great Train Robbery station cards
