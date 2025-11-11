@@ -3,1034 +3,1035 @@ import { CardRegistry } from "../Registry";
 export const CARDS_ENGLISH: CardRegistry = {
     
     BARREL: {
-        "name": "Barrel",
+        name: "Barrel"
     },
     DYNAMITE: {
-        "name": "Dynamite",
-        "description": <div className="draw-description">Lose 3 life points. Else pass the Dynamite on your left.</div>,
+        name: "Dynamite",
+        description: <>Lose 3 life points. Else pass the Dynamite on your left.</>,
+        descriptionClass: "draw-description"
     },
     SCOPE: {
-        "name": "Scope",
-        "description": <>You view others at distance -1.</>
+        name: "Scope",
+        description: <>You view others at distance -1.</>
     },
     MUSTANG: {
-        "name": "Mustang",
-        "hideTitle": true,
-        "description": <>Others view you at distance +1.</>
+        name: "Mustang",
+        hideTitle: true,
+        description: <>Others view you at distance +1.</>
     },
     JAIL: {
-        "name": "Jail",
+        name: "Jail"
     },
     REMINGTON: {
-        "name": "Remington",
+        name: "Remington"
     },
     REV_CARABINE: {
-        "name": "Rev. Carabine",
+        name: "Rev. Carabine"
     },
     SCHOFIELD: {
-        "name": "Schofield",
+        name: "Schofield"
     },
     VOLCANIC: {
-        "name": "Volcanic",
+        name: "Volcanic"
     },
     WINCHESTER: {
-        "name": "Winchester",
+        name: "Winchester"
     },
     BANG: {
-        "name": "Bang!",
+        name: "Bang!"
     },
     BEER: {
-        "name": "Beer",
+        name: "Beer"
     },
     CAT_BALOU: {
-        "name": "Cat Balou",
+        name: "Cat Balou"
     },
     STAGECOACH: {
-        "name": "Stagecoach",
+        name: "Stagecoach"
     },
     DUEL: {
-        "name": "Duel",
+        name: "Duel"
     },
     GENERAL_STORE: {
-        "name": "General Store",
+        name: "General Store"
     },
     GATLING: {
-        "name": "Gatling",
+        name: "Gatling"
     },
     INDIANS: {
-        "name": "Indians!",
+        name: "Indians!"
     },
     MISSED: {
-        "name": "Missed!",
+        name: "Missed!"
     },
     PANIC: {
-        "name": "Panic!",
+        name: "Panic!"
     },
     SALOON: {
-        "name": "Saloon",
+        name: "Saloon"
     },
     WELLS_FARGO: {
-        "name": "Wells Fargo",
+        name: "Wells Fargo"
     },
     BINOCULAR: {
-        "name": "Binocular",
+        name: "Binocular"
     },
     HIDEOUT: {
-        "name": "Hideout",
+        name: "Hideout"
     },
     PUNCH: {
-        "name": "Punch",
+        name: "Punch"
     },
     RAG_TIME: {
-        "name": "Rag Time",
+        name: "Rag Time"
     },
     BRAWL: {
-        "name": "Brawl",
+        name: "Brawl"
     },
     DODGE: {
-        "name": "Dodge",
+        name: "Dodge"
     },
     SPRINGFIELD: {
-        "name": "Springfield",
+        name: "Springfield"
     },
     TEQUILA: {
-        "name": "Tequila",
+        name: "Tequila"
     },
     WHISKY: {
-        "name": "Whisky",
+        name: "Whisky"
     },
     BIBLE: {
-        "name": "Bible",
+        name: "Bible"
     },
     CANTEEN: {
-        "name": "Canteen",
+        name: "Canteen"
     },
     CAN_CAN: {
-        "name": "Can Can",
+        name: "Can Can"
     },
     TEN_GALLON_HAT: {
-        "name": "Ten Gallon Hat",
+        name: "Ten Gallon Hat"
     },
     CONESTOGA: {
-        "name": "Conestoga",
+        name: "Conestoga"
     },
     DERRINGER: {
-        "name": "Derringer",
+        name: "Derringer"
     },
     BUFFALO_RIFLE: {
-        "name": "Buffalo Rifle",
+        name: "Buffalo Rifle"
     },
     HOWITZER: {
-        "name": "Howitzer",
+        name: "Howitzer"
     },
     PEPPERBOX: {
-        "name": "Pepperbox",
+        name: "Pepperbox"
     },
     IRON_PLATE: {
-        "name": "Iron Plate",
+        name: "Iron Plate"
     },
     PONY_EXPRESS: {
-        "name": "Pony Express",
+        name: "Pony Express"
     },
     KNIFE: {
-        "name": "Knife",
+        name: "Knife"
     },
     SOMBRERO: {
-        "name": "Sombrero",
+        name: "Sombrero"
     },
     GHOST: {
-        "name": "Ghost",
+        name: "Ghost"
     },
     LEMAT: {
-        "name": "Lemat",
+        name: "Lemat"
     },
     RATTLESNAKE: {
-        "name": "Rattlesnake",
+        name: "Rattlesnake"
     },
     SHOTGUN: {
-        "name": "Shotgun",
+        name: "Shotgun"
     },
     BOUNTY: {
-        "name": "Bounty",
+        name: "Bounty"
     },
     BANDIDOS: {
-        "name": "Bandidos",
+        name: "Bandidos"
     },
     ESCAPE: {
-        "name": "Escape",
+        name: "Escape"
     },
     AIM: {
-        "name": "Aim",
+        name: "Aim"
     },
     POKER: {
-        "name": "Poker",
+        name: "Poker"
     },
     BACKFIRE: {
-        "name": "Backfire",
+        name: "Backfire"
     },
     SAVED: {
-        "name": "Saved!",
+        name: "Saved!"
     },
     FANNING: {
-        "name": "Fanning",
+        name: "Fanning"
     },
     TOMAHAWK: {
-        "name": "Tomahawk",
+        name: "Tomahawk"
     },
     TORNADO: {
-        "name": "Tornado",
+        name: "Tornado"
     },
     LAST_CALL: {
-        "name": "Last Call",
+        name: "Last Call"
     },
     CARAVAN: {
-        "name": "Caravan",
+        name: "Caravan"
     },
     A_LITTLE_NIP: {
-        "name": "A Little Nip",
+        name: "A Little Nip"
     },
     QUICK_SHOT: {
-        "name": "Quick Shot",
+        name: "Quick Shot"
     },
     FLINTLOCK: {
-        "name": "Flintlock",
+        name: "Flintlock"
     },
     ARROW: {
-        "name": "Arrow",
+        name: "Arrow"
     },
     DUCK: {
-        "name": "Duck!",
+        name: "Duck!"
     },
     RELOAD: {
-        "name": "Reload",
+        name: "Reload"
     },
     RUST: {
-        "name": "Rust",
+        name: "Rust"
     },
     SQUAW: {
-        "name": "Squaw",
+        name: "Squaw"
     },
     ACE_UP_THE_SLEEVE: {
-        "name": "Ace Up The Sleeve",
+        name: "Ace Up The Sleeve"
     },
     BANDOLIER: {
-        "name": "Bandolier",
+        name: "Bandolier"
     },
     BIG_FIFTY: {
-        "name": "Big Fifty",
+        name: "Big Fifty"
     },
     BOMB: {
-        "name": "Bomb",
+        name: "Bomb"
     },
     BUNTLINE_SPECIAL: {
-        "name": "Buntline Special",
+        name: "Buntline Special"
     },
     BELL_TOWER: {
-        "name": "Bell Tower",
+        name: "Bell Tower"
     },
     CRATE: {
-        "name": "Crate",
+        name: "Crate"
     },
     TUMBLEWEED: {
-        "name": "Tumbleweed",
+        name: "Tumbleweed"
     },
     DOUBLE_BARREL: {
-        "name": "Double Barrel",
+        name: "Double Barrel"
     },
     WHIP: {
-        "name": "Whip",
+        name: "Whip"
     },
     BEER_KEG: {
-        "name": "Beer Keg",
+        name: "Beer Keg"
     },
     LOCKPICK: {
-        "name": "Lockpick",
+        name: "Lockpick"
     },
     THUNDERER: {
-        "name": "Thunderer",
+        name: "Thunderer"
     },
     GRAVE_ROBBER: {
-        "name": "Graverobber",
+        name: "Graverobber"
     },
     CARD_SHARPER: {
-        "name": "Card Sharper",
+        name: "Card Sharper"
     },
     MIRAGE: {
-        "name": "Mirage",
+        name: "Mirage"
     },
     BLOOD_PACT: {
-        "name": "Blood Pact",
+        name: "Blood Pact"
     },
     SACRIFICE: {
-        "name": "Sacrifice",
+        name: "Sacrifice"
     },
     DISARM: {
-        "name": "Disarm",
+        name: "Disarm"
     },
     MOLOTOV: {
-        "name": "Molotov",
+        name: "Molotov"
     },
     BULLDOG: {
-        "name": "Bulldog",
+        name: "Bulldog"
     },
     LAST_WILL: {
-        "name": "Last Will",
+        name: "Last Will"
     },
     INDIAN_GUIDE: {
-        "name": "Indian Guide",
+        name: "Indian Guide"
     },
     TAXMAN: {
-        "name": "Taxman",
+        name: "Taxman"
     },
     BROTHEL: {
-        "name": "Brothel",
+        name: "Brothel"
     },
     BRONCO: {
-        "name": "Bronco",
+        name: "Bronco"
     },
     PACK_MULE: {
-        "name": "Pack Mule",
+        name: "Pack Mule"
     },
     WAR_PATH: {
-        "name": "War Path",
+        name: "War Path"
     },
     ARSON: {
-        "name": "Arson",
+        name: "Arson"
     },
     FLYING_BULLET: {
-        "name": "Flying Bullet",
+        name: "Flying Bullet"
     },
     ON_THE_HOUSE: {
-        "name": "On The House",
+        name: "On The House"
     },
     GUITAR: {
-        "name": "Guitar",
+        name: "Guitar"
     },
     SCRAPPER: {
-        "name": "Scrapper",
+        name: "Scrapper"
     },
     SHYLOCK: {
-        "name": "Shylock",
+        name: "Shylock"
     },
     BART_CASSIDY: {
-        "name": "Bart Cassidy",
+        name: "Bart Cassidy"
     },
     BLACK_JACK: {
-        "name": "Black Jack",
+        name: "Black Jack"
     },
     CALAMITY_JANET: {
-        "name": "Calamity Janet",
+        name: "Calamity Janet"
     },
     EL_GRINGO: {
-        "name": "El Gringo",
+        name: "El Gringo"
     },
     JESSE_JONES: {
-        "name": "Jesse Jones",
+        name: "Jesse Jones"
     },
     JOURDONNAIS: {
-        "name": "Jourdonnais",
+        name: "Jourdonnais"
     },
     KIT_CARLSON: {
-        "name": "Kit Carlson",
+        name: "Kit Carlson"
     },
     LUCKY_DUKE: {
-        "name": "Lucky Duke",
+        name: "Lucky Duke"
     },
     PAUL_REGRET: {
-        "name": "Paul Regret",
+        name: "Paul Regret"
     },
     PEDRO_RAMIREZ: {
-        "name": "Pedro Ramirez",
+        name: "Pedro Ramirez"
     },
     ROSE_DOOLAN: {
-        "name": "Rose Doolan",
+        name: "Rose Doolan"
     },
     SID_KETCHUM: {
-        "name": "Sid Ketchum",
+        name: "Sid Ketchum"
     },
     SLAB_THE_KILLER: {
-        "name": "Slab the Killer",
+        name: "Slab the Killer"
     },
     SUZY_LAFAYETTE: {
-        "name": "Suzy Lafayette",
+        name: "Suzy Lafayette"
     },
     VULTURE_SAM: {
-        "name": "Vulture Sam",
+        name: "Vulture Sam"
     },
     WILLY_THE_KID: {
-        "name": "Willy the Kid",
+        name: "Willy the Kid"
     },
     CLAUS_THE_SAINT: {
-        "name": "Claus \"The Saint\"",
+        name: "Claus \"The Saint\""
     },
     JOHNNY_KISCH: {
-        "name": "Johnny Kisch",
+        name: "Johnny Kisch"
     },
     UNCLE_WILL: {
-        "name": "Uncle Will",
+        name: "Uncle Will"
     },
     ANNIE_VERSARY: {
-        "name": "Annie Versary",
+        name: "Annie Versary"
     },
     EMILIANO: {
-        "name": "Emiliano",
+        name: "Emiliano"
     },
     APACHE_KID: {
-        "name": "Apache Kid",
+        name: "Apache Kid"
     },
     BELLE_STAR: {
-        "name": "Belle Star",
+        name: "Belle Star"
     },
     BILL_NOFACE: {
-        "name": "Bill Noface",
+        name: "Bill Noface"
     },
     CHUCK_WENGAM: {
-        "name": "Chuck Wengam",
+        name: "Chuck Wengam"
     },
     DOC_HOLYDAY: {
-        "name": "Doc Holyday",
+        name: "Doc Holyday"
     },
     ELENA_FUENTE: {
-        "name": "Elena Fuente",
+        name: "Elena Fuente"
     },
     GREG_DIGGER: {
-        "name": "Greg Digger",
+        name: "Greg Digger"
     },
     HERB_HUNTER: {
-        "name": "Herb Hunter",
+        name: "Herb Hunter"
     },
     JOSE_DELGADO: {
-        "name": "Josè Delgado",
+        name: "Josè Delgado"
     },
     MOLLY_STARK: {
-        "name": "Molly Stark",
+        name: "Molly Stark"
     },
     PAT_BRENNAN: {
-        "name": "Pat Brennan",
+        name: "Pat Brennan"
     },
     PIXIE_PETE: {
-        "name": "Pixie Pete",
+        name: "Pixie Pete"
     },
     SEAN_MALLORY: {
-        "name": "Sean Mallory",
+        name: "Sean Mallory"
     },
     TEQUILA_JOE: {
-        "name": "Tequila Joe",
+        name: "Tequila Joe"
     },
     VERA_CUSTER: {
-        "name": "Vera Custer",
+        name: "Vera Custer"
     },
     BLACK_FLOWER: {
-        "name": "Black Flower",
+        name: "Black Flower"
     },
     COLORADO_BILL: {
-        "name": "Colorado Bill",
+        name: "Colorado Bill"
     },
     DER_SPOT_BURST_RINGER: {
-        "name": "Der Spot - Burst Ringer",
+        name: "Der Spot - Burst Ringer"
     },
     EVELYN_SHEBANG: {
-        "name": "Evelyn Shebang",
+        name: "Evelyn Shebang"
     },
     HENRY_BLOCK: {
-        "name": "Henry Block",
+        name: "Henry Block"
     },
     LEMONADE_JIM: {
-        "name": "Lemonade Jim",
+        name: "Lemonade Jim"
     },
     MICK_DEFENDER: {
-        "name": "Mick Defender",
+        name: "Mick Defender"
     },
     TUCO_FRANZISKANER: {
-        "name": "Tuco Franziskaner",
+        name: "Tuco Franziskaner"
     },
     BIG_SPENCER: {
-        "name": "Big Spencer",
+        name: "Big Spencer"
     },
     FLINT_WESTWOOD: {
-        "name": "Flint Westwood",
+        name: "Flint Westwood"
     },
     GARY_LOOTER: {
-        "name": "Gary Looter",
+        name: "Gary Looter"
     },
     GREYGORY_DECK: {
-        "name": "Greygory Deck",
+        name: "Greygory Deck"
     },
     JOHN_PAIN: {
-        "name": "John Pain",
+        name: "John Pain"
     },
     LEE_VAN_KLIFF: {
-        "name": "Lee Van Kliff",
+        name: "Lee Van Kliff"
     },
     TEREN_KILL: {
-        "name": "Teren Kill",
+        name: "Teren Kill"
     },
     YOUL_GRINNER: {
-        "name": "Youl Grinner",
+        name: "Youl Grinner"
     },
     AL_PREACHER: {
-        "name": "Al Preacher",
+        name: "Al Preacher"
     },
     BASS_GREEVES: {
-        "name": "Bass Greeves",
+        name: "Bass Greeves"
     },
     BLOODY_MARY: {
-        "name": "Bloody Mary",
+        name: "Bloody Mary"
     },
     FRANKIE_CANTON: {
-        "name": "Frankie Canton",
+        name: "Frankie Canton"
     },
     JULIE_CUTTER: {
-        "name": "Julie Cutter",
+        name: "Julie Cutter"
     },
     MEXICALI_KID: {
-        "name": "Mexicali Kid",
+        name: "Mexicali Kid"
     },
     MS_ABIGAIL: {
-        "name": "Ms. Abigail",
+        name: "Ms. Abigail"
     },
     RED_RINGO: {
-        "name": "Red Ringo",
+        name: "Red Ringo"
     },
     DON_BELL: {
-        "name": "Don Bell",
+        name: "Don Bell"
     },
     DUTCH_WILL: {
-        "name": "Dutch Will",
+        name: "Dutch Will"
     },
     JACKY_MURIETA: {
-        "name": "Jacky Murieta",
+        name: "Jacky Murieta"
     },
     JOSH_MCCLOUD: {
-        "name": "Josh McCloud",
+        name: "Josh McCloud"
     },
     MADAME_YTO: {
-        "name": "Madame Yto",
+        name: "Madame Yto"
     },
     PRETTY_LUZENA: {
-        "name": "Pretty Luzena",
+        name: "Pretty Luzena"
     },
     RADDIE_SNAKE: {
-        "name": "Raddie Snake",
+        name: "Raddie Snake"
     },
     SIMEON_PICOS: {
-        "name": "Simeon Picos",
+        name: "Simeon Picos"
     },
     BLESSING: {
-        "name": "Blessing",
+        name: "Blessing"
     },
     GHOST_TOWN: {
-        "name": "Ghost Town",
+        name: "Ghost Town"
     },
     INVERT_ROTATION: {
-        "name": "Gold Rush",
+        name: "Gold Rush"
     },
     THE_DALTONS: {
-        "name": "The Daltons",
+        name: "The Daltons"
     },
     THE_DOCTOR: {
-        "name": "The Doctor",
+        name: "The Doctor"
     },
     THE_REVEREND: {
-        "name": "The Reverend",
+        name: "The Reverend"
     },
     TRAIN_ARRIVAL: {
-        "name": "Train Arrival",
+        name: "Train Arrival"
     },
     CURSE: {
-        "name": "Curse",
+        name: "Curse"
     },
     HANGOVER: {
-        "name": "Hangover",
+        name: "Hangover"
     },
     SERMON: {
-        "name": "Sermon",
+        name: "Sermon"
     },
     THIRST: {
-        "name": "Thirst",
+        name: "Thirst"
     },
     SHOOTOUT: {
-        "name": "Shootout",
+        name: "Shootout"
     },
     HANDCUFFS: {
-        "name": "Handcuffs",
+        name: "Handcuffs"
     },
     HANDCUFFS_HEARTS: {
-        "name": "Handcuffs: Declare Hearts",
+        name: "Handcuffs: Declare Hearts"
     },
     HANDCUFFS_DIAMONDS: {
-        "name": "Handcuffs: Declare Diamonds",
+        name: "Handcuffs: Declare Diamonds"
     },
     HANDCUFFS_CLUBS: {
-        "name": "Handcuffs: Declare Clubs",
+        name: "Handcuffs: Declare Clubs"
     },
     HANDCUFFS_SPADES: {
-        "name": "Handcuffs: Declare Spades",
+        name: "Handcuffs: Declare Spades"
     },
     NEW_IDENTITY: {
-        "name": "New Identity",
+        name: "New Identity"
     },
     HIGH_NOON: {
-        "name": "High Noon",
+        name: "High Noon"
     },
     AMBUSH: {
-        "name": "Ambush",
+        name: "Ambush"
     },
     SNIPER: {
-        "name": "Sniper",
+        name: "Sniper"
     },
     DEAD_MAN: {
-        "name": "Dead Man",
+        name: "Dead Man"
     },
     BLOOD_BROTHERS: {
-        "name": "Blood Brothers",
+        name: "Blood Brothers"
     },
     THE_JUDGE: {
-        "name": "The Judge",
+        name: "The Judge"
     },
     LASSO: {
-        "name": "Lasso",
+        name: "Lasso"
     },
     LAW_OF_THE_WEST: {
-        "name": "Law Of The West",
+        name: "Law Of The West"
     },
     HARD_LIQUOR: {
-        "name": "Hard Liquor",
+        name: "Hard Liquor"
     },
     ABANDONED_MINE: {
-        "name": "Abandoned Mine",
+        name: "Abandoned Mine"
     },
     PEYOTE: {
-        "name": "Peyote",
+        name: "Peyote"
     },
     PEYOTE_RED: {
-        "name": "Peyote: Declare Red",
+        name: "Peyote: Declare Red"
     },
     PEYOTE_BLACK: {
-        "name": "Peyote: Declare Black",
+        name: "Peyote: Declare Black"
     },
     RANCH: {
-        "name": "Ranch",
+        name: "Ranch"
     },
     RICOCHET: {
-        "name": "Ricochet",
+        name: "Ricochet"
     },
     RUSSIAN_ROULETTE: {
-        "name": "Russian Roulette",
+        name: "Russian Roulette"
     },
     VENDETTA: {
-        "name": "Vendetta",
+        name: "Vendetta"
     },
     A_FISTFUL_OF_CARDS: {
-        "name": "A Fistful Of Cards",
+        name: "A Fistful Of Cards"
     },
     GAG: {
-        "name": "Gag",
+        name: "Gag"
     },
     BONE_ORCHARD: {
-        "name": "Bone Orchard",
+        name: "Bone Orchard"
     },
     DARLING_VALENTINE: {
-        "name": "Darling Valentine",
+        name: "Darling Valentine"
     },
     DOROTHY_RAGE: {
-        "name": "Dorothy Rage",
+        name: "Dorothy Rage"
     },
     HELENA_ZONTERO: {
-        "name": "Helena Zontero",
+        name: "Helena Zontero"
     },
     LADY_ROSA_OF_TEXAS: {
-        "name": "Lady Rosa Of Texas",
+        name: "Lady Rosa Of Texas"
     },
     MISS_SUSANNA: {
-        "name": "Miss Susanna",
+        name: "Miss Susanna"
     },
     SHOWDOWN: {
-        "name": "Showdown",
+        name: "Showdown"
     },
     SACAGAWAY: {
-        "name": "Sacagaway",
+        name: "Sacagaway"
     },
     WILD_WEST_SHOW: {
-        "name": "Wild West Show",
+        name: "Wild West Show"
     },
     SHOT: {
-        "name": "Shot",
+        name: "Shot"
     },
     BOTTLE: {
-        "name": "Bottle",
+        name: "Bottle"
     },
     BOTTLE_PANIC: {
-        "name": "Bottle as Panic!",
+        name: "Bottle as Panic!"
     },
     BOTTLE_BEER: {
-        "name": "Bottle as Beer",
+        name: "Bottle as Beer"
     },
     BOTTLE_BANG: {
-        "name": "Bottle as Bang!",
+        name: "Bottle as Bang!"
     },
     CALUMET: {
-        "name": "Calumet",
+        name: "Calumet"
     },
     GUN_BELT: {
-        "name": "Gun Belt",
+        name: "Gun Belt"
     },
     PARDNER: {
-        "name": "Pardner",
+        name: "Pardner"
     },
     PARDNER_GENERAL_STORE: {
-        "name": "Pardner as General Store",
+        name: "Pardner as General Store"
     },
     PARDNER_DUEL: {
-        "name": "Pardner as Duel",
+        name: "Pardner as Duel"
     },
     PARDNER_CAT_BALOU: {
-        "name": "Pardner as Cat Balou",
+        name: "Pardner as Cat Balou"
     },
     GOLD_RUSH: {
-        "name": "Gold Rush",
+        name: "Gold Rush"
     },
     HORSESHOE: {
-        "name": "Horseshoe",
+        name: "Horseshoe"
     },
     PICKAXE: {
-        "name": "Pickaxe",
+        name: "Pickaxe"
     },
     WANTED: {
-        "name": "Wanted",
+        name: "Wanted"
     },
     RHUM: {
-        "name": "Rhum",
+        name: "Rhum"
     },
     GOLD_PAN: {
-        "name": "Gold Pan",
+        name: "Gold Pan"
     },
     BOOTS: {
-        "name": "Boots",
+        name: "Boots"
     },
     LUCKY_CHARM: {
-        "name": "Lucky Charm",
+        name: "Lucky Charm"
     },
     UNION_PACIFIC: {
-        "name": "Union Pacific",
+        name: "Union Pacific"
     },
     RUCKSACK: {
-        "name": "Rucksack",
+        name: "Rucksack"
     },
     CACTUS: {
-        "name": "Cactus",
+        name: "Cactus"
     },
     DRAGOON: {
-        "name": "Dragoon",
+        name: "Dragoon"
     },
     EVADED: {
-        "name": "Evaded!",
+        name: "Evaded!"
     },
     FULL_STEAM: {
-        "name": "Full Steam",
+        name: "Full Steam"
     },
     FULL_STEAM_NO_EFFECT: {
-        "name": "Full Steam: Cancel Locomotive effect",
+        name: "Full Steam: Cancel Locomotive effect"
     },
     FULL_STEAM_DOUBLE_EFFECT: {
-        "name": "Full Steam: Double Locomotive effect",
+        name: "Full Steam: Double Locomotive effect"
     },
     KNIFE_REVOLVER: {
-        "name": "Knife Revolver",
+        name: "Knife Revolver"
     },
     MAP: {
-        "name": "Map",
+        name: "Map"
     },
     MONEY_BAG: {
-        "name": "Money Bag",
+        name: "Money Bag"
     },
     MOST_WANTED: {
-        "name": "Most Wanted",
+        name: "Most Wanted"
     },
     NEXT_STOP: {
-        "name": "Next Stop",
+        name: "Next Stop"
     },
     REFUND: {
-        "name": "Refund",
+        name: "Refund"
     },
     STRONGBOX: {
-        "name": "Strongbox",
+        name: "Strongbox"
     },
     SWITCH: {
-        "name": "Switch",
+        name: "Switch"
     },
     TRAIN_ROBBERY: {
-        "name": "Train Robbery",
+        name: "Train Robbery"
     },
     TRAIN_ROBBERY_DISCARD: {
-        "name": "Train Robbery: Discard a card",
+        name: "Train Robbery: Discard a card"
     },
     TRAIN_ROBBERY_BANG: {
-        "name": "Train Robbery: Receive a Bang",
+        name: "Train Robbery: Receive a Bang"
     },
     WATER_TOWER: {
-        "name": "Water Tower",
+        name: "Water Tower"
     },
     BENNY_BRAWLER: {
-        "name": "Benny Brawler",
+        name: "Benny Brawler"
     },
     EVAN_BABBIT: {
-        "name": "Evan Babbit",
+        name: "Evan Babbit"
     },
     JIMMY_TEXAS: {
-        "name": "Jimmy Texas",
+        name: "Jimmy Texas"
     },
     MANUELITA: {
-        "name": "Manuelita",
+        name: "Manuelita"
     },
     SANCHO: {
-        "name": "Sancho",
+        name: "Sancho"
     },
     SGT_BLAZE: {
-        "name": "Sgt. Blaze",
+        name: "Sgt. Blaze"
     },
     SHADE_OCONNOR: {
-        "name": "Shade O'Connor",
+        name: "Shade O'Connor"
     },
     ZIPPY_ROY: {
-        "name": "Zippy Roy",
+        name: "Zippy Roy"
     },
     ANNIE_OAKEY: {
-        "name": "Annie Oakey",
+        name: "Annie Oakey"
     },
     ANNIE_OAKEY_RED: {
-        "name": "Annie Oakey: Declare Red",
+        name: "Annie Oakey: Declare Red"
     },
     ANNIE_OAKEY_HEARTS: {
-        "name": "Annie Oakey: Declare Hearts",
+        name: "Annie Oakey: Declare Hearts"
     },
     ANNIE_OAKEY_DIAMONDS: {
-        "name": "Annie Oakey: Declare Diamonds",
+        name: "Annie Oakey: Declare Diamonds"
     },
     ANNIE_OAKEY_BLACK: {
-        "name": "Annie Oakey: Declare Black",
+        name: "Annie Oakey: Declare Black"
     },
     ANNIE_OAKEY_CLUBS: {
-        "name": "Annie Oakey: Declare Clubs",
+        name: "Annie Oakey: Declare Clubs"
     },
     ANNIE_OAKEY_SPADES: {
-        "name": "Annie Oakey: Declare Spades",
+        name: "Annie Oakey: Declare Spades"
     },
     PAT_BARRETT: {
-        "name": "Pat Barrett",
+        name: "Pat Barrett"
     },
     BIG_SPENCER_2: {
-        "name": "Big Spencer",
+        name: "Big Spencer"
     },
     BUFFALO_BELL: {
-        "name": "Buffalo Bell",
+        name: "Buffalo Bell"
     },
     CLASH_THE_STAMPEDE: {
-        "name": "Clash The Stampede",
+        name: "Clash The Stampede"
     },
     CRAZY_HOG: {
-        "name": "Crazy Hog",
+        name: "Crazy Hog"
     },
     EVA_PLACE: {
-        "name": "Eva Place",
+        name: "Eva Place"
     },
     JOSEY_BASSETT: {
-        "name": "Josey Bassett",
+        name: "Josey Bassett"
     },
     LAURA_BILLION: {
-        "name": "Laura Billion",
+        name: "Laura Billion"
     },
     SID_CURRY: {
-        "name": "Sid Curry",
+        name: "Sid Curry"
     },
     SPIKE_SPIEZEL: {
-        "name": "Spike Spiezel",
+        name: "Spike Spiezel"
     },
     TEREN_KILL_2: {
-        "name": "Teren Kill",
+        name: "Teren Kill"
     },
     WYATT_EARL: {
-        "name": "Wyatt Earl",
+        name: "Wyatt Earl"
     },
     BAGGAGE_CAR: {
-        "name": "Baggage Car",
+        name: "Baggage Car"
     },
     BAGGAGE_CAR_MISSED: {
-        "name": "Baggage Car as Missed!",
+        name: "Baggage Car as Missed!"
     },
     BAGGAGE_CAR_PANIC: {
-        "name": "Baggage Car as Panic!",
+        name: "Baggage Car as Panic!"
     },
     BAGGAGE_CAR_CAT_BALOU: {
-        "name": "Baggage Car as Cat Balou",
+        name: "Baggage Car as Cat Balou"
     },
     BAGGAGE_CAR_BANG: {
-        "name": "Baggage Car as Bang!",
+        name: "Baggage Car as Bang!"
     },
     CABOOSE: {
-        "name": "Caboose",
+        name: "Caboose"
     },
     CATTLE_TRUCK: {
-        "name": "Cattle Truck",
+        name: "Cattle Truck"
     },
     CIRCUS_WAGON: {
-        "name": "Circus Wagon",
+        name: "Circus Wagon"
     },
     COAL_HOPPER: {
-        "name": "Coal Hopper",
+        name: "Coal Hopper"
     },
     DINING_CAR: {
-        "name": "Dining Car",
+        name: "Dining Car"
     },
     EXPRESS_CAR: {
-        "name": "Express Car",
+        name: "Express Car"
     },
     GHOST_CAR: {
-        "name": "Ghost Car",
+        name: "Ghost Car"
     },
     LOUNGE_CAR: {
-        "name": "Lounge Car",
+        name: "Lounge Car"
     },
     LUMBER_FLATCAR: {
-        "name": "Lumber Flatcar",
+        name: "Lumber Flatcar"
     },
     MAIL_CAR: {
-        "name": "Mail Car",
+        name: "Mail Car"
     },
     OBSERVATION_CAR: {
-        "name": "Observation Car",
+        name: "Observation Car"
     },
     PASSENGER_CAR: {
-        "name": "Passenger Car",
+        name: "Passenger Car"
     },
     PRISONER_CAR: {
-        "name": "Prisoner Car",
+        name: "Prisoner Car"
     },
     PRIVATE_CAR: {
-        "name": "Private Car",
+        name: "Private Car"
     },
     SLEEPER_CAR: {
-        "name": "Sleeper Car",
+        name: "Sleeper Car"
     },
     IRONHORSE: {
-        "name": "Ironhorse",
+        name: "Ironhorse"
     },
     LELAND: {
-        "name": "Leland",
+        name: "Leland"
     },
     BOOM_TOWN: {
-        "name": "Boom Town",
+        name: "Boom Town"
     },
     CATICO: {
-        "name": "Catico",
+        name: "Catico"
     },
     CREEPY_CREEK: {
-        "name": "Creepy Creek",
+        name: "Creepy Creek"
     },
     CROWNS_HOLE: {
-        "name": "Crown's Hole",
+        name: "Crown's Hole"
     },
     DEATHWOOD: {
-        "name": "Deathwood",
+        name: "Deathwood"
     },
     DODGEVILLE: {
-        "name": "Dodgeville",
+        name: "Dodgeville"
     },
     FORT_WROTH: {
-        "name": "Fort Wroth",
+        name: "Fort Wroth"
     },
     FRISCO: {
-        "name": "Frisco",
+        name: "Frisco"
     },
     MINERS_OATH: {
-        "name": "Miner's Oath",
+        name: "Miner's Oath"
     },
     SAN_TAFE: {
-        "name": "San Tafe",
+        name: "San Tafe"
     },
     TOMBROCK: {
-        "name": "Tombrock",
+        name: "Tombrock"
     },
     VIRGINIA_TOWN: {
-        "name": "Virginia Town",
+        name: "Virginia Town"
     },
     YOOMA: {
-        "name": "Yooma",
+        name: "Yooma"
     },
     FIFTY_GUNS: {
-        "name": "Fifty Guns",
+        name: "Fifty Guns"
     },
     WOUNDED_PRIDE: {
-        "name": "Wounded Pride",
+        name: "Wounded Pride"
     },
     OLD_WEST_GANG: {
-        "name": "Old West Gang",
+        name: "Old West Gang"
     },
     BOTTLENECK: {
-        "name": "Bottleneck",
+        name: "Bottleneck"
     },
     THE_CHUCK_A_LUCK: {
-        "name": "The Chuck-A-Luck",
+        name: "The Chuck-A-Luck"
     },
     '3_15_TO_YOOMA': {
-        "name": "3-15 To Yooma",
+        name: "3-15 To Yooma"
     },
     GOOD_COMPANY: {
-        "name": "Good Company",
+        name: "Good Company"
     },
     THE_LAST_HERO: {
-        "name": "The Last Hero",
+        name: "The Last Hero"
     },
     THE_MAN_WITH_NO_NAME: {
-        "name": "The Man With No Name",
+        name: "The Man With No Name"
     },
     WILHELM_SCREAM: {
-        "name": "Wilhelm Scream",
+        name: "Wilhelm Scream"
     },
     SCRUGS_BALLAD: {
-        "name": "Scrugs Ballad",
+        name: "Scrugs Ballad"
     },
     BORDERLANDS: {
-        "name": "Borderlands",
+        name: "Borderlands"
     },
     THE_OREGON_TRAIL: {
-        "name": "The Oregon Trail",
+        name: "The Oregon Trail"
     },
     A_THOUSAND_WAYS_TO_DIE: {
-        "name": "A Thousand Ways To Die",
+        name: "A Thousand Ways To Die"
     },
     FOR_A_FEW_CARDS_MORE: {
-        "name": "For A Few Cards More",
+        name: "For A Few Cards More"
     },
     A_QUICK_DEATH: {
-        "name": "A Quick Death",
+        name: "A Quick Death"
     },
     ESCAPE_JAIL: {
-        "name": "Escape Jail",
+        name: "Escape Jail"
     },
     BECOME_LEGEND: {
-        "name": "Become a Legend",
+        name: "Become a Legend"
     },
     CLAIM_FEAT: {
-        "name": "Claim a Feat",
+        name: "Claim a Feat"
     },
     GAME_PASS: {
-        "name": "End turn",
+        name: "End turn"
     },
     GAME_CONFIRM: {
-        "name": "Confirm",
+        name: "Confirm"
     },
     GAME_DISMISS: {
-        "name": "Continue",
+        name: "Continue"
     },
     GAME_SELL_BEER: {
-        "name": "Sell beer",
+        name: "Sell beer"
     },
     GAME_DISCARD_BLACK: {
-        "name": "Discard equip",
+        name: "Discard equip"
     },
     GAME_DISCARD_BRONCO: {
-        "name": "Discard Bronco",
+        name: "Discard Bronco"
     },
 
 };
