@@ -842,13 +842,16 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Bottle"
     },
     BOTTLE_PANIC: {
-        name: "Bottle as Panic!"
+        name: "Bottle as Panic!",
+        hideTitle: true
     },
     BOTTLE_BEER: {
-        name: "Bottle as Beer"
+        name: "Bottle as Beer",
+        hideTitle: true
     },
     BOTTLE_BANG: {
-        name: "Bottle as Bang!"
+        name: "Bottle as Bang!",
+        hideTitle: true
     },
     CALUMET: {
         name: "Calumet"
@@ -860,13 +863,18 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Pardner"
     },
     PARDNER_GENERAL_STORE: {
-        name: "Pardner as General Store"
+        name: "Pardner as General Store",
+        hideTitle: true,
+        description: <>Reveal as many cards as players. Each player draws one.</>
     },
     PARDNER_DUEL: {
-        name: "Pardner as Duel"
+        name: "Pardner as Duel",
+        hideTitle: true,
+        description: <>A target player discards a <i>BANG!</i>, then you, etc. First player failing to discard a <i>BANG!</i> loses 1 life point.</>
     },
     PARDNER_CAT_BALOU: {
-        name: "Pardner as Cat Balou"
+        name: "Pardner as Cat Balou",
+        hideTitle: true
     },
     GOLD_RUSH: {
         name: "Gold Rush"
@@ -1072,16 +1080,20 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Baggage Car"
     },
     BAGGAGE_CAR_MISSED: {
-        name: "Baggage Car as Missed!"
+        name: "Baggage Car as Missed!",
+        hideTitle: true
     },
     BAGGAGE_CAR_PANIC: {
-        name: "Baggage Car as Panic!"
+        name: "Baggage Car as Panic!",
+        hideTitle: true
     },
     BAGGAGE_CAR_CAT_BALOU: {
-        name: "Baggage Car as Cat Balou"
+        name: "Baggage Car as Cat Balou",
+        hideTitle: true
     },
     BAGGAGE_CAR_BANG: {
-        name: "Baggage Car as Bang!"
+        name: "Baggage Car as Bang!",
+        hideTitle: true
     },
     CABOOSE: {
         name: "Caboose"

@@ -1184,11 +1184,13 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     PARDNER_GENERAL_STORE: {
         name: "Complice come Emporio",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Rivela carte quanti i giocatori. Ognuno ne pesca una.</>
     },
     PARDNER_DUEL: {
         name: "Complice come Duello",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Un giocatore scarta un <i>BANG!</i>, poi tu, ecc. Il primo che non lo fa perde 1 punto vita.</>
     },
     PARDNER_CAT_BALOU: {
         name: "Complice come Cat Balou",
