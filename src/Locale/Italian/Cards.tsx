@@ -261,11 +261,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     RELOAD: {
         "name": "Ricarica",
-        "description": <>Aggiungi 3 <div className="cube"/> sulle tue carte e/o sul tuo personaggio.</>
+        "description": <>Aggiungi 3 📦 sulle tue carte e/o sul tuo personaggio.</>
     },
     RUST: {
         "name": "Ruggine",
-        "description": <>Gli altri spostano 1 <div className="cube"/> dal personaggio e da ogni carta Dangerous sul tuo personaggio.</>
+        "description": <>Gli altri spostano 1 📦 dal personaggio e da ogni carta Dangerous sul tuo personaggio.</>
     },
     SQUAW: {
         "name": "Squaw",
@@ -284,7 +284,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     BOMB: {
         "name": "Bomba",
-        "description": <>Gioca su chiunque. All'inizio del tuo turno, "estrai!":<br/>♥♦=Passa la Bomba a chi vuoi.<br/>♣♠=scarta 2 <div className="cube"/>: se finiscono, perdi 2 punti vita.</>
+        "description": <>Gioca su chiunque. All'inizio del tuo turno, "estrai!":<br/>♥♦=Passa la Bomba a chi vuoi.<br/>♣♠=scarta 2 📦: se finiscono, perdi 2 punti vita.</>
     },
     BUNTLINE_SPECIAL: {
         "name": "Buntline Special",
@@ -406,51 +406,67 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BART_CASSIDY: {
         "name": "Bart Cassidy",
+        "description": <>Ogni volta che viene ferito, pesca una carta.</>
     },
     BLACK_JACK: {
         "name": "Black Jack",
+        "description": <>Mostra la seconda carta che pesca. Se è Cuori o Quadri, pesca una carta in più.</>
     },
     CALAMITY_JANET: {
         "name": "Calamity Janet",
+        "description": <>Può giocare le carte BANG! come carte Mancato!, e viceversa.</>
     },
     EL_GRINGO: {
         "name": "El Gringo",
+        "description": <>Ogni volta che viene ferito da un giocatore, pesca una carta dalla mano di quel giocatore.</>
     },
     JESSE_JONES: {
         "name": "Jesse Jones",
+        "description": <>Può pescare la prima carta dalla mano di un giocatore.</>
     },
     JOURDONNAIS: {
         "name": "Jourdonnais",
+        "description": <>Ogni volta che è bersaglio di un BANG!, può "estrarre!": se esce Cuori, viene mancato.</>
     },
     KIT_CARLSON: {
         "name": "Kit Carlson",
+        "description": <>Guarda le prime tre carte del mazzo e sceglie le due da pescare.</>
     },
     LUCKY_DUKE: {
         "name": "Lucky Duke",
+        "description": <>Ogni volta che deve "estrarre!", scopre 2 carte e sceglie.</>
     },
     PAUL_REGRET: {
         "name": "Paul Regret",
+        "description": <>Tutti i giocatori lo vedono a distanza aumentata di 1.</>
     },
     PEDRO_RAMIREZ: {
         "name": "Pedro Ramirez",
+        "description": <>Può pescare la prima carta dalla cima degli scarti.</>
     },
     ROSE_DOOLAN: {
         "name": "Rose Doolan",
+        "description": <>Vede tutti i giocatori a distanza diminuita di 1.</>
     },
     SID_KETCHUM: {
         "name": "Sid Ketchum",
+        "description": <>Può scartare 2 carte per recuperare un punto vita.</>
     },
     SLAB_THE_KILLER: {
         "name": "Slab the Killer",
+        "description": <>Per evitare i suoi BANG! occorrono due carte Mancato!.</>
     },
     SUZY_LAFAYETTE: {
         "name": "Suzy Lafayette",
+        "description": <>Appena rimane senza carte in mano, pesca una carta.</>
     },
     VULTURE_SAM: {
         "name": "Vulture Sam",
+        "description": <>Quando un personaggio è eliminato, prende in mano tutte le carte di quel personaggio.</>
     },
     WILLY_THE_KID: {
         "name": "Willy the Kid",
+        "description": <>Può giocare un numero qualsiasi di carte BANG!</>
     },
 
     // Most Wanted characters
@@ -523,27 +539,47 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     BLACK_FLOWER: {
         "name": "Black Flower",
+        "description": <>Una volta nel tuo turno, puoi usare una carta di fiori per sparare un BANG! extra.</>
     },
     COLORADO_BILL: {
         "name": "Colorado Bill",
+        "description": <>Ogni volta che giochi una carta BANG!, "estrai!": se è Picche, il colpo non può essere evitato.</>
+    },
+    COLORADO_BILL_2: {
+        "name": "Colorado Bill",
+        "description": <>Ogni volta che un altro giocatore gioca una carta Mancato! su una carta BANG! giocata da Colorado Bill, "estrai!": se esce Picche la carta Mancato! non ha effetto e il giocatore attaccato perde 1 punto vita.</>
     },
     DER_SPOT_BURST_RINGER: {
         "name": "Der Spot - Burst Ringer",
+        "description": <>Una volta nel tuo turno, puoi usare una carta BANG! come Gatling.</>
     },
     EVELYN_SHEBANG: {
         "name": "Evelyn Shebang",
+        "description": <>Puoi rinunciare a pescare carte nella tua fase di pesca. Per ogni carta non pescata, spari un BANG! a distanza raggiungibile, a un diverso bersaglio.</>
+    },
+    EVELYN_SHEBANG_2: {
+        "name": "Evelyn Shebang",
+        "description": <>Può pescare una carta in meno del normale per sparare un BANG! extra a distanza 1.</>
     },
     HENRY_BLOCK: {
         "name": "Henry Block",
+        "description": <>Chiunque peschi o scarti una tua carta (in gioco o in mano) è bersaglio di un BANG!.</>
     },
     LEMONADE_JIM: {
         "name": "Lemonade Jim",
+        "description": <>Ogni volta che un altro giocatore gioca una Birra, puoi scartare una carta dalla mano per riguadagnare anche tu 1 punto vita.</>
     },
     MICK_DEFENDER: {
         "name": "Mick Defender",
+        "description": <>Se sei bersaglio di una carta marrone (non BANG!), puoi usare una carta Mancato! per evitarne gli effetti.</>
+    },
+    MICK_DEFENDER_2: {
+        "name": "Mick Defender",
+        "description": <>Se è l'unico bersaglio di una carta, può usare un Mancato! per evitare l'effetto di quella carta.</>
     },
     TUCO_FRANZISKANER: {
         "name": "Tuco Franziskaner",
+        "description": <>Durante la tua fase di pesca, se non hai carte blu in gioco, pesca 2 carte extra.</>
     },
 
     // Wild West Show characters
