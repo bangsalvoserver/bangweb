@@ -1,10 +1,14 @@
 import { GameStringRegistry } from "../Registry";
 
+function twoToFour(value: unknown) {
+    return value as number >= 2 && value as number <= 4;
+}
+
 export const GAME_STRINGS_CZECH: GameStringRegistry = {
 
     PROMPT_CARD_NO_EFFECT: (card) =>                                        <>Zahrání {card} by nemělo žádný efekt. Pokračovat?</>,
     PROMPT_CARD_NO_TARGET: (card) =>                                        <>Hraješ {card} bez cílení na nikoho. Pokračovat?</>,
-    PROMPT_PASS_DISCARD: (ncards) =>                                        <>Musíš odhodit {ncards === 1 ? "jednu kartu" : ncards >= 2 && ncards <= 4 ? `${ncards} karty` : `${ncards} karet`}. Pokračovat?</>,
+    PROMPT_PASS_DISCARD: (ncards) =>                                        <>Musíš odhodit {ncards === 1 ? "jednu kartu" : twoToFour(ncards) ? `${ncards} karty` : `${ncards} karet`}. Pokračovat?</>,
     PROMPT_MOVE_BOMB_TO_SELF: (card) =>                                     <>Přesouváš {card} na sebe. Pokračovat?</>,
     PROMPT_EXPLODE_BOMB: (card) =>                                          <>Necháš {card} vybuchnout! Pokračovat?</>,
     PROMPT_REPLACE: (card, target_card) =>                                  <>Chceš zahrát {card} a nahradit {target_card}?</>,
@@ -14,7 +18,7 @@ export const GAME_STRINGS_CZECH: GameStringRegistry = {
     PROMPT_BANG_STRENGTH: (ncards) =>                                       <>Musíš zahrát {ncards} Vedle. Pokračovat?</>,
     PROMPT_NO_BANGS_PLAYED: (card) =>                                       <>Nezahrál jsi žádný Bang, zahrání {card} by nemělo efekt. Pokračovat?</>,
     PROMPT_TARGET_SELF_GHOST_CARD: () =>                                    <>Odhazuješ svou duchovní kartu. Pokračovat?</>,
-    PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                     <>Zahráním {card} pro vyléčení {amount === 1 ? "jednoho života" : `${amount} životů`} bys promarnil {max_amount === 1 ? "jeden život" : max_amount >= 2 && max_amount <= 4 ? `${max_amount} životy` : `${max_amount} životů`}. Pokračovat?</>,
+    PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                     <>Zahráním {card} pro vyléčení {amount === 1 ? "jednoho života" : `${amount} životů`} bys promarnil {max_amount === 1 ? "jeden život" : twoToFour(max_amount) ? `${max_amount} životy` : `${max_amount} životů`}. Pokračovat?</>,
     PROMPT_SUICIDE: (card) =>                                               <>Zahrání {card} vede k sebevraždě. Pokračovat?</>,
     PROMPT_DEATH: () =>                                                     <>Můžeš zahrát pivo, abys se zachránil. Pokračovat?</>,
     PROMPT_CANCEL_PERFORM_FEAT: () =>                                       <>Chceš zrušit vykonání činu?</>,
@@ -40,8 +44,8 @@ export const GAME_STRINGS_CZECH: GameStringRegistry = {
     STATUS_GENERALSTORE_OTHER: (player, card) =>                            <>{card} ... {player} musí zvolit kartu</>,
     STATUS_DISCARD: (player) =>                                             <>{player} ... Odhodit kartu</>,
     STATUS_DISCARD_OTHER: (player, card) =>                                 <>{card} ... {player} musí odhodit kartu</>,
-    STATUS_DISCARD_PASS: (ncards) =>                                        <>Odhodit {ncards === 1 ? "jednu kartu" : ncards >= 2 && ncards <= 4 ? `${ncards} karty` : `${ncards} karet`} před ukončením tahu</>,
-    STATUS_DISCARD_PASS_OTHER: (player, ncards) =>                          <>{player} musí odhodit {ncards === 1 ? "jednu kartu" : ncards >= 2 && ncards <= 4 ? `${ncards} karty` : `${ncards} karet`} před ukončením tahu</>,
+    STATUS_DISCARD_PASS: (ncards) =>                                        <>Odhodit {ncards === 1 ? "jednu kartu" : twoToFour(ncards) ? `${ncards} karty` : `${ncards} karet`} před ukončením tahu</>,
+    STATUS_DISCARD_PASS_OTHER: (player, ncards) =>                          <>{player} musí odhodit {ncards === 1 ? "jednu kartu" : twoToFour(ncards) ? `${ncards} karty` : `${ncards} karet`} před ukončením tahu</>,
     STATUS_BANG: (card, strength, damage) =>                                <>{card} ... Zahraj {strength === 1 ? "Vedle" : `${strength}x Vedle`} nebo ztratíš {damage === 1 ? "jeden život" : `${damage} životů`}</>,
     STATUS_BANG_OTHER: (player, card) =>                                    <>{player} musí reagovat na {card}</>,
     STATUS_CARD_AS_BANG: (card, strength, damage) =>                        <>{card} jako Bang! ... Zahraj {strength === 1 ? "Vedle" : `${strength}x Vedle`} nebo ztratíš {damage === 1 ? "jeden život" : `${damage} životů`}</>,
