@@ -2,182 +2,302 @@ import { CardRegistry } from "../Registry";
 
 export const CARDS_CZECH: CardRegistry = {
     BARREL: {
-        name: "Barel"
+        name: "Barel",
+        hideTitle: true
     },
     DYNAMITE: {
-        name: "Dynamit"
+        name: "Dynamit",
+        hideTitle: true,
+        description: <>Ztrácíš 3 životy. Jinak pošli <i>Dynamite</i> hráči po své levici.</>,
+        descriptionClass: "draw-description",
     },
     SCOPE: {
-        name: "Hledí"
+        name: "Hledí",
+        hideTitle: true,
+        description: <>Všichni ostatní hráči se pro tebe nachází ve vzdálenosti o 1 menší.</>
     },
     MUSTANG: {
-        name: "Mustang"
+        name: "Mustang",
+        hideTitle: true,
+        description: <>Pro všechny ostatní hráče se nacházíš ve vzdálenosti o 1 větší.</>
     },
     JAIL: {
-        name: "Vězení"
+        name: "Vězení",
+        hideTitle: true,
+        description: <>Odhoď <i>Vězení</i> a pokračuj normálně ve svém tahu. Jinak odhoď <i>Vězení</i> a vynechej svůj tah.</>,
+        descriptionClass: "draw-description",
     },
     REMINGTON: {
-        name: "Remington"
+        name: "Remington",
+        hideTitle: true,
     },
     REV_CARABINE: {
-        name: "Rev. Carabine"
+        name: "Rev. Carabine",
+        hideTitle: true,
     },
     SCHOFIELD: {
-        name: "Schofield"
+        name: "Schofield",
+        hideTitle: true,
     },
     VOLCANIC: {
-        name: "Volcanic"
+        name: "Volcanic",
+        hideTitle: true,
+        description: <>Ve svém tahu můžeš zahrát libovolný počet karet <i>BANG!</i></>,
+        descriptionClass: "weapon-description",
     },
     WINCHESTER: {
-        name: "Winchester"
+        name: "Winchester",
+        hideTitle: true
     },
     BANG: {
-        name: "Bang!"
+        name: "Bang!",
+        hideTitle: true
     },
     BEER: {
-        name: "Pivo"
+        name: "Pivo",
+        hideTitle: true
     },
     CAT_BALOU: {
-        name: "Cat Balou"
+        name: "Cat Balou",
+        hideTitle: true
     },
     STAGECOACH: {
-        name: "Dostavník"
+        name: "Dostavník",
+        hideTitle: true
     },
     DUEL: {
-        name: "Duel"
+        name: "Duel",
+        hideTitle: true,
+        description: <>Vyzvaný hráč může odhodit 1 kartu <i>BANG!</i>, potom vyzývající, a takto se střídají. Ten, kdo jako první <i>BANG!</i> neodhodí, ztrácí 1 život.</>
     },
     GENERAL_STORE: {
-        name: "Hokynářsví"
+        name: "Hokynářsví",
+        hideTitle: true,
+        description: <>Otoč tolik vrchních karet z balíčku, kolik je nevyřazených hráčů. Každý hráč si vezme jednu kartu.</>
     },
     GATLING: {
-        name: "Kulomet"
+        name: "Kulomet",
+        hideTitle: true
     },
     INDIANS: {
-        name: "Indiáni!"
+        name: "Indiáni!",
+        hideTitle: true,
+        description: <>Všichni ostatní hráči mohou odhodit kartu <i>BANG!</i> jinak ztrácí 1 život.</>
     },
     MISSED: {
-        name: "Vedle!"
+        name: "Vedle!",
+        hideTitle: true
     },
     PANIC: {
-        name: "Panika!"
+        name: "Panika!",
+        hideTitle: true
     },
     SALOON: {
-        name: "Saloon"
+        name: "Saloon",
+        hideTitle: true
     },
     WELLS_FARGO: {
-        name: "Wells Fargo"
+        name: "Wells Fargo",
+        hideTitle: true
     },
+
+     // Dodge City karty
+
     BINOCULAR: {
-        name: "Dalekohled"
+        name: "Dalekohled",
+        hideTitle: true,
+        description: <>Všichni ostatní hráči se pro tebe nachází ve vzdálenosti o 1 menší.</>
     },
     HIDEOUT: {
-        name: "Skrýš"
+        name: "Skrýš",
+        hideTitle: true,
+        description: <>Pro všechny ostatní hráče se nacházíš ve vzdálenosti o 1 větší.</>
     },
     PUNCH: {
-        name: "Úder"
+        name: "Úder",
+        hideTitle: true
     },
     RAG_TIME: {
-        name: "Rag Time"
+        name: "Rag Time",
+        hideTitle: true
     },
     BRAWL: {
-        name: "Rvačka"
+        name: "Rvačka",
+        hideTitle: true
     },
     DODGE: {
-        name: "Úhyb"
+        name: "Úhyb",
+        hideTitle: true
     },
     SPRINGFIELD: {
-        name: "Springfield"
+        name: "Springfield",
+        hideTitle: true
     },
     TEQUILA: {
-        name: "Tequila"
+        name: "Tequila",
+        hideTitle: true
     },
     WHISKY: {
-        name: "Whisky"
+        name: "Whisky",
+        hideTitle: true
     },
     BIBLE: {
-        name: "Bible"
+        name: "Bible",
+        hideTitle: true
     },
     CANTEEN: {
-        name: "Čutora"
+        name: "Čutora",
+        hideTitle: true
     },
     CAN_CAN: {
-        name: "Can Can"
+        name: "Can Can",
+        hideTitle: true
     },
     TEN_GALLON_HAT: {
-        name: "Stetson"
+        name: "Stetson",
+        hideTitle: true
     },
     CONESTOGA: {
-        name: "Krytý vůz"
+        name: "Krytý vůz",
+        hideTitle: true
     },
     DERRINGER: {
-        name: "Derringer"
+        name: "Derringer",
+        hideTitle: true
     },
     BUFFALO_RIFLE: {
-        name: "Puška na bizony"
+        name: "Puška na bizony",
+        hideTitle: true
     },
     HOWITZER: {
-        name: "Houfnice"
+        name: "Houfnice",
+        hideTitle: true
     },
     PEPPERBOX: {
-        name: "Pepperbox"
+        name: "Pepperbox",
+        hideTitle: true
     },
     IRON_PLATE: {
-        name: "Železný plát"
+        name: "Železný plát",
+        hideTitle: true
     },
     PONY_EXPRESS: {
-        name: "Pony Express"
+        name: "Pony Express",
+        hideTitle: true
     },
     KNIFE: {
-        name: "Nůž"
+        name: "Nůž",
+        hideTitle: true
     },
     SOMBRERO: {
-        name: "Sombrero"
+        name: "Sombrero",
+        hideTitle: true
     },
+
+    // Karty Údolí stínů
+
     GHOST: {
-        name: "Duch"
+        name: "Duch",
+        hideTitle: true,
+        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní postavou a rolí. Nemůže však získat či ztratit žádné životy.</>
+    },
+    GHOST_2: {
+        name: "Duch",
+        hideTitle: true,
+        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní rolí bez schopností. Nemůže však získat či ztratit žádné životy.</>
     },
     LEMAT: {
-        name: "Lemat"
+        name: "Lemat",
+        hideTitle: true,
+        description: <>Během svého tahu můžeš zahrát libovolné karty jako karty <i>BANG!</i>.</>,
+        descriptionClass: "weapon-description",
+    },
+    LEMAT_2: {
+        name: "Lemat",
+        hideTitle: true,
+        description: <>Během svého tahu můžeš zahrát libovolné karty (kromě Vedle!) jako karty <i>BANG!</i>.</>,
+        descriptionClass: "weapon-description",
     },
     RATTLESNAKE: {
-        name: "Chřestýš"
+        name: "Chřestýš",
+        hideTitle: true,
+        description: <>Na začátku svého tahu sejmi. Pokud je sejmutá karta piková ♠️, ztrácíš 1 život.</>
     },
     SHOTGUN: {
-        name: "Brokovnice"
+        name: "Brokovnice",
+        hideTitle: true,
+        description: <>Zasáhneš-li některého hráče kartou <i>BANG!</i>, musí tento hráč odhodit 1 kartu dle svého výběru z ruky (pokud nějakou má).</>,
+        descriptionClass: "weapon-description",
     },
     BOUNTY: {
-        name: "Odměna"
+        name: "Odměna",
+        description: <>Jestliže tě někdo zasáhne kartou <i>BANG!</i>, dobere si 1 kartu.</>
     },
     BANDIDOS: {
-        name: "Divoká banda"
+        name: "Divoká banda",
+        hideTitle: true,
+        description: <>Každý hráč si vypere: odhoď 2 karty z ruky (1 pokud máš 1) nebo si uber 1 život.</>
+    },
+    BANDIDOS_2: {
+        name: "Divoká banda",
+        hideTitle: true,
+        description: <>Všichni ostatní hráči musí odhodit z ruky 1 kartu <i>BANG!</i> nebo 2 libovolné karty.</>
     },
     ESCAPE: {
-        name: "Útěk"
+        name: "Útěk",
+        description: <>Může být hráno mimo tah. Vyhni se efektu hnědé karty (kromě karty <i>BANG!</i>) pokud si jejím jediným cílem.</>
+    },
+    ESCAPE_2: {
+        name: "Útěk",
+        description: <>Pokud jsi jediným cílem nějaké karty (kromě <i>BANG!</i>), můžeš ji zrušit.</>
     },
     AIM: {
-        name: "Dvojitá rána"
+        name: "Dvojitá rána",
+        description: <>Zahraj tuto kartu současně s kartou <i>BANG!</i> Pokud není tento <i>BANG!</i> zrušen, ztrácí zasažený hráč 2 životy. Ke zrušení stačí 1 efekt Vedle!</>
     },
     POKER: {
-        name: "Poker"
+        name: "Poker",
+        hideTitle: true,
+        description: <>Všichni ostatní hráči vyloží po 1 kartě z ruky lícem dolů a poté všechny naráz otočí. Pokud mezi nimi nené žádné A, vezmi si 2 z těchto karet do ruky a zbylé odhoď.</>
     },
     BACKFIRE: {
-        name: "Opětovná palba"
+        name: "Opětovná palba",
+        description: <>Považuje se za kartu <i>Missed!</i> Hráč, který na tebe střílel, je nyní cílem efektu <i>BANG!</i>.</>
     },
     SAVED: {
-        name: "Obětavý skok"
+        name: "Obětavý skok",
+        description: <>Může být hráno mimo tah. Zabraň tomu že jiný hráč ztratí 1 život. Pokud přežije, lízni si 2 karty z jeho ruky nebo z balíčku (tvá volba).</>
+    },
+    SAVED_2: {
+        name: "Obětavý skok",
+        description: <>Zabráníš jakémukoli jinému hráči ztratit 1 život. Pokud takto zamezíš vyřazení, vezmi si 2 karty z ruky zachráněného hráče nebo z balíčku.</>
     },
     FANNING: {
-        name: "Rozstříštěná kulka"
+        name: "Rozstříštěná kulka",
+        description: <>Počítá se do limitu 1 karty <i>BANG!</i> za tah. Prvním cílem efektu BANG! se stává nejprve 1 hráč podle běžných pravidel a poté 1 další hráč, který je od prvního ve vzdálenosti 1 (kromě tebe), je-li to možné.</>
     },
     TOMAHAWK: {
-        name: "Tomahawk"
+        name: "Tomahawk",
+        hideTitle: true
     },
     TORNADO: {
-        name: "Tornádo"
+        name: "Tornádo",
+        hideTitle: true,
+        description: <>Každý hráč odhodí kartu z ruky (pokud je to možné), potom si lízne 2 karty z balíčku.</>
+    },
+    TORNADO_2: {
+        name: "Tornádo",
+        hideTitle: true,
+        description: <>Každý hráč musí dát 2 karty z ruky hráči po levici. <strong>Karty předejte všichni najednou.</strong></>
     },
     LAST_CALL: {
-        name: "Poslední pivo"
+        name: "Poslední pivo",
+        hideTitle: true,
+        description: <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>
     },
+
+    // Karty Ozbrojení a Nebezpeční
+
     CARAVAN: {
         name: "Kolona"
     },
@@ -185,73 +305,114 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Malý doušek"
     },
     QUICK_SHOT: {
-        name: "Rychlopalba"
+        name: "Rychlopalba",
+        description: <>Použij efekt BANG! na jiného hráče.</>,
+        descriptionClass: "cube-description"
     },
     FLINTLOCK: {
-        name: "Křesadlovka"
+        name: "Křesadlovka",
+        hideTitle: true,
+        description: <>Pokud je tato karta zrušena, cezmi si ji zpět do ruky.</>,
+        descriptionClass: "cube-description"
     },
     ARROW: {
-        name: "Šíp"
+        name: "Šíp",
+        description: <><p>Cílový hráč musí odhodit z ruky kartu <i>BANG!</i>, nebo ztratí 1 život.</p><p>Použij <i>Šíp</i> znovu na jiného hráče.</p></>,
+        descriptionClass: "cube-description-double"
     },
     DUCK: {
-        name: "Skrč se!"
+        name: "Skrč se!",
+        description: <>Vezmi si tuto kartu zpět do ruky.</>,
+        descriptionClass: "cube-description"
     },
     RELOAD: {
-        name: "Nabíjení"
+        name: "Nabíjení",
+        description: <>Přidej 3 📦 na své Nebezpečné karty a/nebo postavu.</>
     },
     RUST: {
-        name: "Rez"
+        name: "Rez",
+        description: <>Všichni ostatní hráči přemístí 1 📦 z každé své Nebezpečné karty a postavy na tvou postavu.</>
     },
     SQUAW: {
-        name: "Squaw"
+        name: "Squaw",
+        description: <><p>Odhoď libovolnou kartu ve hře.</p><p>Vezmi si odhozenou kartu do ruky.</p></>,
+        descriptionClass: "cube-description-double"
     },
     ACE_UP_THE_SLEEVE: {
         name: "Eso v rukávu"
     },
     BANDOLIER: {
-        name: "Bandalír"
+        name: "Bandalír",
+        description: <>Během svého tahu můžeš zahrát 1 kartu <i>BANG!</i> navíc.</>,
+        descriptionClass: "cube-description"
     },
     BIG_FIFTY: {
-        name: "Big Fifty"
+        name: "Big Fifty",
+        hideTitle: true,
+        description: <>Cílovému hráči zruš schopnosti postavy a karet ve hře.</>,
+        descriptionClass: "cube-description"
     },
     BOMB: {
-        name: "Bomba"
+        name: "Bomba",
+        description: <>Na začátku svého tahu sejmi: ♥ ♦ = pošli <i>Bombu</i> jinému hráči. ♣ ♠=odhoď z této karty 2 📦: pokud to nemůžeš udělat, ztrácíš 2 životy.</>
     },
     BUNTLINE_SPECIAL: {
-        name: "Buntline Special"
+        name: "Buntline Special",
+        hideTitle: true,
+        description: <>Pokud je tvá karta <i>BANG!</i> zrušena, cílový hráč musí odhodit libovolnou kartu z ruky.</>,
+        descriptionClass: "cube-description"
     },
     BELL_TOWER: {
-        name: "Zvonice"
+        name: "Zvonice",
+        description: <>Při vyhodnocování tvé následující zahrané karty se pro tebe všichni hráči nachází ve vzdálenosti 1.</>,
+        descriptionClass: "cube-description"
     },
     CRATE: {
         name: "Bedna"
     },
     TUMBLEWEED: {
-        name: "Stepní běžec"
+        name: "Stepní běžec",
+        description: <>Libovolný hráč musí opakovat sejmutí.</>,
+        descriptionClass: "cube-description"
     },
     DOUBLE_BARREL: {
-        name: "Dvouhlavňovka"
+        name: "Dvouhlavňovka",
+        description: <>Pokud zahraješ károvou kartu <i>BANG!</i>, nemůže být zrušena.</>,
+        descriptionClass: "cube-description"
     },
     WHIP: {
-        name: "Bič"
+        name: "Bič",
+        description: <>Odhoď libovolnou kartu ve hře.</>,
+        descriptionClass: "cube-description"
     },
     BEER_KEG: {
         name: "Bečka piva"
     },
     LOCKPICK: {
-        name: "Paklíč"
+        name: "Paklíč",
+        description: <>Vezmi si 1 kartu z ruky libovolného hráče.</>,
+        descriptionClass: "cube-description"
     },
     THUNDERER: {
-        name: "Thunderer"
+        name: "Thunderer",
+        hideTitle: true,
+        description: <>Vezmi si zahranou kartu <i>BANG!</i> zpět do ruky.</>,
+        descriptionClass: "cube-description"
     },
+
+    // Karty Canyon Diablo
+
     GRAVE_ROBBER: {
-        name: "Hrobník"
+        name: "Vykradač hrobů",
+        description: <>Otoč tolik vrchních karet z odhazovacího balíčku, kolik je nevyřazených hráčů. Každý hráč si vezme jednu kartu.</>
     },
     CARD_SHARPER: {
-        name: "Šibal"
+        name: "Švindlíř",
+        description: <>Vyměň si modrou kartu kterou máš ve hře s kartou stejné barvy kterou má před sebou jiný hráč.</>
     },
     MIRAGE: {
-        name: "Mrák"
+        name: "Fatamorgána",
+        description: <>Počítá se jako <i>Vedle!</i> Hráč který vystřelil ihned ukončuje svůj tah.</>
     },
     BLOOD_PACT: {
         name: "Krevní přísaha"
@@ -674,10 +835,10 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Komplic"
     },
     PARDNER_GENERAL_STORE: {
-        name: "Komplic jako Obchod"
+        name: "Komplic jako Hokynářství"
     },
     PARDNER_DUEL: {
-        name: "Komplic jako Souboj"
+        name: "Komplic jako Duel"
     },
     PARDNER_CAT_BALOU: {
         name: "Komplic jako Cat Balou"
