@@ -17,7 +17,19 @@ export interface CardNameProps {
 }
 
 export function getLocalizedCardName(name: string): string {
-    return name in cardRegistry ? cardRegistry[name] : name;
+    return name in cardRegistry ? cardRegistry[name].name : name;
+}
+
+export function isCardLocalizedTitleShown(name: string): boolean {
+    return name in cardRegistry ? !(cardRegistry[name].hideTitle ?? false) : false;
+}
+
+export function getLocalizedCardDescription(name: string): JSX.Element | undefined {
+    return cardRegistry[name]?.description;
+}
+
+export function getLocalizedCardDescriptionClass(name: string): string | undefined {
+    return cardRegistry[name]?.descriptionClass;
 }
 
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {

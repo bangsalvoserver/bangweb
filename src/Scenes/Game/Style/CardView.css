@@ -71,6 +71,16 @@
     line-height: 0;
 }
 
+.card-description {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    left: 0;
+    top: 50%;
+    text-align: center;
+    background-color: white;
+}
+
 .card-tokens {
     position: absolute;
     width: 80%;

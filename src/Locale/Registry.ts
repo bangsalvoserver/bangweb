@@ -11,7 +11,14 @@ import { LABELS_ITALIAN } from "./Italian/Labels";
 
 export type Format<T, U> = U | ((...formatArgs: T[]) => U);
 
-export type CardRegistry = Record<string, string>;
+export interface CardRegistryEntry {
+    name: string;
+    hideTitle?: boolean;
+    description?: JSX.Element;
+    descriptionClass?: string;
+}
+
+export type CardRegistry = Record<string, CardRegistryEntry>;
 
 export type LabelGroupRegistry = Record<string, Format<string, string>>;
 export type LabelRegistry = Record<string, LabelGroupRegistry>;

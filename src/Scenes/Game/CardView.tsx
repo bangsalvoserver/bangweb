@@ -2,7 +2,7 @@ import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } 
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
-import { getLocalizedCardName } from "./GameStringComponent";
+import { getLocalizedCardDescription, getLocalizedCardDescriptionClass, getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
@@ -111,8 +111,19 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     let backfaceImage = getCardBackface(card);
     let cardImage = useMemo(() => getCardImage(card), [card]);
-    
-    const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : "";
+
+    let cardAlt: string = "";
+    let description: JSX.Element | undefined;
+
+    if (isCardKnown(card)) {
+        const name = card.cardData.name;
+        cardAlt = getLocalizedCardName(name);
+        const innerDescription = getLocalizedCardDescription(name);
+        if (innerDescription) {
+            const descriptionClass = getLocalizedCardDescriptionClass(name) ?? 'card-description';
+            description = <div className={descriptionClass}>{innerDescription}</div>
+        }
+    }
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 
@@ -180,6 +191,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
             onClick={handleClickCard(card)} >
             { cardImage ? <div className="card-front">
                 <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={cardAlt} />
+                {/* {description} */}
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}
