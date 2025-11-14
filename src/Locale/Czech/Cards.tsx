@@ -1,19 +1,19 @@
 import { CardRegistry } from "../Registry";
 
 export const CARDS_CZECH: CardRegistry = {
+
+    // Base game cards
+
     BARREL: {
         name: "Barel",
-        hideTitle: true
     },
     DYNAMITE: {
         name: "Dynamit",
-        hideTitle: true,
         description: <>Ztrácíš 3 životy. Jinak pošli <i>Dynamite</i> hráči po své levici.</>,
         descriptionClass: "draw-description",
     },
     SCOPE: {
         name: "Hledí",
-        hideTitle: true,
         description: <>Všichni ostatní hráči se pro tebe nachází ve vzdálenosti o 1 menší.</>
     },
     MUSTANG: {
@@ -54,30 +54,24 @@ export const CARDS_CZECH: CardRegistry = {
         hideTitle: true
     },
     BEER: {
-        name: "Pivo",
-        hideTitle: true
+        name: "Pivo"
     },
     CAT_BALOU: {
-        name: "Cat Balou",
-        hideTitle: true
+        name: "Cat Balou"
     },
     STAGECOACH: {
-        name: "Dostavník",
-        hideTitle: true
+        name: "Dostavník"
     },
     DUEL: {
         name: "Duel",
-        hideTitle: true,
         description: <>Vyzvaný hráč může odhodit 1 kartu <i>BANG!</i>, potom vyzývající, a takto se střídají. Ten, kdo jako první <i>BANG!</i> neodhodí, ztrácí 1 život.</>
     },
     GENERAL_STORE: {
         name: "Hokynářsví",
-        hideTitle: true,
         description: <>Otoč tolik vrchních karet z balíčku, kolik je nevyřazených hráčů. Každý hráč si vezme jednu kartu.</>
     },
     GATLING: {
-        name: "Kulomet",
-        hideTitle: true
+        name: "Kulomet"
     },
     INDIANS: {
         name: "Indiáni!",
@@ -85,12 +79,10 @@ export const CARDS_CZECH: CardRegistry = {
         description: <>Všichni ostatní hráči mohou odhodit kartu <i>BANG!</i> jinak ztrácí 1 život.</>
     },
     MISSED: {
-        name: "Vedle!",
-        hideTitle: true
+        name: "Vedle!"
     },
     PANIC: {
-        name: "Panika!",
-        hideTitle: true
+        name: "Panika!"
     },
     SALOON: {
         name: "Saloon",
@@ -101,33 +93,28 @@ export const CARDS_CZECH: CardRegistry = {
         hideTitle: true
     },
 
-     // Dodge City karty
+    // Dodge City cards
 
     BINOCULAR: {
         name: "Dalekohled",
-        hideTitle: true,
         description: <>Všichni ostatní hráči se pro tebe nachází ve vzdálenosti o 1 menší.</>
     },
     HIDEOUT: {
         name: "Skrýš",
-        hideTitle: true,
         description: <>Pro všechny ostatní hráče se nacházíš ve vzdálenosti o 1 větší.</>
     },
     PUNCH: {
-        name: "Úder",
-        hideTitle: true
+        name: "Úder"
     },
     RAG_TIME: {
         name: "Rag Time",
         hideTitle: true
     },
     BRAWL: {
-        name: "Rvačka",
-        hideTitle: true
+        name: "Rvačka"
     },
     DODGE: {
-        name: "Úhyb",
-        hideTitle: true
+        name: "Úhyb"
     },
     SPRINGFIELD: {
         name: "Springfield",
@@ -142,68 +129,58 @@ export const CARDS_CZECH: CardRegistry = {
         hideTitle: true
     },
     BIBLE: {
-        name: "Bible",
-        hideTitle: true
+        name: "Bible"
     },
     CANTEEN: {
-        name: "Čutora",
-        hideTitle: true
+        name: "Čutora"
     },
     CAN_CAN: {
         name: "Can Can",
         hideTitle: true
     },
     TEN_GALLON_HAT: {
-        name: "Stetson",
-        hideTitle: true
+        name: "Stetson"
     },
     CONESTOGA: {
         name: "Krytý vůz",
-        hideTitle: true
     },
     DERRINGER: {
         name: "Derringer",
         hideTitle: true
     },
     BUFFALO_RIFLE: {
-        name: "Puška na bizony",
-        hideTitle: true
+        name: "Puška na bizony"
     },
     HOWITZER: {
-        name: "Houfnice",
-        hideTitle: true
+        name: "Houfnice"
     },
     PEPPERBOX: {
         name: "Pepperbox",
         hideTitle: true
     },
     IRON_PLATE: {
-        name: "Železný plát",
-        hideTitle: true
+        name: "Železný plát"
     },
     PONY_EXPRESS: {
         name: "Pony Express",
         hideTitle: true
     },
     KNIFE: {
-        name: "Nůž",
-        hideTitle: true
+        name: "Nůž"
     },
     SOMBRERO: {
         name: "Sombrero",
         hideTitle: true
     },
 
-    // Karty Údolí stínů
+    // Valley of Shadows cards
 
     GHOST: {
         name: "Duch",
-        hideTitle: true,
         description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní postavou a rolí. Nemůže však získat či ztratit žádné životy.</>
     },
     GHOST_2: {
         name: "Duch",
-        hideTitle: true,
         description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní rolí bez schopností. Nemůže však získat či ztratit žádné životy.</>
     },
     LEMAT: {
@@ -220,12 +197,10 @@ export const CARDS_CZECH: CardRegistry = {
     },
     RATTLESNAKE: {
         name: "Chřestýš",
-        hideTitle: true,
         description: <>Na začátku svého tahu sejmi. Pokud je sejmutá karta piková ♠️, ztrácíš 1 život.</>
     },
     SHOTGUN: {
         name: "Brokovnice",
-        hideTitle: true,
         description: <>Zasáhneš-li některého hráče kartou <i>BANG!</i>, musí tento hráč odhodit 1 kartu dle svého výběru z ruky (pokud nějakou má).</>,
         descriptionClass: "weapon-description",
     },
@@ -235,12 +210,10 @@ export const CARDS_CZECH: CardRegistry = {
     },
     BANDIDOS: {
         name: "Divoká banda",
-        hideTitle: true,
         description: <>Každý hráč si vypere: odhoď 2 karty z ruky (1 pokud máš 1) nebo si uber 1 život.</>
     },
     BANDIDOS_2: {
         name: "Divoká banda",
-        hideTitle: true,
         description: <>Všichni ostatní hráči musí odhodit z ruky 1 kartu <i>BANG!</i> nebo 2 libovolné karty.</>
     },
     ESCAPE: {
@@ -282,21 +255,18 @@ export const CARDS_CZECH: CardRegistry = {
     },
     TORNADO: {
         name: "Tornádo",
-        hideTitle: true,
         description: <>Každý hráč odhodí kartu z ruky (pokud je to možné), potom si lízne 2 karty z balíčku.</>
     },
     TORNADO_2: {
         name: "Tornádo",
-        hideTitle: true,
         description: <>Každý hráč musí dát 2 karty z ruky hráči po levici. <strong>Karty předejte všichni najednou.</strong></>
     },
     LAST_CALL: {
         name: "Poslední pivo",
-        hideTitle: true,
         description: <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>
     },
 
-    // Karty Ozbrojení a Nebezpeční
+    // Armed & Dangerous cards
 
     CARAVAN: {
         name: "Kolona"
@@ -311,7 +281,6 @@ export const CARDS_CZECH: CardRegistry = {
     },
     FLINTLOCK: {
         name: "Křesadlovka",
-        hideTitle: true,
         description: <>Pokud je tato karta zrušena, cezmi si ji zpět do ruky.</>,
         descriptionClass: "cube-description"
     },
@@ -335,6 +304,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     SQUAW: {
         name: "Squaw",
+        hideTitle: true,
         description: <><p>Odhoď libovolnou kartu ve hře.</p><p>Vezmi si odhozenou kartu do ruky.</p></>,
         descriptionClass: "cube-description-double"
     },
@@ -400,7 +370,7 @@ export const CARDS_CZECH: CardRegistry = {
         descriptionClass: "cube-description"
     },
 
-    // Karty Canyon Diablo
+    // Canyon Diablo cards
 
     GRAVE_ROBBER: {
         name: "Vykradač hrobů",
@@ -427,7 +397,8 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Molotov"
     },
     BULLDOG: {
-        name: "Bulldog"
+        name: "Bulldog",
+        hideTitle: true
     },
     LAST_WILL: {
         name: "Poslední vůle"
@@ -442,7 +413,8 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Nevěstinec"
     },
     BRONCO: {
-        name: "Bronco"
+        name: "Bronco",
+        hideTitle: true
     },
     PACK_MULE: {
         name: "Tovární Mulo"
@@ -468,210 +440,301 @@ export const CARDS_CZECH: CardRegistry = {
     SHYLOCK: {
         name: "Židovský lichvář"
     },
+
+    // Base game characters
+
     BART_CASSIDY: {
-        name: "Bart Cassidy"
+        name: "Bart Cassidy",
+        hideTitle: true
     },
     BLACK_JACK: {
-        name: "Black Jack"
+        name: "Black Jack",
+        hideTitle: true
     },
     CALAMITY_JANET: {
-        name: "Calamity Janet"
+        name: "Calamity Janet",
+        hideTitle: true
     },
     EL_GRINGO: {
-        name: "El Gringo"
+        name: "El Gringo",
+        hideTitle: true
     },
     JESSE_JONES: {
-        name: "Jesse Jones"
+        name: "Jesse Jones",
+        hideTitle: true
     },
     JOURDONNAIS: {
-        name: "Jourdonnais"
+        name: "Jourdonnais",
+        hideTitle: true
     },
     KIT_CARLSON: {
-        name: "Kit Carlson"
+        name: "Kit Carlson",
+        hideTitle: true
     },
     LUCKY_DUKE: {
-        name: "Lucky Duke"
+        name: "Lucky Duke",
+        hideTitle: true
     },
     PAUL_REGRET: {
-        name: "Paul Regret"
+        name: "Paul Regret",
+        hideTitle: true
     },
     PEDRO_RAMIREZ: {
-        name: "Pedro Ramirez"
+        name: "Pedro Ramirez",
+        hideTitle: true
     },
     ROSE_DOOLAN: {
-        name: "Rose Doolan"
+        name: "Rose Doolan",
+        hideTitle: true
     },
     SID_KETCHUM: {
-        name: "Sid Ketchum"
+        name: "Sid Ketchum",
+        hideTitle: true
     },
     SLAB_THE_KILLER: {
-        name: "Slab the Killer"
+        name: "Slab the Killer",
+        hideTitle: true
     },
     SUZY_LAFAYETTE: {
-        name: "Suzy Lafayette"
+        name: "Suzy Lafayette",
+        hideTitle: true
     },
     VULTURE_SAM: {
-        name: "Vulture Sam"
+        name: "Vulture Sam",
+        hideTitle: true
     },
     WILLY_THE_KID: {
-        name: "Willy the Kid"
+        name: "Willy the Kid",
+        hideTitle: true
     },
+
+    // Most Wanted characters
+
     CLAUS_THE_SAINT: {
-        name: "Claus \"The Saint\""
+        name: "Claus \"The Saint\"",
+        hideTitle: true
     },
     JOHNNY_KISCH: {
-        name: "Johnny Kisch"
+        name: "Johnny Kisch",
+        hideTitle: true
     },
     UNCLE_WILL: {
-        name: "Uncle Will"
+        name: "Uncle Will",
+        hideTitle: true
     },
     ANNIE_VERSARY: {
-        name: "Annie Versary"
+        name: "Annie Versary",
+        hideTitle: true
     },
     EMILIANO: {
-        name: "Emiliano"
+        name: "Emiliano",
+        hideTitle: true
     },
+
+    // Dodge City characters
+
     APACHE_KID: {
-        name: "Apache Kid"
+        name: "Apache Kid",
+        hideTitle: true
     },
     BELLE_STAR: {
-        name: "Belle Star"
+        name: "Belle Star",
+        hideTitle: true
     },
     BILL_NOFACE: {
-        name: "Bill Noface"
+        name: "Bill Noface",
+        hideTitle: true
     },
     CHUCK_WENGAM: {
-        name: "Chuck Wengam"
+        name: "Chuck Wengam",
+        hideTitle: true
     },
     DOC_HOLYDAY: {
-        name: "Doc Holyday"
+        name: "Doc Holyday",
+        hideTitle: true
     },
     ELENA_FUENTE: {
-        name: "Elena Fuente"
+        name: "Elena Fuente",
+        hideTitle: true
     },
     GREG_DIGGER: {
-        name: "Greg Digger"
+        name: "Greg Digger",
+        hideTitle: true
     },
     HERB_HUNTER: {
-        name: "Herb Hunter"
+        name: "Herb Hunter",
+        hideTitle: true
     },
     JOSE_DELGADO: {
-        name: "Josè Delgado"
+        name: "Josè Delgado",
+        hideTitle: true
     },
     MOLLY_STARK: {
-        name: "Molly Stark"
+        name: "Molly Stark",
+        hideTitle: true
     },
     PAT_BRENNAN: {
-        name: "Pat Brennan"
+        name: "Pat Brennan",
+        hideTitle: true
     },
     PIXIE_PETE: {
-        name: "Pixie Pete"
+        name: "Pixie Pete",
+        hideTitle: true
     },
     SEAN_MALLORY: {
-        name: "Sean Mallory"
+        name: "Sean Mallory",
+        hideTitle: true
     },
     TEQUILA_JOE: {
-        name: "Tequila Joe"
+        name: "Tequila Joe",
+        hideTitle: true
     },
     VERA_CUSTER: {
-        name: "Vera Custer"
+        name: "Vera Custer",
+        hideTitle: true
     },
+
+    // Valley of Shadows characters
+
     BLACK_FLOWER: {
-        name: "Black Flower"
+        name: "Black Flower",
+        hideTitle: true
     },
     COLORADO_BILL: {
-        name: "Colorado Bill"
+        name: "Colorado Bill",
+        hideTitle: true
     },
     DER_SPOT_BURST_RINGER: {
-        name: "Der Spot - Burst Ringer"
+        name: "Der Spot - Burst Ringer",
+        hideTitle: true
     },
     EVELYN_SHEBANG: {
-        name: "Evelyn Shebang"
+        name: "Evelyn Shebang",
+        hideTitle: true
     },
     HENRY_BLOCK: {
-        name: "Henry Block"
+        name: "Henry Block",
+        hideTitle: true
     },
     LEMONADE_JIM: {
         name: "Limonádový Jim"
     },
     MICK_DEFENDER: {
-        name: "Mick Defender"
+        name: "Mick Defender",
+        hideTitle: true
     },
     TUCO_FRANZISKANER: {
-        name: "Tuco Franziskaner"
+        name: "Tuco Franziskaner",
+        hideTitle: true
     },
+
+    // Wild West Show characters
+
     BIG_SPENCER: {
-        name: "Big Spencer"
+        name: "Big Spencer",
+        hideTitle: true
     },
     FLINT_WESTWOOD: {
-        name: "Flint Westwood"
+        name: "Flint Westwood",
+        hideTitle: true
     },
     GARY_LOOTER: {
-        name: "Gary Looter"
+        name: "Gary Looter",
+        hideTitle: true
     },
     GREYGORY_DECK: {
-        name: "Greygory Deck"
+        name: "Greygory Deck",
+        hideTitle: true
     },
     JOHN_PAIN: {
-        name: "John Pain"
+        name: "John Pain",
+        hideTitle: true
     },
     LEE_VAN_KLIFF: {
-        name: "Lee Van Kliff"
+        name: "Lee Van Kliff",
+        hideTitle: true
     },
     TEREN_KILL: {
-        name: "Teren Kill"
+        name: "Teren Kill",
+        hideTitle: true
     },
     YOUL_GRINNER: {
-        name: "Youl Grinner"
+        name: "Youl Grinner",
+        hideTitle: true
     },
+
+    // Armed & Dangerous cards
+
     AL_PREACHER: {
-        name: "Al Preacher"
+        name: "Al Preacher",
+        hideTitle: true
     },
     BASS_GREEVES: {
-        name: "Bass Greeves"
+        name: "Bass Greeves",
+        hideTitle: true
     },
     BLOODY_MARY: {
-        name: "Bloody Mary"
+        name: "Bloody Mary",
+        hideTitle: true
     },
     FRANKIE_CANTON: {
-        name: "Frankie Canton"
+        name: "Frankie Canton",
+        hideTitle: true
     },
     JULIE_CUTTER: {
-        name: "Julie Cutter"
+        name: "Julie Cutter",
+        hideTitle: true
     },
     MEXICALI_KID: {
-        name: "Mexicali Kid"
+        name: "Mexicali Kid",
+        hideTitle: true
     },
     MS_ABIGAIL: {
-        name: "Ms. Abigail"
+        name: "Ms. Abigail",
+        hideTitle: true
     },
     RED_RINGO: {
-        name: "Red Ringo"
+        name: "Red Ringo",
+        hideTitle: true
     },
+
+    // Gold Rush characters
+
     DON_BELL: {
-        name: "Don Bell"
+        name: "Don Bell",
+        hideTitle: true
     },
     DUTCH_WILL: {
-        name: "Dutch Will"
+        name: "Dutch Will",
+        hideTitle: true
     },
     JACKY_MURIETA: {
-        name: "Jacky Murieta"
+        name: "Jacky Murieta",
+        hideTitle: true
     },
     JOSH_MCCLOUD: {
-        name: "Josh McCloud"
+        name: "Josh McCloud",
+        hideTitle: true
     },
     MADAME_YTO: {
-        name: "Madame Yto"
+        name: "Madame Yto",
+        hideTitle: true
     },
     PRETTY_LUZENA: {
-        name: "Pretty Luzena"
+        name: "Pretty Luzena",
+        hideTitle: true
     },
     RADDIE_SNAKE: {
-        name: "Raddie Snake"
+        name: "Raddie Snake",
+        hideTitle: true
     },
     SIMEON_PICOS: {
-        name: "Simeon Picos"
+        name: "Simeon Picos",
+        hideTitle: true
     },
+
+    // High Noon cards
+
     BLESSING: {
         name: "Požehnání"
     },
@@ -712,16 +775,20 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Želízka"
     },
     HANDCUFFS_HEARTS: {
-        name: "Želízka: Prohlašuju srdce"
+        name: "Želízka: Prohlašuju srdce",
+        hideTitle: true
     },
     HANDCUFFS_DIAMONDS: {
-        name: "Želízka: Prohlašuju káry"
+        name: "Želízka: Prohlašuju káry",
+        hideTitle: true
     },
     HANDCUFFS_CLUBS: {
-        name: "Želízka: Prohlašuju kříže"
+        name: "Želízka: Prohlašuju kříže",
+        hideTitle: true
     },
     HANDCUFFS_SPADES: {
-        name: "Želízka: Prohlašuju piky"
+        name: "Želízka: Prohlašuju piky",
+        hideTitle: true
     },
     NEW_IDENTITY: {
         name: "Nová identita"
@@ -729,6 +796,9 @@ export const CARDS_CZECH: CardRegistry = {
     HIGH_NOON: {
         name: "Pravé poledne"
     },
+
+    // Fistful of Cards cards
+
     AMBUSH: {
         name: "Léčka"
     },
@@ -760,10 +830,12 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Peyote"
     },
     PEYOTE_RED: {
-        name: "Peyote: Prohlašuju červenou"
+        name: "Peyote: Prohlašuju červenou",
+        hideTitle: true
     },
     PEYOTE_BLACK: {
-        name: "Peyote: Prohlašuju černou"
+        name: "Peyote: Prohlašuju černou",
+        hideTitle: true
     },
     RANCH: {
         name: "Ranč"
@@ -780,6 +852,9 @@ export const CARDS_CZECH: CardRegistry = {
     A_FISTFUL_OF_CARDS: {
         name: "Fistful"
     },
+    
+    // Wild West Show cards
+
     GAG: {
         name: "Roubík"
     },
@@ -810,6 +885,9 @@ export const CARDS_CZECH: CardRegistry = {
     WILD_WEST_SHOW: {
         name: "Divoký západ"
     },
+
+    // Gold Rush cards
+
     SHOT: {
         name: "Panák"
     },
@@ -817,13 +895,16 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Láhev"
     },
     BOTTLE_PANIC: {
-        name: "Láhev jako Panika!"
+        name: "Láhev jako Panika!",
+        hideTitle: true
     },
     BOTTLE_BEER: {
-        name: "Láhev jako Pivo"
+        name: "Láhev jako Pivo",
+        hideTitle: true
     },
     BOTTLE_BANG: {
-        name: "Láhev jako Bang!"
+        name: "Láhev jako Bang!",
+        hideTitle: true
     },
     CALUMET: {
         name: "Kalumet"
@@ -835,13 +916,16 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Komplic"
     },
     PARDNER_GENERAL_STORE: {
-        name: "Komplic jako Hokynářství"
+        name: "Komplic jako Hokynářství",
+        hideTitle: true
     },
     PARDNER_DUEL: {
-        name: "Komplic jako Duel"
+        name: "Komplic jako Duel",
+        hideTitle: true
     },
     PARDNER_CAT_BALOU: {
-        name: "Komplic jako Cat Balou"
+        name: "Komplic jako Cat Balou",
+        hideTitle: true
     },
     GOLD_RUSH: {
         name: "Zlatá horečka"
@@ -873,6 +957,9 @@ export const CARDS_CZECH: CardRegistry = {
     RUCKSACK: {
         name: "Batoh"
     },
+
+    // The Great Train Robbery cards
+
     CACTUS: {
         name: "Kaktus"
     },
@@ -886,10 +973,12 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Plnou parou vpřed"
     },
     FULL_STEAM_NO_EFFECT: {
-        name: "Plnou parou vpřed: Zrušit efekt lokomotivy"
+        name: "Plnou parou vpřed: Zrušit efekt lokomotivy",
+        hideTitle: true
     },
     FULL_STEAM_DOUBLE_EFFECT: {
-        name: "Plnou parou vpřed: Zdvojnásobit efekt lokomotivy"
+        name: "Plnou parou vpřed: Zdvojnásobit efekt lokomotivy",
+        hideTitle: true
     },
     KNIFE_REVOLVER: {
         name: "Revolver s nožem"
@@ -919,109 +1008,155 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Vlaková loupež"
     },
     TRAIN_ROBBERY_DISCARD: {
-        name: "Vlaková loupež: Odhoď kartu"
+        name: "Vlaková loupež: Odhoď kartu",
+        hideTitle: true
     },
     TRAIN_ROBBERY_BANG: {
-        name: "Vlaková loupež: Staň se cílem karty Bang!"
+        name: "Vlaková loupež: Staň se cílem karty Bang!",
+        hideTitle: true
     },
     WATER_TOWER: {
         name: "Vodojem"
     },
+
+    // The Great Train Robbery characters
+
     BENNY_BRAWLER: {
-        name: "Benny Brawler"
+        name: "Benny Brawler",
+        hideTitle: true
     },
     EVAN_BABBIT: {
-        name: "Evan Babbit"
+        name: "Evan Babbit",
+        hideTitle: true
     },
     JIMMY_TEXAS: {
-        name: "Jimmy Texas"
+        name: "Jimmy Texas",
+        hideTitle: true
     },
     MANUELITA: {
-        name: "Manuelita"
+        name: "Manuelita",
+        hideTitle: true
     },
     SANCHO: {
-        name: "Sancho"
+        name: "Sancho",
+        hideTitle: true
     },
     SGT_BLAZE: {
-        name: "Sgt. Blaze"
+        name: "Sgt. Blaze",
+        hideTitle: true
     },
     SHADE_OCONNOR: {
-        name: "Shade O'Connor"
+        name: "Shade O'Connor",
+        hideTitle: true
     },
     ZIPPY_ROY: {
-        name: "Zippy Roy"
+        name: "Zippy Roy",
+        hideTitle: true
     },
+
+    // Canyon Diablo characters
+
     ANNIE_OAKEY: {
-        name: "Annie Oakey"
+        name: "Annie Oakey",
+        hideTitle: true
     },
     ANNIE_OAKEY_RED: {
-        name: "Annie Oakey: Prohlašuju červenou"
+        name: "Annie Oakey: Prohlašuju červenou",
+        hideTitle: true
     },
     ANNIE_OAKEY_HEARTS: {
-        name: "Annie Oakey: Prohlašuju srdce"
+        name: "Annie Oakey: Prohlašuju srdce",
+        hideTitle: true
     },
     ANNIE_OAKEY_DIAMONDS: {
-        name: "Annie Oakey: Prohlašuju káry"
+        name: "Annie Oakey: Prohlašuju káry",
+        hideTitle: true
     },
     ANNIE_OAKEY_BLACK: {
-        name: "Annie Oakey: Prohlašuju černou"
+        name: "Annie Oakey: Prohlašuju černou",
+        hideTitle: true
     },
     ANNIE_OAKEY_CLUBS: {
-        name: "Annie Oakey: Prohlašuju kříže"
+        name: "Annie Oakey: Prohlašuju kříže",
+        hideTitle: true
     },
     ANNIE_OAKEY_SPADES: {
-        name: "Annie Oakey: Prohlašuju piky"
+        name: "Annie Oakey: Prohlašuju piky",
+        hideTitle: true
     },
     PAT_BARRETT: {
-        name: "Pat Barrett"
+        name: "Pat Barrett",
+        hideTitle: true
     },
     BIG_SPENCER_2: {
-        name: "Big Spencer"
+        name: "Big Spencer",
+        hideTitle: true
     },
     BUFFALO_BELL: {
-        name: "Buffalo Bell"
+        name: "Buffalo Bell",
+        hideTitle: true
     },
     CLASH_THE_STAMPEDE: {
-        name: "Clash The Stampede"
+        name: "Clash The Stampede",
+        hideTitle: true
     },
     CRAZY_HOG: {
-        name: "Crazy Hog"
+        name: "Crazy Hog",
+        hideTitle: true
     },
     EVA_PLACE: {
-        name: "Eva Place"
+        name: "Eva Place",
+        hideTitle: true
     },
     JOSEY_BASSETT: {
-        name: "Josey Bassett"
+        name: "Josey Bassett",
+        hideTitle: true
     },
     LAURA_BILLION: {
-        name: "Laura Billion"
+        name: "Laura Billion",
+        hideTitle: true
     },
     SID_CURRY: {
-        name: "Sid Curry"
+        name: "Sid Curry",
+        hideTitle: true
+    },
+    SOUNDANCE_KID: {
+        name: "Soundance Kid",
+        hideTitle: true
     },
     SPIKE_SPIEZEL: {
-        name: "Spike Spiezel"
+        name: "Spike Spiezel",
+        hideTitle: true
     },
     TEREN_KILL_2: {
-        name: "Teren Kill"
+        name: "Teren Kill",
+        hideTitle: true
     },
     WYATT_EARL: {
-        name: "Wyatt Earl"
+        name: "Wyatt Earl",
+        hideTitle: true
     },
+
+    // The Great Train Robbery train cards
+
     BAGGAGE_CAR: {
         name: "Zavazadlový vůz"
     },
     BAGGAGE_CAR_MISSED: {
-        name: "Zavazadlový vůz jako Vedle!"
+        name: "Zavazadlový vůz jako Vedle!",
+        hideTitle: true
     },
     BAGGAGE_CAR_PANIC: {
-        name: "Zavazadlový vůz jako Panika!"
+        name: "Zavazadlový vůz jako Panika!",
+        hideTitle: true
     },
     BAGGAGE_CAR_CAT_BALOU: {
-        name: "Zavazadlový vůz jako Cat Balou"
+        name: "Zavazadlový vůz jako Cat Balou",
+        hideTitle: true
     },
     BAGGAGE_CAR_BANG: {
-        name: "Zavazadlový vůz jako Bang!"
+        name: "Zavazadlový vůz jako Bang!",
+        hideTitle: true
     },
     CABOOSE: {
         name: "Sližební vůz"
@@ -1068,12 +1203,20 @@ export const CARDS_CZECH: CardRegistry = {
     SLEEPER_CAR: {
         name: "Spací vůz"
     },
+
+    // The Great Train Robbery locomotive cards
+
     IRONHORSE: {
-        name: "Ironhorse"
+        name: "Ironhorse",
+        hideTitle: true
     },
     LELAND: {
-        name: "Leland"
+        name: "Leland",
+        hideTitle: true
     },
+
+    // The Great Train Robbery station cards
+
     BOOM_TOWN: {
         name: "Boom Town"
     },
@@ -1113,54 +1256,159 @@ export const CARDS_CZECH: CardRegistry = {
     YOOMA: {
         name: "Yooma"
     },
+
+    // Legends characters
+
+    LEGEND_BART_CASSIDY: {
+        name: "Bart Cassidy",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_BLACK_JACK: {
+        name: "Black Jack",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_CALAMITY_JANET: {
+        name: "Calamity Janet",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_EL_GRINGO: {
+        name: "El Gringo",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_JESSE_JONES: {
+        name: "Jesse Jones",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_JOURDONNAIS: {
+        name: "Jourdonnais",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_KIT_CARLSON: {
+        name: "Kit Carlson",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_LUCKY_DUKE: {
+        name: "Lucky Duke",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_PAUL_REGRET: {
+        name: "Paul Regret",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_PEDRO_RAMIREZ: {
+        name: "Pedro Ramirez",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_ROSE_DOOLAN: {
+        name: "Rose Doolan",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_SID_KETCHUM: {
+        name: "Sid Ketchum",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_SLAB_THE_KILLER: {
+        name: "Slab the Killer",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_SUZY_LAFAYETTE: {
+        name: "Suzy Lafayette",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_VULTURE_SAM: {
+        name: "Vulture Sam",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    LEGEND_WILLY_THE_KID: {
+        name: "Willy the Kid",
+        hideTitle: true,
+        descriptionClass: "legends-description",
+    },
+    
+    // Legends feats cards
+
     FIFTY_GUNS: {
-        name: "Padesát pistolí"
+        name: "Padesát pistolí",
+        descriptionClass: "feats-description"
     },
     WOUNDED_PRIDE: {
-        name: "Zraněná pýcha"
+        name: "Zraněná pýcha",
+        descriptionClass: "feats-description"
     },
     OLD_WEST_GANG: {
-        name: "Banda ze starého západu"
+        name: "Banda ze starého západu",
+        descriptionClass: "feats-description"
     },
     BOTTLENECK: {
-        name: "Hrdlo lahve"
+        name: "Hrdlo lahve",
+        descriptionClass: "feats-description"
     },
     THE_CHUCK_A_LUCK: {
-        name: "Velký hazard"
+        name: "Velký hazard",
+        descriptionClass: "feats-description"
     },
-    '3_15_TO_YOOMA': {
-        name: "Vlak do Yoomy"
+    "3_15_TO_YOOMA": {
+        name: "Vlak do Yoomy",
+        descriptionClass: "feats-description"
     },
     GOOD_COMPANY: {
-        name: "Dobrá společnost"
+        name: "Dobrá společnost",
+        descriptionClass: "feats-description"
     },
     THE_LAST_HERO: {
-        name: "Poslední hrdina"
+        name: "Poslední hrdina",
+        descriptionClass: "feats-description"
     },
     THE_MAN_WITH_NO_NAME: {
-        name: "Bezejmenný muž"
+        name: "Bezejmenný muž",
+        descriptionClass: "feats-description"
     },
     WILHELM_SCREAM: {
-        name: "Zděšený výkřik"
+        name: "Zděšený výkřik",
+        descriptionClass: "feats-description"
     },
     SCRUGS_BALLAD: {
-        name: "Balada o Scrugsovi"
+        name: "Balada o Scrugsovi",
+        descriptionClass: "feats-description"
     },
     BORDERLANDS: {
-        name: "Pohraničí"
+        name: "Pohraničí",
+        descriptionClass: "feats-description"
     },
     THE_OREGON_TRAIL: {
-        name: "Oregonská stezka"
+        name: "Oregonská stezka",
+        descriptionClass: "feats-description"
     },
     A_THOUSAND_WAYS_TO_DIE: {
-        name: "Tisíc způsobů, jak zemřít"
+        name: "Tisíc způsobů, jak zemřít",
+        descriptionClass: "feats-description"
     },
     FOR_A_FEW_CARDS_MORE: {
-        name: "O pár karet navíc"
+        name: "O pár karet navíc",
+        descriptionClass: "feats-description"
     },
     A_QUICK_DEATH: {
-        name: "Rychlá smrt"
+        name: "Rychlá smrt",
+        descriptionClass: "feats-description"
     },
+
+    // Button Row virtual cards
+
     ESCAPE_JAIL: {
         name: "Útěk z vězení"
     },
