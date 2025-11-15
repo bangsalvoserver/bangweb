@@ -7,12 +7,14 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [react(), eslint(), viteTsconfigPaths(), svgrPlugin()],
   build: {
     rollupOptions: {
       input: {
         appGame: fileURLToPath(new URL('./index.html', import.meta.url)),
-        appTracking: fileURLToPath(new URL('./tracking.html', import.meta.url))
+        appTracking: fileURLToPath(new URL('./tracking.html', import.meta.url)),
+        appAllCards: fileURLToPath(new URL('./all_cards.html', import.meta.url))
       }
     }
   }
