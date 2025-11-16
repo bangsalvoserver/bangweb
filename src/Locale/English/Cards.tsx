@@ -251,7 +251,8 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     FANNING: {
         name: "Fanning",
-        description: <>Counts as your normal one <i>BANG!</i> per turn. Also targets the player of your choice at distance 1 from the first target (if any, excluding you) with a <i>BANG!</i>.</>
+        description: <>Counts as your normal one <i>BANG!</i> per turn. Also targets the player of your choice at distance 1 from the first target (if any, excluding you) with a <i>BANG!</i>.</>,
+        descriptionClass: "card-description text-smaller"
     },
     TOMAHAWK: {
         name: "Tomahawk",

@@ -330,7 +330,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Flintlock",
         hideTitle: true,
         description: <>Se annullato, riprendi questa carta.</>,
-        descriptionClass: "cube-description",
+        descriptionClass: "cube-description-lower",
     },
     ARROW: {
         name: "Freccia",
@@ -345,7 +345,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Giù la Testa!",
         hideTitle: true,
         description: <>Riprendi questa carta.</>,
-        descriptionClass: "cube-description",
+        descriptionClass: "cube-description-lower",
     },
     RELOAD: {
         name: "Ricarica",
@@ -414,7 +414,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Doppia Canna",
         hideTitle: true,
         description: <>Se giochi un <i>BANG!</i> di Quadri non può essere annullato.</>,
-        descriptionClass: "cube-description",
+        descriptionClass: "cube-description-lower",
     },
     WHIP: {
         name: "Frusta",
