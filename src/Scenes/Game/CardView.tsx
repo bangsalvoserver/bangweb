@@ -19,7 +19,7 @@ export function getTokenSprite(tokenType: TokenType) {
 }
 
 export function getCardUrl(image: string) {
-    return `/cards/${image}.png`;
+    return `/cards/${image}.webp`;
 }
 
 export interface CardProps {
