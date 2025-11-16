@@ -551,82 +551,98 @@ export const CARDS_ITALIAN: CardRegistry = {
     BART_CASSIDY: {
         name: "Bart Cassidy",
         hideTitle: true,
-        description: <>Ogni volta che viene ferito, pesca una carta.</>
+        description: <>Ogni volta che viene ferito, pesca una carta.</>,
+        descriptionClass: "character-description"
     },
     BLACK_JACK: {
         name: "Black Jack",
         hideTitle: true,
-        description: <>Mostra la seconda carta che pesca. Se è Cuori o Quadri, pesca una carta in più.</>
+        description: <>Mostra la seconda carta che pesca. Se è Cuori o Quadri, pesca una carta in più.</>,
+        descriptionClass: "character-description"
     },
     CALAMITY_JANET: {
         name: "Calamity Janet",
         hideTitle: true,
-        description: <>Può giocare le carte <i>BANG!</i> come carte <i>Mancato!</i>, e viceversa.</>
+        description: <>Può giocare le carte <i>BANG!</i> come carte <i>Mancato!</i>, e viceversa.</>,
+        descriptionClass: "character-description"
     },
     EL_GRINGO: {
         name: "El Gringo",
         hideTitle: true,
-        description: <>Ogni volta che viene ferito da un giocatore, pesca una carta dalla mano di quel giocatore.</>
+        description: <>Ogni volta che viene ferito da un giocatore, pesca una carta dalla mano di quel giocatore.</>,
+        descriptionClass: "character-description"
     },
     JESSE_JONES: {
         name: "Jesse Jones",
         hideTitle: true,
-        description: <>Può pescare la prima carta dalla mano di un giocatore.</>
+        description: <>Può pescare la prima carta dalla mano di un giocatore.</>,
+        descriptionClass: "character-description"
     },
     JOURDONNAIS: {
         name: "Jourdonnais",
         hideTitle: true,
-        description: <>Ogni volta che è bersaglio di un <i>BANG!</i>, può "estrarre!": se esce Cuori, viene mancato.</>
+        description: <>Ogni volta che è bersaglio di un <i>BANG!</i>, può "estrarre!": se esce Cuori, viene mancato.</>,
+        descriptionClass: "character-description"
     },
     KIT_CARLSON: {
         name: "Kit Carlson",
         hideTitle: true,
-        description: <>Guarda le prime tre carte del mazzo e sceglie le due da pescare.</>
+        description: <>Guarda le prime tre carte del mazzo e sceglie le due da pescare.</>,
+        descriptionClass: "character-description"
     },
     LUCKY_DUKE: {
         name: "Lucky Duke",
         hideTitle: true,
-        description: <>Ogni volta che deve "estrarre!", scopre 2 carte e sceglie.</>
+        description: <>Ogni volta che deve "estrarre!", scopre 2 carte e sceglie.</>,
+        descriptionClass: "character-description"
     },
     PAUL_REGRET: {
         name: "Paul Regret",
         hideTitle: true,
-        description: <>Tutti i giocatori lo vedono a distanza aumentata di 1.</>
+        description: <>Tutti i giocatori lo vedono a distanza aumentata di 1.</>,
+        descriptionClass: "character-description"
     },
     PEDRO_RAMIREZ: {
         name: "Pedro Ramirez",
         hideTitle: true,
-        description: <>Può pescare la prima carta dalla cima degli scarti.</>
+        description: <>Può pescare la prima carta dalla cima degli scarti.</>,
+        descriptionClass: "character-description"
     },
     ROSE_DOOLAN: {
         name: "Rose Doolan",
         hideTitle: true,
-        description: <>Vede tutti i giocatori a distanza diminuita di 1.</>
+        description: <>Vede tutti i giocatori a distanza diminuita di 1.</>,
+        descriptionClass: "character-description"
     },
     SID_KETCHUM: {
         name: "Sid Ketchum",
         hideTitle: true,
-        description: <>Può scartare 2 carte per recuperare un punto vita.</>
+        description: <>Può scartare 2 carte per recuperare un punto vita.</>,
+        descriptionClass: "character-description"
     },
     SLAB_THE_KILLER: {
         name: "Slab the Killer",
         hideTitle: true,
-        description: <>Per evitare i suoi <i>BANG!</i> occorrono due carte <i>Mancato!</i>.</>
+        description: <>Per evitare i suoi <i>BANG!</i> occorrono due carte <i>Mancato!</i>.</>,
+        descriptionClass: "character-description"
     },
     SUZY_LAFAYETTE: {
         name: "Suzy Lafayette",
         hideTitle: true,
-        description: <>Appena rimane senza carte in mano, pesca una carta.</>
+        description: <>Appena rimane senza carte in mano, pesca una carta.</>,
+        descriptionClass: "character-description"
     },
     VULTURE_SAM: {
         name: "Vulture Sam",
         hideTitle: true,
-        description: <>Quando un personaggio è eliminato, prende in mano tutte le carte di quel personaggio.</>
+        description: <>Quando un personaggio è eliminato, prende in mano tutte le carte di quel personaggio.</>,
+        descriptionClass: "character-description"
     },
     WILLY_THE_KID: {
         name: "Willy the Kid",
         hideTitle: true,
-        description: <>Può giocare un numero qualsiasi di carte <i>BANG!</i></>
+        description: <>Può giocare un numero qualsiasi di carte <i>BANG!</i></>,
+        descriptionClass: "character-description"
     },
 
     // Most Wanted characters
@@ -634,27 +650,32 @@ export const CARDS_ITALIAN: CardRegistry = {
     CLAUS_THE_SAINT: {
         name: "Claus \"The Saint\"",
         hideTitle: true,
-        description: <>Pesca tante carte quanti sono i giocatori più una. Ne tiene due per sé, poi ne dà una ad ognuno.</>
+        description: <>Pesca tante carte quanti sono i giocatori più una. Ne tiene due per sé, poi ne dà una ad ognuno.</>,
+        descriptionClass: "character-description"
     },
     JOHNNY_KISCH: {
         name: "Johnny Kisch",
         hideTitle: true,
-        description: <>Quando mette una carta in gioco, tutte le altre carte in gioco con lo stesso nome sono scartate.</>
+        description: <>Quando mette una carta in gioco, tutte le altre carte in gioco con lo stesso nome sono scartate.</>,
+        descriptionClass: "character-description"
     },
     UNCLE_WILL: {
         name: "Uncle Will",
         hideTitle: true,
-        description: <>Una volta per turno, può giocare una carta qualsiasi dalla mano come un <i>Emporio</i>.</>
+        description: <>Una volta per turno, può giocare una carta qualsiasi dalla mano come un <i>Emporio</i>.</>,
+        descriptionClass: "character-description"
     },
     ANNIE_VERSARY: {
         name: "Annie Versary",
         hideTitle: true,
-        description: <>Può giocare una carta qualunque come fosse una carta <i>BANG!</i></>
+        description: <>Può giocare una carta qualunque come fosse una carta <i>BANG!</i></>,
+        descriptionClass: "character-description"
     },
     EMILIANO: {
         name: "Emiliano",
         hideTitle: true,
-        description: <>Quando un tuo <i>BANG!</i> viene <i>Mancato!</i>, pesca quel <i>Mancato!</i>; quandi manchi un <i>BANG!</i>, pesca quel <i>BANG!</i></>
+        description: <>Quando un tuo <i>BANG!</i> viene <i>Mancato!</i>, pesca quel <i>Mancato!</i>; quandi manchi un <i>BANG!</i>, pesca quel <i>BANG!</i></>,
+        descriptionClass: "character-description"
     },
 
     // Dodge City characters
@@ -662,77 +683,92 @@ export const CARDS_ITALIAN: CardRegistry = {
     APACHE_KID: {
         name: "Apache Kid",
         hideTitle: true,
-        description: <>Le carte di Quadri giocate dagli avversari non hanno effeto su di lui.</>
+        description: <>Le carte di Quadri giocate dagli avversari non hanno effeto su di lui.</>,
+        descriptionClass: "character-description"
     },
     BELLE_STAR: {
         name: "Belle Star",
         hideTitle: true,
-        description: <>Nel suo turno, le carte in gioco degli altri giocatori non hanno effetto.</>
+        description: <>Nel suo turno, le carte in gioco degli altri giocatori non hanno effetto.</>,
+        descriptionClass: "character-description"
     },
     BILL_NOFACE: {
         name: "Bill Noface",
         hideTitle: true,
-        description: <>Pesca 1 carta, più 1 carta per ogni ferita che ha.</>
+        description: <>Pesca 1 carta, più 1 carta per ogni ferita che ha.</>,
+        descriptionClass: "character-description"
     },
     CHUCK_WENGAM: {
         name: "Chuck Wengam",
         hideTitle: true,
-        description: <>Nel suo turno può perdere 1 punto vita per pescare 2 carte.</>
+        description: <>Nel suo turno può perdere 1 punto vita per pescare 2 carte.</>,
+        descriptionClass: "character-description"
     },
     DOC_HOLYDAY: {
         name: "Doc Holyday",
         hideTitle: true,
-        description: <>Nel suo turno può scartare una sola volta due carte per sparare un <i>BANG!</i>.</>
+        description: <>Nel suo turno può scartare una sola volta due carte per sparare un <i>BANG!</i>.</>,
+        descriptionClass: "character-description"
     },
     ELENA_FUENTE: {
         name: "Elena Fuente",
         hideTitle: true,
-        description: <>Può usare una carta qualsiasi come <i>Mancato!</i>.</>
+        description: <>Può usare una carta qualsiasi come <i>Mancato!</i>.</>,
+        descriptionClass: "character-description"
     },
     GREG_DIGGER: {
         name: "Greg Digger",
         hideTitle: true,
-        description: <>Quando un personaggio è eliminato, recupera 2 punti vita.</>
+        description: <>Quando un personaggio è eliminato, recupera 2 punti vita.</>,
+        descriptionClass: "character-description"
     },
     HERB_HUNTER: {
         name: "Herb Hunter",
         hideTitle: true,
-        description: <>Quando un peronaggio è eliminato, pesca 2 carte extra.</>
+        description: <>Quando un peronaggio è eliminato, pesca 2 carte extra.</>,
+        descriptionClass: "character-description"
     },
     JOSE_DELGADO: {
         name: Math.random() < 0.95 ? "Josè Delgado" : "Josè Degrado",
         hideTitle: true,
-        description: <>Due volte nel suo turno può scartare una carta blu dalla mano per pescare 2 carte.</>
+        description: <>Due volte nel suo turno può scartare una carta blu dalla mano per pescare 2 carte.</>,
+        descriptionClass: "character-description"
     },
     MOLLY_STARK: {
         name: "Molly Stark",
         hideTitle: true,
-        description: <>Quando usa una carta dalla mano fuori turno, pesca un'altra carta.</>
+        description: <>Quando usa una carta dalla mano fuori turno, pesca un'altra carta.</>,
+        descriptionClass: "character-description"
     },
     PAT_BRENNAN: {
         name: "Pat Brennan",
         hideTitle: true,
-        description: <>Invece di pescare, può prendere una carta in gioco di fronte a un giocatore.</>
+        description: <>Invece di pescare, può prendere una carta in gioco di fronte a un giocatore.</>,
+        descriptionClass: "character-description"
     },
     PIXIE_PETE: {
         name: "Pixie Pete",
         hideTitle: true,
-        description: <>Pesca 3 carte invece di 2.</>
+        description: <>Pesca 3 carte invece di 2.</>,
+        descriptionClass: "character-description"
     },
     SEAN_MALLORY: {
         name: "Sean Mallory",
         hideTitle: true,
-        description: <>Può rimanere con 10 carte in mano.</>
+        description: <>Può rimanere con 10 carte in mano.</>,
+        descriptionClass: "character-description"
     },
     TEQUILA_JOE: {
         name: "Tequila Joe",
         hideTitle: true,
-        description: <>Quando gioca una <i>Birra</i>, recupera 2 punti vita.</>
+        description: <>Quando gioca una <i>Birra</i>, recupera 2 punti vita.</>,
+        descriptionClass: "character-description"
     },
     VERA_CUSTER: {
         name: "Vera Custer",
         hideTitle: true,
-        description: <>Per un intero giro, acquisisce l'abilità di un altro personaggio in gioco a sua scelta.</>
+        description: <>Per un intero giro, acquisisce l'abilità di un altro personaggio in gioco a sua scelta.</>,
+        descriptionClass: "character-description"
     },
 
     // Valley of Shadows characters
@@ -740,57 +776,68 @@ export const CARDS_ITALIAN: CardRegistry = {
     BLACK_FLOWER: {
         name: "Black Flower",
         hideTitle: true,
-        description: <>Una volta nel tuo turno, puoi usare una carta di fiori per sparare un <i>BANG!</i> extra.</>
+        description: <>Una volta nel tuo turno, puoi usare una carta di fiori per sparare un <i>BANG!</i> extra.</>,
+        descriptionClass: "character-description"
     },
     COLORADO_BILL: {
         name: "Colorado Bill",
         hideTitle: true,
-        description: <>Ogni volta che giochi una carta <i>BANG!</i>, "estrai!": se è Picche, il colpo non può essere evitato.</>
+        description: <>Ogni volta che giochi una carta <i>BANG!</i>, "estrai!": se è Picche, il colpo non può essere evitato.</>,
+        descriptionClass: "character-description"
     },
     COLORADO_BILL_2: {
         name: "Colorado Bill",
         hideTitle: true,
-        description: <>Ogni volta che un altro giocatore gioca una carta Mancato! su una carta <i>BANG!</i> giocata da <i>Colorado Bill</i>, "estrai!": se esce Picche la carta Mancato! non ha effetto e il giocatore attaccato perde 1 punto vita.</>
+        description: <>Ogni volta che un altro giocatore gioca una carta Mancato! su una carta <i>BANG!</i> giocata da <i>Colorado Bill</i>, "estrai!": se esce Picche la carta Mancato! non ha effetto e il giocatore attaccato perde 1 punto vita.</>,
+        descriptionClass: "character-description"
     },
     DER_SPOT_BURST_RINGER: {
         name: "Der Spot - Burst Ringer",
         hideTitle: true,
-        description: <>Una volta nel tuo turno, puoi usare una carta <i>BANG!</i> come <i>Gatling</i>.</>
+        description: <>Una volta nel tuo turno, puoi usare una carta <i>BANG!</i> come <i>Gatling</i>.</>,
+        descriptionClass: "character-description"
     },
     EVELYN_SHEBANG: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>Puoi rinunciare a pescare carte nella tua fase di pesca. Per ogni carta non pescata, spari un <i>BANG!</i> a distanza raggiungibile, a un diverso bersaglio.</>
+        description: <>Puoi rinunciare a pescare carte nella tua fase di pesca. Per ogni carta non pescata, spari un <i>BANG!</i> a distanza raggiungibile, a un diverso bersaglio.</>,
+        descriptionClass: "character-description"
     },
     EVELYN_SHEBANG_2: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>Può pescare una carta in meno del normale per sparare un <i>BANG!</i> extra a distanza 1.</>
+        description: <>Può pescare una carta in meno del normale per sparare un <i>BANG!</i> extra a distanza 1.</>,
+        descriptionClass: "character-description"
     },
     HENRY_BLOCK: {
         name: "Henry Block",
         hideTitle: true,
-        description: <>Chiunque peschi o scarti una tua carta (in gioco o in mano) è bersaglio di un <i>BANG!</i>.</>
+        description: <>Chiunque peschi o scarti una tua carta (in gioco o in mano) è bersaglio di un <i>BANG!</i>.</>,
+        descriptionClass: "character-description"
     },
     LEMONADE_JIM: {
         name: "Lemonade Jim",
         hideTitle: true,
-        description: <>Ogni volta che un altro giocatore gioca una <i>Birra</i>, puoi scartare una carta dalla mano per riguadagnare anche tu 1 punto vita.</>
+        description: <>Ogni volta che un altro giocatore gioca una <i>Birra</i>, puoi scartare una carta dalla mano per riguadagnare anche tu 1 punto vita.</>,
+        descriptionClass: "character-description"
     },
     MICK_DEFENDER: {
         name: "Mick Defender",
         hideTitle: true,
-        description: <>Se sei bersaglio di una carta marrone (non <i>BANG!</i>), puoi usare una carta <i>Mancato!</i> per evitarne gli effetti.</>
+        description: <>Se sei bersaglio di una carta marrone (non <i>BANG!</i>), puoi usare una carta <i>Mancato!</i> per evitarne gli effetti.</>,
+        descriptionClass: "character-description"
     },
     MICK_DEFENDER_2: {
         name: "Mick Defender",
         hideTitle: true,
-        description: <>Se è l'unico bersaglio di una carta, può usare un <i>Mancato!</i> per evitare l'effetto di quella carta.</>
+        description: <>Se è l'unico bersaglio di una carta, può usare un <i>Mancato!</i> per evitare l'effetto di quella carta.</>,
+        descriptionClass: "character-description"
     },
     TUCO_FRANZISKANER: {
         name: "Tuco Franziskaner",
         hideTitle: true,
-        description: <>Durante la tua fase di pesca, se non hai carte blu in gioco, pesca 2 carte extra.</>
+        description: <>Durante la tua fase di pesca, se non hai carte blu in gioco, pesca 2 carte extra.</>,
+        descriptionClass: "character-description"
     },
 
     // Wild West Show characters
@@ -798,42 +845,50 @@ export const CARDS_ITALIAN: CardRegistry = {
     BIG_SPENCER: {
         name: "Big Spencer",
         hideTitle: true,
-        description: <>Inizia con 5 carte. Non può giocare <i>Mancato!</i></>
+        description: <>Inizia con 5 carte. Non può giocare <i>Mancato!</i></>,
+        descriptionClass: "character-description"
     },
     FLINT_WESTWOOD: {
         name: "Flint Westwood",
         hideTitle: true,
-        description: <>Nel suo turno può scambiare una carta dalla mano con 2 carte a caso dalla mano di un altro giocatore.</>
+        description: <>Nel suo turno può scambiare una carta dalla mano con 2 carte a caso dalla mano di un altro giocatore.</>,
+        descriptionClass: "character-description"
     },
     GARY_LOOTER: {
         name: "Gary Looter",
         hideTitle: true,
-        description: <>Pesca tutte le carte in eccesso scartate dagli altri giocatori a fine turno.</>
+        description: <>Pesca tutte le carte in eccesso scartate dagli altri giocatori a fine turno.</>,
+        descriptionClass: "character-description"
     },
     GREYGORY_DECK: {
         name: "Greygory Deck",
         hideTitle: true,
-        description: <>All'inizio del suo turno può pescare 2 personaggi a caso. Ha tutte le abilità dei personaggi pescati.</>
+        description: <>All'inizio del suo turno può pescare 2 personaggi a caso. Ha tutte le abilità dei personaggi pescati.</>,
+        descriptionClass: "character-description"
     },
     JOHN_PAIN: {
         name: "John Pain",
         hideTitle: true,
-        description: <>Se ha meno di 6 carte in mano, quando un giocatore "estrae!", John aggiunge alla mano la carta appena estratta.</>
+        description: <>Se ha meno di 6 carte in mano, quando un giocatore "estrae!", John aggiunge alla mano la carta appena estratta.</>,
+        descriptionClass: "character-description"
     },
     LEE_VAN_KLIFF: {
         name: "Lee Van Kliff",
         hideTitle: true,
-        description: <>Nel suo turno, può scartare un <i>BANG!</i> per ripetere l'effetto di una carta a bordo marrone che ha appena giocato.</>
+        description: <>Nel suo turno, può scartare un <i>BANG!</i> per ripetere l'effetto di una carta a bordo marrone che ha appena giocato.</>,
+        descriptionClass: "character-description"
     },
     TEREN_KILL: {
         name: "Teren Kill",
         hideTitle: true,
-        description: <>Ogni volta che sarebbe eliminato "estrai!": se non è Picche, <i>Teren</i> resta a 1 punto vita e pesca 1 carta.</>
+        description: <>Ogni volta che sarebbe eliminato "estrai!": se non è Picche, <i>Teren</i> resta a 1 punto vita e pesca 1 carta.</>,
+        descriptionClass: "character-description"
     },
     YOUL_GRINNER: {
         name: "Youl Grinner",
         hideTitle: true,
-        description: <>Prima di pescare, i giocatori con più carte in mano di lui devono dargli una carta a scelta.</>
+        description: <>Prima di pescare, i giocatori con più carte in mano di lui devono dargli una carta a scelta.</>,
+        descriptionClass: "character-description"
     },
 
     // Armed & Dangerous characters
@@ -841,42 +896,50 @@ export const CARDS_ITALIAN: CardRegistry = {
     AL_PREACHER: {
         name: "Al Preacher",
         hideTitle: true,
-        description: <>Se un altro giocatore gioca una carta a bordo blu o arancione, puoi pagare 2 📦 per pescare 1 carta dal mazzo.</>
+        description: <>Se un altro giocatore gioca una carta a bordo blu o arancione, puoi pagare 2 📦 per pescare 1 carta dal mazzo.</>,
+        descriptionClass: "character-description"
     },
     BASS_GREEVES: {
         name: "Bass Greeves",
         hideTitle: true,
-        description: <>Una volta nel tuo turno, puoi scartare 1 carta dalla mano per aggiungere 2 📦 su una tua carta.</>
+        description: <>Una volta nel tuo turno, puoi scartare 1 carta dalla mano per aggiungere 2 📦 su una tua carta.</>,
+        descriptionClass: "character-description"
     },
     BLOODY_MARY: {
         name: "Bloody Mary",
         hideTitle: true,
-        description: <>Ogni volta che una tua carta <i>BANG!</i> è annullata, pesca 1 carta dal mazzo.</>
+        description: <>Ogni volta che una tua carta <i>BANG!</i> è annullata, pesca 1 carta dal mazzo.</>,
+        descriptionClass: "character-description"
     },
     FRANKIE_CANTON: {
         name: "Frankie Canton",
         hideTitle: true,
-        description: <>Una volta nel tuo turno, puoi prendere 1 📦 da qualunque carta e metterla qui.</>
+        description: <>Una volta nel tuo turno, puoi prendere 1 📦 da qualunque carta e metterla qui.</>,
+        descriptionClass: "character-description"
     },
     JULIE_CUTTER: {
         name: "Julie Cutter",
         hideTitle: true,
-        description: <>Ogni volta che un giocatore ti fa perdere almeno 1 punto vita, "estrai!":<br/>♥♦=è bersaglio di un <i>BANG!</i><br/></>
+        description: <>Ogni volta che un giocatore ti fa perdere almeno 1 punto vita, "estrai!":<br/>♥♦=è bersaglio di un <i>BANG!</i><br/></>,
+        descriptionClass: "character-description"
     },
     MEXICALI_KID: {
         name: "Mexicali Kid",
         hideTitle: true,
-        description: <>Una volta nel tuo turno, puoi pagare 2 📦 per sparare 1 <i>BANG!</i> extra (non serve la carta).</>
+        description: <>Una volta nel tuo turno, puoi pagare 2 📦 per sparare 1 <i>BANG!</i> extra (non serve la carta).</>,
+        descriptionClass: "character-description"
     },
     MS_ABIGAIL: {
         name: "Ms. Abigail",
         hideTitle: true,
-        description: <>Puoi ignorare gli effetti delle carte a bordo marrone di valore J, Q, K e A se sei l'unico bersaglio.</>
+        description: <>Puoi ignorare gli effetti delle carte a bordo marrone di valore J, Q, K e A se sei l'unico bersaglio.</>,
+        descriptionClass: "character-description"
     },
     RED_RINGO: {
         name: "Red Ringo",
         hideTitle: true,
-        description: <>Inizi con 4 📦. Una volta nel tuo turno puoi spostare fino a 2 📦 da qui alle tue carte.</>
+        description: <>Inizi con 4 📦. Una volta nel tuo turno puoi spostare fino a 2 📦 da qui alle tue carte.</>,
+        descriptionClass: "character-description"
     },
 
     // Gold Rush characters
@@ -884,42 +947,50 @@ export const CARDS_ITALIAN: CardRegistry = {
     DON_BELL: {
         name: "Don Bell",
         hideTitle: true,
-        description: <>Alla fine del suo turno, "estrae!": se esce Cuori o Quadri, gioca un turno extra.</>
+        description: <>Alla fine del suo turno, "estrae!": se esce Cuori o Quadri, gioca un turno extra.</>,
+        descriptionClass: "character-description"
     },
     DUTCH_WILL: {
         name: "Dutch Will",
         hideTitle: true,
-        description: <>Pesca 2 pepite, ne scarta 1, e prende 1 pepita.</>
+        description: <>Pesca 2 pepite, ne scarta 1, e prende 1 pepita.</>,
+        descriptionClass: "character-description"
     },
     JACKY_MURIETA: {
         name: "Jacky Murieta",
         hideTitle: true,
-        description: <>Nel suo turno può pagare 2 pepite per sparare 1 <i>BANG!</i> extra.</>
+        description: <>Nel suo turno può pagare 2 pepite per sparare 1 <i>BANG!</i> extra.</>,
+        descriptionClass: "character-description"
     },
     JOSH_MCCLOUD: {
         name: "Josh McCloud",
         hideTitle: true,
-        description: <>Può pescare il primo equipaggiamento del mazzetto pagando 2 pepite.</>
+        description: <>Può pescare il primo equipaggiamento del mazzetto pagando 2 pepite.</>,
+        descriptionClass: "character-description"
     },
     MADAME_YTO: {
         name: "Madam Yto",
         hideTitle: true,
-        description: <>Ogni volta che viene giocata una <i>Birra</i>, pesca 1 carta dal mazzo.</>
+        description: <>Ogni volta che viene giocata una <i>Birra</i>, pesca 1 carta dal mazzo.</>,
+        descriptionClass: "character-description"
     },
     PRETTY_LUZENA: {
         name: "Pretty Luzena",
         hideTitle: true,
-        description: <>Una volte per turno può pagare un equipaggiamento a costo diminuito di 1.</>
+        description: <>Una volte per turno può pagare un equipaggiamento a costo diminuito di 1.</>,
+        descriptionClass: "character-description"
     },
     RADDIE_SNAKE: {
         name: "Raddie Snake",
         hideTitle: true,
-        description: <>Nel suo turno, può scartare 1 pepita per pescare 1 carta dal mazzo (fino a 2 volte).</>
+        description: <>Nel suo turno, può scartare 1 pepita per pescare 1 carta dal mazzo (fino a 2 volte).</>,
+        descriptionClass: "character-description"
     },
     SIMEON_PICOS: {
         name: "Simeon Picos",
         hideTitle: true,
-        description: <>Ogni volta che perde 1 punto vita, prende 1 pepita.</>
+        description: <>Ogni volta che perde 1 punto vita, prende 1 pepita.</>,
+        descriptionClass: "character-description"
     },
 
     // High Noon cards
@@ -1367,43 +1438,51 @@ export const CARDS_ITALIAN: CardRegistry = {
     BENNY_BRAWLER: {
         name: "Benny Brawler",
         hideTitle: true,
-        description: <>Nel tuo turno, puoi prendere un qualunque numero di vagoni.</>
+        description: <>Nel tuo turno, puoi prendere un qualunque numero di vagoni.</>,
+        descriptionClass: "character-description"
     },
     EVAN_BABBIT: {
         name: "Evan Babbit",
         hideTitle: true,
-        description: <>Se sei bersaglio di una carta <i>BANG!</i>, puoi deviarla a un giocatore a distanza 1 scartando dalla mano una carta dello stesso seme.</>
+        description: <>Se sei bersaglio di una carta <i>BANG!</i>, puoi deviarla a un giocatore a distanza 1 scartando dalla mano una carta dello stesso seme.</>,
+        descriptionClass: "character-description"
     },
     JIMMY_TEXAS: {
         name: "Jimmy Texas",
         hideTitle: true,
-        description: <>Alla fine del tuo turno, pesca una carta.</>
+        description: <>Alla fine del tuo turno, pesca una carta.</>,
+        descriptionClass: "character-description"
     },
     MANUELITA: {
         name: "Manuelita",
         hideTitle: true,
-        description: <>Ogni volta che il treno arriva al capolinea, pesca 2 carte.</>
+        description: <>Ogni volta che il treno arriva al capolinea, pesca 2 carte.</>,
+        descriptionClass: "character-description"
     },
     SANCHO: {
         name: "Sancho",
         hideTitle: true,
-        description: <>Una volta nel tuo turno, puoi prendere gratis un vagone a scelta dal treno.</>
+        description: <>Una volta nel tuo turno, puoi prendere gratis un vagone a scelta dal treno.</>,
+        descriptionClass: "character-description"
     },
     SGT_BLAZE: {
         name: "Sgt. Blaze",
         hideTitle: true,
         // EDIT: dvGiochi made a typo here
-        description: <>Quando giochi una carta o un effetto che bersaglia più giocatori, puoi escluderne uno.</>
+        description: <>Quando giochi una carta o un effetto che bersaglia più giocatori, puoi escluderne uno.</>,
+        descriptionClass: "character-description"
     },
     SHADE_OCONNOR: {
         name: "Shade O'Connor",
         hideTitle: true,
-        description: <>Ogni volta che il treno avanza fuori dal tuo turno, puoi scartare una carta dalla mano per pescarne un'altra.</>
+        description: <>Ogni volta che il treno avanza fuori dal tuo turno, puoi scartare una carta dalla mano per pescarne un'altra.</>,
+        descriptionClass: "character-description"
     },
     ZIPPY_ROY: {
         name: "Zippy Roy",
         hideTitle: true,
-        description: <>Una volta nel tuo turno, puoi far avanzare il treno di 1 stazione.</>
+        description: <>Una volta nel tuo turno, puoi far avanzare il treno di 1 stazione.</>,
+        descriptionClass: "character-description"
     },
 
     // Canyon Diablo characters
@@ -1411,7 +1490,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     ANNIE_OAKEY: {
         name: "Annie Oakey",
         hideTitle: true,
-        description: <>Può provare a indovinare il colore o il seme di ogni carta pescata in fase 1: pesca + 1 carta per ogni "colore" indovinato (+ 2 per ogni "seme").</>
+        description: <>Può provare a indovinare il colore o il seme di ogni carta pescata in fase 1: pesca + 1 carta per ogni "colore" indovinato (+ 2 per ogni "seme").</>,
+        descriptionClass: "character-description"
     },
     ANNIE_OAKEY_RED: {
         name: "Annie Oakey: Dichiaro Rosso",
@@ -1440,67 +1520,80 @@ export const CARDS_ITALIAN: CardRegistry = {
     BIG_SPENCER_2: {
         name: "Big Spencer",
         hideTitle: true,
-        description: <>Può incrementare i suoi punti vita fino a un massimo di 6.</>
+        description: <>Può incrementare i suoi punti vita fino a un massimo di 6.</>,
+        descriptionClass: "character-description"
     },
     BUFFALO_BELL: {
         name: "Buffalo Bell",
         hideTitle: true,
-        description: <>Ogni volta che viene attaccato da un giocatore, può scartare una carta dalla mano per evitare il colpo. Carta giocata + carta schivata: se ≥ 13 = <i>Mancato!</i>; se ≥ 17 = <i>Schivata</i>; se ≥ 20 = <i>Ritorno di Fiamma.</i></>
+        description: <>Ogni volta che viene attaccato da un giocatore, può scartare una carta dalla mano per evitare il colpo. Carta giocata + carta schivata: se ≥ 13 = <i>Mancato!</i>; se ≥ 17 = <i>Schivata</i>; se ≥ 20 = <i>Ritorno di Fiamma.</i></>,
+        descriptionClass: "character-description"
     },
     CLASH_THE_STAMPEDE: {
         name: "Clash The Stampede",
         hideTitle: true,
-        description: <>Prima di pescare, il giocatore con più carte in mano deve dargliene una a sua scelta.</>
+        description: <>Prima di pescare, il giocatore con più carte in mano deve dargliene una a sua scelta.</>,
+        descriptionClass: "character-description"
     },
     CRAZY_HOG: {
         name: "Crazy Hog",
         hideTitle: true,
-        description: <>Una volta nel suo turno può scartare una carta a bordo blu dalla mano per pescare 2 carte.</>
+        description: <>Una volta nel suo turno può scartare una carta a bordo blu dalla mano per pescare 2 carte.</>,
+        descriptionClass: "character-description"
     },
     EVA_PLACE: {
         name: "Eva Place",
         hideTitle: true,
-        description: <>Una volta nel suo turno, può scartare una carta dalla mano per pescarne un'altra dal mazzo. Se è Quadri, può pescare ancora.</>
+        description: <>Una volta nel suo turno, può scartare una carta dalla mano per pescarne un'altra dal mazzo. Se è Quadri, può pescare ancora.</>,
+        descriptionClass: "character-description"
     },
     JOSEY_BASSETT: {
         name: "Josey Bassett",
         hideTitle: true,
-        description: <>Per un intero giro, può beneficiare dell'effetto di una qualsiasi carta a bordo blu in gioco di fronte ad un altro giocatore.</>
+        description: <>Per un intero giro, può beneficiare dell'effetto di una qualsiasi carta a bordo blu in gioco di fronte ad un altro giocatore.</>,
+        descriptionClass: "character-description"
     },
     LAURA_BILLION: {
         name: "Laura Billion",
         hideTitle: true,
-        description: <>Ogni volta che una carta è "estratta!", può scartare una carta dalla mano per pescare la carta estratta.</>
+        description: <>Ogni volta che una carta è "estratta!", può scartare una carta dalla mano per pescare la carta estratta.</>,
+        descriptionClass: "character-description"
     },
     PAT_BARRETT: {
         name: "Pat Barrett",
         hideTitle: true,
-        description: <>Per ogni punto vita in meno, la distanza a cui gli altri giocatori lo vedono è aumentata di 1.</>
+        description: <>Per ogni punto vita in meno, la distanza a cui gli altri giocatori lo vedono è aumentata di 1.</>,
+        descriptionClass: "character-description"
     },
     SID_CURRY: {
         name: "Sid Curry",
         hideTitle: true,
-        description: <>Quando mette una carta in gioco, tutte le altre carte in gioco con lo stesso nome vengono scartate.</>
+        description: <>Quando mette una carta in gioco, tutte le altre carte in gioco con lo stesso nome vengono scartate.</>,
+        descriptionClass: "character-description"
     },
     SOUNDANCE_KID: {
         name: "Soundance Kid",
         hideTitle: true,
-        description: <>Ogni volta che ferisce un giocatore con un <i>BANG!</i>, pesca una carta dal mazzo.</>
+        description: <>Ogni volta che ferisce un giocatore con un <i>BANG!</i>, pesca una carta dal mazzo.</>,
+        descriptionClass: "character-description"
     },
     SPIKE_SPIEZEL: {
         name: "Spike Spiezel",
         hideTitle: true,
-        description: <>Una volta nel suo turno, può scartare una carta <i>BANG!</i> per ripetere l'effetto dell'ultima carta a bordo marrone da lui giocata.</>
+        description: <>Una volta nel suo turno, può scartare una carta <i>BANG!</i> per ripetere l'effetto dell'ultima carta a bordo marrone da lui giocata.</>,
+        descriptionClass: "character-description"
     },
     TEREN_KILL_2: {
         name: "Teren Kill",
         hideTitle: true,
-        description: <>Ogni volta che sarebbe eliminato, "estrae!": se non è Picche, resta a 1 punto vita e pesca 1 carta.</>
+        description: <>Ogni volta che sarebbe eliminato, "estrae!": se non è Picche, resta a 1 punto vita e pesca 1 carta.</>,
+        descriptionClass: "character-description"
     },
     WYATT_EARL: {
         name: "Wyatt Earl",
         hideTitle: true,
-        description: <>Le carte che possono avere effetto su più giocatori non hanno effetto su di lui.</>
+        description: <>Le carte che possono avere effetto su più giocatori non hanno effetto su di lui.</>,
+        descriptionClass: "character-description"
     },
 
     // The Great Train Robbery railcar cards

@@ -71,6 +71,14 @@
     top: 60%;
 }
 
+.character-description {
+    position: absolute;
+    width: 76%;
+    height: 28%;
+    left: 12%;
+    top: 64%;
+}
+
 .cube-description {
     position: absolute;
     width: 68%;
