@@ -8,6 +8,10 @@
     src: url('/public/fonts/palatinolinotype_roman.ttf');
 }
 
+.card-overlay-inner > *, .card-front > * {
+    /* outline: 1px solid red; */
+}
+
 .card-title {
     position: absolute;
     text-align: center;
@@ -35,7 +39,7 @@
 .card-description {
     position: absolute;
     width: 76%;
-    height: 22%;
+    height: 20%;
     left: 12%;
     top: 70%;
 }
@@ -96,12 +100,7 @@
     top: 77%;
 }
 
-.cube-description-double > .card-description-inner {
-    position: unset;
-    transform: unset;
-}
-
-.cube-description-double p:nth-child(1) {
+.cube-description-double[description-index="0"] {
     position: absolute;
     width: 76%;
     height: 15%;
@@ -110,7 +109,7 @@
     font-size: 11pt;
 }
 
-.cube-description-double p:nth-child(2) {
+.cube-description-double[description-index="1"] {
     position: absolute;
     width: 68%;
     height: 10%;

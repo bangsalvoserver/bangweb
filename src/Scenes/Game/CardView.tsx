@@ -14,6 +14,7 @@ import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
 import "./Style/CardDescriptionView.css";
+import { asArray } from "../../Utils/ArrayUtils";
 
 export function getTokenSprite(tokenType: TokenType) {
     return `/media/sprite_${tokenType}.png`;
@@ -103,9 +104,10 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
 export function CardDescriptionView({ entry }: { entry: CardRegistryEntry }) {
     return <>
         {!entry.hideTitle && <div className='card-title'>{entry.name}</div>}
-        {entry.description && <div className={entry.descriptionClass ?? 'card-description'}>
-            <div className='card-description-inner'>{entry.description}</div>
-        </div>}
+        {asArray(entry.description).map((elem, index) =>
+            <div key={index} className={entry.descriptionClass ?? 'card-description'} description-index={index}>
+                <div className='card-description-inner'>{elem}</div>
+            </div>)}
     </>
 }
 

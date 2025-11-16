@@ -286,10 +286,10 @@ export const CARDS_CZECH: CardRegistry = {
     },
     ARROW: {
         name: "Šíp",
-        description: <>
-            <p><div className="card-description-inner">Cílový hráč musí odhodit z ruky kartu <i>BANG!</i>, nebo ztratí 1 život.</div></p>
-            <p><div className="card-description-inner">Použij <i>Šíp</i> znovu na jiného hráče.</div></p>
-        </>,
+        description: [
+            <>Cílový hráč musí odhodit z ruky kartu <i>BANG!</i>, nebo ztratí 1 život.</>,
+            <>Použij <i>Šíp</i> znovu na jiného hráče.</>
+        ],
         descriptionClass: "cube-description-double"
     },
     DUCK: {
@@ -308,10 +308,10 @@ export const CARDS_CZECH: CardRegistry = {
     SQUAW: {
         name: "Squaw",
         hideTitle: true,
-        description: <>
-            <p><div className="card-description-inner">Odhoď libovolnou kartu ve hře.</div></p>
-            <p><div className="card-description-inner">Vezmi si odhozenou kartu do ruky.</div></p>
-        </>,
+        description: [
+            <>Odhoď libovolnou kartu ve hře.</>,
+            <>Vezmi si odhozenou kartu do ruky.</>
+        ],
         descriptionClass: "cube-description-double"
     },
     ACE_UP_THE_SLEEVE: {

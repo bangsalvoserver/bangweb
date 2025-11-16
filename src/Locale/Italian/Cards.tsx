@@ -335,10 +335,10 @@ export const CARDS_ITALIAN: CardRegistry = {
     ARROW: {
         name: "Freccia",
         hideTitle: true,
-        description: <>
-            <p><div className="card-description-inner">Un giocatore bersaglio scarta una carta <i>BANG!</i> dalla mano o perde 1 punto vita.</div></p>
-            <p><div className="card-description-inner">Colpisci un ulteriore giocatore.</div></p>
-        </>,
+        description: [
+            <>Un giocatore bersaglio scarta una carta <i>BANG!</i> dalla mano o perde 1 punto vita.</>,
+            <>Colpisci un ulteriore giocatore.</>
+        ],
         descriptionClass: "cube-description-double",
     },
     DUCK: {
@@ -360,10 +360,10 @@ export const CARDS_ITALIAN: CardRegistry = {
     SQUAW: {
         name: "Squaw",
         hideTitle: true,
-        description: <>
-            <p><div className="card-description-inner">Scarta una carta in gioco.</div></p>
-            <p><div className="card-description-inner">Aggiungi la carta scartata alla tua mano.</div></p>
-        </>,
+        description: [
+            <>Scarta una carta in gioco.</>,
+            <>Aggiungi la carta scartata alla tua mano.</>
+        ],
         descriptionClass: "cube-description-double",
     },
     ACE_UP_THE_SLEEVE: {

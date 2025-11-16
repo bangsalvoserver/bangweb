@@ -14,7 +14,7 @@ export type Format<T, U> = U | ((...formatArgs: T[]) => U);
 export interface CardRegistryEntry {
     name: string;
     hideTitle?: boolean;
-    description?: JSX.Element;
+    description?: JSX.Element | JSX.Element[];
     descriptionClass?: string;
 }
 

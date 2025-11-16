@@ -182,7 +182,8 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     GHOST_2: {
         name: "Ghost",
-        description: <>Play on any eliminated player. That player is alive again without his character's ability, cannot gain nor lose life points and plays as a normal player.</>
+        description: <>Play on any eliminated player. That player is alive again without his character's ability, cannot gain nor lose life points and plays as a normal player.</>,
+        descriptionClass: "card-description text-smaller line-smaller"
     },
     LEMAT: {
         name: "Lemat",
@@ -293,10 +294,10 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     ARROW: {
         name: "Arrow",
-        description: <>
-            <p><div className="card-description-inner">A target player discards a <i>BANG!</i> card from hand or loses 1 life point.</div></p>
-            <p><div className="card-description-inner">Target one additional different player.</div></p>
-        </>,
+        description: [
+            <>A target player discards a <i>BANG!</i> card from hand or loses 1 life point.</>,
+            <>Target one additional different player.</>
+        ],
         descriptionClass: "cube-description-double"
     },
     DUCK: {
@@ -314,10 +315,10 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     SQUAW: {
         name: "Squaw",
-        description: <>
-            <p><div className="card-description-inner">Discard any card from play.</div></p>
-            <p><div className="card-description-inner">Add the discarded card to your hand.</div></p>
-        </>,
+        description: [
+            <>Discard any card from play.</>,
+            <>Add the discarded card to your hand.</>
+        ],
         descriptionClass: "cube-description-double"
     },
     ACE_UP_THE_SLEEVE: {
