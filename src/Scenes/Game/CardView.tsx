@@ -2,7 +2,7 @@ import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } 
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
-import { getLocalizedCardDescription, getLocalizedCardDescriptionClass, getLocalizedCardName } from "./GameStringComponent";
+import { getCardRegistryEntry } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
@@ -12,6 +12,7 @@ import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isRe
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
+import { CardRegistryEntry } from "../../Locale/Registry";
 
 export function getTokenSprite(tokenType: TokenType) {
     return `/media/sprite_${tokenType}.png`;
@@ -98,6 +99,13 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
     return '';
 }
 
+export function CardDescriptionView({ entry }: { entry: CardRegistryEntry }) {
+    return <>
+        {!entry.hideTitle && <div className='card-title'>{entry.name}</div>}
+        {entry.description && <div className={entry.descriptionClass ?? 'card-description'}>{entry.description}</div>}
+    </>
+}
+
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
 
@@ -112,20 +120,10 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
     let backfaceImage = getCardBackface(card);
     let cardImage = useMemo(() => getCardImage(card), [card]);
 
-    let cardAlt: string = "";
-    let description: JSX.Element | undefined;
+    const cardName = isCardKnown(card) ? card.cardData.name : undefined;
+    const entry = useMemo(() => cardName ? getCardRegistryEntry(cardName) : undefined, [cardName]);
 
-    if (isCardKnown(card)) {
-        const name = card.cardData.name;
-        cardAlt = getLocalizedCardName(name);
-        const innerDescription = getLocalizedCardDescription(name);
-        if (innerDescription) {
-            const descriptionClass = getLocalizedCardDescriptionClass(name) ?? 'card-description';
-            description = <div className={descriptionClass}>{innerDescription}</div>
-        }
-    }
-
-    useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
+    useCardOverlay(cardImage ?? backfaceImage, entry, divRef);
 
     let style: CSSProperties | undefined;
     let classes = ['card-view'];
@@ -190,8 +188,8 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         <div ref={divRef} style={style} className={classes.join(' ')}
             onClick={handleClickCard(card)} >
             { cardImage ? <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={cardAlt} />
-                {/* {description} */}
+                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={entry?.name} />
+                {/* {entry && <CardDescriptionView entry={entry} />} */}
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}

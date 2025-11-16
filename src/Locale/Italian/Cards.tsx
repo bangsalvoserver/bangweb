@@ -1878,4 +1878,37 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Scarta Bronco"
     },
 
+    // Player roles
+
+    ROLE_UNKNOWN: {
+        name: "(Ruolo sconosciuto)"
+    },
+    ROLE_SHERIFF: {
+        name: "Sceriffo"
+    },
+    ROLE_DEPUTY: {
+        name: "Vice"
+    },
+    ROLE_OUTLAW: {
+        name: "Fuorilegge"
+    },
+    ROLE_RENEGADE: {
+        name: "Rinnegato"
+    },
+    ROLE_DEPUTY_3P: {
+        name: "Vice"
+    },
+    ROLE_OUTLAW_3P: {
+        name: "Fuorilegge"
+    },
+    ROLE_RENEGADE_3P: {
+        name: "Rinnegato"
+    },
+    ROLE_SHADOW_DEPUTY: {
+        name: "Vice Ombra"
+    },
+    ROLE_SHADOW_OUTLAW: {
+        name: "Fuorilegge Ombra"
+    },
+
 };

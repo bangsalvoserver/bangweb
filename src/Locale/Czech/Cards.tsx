@@ -1436,4 +1436,38 @@ export const CARDS_CZECH: CardRegistry = {
     GAME_DISCARD_BRONCO: {
         name: "Odhodit Bronco"
     },
+
+    // Player roles
+
+    ROLE_UNKNOWN: {
+        name: "(Neznámá role)"
+    },
+    ROLE_SHERIFF: {
+        name: "Šerif"
+    },
+    ROLE_DEPUTY: {
+        name: "Zástupce šerifa"
+    },
+    ROLE_OUTLAW: {
+        name: "Bandita"
+    },
+    ROLE_RENEGADE: {
+        name: "Odpadlík"
+    },
+    ROLE_DEPUTY_3P: {
+        name: "Zástupce šerifa"
+    },
+    ROLE_OUTLAW_3P: {
+        name: "Bandita"
+    },
+    ROLE_RENEGADE_3P: {
+        name: "Odpadlík"
+    },
+    ROLE_SHADOW_DEPUTY: {
+        name: "Stínový zástupce šerifa"
+    },
+    ROLE_SHADOW_OUTLAW: {
+        name: "Stínový bandita"
+    },
+    
 };

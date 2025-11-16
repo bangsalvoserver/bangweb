@@ -9,7 +9,7 @@ import "./Style/CardOverlayView.css";
 const WINDOW_PADDING_X = 150;
 const WINDOW_PADDING_Y = 200;
 
-function CardOverlayInner({ divRef, cardImage, cardAlt }: OverlayState) {
+function CardOverlayInner({ divRef, cardImage, entry }: OverlayState) {
   const rect = useUpdateEveryFrame(() => getDivRect(divRef.current));
   if (!rect) return null;
 
@@ -24,7 +24,8 @@ function CardOverlayInner({ divRef, cardImage, cardAlt }: OverlayState) {
 
   return <div className="card-overlay" style={cardOverlayStyle}>
     <div className="card-overlay-inner">
-      <img className="card-overlay-img" src={getCardUrl(image)} alt={cardAlt} />
+      <img className="card-overlay-img" src={getCardUrl(image)} alt={entry?.name} />
+      {/* {entry && <CardDescriptionView entry={entry} />} */}
       {sign && <div className="card-overlay-sign">
         <CardSignView sign={sign} />
       </div> }

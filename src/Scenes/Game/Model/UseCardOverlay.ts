@@ -1,15 +1,16 @@
 import { Dispatch, RefObject, SetStateAction, createContext, useContext, useEffect } from "react";
 import { CardImage } from "./GameTable";
+import { CardRegistryEntry } from "../../../Locale/Registry";
 
 export interface OverlayState {
     cardImage: CardImage | string;
-    cardAlt: string;
+    entry: CardRegistryEntry | undefined;
     divRef: RefObject<HTMLDivElement>;
 };
 
 export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayState | undefined>> | null>(null);
 
-export default function useCardOverlay(cardImage: CardImage | string, cardAlt: string, divRef: RefObject<HTMLDivElement>) {
+export default function useCardOverlay(cardImage: CardImage | string, entry: CardRegistryEntry | undefined, divRef: RefObject<HTMLDivElement>) {
     const setCardOverlay = useContext(SetCardOverlayContext);
 
     useEffect(() => {
@@ -27,7 +28,7 @@ export default function useCardOverlay(cardImage: CardImage | string, cardAlt: s
         const addOverlay = () => {
             timeout = setTimeout(() => {
                 added = true;
-                setCardOverlay({ cardImage, cardAlt, divRef });
+                setCardOverlay({ cardImage, entry, divRef });
             }, 500);
         };
 
@@ -54,5 +55,5 @@ export default function useCardOverlay(cardImage: CardImage | string, cardAlt: s
             div.removeEventListener('mousemove', resetTimeout);
             removeOverlay();
         }
-    }, [cardImage, cardAlt, divRef, setCardOverlay]);
+    }, [cardImage, entry, divRef, setCardOverlay]);
 }

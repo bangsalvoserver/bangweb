@@ -1733,4 +1733,37 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Discard Bronco"
     },
 
+    // Player roles
+
+    ROLE_UNKNOWN: {
+        name: "(Unknown role)"
+    },
+    ROLE_SHERIFF: {
+        name: "Sheriff"
+    },
+    ROLE_DEPUTY: {
+        name: "Deputy"
+    },
+    ROLE_OUTLAW: {
+        name: "Outlaw"
+    },
+    ROLE_RENEGADE: {
+        name: "Renegade"
+    },
+    ROLE_DEPUTY_3P: {
+        name: "Deputy"
+    },
+    ROLE_OUTLAW_3P: {
+        name: "Outlaw"
+    },
+    ROLE_RENEGADE_3P: {
+        name: "Renegade"
+    },
+    ROLE_SHADOW_DEPUTY: {
+        name: "Shadow Deputy"
+    },
+    ROLE_SHADOW_OUTLAW: {
+        name: "Shadow Outlaw"
+    },
+
 };

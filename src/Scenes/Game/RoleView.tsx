@@ -1,6 +1,6 @@
 import { CSSProperties, useRef } from "react";
-import getLabel from "../../Locale/GetLabel";
 import { getCardUrl } from "./CardView";
+import { getCardRegistryEntry } from "./GameStringComponent";
 import { PlayerRole } from "./Model/CardEnums";
 import { Player } from "./Model/GameTable";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -41,14 +41,15 @@ export default function RoleView({ player }: RoleProps) {
 
     const backfaceSrc = getRoleImage(backRole);
     const frontfaceSrc = getRoleImage(frontRole);
-    const cardAlt = getLabel('PlayerRole', frontRole);
+    const entry = getCardRegistryEntry('ROLE_' + frontRole.toUpperCase());
 
-    useCardOverlay(frontfaceSrc, cardAlt, divRef);
+    useCardOverlay(frontfaceSrc, entry, divRef);
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(frontfaceSrc)} alt={cardAlt} />
+                <img className="card-view-img" src={getCardUrl(frontfaceSrc)} alt={entry?.name} />
+                {/* {<CardDescriptionView entry={entry} />} */}
             </div>
             {animationKey ? <div className="card-back-flip">
                 <img className="card-view-img" src={getCardUrl(backfaceSrc)} alt="" />

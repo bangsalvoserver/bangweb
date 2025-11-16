@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import getLabel from "../../Locale/GetLabel";
-import { cardRegistry, gameStringRegistry } from "../../Locale/Registry";
+import { cardRegistry, CardRegistryEntry, gameStringRegistry } from "../../Locale/Registry";
 import { createUnionDispatch } from "../../Utils/UnionUtils";
-import { LobbyContext, getUser } from "../Lobby/Lobby";
+import { getUser, LobbyContext } from "../Lobby/Lobby";
 import { clipUsername } from "../Lobby/LobbyUser";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
@@ -16,24 +16,15 @@ export interface CardNameProps {
     sign?: CardSign;
 }
 
-export function getLocalizedCardName(name: string): string {
-    return name in cardRegistry ? cardRegistry[name].name : name;
-}
-
-export function isCardLocalizedTitleShown(name: string): boolean {
-    return name in cardRegistry ? !(cardRegistry[name].hideTitle ?? false) : false;
-}
-
-export function getLocalizedCardDescription(name: string): JSX.Element | undefined {
-    return cardRegistry[name]?.description;
-}
-
-export function getLocalizedCardDescriptionClass(name: string): string | undefined {
-    return cardRegistry[name]?.descriptionClass;
+export function getCardRegistryEntry(name: string): CardRegistryEntry {
+    if (name in cardRegistry) {
+        return cardRegistry[name];
+    }
+    return { name, hideTitle: true };
 }
 
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
-    const localizedName = getLocalizedCardName(name);
+    const localizedName = getCardRegistryEntry(name).name;
     if (sign && sign.rank !== 'none' && sign.suit !== 'none') {
         return <span className="card-name">{localizedName} <span className="inline-block">(<CardSignView sign={sign} />)</span></span>;
     } else {
