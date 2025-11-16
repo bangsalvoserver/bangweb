@@ -34,7 +34,7 @@ export default function AllCards() {
 
     return <div>
         <SetCardOverlayContext.Provider value={setCardOverlayState}>
-            <div>{ cards.map(card => <CardView key={card.id} card={card} />) }</div>
+            <div className={deck === 'feats' ? 'feats-cards' : ''}>{ cards.map(card => <CardView key={card.id} card={card} />) }</div>
         </SetCardOverlayContext.Provider>
         { isMobileDevice() || <CardOverlayView overlayState={overlayState} /> }
     </div>
