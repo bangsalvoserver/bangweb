@@ -303,7 +303,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     DUCK: {
         name: "Duck!",
         description: <>Take this card back in hand.</>,
-        descriptionClass: "cube-description"
+        descriptionClass: "cube-description-lower"
     },
     RELOAD: {
         name: "Reloading",

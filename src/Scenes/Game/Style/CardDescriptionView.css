@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'American Typewriter';
-    src: url('/public/fonts/American\ Typewriter\ Regular.ttf');
+    src: url('/fonts/American\ Typewriter\ Regular.ttf');
 }
 
 @font-face {
     font-family: 'Panatino Linotype';
-    src: url('/public/fonts/palatinolinotype_roman.ttf');
+    src: url('/fonts/palatinolinotype_roman.ttf');
 }
 
 .card-overlay-inner > *, .card-front > * {
@@ -120,6 +120,19 @@
 
 .cube-description .card-description-inner {
     font-size: 11pt;
+}
+
+.legends-description {
+    position: absolute;
+    width: 84%;
+    height: 18%;
+    left: 8%;
+    top: 80%;
+}
+
+.legends-description .card-description-inner {
+    font-size: 11pt;
+    line-height: 10pt;
 }
 
 .text-smaller .card-description-inner {
