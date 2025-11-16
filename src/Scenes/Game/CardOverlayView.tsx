@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 import { clampPoint, getDivRect, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardSignView from "./CardSignView";
-import { getCardUrl } from "./CardView";
+import { CardDescriptionView, getCardUrl } from "./CardView";
 import { OverlayState } from "./Model/UseCardOverlay";
 import "./Style/CardOverlayView.css";
 
@@ -25,7 +25,7 @@ function CardOverlayInner({ divRef, cardImage, entry }: OverlayState) {
   return <div className="card-overlay" style={cardOverlayStyle}>
     <div className="card-overlay-inner">
       <img className="card-overlay-img" src={getCardUrl(image)} alt={entry?.name} />
-      {/* {entry && <CardDescriptionView entry={entry} />} */}
+      {entry && <CardDescriptionView entry={entry} />}
       {sign && <div className="card-overlay-sign">
         <CardSignView sign={sign} />
       </div> }

@@ -286,7 +286,10 @@ export const CARDS_CZECH: CardRegistry = {
     },
     ARROW: {
         name: "Šíp",
-        description: <><p>Cílový hráč musí odhodit z ruky kartu <i>BANG!</i>, nebo ztratí 1 život.</p><p>Použij <i>Šíp</i> znovu na jiného hráče.</p></>,
+        description: <>
+            <p><div className="card-description-inner">Cílový hráč musí odhodit z ruky kartu <i>BANG!</i>, nebo ztratí 1 život.</div></p>
+            <p><div className="card-description-inner">Použij <i>Šíp</i> znovu na jiného hráče.</div></p>
+        </>,
         descriptionClass: "cube-description-double"
     },
     DUCK: {
@@ -305,7 +308,10 @@ export const CARDS_CZECH: CardRegistry = {
     SQUAW: {
         name: "Squaw",
         hideTitle: true,
-        description: <><p>Odhoď libovolnou kartu ve hře.</p><p>Vezmi si odhozenou kartu do ruky.</p></>,
+        description: <>
+            <p><div className="card-description-inner">Odhoď libovolnou kartu ve hře.</div></p>
+            <p><div className="card-description-inner">Vezmi si odhozenou kartu do ruky.</div></p>
+        </>,
         descriptionClass: "cube-description-double"
     },
     ACE_UP_THE_SLEEVE: {
@@ -324,7 +330,8 @@ export const CARDS_CZECH: CardRegistry = {
     },
     BOMB: {
         name: "Bomba",
-        description: <>Na začátku svého tahu sejmi: ♥ ♦ = pošli <i>Bombu</i> jinému hráči. ♣ ♠=odhoď z této karty 2 📦: pokud to nemůžeš udělat, ztrácíš 2 životy.</>
+        description: <>Na začátku svého tahu sejmi:<br/>♥ ♦ = pošli <i>Bombu</i> jinému hráči.<br/>♣ ♠=odhoď z této karty 2 📦: pokud to nemůžeš udělat, ztrácíš 2 životy.</>,
+        descriptionClass: "card-description-higher text-smaller"
     },
     BUNTLINE_SPECIAL: {
         name: "Buntline Special",

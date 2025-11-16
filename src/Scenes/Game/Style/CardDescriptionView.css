@@ -1,0 +1,102 @@
+.card-title {
+    display: none;
+}
+
+.card-description-inner {
+    text-align: center;
+    line-height: 12pt;
+    font-family: 'Palatino Linotype', 'Book Antiqua', sans-serif;
+    font-size: 12pt;
+
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.card-description {
+    position: absolute;
+    width: 76%;
+    height: 22%;
+    left: 12%;
+    top: 70%;
+}
+
+.draw-description {
+    position: absolute;
+    width: 60%;
+    height: 22%;
+    left: 28%;
+    top: 70%;
+}
+
+.card-description-higher {
+    position: absolute;
+    width: 76%;
+    height: 26%;
+    left: 12%;
+    top: 63%;
+}
+
+.card-description-lower {
+    position: absolute;
+    width: 76%;
+    height: 16%;
+    left: 12%;
+    top: 76%;
+}
+
+.weapon-description {
+    position: absolute;
+    width: 76%;
+    height: 18%;
+    left: 12%;
+    top: 60%;
+}
+
+.cube-description {
+    position: absolute;
+    width: 68%;
+    height: 15%;
+    left: 16%;
+    top: 74%;
+}
+
+.cube-description-double > .card-description-inner {
+    position: unset;
+    transform: unset;
+}
+
+.cube-description-double p:nth-child(1) {
+    position: absolute;
+    width: 76%;
+    height: 15%;
+    left: 12%;
+    top: 62%;
+    font-size: 11pt;
+}
+
+.cube-description-double p:nth-child(2) {
+    position: absolute;
+    width: 68%;
+    height: 10%;
+    left: 16%;
+    top: 80%;
+    font-size: 11pt;
+}
+
+.cube-description .card-description-inner {
+    font-size: 11pt;
+}
+
+.text-smaller .card-description-inner {
+    font-size: 10pt;
+}
+
+.text-smallest .card-description-inner {
+    font-size: 9pt;
+}
+
+.line-smaller .card-description-inner {
+    line-height: 10pt;
+}

@@ -292,7 +292,10 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     ARROW: {
         name: "Arrow",
-        description: <><p>A target player discards a <i>BANG!</i> card from hand or loses 1 life point.</p><p>Target one additional different player.</p></>,
+        description: <>
+            <p><div className="card-description-inner">A target player discards a <i>BANG!</i> card from hand or loses 1 life point.</div></p>
+            <p><div className="card-description-inner">Target one additional different player.</div></p>
+        </>,
         descriptionClass: "cube-description-double"
     },
     DUCK: {
@@ -310,7 +313,10 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     SQUAW: {
         name: "Squaw",
-        description: <><p>Discard any card from play.</p><p>Add the discarded card to your hand.</p></>,
+        description: <>
+            <p><div className="card-description-inner">Discard any card from play.</div></p>
+            <p><div className="card-description-inner">Add the discarded card to your hand.</div></p>
+        </>,
         descriptionClass: "cube-description-double"
     },
     ACE_UP_THE_SLEEVE: {
@@ -329,7 +335,8 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     BOMB: {
         name: "Bomb",
-        description: <>Play on any player. At the start of your turn, "draw!":<br/>♥♦=pass <i>Bomb</i> to any player.<br/>♣♠=discard 2 📦: if they run out, lose 2 life points.</>
+        description: <>Play on any player. At the start of your turn, "draw!":<br/>♥♦=pass <i>Bomb</i> to any player.<br/>♣♠=discard 2 📦: if they run out, lose 2 life points.</>,
+        descriptionClass: "card-description-higher text-smaller"
     },
     BUNTLINE_SPECIAL: {
         name: "Buntline Special",
@@ -1142,7 +1149,8 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     EVADED: {
         name: "Evaded!",
-        description: <>Draw the card you just <i>Missed!</i></>
+        description: <>Draw the card you just <i>Missed!</i></>,
+        descriptionClass: "card-description-lower"
     },
     FULL_STEAM: {
         name: "Full Steam",
@@ -1173,12 +1181,12 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Most Wanted",
         hideTitle: true,
         description: <>Each player must "draw!":<br/>♠=that player loses 1 life point.</>,
-        descriptionClass: "description-low"
+        descriptionClass: "card-description-lower"
     },
     NEXT_STOP: {
         name: "Next Stop",
         description: <>Advance the train 1 Station.</>,
-        descriptionClass: "description-low"
+        descriptionClass: "card-description-lower"
     },
     REFUND: {
         name: "Refund",
@@ -1194,7 +1202,8 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     TRAIN_ROBBERY: {
         name: "Train Robbery",
-        description: <>Counts as your 1 <i>BANG!</i> per turn.<br/>For each of their cards in play, the target chooses: discard it or be the target of a BANG!</>
+        description: <>Counts as your 1 <i>BANG!</i> per turn.<br/>For each of their cards in play, the target chooses: discard it or be the target of a BANG!</>,
+        descriptionClass: "card-description text-smaller"
     },
     TRAIN_ROBBERY_DISCARD: {
         name: "Train Robbery: Discard a card",

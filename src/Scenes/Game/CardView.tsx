@@ -1,4 +1,5 @@
 import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import { CardRegistryEntry } from "../../Locale/Registry";
 import { getDivRect } from "../../Utils/Rect";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
@@ -12,7 +13,7 @@ import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isRe
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
-import { CardRegistryEntry } from "../../Locale/Registry";
+import "./Style/CardDescriptionView.css";
 
 export function getTokenSprite(tokenType: TokenType) {
     return `/media/sprite_${tokenType}.png`;
@@ -102,7 +103,9 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
 export function CardDescriptionView({ entry }: { entry: CardRegistryEntry }) {
     return <>
         {!entry.hideTitle && <div className='card-title'>{entry.name}</div>}
-        {entry.description && <div className={entry.descriptionClass ?? 'card-description'}>{entry.description}</div>}
+        {entry.description && <div className={entry.descriptionClass ?? 'card-description'}>
+            <div className='card-description-inner'>{entry.description}</div>
+        </div>}
     </>
 }
 

@@ -207,7 +207,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     GHOST_2: {
         name: "Fantasma",
         hideTitle: true,
-        description: <>Giocala su un giocatore eliminato. Quel giocatore è di nuovo in gioco senza l'abilità del suo personaggio, non può guadagnare né perdere punti vita e gioca normalmente finché ha questa carta in gioco.</>
+        description: <>Giocala su un giocatore eliminato. Quel giocatore è di nuovo in gioco senza l'abilità del suo personaggio, non può guadagnare né perdere punti vita e gioca normalmente finché ha questa carta in gioco.</>,
+        descriptionClass: "card-description text-smallest"
     },
     LEMAT: {
         name: "Lemat",
@@ -275,17 +276,20 @@ export const CARDS_ITALIAN: CardRegistry = {
     SAVED: {
         name: "Salvo!",
         hideTitle: true,
-        description: <>Può essere giocata fuori turno. Previeni la perdita di 1 punto vita di un altro giocatore. Se sopravvive, pesca 2 carte dalla sua mano o dal mazzo (scegli).</>
+        description: <>Può essere giocata fuori turno. Previeni la perdita di 1 punto vita di un altro giocatore. Se sopravvive, pesca 2 carte dalla sua mano o dal mazzo (scegli).</>,
+        descriptionClass: "card-description-higher"
     },
     SAVED_2: {
         name: "Salvo!",
         hideTitle: true,
-        description: <>Giocala solo fuori dal tuo turno<br/>Impedisce a un giocatore di perdere 1 punto vita. Se salvi un giocatore dall'eliminazione, pesca 2 carte dalla mano di quel giocatore.</>,
+        description: <>Giocala solo fuori dal tuo turno.<br/>Impedisce a un giocatore di perdere 1 punto vita. Se salvi un giocatore dall'eliminazione, pesca 2 carte dalla mano di quel giocatore.</>,
+        descriptionClass: "card-description-higher text-smallest"
     },
     FANNING: {
         name: "Sventagliata",
         hideTitle: true,
-        description: <>Conta come l'unico <i>BANG!</i> del turno. Anche un giocatore a tua scelta a distanza 1 dal bersaglio (se c'è, te escluso) è bersaglio di un <i>BANG!</i>.</>
+        description: <>Conta come l'unico <i>BANG!</i> del turno. Anche un giocatore a tua scelta a distanza 1 dal bersaglio (se c'è, te escluso) è bersaglio di un <i>BANG!</i>.</>,
+        descriptionClass: "card-description text-smaller"
     },
     TOMAHAWK: {
         name: "Tomahawk",
@@ -331,7 +335,10 @@ export const CARDS_ITALIAN: CardRegistry = {
     ARROW: {
         name: "Freccia",
         hideTitle: true,
-        description: <><p>Un giocatore bersaglio scarta una carta <i>BANG!</i> dalla mano o perde 1 punto vita.</p><p>Colpisci un ulteriore giocatore.</p></>,
+        description: <>
+            <p><div className="card-description-inner">Un giocatore bersaglio scarta una carta <i>BANG!</i> dalla mano o perde 1 punto vita.</div></p>
+            <p><div className="card-description-inner">Colpisci un ulteriore giocatore.</div></p>
+        </>,
         descriptionClass: "cube-description-double",
     },
     DUCK: {
@@ -353,7 +360,10 @@ export const CARDS_ITALIAN: CardRegistry = {
     SQUAW: {
         name: "Squaw",
         hideTitle: true,
-        description: <><p>Scarta una carta in gioco.</p><p>Aggiungi la carta scartata alla tua mano.</p></>,
+        description: <>
+            <p><div className="card-description-inner">Scarta una carta in gioco.</div></p>
+            <p><div className="card-description-inner">Aggiungi la carta scartata alla tua mano.</div></p>
+        </>,
         descriptionClass: "cube-description-double",
     },
     ACE_UP_THE_SLEEVE: {
@@ -375,7 +385,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     BOMB: {
         name: "Bomba",
         hideTitle: true,
-        description: <>Gioca su chiunque. All'inizio del tuo turno, "estrai!":<br/>♥♦=Passa la <i>Bomba</i> a chi vuoi.<br/>♣♠=scarta 2 📦: se finiscono, perdi 2 punti vita.</>
+        description: <>Gioca su chiunque. All'inizio del tuo turno, "estrai!":<br/>♥♦=Passa la <i>Bomba</i> a chi vuoi.<br/>♣♠=scarta 2 📦: se finiscono, perdi 2 punti vita.</>,
+        descriptionClass: "card-description-higher text-smaller"
     },
     BUNTLINE_SPECIAL: {
         name: "Buntline Special",
@@ -438,7 +449,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     CARD_SHARPER: {
         name: "Baro",
         hideTitle: true,
-        description: <>Scambia una carta a bordo blu in gioco di fronte a te con un'altra dello stesso colore in gioco di fronte ad un altro giocatore.</>
+        description: <>Scambia una carta a bordo blu in gioco di fronte a te con un'altra dello stesso colore in gioco di fronte ad un altro giocatore.</>,
+        descriptionClass: "card-description text-smaller"
     },
     MIRAGE: {
         name: "Miraggio",
@@ -452,7 +464,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     SACRIFICE: {
         name: "Sacrificio",
         hideTitle: true,
-        description: <>Può essere giocata fuori turno. Previeni la perdita di 1 punto vita di un altro giocatore subendola tu stesso. Se possibile, poi, pesca 2 carte dal mazzo (3, se si previene un colpo fatale).</>
+        description: <>Può essere giocata fuori turno. Previeni la perdita di 1 punto vita di un altro giocatore subendola tu stesso. Se possibile, poi, pesca 2 carte dal mazzo (3, se si previene un colpo fatale).</>,
+        descriptionClass: "card-description text-smaller"
     },
     DISARM: {
         name: "Disarmare",
@@ -467,7 +480,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Bulldog",
         hideTitle: true,
         description: <>Una sola volta per turno, puoi giocare una carta <i>BANG!</i> come <i>Gatling</i> scartando un'altra carta con essa.</>,
-        descriptionClass: "weapon-description",
+        descriptionClass: "weapon-description text-smaller",
     },
     LAST_WILL: {
         name: "Ultime Volontà",
@@ -482,7 +495,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     TAXMAN: {
         name: "Esattore",
         hideTitle: true,
-        description: <>Gioca su chiunque. All'inizio del turno, quel giocatore "estrae!": se è Picche o Fiori, pesca una carta in meno in fase 1.</>
+        description: <>Gioca su chiunque. All'inizio del turno, quel giocatore "estrae!": se è Picche o Fiori, pesca una carta in meno in fase 1.</>,
+        descriptionClass: "card-description"
     },
     BROTHEL: {
         name: "Bordello",
@@ -918,7 +932,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     GHOST_TOWN: {
         name: "Città Fantasma",
         hideTitle: true,
-        description: <>Ogni giocatore eliminato torna, al proprio turno, come fantasma: pesca 3 carte invece di 2, e non può morire. Al termine del proprio turno è eliminato di nuovo.</>
+        description: <>Ogni giocatore eliminato torna, al proprio turno, come fantasma: pesca 3 carte invece di 2, e non può morire. Al termine del proprio turno è eliminato di nuovo.</>,
+        descriptionClass: "card-description text-smallest"
     },
     INVERT_ROTATION: {
         name: "Corsa all'Oro",
@@ -995,7 +1010,8 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Nuova Identità",
         hideTitle: true,
         // EDIT: the original card said that you should change the character with the one used to display your hp, which is not the case any more.
-        description: <>Ciascuno, all'inizio del proprio turno, prende un altro personaggio a caso: può sostituirlo per sempre al proprio, ripartendo da 2 punti vita.</>
+        description: <>Ciascuno, all'inizio del proprio turno, prende un altro personaggio a caso: può sostituirlo per sempre al proprio, ripartendo da 2 punti vita.</>,
+        descriptionClass: "card-description text-smallest"
     },
     HIGH_NOON: {
         name: "Mezzogiorno di Fuoco",
@@ -1013,7 +1029,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     SNIPER: {
         name: "Cecchino",
         hideTitle: true,
-        description: <>Il giocatore di turno può scartare 2 carte <i>BANG!</i> insieme contro un giocatore: vale come un <i>BANG!</i>, ma è annullabile solo con 2 <i>Mancato!</i>.</>
+        description: <>Il giocatore di turno può scartare 2 carte <i>BANG!</i> insieme contro un giocatore: vale come un <i>BANG!</i>, ma è annullabile solo con 2 <i>Mancato!</i>.</>,
+        descriptionClass: "card-description text-smallest"
     },
     DEAD_MAN: {
         name: "Dead Man",
@@ -1023,7 +1040,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     BLOOD_BROTHERS: {
         name: "Fratelli di Sangue",
         hideTitle: true,
-        description: <>All'inizio del proprio turno, il giocatore può perdere un punto vita (tranne l'ultimo) per fare recuperare un punto vita a un giocatore a sua scelta.</>
+        description: <>All'inizio del proprio turno, il giocatore può perdere un punto vita (tranne l'ultimo) per fare recuperare un punto vita a un giocatore a sua scelta.</>,
+        descriptionClass: "card-description text-smallest"
     },
     THE_JUDGE: {
         name: "Il Giudice",
@@ -1048,12 +1066,14 @@ export const CARDS_ITALIAN: CardRegistry = {
     ABANDONED_MINE: {
         name: "Miniera Abbandonata",
         hideTitle: true,
-        description: <>Nella propria fase 1, il giocatore pesca dagli scarti (se finiscono, pesca dal mazzo). Nella propria fase 3, scarta a faccia in giù sul mazzo.</>
+        description: <>Nella propria fase 1, il giocatore pesca dagli scarti (se finiscono, pesca dal mazzo). Nella propria fase 3, scarta a faccia in giù sul mazzo.</>,
+        descriptionClass: "card-description text-smallest"
     },
     PEYOTE: {
         name: "Peyote",
         hideTitle: true,
-        description: <>Invece di pescare nella fase 1, il giocatore prova a indovinare se il seme della carta in cima al mazzo è rosso o nero. Poi pesca e mostra la carta: se ha indovinato, la tiene e può indovinare ancora, altrimentri passa alla fase 2.</>
+        description: <>Invece di pescare nella fase 1, il giocatore prova a indovinare se il seme della carta in cima al mazzo è rosso o nero. Poi pesca e mostra la carta: se ha indovinato, la tiene e può indovinare ancora, altrimentri passa alla fase 2.</>,
+        descriptionClass: "card-description text-smallest line-smaller"
     },
     PEYOTE_RED: {
         name: "Peyote: Dichiaro Rosso",
@@ -1066,17 +1086,20 @@ export const CARDS_ITALIAN: CardRegistry = {
     RANCH: {
         name: "Ranch",
         hideTitle: true,
-        description: <>Alla fine della propria fase 1, il giocatore per una volta può scartare un qualsiasi numero di carte dalla mano per pescarne altrettante dal mazzo.</>
+        description: <>Alla fine della propria fase 1, il giocatore per una volta può scartare un qualsiasi numero di carte dalla mano per pescarne altrettante dal mazzo.</>,
+        descriptionClass: "card-description text-smallest"
     },
     RICOCHET: {
         name: "Rimbalzo",
         hideTitle: true,
-        description: <>Il giocatore può scartare <i>BANG!</i> contro carte in gioco di fronte agli altri: ogni carta è scartata se il proprietario non gioca un <i>Mancato!</i> per ciascuna.</>
+        description: <>Il giocatore può scartare <i>BANG!</i> contro carte in gioco di fronte agli altri: ogni carta è scartata se il proprietario non gioca un <i>Mancato!</i> per ciascuna.</>,
+        descriptionClass: "card-description text-smallest"
     },
     RUSSIAN_ROULETTE: {
         name: "Roulette Russa",
         hideTitle: true,
-        description: <>Quando la <i>Roulette Russa</i> entra in gioco, a partire dallo Sceriffo ognuno scarta un <i>Mancato!</i>, a oltranza: il primo che non lo fa perde 2 punti vita, e la <i>Roulette</i> si interrompe.</>
+        description: <>Quando la <i>Roulette Russa</i> entra in gioco, a partire dallo Sceriffo ognuno scarta un <i>Mancato!</i>, a oltranza: il primo che non lo fa perde 2 punti vita, e la <i>Roulette</i> si interrompe.</>,
+        descriptionClass: "card-description text-smallest line-smaller"
     },
     VENDETTA: {
         name: "Vendetta",
@@ -1261,7 +1284,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     EVADED: {
         name: "Per Un Pelo!",
         hideTitle: true,
-        description: <>Pesca la carta che hai <i>Mancato!</i></>
+        description: <>Pesca la carta che hai <i>Mancato!</i></>,
+        descriptionClass: "card-description-lower"
     },
     FULL_STEAM: {
         name: "A Tutto Vapore",
@@ -1295,13 +1319,13 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Most Wanted",
         hideTitle: true,
         description: <>Ogni giocatore "estrae!":<br/>♠=perde 1 punto vita.</>,
-        descriptionClass: "description-low"
+        descriptionClass: "card-description-lower"
     },
     NEXT_STOP: {
         name: "Prossima Fermata",
         hideTitle: true,
         description: <>Fai avanzare il treno di 1 stazione.</>,
-        descriptionClass: "description-low"
+        descriptionClass: "card-description-lower"
     },
     REFUND: {
         name: "Rimborso",
@@ -1321,7 +1345,8 @@ export const CARDS_ITALIAN: CardRegistry = {
     TRAIN_ROBBERY: {
         name: "Rapina Al Treno",
         hideTitle: true,
-        description: <>Conta come il <i>BANG!</i> del turno.<br/>Il bersaglio sceglie per ogni sua carta in gioco: la scarta o è colpito da un <i>BANG!</i></>
+        description: <>Conta come il <i>BANG!</i> del turno.<br/>Il bersaglio sceglie per ogni sua carta in gioco: la scarta o è colpito da un <i>BANG!</i></>,
+        descriptionClass: "card-description text-smaller"
     },
     TRAIN_ROBBERY_DISCARD: {
         name: "Rapina Al Treno: Scarta una carta",
