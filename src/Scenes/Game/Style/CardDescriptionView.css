@@ -24,6 +24,7 @@
     line-height: 12pt;
     font-family: 'Palatino Linotype', 'Book Antiqua', sans-serif;
     font-size: 12pt;
+    white-space: wrap;
 
     position: absolute;
     width: 100%;
@@ -132,4 +133,28 @@
 
 .line-smaller .card-description-inner {
     line-height: 10pt;
+}
+
+.card-view .card-description-inner {
+    font-size: 3.5pt;
+    line-height: 2pt;
+    pointer-events: none;
+    color: gray;
+}
+
+.card-view .card-title {
+    font-size: 3pt;
+    pointer-events: none;
+    color: gray;
+}
+
+@media (max-width:1200px) {
+    .card-view .card-description-inner {
+        font-size: 1.5pt;
+        line-height: 1pt;
+    }
+
+    .card-view .card-title {
+        font-size: 2pt;
+    }
 }

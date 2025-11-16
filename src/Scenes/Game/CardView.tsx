@@ -192,7 +192,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
             onClick={handleClickCard(card)} >
             { cardImage ? <div className="card-front">
                 <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={entry?.name} />
-                {/* {entry && <CardDescriptionView entry={entry} />} */}
+                {entry && <CardDescriptionView entry={entry} />}
                 {cardImage.sign && <div className="card-view-inner">
                     <CardSignView sign={cardImage.sign} />
                 </div>}
