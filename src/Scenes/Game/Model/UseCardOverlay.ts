@@ -1,11 +1,12 @@
 import { Dispatch, RefObject, SetStateAction, createContext, useContext, useEffect } from "react";
 import { CardImage } from "./GameTable";
 import { CardRegistryEntry } from "../../../Locale/Registry";
+import { buildCardRef, CardRef } from "./CardTracker";
 
 export interface OverlayState {
     cardImage: CardImage | string;
     entry: CardRegistryEntry | undefined;
-    divRef: RefObject<HTMLDivElement>;
+    cardRef: CardRef;
 };
 
 export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayState | undefined>> | null>(null);
@@ -28,7 +29,7 @@ export default function useCardOverlay(cardImage: CardImage | string, entry: Car
         const addOverlay = () => {
             timeout = setTimeout(() => {
                 added = true;
-                setCardOverlay({ cardImage, entry, divRef });
+                setCardOverlay({ cardImage, entry, cardRef: buildCardRef(divRef) });
             }, 500);
         };
 

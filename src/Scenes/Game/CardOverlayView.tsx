@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { clampPoint, getDivRect, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
+import { clampPoint, getRectCenter, getWindowRect, shrinkRect } from "../../Utils/Rect";
 import useUpdateEveryFrame from "../../Utils/UseUpdateEveryFrame";
 import CardSignView from "./CardSignView";
 import { CardDescriptionView, getCardUrl } from "./CardView";
@@ -9,8 +9,8 @@ import "./Style/CardOverlayView.css";
 const WINDOW_PADDING_X = 150;
 const WINDOW_PADDING_Y = 200;
 
-function CardOverlayInner({ divRef, cardImage, entry }: OverlayState) {
-  const rect = useUpdateEveryFrame(() => getDivRect(divRef.current));
+function CardOverlayInner({ cardRef, cardImage, entry }: OverlayState) {
+  const rect = useUpdateEveryFrame(cardRef.getRect);
   if (!rect) return null;
 
   const rectCenter = clampPoint(getRectCenter(rect), shrinkRect(getWindowRect(), WINDOW_PADDING_X, WINDOW_PADDING_Y));
