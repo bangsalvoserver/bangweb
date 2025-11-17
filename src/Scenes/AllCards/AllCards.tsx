@@ -78,23 +78,23 @@ export default function AllCards() {
 
     return <LanguageProvider selected={language}>
         <div>
-            <select onChange={handleChangeDeck} className="m-2 p-1">
-                <option value='main_deck' selected={deck === 'main_deck'}>Main Deck</option>
-                <option value='character' selected={deck === 'character'}>Characters</option>
-                <option value='goldrush' selected={deck === 'goldrush'}>Gold Rush</option>
-                <option value='highnoon' selected={deck === 'highnoon'}>High Noon</option>
-                <option value='fistfulofcards' selected={deck === 'fistfulofcards'}>Fistful of Cards</option>
-                <option value='wildwestshow' selected={deck === 'wildwestshow'}>Wild West Show</option>
-                <option value='locomotive' selected={deck === 'locomotive'}>Locomotive</option>
-                <option value='train' selected={deck === 'train'}>Train Cards</option>
-                <option value='legends' selected={deck === 'legends'}>Legends</option>
-                <option value='feats' selected={deck === 'feats'}>Feats</option>
-                <option value='none' selected={deck === 'none'}>Hidden Deck</option>
+            <select value={deck} onChange={handleChangeDeck} className="m-2 p-1">
+                <option value='main_deck'>Main Deck</option>
+                <option value='character'>Characters</option>
+                <option value='goldrush'>Gold Rush</option>
+                <option value='highnoon'>High Noon</option>
+                <option value='fistfulofcards'>Fistful of Cards</option>
+                <option value='wildwestshow'>Wild West Show</option>
+                <option value='locomotive'>Locomotive</option>
+                <option value='train'>Train Cards</option>
+                <option value='legends'>Legends</option>
+                <option value='feats'>Feats</option>
+                <option value='none'>Hidden Deck</option>
             </select>
-            <select onChange={handleChangeLanguage} className="m-2 p-1">
-                <option value='en' selected={language === 'en'}>English</option>
-                <option value='it' selected={language === 'it'}>Italian</option>
-                <option value='cs' selected={language === 'cs'}>Czech</option>
+            <select value={language} onChange={handleChangeLanguage} className="m-2 p-1">
+                <option value='en'>English</option>
+                <option value='it'>Italian</option>
+                <option value='cs'>Czech</option>
             </select>
         </div>
         <AllCardsInner deck={deck} />
