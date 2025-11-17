@@ -54,7 +54,7 @@ export default function App() {
   };
 
   return (
-    <LanguageProvider settings={settings}>
+    <LanguageProvider selected={settings.language}>
       <div className="flex flex-col min-h-screen">
         <Header scene={scene} settings={settings} connection={connection} />
         <div className="current-scene">{currentScene()}</div>

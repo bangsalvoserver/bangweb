@@ -1,5 +1,5 @@
 import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
-import { CardRegistryEntry } from "../../Locale/Registry";
+import { CardRegistryEntry, useLanguage } from "../../Locale/Registry";
 import { asArray } from "../../Utils/ArrayUtils";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
@@ -112,6 +112,7 @@ export function CardDescriptionView({ entry }: { entry: CardRegistryEntry }) {
 
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
+    const language = useLanguage();
 
     const { handleClickCard } = useSelectorConfirm();
 
@@ -123,7 +124,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
     let cardImage = useMemo(() => getCardImage(card), [card]);
 
     const cardName = isCardKnown(card) ? card.cardData.name : undefined;
-    const entry = useMemo(() => cardName ? getCardRegistryEntry(cardName) : undefined, [cardName]);
+    const entry = useMemo(() => cardName ? getCardRegistryEntry(language, cardName) : undefined, [language, cardName]);
 
     useCardOverlay(cardImage ?? backfaceImage, entry, divRef);
 

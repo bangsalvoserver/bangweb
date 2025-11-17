@@ -11,6 +11,7 @@ import { CardRef } from "../Game/Model/CardTracker";
 import { Card, getCardImage, KnownCard } from "../Game/Model/GameTable";
 import { SelectorConfirm, SelectorConfirmContext } from "../Game/Model/SelectorConfirm";
 import { OverlayState } from "../Game/Model/UseCardOverlay";
+import { useLanguage } from "../../Locale/Registry";
 
 function buildCard(cardData: CardData, index: number): Card {
     return {
@@ -25,6 +26,8 @@ function buildCard(cardData: CardData, index: number): Card {
 }
 
 export default function AllCards() {
+    const language = useLanguage();
+
     const params = new URLSearchParams(window.location.search);
     const deck = params.get('deck') || 'main_deck';
     const url = Env.bangCardsUrl + '/' + deck;
@@ -41,7 +44,7 @@ export default function AllCards() {
             if (!overlayState || overlayState.cardRef.cardId !== card.id) {
                 return {
                     cardImage: getCardImage(card)!,
-                    entry: getCardRegistryEntry((card as KnownCard).cardData.name),
+                    entry: getCardRegistryEntry(language, (card as KnownCard).cardData.name),
                     cardRef: cardRefs.get(card.id)!
                 };
             }
@@ -49,7 +52,7 @@ export default function AllCards() {
         handleClickPlayer: player => undefined,
         handleConfirm: undefined,
         handleUndo: undefined,
-    }), [cardRefs]);
+    }), [language, cardRefs]);
 
     return <div>
         <SelectorConfirmContext.Provider value={selectorConfirm}>

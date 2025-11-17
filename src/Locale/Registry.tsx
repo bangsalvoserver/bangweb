@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useContext, useLayoutEffect, useMemo } from "react";
-import AppSettings from "../Model/AppSettings";
 import Env, { Language } from "../Model/Env";
 import { CARDS_CZECH } from "./Czech/Cards";
 import { GAME_STRINGS_CZECH } from "./Czech/GameStrings";
@@ -78,8 +77,8 @@ export function useLanguage() {
     return useContext(LanguageContext);
 }
 
-export function LanguageProvider({ settings, children }: { settings: AppSettings, children: ReactNode }) {
-    const language = useMemo(() => getSystemLanguage(settings.language), [settings.language]);
+export function LanguageProvider({ selected, children }: { selected?: Language, children: ReactNode }) {
+    const language = useMemo(() => getSystemLanguage(selected), [selected]);
     
     useLayoutEffect(() => {
         document.documentElement.lang = language;
