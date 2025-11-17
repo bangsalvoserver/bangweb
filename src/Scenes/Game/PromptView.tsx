@@ -5,6 +5,7 @@ import GameStringComponent from "./GameStringComponent";
 import { GamePrompt } from "./Model/TargetSelector";
 import { SelectorUpdate } from "./Model/TargetSelectorReducer";
 import "./Style/PromptView.css";
+import { useLanguage } from "../../Locale/Registry";
 
 export interface PromptProps {
     prompt: GamePrompt;
@@ -12,6 +13,8 @@ export interface PromptProps {
 }
 
 export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
+    const language = useLanguage();
+
     if (prompt.type === 'yesno') {
         const handleYes = () => selectorDispatch({ setPrompt: { ...prompt, response: true } });
         const handleNo = () => selectorDispatch({ undoSelection: {} });
@@ -21,8 +24,8 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
                 <p><GameStringComponent message={prompt.message} /></p>
             </div>
             <div className="prompt-buttons">
-                <Button color='blue' onClick={handleYes}>{getLabel('ui', 'BUTTON_YES')}</Button>
-                <Button color='red' onClick={handleNo}>{getLabel('ui', 'BUTTON_NO')}</Button>
+                <Button color='blue' onClick={handleYes}>{getLabel(language, 'ui', 'BUTTON_YES')}</Button>
+                <Button color='red' onClick={handleNo}>{getLabel(language, 'ui', 'BUTTON_NO')}</Button>
             </div>
         </div>;
     } else if (prompt.type === 'playpick') {
@@ -49,9 +52,9 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
                 <p><GameStringComponent message={message} /></p>
             </div>
             <div className="prompt-buttons">
-                <Button color='blue' onClick={handlePlay}>{getLabel('ui', 'BUTTON_PLAY')}</Button>
-                <Button color='blue' onClick={handlePick}>{getLabel('ui', 'BUTTON_PICK')}</Button>
-                <Button color='red' onClick={handleUndo}>{getLabel('ui', 'BUTTON_UNDO')}</Button>
+                <Button color='blue' onClick={handlePlay}>{getLabel(language, 'ui', 'BUTTON_PLAY')}</Button>
+                <Button color='blue' onClick={handlePick}>{getLabel(language, 'ui', 'BUTTON_PICK')}</Button>
+                <Button color='red' onClick={handleUndo}>{getLabel(language, 'ui', 'BUTTON_UNDO')}</Button>
             </div>
         </div>;
     } else {

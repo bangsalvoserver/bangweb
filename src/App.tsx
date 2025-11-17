@@ -3,6 +3,7 @@ import './App.css';
 import ErrorPopup from './Components/ErrorPopup';
 import Header from './Components/Header';
 import OverlayButtons from './Components/OverlayButtons';
+import { LanguageProvider } from './Locale/Registry';
 import useBangConnection from './Model/UseBangConnection';
 import GameScene from './Scenes/Game/GameScene';
 import HomeScene from './Scenes/Home/Home';
@@ -53,11 +54,13 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header scene={scene} settings={settings} connection={connection} />
-      <div className="current-scene">{currentScene()}</div>
-      <OverlayButtons scene={scene} settings={settings} connection={connection} overlayRef={overlayRef} />
-      <ErrorPopup error={scene.error} clearError={clearError} />
-    </div>
+    <LanguageProvider settings={settings}>
+      <div className="flex flex-col min-h-screen">
+        <Header scene={scene} settings={settings} connection={connection} />
+        <div className="current-scene">{currentScene()}</div>
+        <OverlayButtons scene={scene} settings={settings} connection={connection} overlayRef={overlayRef} />
+        <ErrorPopup error={scene.error} clearError={clearError} />
+      </div>
+    </LanguageProvider>
   );
 }

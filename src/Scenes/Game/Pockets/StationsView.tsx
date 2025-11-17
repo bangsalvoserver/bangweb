@@ -7,15 +7,17 @@ import { useSelectorConfirm } from "../Model/SelectorConfirm";
 import useCardOverlay from "../Model/UseCardOverlay";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
+import { useLanguage } from "../../../Locale/Registry";
 
 function StationCardView({ card }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
     const { handleClickCard } = useSelectorConfirm();
+    const language = useLanguage();
 
     const divRef = useRef<HTMLDivElement>(null);
     const image = getCardFrontface(card) ?? 'backface/station';
     const cardName = isCardKnown(card) ? card.cardData.name : undefined;
-    const entry = useMemo(() => cardName ? getCardRegistryEntry(cardName) : undefined, [cardName]);
+    const entry = useMemo(() => cardName ? getCardRegistryEntry(language, cardName) : undefined, [language, cardName]);
 
     useCardOverlay(image, entry, divRef);
     

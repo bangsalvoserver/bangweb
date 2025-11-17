@@ -1,5 +1,6 @@
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
-import { boolConverter, intConverter, jsonConverter, stringConverter, useLocalStorage, useSessionStorage } from "../Utils/UseLocalStorage";
+import { boolConverter, Converter, intConverter, jsonConverter, stringConverter, useLocalStorage, useSessionStorage } from "../Utils/UseLocalStorage";
+import { Language } from "./Env";
 
 export function useSettings() {
     const [sessionId, setSessionId] = useSessionStorage('session_id', intConverter);
@@ -11,6 +12,7 @@ export function useSettings() {
     const [lobbyPassword, setLobbyPassword] = useLocalStorage('lobby_password', stringConverter);
     const [gameOptions, setGameOptions] = useLocalStorage<GameOptions>('game_options', jsonConverter);
     const [muteSounds, setMuteSounds] = useLocalStorage('mute_sounds', boolConverter);
+    const [language, setLanguage] = useLocalStorage('language', stringConverter as Converter<Language>);
 
     return {
         sessionId, setSessionId,
@@ -20,7 +22,8 @@ export function useSettings() {
         expandLobbyOptions, setExpandLobbyOptions,
         lobbyPassword, setLobbyPassword,
         gameOptions, setGameOptions,
-        muteSounds, setMuteSounds
+        muteSounds, setMuteSounds,
+        language, setLanguage
     } as const;
 }
 

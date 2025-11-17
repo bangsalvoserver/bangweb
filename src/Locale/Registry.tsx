@@ -1,3 +1,5 @@
+import { createContext, ReactNode, useContext, useLayoutEffect, useMemo } from "react";
+import AppSettings from "../Model/AppSettings";
 import Env, { Language } from "../Model/Env";
 import { CARDS_CZECH } from "./Czech/Cards";
 import { GAME_STRINGS_CZECH } from "./Czech/GameStrings";
@@ -26,19 +28,31 @@ export type LabelRegistry = Record<string, LabelGroupRegistry>;
 
 export type GameStringRegistry = Record<string, Format<number | JSX.Element, JSX.Element>>;
 
-export type Registry = [CardRegistry, LabelRegistry, GameStringRegistry];
+export interface LanguageRegistries {
+    cardRegistry: CardRegistry;
+    labelRegistry: LabelRegistry;
+    gameStringRegistry: GameStringRegistry;
+}
 
-const registries: Record<Language, Registry> = {
-    'it': [CARDS_ITALIAN, LABELS_ITALIAN, GAME_STRINGS_ITALIAN],
-    'en': [CARDS_ENGLISH, LABELS_ENGLISH, GAME_STRINGS_ENGLISH],
-    'cs': [CARDS_CZECH, LABELS_CZECH, GAME_STRINGS_CZECH],
+const registries: Record<Language, LanguageRegistries> = {
+    'it': { cardRegistry: CARDS_ITALIAN, labelRegistry: LABELS_ITALIAN, gameStringRegistry: GAME_STRINGS_ITALIAN},
+    'en': { cardRegistry: CARDS_ENGLISH, labelRegistry: LABELS_ENGLISH, gameStringRegistry: GAME_STRINGS_ENGLISH},
+    'cs': { cardRegistry: CARDS_CZECH, labelRegistry: LABELS_CZECH, gameStringRegistry: GAME_STRINGS_CZECH},
 };
 
-export function getSystemLanguage(): Language {
+export function getRegistries(language: Language) {
+    return registries[language];
+}
+
+function getSystemLanguage(selectedLanguage: Language | undefined): Language {
     let language: string | undefined = Env.language;
 
     if (!language) {
         language = new URLSearchParams(window.location.search).get('language') || '';
+    }
+
+    if (!language && selectedLanguage) {
+        language = selectedLanguage;
     }
 
     if (!language && navigator.languages) {
@@ -58,4 +72,20 @@ export function getSystemLanguage(): Language {
     }
 }
 
-export const [cardRegistry, labelRegistry, gameStringRegistry] = registries[getSystemLanguage()];
+const LanguageContext = createContext<Language>('en');
+
+export function useLanguage() {
+    return useContext(LanguageContext);
+}
+
+export function LanguageProvider({ settings, children }: { settings: AppSettings, children: ReactNode }) {
+    const language = useMemo(() => getSystemLanguage(settings.language), [settings.language]);
+    
+    useLayoutEffect(() => {
+        document.documentElement.lang = language;
+    }, [language]);
+
+    return <LanguageContext.Provider value={language}>
+        {children}
+    </LanguageContext.Provider>
+}

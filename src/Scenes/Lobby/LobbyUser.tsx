@@ -1,11 +1,12 @@
 import { ReactNode } from "react";
 import TimerWidget from "../../Components/TimerWidget";
 import getLabel from "../../Locale/GetLabel";
-import Env from "../../Model/Env";
+import Env, { Language } from "../../Model/Env";
 import { UserValue } from "../../Model/ServerMessage";
 import "./Style/LobbyUser.css";
 import defaultUserPropic from "/media/icon_default_user.png";
 import PlayerIcon from "../../Components/PlayerIcon";
+import { useLanguage } from "../../Locale/Registry";
 
 export interface LobbyUserProps {
     user: UserValue;
@@ -25,11 +26,13 @@ export function getPropicUrl(propic: string | null) {
   return DEFAULT_USER_PROPIC;
 }
 
-export function clipUsername(username: string): string {
-  return username.length !== 0 ? username : getLabel('ui', 'USERNAME_EMPTY');
+export function clipUsername(language: Language, username: string): string {
+  return username.length !== 0 ? username : getLabel(language, 'ui', 'USERNAME_EMPTY');
 }
 
 export default function LobbyUser({ user: { username, propic, flags, lifetime}, isSelf, align, noUserIcons, playerIcons, children }: LobbyUserProps) {
+  const language = useLanguage();
+
   const timerWidget = lifetime > 0 && <TimerWidget duration={lifetime} />;
   const isOwner = flags.has('lobby_owner');
   const isSpectator = flags.has('spectator');
@@ -68,7 +71,7 @@ export default function LobbyUser({ user: { username, propic, flags, lifetime}, 
         <img src={getPropicUrl(propic)} alt="" />
       </div>
       <div className='lobby-username'>
-        <span>{clipUsername(username)}</span>
+        <span>{clipUsername(language, username)}</span>
         { icons.length !== 0 && <div className="lobby-user-icons">
           { icons.map(icon => <PlayerIcon name={icon} key={icon} />) }
         </div> }
