@@ -936,11 +936,13 @@ export const CARDS_CZECH: CardRegistry = {
     },
     PARDNER_GENERAL_STORE: {
         name: "Komplic jako Hokynářství",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Otoč tolik vrchních karet z balíčku, kolik je nevyřazených hráčů. Každý hráč si vezme jednu kartu.</>
     },
     PARDNER_DUEL: {
         name: "Komplic jako Duel",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Vyzvaný hráč může odhodit 1 kartu <i>BANG!</i>, potom vyzývající, a takto se střídají. Ten, kdo jako první <i>BANG!</i> neodhodí, ztrácí 1 život.</>
     },
     PARDNER_CAT_BALOU: {
         name: "Komplic jako Cat Balou",
