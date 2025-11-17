@@ -974,19 +974,27 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     HANDCUFFS_HEARTS: {
         name: "Handcuffs: Declare Hearts",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_DIAMONDS: {
         name: "Handcuffs: Declare Diamonds",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_CLUBS: {
         name: "Handcuffs: Declare Clubs",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_SPADES: {
         name: "Handcuffs: Declare Spades",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "card-description text-bigger"
     },
     NEW_IDENTITY: {
         name: "New Identity",
@@ -1042,11 +1050,15 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     PEYOTE_RED: {
         name: "Peyote: Declare Red",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️♦️</>,
+        descriptionClass: "card-description text-bigger"
     },
     PEYOTE_BLACK: {
         name: "Peyote: Declare Black",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️♠️</>,
+        descriptionClass: "card-description text-bigger"
     },
     RANCH: {
         name: "Ranch"
@@ -1352,27 +1364,39 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     ANNIE_OAKEY_RED: {
         name: "Annie Oakey: Declare Red",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️♦️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_HEARTS: {
         name: "Annie Oakey: Declare Hearts",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_DIAMONDS: {
         name: "Annie Oakey: Declare Diamonds",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_BLACK: {
         name: "Annie Oakey: Declare Black",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️♠️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_CLUBS: {
         name: "Annie Oakey: Declare Clubs",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_SPADES: {
         name: "Annie Oakey: Declare Spades",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "character-description text-bigger"
     },
     PAT_BARRETT: {
         name: "Pat Barrett",

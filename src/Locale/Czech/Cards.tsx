@@ -783,19 +783,27 @@ export const CARDS_CZECH: CardRegistry = {
     },
     HANDCUFFS_HEARTS: {
         name: "Želízka: Prohlašuju srdce",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_DIAMONDS: {
         name: "Želízka: Prohlašuju káry",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_CLUBS: {
         name: "Želízka: Prohlašuju kříže",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_SPADES: {
         name: "Želízka: Prohlašuju piky",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "card-description text-bigger"
     },
     NEW_IDENTITY: {
         name: "Nová identita"
@@ -838,11 +846,15 @@ export const CARDS_CZECH: CardRegistry = {
     },
     PEYOTE_RED: {
         name: "Peyote: Prohlašuju červenou",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️♦️</>,
+        descriptionClass: "card-description text-bigger"
     },
     PEYOTE_BLACK: {
         name: "Peyote: Prohlašuju černou",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️♠️</>,
+        descriptionClass: "card-description text-bigger"
     },
     RANCH: {
         name: "Ranč"
@@ -1069,27 +1081,39 @@ export const CARDS_CZECH: CardRegistry = {
     },
     ANNIE_OAKEY_RED: {
         name: "Annie Oakey: Prohlašuju červenou",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️♦️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_HEARTS: {
         name: "Annie Oakey: Prohlašuju srdce",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_DIAMONDS: {
         name: "Annie Oakey: Prohlašuju káry",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_BLACK: {
         name: "Annie Oakey: Prohlašuju černou",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️♠️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_CLUBS: {
         name: "Annie Oakey: Prohlašuju kříže",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_SPADES: {
         name: "Annie Oakey: Prohlašuju piky",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "character-description text-bigger"
     },
     PAT_BARRETT: {
         name: "Pat Barrett",

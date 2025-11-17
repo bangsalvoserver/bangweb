@@ -1063,19 +1063,27 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     HANDCUFFS_HEARTS: {
         name: "Manette: Dichiaro Cuori",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_DIAMONDS: {
         name: "Manette: Dichiaro Quadri",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_CLUBS: {
         name: "Manette: Dichiaro Fiori",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_SPADES: {
         name: "Manette: Dichiaro Picche",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "card-description text-bigger"
     },
     NEW_IDENTITY: {
         name: "Nuova Identità",
@@ -1148,11 +1156,15 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     PEYOTE_RED: {
         name: "Peyote: Dichiaro Rosso",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️♦️</>,
+        descriptionClass: "card-description text-bigger"
     },
     PEYOTE_BLACK: {
         name: "Peyote: Dichiaro Nero",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️♠️</>,
+        descriptionClass: "card-description text-bigger"
     },
     RANCH: {
         name: "Ranch",
@@ -1495,27 +1507,39 @@ export const CARDS_ITALIAN: CardRegistry = {
     },
     ANNIE_OAKEY_RED: {
         name: "Annie Oakey: Dichiaro Rosso",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️♦️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_HEARTS: {
         name: "Annie Oakey: Dichiaro Cuori",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_DIAMONDS: {
         name: "Annie Oakey: Dichiaro Quadri",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_BLACK: {
         name: "Annie Oakey: Dichiaro Nero",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️♠️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_CLUBS: {
         name: "Annie Oakey: Dichiaro Fiori",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_SPADES: {
         name: "Annie Oakey: Dichiaro Picche",
-        hideTitle: true
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "character-description text-bigger"
     },
     BIG_SPENCER_2: {
         name: "Big Spencer",

@@ -157,6 +157,10 @@
     color: rgb(50, 50, 50);
 }
 
+.text-bigger .card-description-inner {
+    font-size: 40pt;
+}
+
 .text-smaller .card-description-inner {
     font-size: 10pt;
 }
@@ -174,6 +178,10 @@
     line-height: 2pt;
     pointer-events: none;
     color: gray;
+}
+
+.card-view .text-bigger .card-description-inner {
+    font-size: 10pt;
 }
 
 .card-view .card-title {
@@ -196,6 +204,10 @@
     .card-view .card-description-inner {
         font-size: 1.5pt;
         line-height: 1pt;
+    }
+
+    .card-view .text-bigger .card-description-inner {
+        font-size: 5pt;
     }
 
     .card-view .card-title {
