@@ -1061,7 +1061,9 @@ export const CARDS_ENGLISH: CardRegistry = {
         descriptionClass: "card-description text-bigger"
     },
     RANCH: {
-        name: "Ranch"
+        name: "Ranch",
+        hideTitle: false,
+        description: <>At the end of his phase 1, each player may discard once any number of cards from his hand to draw the same number of cards from the deck.</>
     },
     RICOCHET: {
         name: "Ricochet",
