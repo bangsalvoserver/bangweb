@@ -5,6 +5,7 @@ import { PlayerRole } from "./Model/CardEnums";
 import { Player } from "./Model/GameTable";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardView.css";
+import { useLanguage } from "../../Locale/Registry";
 
 export interface RoleProps {
     player: Player;
@@ -16,6 +17,8 @@ function getRoleImage(role: PlayerRole) {
 }
 
 export default function RoleView({ player }: RoleProps) {
+    const language = useLanguage();
+
     const divRef = useRef<HTMLDivElement>(null);
     
     let animationKey: number | undefined;
@@ -41,7 +44,7 @@ export default function RoleView({ player }: RoleProps) {
 
     const backfaceSrc = getRoleImage(backRole);
     const frontfaceSrc = getRoleImage(frontRole);
-    const cardAlt = getLabel('PlayerRole', frontRole);
+    const cardAlt = getLabel(language, 'PlayerRole', frontRole);
 
     useCardOverlay(frontfaceSrc, cardAlt, divRef);
 

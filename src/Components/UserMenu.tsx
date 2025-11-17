@@ -3,6 +3,7 @@ import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 import "./Style/UserMenu.css";
 import { MAX_USERNAME_LENGTH } from "../Model/AppSettings";
 import getLabel from "../Locale/GetLabel";
+import { useLanguage } from "../Locale/Registry";
 
 export interface UserMenuItemProps {
   onClick: () => void;
@@ -23,6 +24,7 @@ export interface UserMenuProps {
 export default function UserMenu({ username, setUsername, clearPropic, children }: UserMenuProps) {
   const usernameRef = useRef<HTMLInputElement>(null);
   const [showInput, setShowInput] = useState(false);
+  const language = useLanguage();
 
   useLayoutEffect(() => {
     if (showInput) {
@@ -38,7 +40,7 @@ export default function UserMenu({ username, setUsername, clearPropic, children 
       <div className="px-4 py-3">
         <div className={showInput ? 'username-input' : 'username-span'}
           onClick={() => setShowInput(true)}>
-          <span className="block text-sm text-white w-max h-5">{clipUsername(username ?? '')}</span>
+          <span className="block text-sm text-white w-max h-5">{clipUsername(language, username ?? '')}</span>
           <input ref={usernameRef} value={username}
             maxLength={MAX_USERNAME_LENGTH}
             onChange={e => setUsername(e.target.value)}
@@ -47,7 +49,7 @@ export default function UserMenu({ username, setUsername, clearPropic, children 
         </div>
       </div>
       <ul className="py-2" aria-labelledby="user-menu-button">
-        {clearPropic && <UserMenuItem onClick={clearPropic}>{getLabel('ui', 'BUTTON_CLEAR_PROPIC')}</UserMenuItem>}
+        {clearPropic && <UserMenuItem onClick={clearPropic}>{getLabel(language, 'ui', 'BUTTON_CLEAR_PROPIC')}</UserMenuItem>}
         {children}
       </ul>
     </div>

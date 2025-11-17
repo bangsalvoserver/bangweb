@@ -12,6 +12,7 @@ import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isRe
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
+import { useLanguage } from "../../Locale/Registry";
 
 export function getTokenSprite(tokenType: TokenType) {
     return `/media/sprite_${tokenType}.png`;
@@ -100,6 +101,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
 
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
+    const language = useLanguage();
 
     const { handleClickCard } = useSelectorConfirm();
 
@@ -112,7 +114,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
     let backfaceImage = getCardBackface(card);
     let cardImage = useMemo(() => getCardImage(card), [card]);
     
-    const cardAlt = isCardKnown(card) ? getLocalizedCardName(card.cardData.name) : "";
+    const cardAlt = isCardKnown(card) ? getLocalizedCardName(language, card.cardData.name) : "";
 
     useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
 

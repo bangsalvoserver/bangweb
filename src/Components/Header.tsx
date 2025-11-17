@@ -7,6 +7,7 @@ import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
 import { loadFile, PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import UserMenu, { UserMenuItem } from './UserMenu';
+import { useLanguage } from '../Locale/Registry';
 
 export interface HeaderProps {
   scene: SceneState;
@@ -18,6 +19,8 @@ function Header({ scene, settings, connection }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   
   const [isMenuOpen, setIsMenuOpen, menuRef] = useCloseOnLoseFocus<HTMLDivElement>();
+
+  const language = useLanguage();
 
   const handleSetUsername = (username?: string) => {
     settings.setUsername(username);
@@ -67,7 +70,7 @@ function Header({ scene, settings, connection }: HeaderProps) {
     <nav className="border-gray-200 bg-gray-900">
       <div className="max-w-screen-xl flex items-center justify-between mx-auto p-1.5 md:p-4">
         <div className="flex items-center">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">{getLabel('ui', 'APP_TITLE')}</span>
+          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">{getLabel(language, 'ui', 'APP_TITLE')}</span>
         </div>
         { (scene.type === 'lobby' || scene.type === 'game') && <div className="text-blue-500 font-medium whitespace-nowrap overflow-x-hidden text-ellipsis">
           { scene.lobbyName }
@@ -90,12 +93,12 @@ function Header({ scene, settings, connection }: HeaderProps) {
           </button>
           { isMenuOpen &&
             <UserMenu username={settings.username} setUsername={handleSetUsername} clearPropic={settings.propic ? handleClearPropic : undefined}>
-              <UserMenuItem onClick={handleToggleSounds}>{getLabel('ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
-              { scene.type === 'game' && checkMyUserFlag(scene.lobbyState, 'lobby_owner') && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel('ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
-              { scene.type === 'lobby' && <UserMenuItem onClick={handleToggleSpectate}>{getLabel('ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }
+              <UserMenuItem onClick={handleToggleSounds}>{getLabel(language, 'ui', settings.muteSounds ? 'BUTTON_ENABLE_SOUNDS' : 'BUTTON_DISABLE_SOUNDS')}</UserMenuItem>
+              { scene.type === 'game' && checkMyUserFlag(scene.lobbyState, 'lobby_owner') && <UserMenuItem onClick={closeMenuAnd(handleReturnLobby)}>{getLabel(language, 'ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
+              { scene.type === 'lobby' && <UserMenuItem onClick={handleToggleSpectate}>{getLabel(language, 'ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }
               { scene.type === 'game' || scene.type === 'lobby'
-                ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel('ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
-                : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel('ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
+                ? <UserMenuItem onClick={closeMenuAnd(handleLeaveLobby)}>{getLabel(language, 'ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem>
+                : <UserMenuItem onClick={closeMenuAnd(handleDisconnect)}>{getLabel(language, 'ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
             </UserMenu> }
           </div>}
         </div>

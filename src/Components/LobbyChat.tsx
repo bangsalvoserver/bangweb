@@ -1,12 +1,13 @@
 import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import getLabel from "../Locale/GetLabel";
+import { useLanguage } from "../Locale/Registry";
 import { LobbyState } from "../Model/SceneState";
 import { ChatMessage, LobbyChatArg } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";
 import { getUser } from "../Scenes/Lobby/Lobby";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
-import { isMobileDevice} from "../Utils/MobileCheck";
 import { countIf } from "../Utils/ArrayUtils";
+import { isMobileDevice } from "../Utils/MobileCheck";
 import { createUnionDispatch } from "../Utils/UnionUtils";
 import useCloseOnLoseFocus from "../Utils/UseCloseOnLoseFocus";
 import usePrevious from "../Utils/UsePrevious";
@@ -20,6 +21,8 @@ export interface ChatProps {
 export default function LobbyChat({ connection, lobbyState: { myUserId, users, chatMessages: messages } }: ChatProps) {
     const messagesEnd = useRef<HTMLDivElement>(null);
     const inputMessage = useRef<HTMLInputElement>(null);
+    
+    const language = useLanguage();
     
     const [isChatOpen, setIsChatOpen, chatRef] = useCloseOnLoseFocus<HTMLDivElement>();
     
@@ -74,23 +77,23 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
     };
 
     const transformChatArg = useMemo(() => createUnionDispatch<LobbyChatArg, string>({
-        user: user_id => clipUsername(getUser(users, user_id).username),
+        user: user_id => clipUsername(language, getUser(users, user_id).username),
         integer: value => value.toString(),
         string: value => value
-    }), [users]);
+    }), [language, users]);
 
     const MessageTag = useCallback((props: ChatMessage) => {
         if (props.user_id === 0) {
             if (props.flags.has('translated')) {
-                return <p className='server-message'>{getLabel('chat', props.message, ...props.args.map(transformChatArg))}</p>;
+                return <p className='server-message'>{getLabel(language, 'chat', props.message, ...props.args.map(transformChatArg))}</p>;
             } else {
                 return props.message.split('\n').map((line, index) => <p key={index} className='server-message'>{line}</p>);
             }
         } else {
             const pClass = props.user_id === myUserId ? 'text-right' : '';
-            return <p className={pClass}><span className='username'>{clipUsername(getUser(users, props.user_id).username)}</span> : {props.message}</p>;
+            return <p className={pClass}><span className='username'>{clipUsername(language, getUser(users, props.user_id).username)}</span> : {props.message}</p>;
         }
-    }, [users, myUserId, transformChatArg]);
+    }, [language, users, myUserId, transformChatArg]);
 
     return <div ref={chatRef} className="lobby-chat-outer">
         <button className='
@@ -146,7 +149,7 @@ export default function LobbyChat({ connection, lobbyState: { myUserId, users, c
                 focus:ring-2
                 focus:ring-blue-800
                 "
-                >{getLabel('ui', 'BUTTON_CHAT_SEND')}</button>
+                >{getLabel(language, 'ui', 'BUTTON_CHAT_SEND')}</button>
             </form>
         </div>
     </div>;

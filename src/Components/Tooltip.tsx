@@ -1,4 +1,5 @@
 import getLabel, { hasLabel } from "../Locale/GetLabel";
+import { useLanguage } from "../Locale/Registry";
 import "./Style/Tooltip.css"
 
 export interface TooltipProps {
@@ -7,9 +8,10 @@ export interface TooltipProps {
 }
 
 export default function Tooltip({ group, name }: TooltipProps) {
-    if (hasLabel(group, name)) {
+    const language = useLanguage();
+    if (hasLabel(language, group, name)) {
         return <div className="tooltip">?
-            <span className="tooltiptext">{getLabel(group, name)}</span>
+            <span className="tooltiptext">{getLabel(language, group, name)}</span>
         </div>
     }
 }

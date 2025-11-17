@@ -1,13 +1,16 @@
-import { labelRegistry } from "./Registry";
+import { Language } from "../Model/Env";
+import { getRegistries } from "./Registry";
 
-export function hasLabel(group: string, name: string) {
+export function hasLabel(language: Language, group: string, name: string) {
+    const { labelRegistry } = getRegistries(language);
     if (group in labelRegistry) {
         return name in labelRegistry[group];
     }
     return false;
 }
 
-export default function getLabel(group: string, name: string, ...formatArgs: string[]): string {
+export default function getLabel(language: Language, group: string, name: string, ...formatArgs: string[]): string {
+    const { labelRegistry } = getRegistries(language);
     if (group in labelRegistry) {
         const labelGroup = labelRegistry[group];
         if (name in labelGroup) {

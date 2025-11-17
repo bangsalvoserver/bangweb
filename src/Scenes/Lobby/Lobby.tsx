@@ -8,6 +8,7 @@ import { BangConnection } from '../../Model/UseBangConnection';
 import { GameOptions } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyUser from './LobbyUser';
+import { useLanguage } from '../../Locale/Registry';
 
 export function getUser(users: UserValue[], id: UserId): UserValue {
   const user = users.find(user => user.user_id === id);
@@ -30,6 +31,7 @@ export const LobbyContext = createContext<LobbyState>(newLobbyState(0, 0));
 
 export default function LobbyScene({ gameOptions, setGameOptions, connection, lobbyState }: LobbyProps) {
   const handleStartGame = useEvent(() => connection.sendMessage({ game_start: {} }));
+  const language = useLanguage();
 
   const isLobbyOwner = checkMyUserFlag(lobbyState, 'lobby_owner');
 
@@ -37,7 +39,7 @@ export default function LobbyScene({ gameOptions, setGameOptions, connection, lo
     <LobbyContext.Provider value={lobbyState}>
       <div className='flex flex-col'>
         { isLobbyOwner && <div className='status-bar'>
-          <Button color='green' onClick={handleStartGame}>{getLabel('ui', 'BUTTON_START_GAME')}</Button>
+          <Button color='green' onClick={handleStartGame}>{getLabel(language, 'ui', 'BUTTON_START_GAME')}</Button>
         </div> }
         <div className='flex flex-col md:flex-row items-center md:items-start mb-24'>
           <GameOptionsEditor gameOptions={gameOptions} setGameOptions={isLobbyOwner ? setGameOptions : undefined} />

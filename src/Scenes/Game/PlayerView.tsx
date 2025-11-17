@@ -20,6 +20,7 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import { useLanguage } from "../../Locale/Registry";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;
@@ -86,6 +87,7 @@ function clampedPocket(pocket: PocketRef, scrollRef: RefObject<HTMLDivElement>):
 export default function PlayerView({ playerRef, gameOptions, user, player, handleRejoin }: PlayerProps) {
     const { table, selector } = useContext(GameStateContext);
     const { handleClickPlayer } = useSelectorConfirm();
+    const language = useLanguage();
 
     const pocketRefs = useMapRef<PocketType, PocketRef>();
     const divRef = useRef<HTMLDivElement>(null);
@@ -231,7 +233,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         </div>
         <div className='player-propic'>
             <LobbyUser user={user} align='horizontal' noUserIcons>
-                { canRejoin && <Button className="button-rejoin" onClick={handleRejoin} color="green">{getLabel('ui','BUTTON_REJOIN')}</Button> }
+                { canRejoin && <Button className="button-rejoin" onClick={handleRejoin} color="green">{getLabel(language, 'ui','BUTTON_REJOIN')}</Button> }
             </LobbyUser>
         </div>
     </div>

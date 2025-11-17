@@ -1,4 +1,5 @@
 import getLabel from "../Locale/GetLabel";
+import { useLanguage } from "../Locale/Registry";
 import "./Style/PlayerIcon.css";
 
 export interface PlayerIconProps {
@@ -6,7 +7,8 @@ export interface PlayerIconProps {
 }
 
 export default function PlayerIcon({ name }: PlayerIconProps) {
-    return <div className="player-icon-outer" title={getLabel('PlayerIcon', name)}>
+    const language = useLanguage();
+    return <div className="player-icon-outer" title={getLabel(language, 'PlayerIcon', name)}>
         <div className={'player-icon ' + name} />
     </div>;
 }

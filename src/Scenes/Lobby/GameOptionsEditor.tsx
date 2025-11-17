@@ -6,6 +6,7 @@ import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import { SetGameOptions } from "./Lobby";
 import './Style/GameOptionsEditor.css';
+import { useLanguage } from "../../Locale/Registry";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
@@ -23,6 +24,8 @@ interface ExpansionProps {
 }
 
 export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameOptionProps) {
+    const language = useLanguage();
+
     const ExpansionCheckbox = useCallback(({ name, onSelect, onDeselect }: ExpansionProps) => {
         const readOnly = setGameOptions === undefined;
         const handleExpansionChange = readOnly ? undefined : (event: ChangeEvent<HTMLInputElement>) => {
@@ -47,10 +50,10 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 onChange={handleExpansionChange}
                 readOnly={readOnly}
             />
-            <label htmlFor={name}>{getLabel('ExpansionType', name)}</label>
+            <label htmlFor={name}>{getLabel(language, 'ExpansionType', name)}</label>
             <Tooltip group='ExpansionTooltip' name={name} />
         </div>);
-    }, [gameOptions.expansions, setGameOptions]);
+    }, [language, gameOptions.expansions, setGameOptions]);
 
     const ConditionalOnExpansion = useCallback(({ expansions, children }: { expansions: ExpansionType[], children: ReactNode }) => {
         if (expansions.some(value => gameOptions.expansions?.includes(value))) {
@@ -77,7 +80,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         const handleNumberChange = numberSetter(prop, min, max);
         return (<div className="option-row">
             <div className="option-left-column">
-                <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+                <label htmlFor={prop}>{getLabel(language, 'GameOptions', prop)}</label>
                 <Tooltip group='GameOptionsTooltip' name={prop} />
             </div>
             <div className="option-right-column">
@@ -89,13 +92,13 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 />
             </div>
         </div>);
-    }, [numberSetter]);
+    }, [language, numberSetter]);
 
     const OptionSlider = useCallback(({ prop, value, min, max, step }: GameOptionsOf<number> & { min?: number, max?: number, step?: number }) => {
         const handleNumberChange = numberSetter(prop, min, max);
         return (<div className="option-row">
             <div className="option-left-column">
-                <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+                <label htmlFor={prop}>{getLabel(language, 'GameOptions', prop)}</label>
                 <Tooltip group='GameOptionsTooltip' name={prop} />
             </div>
             <div className="option-right-column">
@@ -113,7 +116,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 />
             </div>
         </div>);
-    }, [numberSetter]);
+    }, [language, numberSetter]);
 
     const OptionCheckbox = useCallback(({ prop, value }: GameOptionsOf<boolean>) => {
         const readOnly = setGameOptions === undefined;
@@ -126,10 +129,10 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 onChange={handleOptionChange}
                 readOnly={readOnly}
             />
-            <label htmlFor={prop}>{getLabel('GameOptions', prop)}</label>
+            <label htmlFor={prop}>{getLabel(language, 'GameOptions', prop)}</label>
             <Tooltip group='GameOptionsTooltip' name={prop} />
         </div>)
-    }, [setGameOptions]);
+    }, [language, setGameOptions]);
 
     const getOption = <T,>(prop: GameOptionsOf<T>['prop']) => {
         let value: T | undefined;
@@ -141,7 +144,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
 
     return (<div className="game-options-editor">
         <div className="game-options-group">
-            <Collapsible label={getLabel('GameOptions', 'expansions')} storageKey="expand_expansions" defaultExpanded>
+            <Collapsible label={getLabel(language, 'GameOptions', 'expansions')} storageKey="expand_expansions" defaultExpanded>
                 <ExpansionCheckbox name='dodgecity' />
                 <ExpansionCheckbox name='wildwestshow_characters' />
                 <ExpansionCheckbox name='goldrush' />
@@ -152,7 +155,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='legends' onSelect={e => e.add('legends_basemod')} />
                 <ExpansionCheckbox name='legends_basemod' onDeselect={e => e.delete('legends')} />
             </Collapsible>
-            <Collapsible label={getLabel('GameOptions', 'variations')} storageKey="expand_variations" defaultExpanded>
+            <Collapsible label={getLabel(language, 'GameOptions', 'variations')} storageKey="expand_variations" defaultExpanded>
                 <ExpansionCheckbox name='ghost_cards' />
                 <ExpansionCheckbox name='highnoon' />
                 <ExpansionCheckbox name='fistfulofcards' />
@@ -160,14 +163,14 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='shadowgunslingers' />
                 <ExpansionCheckbox name='stickofdynamite' />
             </Collapsible>
-            <Collapsible label={getLabel('GameOptions', 'extras')} storageKey="expand_extras">
+            <Collapsible label={getLabel(language, 'GameOptions', 'extras')} storageKey="expand_extras">
                 <ExpansionCheckbox name='mostwanted' />
                 <ExpansionCheckbox name='canyondiablo' />
                 <ExpansionCheckbox name='crazy_greygory' />
             </Collapsible>
         </div>
         <div className="game-options-group">
-            <Collapsible label={getLabel('ui', 'GAME_OPTIONS')} storageKey="expand_options">
+            <Collapsible label={getLabel(language, 'ui', 'GAME_OPTIONS')} storageKey="expand_options">
                 <OptionSlider {...getOption('character_choice')} min={1} max={3} />
                 <OptionSlider {...getOption('max_players')} min={3} max={8} />
                 <OptionCheckbox {...getOption('add_bots')} />
