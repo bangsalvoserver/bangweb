@@ -421,7 +421,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     LAST_WILL: {
         name: "Last Will",
-        description: <>Play on any player. If he is eliminated, he may give up to 3cards (in hand or in play) to another player.</>
+        description: <>Play on any player. If he is eliminated, he may give up to 3 cards (in hand or in play) to another player.</>
     },
     INDIAN_GUIDE: {
         name: "Indian Guide",
