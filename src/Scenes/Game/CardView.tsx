@@ -1,10 +1,10 @@
 import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
-import { getDivRect } from "../../Utils/Rect";
+import { useLanguage } from "../../Locale/Registry";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
 import { getLocalizedCardName } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
-import { CardRef } from "./Model/CardTracker";
+import { buildCardRef, CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
 import { Card, GameTable, getCard, getCardBackface, getCardImage, getTablePocket, isCardKnown } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
@@ -12,7 +12,6 @@ import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isRe
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardAnimations.css";
 import "./Style/CardView.css";
-import { useLanguage } from "../../Locale/Registry";
 
 export function getTokenSprite(tokenType: TokenType) {
     return `/media/sprite_${tokenType}.png`;
@@ -107,16 +106,15 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     const divRef = useRef<HTMLDivElement>(null);
 
-    useImperativeHandle(cardRef, () => ({
-        getRect: () => getDivRect(divRef.current)
-    }), []);
+    useImperativeHandle(cardRef, () => buildCardRef(divRef), []);
 
     let backfaceImage = getCardBackface(card);
     let cardImage = useMemo(() => getCardImage(card), [card]);
     
-    const cardAlt = isCardKnown(card) ? getLocalizedCardName(language, card.cardData.name) : "";
+    const cardName = isCardKnown(card) ? card.cardData.name : undefined;
+    const cardAlt = cardName ? getLocalizedCardName(language, cardName) : undefined;
 
-    useCardOverlay(cardImage ?? backfaceImage, cardAlt, divRef);
+    useCardOverlay(cardImage ?? backfaceImage, cardName, divRef);
 
     let style: CSSProperties | undefined;
     let classes = ['card-view'];

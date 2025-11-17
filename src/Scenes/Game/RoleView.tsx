@@ -1,11 +1,11 @@
 import { CSSProperties, useRef } from "react";
-import getLabel from "../../Locale/GetLabel";
+import { useLanguage } from "../../Locale/Registry";
 import { getCardUrl } from "./CardView";
+import { getLocalizedCardName } from "./GameStringComponent";
 import { PlayerRole } from "./Model/CardEnums";
 import { Player } from "./Model/GameTable";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardView.css";
-import { useLanguage } from "../../Locale/Registry";
 
 export interface RoleProps {
     player: Player;
@@ -44,9 +44,11 @@ export default function RoleView({ player }: RoleProps) {
 
     const backfaceSrc = getRoleImage(backRole);
     const frontfaceSrc = getRoleImage(frontRole);
-    const cardAlt = getLabel(language, 'PlayerRole', frontRole);
+    
+    const cardName = 'ROLE_' + frontRole.toUpperCase();
+    const cardAlt = getLocalizedCardName(language, cardName);
 
-    useCardOverlay(frontfaceSrc, cardAlt, divRef);
+    useCardOverlay(frontfaceSrc, cardName, divRef);
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>

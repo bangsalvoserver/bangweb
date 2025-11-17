@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { RefObject, useMemo } from "react";
 import { getDivRect, Rect } from "../../../Utils/Rect";
 import { matchUnion } from "../../../Utils/UnionUtils";
 import { MapRef } from "../../../Utils/UseMapRef";
@@ -19,6 +19,12 @@ export type PlayerRef = {
 
 export interface CardRef {
     getRect: () => Rect | null;
+}
+
+export function buildCardRef(divRef: RefObject<HTMLDivElement>): CardRef {
+    return {
+        getRect: () => getDivRect(divRef.current)
+    };
 }
 
 export interface CardTracker {

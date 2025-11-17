@@ -1,15 +1,16 @@
-import { Dispatch, RefObject, SetStateAction, createContext, useContext, useEffect } from "react";
+import { createContext, Dispatch, RefObject, SetStateAction, useContext, useEffect } from "react";
 import { CardImage } from "./GameTable";
+import { buildCardRef, CardRef } from "./CardTracker";
 
 export interface OverlayState {
     cardImage: CardImage | string;
-    cardAlt: string;
-    divRef: RefObject<HTMLDivElement>;
+    cardName: string | undefined;
+    cardRef: CardRef;
 };
 
 export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayState | undefined>> | null>(null);
 
-export default function useCardOverlay(cardImage: CardImage | string, cardAlt: string, divRef: RefObject<HTMLDivElement>) {
+export default function useCardOverlay(cardImage: CardImage | string, cardName: string | undefined, divRef: RefObject<HTMLDivElement>) {
     const setCardOverlay = useContext(SetCardOverlayContext);
 
     useEffect(() => {
@@ -21,13 +22,15 @@ export default function useCardOverlay(cardImage: CardImage | string, cardAlt: s
             return;
         }
 
+        const cardRef = buildCardRef(divRef);
+
         let timeout: number | undefined;
         let added = false;
 
         const addOverlay = () => {
             timeout = setTimeout(() => {
                 added = true;
-                setCardOverlay({ cardImage, cardAlt, divRef });
+                setCardOverlay({ cardImage, cardName, cardRef });
             }, 500);
         };
 
@@ -54,5 +57,5 @@ export default function useCardOverlay(cardImage: CardImage | string, cardAlt: s
             div.removeEventListener('mousemove', resetTimeout);
             removeOverlay();
         }
-    }, [cardImage, cardAlt, divRef, setCardOverlay]);
+    }, [cardImage, cardName, divRef, setCardOverlay]);
 }

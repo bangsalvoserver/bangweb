@@ -345,4 +345,17 @@ export const CARDS_ITALIAN: CardRegistry = {
     GAME_DISCARD_BLACK:         "Scarta equip",
     GAME_DISCARD_BRONCO:        "Scarta Bronco",
 
+    // Roles
+
+    ROLE_UNKNWOWN:               "(Ruolo sconosciuto)",
+    ROLE_SHERIFF:                "Sceriffo",
+    ROLE_DEPUTY:                 "Vice",
+    ROLE_OUTLAW:                 "Fuorilegge",
+    ROLE_RENEGADE:               "Rinnegato",
+    ROLE_DEPUTY_3P:              "Vice",
+    ROLE_OUTLAW_3P:              "Fuorilegge",
+    ROLE_RENEGADE_3P:            "Rinnegato",
+    ROLE_SHADOW_DEPUTY:          "Vice Ombra",
+    ROLE_SHADOW_OUTLAW:          "Fuorilegge Ombra",
+
 };

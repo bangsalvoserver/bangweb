@@ -71,19 +71,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
         crazy_greygory:         "Tutti i giocatori sono Greygory Deck senza limitazioni",
     },
 
-    PlayerRole: {
-        unknwown:               "(Ruolo sconosciuto)",
-        sheriff:                "Sceriffo",
-        deputy:                 "Vice",
-        outlaw:                 "Fuorilegge",
-        renegade:               "Rinnegato",
-        deputy_3p:              "Vice",
-        outlaw_3p:              "Fuorilegge",
-        renegade_3p:            "Rinnegato",
-        shadow_deputy:          "Vice Ombra",
-        shadow_outlaw:          "Fuorilegge Ombra",
-    },
-
     PlayerIcon: {
         'icon-winner':          "Vincitore",
         'icon-origin':          "Giocatore origine",

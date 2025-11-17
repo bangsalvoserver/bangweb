@@ -343,4 +343,17 @@ export const CARDS_CZECH: CardRegistry = {
     GAME_SELL_BEER:             "Prodat pivo",
     GAME_DISCARD_BLACK:         "Odhodit vybavení",
     GAME_DISCARD_BRONCO:        "Odhodit Bronco",
+
+    // Roles
+
+    ROLE_UNKNOWN:               "(Neznámá role)",
+    ROLE_SHERIFF:               "Šerif",
+    ROLE_DEPUTY:                "Zástupce šerifa",
+    ROLE_OUTLAW:                "Bandita",
+    ROLE_RENEGADE:              "Odpadlík",
+    ROLE_DEPUTY_3P:             "Zástupce šerifa",
+    ROLE_OUTLAW_3P:             "Bandita",
+    ROLE_RENEGADE_3P:           "Odpadlík",
+    ROLE_SHADOW_DEPUTY:         "Stínový zástupce šerifa",
+    ROLE_SHADOW_OUTLAW:         "Stínový bandita",
 };

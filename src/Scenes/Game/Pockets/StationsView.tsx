@@ -16,9 +16,10 @@ function StationCardView({ card }: CardProps) {
 
     const divRef = useRef<HTMLDivElement>(null);
     const image = getCardFrontface(card) ?? 'backface/station';
-    const cardAlt = isCardKnown(card) ? getLocalizedCardName(language, card.cardData.name) : "";
+    const cardName = isCardKnown(card) ? card.cardData.name : undefined;
+    const cardAlt = cardName ? getLocalizedCardName(language, cardName) : undefined;
 
-    useCardOverlay(image, cardAlt, divRef);
+    useCardOverlay(image, cardName, divRef);
     
     const selectorCardClass = getSelectorCardClass(table, selector, card);
     return (

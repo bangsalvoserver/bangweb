@@ -71,19 +71,6 @@ export const LABELS_CZECH: LabelRegistry = {
         crazy_greygory:         "Každý hráč je Greygory Deck bez omezení",
     },
 
-    PlayerRole: {
-        unknwown:               "(Neznámá role)",
-        sheriff:                "Šerif",
-        deputy:                 "Zástupce šerifa",
-        outlaw:                 "Bandita",
-        renegade:               "Odpadlík",
-        deputy_3p:              "Zástupce šerifa",
-        outlaw_3p:              "Bandita",
-        renegade_3p:            "Odpadlík",
-        shadow_deputy:          "Stínový zástupce šerifa",
-        shadow_outlaw:          "Stínový bandita",
-    },
-
     PlayerIcon: {
         'icon-winner':          "Vítěz",
         'icon-origin':          "Hrající hráč",
