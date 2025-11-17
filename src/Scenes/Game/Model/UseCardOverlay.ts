@@ -26,10 +26,12 @@ export default function useCardOverlay(cardImage: CardImage | string, entry: Car
         let timeout: number | undefined;
         let added = false;
 
+        const cardRef = buildCardRef(divRef);
+
         const addOverlay = () => {
             timeout = setTimeout(() => {
                 added = true;
-                setCardOverlay({ cardImage, entry, cardRef: buildCardRef(divRef) });
+                setCardOverlay({ cardImage, entry, cardRef });
             }, 500);
         };
 

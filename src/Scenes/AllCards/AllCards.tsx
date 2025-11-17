@@ -1,17 +1,16 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import '../../App.css';
 import Env from "../../Model/Env";
-import { isMobileDevice } from "../../Utils/MobileCheck";
 import useFetch from "../../Utils/UseFetch";
+import { useMapRef } from "../../Utils/UseMapRef";
 import CardOverlayView from "../Game/CardOverlayView";
 import CardView from "../Game/CardView";
-import { CardData } from "../Game/Model/CardData";
-import { Card, getCardImage, isCardKnown } from "../Game/Model/GameTable";
-import { OverlayState } from "../Game/Model/UseCardOverlay";
-import { useMapRef } from "../../Utils/UseMapRef";
 import { getCardRegistryEntry } from "../Game/GameStringComponent";
+import { CardData } from "../Game/Model/CardData";
 import { CardRef } from "../Game/Model/CardTracker";
+import { Card, getCardImage, KnownCard } from "../Game/Model/GameTable";
 import { SelectorConfirm, SelectorConfirmContext } from "../Game/Model/SelectorConfirm";
-import '../../App.css';
+import { OverlayState } from "../Game/Model/UseCardOverlay";
 
 function buildCard(cardData: CardData, index: number): Card {
     return {
@@ -36,23 +35,17 @@ export default function AllCards() {
     const cardRefs = useMapRef<number, CardRef>();
 
     const [overlayState, setOverlayState] = useState<OverlayState>();
-    const selected = useRef<number>();
 
     const selectorConfirm: SelectorConfirm = useMemo(() => ({
-        handleClickCard: card => () => {
-            if (selected.current === card.id) {
-                setOverlayState(undefined);
-                selected.current = undefined;
-            } else {
-                if (!isCardKnown(card)) throw new Error('All cards are known');
-                setOverlayState({
+        handleClickCard: card => () => setOverlayState(overlayState => {
+            if (!overlayState || overlayState.cardRef.cardId !== card.id) {
+                return {
                     cardImage: getCardImage(card)!,
-                    entry: getCardRegistryEntry(card.cardData.name),
+                    entry: getCardRegistryEntry((card as KnownCard).cardData.name),
                     cardRef: cardRefs.get(card.id)!
-                });
-                selected.current = card.id;
+                };
             }
-        },
+        }),
         handleClickPlayer: player => undefined,
         handleConfirm: undefined,
         handleUndo: undefined,
@@ -64,6 +57,6 @@ export default function AllCards() {
                 <CardView key={card.id} card={card} cardRef={ref => cardRefs.set(card.id, ref)} />
             )}</div>
         </SelectorConfirmContext.Provider>
-        { isMobileDevice() || <CardOverlayView overlayState={overlayState} /> }
+        <CardOverlayView overlayState={overlayState} />
     </div>
 }

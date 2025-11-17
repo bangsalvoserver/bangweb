@@ -19,11 +19,13 @@ export type PlayerRef = {
 
 export interface CardRef {
     getRect: () => Rect | null;
+    cardId?: CardId;
 }
 
-export function buildCardRef(divRef: RefObject<HTMLDivElement>) {
+export function buildCardRef(divRef: RefObject<HTMLDivElement>, id?: CardId) {
     return {
-        getRect: () => getDivRect(divRef.current)
+        getRect: () => getDivRect(divRef.current),
+        cardId: id
     }
 }
 
