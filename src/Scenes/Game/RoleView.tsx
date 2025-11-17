@@ -44,9 +44,11 @@ export default function RoleView({ player }: RoleProps) {
 
     const backfaceSrc = getRoleImage(backRole);
     const frontfaceSrc = getRoleImage(frontRole);
-    const entry = getCardRegistryEntry(language, 'ROLE_' + frontRole.toUpperCase());
+    
+    const cardName = 'ROLE_' + frontRole.toUpperCase();
+    const entry = getCardRegistryEntry(language, cardName);
 
-    useCardOverlay(frontfaceSrc, entry, divRef);
+    useCardOverlay(frontfaceSrc, cardName, divRef);
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>

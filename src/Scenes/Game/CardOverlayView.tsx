@@ -5,11 +5,15 @@ import CardSignView from "./CardSignView";
 import { CardDescriptionView, getCardUrl } from "./CardView";
 import { OverlayState } from "./Model/UseCardOverlay";
 import "./Style/CardOverlayView.css";
+import { useLanguage } from "../../Locale/Registry";
+import { getCardRegistryEntry } from "./GameStringComponent";
 
 const WINDOW_PADDING_X = 150;
 const WINDOW_PADDING_Y = 200;
 
-function CardOverlayInner({ cardRef, cardImage, entry }: OverlayState) {
+function CardOverlayInner({ cardRef, cardImage, cardName }: OverlayState) {
+  const language = useLanguage();
+
   const rect = useUpdateEveryFrame(cardRef.getRect);
   if (!rect) return null;
 
@@ -21,6 +25,7 @@ function CardOverlayInner({ cardRef, cardImage, entry }: OverlayState) {
 
   const image = typeof cardImage === 'string' ? cardImage : cardImage.image;
   const sign = typeof cardImage === 'string' ? undefined : cardImage.sign;
+  const entry = cardName ? getCardRegistryEntry(language, cardName) : undefined;
 
   return <div className="card-overlay" style={cardOverlayStyle}>
     <div className="card-overlay-inner">

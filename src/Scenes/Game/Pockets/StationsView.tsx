@@ -19,7 +19,7 @@ function StationCardView({ card }: CardProps) {
     const cardName = isCardKnown(card) ? card.cardData.name : undefined;
     const entry = useMemo(() => cardName ? getCardRegistryEntry(language, cardName) : undefined, [language, cardName]);
 
-    useCardOverlay(image, entry, divRef);
+    useCardOverlay(image, cardName, divRef);
     
     const selectorCardClass = getSelectorCardClass(table, selector, card);
     return (
