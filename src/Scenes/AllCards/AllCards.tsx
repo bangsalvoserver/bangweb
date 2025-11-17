@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import '../../App.css';
 import { LanguageProvider } from "../../Locale/Registry";
 import Env, { Language } from "../../Model/Env";
@@ -33,6 +33,17 @@ function AllCardsInner({ deck }: { deck: DeckType }) {
 
     const [overlayState, setOverlayState] = useState<OverlayState>();
 
+    useEffect(() => {
+        const callback = (ev: MouseEvent) => {
+            if (!(ev.target as Element).classList.contains('card-view-img')) {
+                setOverlayState(undefined);
+            }
+        };
+
+        window.addEventListener('click', callback);
+        return () => window.removeEventListener('click', callback);
+    }, []);
+
     const selectorConfirm: SelectorConfirm = useMemo(() => ({
         handleClickCard: card => () => setOverlayState(overlayState => {
             if (!overlayState || overlayState.cardRef.cardId !== card.id) {
@@ -51,7 +62,7 @@ function AllCardsInner({ deck }: { deck: DeckType }) {
     return <div>
         <SelectorConfirmContext.Provider value={selectorConfirm}>
             <div className={deck === 'feats' ? 'feats-cards' : ''}>{ cards.map(card =>
-                <CardView key={card.id} card={card} cardRef={ref => cardRefs.set(card.id, ref)} />
+                <CardView key={`${deck}_${card.id}`} card={card} cardRef={ref => cardRefs.set(card.id, ref)} />
             )}</div>
         </SelectorConfirmContext.Provider>
         <CardOverlayView overlayState={overlayState} />
