@@ -15,6 +15,7 @@ export interface CardRegistryEntry {
     name: string;
     hideTitle?: boolean;
     description?: JSX.Element | JSX.Element[];
+    titleClass?: string;
     descriptionClass?: string;
 }
 

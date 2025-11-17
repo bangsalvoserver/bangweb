@@ -102,7 +102,7 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
 
 export function CardDescriptionView({ entry }: { entry: CardRegistryEntry }) {
     return <>
-        {!entry.hideTitle && <div className='card-title'>{entry.name}</div>}
+        {!entry.hideTitle && <div className={entry.titleClass ?? 'card-title'}>{entry.name}</div>}
         {asArray(entry.description).map((elem, index) =>
             <div key={index} className={entry.descriptionClass ?? 'card-description'} description-index={index}>
                 <div className='card-description-inner'>{elem}</div>

@@ -1729,81 +1729,97 @@ export const CARDS_ENGLISH: CardRegistry = {
     FIFTY_GUNS: {
         name: "Fifty Guns",
         description: <>Take or discard a weapon.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     WOUNDED_PRIDE: {
         name: "Wounded Pride",
         description: <>Another player causes one of your <i>BANG!</i> cards to miss.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     OLD_WEST_GANG: {
         name: "Old West Gang",
         description: <>Hit 2 or more players in the same turn.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     BOTTLENECK: {
         name: "Bottleneck",
         description: <>Discard a <i>Beer</i> card.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_CHUCK_A_LUCK: {
         name: "The Chuck-A-Luck",
         description: <>Discard a <i>BANG!</i> card.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     "3_15_TO_YOOMA": {
         name: "3-15 To Yooma",
         description: <>Do or make another player do a "Draw!" (even at the start of your turn).</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     GOOD_COMPANY: {
         name: "Good Company",
         description: <>Discard a card, then play a card with the same name (or vice versa).</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_LAST_HERO: {
         name: "The Last Hero",
         description: <>Discard a blue card in play.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_MAN_WITH_NO_NAME: {
         name: "The Man With No Name",
         description: <>Lose 1 life point (not your last one).</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     WILHELM_SCREAM: {
         name: "Wilhelm Scream",
         description: <>Play a <i>BANG!</i> card at distance 2 or more.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     SCRUGS_BALLAD: {
         name: "Scrugs Ballad",
         description: <>Lose a <i>Duel</i>.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     BORDERLANDS: {
         name: "Borderlands",
         description: <>Discard your entire hand (even if you have 0 cards).</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_OREGON_TRAIL: {
         name: "The Oregon Trail",
         description: <>During your draw phase, do not draw the first card you are allowed to draw.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     A_THOUSAND_WAYS_TO_DIE: {
         name: "A Thousand Ways To Die",
         description: <>Show from your hand a <i>Missed!</i> card and another card of the same suit.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     FOR_A_FEW_CARDS_MORE: {
         name: "For A Few Cards More",
         description: <>Discard at least 1 excess card at the end of your turn.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     A_QUICK_DEATH: {
         name: "A Quick Death",
         description: <>Hit another player at full life using a <i>BANG!</i> card.</>,
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
 

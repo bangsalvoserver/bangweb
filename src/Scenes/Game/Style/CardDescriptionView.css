@@ -8,10 +8,6 @@
     src: url('/fonts/palatinolinotype_roman.ttf');
 }
 
-.card-overlay-inner > *, .card-front > * {
-    /* outline: 1px solid red; */
-}
-
 .card-title {
     position: absolute;
     text-align: center;
@@ -135,6 +131,32 @@
     line-height: 10pt;
 }
 
+.feats-description {
+    position: absolute;
+    width: 53%;
+    height: 30%;
+    left: 43%;
+    top: 58%;
+}
+
+.feats-description .card-description-inner {
+    text-align: left;
+    font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
+    top: 0;
+    transform: unset;
+}
+
+.feats-title {
+    position: absolute;
+    font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    top: 16%;
+    left: 43%;
+    color: rgb(50, 50, 50);
+}
+
 .text-smaller .card-description-inner {
     font-size: 10pt;
 }
@@ -155,6 +177,12 @@
 }
 
 .card-view .card-title {
+    font-size: 3pt;
+    pointer-events: none;
+    color: gray;
+}
+
+.card-view .feats-title {
     font-size: 3pt;
     pointer-events: none;
     color: gray;
