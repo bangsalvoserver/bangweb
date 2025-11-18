@@ -1,9 +1,11 @@
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import { clipUsername } from "../Scenes/Lobby/LobbyUser";
-import "./Style/UserMenu.css";
-import { MAX_USERNAME_LENGTH } from "../Model/AppSettings";
 import getLabel from "../Locale/GetLabel";
 import { useLanguage } from "../Locale/Registry";
+import { MAX_USERNAME_LENGTH } from "../Model/AppSettings";
+import { clipUsername } from "../Scenes/Lobby/LobbyUser";
+import { HeaderProps } from "./Header";
+import "./Style/UserMenu.css";
+import { checkMyUserFlag } from "../Model/SceneState";
 
 export interface UserMenuItemProps {
   onClick: () => void;
@@ -11,17 +13,14 @@ export interface UserMenuItemProps {
 }
 
 export function UserMenuItem({ onClick, children }: UserMenuItemProps) {
-  return <li><button onClick={onClick} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">{children}</button></li>;
+  return <button onClick={onClick} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">{children}</button>;
 }
 
-export interface UserMenuProps {
-  username?: string;
-  setUsername: (value: string) => void;
-  clearPropic?: () => void;
-  children: ReactNode;
+export interface UserMenuProps extends HeaderProps {
+  closeMenu: () => void;
 }
 
-export default function UserMenu({ username, setUsername, clearPropic, children }: UserMenuProps) {
+export default function UserMenu({ scene, settings, connection, closeMenu }: UserMenuProps) {
   const usernameRef = useRef<HTMLInputElement>(null);
   const [showInput, setShowInput] = useState(false);
   const language = useLanguage();
@@ -32,26 +31,73 @@ export default function UserMenu({ username, setUsername, clearPropic, children 
     }
   }, [showInput]);
 
+  const handleSetUsername = (username?: string) => {
+    settings.setUsername(username);
+    connection.sendMessage({ user_set_name: username ?? '' });
+  };
+
+  const handleClearPropic = () => {
+    closeMenu();
+    settings.setPropic(undefined);
+    connection.sendMessage({ user_set_propic: null });
+  };
+  
+  const handleLeaveLobby = () => {
+    closeMenu();
+    connection.sendMessage({ lobby_leave: {}});
+  };
+
+  const handleReturnLobby = () => {
+    closeMenu();
+    connection.sendMessage({ lobby_return: {}});
+  };
+  
+  const isSpectator = scene.type === 'lobby' && checkMyUserFlag(scene.lobbyState, 'spectator');
+
+  const handleToggleSpectate = () => {
+    // closeMenu();
+    connection.sendMessage({ user_spectate: !isSpectator });
+  };
+
+  const handleDisconnect = () => {
+    closeMenu();
+    settings.setSessionId(undefined);
+    connection.disconnect();
+  };
+
   return (
     <div className='user-menu z-50
-    absolute top-10 right-0
-    text-base list-none divide-y rounded-lg shadow bg-gray-700 divide-gray-600'
+      absolute top-10 right-0
+      text-base list-none divide-y rounded-lg shadow bg-gray-700 divide-gray-600'
     >
-      <div className="px-4 py-3">
-        <div className={showInput ? 'username-input' : 'username-span'}
+      <div className="py-2">
+        <div className={(showInput ? 'username-input' : 'username-span') + ' px-4 py-2'}
           onClick={() => setShowInput(true)}>
-          <span className="block text-sm text-white w-max h-5">{clipUsername(language, username ?? '')}</span>
-          <input ref={usernameRef} value={username}
+          <span className="block text-sm text-white w-max h-5">{clipUsername(language, settings.username ?? '')}</span>
+          <input ref={usernameRef} value={settings.username}
             maxLength={MAX_USERNAME_LENGTH}
-            onChange={e => setUsername(e.target.value)}
+            onChange={e => handleSetUsername(e.target.value)}
             onBlur={() => setShowInput(false)}
           />
         </div>
+        { settings.propic &&
+          <UserMenuItem onClick={handleClearPropic}>{getLabel(language, 'ui', 'BUTTON_CLEAR_PROPIC')}</UserMenuItem>}
       </div>
-      <ul className="py-2" aria-labelledby="user-menu-button">
-        {clearPropic && <UserMenuItem onClick={clearPropic}>{getLabel(language, 'ui', 'BUTTON_CLEAR_PROPIC')}</UserMenuItem>}
-        {children}
-      </ul>
+      { (scene.type !== 'home' && scene.type !== 'loading') && <div className="py-2">
+
+        { scene.type === 'game' && checkMyUserFlag(scene.lobbyState, 'lobby_owner') &&
+          <UserMenuItem onClick={handleReturnLobby}>{getLabel(language, 'ui', 'BUTTON_RETURN_LOBBY')}</UserMenuItem>}
+        
+        { scene.type === 'lobby' &&
+          <UserMenuItem onClick={handleToggleSpectate}>{getLabel(language, 'ui', isSpectator ? 'BUTTON_SPECTATE_OFF' : 'BUTTON_SPECTATE_ON')}</UserMenuItem> }
+
+        { (scene.type === 'game' || scene.type === 'lobby') &&
+          <UserMenuItem onClick={handleLeaveLobby}>{getLabel(language, 'ui', 'BUTTON_LEAVE_LOBBY')}</UserMenuItem> }
+          
+        { scene.type === 'waiting_area' &&
+          <UserMenuItem onClick={handleDisconnect}>{getLabel(language, 'ui', 'BUTTON_DISCONNECT')}</UserMenuItem> }
+
+      </div> }
     </div>
   )
 }
