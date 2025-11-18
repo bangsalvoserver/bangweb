@@ -1,4 +1,5 @@
-export type Language = 'en' | 'it' | 'cs';
+export const LANGUAGES = [ 'it', 'en', 'cs' ] as const;
+export type Language = typeof LANGUAGES[number];
 
 const Env = (() => {
     const bangServerUrl = import.meta.env.VITE_BANG_SERVER_URL as string | undefined;
