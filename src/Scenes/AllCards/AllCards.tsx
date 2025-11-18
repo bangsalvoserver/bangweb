@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import '../../App.css';
 import { LanguageProvider } from "../../Locale/Registry";
-import Env, { Language } from "../../Model/Env";
+import Env, { Language, LANGUAGES } from "../../Model/Env";
 import useFetch from "../../Utils/UseFetch";
 import { useMapRef } from "../../Utils/UseMapRef";
 import CardOverlayView from "../Game/CardOverlayView";
@@ -12,6 +12,7 @@ import { CardRef } from "../Game/Model/CardTracker";
 import { Card, getCardImage, KnownCard } from "../Game/Model/GameTable";
 import { SelectorConfirm, SelectorConfirmContext } from "../Game/Model/SelectorConfirm";
 import { OverlayState } from "../Game/Model/UseCardOverlay";
+import getLabel from "../../Locale/GetLabel";
 
 function buildCard(cardData: CardData, index: number): Card {
     return {
@@ -103,9 +104,7 @@ export default function AllCards() {
                 <option value='none'>Hidden Deck</option>
             </select>
             <select value={language} onChange={handleChangeLanguage} className="m-2 p-1">
-                <option value='en'>English</option>
-                <option value='it'>Italian</option>
-                <option value='cs'>Czech</option>
+                {LANGUAGES.map(value => <option key={value} value={value}>{getLabel(value, 'ui', 'LANGUAGE_NAME')}</option>)}
             </select>
         </div>
         <AllCardsInner deck={deck} />
