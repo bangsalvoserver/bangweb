@@ -347,7 +347,7 @@ export const CARDS_ITALIAN: CardRegistry = {
 
     // Roles
 
-    ROLE_UNKNWOWN:               "(Ruolo sconosciuto)",
+    ROLE_UNKNOWN:                "(Ruolo sconosciuto)",
     ROLE_SHERIFF:                "Sceriffo",
     ROLE_DEPUTY:                 "Vice",
     ROLE_OUTLAW:                 "Fuorilegge",
