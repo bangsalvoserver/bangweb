@@ -261,10 +261,10 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         };
     },
 
-    flash_card ({ card, duration }) {
+    flash_card ({ cards, duration }) {
         return {
             ...this,
-            cards: editById(this.cards, card, card => setAnimation(card,
+            cards: editByIds(this.cards, cards, card => setAnimation(card,
                 { type: 'flash', duration }
             ))
         };
@@ -284,6 +284,13 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             cards: editById(this.cards, card, clearAnimation)
+        };
+    },
+
+    cards_animation_end (cards) {
+        return {
+            ...this,
+            cards: editByIds(this.cards, cards, clearAnimation)
         };
     },
 

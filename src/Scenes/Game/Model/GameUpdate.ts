@@ -88,7 +88,7 @@ export interface TapCardUpdate {
 }
 
 export interface FlashCardUpdate {
-    card: CardId;
+    cards: CardId[];
 }
 
 export interface ShortPauseUpdate {
@@ -232,6 +232,7 @@ export type SyntheticTableUpdate =
     { move_card_end: MoveCardUpdate } |
     { deck_shuffled_end: DeckShuffledUpdate } |
     { card_animation_end: CardId } |
+    { cards_animation_end: CardId[] } |
     { move_tokens_end: MoveTokensUpdate } |
     { move_train_end: MoveTrainUpdate };
 

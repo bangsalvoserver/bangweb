@@ -166,7 +166,7 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
         
             flash_card(update) {
                 tableDispatch({ flash_card: update });
-                delayDispatch(update.duration, () => tableDispatch({ card_animation_end: update.card }));
+                delayDispatch(update.duration, () => tableDispatch({ cards_animation_end: update.cards }));
             },
         
             short_pause({ card, duration }) {
