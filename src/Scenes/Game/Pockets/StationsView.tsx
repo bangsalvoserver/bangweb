@@ -1,4 +1,5 @@
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useRef } from "react";
+import { useLanguage } from "../../../Locale/Registry";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameStateContext } from "../GameScene";
 import { getCardRegistryEntry } from "../GameStringComponent";
@@ -7,7 +8,6 @@ import { useSelectorConfirm } from "../Model/SelectorConfirm";
 import useCardOverlay from "../Model/UseCardOverlay";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
-import { useLanguage } from "../../../Locale/Registry";
 
 function StationCardView({ card }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
@@ -17,7 +17,7 @@ function StationCardView({ card }: CardProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const image = getCardFrontface(card) ?? 'backface/station';
     const cardName = isCardKnown(card) ? card.cardData.name : undefined;
-    const entry = useMemo(() => cardName ? getCardRegistryEntry(language, cardName) : undefined, [language, cardName]);
+    const entry = cardName ? getCardRegistryEntry(language, cardName) : undefined;
 
     useCardOverlay(image, cardName, divRef);
     

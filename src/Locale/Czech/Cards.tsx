@@ -1473,7 +1473,8 @@ export const CARDS_CZECH: CardRegistry = {
     // Player roles
 
     ROLE_UNKNOWN: {
-        name: "(Neznámá role)"
+        name: "(Neznámá role)",
+        hideTitle: true
     },
     ROLE_SHERIFF: {
         name: "Šerif"

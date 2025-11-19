@@ -1882,34 +1882,47 @@ export const CARDS_ENGLISH: CardRegistry = {
     // Player roles
 
     ROLE_UNKNOWN: {
-        name: "(Unknown role)"
+        name: "(Unknown role)",
+        hideTitle: true
     },
     ROLE_SHERIFF: {
-        name: "Sheriff"
+        name: "Sheriff",
+        hideTitle: true,
+        description: <>Kill all the Outlaws and the Renegade!</>
     },
     ROLE_DEPUTY: {
-        name: "Deputy"
+        name: "Deputy",
+        hideTitle: true,
+        description: <>Protect the Sheriff! Kill all the Outlaws and the Renegade!</>
     },
     ROLE_OUTLAW: {
-        name: "Outlaw"
+        name: "Outlaw",
+        description: <>Kill the Sheriff!</>
     },
     ROLE_RENEGADE: {
-        name: "Renegade"
+        name: "Renegade",
+        description: <>Be the last one in play!</>
     },
     ROLE_DEPUTY_3P: {
-        name: "Deputy"
+        name: "Deputy",
+        hideTitle: true,
+        description: <>Kill the Renegade!</>
     },
     ROLE_OUTLAW_3P: {
-        name: "Outlaw"
+        name: "Outlaw",
+        description: <>Kill the Deputy!</>
     },
     ROLE_RENEGADE_3P: {
-        name: "Renegade"
+        name: "Renegade",
+        description: <>Kill the Outlaw!</>
     },
     ROLE_SHADOW_DEPUTY: {
-        name: "Shadow Deputy"
+        name: "Shadow Deputy",
+        description: <>Protect the Sheriff! Kill all the Outlaws!</>
     },
     ROLE_SHADOW_OUTLAW: {
-        name: "Shadow Outlaw"
+        name: "Shadow Outlaw",
+        description: <>Kill the Sheriff!</>
     },
 
 };

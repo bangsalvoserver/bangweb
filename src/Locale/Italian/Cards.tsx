@@ -2023,34 +2023,53 @@ export const CARDS_ITALIAN: CardRegistry = {
     // Player roles
 
     ROLE_UNKNOWN: {
-        name: "(Ruolo sconosciuto)"
+        name: "(Ruolo sconosciuto)",
+        hideTitle: true
     },
     ROLE_SHERIFF: {
-        name: "Sceriffo"
+        name: "Sceriffo",
+        hideTitle: true,
+        description: <>Elimina tutti i fuorilegge e il Rinnegato!</>,
     },
     ROLE_DEPUTY: {
-        name: "Vice"
+        name: "Vice",
+        hideTitle: true,
+        description: <>Proteggi lo Sceriffo! Elimina tutti i fuorilegge e il Rinnegato!</>
     },
     ROLE_OUTLAW: {
-        name: "Fuorilegge"
+        name: "Fuorilegge",
+        hideTitle: true,
+        description: <>Elimina lo Sceriffo!</>
     },
     ROLE_RENEGADE: {
-        name: "Rinnegato"
+        name: "Rinnegato",
+        hideTitle: true,
+        description: <>Rimani l'ultimo personaggio in gioco!</>
     },
     ROLE_DEPUTY_3P: {
-        name: "Vice"
+        name: "Vice",
+        hideTitle: true,
+        description: <>Elimina il Rinnegato!</>
     },
     ROLE_OUTLAW_3P: {
-        name: "Fuorilegge"
+        name: "Fuorilegge",
+        hideTitle: true,
+        description: <>Elimina il Vice!</>
     },
     ROLE_RENEGADE_3P: {
-        name: "Rinnegato"
+        name: "Rinnegato",
+        hideTitle: true,
+        description: <>Elimina il Fuorilegge!</>
     },
     ROLE_SHADOW_DEPUTY: {
-        name: "Vice Ombra"
+        name: "Vice Ombra",
+        hideTitle: true,
+        description: <>Proteggi lo Sceriffo! Elimina tutti i Fuorilegge!</>
     },
     ROLE_SHADOW_OUTLAW: {
-        name: "Fuorilegge Ombra"
+        name: "Fuorilegge Ombra",
+        hideTitle: true,
+        description: <>Elimina lo Sceriffo!</>
     },
 
 };

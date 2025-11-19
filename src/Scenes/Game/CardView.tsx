@@ -124,7 +124,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
     let cardImage = useMemo(() => getCardImage(card), [card]);
 
     const cardName = isCardKnown(card) ? card.cardData.name : undefined;
-    const entry = useMemo(() => cardName ? getCardRegistryEntry(language, cardName) : undefined, [language, cardName]);
+    const entry = cardName ? getCardRegistryEntry(language, cardName) : undefined;
 
     useCardOverlay(cardImage ?? backfaceImage, cardName, divRef);
 

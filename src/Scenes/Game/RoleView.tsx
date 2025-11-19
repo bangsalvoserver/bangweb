@@ -1,5 +1,5 @@
 import { CSSProperties, useRef } from "react";
-import { getCardUrl } from "./CardView";
+import { CardDescriptionView, getCardUrl } from "./CardView";
 import { getCardRegistryEntry } from "./GameStringComponent";
 import { PlayerRole } from "./Model/CardEnums";
 import { Player } from "./Model/GameTable";
@@ -11,8 +11,11 @@ export interface RoleProps {
     player: Player;
 }
 
+const SUFFIX_3P = '_3p';
+
 function getRoleImage(role: PlayerRole) {
     if (role === 'unknown') return 'backface/role';
+    if (role.endsWith(SUFFIX_3P)) return 'role/' + role.substring(0, role.length - SUFFIX_3P.length);
     return 'role/' + role;
 }
 
@@ -54,7 +57,7 @@ export default function RoleView({ player }: RoleProps) {
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
                 <img className="card-view-img" src={getCardUrl(frontfaceSrc)} alt={entry?.name} />
-                {/* {<CardDescriptionView entry={entry} />} */}
+                <CardDescriptionView entry={entry} />
             </div>
             {animationKey ? <div className="card-back-flip">
                 <img className="card-view-img" src={getCardUrl(backfaceSrc)} alt="" />
