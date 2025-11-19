@@ -6,10 +6,11 @@ import { Language } from '../Model/Env';
 import { SceneState } from '../Model/SceneState';
 import { BangConnection } from '../Model/UseBangConnection';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
-import { loadFile, PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
+import { PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import LanguageMenu from './LanguageMenu';
 import UserMenu from './UserMenu';
+import { loadFile } from '../Utils/FileUtils';
 
 export interface HeaderProps {
   scene: SceneState;

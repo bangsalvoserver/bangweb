@@ -3,11 +3,11 @@ import useEvent from "react-use-event-hook";
 import { getCardUrl } from "../Scenes/Game/CardView";
 import { SoundId } from "../Scenes/Game/Model/CardEnums";
 import { PreloadAssets } from "../Scenes/Game/Model/GameUpdate";
-import { loadImage } from "./ImageSerial";
 import makeMapCache from "./MapCache";
+import { loadAudio, loadImage } from "./FileUtils";
 
 const loadCardImage = makeMapCache((name: string) => loadImage(getCardUrl(name)));
-const loadGameSound = makeMapCache((name: SoundId) => new Audio(`/sounds/${name}.mp3`));
+const loadGameSound = makeMapCache((name: SoundId) => loadAudio(`/sounds/${name}.mp3`));
 
 export function usePlaySound(muteSounds: boolean = false) {
     const currentAudio = useRef<HTMLAudioElement>();
@@ -29,11 +29,11 @@ export function usePlaySound(muteSounds: boolean = false) {
         return clearCurrentAudio;
     }, [muteSounds, clearCurrentAudio]);
 
-    return useEvent((name: SoundId) => {
+    return useEvent(async (name: SoundId) => {
         if (!muteSounds) {
             clearCurrentAudio();
 
-            const sound = loadGameSound(name);
+            const sound = await loadGameSound(name);
             currentAudio.current = sound;
 
             sound.addEventListener('ended', clearCurrentAudio);
@@ -51,15 +51,11 @@ async function asyncTimer(timeout: number): Promise<void> {
 const PRELOAD_TIMEOUT = 10000;
 
 export async function preloadAssets({ images, sounds }: PreloadAssets) {
-    for (const sound of sounds) {
-        try {
-            loadGameSound(sound);
-        } catch (e) {
-            console.error('error preloading sound', e);
-        }
-    }
     return Promise.race([
-        Promise.allSettled(images.map(loadCardImage)),
+        Promise.allSettled([
+            ...images.map(loadCardImage),
+            ...sounds.map(loadGameSound)
+        ]),
         asyncTimer(PRELOAD_TIMEOUT)
     ]);
 }
