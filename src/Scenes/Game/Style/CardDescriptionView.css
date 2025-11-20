@@ -118,6 +118,22 @@
     font-size: 11pt;
 }
 
+.train-description {
+    position: absolute;
+    width: 90%;
+    height: 20%;
+    left: 5%;
+    top: 27%;
+}
+
+.locomotive-description {
+    position: absolute;
+    width: 70%;
+    height: 25%;
+    left: 15%;
+    top: 15%;
+}
+
 .legends-description {
     position: absolute;
     width: 84%;
@@ -133,10 +149,10 @@
 
 .feats-description {
     position: absolute;
-    width: 53%;
+    width: 50%;
     height: 30%;
     left: 43%;
-    top: 58%;
+    top: 62%;
 }
 
 .feats-description .card-description-inner {
@@ -154,7 +170,7 @@
     text-transform: uppercase;
     top: 16%;
     left: 43%;
-    color: rgb(50, 50, 50);
+    color: rgb(65, 65, 65);
 }
 
 .text-bigger .card-description-inner {

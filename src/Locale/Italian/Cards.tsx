@@ -1741,13 +1741,13 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Ironhorse",
         hideTitle: true,
         description: <>Al capolinea ogni gioctore è bersaglio di un <i>BANG!</i></>,
-        descriptionClass: "train-description",
+        descriptionClass: "locomotive-description",
     },
     LELAND: {
         name: "Leland",
         hideTitle: true,
         description: <>Al capolinea ha l'effetto di un <i>Emporio</i></>,
-        descriptionClass: "train-description",
+        descriptionClass: "locomotive-description",
     },
 
     // The Great Train Robbery station cards

@@ -1600,13 +1600,13 @@ export const CARDS_ENGLISH: CardRegistry = {
         name: "Ironhorse",
         hideTitle: true,
         description: <>At the End of the Line, each player is the target of a <i>BANG!</i></>,
-        descriptionClass: "train-description"
+        descriptionClass: "locomotive-description"
     },
     LELAND: {
         name: "Leland",
         hideTitle: true,
         description: <>At the End of the Line, this acts as a <i>General Store</i>.</>,
-        descriptionClass: "train-description"
+        descriptionClass: "locomotive-description"
     },
 
     // The Great Train Robbery station cards

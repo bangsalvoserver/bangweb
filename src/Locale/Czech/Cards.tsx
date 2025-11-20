@@ -1298,11 +1298,13 @@ export const CARDS_CZECH: CardRegistry = {
 
     IRONHORSE: {
         name: "Ironhorse",
-        hideTitle: true
+        hideTitle: true,
+        descriptionClass: "locomotive-description"
     },
     LELAND: {
         name: "Leland",
-        hideTitle: true
+        hideTitle: true,
+        descriptionClass: "locomotive-description"
     },
 
     // The Great Train Robbery station cards
@@ -1434,66 +1436,82 @@ export const CARDS_CZECH: CardRegistry = {
 
     FIFTY_GUNS: {
         name: "Padesát pistolí",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     WOUNDED_PRIDE: {
         name: "Zraněná pýcha",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     OLD_WEST_GANG: {
         name: "Banda ze starého západu",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     BOTTLENECK: {
         name: "Hrdlo lahve",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_CHUCK_A_LUCK: {
         name: "Velký hazard",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     "3_15_TO_YOOMA": {
         name: "Vlak do Yoomy",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     GOOD_COMPANY: {
         name: "Dobrá společnost",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_LAST_HERO: {
         name: "Poslední hrdina",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_MAN_WITH_NO_NAME: {
         name: "Bezejmenný muž",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     WILHELM_SCREAM: {
         name: "Zděšený výkřik",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     SCRUGS_BALLAD: {
         name: "Balada o Scrugsovi",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     BORDERLANDS: {
         name: "Pohraničí",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     THE_OREGON_TRAIL: {
         name: "Oregonská stezka",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     A_THOUSAND_WAYS_TO_DIE: {
         name: "Tisíc způsobů, jak zemřít",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     FOR_A_FEW_CARDS_MORE: {
         name: "O pár karet navíc",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
     A_QUICK_DEATH: {
         name: "Rychlá smrt",
+        titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
 
