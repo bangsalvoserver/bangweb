@@ -566,23 +566,33 @@ export const CARDS_CZECH: CardRegistry = {
 
     CLAUS_THE_SAINT: {
         name: "Claus \"The Saint\"",
-        hideTitle: true
+        hideTitle: true,
+        description: <>V 1. fázi svého tahu si dober o 1 kartu více než kolik je nevyřazených hráčů. Z těchto karet si 2 nech a zbylé rozdej po jedné ostatním hráčům.</>,
+        descriptionClass: "character-description"
     },
     JOHNNY_KISCH: {
         name: "Johnny Kisch",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli zahraješ kartu, všechny stejné karty, které jsou již ve hře, se odhodí.</>,
+        descriptionClass: "character-description"
     },
     UNCLE_WILL: {
         name: "Uncle Will",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Jednou během svého tahu můžeš zahrát jakoukoli kartu jako <i>Hokynářství</i>.</>,
+        descriptionClass: "character-description"
     },
     ANNIE_VERSARY: {
         name: "Annie Versary",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Můžeš zahrát jakoukoli kartu jako kartu <i>BANG!</i>.</>,
+        descriptionClass: "character-description"
     },
     EMILIANO: {
         name: "Emiliano",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli je zrušena tvá karta <i>BANG!</i> kartou <i>Vedle!</i>, vezmi si tuto kartu <i>Vedle!</i> do ruky. Kdykoli zrušíš kartu <i>BANG!</i>, kartou <i>Vedle!</i>, vezmi si zrušenou kartu <i>BANG!</i> do ruky.</>,
+        descriptionClass: "character-description"
     },
 
     // Dodge City characters
