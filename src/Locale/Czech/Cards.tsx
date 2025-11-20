@@ -395,124 +395,171 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Krevní přísaha"
     },
     SACRIFICE: {
-        name: "Oběť"
+        name: "Oběť",
+        description: <>Může být hráno mimo tah. Zachraň jiného hráče od ztráty 1 života tím že ztratíš život sám. Potom si lízni 2 karty, pokud je to možné (3 pokud přežije).</>
     },
     DISARM: {
-        name: "Vyzbrojit"
+        name: "Odzbrojit",
+        description: <>Počítá se jako <i>Vedle!</i>.<br/>Hráč který střílel musí odhodit kartu z ruky.</>
     },
     MOLOTOV: {
-        name: "Molotov"
+        name: "Molotov",
+        hideTitle: true
     },
     BULLDOG: {
         name: "Bulldog",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Jendou za tah mužeš zahrát kartu <i>BANG!</i> jako <i>Kulomet</i> odhozením další karty spolu s ní.</>,
+        descriptionClass: "weapon-description"
     },
     LAST_WILL: {
-        name: "Poslední vůle"
+        name: "Poslední vůle",
+        description: <>Zahraj na kteréhokoli hráče. Pokud zemře, může dát až 3 karty (z ruky nebo ze hry) jinému hráči.</>
     },
     INDIAN_GUIDE: {
-        name: "Indiánský vůdce"
+        name: "Indiánský průvodce",
+        description: <>Zahraj na sebe. <i>Indiáni!</i> a <i>Válečná stezka</i> na tebe nemají efekt.</>
     },
     TAXMAN: {
-        name: "Vyzvedávač daní"
+        name: "Výběrčí daní",
+        description: <>Zahraj na kteréhokoli hráče. Na začátku jeho tahu, si musí líznout, ♠ ♣: ve fázi 1 si líže o kartu míň.</>
     },
     BROTHEL: {
-        name: "Nevěstinec"
+        name: "Nevěstinec",
+        description: <>Odhoď a hraj, ale ztrácíš schopnost do příštího tahu. Jinak odhoď a hraj normálně.</>,
+        descriptionClass: "draw-description"
     },
     BRONCO: {
         name: "Bronco",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Ostatní tě vidí na vzdálenost +1. Nemůže být zahráno spolu s <i>Mustang</i>. Také může být odstraněno odhozením 2 karet.</>
     },
     PACK_MULE: {
-        name: "Tovární Mulo"
+        name: "Nákladní Mula",
+        description: <>Můžeš mít v ruce o kartu víc než máš životů. Nemůže být zahráno spolu s <i>Mustang</i> nebo <i>Bronco</i>.</>
     },
     WAR_PATH: {
-        name: "Cesta války"
+        name: "Válečná stezka",
+        description: <>Všichni ostatní hráči odhodí <i>BANG!</i> nebo ztrácí 1 život.</>
     },
     ARSON: {
-        name: "Podpaľování"
+        name: "Žhářství",
     },
     FLYING_BULLET: {
-        name: "Létající projektil"
+        name: "Letící kulka",
+        description: <>Počítá se jako <i>Vedle!</i>.<br/>Hráč tvého výběru na vzdálenost 1 od tebe (pokud takový je) je sílem karty <i>BANG!</i>.</>
     },
     ON_THE_HOUSE: {
         name: "Na účet podniku"
     },
     GUITAR: {
-        name: "Kytara"
+        name: "Kytara",
+        description: <>Zahraj na kteréhokoli hráče. Dokud není odstraněna nesmí hrát kartu <i>BANG!</i> nebo karty které závisí na dosahu zbraně.</>
     },
     SCRAPPER: {
         name: "Rvač"
     },
     SHYLOCK: {
-        name: "Židovský lichvář"
+        name: "Lichvář"
     },
 
     // Base game characters
 
     BART_CASSIDY: {
         name: "Bart Cassidy",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli jsi zraněn, dober si 1 kartu za každý ztracený život.</>,
+        descriptionClass: "character-description"
     },
     BLACK_JACK: {
         name: "Black Jack",
-        hideTitle: true
+        hideTitle: true,
+        description: <>V 1. fázi svého tahu ukaž druhou kartu, kterou sis dobral. Pokud je srdcová nebo kárová, dober si ještě 1 kartu.</>,
+        descriptionClass: "character-description"
     },
     CALAMITY_JANET: {
         name: "Calamity Janet",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Můžeš používat kartu <i>BANG!</i> jako kartu <i>Missed!</i> a naopak.</>,
+        descriptionClass: "character-description"
     },
     EL_GRINGO: {
         name: "El Gringo",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli ti některý hráč způsobí zranění, vezmi si z jeho ruky 1 kartu za každý ztracený život.</>,
+        descriptionClass: "character-description"
     },
     JESSE_JONES: {
         name: "Jesse Jones",
-        hideTitle: true
+        hideTitle: true,
+        description: <>V 1. fázi svého tahu si můžeš první kartu vzít náhodně z ruky jiného hráče.</>,
+        descriptionClass: "character-description"
     },
     JOURDONNAIS: {
         name: "Jourdonnais",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli jsi cílem efektu <i>BANG!</i>, můžeš sejmout. Pokud je otočená karta srdcová, efekt <i>BANG!</i> je zrušen.</>,
+        descriptionClass: "character-description"
     },
     KIT_CARLSON: {
         name: "Kit Carlson",
-        hideTitle: true
+        hideTitle: true,
+        description: <>V 1. fázi svého tahu se podívej na vrchní 3 karty z dobíracího balíčku. Dvě z nich si dober a třetí vrať zpět na balíček.</>,
+        descriptionClass: "character-description"
     },
     LUCKY_DUKE: {
         name: "Lucky Duke",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli máš sejmout, otoč vrchní dvě karty z dobíracího balíčku a vyber si, kterou použiješ.</>,
+        descriptionClass: "character-description"
     },
     PAUL_REGRET: {
         name: "Paul Regret",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Pro všechny ostatní hráče se nacházíš ve vzdálenosti o 1 větší.</>,
+        descriptionClass: "character-description"
     },
     PEDRO_RAMIREZ: {
         name: "Pedro Ramirez",
-        hideTitle: true
+        hideTitle: true,
+        description: <>V 1. fázi svého tahu si můžeš první kartu vzít z vrškuz odhazovací hromádky.</>,
+        descriptionClass: "character-description"
     },
     ROSE_DOOLAN: {
         name: "Rose Doolan",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Všichni ostatní hráči se pro tebe nachází ve vzdálenosti o 1 menší.</>,
+        descriptionClass: "character-description"
     },
     SID_KETCHUM: {
         name: "Sid Ketchum",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli můžeš odhosit 2 karty z ruky a vyléčit si tak 1 život.</>,
+        descriptionClass: "character-description"
     },
     SLAB_THE_KILLER: {
         name: "Slab the Killer",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Aby ostatní hráči zrušili tvou kartu <i>BANG!</i>, musí použít 2 efekty <i>Vedle!</i>.</>,
+        descriptionClass: "character-description"
     },
     SUZY_LAFAYETTE: {
         name: "Suzy Lafayette",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Jakmile nemáš v ruce žádnou kartu, dober si 1 kartu.</>,
+        descriptionClass: "character-description"
     },
     VULTURE_SAM: {
         name: "Vulture Sam",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Kdykoli je některý jiný hráč vyřazen ze hry, vezmi si všechny jeho karty.</>,
+        descriptionClass: "character-description"
     },
     WILLY_THE_KID: {
         name: "Willy the Kid",
-        hideTitle: true
+        hideTitle: true,
+        description: <>Ve svém tahu můžeš zahrát libovolný počet karet <i>BANG!</i>.</>,
+        descriptionClass: "character-description"
     },
 
     // Most Wanted characters
