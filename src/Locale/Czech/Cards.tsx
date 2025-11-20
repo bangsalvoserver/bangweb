@@ -57,7 +57,8 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Pivo"
     },
     CAT_BALOU: {
-        name: "Cat Balou"
+        name: "Cat Balou",
+        hideTitle: true
     },
     STAGECOACH: {
         name: "Dostavník"
@@ -177,11 +178,13 @@ export const CARDS_CZECH: CardRegistry = {
 
     GHOST: {
         name: "Duch",
-        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní postavou a rolí. Nemůže však získat či ztratit žádné životy.</>
+        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní postavou a rolí. Nemůže však získat či ztratit žádné životy.</>,
+        descriptionClass: "card-description text-smaller"
     },
     GHOST_2: {
         name: "Duch",
-        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní rolí bez schopností. Nemůže však získat či ztratit žádné životy.</>
+        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní rolí bez schopností. Nemůže však získat či ztratit žádné životy.</>,
+        descriptionClass: "card-description text-smaller"
     },
     LEMAT: {
         name: "Lemat",
@@ -231,7 +234,8 @@ export const CARDS_CZECH: CardRegistry = {
     POKER: {
         name: "Poker",
         hideTitle: true,
-        description: <>Všichni ostatní hráči vyloží po 1 kartě z ruky lícem dolů a poté všechny naráz otočí. Pokud mezi nimi nené žádné A, vezmi si 2 z těchto karet do ruky a zbylé odhoď.</>
+        description: <>Všichni ostatní hráči vyloží po 1 kartě z ruky lícem dolů a poté všechny naráz otočí. Pokud mezi nimi nené žádné A, vezmi si 2 z těchto karet do ruky a zbylé odhoď.</>,
+        descriptionClass: "card-description text-smaller"
     },
     BACKFIRE: {
         name: "Opětovná palba",
@@ -243,11 +247,13 @@ export const CARDS_CZECH: CardRegistry = {
     },
     SAVED_2: {
         name: "Obětavý skok",
-        description: <>Zabráníš jakémukoli jinému hráči ztratit 1 život. Pokud takto zamezíš vyřazení, vezmi si 2 karty z ruky zachráněného hráče nebo z balíčku.</>
+        description: <>Zabráníš jakémukoli jinému hráči ztratit 1 život. Pokud takto zamezíš vyřazení, vezmi si 2 karty z ruky zachráněného hráče nebo z balíčku.</>,
+        descriptionClass: "card-description text-smaller"
     },
     FANNING: {
         name: "Rozstříštěná kulka",
-        description: <>Počítá se do limitu 1 karty <i>BANG!</i> za tah. Prvním cílem efektu BANG! se stává nejprve 1 hráč podle běžných pravidel a poté 1 další hráč, který je od prvního ve vzdálenosti 1 (kromě tebe), je-li to možné.</>
+        description: <>Počítá se do limitu 1 karty <i>BANG!</i> za tah. Prvním cílem efektu BANG! se stává nejprve 1 hráč podle běžných pravidel a poté 1 další hráč, který je od prvního ve vzdálenosti 1 (kromě tebe), je-li to možné.</>,
+        descriptionClass: "card-description text-smallest line-smaller"
     },
     TOMAHAWK: {
         name: "Tomahawk",
@@ -263,7 +269,8 @@ export const CARDS_CZECH: CardRegistry = {
     },
     LAST_CALL: {
         name: "Poslední pivo",
-        description: <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>
+        description: <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>,
+        descriptionClass: "card-description bg-white" // this covers the beer symbol, what do we do here?
     },
 
     // Armed & Dangerous cards
@@ -282,7 +289,7 @@ export const CARDS_CZECH: CardRegistry = {
     FLINTLOCK: {
         name: "Křesadlovka",
         description: <>Pokud je tato karta zrušena, cezmi si ji zpět do ruky.</>,
-        descriptionClass: "cube-description"
+        descriptionClass: "cube-description-lower"
     },
     ARROW: {
         name: "Šíp",
@@ -295,7 +302,7 @@ export const CARDS_CZECH: CardRegistry = {
     DUCK: {
         name: "Skrč se!",
         description: <>Vezmi si tuto kartu zpět do ruky.</>,
-        descriptionClass: "cube-description"
+        descriptionClass: "cube-description-lower"
     },
     RELOAD: {
         name: "Nabíjení",
@@ -342,7 +349,7 @@ export const CARDS_CZECH: CardRegistry = {
     BELL_TOWER: {
         name: "Zvonice",
         description: <>Při vyhodnocování tvé následující zahrané karty se pro tebe všichni hráči nachází ve vzdálenosti 1.</>,
-        descriptionClass: "cube-description"
+        descriptionClass: "cube-description text-smaller line-smaller"
     },
     CRATE: {
         name: "Bedna"
@@ -355,7 +362,7 @@ export const CARDS_CZECH: CardRegistry = {
     DOUBLE_BARREL: {
         name: "Dvouhlavňovka",
         description: <>Pokud zahraješ károvou kartu <i>BANG!</i>, nemůže být zrušena.</>,
-        descriptionClass: "cube-description"
+        descriptionClass: "cube-description-lower text-smaller line-smaller"
     },
     WHIP: {
         name: "Bič",
@@ -396,7 +403,8 @@ export const CARDS_CZECH: CardRegistry = {
     },
     SACRIFICE: {
         name: "Oběť",
-        description: <>Může být hráno mimo tah. Zachraň jiného hráče od ztráty 1 života tím že ztratíš život sám. Potom si lízni 2 karty, pokud je to možné (3 pokud přežije).</>
+        description: <>Může být hráno mimo tah. Zachraň jiného hráče od ztráty 1 života tím že ztratíš život sám. Potom si lízni 2 karty, pokud je to možné (3 pokud přežije).</>,
+        descriptionClass: "card-description text-smaller"
     },
     DISARM: {
         name: "Odzbrojit",
@@ -800,43 +808,56 @@ export const CARDS_CZECH: CardRegistry = {
     // High Noon cards
 
     BLESSING: {
-        name: "Požehnání"
+        name: "Požehnání",
+        titleClass: "card-title card-title-lower"
     },
     GHOST_TOWN: {
-        name: "Město Duchů"
+        name: "Město Duchů",
+        titleClass: "card-title card-title-lower"
     },
     INVERT_ROTATION: {
-        name: "Zlatá horečka"
+        name: "Zlatá horečka",
+        titleClass: "card-title card-title-lower"
     },
     THE_DALTONS: {
-        name: "Daltonové"
+        name: "Daltonové",
+        titleClass: "card-title card-title-lower"
     },
     THE_DOCTOR: {
-        name: "Doktor"
+        name: "Doktor",
+        titleClass: "card-title card-title-lower"
     },
     THE_REVEREND: {
-        name: "Reverend"
+        name: "Reverend",
+        titleClass: "card-title card-title-lower"
     },
     TRAIN_ARRIVAL: {
-        name: "Příjezd vlaku"
+        name: "Příjezd vlaku",
+        titleClass: "card-title card-title-lower"
     },
     CURSE: {
-        name: "Prokletí"
+        name: "Prokletí",
+        titleClass: "card-title card-title-lower"
     },
     HANGOVER: {
-        name: "Kocovina"
+        name: "Kocovina",
+        titleClass: "card-title card-title-lower"
     },
     SERMON: {
-        name: "Kazatel"
+        name: "Kazatel",
+        titleClass: "card-title card-title-lower"
     },
     THIRST: {
-        name: "Žízeň"
+        name: "Žízeň",
+        titleClass: "card-title card-title-lower"
     },
     SHOOTOUT: {
-        name: "Přestřelka"
+        name: "Přestřelka",
+        titleClass: "card-title card-title-lower"
     },
     HANDCUFFS: {
-        name: "Želízka"
+        name: "Želízka",
+        titleClass: "card-title card-title-lower"
     },
     HANDCUFFS_HEARTS: {
         name: "Želízka: Prohlašuju srdce",
@@ -863,43 +884,55 @@ export const CARDS_CZECH: CardRegistry = {
         descriptionClass: "card-description text-bigger"
     },
     NEW_IDENTITY: {
-        name: "Nová identita"
+        name: "Nová identita",
+        titleClass: "card-title card-title-lower"
     },
     HIGH_NOON: {
-        name: "Pravé poledne"
+        name: "Pravé poledne",
+        titleClass: "card-title card-title-lower"
     },
 
     // Fistful of Cards cards
 
     AMBUSH: {
-        name: "Léčka"
+        name: "Léčka",
+        titleClass: "card-title card-title-lower"
     },
     SNIPER: {
-        name: "Odstřelovač"
+        name: "Odstřelovač",
+        titleClass: "card-title card-title-lower"
     },
     DEAD_MAN: {
-        name: "Mrtvý muž"
+        name: "Mrtvý muž",
+        titleClass: "card-title card-title-lower"
     },
     BLOOD_BROTHERS: {
-        name: "Pokrevní bratři"
+        name: "Pokrevní bratři",
+        titleClass: "card-title card-title-lower"
     },
     THE_JUDGE: {
-        name: "Soudce"
+        name: "Soudce",
+        titleClass: "card-title card-title-lower"
     },
     LASSO: {
-        name: "Laso"
+        name: "Laso",
+        titleClass: "card-title card-title-lower"
     },
     LAW_OF_THE_WEST: {
-        name: "Právo západu"
+        name: "Právo západu",
+        titleClass: "card-title card-title-lower"
     },
     HARD_LIQUOR: {
-        name: "Pálenka"
+        name: "Pálenka",
+        titleClass: "card-title card-title-lower"
     },
     ABANDONED_MINE: {
-        name: "Opustený důl"
+        name: "Opustený důl",
+        titleClass: "card-title card-title-lower"
     },
     PEYOTE: {
-        name: "Peyote"
+        name: "Peyote",
+        titleClass: "card-title card-title-lower"
     },
     PEYOTE_RED: {
         name: "Peyote: Prohlašuju červenou",
@@ -914,52 +947,67 @@ export const CARDS_CZECH: CardRegistry = {
         descriptionClass: "card-description text-bigger"
     },
     RANCH: {
-        name: "Ranč"
+        name: "Ranč",
+        titleClass: "card-title card-title-lower"
     },
     RICOCHET: {
-        name: "Odražená střela"
+        name: "Odražená střela",
+        titleClass: "card-title card-title-lower"
     },
     RUSSIAN_ROULETTE: {
-        name: "Ruská ruleta"
+        name: "Ruská ruleta",
+        titleClass: "card-title card-title-lower"
     },
     VENDETTA: {
-        name: "Vendeta"
+        name: "Vendeta",
+        titleClass: "card-title card-title-lower"
     },
     A_FISTFUL_OF_CARDS: {
-        name: "Fistful"
+        name: "Fistful",
+        titleClass: "card-title card-title-lower"
     },
     
     // Wild West Show cards
 
     GAG: {
-        name: "Roubík"
+        name: "Roubík",
+        titleClass: "card-title card-title-higher"
     },
     BONE_ORCHARD: {
-        name: "Hřbitov"
+        name: "Hřbitov",
+        titleClass: "card-title card-title-higher"
     },
     DARLING_VALENTINE: {
-        name: "Miláček Valentýn"
+        name: "Miláček Valentýn",
+        titleClass: "card-title card-title-higher"
     },
     DOROTHY_RAGE: {
-        name: "Zuřivá Dorothy"
+        name: "Zuřivá Dorothy",
+        titleClass: "card-title card-title-higher"
     },
     HELENA_ZONTERO: {
-        name: "Helena Zontero"
+        name: "Helena Zontero",
+        titleClass: "card-title card-title-higher"
     },
     LADY_ROSA_OF_TEXAS: {
-        name: "Lady Rosa z Texasu"
+        name: "Lady Rosa z Texasu",
+        titleClass: "card-title card-title-higher"
     },
     MISS_SUSANNA: {
-        name: "Slečna Zuzana"
+        name: "Slečna Zuzana",
+        titleClass: "card-title card-title-higher"
     },
     SHOWDOWN: {
-        name: "Zůčtování"
+        name: "Zůčtování",
+        titleClass: "card-title card-title-higher"
     },
     SACAGAWAY: {
-        name: "Sacagaway"
+        name: "Sacagaway",
+        titleClass: "card-title card-title-higher"
     },
     WILD_WEST_SHOW: {
-        name: "Divoký západ"
+        name: "Divoký západ",
+        titleClass: "card-title card-title-higher"
     },
 
     // Gold Rush cards
@@ -1230,7 +1278,8 @@ export const CARDS_CZECH: CardRegistry = {
     // The Great Train Robbery train cards
 
     BAGGAGE_CAR: {
-        name: "Zavazadlový vůz"
+        name: "Zavazadlový vůz",
+        titleClass: "train-title"
     },
     BAGGAGE_CAR_MISSED: {
         name: "Zavazadlový vůz jako Vedle!",
@@ -1249,49 +1298,64 @@ export const CARDS_CZECH: CardRegistry = {
         hideTitle: true
     },
     CABOOSE: {
-        name: "Sližební vůz"
+        name: "Sližební vůz",
+        titleClass: "train-title"
     },
     CATTLE_TRUCK: {
-        name: "Dobytčák"
+        name: "Dobytčák",
+        titleClass: "train-title"
     },
     CIRCUS_WAGON: {
-        name: "Cirkusový vagon"
+        name: "Cirkusový vagon",
+        titleClass: "train-title"
     },
     COAL_HOPPER: {
-        name: "Vagon s uhlím"
+        name: "Vagon s uhlím",
+        titleClass: "train-title"
     },
     DINING_CAR: {
-        name: "Jídelní vůz"
+        name: "Jídelní vůz",
+        titleClass: "train-title"
     },
     EXPRESS_CAR: {
-        name: "Expresní vůz"
+        name: "Expresní vůz",
+        titleClass: "train-title"
     },
     GHOST_CAR: {
-        name: "Vagon duchů"
+        name: "Vagon duchů",
+        titleClass: "train-title"
     },
     LOUNGE_CAR: {
-        name: "Salonní vůz"
+        name: "Salonní vůz",
+        titleClass: "train-title"
     },
     LUMBER_FLATCAR: {
-        name: "Plošinový vůz"
+        name: "Plošinový vůz",
+        titleClass: "train-title"
     },
     MAIL_CAR: {
-        name: "Poštovní vůz"
+        name: "Poštovní vůz",
+        titleClass: "train-title"
     },
     OBSERVATION_CAR: {
-        name: "Vyhlídkový vůz"
+        name: "Vyhlídkový vůz",
+        titleClass: "train-title"
     },
     PASSENGER_CAR: {
-        name: "Osobní vůz"
+        name: "Osobní vůz",
+        titleClass: "train-title"
     },
     PRISONER_CAR: {
-        name: "Vězeňský vůz"
+        name: "Vězeňský vůz",
+        titleClass: "train-title"
     },
     PRIVATE_CAR: {
-        name: "Soukromý vagon"
+        name: "Soukromý vagon",
+        titleClass: "train-title"
     },
     SLEEPER_CAR: {
-        name: "Spací vůz"
+        name: "Spací vůz",
+        titleClass: "train-title"
     },
 
     // The Great Train Robbery locomotive cards

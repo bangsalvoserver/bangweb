@@ -789,7 +789,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Colorado Bill",
         hideTitle: true,
         description: <>Ogni volta che un altro giocatore gioca una carta Mancato! su una carta <i>BANG!</i> giocata da <i>Colorado Bill</i>, "estrai!": se esce Picche la carta Mancato! non ha effetto e il giocatore attaccato perde 1 punto vita.</>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description text-smaller line-smaller"
     },
     DER_SPOT_BURST_RINGER: {
         name: "Der Spot - Burst Ringer",
@@ -1551,7 +1551,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Buffalo Bell",
         hideTitle: true,
         description: <>Ogni volta che viene attaccato da un giocatore, può scartare una carta dalla mano per evitare il colpo. Carta giocata + carta schivata: se ≥ 13 = <i>Mancato!</i>; se ≥ 17 = <i>Schivata</i>; se ≥ 20 = <i>Ritorno di Fiamma.</i></>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description text-smaller"
     },
     CLASH_THE_STAMPEDE: {
         name: "Clash The Stampede",
@@ -1882,7 +1882,7 @@ export const CARDS_ITALIAN: CardRegistry = {
         name: "Vulture Sam",
         hideTitle: true,
         description: <>Se un personaggio è eliminato, prendi in mano tutte le sue carte. Se vieni eliminato, resti in gioco con 4 punti vita, ma torni sul lato normale.</>,
-        descriptionClass: "legends-description",
+        descriptionClass: "legends-description text-smaller line-smaller",
     },
     LEGEND_WILLY_THE_KID: {
         name: "Willy the Kid",
