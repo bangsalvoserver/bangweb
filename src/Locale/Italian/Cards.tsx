@@ -1753,43 +1753,56 @@ export const CARDS_ITALIAN: CardRegistry = {
     // The Great Train Robbery station cards
 
     BOOM_TOWN: {
-        name: "Boom Town"
+        name: "Boom Town",
+        hideTitle: true
     },
     CATICO: {
-        name: "Catico"
+        name: "Catico",
+        hideTitle: true
     },
     CREEPY_CREEK: {
-        name: "Creepy Creek"
+        name: "Creepy Creek",
+        hideTitle: true
     },
     CROWNS_HOLE: {
-        name: "Crown's Hole"
+        name: "Crown's Hole",
+        hideTitle: true
     },
     DEATHWOOD: {
-        name: "Deathwood"
+        name: "Deathwood",
+        hideTitle: true
     },
     DODGEVILLE: {
-        name: "Dodgeville"
+        name: "Dodgeville",
+        hideTitle: true
     },
     FORT_WROTH: {
-        name: "Fort Wroth"
+        name: "Fort Wroth",
+        hideTitle: true
     },
     FRISCO: {
-        name: "Frisco"
+        name: "Frisco",
+        hideTitle: true
     },
     MINERS_OATH: {
-        name: "Miner's Oath"
+        name: "Miner's Oath",
+        hideTitle: true
     },
     SAN_TAFE: {
-        name: "San Tafe"
+        name: "San Tafe",
+        hideTitle: true
     },
     TOMBROCK: {
-        name: "Tombrock"
+        name: "Tombrock",
+        hideTitle: true
     },
     VIRGINIA_TOWN: {
-        name: "Virginia Town"
+        name: "Virginia Town",
+        hideTitle: true
     },
     YOOMA: {
-        name: "Yooma"
+        name: "Yooma",
+        hideTitle: true
     },
 
     // Legends characters
