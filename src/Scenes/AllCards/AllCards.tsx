@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import '../../App.css';
+import getLabel from "../../Locale/GetLabel";
 import { LanguageProvider } from "../../Locale/Registry";
 import Env, { Language, LANGUAGES } from "../../Model/Env";
 import useFetch from "../../Utils/UseFetch";
@@ -9,10 +10,9 @@ import CardView from "../Game/CardView";
 import { CardData } from "../Game/Model/CardData";
 import { DeckType } from "../Game/Model/CardEnums";
 import { CardRef } from "../Game/Model/CardTracker";
-import { Card, getCardImage, KnownCard } from "../Game/Model/GameTable";
+import { Card, getCardImage } from "../Game/Model/GameTable";
 import { SelectorConfirm, SelectorConfirmContext } from "../Game/Model/SelectorConfirm";
 import { OverlayState } from "../Game/Model/UseCardOverlay";
-import getLabel from "../../Locale/GetLabel";
 
 function buildCard(cardData: CardData, index: number): Card {
     return {
@@ -50,7 +50,6 @@ function AllCardsInner({ deck }: { deck: DeckType }) {
             if (!overlayState || overlayState.cardRef.cardId !== card.id) {
                 return {
                     cardImage: getCardImage(card)!,
-                    cardName: (card as KnownCard).cardData.name,
                     cardRef: cardRefs.get(card.id)!
                 };
             }

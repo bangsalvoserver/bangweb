@@ -11,7 +11,7 @@ import { getCardRegistryEntry } from "./GameStringComponent";
 const WINDOW_PADDING_X = 150;
 const WINDOW_PADDING_Y = 200;
 
-function CardOverlayInner({ cardRef, cardImage, cardName }: OverlayState) {
+function CardOverlayInner({ cardRef, cardImage }: OverlayState) {
   const language = useLanguage();
 
   const rect = useUpdateEveryFrame(cardRef.getRect);
@@ -23,16 +23,14 @@ function CardOverlayInner({ cardRef, cardImage, cardName }: OverlayState) {
       '--card-overlay-y': rectCenter.y + 'px'
   } as CSSProperties;
 
-  const image = typeof cardImage === 'string' ? cardImage : cardImage.image;
-  const sign = typeof cardImage === 'string' ? undefined : cardImage.sign;
-  const entry = cardName ? getCardRegistryEntry(language, cardName) : undefined;
+  const entry = cardImage.name ? getCardRegistryEntry(language, cardImage.name) : undefined;
 
   return <div className="card-overlay" style={cardOverlayStyle}>
     <div className="card-overlay-inner">
-      <img className="card-overlay-img" src={getCardUrl(image)} alt={entry?.name} />
+      <img className="card-overlay-img" src={getCardUrl(cardImage.image)} alt={entry?.name} />
       {entry && <CardDescriptionView entry={entry} />}
-      {sign && <div className="card-overlay-sign">
-        <CardSignView sign={sign} />
+      {cardImage.sign && <div className="card-overlay-sign">
+        <CardSignView sign={cardImage.sign} />
       </div> }
     </div>
   </div>;

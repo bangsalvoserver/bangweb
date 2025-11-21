@@ -7,7 +7,7 @@ import { getCardRegistryEntry } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { buildCardRef, CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
-import { Card, GameTable, getCard, getCardBackface, getCardImage, getTablePocket, isCardKnown } from "./Model/GameTable";
+import { Card, GameTable, getCard, getCardBackface, getCardImage, getTablePocket } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -120,13 +120,10 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useImperativeHandle(cardRef, () => buildCardRef(divRef, card.id), [card.id]);
 
-    let backfaceImage = getCardBackface(card);
+    let backface = useMemo(() => getCardBackface(card), [card]);
     let cardImage = useMemo(() => getCardImage(card), [card]);
 
-    const cardName = isCardKnown(card) ? card.cardData.name : undefined;
-    const entry = cardName ? getCardRegistryEntry(language, cardName) : undefined;
-
-    useCardOverlay(cardImage ?? backfaceImage, cardName, divRef);
+    useCardOverlay(cardImage ?? backface, divRef);
 
     let style: CSSProperties | undefined;
     let classes = ['card-view'];
@@ -141,7 +138,7 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
         classes.push('card-animation', 'z-10', 'card-animation-flip');
         if (card.animation.backface) {
-            backfaceImage = card.animation.backface;
+            backface = card.animation.backface;
         }
         if (card.animation.cardImage) {
             cardImage = card.animation.cardImage;
@@ -174,6 +171,9 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         classes.push(getSelectorCardClass(table, selector, card));
     }
 
+    const entry = cardImage?.name ? getCardRegistryEntry(language, cardImage.name) : undefined;
+    const backEntry = backface?.name ? getCardRegistryEntry(language, backface.name) : undefined;
+
     const selectedCubes = countSelectedCubes(table, selector, card);
     const tokens = (Object.entries(card.tokens) as [TokenType, number][])
         .flatMap(([token, count]) => [...Array(count)].map((_,i) => {
@@ -198,10 +198,12 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
                 </div>}
                 {tokens.length !== 0 && <div className="card-tokens">{tokens}</div>}
             </div> : <div className="card-back">
-                <img className="card-view-img" src={getCardUrl(backfaceImage)} alt="" />
+                <img className="card-view-img" src={getCardUrl(backface.image)} alt="" />
+                {backEntry && <CardDescriptionView entry={backEntry} />}
             </div> }
             { showBackface && <div className="card-back-flip">
-                <img className="card-view-img" src={getCardUrl(backfaceImage)} alt=""  />
+                <img className="card-view-img" src={getCardUrl(backface.image)} alt=""  />
+                {backEntry && <CardDescriptionView entry={backEntry} />}
             </div> }
         </div>
     )

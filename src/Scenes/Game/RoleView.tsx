@@ -1,11 +1,11 @@
-import { CSSProperties, useRef } from "react";
+import { CSSProperties, useMemo, useRef } from "react";
+import { useLanguage } from "../../Locale/Registry";
 import { CardDescriptionView, getCardUrl } from "./CardView";
 import { getCardRegistryEntry } from "./GameStringComponent";
 import { PlayerRole } from "./Model/CardEnums";
-import { Player } from "./Model/GameTable";
+import { CardImage, Player } from "./Model/GameTable";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardView.css";
-import { useLanguage } from "../../Locale/Registry";
 
 export interface RoleProps {
     player: Player;
@@ -13,10 +13,15 @@ export interface RoleProps {
 
 const SUFFIX_3P = '_3p';
 
-function getRoleImage(role: PlayerRole) {
-    if (role === 'unknown') return 'backface/role';
-    if (role.endsWith(SUFFIX_3P)) return 'role/' + role.substring(0, role.length - SUFFIX_3P.length);
-    return 'role/' + role;
+function getRoleImage(role: PlayerRole): CardImage {
+    const name = 'ROLE_' + role.toUpperCase();
+    let image = 'role/' + role;
+    if (role === 'unknown') {
+        image = 'backface/role';
+    } else if (role.endsWith(SUFFIX_3P)) {
+        image = 'role/' + role.substring(0, role.length - SUFFIX_3P.length);
+    }
+    return { name, image };
 }
 
 export default function RoleView({ player }: RoleProps) {
@@ -45,26 +50,23 @@ export default function RoleView({ player }: RoleProps) {
         classes.push('card-animation', 'card-animation-flip');
     }
 
-    const backfaceSrc = getRoleImage(backRole);
-    const frontfaceSrc = getRoleImage(frontRole);
+    const frontfaceImage = useMemo(() => getRoleImage(frontRole), [frontRole]);
+    const backfaceImage = useMemo(() => getRoleImage(backRole), [backRole]);
     
-    const frontName = 'ROLE_' + frontRole.toUpperCase();
-    const frontEntry = getCardRegistryEntry(language, frontName);
-    
-    const backName = 'ROLE_' + backRole.toUpperCase();
-    const backEntry = getCardRegistryEntry(language, backName);
+    const frontfaceEntry = getCardRegistryEntry(language, frontfaceImage.name!);
+    const backfaceEntry = getCardRegistryEntry(language, backfaceImage.name!);
 
-    useCardOverlay(frontfaceSrc, frontName, divRef);
+    useCardOverlay(frontfaceImage, divRef);
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(frontfaceSrc)} alt={frontEntry?.name} />
-                <CardDescriptionView entry={frontEntry} />
+                <img className="card-view-img" src={getCardUrl(frontfaceImage.image)} alt={frontfaceEntry?.name} />
+                <CardDescriptionView entry={frontfaceEntry} />
             </div>
             {animationKey ? <div className="card-back-flip">
-                <img className="card-view-img" src={getCardUrl(backfaceSrc)} alt="" />
-                <CardDescriptionView entry={backEntry} />
+                <img className="card-view-img" src={getCardUrl(backfaceImage.image)} alt="" />
+                <CardDescriptionView entry={backfaceEntry} />
             </div> : null}
         </div>
     </div>;

@@ -3,14 +3,13 @@ import { buildCardRef, CardRef } from "./CardTracker";
 import { CardImage } from "./GameTable";
 
 export interface OverlayState {
-    cardImage: CardImage | string;
-    cardName: string | undefined;
+    cardImage: CardImage;
     cardRef: CardRef;
 };
 
 export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayState | undefined>> | null>(null);
 
-export default function useCardOverlay(cardImage: CardImage | string, cardName: string | undefined, divRef: RefObject<HTMLDivElement>) {
+export default function useCardOverlay(cardImage: CardImage, divRef: RefObject<HTMLDivElement>) {
     const setCardOverlay = useContext(SetCardOverlayContext);
 
     useEffect(() => {
@@ -30,7 +29,7 @@ export default function useCardOverlay(cardImage: CardImage | string, cardName: 
         const addOverlay = () => {
             timeout = setTimeout(() => {
                 added = true;
-                setCardOverlay({ cardImage, cardName, cardRef });
+                setCardOverlay({ cardImage, cardRef });
             }, 500);
         };
 
@@ -57,5 +56,5 @@ export default function useCardOverlay(cardImage: CardImage | string, cardName: 
             div.removeEventListener('mousemove', resetTimeout);
             removeOverlay();
         }
-    }, [cardImage, cardName, divRef, setCardOverlay]);
+    }, [cardImage, divRef, setCardOverlay]);
 }

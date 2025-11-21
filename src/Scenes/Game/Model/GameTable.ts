@@ -8,12 +8,13 @@ export type PocketId = { name: TablePocketType } | { name: PlayerPocketType, pla
 
 export interface CardImage {
     image: string;
+    name?: string;
     sign?: CardSign;
 }
 
 export type CardAnimation =
     { type: 'none' } |
-    { type: 'flipping', cardImage?: CardImage, backface?: string } & Duration |
+    { type: 'flipping', cardImage?: CardImage, backface?: CardImage } & Duration |
     { type: 'turning' } & Duration |
     { type: 'flash' } & Duration |
     { type: 'short_pause' };
@@ -42,36 +43,40 @@ function parseCardImage(image: string, deck: string): string {
     return image.includes('/') ? image : `${deck}/${image}`;
 }
 
-export function getCardFrontface(card: Card): string | undefined {
-    if (isCardKnown(card)) {
-        const cardData = card.cardData;
-        const colonIndex = cardData.image.indexOf(':');
-        const imageFront = colonIndex >= 0 ? cardData.image.substring(0, colonIndex) : cardData.image;
-        return parseCardImage(imageFront, cardData.deck);
-    }
-    return undefined;
+function substringBefore(value: string, separator: string) {
+    const index = value.indexOf(separator);
+    return index >= 0 ? value.substring(0, index) : value;
+}
+
+function substringAfter(value: string, separator: string) {
+    const index = value.indexOf(separator);
+    return index >= 0 ? value.substring(index + separator.length) : undefined;
 }
 
 export function getCardImage(card: Card): CardImage | undefined {
     if (isCardKnown(card)) {
         const cardData = card.cardData;
         return {
-            image: getCardFrontface(card)!,
+            name: substringBefore(cardData.name, ':'),
+            image: parseCardImage(substringBefore(cardData.image, ':'), cardData.deck),
             sign: cardData.sign.rank !== 'none' && cardData.sign.suit !== 'none' ? cardData.sign : undefined
         };
     }
     return undefined;
 };
 
-export function getCardBackface(card: Card): string {
+export function getCardBackface(card: Card): CardImage {
     if (isCardKnown(card)) {
         const cardData = card.cardData;
-        const colonIndex = cardData.image.indexOf(':');
-        if (colonIndex >= 0) {
-            return parseCardImage(cardData.image.substring(colonIndex + 1), cardData.deck);
+        const image = substringAfter(cardData.image, ':');
+        if (image !== undefined) {
+            return {
+                name: substringAfter(cardData.name, ':'),
+                image: parseCardImage(image, cardData.deck)
+            };
         }
     }
-    return 'backface/' + card.cardData.deck;
+    return { image: 'backface/' + card.cardData.deck };
 }
 
 export function *getPlayerCubes(table: GameTable, player: Player) {

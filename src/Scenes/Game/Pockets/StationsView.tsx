@@ -1,9 +1,9 @@
-import { useContext, useRef } from "react";
+import { useContext, useMemo, useRef } from "react";
 import { useLanguage } from "../../../Locale/Registry";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameStateContext } from "../GameScene";
 import { getCardRegistryEntry } from "../GameStringComponent";
-import { getCard, getCardFrontface, isCardKnown } from "../Model/GameTable";
+import { getCard, getCardImage } from "../Model/GameTable";
 import { useSelectorConfirm } from "../Model/SelectorConfirm";
 import useCardOverlay from "../Model/UseCardOverlay";
 import { PocketProps } from "./PocketView";
@@ -15,16 +15,15 @@ function StationCardView({ card }: CardProps) {
     const language = useLanguage();
 
     const divRef = useRef<HTMLDivElement>(null);
-    const image = getCardFrontface(card) ?? 'backface/station';
-    const cardName = isCardKnown(card) ? card.cardData.name : undefined;
-    const entry = cardName ? getCardRegistryEntry(language, cardName) : undefined;
-
-    useCardOverlay(image, cardName, divRef);
+    const cardImage = useMemo(() => getCardImage(card) ?? { image: 'backface/station' }, [card]);
+    const entry = cardImage.name ? getCardRegistryEntry(language, cardImage.name) : undefined;
+    
+    useCardOverlay(cardImage, divRef);
     
     const selectorCardClass = getSelectorCardClass(table, selector, card);
     return (
         <div ref={divRef} className={`station-card ${selectorCardClass ?? ''}`} onClick={handleClickCard(card)}>
-            <img className='station-card-img' src={getCardUrl(image)} alt={entry?.name} />
+            <img className='station-card-img' src={getCardUrl(cardImage.image)} alt={entry?.name} />
         </div>
     );
 }
