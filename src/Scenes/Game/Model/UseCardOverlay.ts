@@ -10,7 +10,7 @@ export interface OverlayState {
 
 export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<OverlayState | undefined>> | null>(null);
 
-export default function useCardOverlay(cardImage: CardImage | string, cardName: string | undefined, divRef: RefObject<HTMLDivElement>) {
+export default function useCardOverlay(cardImage: CardImage | string, cardName: string | undefined, divRef: RefObject<Element>) {
     const setCardOverlay = useContext(SetCardOverlayContext);
 
     useEffect(() => {
