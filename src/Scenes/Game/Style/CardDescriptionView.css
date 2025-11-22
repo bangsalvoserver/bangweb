@@ -27,6 +27,10 @@
     top: 20%;
 }
 
+.character-title {
+    top: 15%;
+}
+
 .card-description-inner {
     text-align: center;
     line-height: 12pt;

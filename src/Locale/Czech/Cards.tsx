@@ -689,7 +689,8 @@ export const CARDS_CZECH: CardRegistry = {
         hideTitle: true
     },
     LEMONADE_JIM: {
-        name: "Limonádový Jim"
+        name: "Limonádový Jim",
+        titleClass: "card-title character-title"
     },
     MICK_DEFENDER: {
         name: "Mick Defender",
