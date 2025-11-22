@@ -22,7 +22,7 @@ export interface CardRef {
     cardId?: CardId;
 }
 
-export function buildCardRef(divRef: RefObject<HTMLDivElement>, id?: CardId) {
+export function buildCardRef(divRef: RefObject<Element>, id?: CardId) {
     return {
         getRect: () => getDivRect(divRef.current),
         cardId: id
@@ -36,7 +36,7 @@ export interface CardTracker {
     getTokensRect: (table: GameTable, token_type: TokenType, position: TokenPosition) => Rect | null;
 }
 
-export function useCardTracker(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, tokensRef: MapRef<TokenType, HTMLDivElement>): CardTracker {
+export function useCardTracker<T extends Element>(playerRefs: MapRef<PlayerId, PlayerRef>, pocketRefs: MapRef<PocketType, PocketRef>, tokensRef: MapRef<TokenType, T>): CardTracker {
     return useMemo(() => ({
         getPlayerPockets(player: PlayerId) {
             return playerRefs.get(player);
