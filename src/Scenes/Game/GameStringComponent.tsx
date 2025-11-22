@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import getLabel from "../../Locale/GetLabel";
 import { CardRegistryEntry, getRegistries, useLanguage } from "../../Locale/Registry";
 import { Language } from "../../Model/Env";
@@ -55,31 +55,27 @@ export interface GameStringProps {
     message: GameString;
 }
 
-function LocalizedCardNameOrUnknown({ name, sign }: { name?: string, sign?: CardSign }) {
+function UnknownCard() {
     const language = useLanguage();
-    if (name) {
-        return <LocalizedCardName name={name} sign={sign} />
-    } else {
-        return <span className="card-name unknown-name">{getLabel(language, 'ui', 'UNKNOWN_CARD')}</span>
-    }
+    return (
+        <span className="card-name unknown-name">{getLabel(language, 'ui', 'UNKNOWN_CARD')}</span>
+    );
 }
 
-function PlayerNameViewOrUnknown({ id }: { id: PlayerId }) {
+function UnknownPlayer() {
     const language = useLanguage();
-    if (id) {
-        return <PlayerNameView id={id} />
-    } else {
-        return <span className="player-name unknown-name">{getLabel(language, 'ui', 'UNKNOWN_PLAYER')}</span>
-    }
+    return (
+        <span className="player-name unknown-name">{getLabel(language, 'ui', 'UNKNOWN_PLAYER')}</span>
+    );
 }
 
 const transformFormatArg = createUnionDispatch<FormatArg, number | JSX.Element>({
     integer: value => value,
-    card: ({ name, sign }) => <LocalizedCardNameOrUnknown name={name} sign={sign} />,
-    player: id => <PlayerNameViewOrUnknown id={id} />
+    card: ({ name, sign }) => name ? <LocalizedCardName name={name} sign={sign} /> : <UnknownCard />,
+    player: id => id ? <PlayerNameView id={id} /> : <UnknownPlayer />
 });
 
-export default function GameStringComponent({ message }: GameStringProps) {
+const GameStringComponent = React.memo(({ message }: GameStringProps) => {
     const language = useLanguage();
     const { gameStringRegistry } = getRegistries(language);
 
@@ -93,4 +89,6 @@ export default function GameStringComponent({ message }: GameStringProps) {
     } else {
         return <>{message.format_str}</>;
     }
-}
+});
+
+export default GameStringComponent;
