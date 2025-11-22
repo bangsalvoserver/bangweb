@@ -19,7 +19,7 @@
     transform: translate(-50%, -50%);
 }
 
-.card-overlay-sign {
+.card-overlay .card-sign-view {
     display: inline;
     text-align: left;
     position: absolute;
@@ -27,11 +27,7 @@
     bottom: 4%;
 }
 
-.card-overlay-sign img {
-    display: inline;
-}
-
-.card-overlay-img {
+.card-overlay .card-view-img {
     background-color: white;
     border-radius: var(--card-border-unscaled) var(--card-border-unscaled);
     

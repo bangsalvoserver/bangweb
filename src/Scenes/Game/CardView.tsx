@@ -1,5 +1,5 @@
-import { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
-import { CardRegistryEntry, useLanguage } from "../../Locale/Registry";
+import React, { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import { useLanguage } from "../../Locale/Registry";
 import { asArray } from "../../Utils/ArrayUtils";
 import CardSignView from "./CardSignView";
 import { GameStateContext } from "./GameScene";
@@ -7,7 +7,7 @@ import { getCardRegistryEntry } from "./GameStringComponent";
 import { TokenType } from "./Model/CardEnums";
 import { buildCardRef, CardRef } from "./Model/CardTracker";
 import { cardHasTag } from "./Model/Filters";
-import { Card, GameTable, getCard, getCardBackface, getCardImage, getTablePocket } from "./Model/GameTable";
+import { Card, CardImage, GameTable, getCard, getCardBackface, getCardImage, getTablePocket } from "./Model/GameTable";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { countSelectedCubes, isCardCurrent, isCardPrompted, isCardSelected, isResponse, isValidCardTarget, isValidCubeTarget, selectorCanPlayCard, selectorIsTargeting, TargetSelector } from "./Model/TargetSelector";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -100,19 +100,22 @@ export function getSelectorCardClass(table: GameTable, selector: TargetSelector,
     return '';
 }
 
-export function CardDescriptionView({ entry }: { entry: CardRegistryEntry }) {
+export const CardImageView = React.memo(({ image, name, sign }: CardImage) => {
+    const language = useLanguage();
+    const entry = name ? getCardRegistryEntry(language, name) : undefined;
     return <>
-        {!entry.hideTitle && <div className={entry.titleClass ?? 'card-title'}>{entry.name}</div>}
-        {asArray(entry.description).map((elem, index) =>
+        <img className="card-view-img" src={getCardUrl(image)} alt={entry?.name} />
+        {entry && !entry.hideTitle && <div className={entry.titleClass ?? 'card-title'}>{entry.name}</div>}
+        {entry && asArray(entry.description).map((elem, index) =>
             <div key={index} className={entry.descriptionClass ?? 'card-description'} description-index={index}>
                 <div className='card-description-inner'>{elem}</div>
             </div>)}
+        {sign && <div className="card-sign-view"><CardSignView sign={sign} /></div>}
     </>
-}
+});
 
 export default function CardView({ cardRef, card, showBackface }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
-    const language = useLanguage();
 
     const { handleClickCard } = useSelectorConfirm();
 
@@ -120,8 +123,9 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useImperativeHandle(cardRef, () => buildCardRef(divRef, card.id), [card.id]);
 
-    let backface = useMemo(() => getCardBackface(card), [card]);
-    let cardImage = useMemo(() => getCardImage(card), [card]);
+    let [cardImage, backface] = useMemo(() => [
+        getCardImage(card), getCardBackface(card)
+    ], [card]);
 
     useCardOverlay(cardImage ?? backface, divRef);
 
@@ -171,9 +175,6 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         classes.push(getSelectorCardClass(table, selector, card));
     }
 
-    const entry = cardImage?.name ? getCardRegistryEntry(language, cardImage.name) : undefined;
-    const backEntry = backface?.name ? getCardRegistryEntry(language, backface.name) : undefined;
-
     const selectedCubes = countSelectedCubes(table, selector, card);
     const tokens = (Object.entries(card.tokens) as [TokenType, number][])
         .flatMap(([token, count]) => [...Array(count)].map((_,i) => {
@@ -191,19 +192,13 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
         <div ref={divRef} style={style} className={classes.join(' ')}
             onClick={handleClickCard(card)} >
             { cardImage ? <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(cardImage.image)} alt={entry?.name} />
-                {entry && <CardDescriptionView entry={entry} />}
-                {cardImage.sign && <div className="card-view-inner">
-                    <CardSignView sign={cardImage.sign} />
-                </div>}
+                <CardImageView {...cardImage} />
                 {tokens.length !== 0 && <div className="card-tokens">{tokens}</div>}
             </div> : <div className="card-back">
-                <img className="card-view-img" src={getCardUrl(backface.image)} alt="" />
-                {backEntry && <CardDescriptionView entry={backEntry} />}
+                <CardImageView {...backface} />
             </div> }
             { showBackface && <div className="card-back-flip">
-                <img className="card-view-img" src={getCardUrl(backface.image)} alt=""  />
-                {backEntry && <CardDescriptionView entry={backEntry} />}
+                <CardImageView {...backface} />
             </div> }
         </div>
     )

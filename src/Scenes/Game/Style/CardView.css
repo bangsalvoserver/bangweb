@@ -194,7 +194,7 @@
     box-shadow: 0px 0px 3px 3px #ff0000d0 !important;
 }
 
-.card-view-img {
+.card-view .card-view-img {
     background-color: white;
     border-radius: var(--card-border) var(--card-border);
     box-shadow: 0px 0px var(--card-highlight-size) var(--card-highlight-size) var(--card-highlight-color);
@@ -202,7 +202,7 @@
     height: var(--card-height);
 }
 
-.card-view-inner {
+.card-view .card-sign-view {
     position: absolute;
     left: 4%;
     bottom: 2%;
@@ -210,8 +210,4 @@
     line-height: 0;
     scale: calc(var(--card-scale) * 2);
     transform-origin: bottom left;
-}
-
-.card-view-inner img {
-    display: inline;
 }

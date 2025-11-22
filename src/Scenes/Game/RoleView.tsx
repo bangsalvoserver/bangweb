@@ -1,7 +1,5 @@
 import { CSSProperties, useMemo, useRef } from "react";
-import { useLanguage } from "../../Locale/Registry";
-import { CardDescriptionView, getCardUrl } from "./CardView";
-import { getCardRegistryEntry } from "./GameStringComponent";
+import { CardImageView } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
 import { CardImage, Player } from "./Model/GameTable";
 import useCardOverlay from "./Model/UseCardOverlay";
@@ -25,8 +23,6 @@ function getRoleImage(role: PlayerRole): CardImage {
 }
 
 export default function RoleView({ player }: RoleProps) {
-    const language = useLanguage();
-
     const divRef = useRef<HTMLDivElement>(null);
     
     let animationKey: number | undefined;
@@ -51,22 +47,16 @@ export default function RoleView({ player }: RoleProps) {
     }
 
     const frontfaceImage = useMemo(() => getRoleImage(frontRole), [frontRole]);
-    const backfaceImage = useMemo(() => getRoleImage(backRole), [backRole]);
-    
-    const frontfaceEntry = getCardRegistryEntry(language, frontfaceImage.name!);
-    const backfaceEntry = getCardRegistryEntry(language, backfaceImage.name!);
 
     useCardOverlay(frontfaceImage, divRef);
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(frontfaceImage.image)} alt={frontfaceEntry?.name} />
-                <CardDescriptionView entry={frontfaceEntry} />
+                <CardImageView {...frontfaceImage} />
             </div>
             {animationKey ? <div className="card-back-flip">
-                <img className="card-view-img" src={getCardUrl(backfaceImage.image)} alt="" />
-                <CardDescriptionView entry={backfaceEntry} />
+                <CardImageView {...getRoleImage(backRole)} />
             </div> : null}
         </div>
     </div>;
