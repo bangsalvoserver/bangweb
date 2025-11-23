@@ -67,7 +67,7 @@ function LobbyElement({ lobby: { lobby_id, name, num_players, num_bots, num_spec
         <div className='player-count'>{num_bots > 0 ? num_bots : null}</div>
         <div className='player-count'>{num_spectators > 0 ? num_spectators : null}</div>
         <div className='lobby-state' title={getLabel(language, 'LobbyState', state)}>{LOBBY_STATE_ICONS[state]}</div>
-        <Button color='green' onClick={handleClickJoin}>
+        <Button color='green' className="lobby-join-button" onClick={handleClickJoin}>
           {getLabel(language, 'ui', 'BUTTON_JOIN')}
           {security === 'locked' ? ' 🔒' : security === 'unlocked' ? ' 🔓' : null}
         </Button>
