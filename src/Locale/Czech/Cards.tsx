@@ -23,7 +23,6 @@ export const CARDS_CZECH: CardRegistry = {
     },
     JAIL: {
         name: "Vězení",
-        hideTitle: true,
         description: <>Odhoď <i>Vězení</i> a pokračuj normálně ve svém tahu. Jinak odhoď <i>Vězení</i> a vynechej svůj tah.</>,
         descriptionClass: "draw-description",
     },
@@ -76,7 +75,6 @@ export const CARDS_CZECH: CardRegistry = {
     },
     INDIANS: {
         name: "Indiáni!",
-        hideTitle: true,
         description: <>Všichni ostatní hráči mohou odhodit kartu <i>BANG!</i> jinak ztrácí 1 život.</>
     },
     MISSED: {
