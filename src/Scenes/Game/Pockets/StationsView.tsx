@@ -1,13 +1,13 @@
-import { useContext, useRef } from "react";
+import { useContext, useMemo, useRef } from "react";
+import { useLanguage } from "../../../Locale/Registry";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameStateContext } from "../GameScene";
-import { getLocalizedCardName } from "../GameStringComponent";
-import { getCard, getCardFrontface, isCardKnown } from "../Model/GameTable";
-import useCardOverlay from "../Model/UseCardOverlay";
+import { getCardRegistryEntry } from "../GameStringComponent";
+import { getCard, getCardImage } from "../Model/GameTable";
 import { useSelectorConfirm } from "../Model/SelectorConfirm";
+import useCardOverlay from "../Model/UseCardOverlay";
 import { PocketProps } from "./PocketView";
 import "./Style/StationsView.css";
-import { useLanguage } from "../../../Locale/Registry";
 
 function StationCardView({ card }: CardProps) {
     const { table, selector } = useContext(GameStateContext);
@@ -15,16 +15,15 @@ function StationCardView({ card }: CardProps) {
     const language = useLanguage();
 
     const divRef = useRef<HTMLDivElement>(null);
-    const image = getCardFrontface(card) ?? 'backface/station';
-    const cardName = isCardKnown(card) ? card.cardData.name : undefined;
-    const cardAlt = cardName ? getLocalizedCardName(language, cardName) : undefined;
-
-    useCardOverlay(image, cardName, divRef);
+    const cardImage = useMemo(() => getCardImage(card) ?? { image: 'backface/station' }, [card]);
+    const entry = cardImage.name ? getCardRegistryEntry(language, cardImage.name) : undefined;
+    
+    useCardOverlay(cardImage, divRef);
     
     const selectorCardClass = getSelectorCardClass(table, selector, card);
     return (
         <div ref={divRef} className={`station-card ${selectorCardClass ?? ''}`} onClick={handleClickCard(card)}>
-            <img className='station-card-img' src={getCardUrl(image)} alt={cardAlt} />
+            <img className='station-card-img' src={getCardUrl(cardImage.image)} alt={entry?.name} />
         </div>
     );
 }

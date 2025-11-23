@@ -95,7 +95,7 @@ const DEFAULT_SELECTOR_CONFIRM: SelectorConfirm = {
     handleUndo: undefined,
 };
 
-const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SELECTOR_CONFIRM);
+export const SelectorConfirmContext = createContext<SelectorConfirm>(DEFAULT_SELECTOR_CONFIRM);
 
 export function useSelectorConfirm() {
     return useContext(SelectorConfirmContext);

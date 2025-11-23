@@ -38,8 +38,8 @@ function getSuitAlt(suit: CardSuit) {
 export default function CardSignView({ sign }: CardSignProps) {
     if (sign.rank !== 'none' && sign.suit !== 'none') {
         return <>
-            <img src={getCardUrl('misc/' + sign.rank)} alt={getRankAlt(sign.rank)} />
-            <img src={getCardUrl('misc/suit_' + sign.suit)} alt={getSuitAlt(sign.suit)} />
+            <img className="inline" src={getCardUrl('misc/' + sign.rank)} alt={getRankAlt(sign.rank)} />
+            <img className="inline" src={getCardUrl('misc/suit_' + sign.suit)} alt={getSuitAlt(sign.suit)} />
         </>;
     } else {
         return null;

@@ -1,30 +1,10 @@
 import { Chart as ChartJS, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
-import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Env from "../../Model/Env";
+import useFetch from '../../Utils/UseFetch';
 
 ChartJS.register(...registerables);
-
-function useFetch<T>(url: string): T | undefined {
-    const [result, setResult] = useState<T>();
-
-    useEffect(() => {
-        let fetching = true;
-        (async () => {
-            const response = await fetch(url);
-            if (response.ok) {
-                const json = await response.json();
-                if (fetching) {
-                    setResult(json);
-                }
-            }
-        })();
-        return () => { fetching = false; };
-    }, [url]);
-
-    return result;
-}
 
 type Timestamp = number;
 type TimestampCount = [Timestamp, number];

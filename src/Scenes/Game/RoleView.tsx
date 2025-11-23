@@ -1,9 +1,7 @@
-import { CSSProperties, useRef } from "react";
-import { useLanguage } from "../../Locale/Registry";
-import { getCardUrl } from "./CardView";
-import { getLocalizedCardName } from "./GameStringComponent";
+import { CSSProperties, useMemo, useRef } from "react";
+import { CardImageView } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
-import { Player } from "./Model/GameTable";
+import { CardImage, Player } from "./Model/GameTable";
 import useCardOverlay from "./Model/UseCardOverlay";
 import "./Style/CardView.css";
 
@@ -11,14 +9,20 @@ export interface RoleProps {
     player: Player;
 }
 
-function getRoleImage(role: PlayerRole) {
-    if (role === 'unknown') return 'backface/role';
-    return 'role/' + role;
+const SUFFIX_3P = '_3p';
+
+function getRoleImage(role: PlayerRole): CardImage {
+    const name = 'ROLE_' + role.toUpperCase();
+    let image = 'role/' + role;
+    if (role === 'unknown') {
+        image = 'backface/role';
+    } else if (role.endsWith(SUFFIX_3P)) {
+        image = 'role/' + role.substring(0, role.length - SUFFIX_3P.length);
+    }
+    return { name, image };
 }
 
 export default function RoleView({ player }: RoleProps) {
-    const language = useLanguage();
-
     const divRef = useRef<HTMLDivElement>(null);
     
     let animationKey: number | undefined;
@@ -42,21 +46,17 @@ export default function RoleView({ player }: RoleProps) {
         classes.push('card-animation', 'card-animation-flip');
     }
 
-    const backfaceSrc = getRoleImage(backRole);
-    const frontfaceSrc = getRoleImage(frontRole);
-    
-    const cardName = 'ROLE_' + frontRole.toUpperCase();
-    const cardAlt = getLocalizedCardName(language, cardName);
+    const frontfaceImage = useMemo(() => getRoleImage(frontRole), [frontRole]);
 
-    useCardOverlay(frontfaceSrc, cardName, divRef);
+    useCardOverlay(frontfaceImage, divRef);
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
             <div className="card-front">
-                <img className="card-view-img" src={getCardUrl(frontfaceSrc)} alt={cardAlt} />
+                <CardImageView {...frontfaceImage} />
             </div>
             {animationKey ? <div className="card-back-flip">
-                <img className="card-view-img" src={getCardUrl(backfaceSrc)} alt="" />
+                <CardImageView {...getRoleImage(backRole)} />
             </div> : null}
         </div>
     </div>;

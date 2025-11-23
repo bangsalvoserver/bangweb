@@ -1,0 +1,274 @@
+@font-face {
+    font-family: 'American Typewriter';
+    src: url('/fonts/American\ Typewriter\ Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Panatino Linotype';
+    src: url('/fonts/palatinolinotype_roman.ttf');
+}
+
+.card-title {
+    position: absolute;
+    text-align: center;
+    font-family: 'American Typewriter';
+    font-size: 11pt;
+    text-transform: uppercase;
+    width: 100%;
+    top: 19%;
+    left: 0;
+}
+
+.card-title-higher {
+    top: 17%;
+}
+
+.card-title-lower {
+    top: 20%;
+}
+
+.character-title {
+    top: 15%;
+}
+
+.card-description-inner {
+    text-align: center;
+    line-height: 12pt;
+    font-family: 'Palatino Linotype', 'Book Antiqua', sans-serif;
+    font-size: 12pt;
+    white-space: wrap;
+
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.card-description {
+    position: absolute;
+    width: 76%;
+    height: 20%;
+    left: 12%;
+    top: 70%;
+}
+
+.draw-description {
+    position: absolute;
+    width: 60%;
+    height: 22%;
+    left: 28%;
+    top: 70%;
+}
+
+.card-description-higher {
+    position: absolute;
+    width: 76%;
+    height: 26%;
+    left: 12%;
+    top: 63%;
+}
+
+.card-description-lower {
+    position: absolute;
+    width: 76%;
+    height: 16%;
+    left: 12%;
+    top: 76%;
+}
+
+.weapon-description {
+    position: absolute;
+    width: 76%;
+    height: 18%;
+    left: 12%;
+    top: 60%;
+}
+
+.character-description {
+    position: absolute;
+    width: 76%;
+    height: 28%;
+    left: 12%;
+    top: 64%;
+}
+
+.cube-description {
+    position: absolute;
+    width: 68%;
+    height: 15%;
+    left: 16%;
+    top: 74%;
+}
+
+.cube-description-lower {
+    position: absolute;
+    width: 68%;
+    height: 15%;
+    left: 16%;
+    top: 77%;
+}
+
+.cube-description-double[description-index="0"] {
+    position: absolute;
+    width: 76%;
+    height: 15%;
+    left: 12%;
+    top: 62%;
+    font-size: 11pt;
+}
+
+.cube-description-double[description-index="1"] {
+    position: absolute;
+    width: 68%;
+    height: 10%;
+    left: 16%;
+    top: 80%;
+    font-size: 11pt;
+}
+
+.cube-description .card-description-inner {
+    font-size: 11pt;
+}
+
+.train-description {
+    position: absolute;
+    width: 90%;
+    height: 20%;
+    left: 5%;
+    top: 27%;
+}
+
+.train-title {
+    position: absolute;
+    text-align: center;
+    font-family: 'American Typewriter';
+    font-weight: bold;
+    font-size: 11pt;
+    text-transform: uppercase;
+    width: 80%;
+    top: 82.5%;
+    left: 10%;
+}
+
+.locomotive-description {
+    position: absolute;
+    width: 70%;
+    height: 25%;
+    left: 15%;
+    top: 15%;
+}
+
+.legends-description {
+    position: absolute;
+    width: 84%;
+    height: 18%;
+    left: 8%;
+    top: 80%;
+}
+
+.legends-description .card-description-inner {
+    font-size: 11pt;
+    line-height: 10pt;
+}
+
+.feats-description {
+    position: absolute;
+    width: 50%;
+    height: 30%;
+    left: 43%;
+    top: 62%;
+}
+
+.feats-description .card-description-inner {
+    text-align: left;
+    font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
+    top: 0;
+    transform: unset;
+}
+
+.feats-title {
+    position: absolute;
+    font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    top: 16%;
+    left: 43%;
+    color: rgb(65, 65, 65);
+}
+
+.text-bigger .card-description-inner {
+    font-size: 40pt;
+}
+
+.text-smaller .card-description-inner {
+    font-size: 10pt;
+}
+
+.text-smallest .card-description-inner {
+    font-size: 9pt;
+}
+
+.line-smaller .card-description-inner {
+    line-height: 10pt;
+}
+
+.card-view .card-description-inner {
+    font-size: 3.5pt;
+    line-height: 2pt;
+    pointer-events: none;
+    color: gray;
+}
+
+.card-view .text-smallest .card-description-inner {
+    font-size: 2.5pt;
+}
+
+.card-view .text-bigger .card-description-inner {
+    font-size: 10pt;
+}
+
+.card-view .card-title {
+    font-size: 3pt;
+    pointer-events: none;
+    color: gray;
+}
+
+.card-view .train-title {
+    font-size: 3pt;
+    pointer-events: none;
+    color: rgb(109, 73, 57)
+}
+
+.card-view .feats-title {
+    font-size: 3pt;
+    pointer-events: none;
+    color: gray;
+}
+
+.card-view .legends-description .card-description-inner {
+    color: rgb(90, 90, 90);
+}
+
+.card-view {
+    text-rendering: optimizeSpeed;
+}
+
+@media (max-width:1200px) {
+    .card-view .card-description-inner {
+        font-size: 1.5pt;
+        line-height: 1pt;
+    }
+
+    .card-view .text-smallest .card-description-inner {
+        font-size: 1.2pt;
+    }
+
+    .card-view .text-bigger .card-description-inner {
+        font-size: 5pt;
+    }
+
+    .card-view .card-title, .card-view .train-title {
+        font-size: 2pt;
+    }
+}
