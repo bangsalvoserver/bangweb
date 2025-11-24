@@ -1,4 +1,4 @@
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useRef } from "react";
 import { useLanguage } from "../../../Locale/Registry";
 import { CardProps, getCardUrl, getSelectorCardClass } from "../CardView";
 import { GameStateContext } from "../GameScene";
@@ -15,7 +15,7 @@ function StationCardView({ card }: CardProps) {
     const language = useLanguage();
 
     const divRef = useRef<HTMLDivElement>(null);
-    const cardImage = useMemo(() => getCardImage(card) ?? { image: 'backface/station' }, [card]);
+    const cardImage = getCardImage(card) ?? { image: 'backface/station' };
     const entry = cardImage.name ? getCardRegistryEntry(language, cardImage.name) : undefined;
     
     useCardOverlay(cardImage, divRef);

@@ -1,4 +1,4 @@
-import React, { CSSProperties, Ref, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import React, { CSSProperties, Ref, useContext, useImperativeHandle, useRef } from "react";
 import { useLanguage } from "../../Locale/Registry";
 import { asArray } from "../../Utils/ArrayUtils";
 import CardSignView from "./CardSignView";
@@ -123,9 +123,8 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
 
     useImperativeHandle(cardRef, () => buildCardRef(divRef, card.id), [card.id]);
 
-    let [cardImage, backface] = useMemo(() => [
-        getCardImage(card), getCardBackface(card)
-    ], [card]);
+    let cardImage = getCardImage(card);
+    let backface = getCardBackface(card);
 
     useCardOverlay(cardImage ?? backface, divRef);
 

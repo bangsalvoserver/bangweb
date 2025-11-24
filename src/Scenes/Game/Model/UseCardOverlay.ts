@@ -12,6 +12,8 @@ export const SetCardOverlayContext = createContext<Dispatch<SetStateAction<Overl
 export default function useCardOverlay(cardImage: CardImage, divRef: RefObject<Element>) {
     const setCardOverlay = useContext(SetCardOverlayContext);
 
+    const { image, name, sign } = cardImage;
+
     useEffect(() => {
         if (!setCardOverlay) return;
         
@@ -29,7 +31,7 @@ export default function useCardOverlay(cardImage: CardImage, divRef: RefObject<E
         const addOverlay = () => {
             timeout = setTimeout(() => {
                 added = true;
-                setCardOverlay({ cardImage, cardRef });
+                setCardOverlay({ cardImage: { image, name, sign }, cardRef });
             }, 500);
         };
 
@@ -56,5 +58,5 @@ export default function useCardOverlay(cardImage: CardImage, divRef: RefObject<E
             div.removeEventListener('mousemove', resetTimeout);
             removeOverlay();
         }
-    }, [cardImage, divRef, setCardOverlay]);
+    }, [image, name, sign, divRef, setCardOverlay]);
 }

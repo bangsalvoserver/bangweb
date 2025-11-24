@@ -1,4 +1,4 @@
-import { CSSProperties, useMemo, useRef } from "react";
+import { CSSProperties, useRef } from "react";
 import { CardImageView } from "./CardView";
 import { PlayerRole } from "./Model/CardEnums";
 import { CardImage, Player } from "./Model/GameTable";
@@ -46,7 +46,7 @@ export default function RoleView({ player }: RoleProps) {
         classes.push('card-animation', 'card-animation-flip');
     }
 
-    const frontfaceImage = useMemo(() => getRoleImage(frontRole), [frontRole]);
+    const frontfaceImage = getRoleImage(frontRole);
 
     useCardOverlay(frontfaceImage, divRef);
 
