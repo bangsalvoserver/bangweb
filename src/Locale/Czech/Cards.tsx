@@ -267,8 +267,11 @@ export const CARDS_CZECH: CardRegistry = {
     },
     LAST_CALL: {
         name: "Poslední pivo",
-        description: <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>,
-        descriptionClass: "card-description bg-white" // this covers the beer symbol, what do we do here?
+        description: [
+            <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>,
+            <img src='/cards/misc/icon_beer.webp' alt='' />
+        ],
+        descriptionClass: "draw-description text-smaller bg-white"
     },
 
     // Armed & Dangerous cards

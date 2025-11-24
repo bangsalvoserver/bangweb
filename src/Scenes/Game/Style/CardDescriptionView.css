@@ -60,6 +60,11 @@
     top: 70%;
 }
 
+.draw-description[description-index="1"] {
+    left: 11%;
+    width: 16%;
+}
+
 .card-description-higher {
     position: absolute;
     width: 76%;
