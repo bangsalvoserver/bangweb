@@ -30,8 +30,8 @@ export function getRectCenter(rect: Rect): Point {
 
 export function getWindowRect(): Rect {
     return {
-        x: window.scrollX,
-        y: window.scrollY,
+        x: 0,
+        y: 0,
         w: window.innerWidth,
         h: window.innerHeight
     };
