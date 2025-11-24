@@ -25,9 +25,13 @@ export function getCardRegistryEntry(language: Language, name: string): CardRegi
     return { name, hideTitle: true };
 }
 
+export function getLocalizedCardName(language: Language, name: string): string {
+    return getCardRegistryEntry(language, name).name;
+}
+
 export function LocalizedCardName({ name, sign }: CardNameProps): JSX.Element {
     const language = useLanguage();
-    const localizedName = getCardRegistryEntry(language, name).name;
+    const localizedName = getLocalizedCardName(language, name);
     if (sign && sign.rank !== 'none' && sign.suit !== 'none') {
         return <span className="card-name">{localizedName} <span className="inline-block">(<CardSignView sign={sign} />)</span></span>;
     } else {
