@@ -1401,8 +1401,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     MOST_WANTED: {
         name: "Most Wanted",
         hideTitle: true,
-        description: <>Ogni giocatore "estrae!":<br/>♠=perde 1 punto vita.</>,
-        descriptionClass: "card-description-lower"
+        description: <>Ogni giocatore "estrae!":<br/>♠=perde 1 punto vita.</>
     },
     NEXT_STOP: {
         name: "Prossima Fermata",

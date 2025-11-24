@@ -1315,8 +1315,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     MOST_WANTED: {
         name: "Most Wanted",
         hideTitle: true,
-        description: <>Each player must "draw!":<br/>♠=that player loses 1 life point.</>,
-        descriptionClass: "card-description-lower"
+        description: <>Each player must "draw!":<br/>♠=that player loses 1 life point.</>
     },
     NEXT_STOP: {
         name: "Next Stop",

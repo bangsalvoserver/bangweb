@@ -1262,6 +1262,7 @@ export const CARDS_CZECH: CardRegistry = {
     EVADED: {
         name: "K zemi!",
         description: <>Doberte si kartu, kterou jste právě <i>minuli!</i></>,
+        descriptionClass: "card-description-lower"
     },
     FULL_STEAM: {
         name: "Plnou parou vpřed",
@@ -1294,6 +1295,7 @@ export const CARDS_CZECH: CardRegistry = {
     NEXT_STOP: {
         name: "Příští stanice",
         description: <>Posuňte vlak o 1 stanici.</>,
+        descriptionClass: "card-description-lower"
     },
     REFUND: {
         name: "Odškodnění",
