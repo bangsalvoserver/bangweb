@@ -5,18 +5,22 @@ export interface Converter<T> {
     toString: (value: T) => string;
 }
 
+export type DefaultValue<T> = T | (() => T);
+
 export const stringConverter: Converter<string> = { fromString: str => str, toString : str => str };
 export const intConverter: Converter<number> = { fromString: parseInt, toString: value => value.toString() };
 export const floatConverter: Converter<number> = { fromString: parseFloat, toString: value => value.toString() };
 export const boolConverter: Converter<boolean> = { fromString: str => str === 'true', toString: value => value ? 'true' : 'false' }
 export const jsonConverter: Converter<any> = { fromString: JSON.parse, toString: JSON.stringify };
 
-function useStorage<T>(key: string, converter: Converter<T>, storage: Storage, defaultValue?: T) {
+function useStorage<T>(key: string, converter: Converter<T>, storage: Storage, defaultValue?: DefaultValue<T>) {
     const [value, setValue] = useState(() => {
         try {
             const stringValue = storage.getItem(key);
             if (stringValue) {
                 return converter.fromString(stringValue);
+            } else if (typeof defaultValue === 'function') {
+                return (defaultValue as (() => T))();
             } else {
                 return defaultValue;
             }
@@ -38,10 +42,10 @@ function useStorage<T>(key: string, converter: Converter<T>, storage: Storage, d
     return [value, setValue] as const;
 }
 
-export function useLocalStorage<T>(key: string, converter: Converter<T>, defaultValue?: T) {
+export function useLocalStorage<T>(key: string, converter: Converter<T>, defaultValue?: DefaultValue<T>) {
     return useStorage(key, converter, localStorage, defaultValue);
 }
 
-export function useSessionStorage<T>(key: string, converter: Converter<T>, defaultValue?: T) {
+export function useSessionStorage<T>(key: string, converter: Converter<T>, defaultValue?: DefaultValue<T>) {
     return useStorage(key, converter, sessionStorage, defaultValue);
 }

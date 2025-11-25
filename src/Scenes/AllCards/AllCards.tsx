@@ -13,6 +13,7 @@ import { CardRef } from "../Game/Model/CardTracker";
 import { Card, getCardImage } from "../Game/Model/GameTable";
 import { SelectorConfirm, SelectorConfirmContext } from "../Game/Model/SelectorConfirm";
 import { OverlayState } from "../Game/Model/UseCardOverlay";
+import { Converter, stringConverter, useSessionStorage } from "../../Utils/UseLocalStorage";
 
 function buildCard(cardData: CardData, index: number): Card {
     return {
@@ -76,8 +77,8 @@ function getDefaultDeck(): DeckType {
 }
 
 export default function AllCards() {
-    const [deck, setDeck] = useState(getDefaultDeck);
-    const [language, setLanguage] = useState('en' as Language);
+    const [deck, setDeck] = useSessionStorage('deck', stringConverter as Converter<DeckType>, getDefaultDeck);
+    const [language, setLanguage] = useSessionStorage('language', stringConverter as Converter<Language>, 'en');
 
     const handleChangeDeck = (event: ChangeEvent<HTMLSelectElement>) => {
         setDeck(event.target.value as DeckType);
@@ -106,6 +107,6 @@ export default function AllCards() {
                 {LANGUAGES.map(value => <option key={value} value={value}>{getLabel(value, 'ui', 'LANGUAGE_NAME')}</option>)}
             </select>
         </div>
-        <AllCardsInner deck={deck} />
+        { deck && <AllCardsInner deck={deck} /> }
     </LanguageProvider>
 }
