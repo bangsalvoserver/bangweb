@@ -609,91 +609,91 @@ export const CARDS_CZECH: CardRegistry = {
     APACHE_KID: {
         name: "Apache Kid",
         hideTitle: true,
-        description: <>Karty diamantů zahrané jinými hráči na něj nemají vliv.</>,
+        description: <>Nemají na tebe vliv kárové ♦ karty zahrané jinými hráči.</>,
         descriptionClass: "character-description"
     },
     BELLE_STAR: {
         name: "Belle Star",
         hideTitle: true,
-        description: <>Během jejího tahu nemají karty zahrané před ostatními hráči žádný vliv.</>,
+        description: <>Ve tvém tahu nemají žádný efekt všechny karty, které mají ostatní hráči před sebou ve hře.</>,
         descriptionClass: "character-description"
     },
     BILL_NOFACE: {
         name: "Bill Noface",
         hideTitle: true,
-        description: <>Dobere si 1 kartu a navíc 1 kartu za každé zranění, které má.</>,
+        description: <>V 1. fázi svého tahu si dober 1 kartu plus 1 kartu za každé aktuální zranění (ztracený život).</>,
         descriptionClass: "character-description"
     },
     CHUCK_WENGAM: {
         name: "Chuck Wengam",
         hideTitle: true,
-        description: <>Během svého tahu se může rozhodnout ztratit 1 život, aby si mohl líznout 2 karty.</>,
+        description: <>Ve svém tahu si můžeš ubrat 1 život a dobrat si 2 karty.</>,
         descriptionClass: "character-description"
     },
     DOC_HOLYDAY: {
         name: "Doc Holyday",
         hideTitle: true,
-        description: <>Během svého tahu může odhodit jednou 2 karty z ruky a vystřelit <i>BANG!</i>.</>,
+        description: <>Jednou během svého tahu můžeš odhodit 2 karty z ruky a aktivovat tím efekt <i>BANG!</i>.</>,
         descriptionClass: "character-description"
     },
     ELENA_FUENTE: {
         name: "Elena Fuente",
         hideTitle: true,
-        description: <>Může použít jakoukoli kartu jako <i>Minul!</i>.</>,
+        description: <>Můžeš použít jakoukoli kartu ze své ruky jako <i>Vedle!</i>.</>,
         descriptionClass: "character-description"
     },
     GREG_DIGGER: {
         name: "Greg Digger",
         hideTitle: true,
-        description: <>Pokaždé, když je další hráč vyřazen, získá zpět 2 životy.</>,
+        description: <>Vždy když je jiná postava vyřazena ze hry, přidej si 2 životy.</>,
         descriptionClass: "character-description"
     },
     HERB_HUNTER: {
         name: "Herb Hunter",
         hideTitle: true,
-        description: <>Pokaždé, když je další hráč vyřazen, si lízne 2 karty navíc.</>,
+        description: <>Vždy když je jiná postava vyřazena ze hry, dober si 2 karty.</>,
         descriptionClass: "character-description"
     },
     JOSE_DELGADO: {
         name: "Josè Delgado",
         hideTitle: true,
-        description: <>Dvakrát během svého tahu může odhodit modrou kartu z ruky a líznout si tak 2 karty.</>,
+        description: <>Až dvakrát během svého tahu můžeš odhodit z ruky 1 modrou kartu a dobrat si 2 karty.</>,
         descriptionClass: "character-description"
     },
     MOLLY_STARK: {
         name: "Molly Stark",
         hideTitle: true,
-        description: <>Pokaždé, když použije kartu z ruky mimo pořadí, si lízne kartu.</>,
+        description: <>Kdykoli použiješ nějakou kartu mimo svůj tah, dober si 1 kartu.</>,
         descriptionClass: "character-description"
     },
     PAT_BRENNAN: {
         name: "Pat Brennan",
         hideTitle: true,
-        description: <>Před kterýmkoli hráčem může líznout pouze jednu kartu.</>,
+        description: <>V 1. fázi svého tahu si místo dobrání 2 karet můžeš vzít 1 kartu ze hry.</>,
         descriptionClass: "character-description"
     },
     PIXIE_PETE: {
         name: "Pixie Pete",
         hideTitle: true,
-        description: <>Dobírá si 3 karty místo 2.</>,
+        description: <>V 1. fázi svého tahu si dobíráš 3 karty místo 2.</>,
         descriptionClass: "character-description"
     },
     SEAN_MALLORY: {
         name: "Sean Mallory",
         hideTitle: true,
-        description: <>V ruce může držet až 10 karet.</>,
+        description: <>Ve 3. fázi svého tahu neodhazuješ karty, pokud jich máš v ruce více než aktuální počet životů ale nanejvýš 10.</>,
         descriptionClass: "character-description"
     },
     TEQUILA_JOE: {
         name: "Tequila Joe",
         hideTitle: true,
-        description: <>Pokaždé, když zahraje <i>Pivo</i>, získá zpět 2 životy místo 1.</>,
+        description: <>Kdykoli zahraješ kartu <i>Pivo</i>, přidej si 2 životy místo 1.</>,
         descriptionClass: "character-description"
     },
     VERA_CUSTER: {
         name: "Vera Custer",
         hideTitle: true,
-        description: <>Na celé jedno kolo získá stejnou schopnost jiné postavy ve hře dle vlastního výběru.</>,
+        description: <>Na začátku svého tahu si vyber jinou postavu ve hře. Až do začátku svého příštího tahu získáš její schopnost.</>,
         descriptionClass: "character-description"
     },
 
