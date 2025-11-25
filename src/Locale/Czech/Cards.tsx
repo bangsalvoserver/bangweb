@@ -239,7 +239,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     BACKFIRE: {
         name: "Opětovná palba",
-        description: <>Považuje se za kartu <i>Missed!</i> Hráč, který na tebe střílel, je nyní cílem efektu <i>BANG!</i>.</>
+        description: <>Považuje se za kartu <i>Vedle!</i> Hráč, který na tebe střílel, je nyní cílem efektu <i>BANG!</i>.</>
     },
     SAVED: {
         name: "Obětavý skok",
@@ -488,7 +488,7 @@ export const CARDS_CZECH: CardRegistry = {
     CALAMITY_JANET: {
         name: "Calamity Janet",
         hideTitle: true,
-        description: <>Můžeš používat kartu <i>BANG!</i> jako kartu <i>Missed!</i> a naopak.</>,
+        description: <>Můžeš používat kartu <i>BANG!</i> jako kartu <i>Vedle!</i> a naopak.</>,
         descriptionClass: "character-description"
     },
     EL_GRINGO: {
@@ -701,67 +701,67 @@ export const CARDS_CZECH: CardRegistry = {
     BLACK_FLOWER: {
         name: "Black Flower",
         hideTitle: true,
-        description: <>Jednou během svého tahu můžete použít libovolnou kartu Clubu jako bonus <i>BANG!</i>.</>,
+        description: <>Jednou během svého tahu můžeš zahrát jakoukoli křížovou ♣ kartu jako kartu <i>BANG!</i> navíc.</>,
         descriptionClass: "character-description"
     },
     COLORADO_BILL: {
         name: "Colorado Bill",
         hideTitle: true,
-        description: <>Pokaždé, když zahrajete kartu <i>BANG!</i>, „doberte!“: u piků se tomuto úderu nelze vyhnout.</>,
+        description: <>Když zahraješ kartu <i>BANG!</i>, sejmi. Pokud je sejmutá karta piková ♠, nelze tento <i>BANG!</i> zrušit.</>,
         descriptionClass: "character-description"
     },
     COLORADO_BILL_2: {
         name: "Colorado Bill",
         hideTitle: true,
-        description: <>Pokaždé, když jiný hráč zahraje kartu <i>Missed!</i> na kartu <i>BANG!</i> od <i>Colorado Bill</i>, "remíza!": na Piky karta <i>Missed!</i> nemá žádný účinek a napadený hráč ztrácí 1 život.</>,
+        description: <>Pokaždé, když jiný hráč zahraje kartu <i>Vedle!</i> na kartu <i>BANG!</i> od <i>Colorado Bill</i>, "sejmi": na Piky karta <i>Vedle!</i> nemá žádný účinek a napadený hráč ztrácí 1 život.</>,
         descriptionClass: "character-description"
     },
     DER_SPOT_BURST_RINGER: {
         name: "Der Spot - Burst Ringer",
         hideTitle: true,
-        description: <>Jednou během svého tahu můžete použít kartu <i>BANG!</i> jako <i>Gatlinga</i>.</>,
+        description: <>Jednou během svého tahu můžeš zahrát kartu <i>BANG!</i> jako kartu <i>Kulomet</i>.</>,
         descriptionClass: "character-description"
     },
     EVELYN_SHEBANG: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>Ve fázi tažení můžete odmítnout líznout si karty. Za každou vynechanou kartu vystřelte <i>BANG!</i> na jiný cíl v dosažitelné vzdálenosti.</>,
+        description: <>V 1. fázi svého tahu si smíš dobrat o 1 kartu méně. Pokud tak učiníš, použij efekt BANG! na hráče ve vzdálenosti 1.</>,
         descriptionClass: "character-description"
     },
     EVELYN_SHEBANG_2: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>Může si líznout o 1 kartu méně než obvykle, aby mohla zahrát další <i>BANG!</i> na vzdálenost 1.</>,
+        description: <>>V 1. fázi svého tahu si smíš dobrat o 1 kartu méně. Pokud tak učiníš, můžeš použít BANG! navíc na hráče ve vzdálenosti 1.</>,
         descriptionClass: "character-description"
     },
     HENRY_BLOCK: {
         name: "Henry Block",
         hideTitle: true,
-        description: <>Každý hráč, který si vezme nebo odhodí jednu ze svých karet (z ruky nebo ze hry), se stane terčem <i>BANG!</i>.</>,
+        description: <>Hráč, který ti vezme nebo odhodí kartu, kterou máš v ruce nebo před sebou ve hře, se stává cílem efektu <i>BANG!</i> za každou takovou kartu.</>,
         descriptionClass: "character-description"
     },
     LEMONADE_JIM: {
         name: "Limonádový Jim",
-        description: <>Pokaždé, když jiný hráč zahraje kartu Pivo, můžete odhodit jakoukoli kartu z ruky a získat tak zpět 1 život.</>,
+        description: <>Kdykoli některý jiný hráč zahraje kartu <i>Pivo</i>, můžeš odhodit 1 kartu z ruky a přidat si 1 život.</>,
         titleClass: "card-title character-title",
         descriptionClass: "character-description"
     },
     MICK_DEFENDER: {
         name: "Mick Defender",
         hideTitle: true,
-        description: <>Pokud jste cílem jiné hnědé karty než <i>BANG!</i>, můžete použít kartu <i>Minul!</i>, abyste se této kartě vyhnuli.</>,
+        description: <>Pokud jsi cílem hnědé karty (kromě BANG!), můžeš ji zahráním karty <i>Vedle!</i> zrušit.</>,
         descriptionClass: "character-description"
     },
     MICK_DEFENDER_2: {
         name: "Mick Defender",
         hideTitle: true,
-        description: <>Pokud je jediným cílem karty, může použít kartu <i>Minul!</i>, aby se této kartě vyhnul.</>,
+        description: <>Pokud jsi jediným cílem libovolné karty, můžeš ji zahráním karty <i>Vedle!</i> zrušit.</>,
         descriptionClass: "character-description"
     },
     TUCO_FRANZISKANER: {
         name: "Tuco Franziskaner",
         hideTitle: true,
-        description: <>Během fáze losování, pokud nemáte ve hře žádné modré karty, losujte si 2 karty navíc.</>,
+        description: <>Pokud v 1. fázi svého tahu nemáš před sebou ve hře žádné modré karty, dober si 2 karty navíc.</>,
         descriptionClass: "character-description"
     },
 
@@ -770,49 +770,49 @@ export const CARDS_CZECH: CardRegistry = {
     BIG_SPENCER: {
         name: "Big Spencer",
         hideTitle: true,
-        description: <>Začíná s 5 kartami. Nemůže hrát <i>Missed!</i></>,
+        description: <>Začínáš hru s 5 kartami. Nemůže hrát kartu <i>Vedle!</i></>,
         descriptionClass: "character-description"
     },
     FLINT_WESTWOOD: {
         name: "Flint Westwood",
         hideTitle: true,
-        description: <>Během svého tahu může vyměnit jednu kartu z ruky se dvěma náhodnými kartami z ruky jiného hráče.</>,
+        description: <>Během svého tahu můžeš vyměnit 1 kartu ze své ruky za 2 karty náhodně vybrané z ruky jiného hráče.</>,
         descriptionClass: "character-description"
     },
     GARY_LOOTER: {
         name: "Gary Looter",
         hideTitle: true,
-        description: <>Na konci tahu si lízne všechny přebytečné karty, které ostatní hráči odhodili.</>,
+        description: <>Bereš si všechny nadpočetné karty odhozené ostatními hráči na konci jejich tahů.</>,
         descriptionClass: "character-description"
     },
     GREYGORY_DECK: {
         name: "Greygory Deck",
         hideTitle: true,
-        description: <>Na začátku svého tahu si může náhodně vylosovat 2 postavy. Má všechny schopnosti vylosovaných postav.</>,
+        description: <>Na začátku svého tahu si můžeš náhodně vybrat 2 postavy ze základní hry, za něž momentálně nikdo nehraje. Získáš zvláštní schopnosti obou těchto postav.</>,
         descriptionClass: "character-description"
     },
     JOHN_PAIN: {
         name: "John Pain",
         hideTitle: true,
-        description: <>Pokud má v ruce méně než 6 karet, pokaždé, když si kterýkoli hráč „dobere!“, John si přidá právě dotaženou kartu do ruky.</>,
+        description: <>Kdykoli některý hráč sejme, vezmi si sejmutou kartu do ruky. Toto smíš provést pouze tehdy, máš-li v ruce méně než 6 karet.</>,
         descriptionClass: "character-description"
     },
     LEE_VAN_KLIFF: {
         name: "Lee Van Kliff",
         hideTitle: true,
-        description: <>Během svého tahu může odhodit kartu <i>BANG!</i>, aby zopakoval efekt právě zahrané karty s hnědým okrajem.</>,
+        description: <>Během svého tahu můžeš odhodit kartu <i>BANG!</i>, abys tak zopakoval efekt hnědé karty, kterou jsi právě zahrál.</>,
         descriptionClass: "character-description"
     },
     TEREN_KILL: {
         name: "Teren Kill",
         hideTitle: true,
-        description: <>Pokaždé, když by byl vyřazen, „tasírujte!“: pokud to nejsou piky, Teren zůstane na 1 životním bodě a táhne si 1 kartu.</>,
+        description: <>Kdykoli bys měl být vyřazen ze hry, sejmi. Pokud není sejmutá karta piková ♠, zůstává ti 1 život a dober si 1 kartu.</>,
         descriptionClass: "character-description"
     },
     YOUL_GRINNER: {
         name: "Youl Grinner",
         hideTitle: true,
-        description: <>Před losováním mu musí hráči, kteří mají v ruce více karet než on, dát jednu kartu dle vlastního výběru.</>,
+        description: <>Než si v 1. fázi svého tahu dobereš karty, musí ti všichni ostatní hráči, kteží mají v ruce více karet než ty, dát 1 kartu z ruky dle své volby.</>,
         descriptionClass: "character-description"
     },
 
@@ -1089,7 +1089,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     RICOCHET: {
         name: "Odražená střela",
-        description: <>Každý hráč může odhodit karty <i>BANG!</i> proti kartám zahraným před jakýmkoli hráčem: každá karta je odhozena, pokud její majitel za každou z nich nezahraje <i>Missed!</i>.</>,
+        description: <>Každý hráč může odhodit karty <i>BANG!</i> proti kartám zahraným před jakýmkoli hráčem: každá karta je odhozena, pokud její majitel za každou z nich nezahraje <i>Vedle!</i>.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller line-smaller"
     },
@@ -1504,7 +1504,7 @@ export const CARDS_CZECH: CardRegistry = {
 
     BAGGAGE_CAR: {
         name: "Zavazadlový vůz",
-        description: <>Zahoďte to za <i>Missed!</i>, <i>Panic!</i>, <i>Cat Balou</i> nebo navíc <i>BANG!</i></>,
+        description: <>Zahoďte to za <i>Vedle!</i>, <i>Panic!</i>, <i>Cat Balou</i> nebo navíc <i>BANG!</i></>,
         titleClass: "train-title",
         descriptionClass: "train-description"
     },
@@ -1866,7 +1866,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     A_THOUSAND_WAYS_TO_DIE: {
         name: "Tisíc způsobů, jak zemřít",
-        description: <>Ukažte z ruky kartu <i>Missed!</i> a další kartu stejné barvy.</>,
+        description: <>Ukažte z ruky kartu <i>Vedle!</i> a další kartu stejné barvy.</>,
         titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
