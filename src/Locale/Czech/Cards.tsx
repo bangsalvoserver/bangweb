@@ -914,28 +914,28 @@ export const CARDS_CZECH: CardRegistry = {
 
     BLESSING: {
         name: "Požehnání",
-        description: <>Barva všech karet je srdcová.</>,
+        description: <>Všechny karty jsou po celé kolo srdcové.</>,
         titleClass: "card-title card-title-lower",
     },
     GHOST_TOWN: {
         name: "Město Duchů",
-        description: <>Během svého tahu se vyřazení hráči vracejí do hry jako duchové. Doberou si 3 karty místo 2 a nemohou zemřít. Na konci svého tahu jsou opět vyřazeni.</>,
+        description: <>Vyřazené postavy se na jeden tah vrací do hry. V 1. fázi svého tahu si dobírají 3 karty. Během svého tahu nemohou zemřít a na jeho konci jsou opět vyřazeny.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller",
     },
     INVERT_ROTATION: {
         name: "Zlatá horečka",
-        description: <>Hra probíhá jedno kolo proti směru hodinových ručiček, vždy začíná šerifem. Všechny efekty karet probíhají ve směru hodinových ručiček.</>,
+        description: <>Hra probíhá proti směru hodinových ručiček, začíná Šerif. Všechny karetní efekty probíhají po směru hodinových ručiček.</>,
         titleClass: "card-title card-title-lower",
     },
     THE_DALTONS: {
         name: "Daltonové",
-        description: <>Když se <i>Daltonové</i> dostanou do hry, každý hráč, který má před sebou nějaké modré karty, si jednu z nich vybere a odhodí ji.</>,
+        description: <>Když přijdou <i>Daltonové</i> do hry, každý hráč, který má před sebou vyloženy modré karty, musí jednu z nich vybrat a odhodit.</>,
         titleClass: "card-title card-title-lower",
     },
     THE_DOCTOR: {
         name: "Doktor",
-        description: <>Když vstoupí do hry <i>Doktor</i>, hráč(é) s nejmenším počtem životů, kteří jsou stále ve hře, znovu získají 1 život.</>,
+        description: <>Když vstoupí do hry <i>Doktor</i>, hráči s nejmenším počtem životů, kteří jsou stále ve hře, znovu získají 1 život.</>,
         titleClass: "card-title card-title-lower",
     },
     THE_REVEREND: {
@@ -1921,39 +1921,39 @@ export const CARDS_CZECH: CardRegistry = {
     },
     ROLE_SHERIFF: {
         name: "Šerif",
-        description: <>Zabijte všechny psance a Odpadlíka!</>,
+        description: <>Zabij všechny Bandity a Odpadlíka!</>,
     },
     ROLE_DEPUTY: {
         name: "Zástupce šerifa",
-        description: <>Ochraňte šerifa! Zabijte všechny psance a Odpadlíka!</>,
+        description: <>Ochraňuj Šerifa! Zabij všechny Bandity a Odpadlíka!</>,
     },
     ROLE_OUTLAW: {
         name: "Bandita",
-        description: <>Zabijte šerifa!</>,
+        description: <>Zabij šerifa!</>,
     },
     ROLE_RENEGADE: {
         name: "Odpadlík",
-        description: <>Buďte poslední ve hře!</>,
+        description: <>Zůstaň poslední ve hře!</>,
     },
     ROLE_DEPUTY_3P: {
         name: "Zástupce šerifa",
-        description: <>Zabijte Odpadlíka!</>,
+        description: <>Zabij Odpadlíka!</>,
     },
     ROLE_OUTLAW_3P: {
         name: "Bandita",
-        description: <>Zabijte zástupce!</>,
+        description: <>Zabij Pomocníka šerifa!</>,
     },
     ROLE_RENEGADE_3P: {
         name: "Odpadlík",
-        description: <>Zabijte psance!</>,
+        description: <>Zabijte Banditu!</>,
     },
     ROLE_SHADOW_DEPUTY: {
         name: "Stínový zástupce šerifa",
-        description: <>Ochraňte šerifa! Zabijte všechny psance!</>,
+        description: <>Ochraňuj Šerifa! Zabij všechny Bandity!</>,
     },
     ROLE_SHADOW_OUTLAW: {
         name: "Stínový bandita",
-        description: <>Zabijte šerifa!</>,
+        description: <>Zabij Šerifa!</>,
     },
     
 };
