@@ -1063,7 +1063,7 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Opustený důl",
         description: <>V 1. fázi svého taho si dobíráš karty z odhazovací hromádky, je-li to možné. Jestliže si takto dobereš alespoň 1 kartu, pokládáš karty odhozené ve svém tahu lícem dolů na dobírací balíček.</>,
         titleClass: "card-title card-title-lower",
-        descriptionClass: "card-description text-smaller"
+        descriptionClass: "card-description text-smallest line-smaller"
     },
     PEYOTE: {
         name: "Peyote",
@@ -1092,13 +1092,13 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Odražená střela",
         description: <>Ve svém tahu můžeš použít kartu <i>BANG!</i> na libovolnou kartu ve hře. Pokud není tento <i>BANG!</i> zrušen efektem Vedle! cílová karta se odhodí.</>,
         titleClass: "card-title card-title-lower",
-        descriptionClass: "card-description text-smaller line-smaller"
+        descriptionClass: "card-description text-smaller"
     },
     RUSSIAN_ROULETTE: {
         name: "Ruská ruleta",
         description: <>Když přijde <i>Ruská ruleta</i> do hry, musí každý hráč postupně použít efekt Vedle! (začíná Šerif a dále se postupuje po směru hodinových ručiček). První hráč, který tak neučiní, ztrácí 2 životy a ruská ruleta tím končí.</>,
         titleClass: "card-title card-title-lower",
-        descriptionClass: "card-description text-smaller line-smaller"
+        descriptionClass: "card-description text-smallest line-smaller"
     },
     VENDETTA: {
         name: "Vendeta",
@@ -1137,6 +1137,7 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Helena Zontero",
         description: <>Když přijde Helena do hry, sejměte: Jsou-li to srdce ♥ nebo káry ♦, zamíchejte všechny aktivní role s vyjímkou Šerifa a znovu je náhodně a tajně rozdejte. Každý hráč se podívá na svou novou roli.</>,
         titleClass: "card-title card-title-higher",
+        descriptionClass: "card-description text-smaller line-smaller"
     },
     LADY_ROSA_OF_TEXAS: {
         name: "Lady Rosa z Texasu",
