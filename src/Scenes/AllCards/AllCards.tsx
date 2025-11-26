@@ -37,7 +37,7 @@ function AllCardsInner({ deck }: { deck: DeckType }) {
 
     useEffect(() => {
         const callback = (ev: MouseEvent) => {
-            if (!(ev.target as Element).classList.contains('card-view-img')) {
+            if (!(ev.target as Element).classList.contains('card-view')) {
                 setOverlayState(undefined);
             }
         };

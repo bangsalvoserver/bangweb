@@ -52,12 +52,8 @@ export default function RoleView({ player }: RoleProps) {
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
-            <div className="card-front">
-                <CardImageView {...frontfaceImage} />
-            </div>
-            {animationKey ? <div className="card-back-flip">
-                <CardImageView {...getRoleImage(backRole)} />
-            </div> : null}
+            <CardImageView className="card-front" cardImage={frontfaceImage} />
+            {animationKey ? <CardImageView className="card-back-flip" cardImage={getRoleImage(backRole)} /> : null}
         </div>
     </div>;
 }

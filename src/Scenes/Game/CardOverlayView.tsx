@@ -19,9 +19,7 @@ function CardOverlayInner({ cardRef, cardImage }: OverlayState) {
   } as CSSProperties;
 
   return <div className="card-overlay" style={cardOverlayStyle}>
-    <div className="card-overlay-inner">
-      <CardImageView {...cardImage} />
-    </div>
+    <CardImageView className="card-overlay-inner" cardImage={cardImage} />
   </div>;
 }
 

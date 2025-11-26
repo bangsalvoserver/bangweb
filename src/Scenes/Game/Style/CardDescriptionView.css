@@ -8,6 +8,10 @@
     src: url('/fonts/palatinolinotype_roman.ttf');
 }
 
+.card-image-view {
+    pointer-events: none;
+}
+
 .card-title {
     position: absolute;
     text-align: center;
@@ -221,7 +225,6 @@
 .card-view .card-description-inner {
     font-size: 3.5pt;
     line-height: 2pt;
-    pointer-events: none;
     color: gray;
 }
 
@@ -235,19 +238,16 @@
 
 .card-view .card-title {
     font-size: 3pt;
-    pointer-events: none;
     color: gray;
 }
 
 .card-view .train-title {
     font-size: 3pt;
-    pointer-events: none;
     color: rgb(109, 73, 57)
 }
 
 .card-view .feats-title {
     font-size: 3pt;
-    pointer-events: none;
     color: gray;
 }
 
