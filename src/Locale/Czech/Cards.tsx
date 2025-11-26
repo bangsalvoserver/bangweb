@@ -189,13 +189,13 @@ export const CARDS_CZECH: CardRegistry = {
     LEMAT: {
         name: "Lemat",
         hideTitle: true,
-        description: <>Během svého tahu můžeš zahrát libovolné karty jako karty <i>BANG!</i>.</>,
+        description: <>Během svého tahu můžeš zahrát libovolné karty jako karty <i>BANG!</i></>,
         descriptionClass: "weapon-description",
     },
     LEMAT_2: {
         name: "Lemat",
         hideTitle: true,
-        description: <>Během svého tahu můžeš zahrát libovolné karty (kromě Vedle!) jako karty <i>BANG!</i>.</>,
+        description: <>Během svého tahu můžeš zahrát libovolné karty (kromě Vedle!) jako karty <i>BANG!</i></>,
         descriptionClass: "weapon-description",
     },
     RATTLESNAKE: {
@@ -239,7 +239,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     BACKFIRE: {
         name: "Opětovná palba",
-        description: <>Považuje se za kartu <i>Vedle!</i> Hráč, který na tebe střílel, je nyní cílem efektu <i>BANG!</i>.</>
+        description: <>Považuje se za kartu <i>Vedle!</i> Hráč, který na tebe střílel, je nyní cílem efektu <i>BANG!</i></>
     },
     SAVED: {
         name: "Obětavý skok",
@@ -408,7 +408,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     DISARM: {
         name: "Odzbrojit",
-        description: <>Počítá se jako <i>Vedle!</i>.<br/>Hráč který střílel musí odhodit kartu z ruky.</>
+        description: <>Počítá se jako <i>Vedle!</i><br/>Hráč který střílel musí odhodit kartu z ruky.</>
     },
     MOLOTOV: {
         name: "Molotov",
@@ -455,7 +455,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     FLYING_BULLET: {
         name: "Letící kulka",
-        description: <>Počítá se jako <i>Vedle!</i>.<br/>Hráč tvého výběru na vzdálenost 1 od tebe (pokud takový je) je sílem karty <i>BANG!</i>.</>
+        description: <>Počítá se jako <i>Vedle!</i><br/>Hráč tvého výběru na vzdálenost 1 od tebe (pokud takový je) je sílem karty <i>BANG!</i></>
     },
     ON_THE_HOUSE: {
         name: "Na účet podniku"
@@ -548,7 +548,7 @@ export const CARDS_CZECH: CardRegistry = {
     SLAB_THE_KILLER: {
         name: "Slab the Killer",
         hideTitle: true,
-        description: <>Aby ostatní hráči zrušili tvou kartu <i>BANG!</i>, musí použít 2 efekty <i>Vedle!</i>.</>,
+        description: <>Aby ostatní hráči zrušili tvou kartu <i>BANG!</i>, musí použít 2 efekty <i>Vedle!</i></>,
         descriptionClass: "character-description"
     },
     SUZY_LAFAYETTE: {
@@ -566,7 +566,7 @@ export const CARDS_CZECH: CardRegistry = {
     WILLY_THE_KID: {
         name: "Willy the Kid",
         hideTitle: true,
-        description: <>Ve svém tahu můžeš zahrát libovolný počet karet <i>BANG!</i>.</>,
+        description: <>Ve svém tahu můžeš zahrát libovolný počet karet <i>BANG!</i></>,
         descriptionClass: "character-description"
     },
 
@@ -593,7 +593,7 @@ export const CARDS_CZECH: CardRegistry = {
     ANNIE_VERSARY: {
         name: "Annie Versary",
         hideTitle: true,
-        description: <>Můžeš zahrát jakoukoli kartu jako kartu <i>BANG!</i>.</>,
+        description: <>Můžeš zahrát jakoukoli kartu jako kartu <i>BANG!</i></>,
         descriptionClass: "character-description"
     },
     EMILIANO: {
@@ -632,13 +632,13 @@ export const CARDS_CZECH: CardRegistry = {
     DOC_HOLYDAY: {
         name: "Doc Holyday",
         hideTitle: true,
-        description: <>Jednou během svého tahu můžeš odhodit 2 karty z ruky a aktivovat tím efekt <i>BANG!</i>.</>,
+        description: <>Jednou během svého tahu můžeš odhodit 2 karty z ruky a aktivovat tím efekt <i>BANG!</i></>,
         descriptionClass: "character-description"
     },
     ELENA_FUENTE: {
         name: "Elena Fuente",
         hideTitle: true,
-        description: <>Můžeš použít jakoukoli kartu ze své ruky jako <i>Vedle!</i>.</>,
+        description: <>Můžeš použít jakoukoli kartu ze své ruky jako <i>Vedle!</i></>,
         descriptionClass: "character-description"
     },
     GREG_DIGGER: {
@@ -846,7 +846,7 @@ export const CARDS_CZECH: CardRegistry = {
     MEXICALI_KID: {
         name: "Mexicali Kid",
         hideTitle: true,
-        description: <>Jednou během svého tahu můžeš zaplatit 2 📦 a použít efekt <i>BANG!</i>.</>,
+        description: <>Jednou během svého tahu můžeš zaplatit 2 📦 a použít efekt <i>BANG!</i></>,
     },
     MS_ABIGAIL: {
         name: "Ms. Abigail",
@@ -935,82 +935,82 @@ export const CARDS_CZECH: CardRegistry = {
     },
     THE_DOCTOR: {
         name: "Doktor",
-        description: <>Když vstoupí do hry <i>Doktor</i>, hráči s nejmenším počtem životů, kteří jsou stále ve hře, znovu získají 1 život.</>,
+        description: <>Když přijde <i>Doktor</i> do hry, hráči kteří mají aktuálně nejméně životů, si 1 život přidají.</>,
         titleClass: "card-title card-title-lower",
     },
     THE_REVEREND: {
         name: "Reverend",
-        description: <>Hráči nemohou hrát žádné karty s pivem.</>,
+        description: <>Hráči nemohou po celé kolo hrát kartu <i>Pivo</i>.</>,
         titleClass: "card-title card-title-lower",
     },
     TRAIN_ARRIVAL: {
         name: "Příjezd vlaku",
-        description: <>Každý hráč si na konci fáze 1 svého tahu dobere jednu kartu navíc.</>,
+        description: <>V 1. fázi svého tahu si dobíráš o 1 kartu více.</>,
         titleClass: "card-title card-title-lower",
     },
     CURSE: {
         name: "Prokletí",
-        description: <>Barva všech karet je piková.</>,
+        description: <>Všechny karty jsou po celé kolo pikové.</>,
         titleClass: "card-title card-title-lower",
     },
     HANGOVER: {
         name: "Kocovina",
-        description: <>Všechny postavy ztratí své speciální schopnosti.</>,
+        description: <>Všechny postavy ztrácí na celé kolo své zvláštní schopnosti.</>,
         titleClass: "card-title card-title-lower",
     },
     SERMON: {
         name: "Kazatel",
-        description: <>Žádný hráč nemůže během svého tahu použít karty <i>BANG!</i>.</>,
+        description: <>Během svého tahu nesmíš používat karty <i>BANG!</i></>,
         titleClass: "card-title card-title-lower",
     },
     THIRST: {
         name: "Žízeň",
-        description: <>Každý hráč si během fáze 1 svého tahu lízne pouze svou první kartu, nikoli druhou.</>,
+        description: <>V 1. fázi svého tahu si dobíráš o 1 kartu méně.</>,
         titleClass: "card-title card-title-lower",
     },
     SHOOTOUT: {
         name: "Přestřelka",
-        description: <>Každý hráč může během svého tahu zahrát druhou kartu <i>BANG!</i>.</>,
+        description: <>Ve svém tahu můžeš zahrát 2 karty <i>BANG!</i></>,
         titleClass: "card-title card-title-lower",
     },
     HANDCUFFS: {
         name: "Želízka",
-        description: <>Poté, co si hráč v první fázi lízne karty, pojmenuje barvu: během svého tahu může hrát pouze karty této barvy.</>,
+        description: <>Po dobrání karet v 1. fázi svého tahu urči jednu karetní barvu (piky, srdce, kára, kříže). V tomto tahu smíš hrát pouze karty této barvy.</>,
         titleClass: "card-title card-title-lower",
     },
     HANDCUFFS_HEARTS: {
-        name: "Želízka: Prohlašuju srdce",
+        name: "Želízka: Určuji srdce",
         hideTitle: true,
         description: <>♥️</>,
         descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_DIAMONDS: {
-        name: "Želízka: Prohlašuju káry",
+        name: "Želízka: Určuji káry",
         hideTitle: true,
         description: <>♦️</>,
         descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_CLUBS: {
-        name: "Želízka: Prohlašuju kříže",
+        name: "Želízka: Určuji kříže",
         hideTitle: true,
         description: <>♣️</>,
         descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_SPADES: {
-        name: "Želízka: Prohlašuju piky",
+        name: "Želízka: Určuji piky",
         hideTitle: true,
         description: <>♠️</>,
         descriptionClass: "card-description text-bigger"
     },
     NEW_IDENTITY: {
         name: "Nová identita",
-        description: <>Na začátku svého tahu si každý hráč náhodně vybere další postavu. Může přejít na novou identitu pro zbytek hry, počínaje 2 body života.</>,
+        description: <>Na začátku svého tahu se podívej na náhodnou postavu z balíčku postav. Pokud chceš, můžeš obě postavy prohodit. Nová postava bude mít na začátku 2 životy.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller",
     },
     HIGH_NOON: {
         name: "Pravé poledne",
-        description: <>Každý hráč ztratí na začátku svého tahu 1 život.</>,
+        description: <>Na začátku svého tahu ztrácíš 1 život.</>,
         titleClass: "card-title card-title-lower",
     },
 
@@ -1018,49 +1018,49 @@ export const CARDS_CZECH: CardRegistry = {
 
     AMBUSH: {
         name: "Léčka",
-        description: <>Vzdálenost mezi libovolnými dvěma hráči je 1. Tuto vzdálenost ovlivňují pouze karty ve hře.</>,
+        description: <>Vzdálenost mezi všemi hráči činí 1. Mohou ji změnit pouze efekty karet.</>,
         titleClass: "card-title card-title-lower",
     },
     SNIPER: {
         name: "Odstřelovač",
-        description: <>Během svého tahu může hráč odhodit 2 karty <i>BANG!</i> najednou proti hráči: to se počítá jako <i>BANG!</i>, ale může být zrušeno pouze dvěma <i>Minulo!</i>.</>,
+        description: <>Během svého tahu můžeš odhodit 2 karty <i>BANG!</i> a získat tak efekt <i>BANG!</i> Na tento efekt se vztahuje běžný dostřel a lze ho zrušit pouze 2 efekty Vedle!</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller line-smaller",
     },
     DEAD_MAN: {
         name: "Mrtvý muž",
-        description: <>Během svého tahu se hráč, který byl vyřazen jako první, vrací do hry se 2 body života a 2 kartami.</>,
+        description: <>Hráč, který byl vyřazen jako první, se na začátku svého tahu vrací do hry se 2 životy a 2 kartami.</>,
         titleClass: "card-title card-title-lower",
     },
     BLOOD_BROTHERS: {
         name: "Pokrevní bratři",
-        description: <>Na začátku svého tahu může každý hráč ztratit jeden život (kromě posledního), aby dal jeden život libovolnému hráči dle vlastního výběru.</>,
+        description: <>Na začátku svého tahu si můžeš ubrat 1 život a určit jiného hráče, který si 1 život přidá. Nemůžeš takto přijít o svůj poslední život.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller"
     },
     THE_JUDGE: {
         name: "Soudce",
-        description: <>Karty nemůžete hrát před sebou ani před jiným hráčem.</>,
+        description: <>Během celého kola nelze hrát žádné karty zůstávající ve hře.</>,
         titleClass: "card-title card-title-lower",
     },
     LASSO: {
         name: "Laso",
-        description: <>Karty zahrané před hráči nemají žádný účinek.</>,
+        description: <>Karty ve hře nemají během celého kola žádný efekt.</>,
         titleClass: "card-title card-title-lower",
     },
     LAW_OF_THE_WEST: {
         name: "Právo západu",
-        description: <>Během své fáze 1 každý hráč ukáže druhou kartu, kterou si dobere: pokud může, musí ji zahrát během své fáze 2.</>,
+        description: <>V 1. fázi svého tahu ukaž ostatním hráčům druhou kartu kterou sis dobral. Pokud je to možné, musíš ji během 2. fáze svého tahu zahrát.</>,
         titleClass: "card-title card-title-lower",
     },
     HARD_LIQUOR: {
         name: "Pálenka",
-        description: <>Každý hráč může přeskočit svou 1. fázi a získat zpět 1 život.</>,
+        description: <>Můžeš přeskočut 1. fázi svého tahu a přidat si 1 život.</>,
         titleClass: "card-title card-title-lower",
     },
     ABANDONED_MINE: {
         name: "Opustený důl",
-        description: <>Během fáze 1 si každý hráč lízne z odhozených karet (pokud dojdou, tak z balíčku). Ve fázi 3 odhozuje karty lícem dolů na balíček.</>,
+        description: <>V 1. fázi svého taho si dobíráš karty z odhazovací hromádky, je-li to možné. Jestliže si takto dobereš alespoň 1 kartu, pokládáš karty odhozené ve svém tahu lícem dolů na dobírací balíček.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller"
     },
@@ -1089,7 +1089,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     RICOCHET: {
         name: "Odražená střela",
-        description: <>Každý hráč může odhodit karty <i>BANG!</i> proti kartám zahraným před jakýmkoli hráčem: každá karta je odhozena, pokud její majitel za každou z nich nezahraje <i>Vedle!</i>.</>,
+        description: <>Každý hráč může odhodit karty <i>BANG!</i> proti kartám zahraným před jakýmkoli hráčem: každá karta je odhozena, pokud její majitel za každou z nich nezahraje <i>Vedle!</i></>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller line-smaller"
     },
@@ -1259,7 +1259,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     DRAGOON: {
         name: "Dragoon",
-        description: <>Během svého tahu můžete zahrát 1 další <i>BANG!</i>.</>,
+        description: <>Během svého tahu můžete zahrát 1 další <i>BANG!</i></>,
     },
     EVADED: {
         name: "K zemi!",
@@ -1604,7 +1604,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     PRIVATE_CAR: {
         name: "Soukromý vagon",
-        description: <>Dokud máte prázdnou ruku, nemůžete se stát terčem karet <i>BANG!</i>.</>,
+        description: <>Dokud máte prázdnou ruku, nemůžete se stát terčem karet <i>BANG!</i></>,
         titleClass: "train-title",
         descriptionClass: "train-description"
     },
@@ -1620,7 +1620,7 @@ export const CARDS_CZECH: CardRegistry = {
     IRONHORSE: {
         name: "Ironhorse",
         hideTitle: true,
-        description: <>Na konci řady je každý hráč terčem výbuchu <i>BANG!</i>.</>,
+        description: <>Na konci řady je každý hráč terčem výbuchu <i>BANG!</i></>,
         descriptionClass: "locomotive-description"
     },
     LELAND: {
@@ -1750,13 +1750,13 @@ export const CARDS_CZECH: CardRegistry = {
     LEGEND_ROSE_DOOLAN: {
         name: "Rose Doolan",
         hideTitle: true,
-        description: <>Všechny hráče můžete vidět ve vzdálenosti 1. Jednou během svého tahu můžete odhodit jednu ze svých modrých karet, ať už z ruky nebo ze hry, jako <i>Paniku!</i>.</>,
+        description: <>Všechny hráče můžete vidět ve vzdálenosti 1. Jednou během svého tahu můžete odhodit jednu ze svých modrých karet, ať už z ruky nebo ze hry, jako <i>Paniku!</i></>,
         descriptionClass: "legends-description text-smaller line-smaller",
     },
     LEGEND_SID_KETCHUM: {
         name: "Sid Ketchum",
         hideTitle: true,
-        description: <>Můžete odhodit 2 karty a získat 1 život. Jednou během svého tahu, pokud získáte 1 život, můžete vystřelit zdarma <i>BANG!</i>.</>,
+        description: <>Můžete odhodit 2 karty a získat 1 život. Jednou během svého tahu, pokud získáte 1 život, můžete vystřelit zdarma <i>BANG!</i></>,
         descriptionClass: "legends-description",
     },
     LEGEND_SLAB_THE_KILLER: {
@@ -1780,7 +1780,7 @@ export const CARDS_CZECH: CardRegistry = {
     LEGEND_WILLY_THE_KID: {
         name: "Willy the Kid",
         hideTitle: true,
-        description: <>Můžete zahrát libovolný počet karet <i>BANG!</i>.<br/>Místo vyzvednutí si Výkonu můžete zahrát <i>BANG!</i> zdarma.</>,
+        description: <>Můžete zahrát libovolný počet karet <i>BANG!</i><br/>Místo vyzvednutí si Výkonu můžete zahrát <i>BANG!</i> zdarma.</>,
         descriptionClass: "legends-description",
     },
     
@@ -1812,7 +1812,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     THE_CHUCK_A_LUCK: {
         name: "Velký hazard",
-        description: <>Zahoďte kartu s nápisem <i>BANG!</i>.</>,
+        description: <>Zahoďte kartu s nápisem <i>BANG!</i></>,
         titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
@@ -1878,7 +1878,7 @@ export const CARDS_CZECH: CardRegistry = {
     },
     A_QUICK_DEATH: {
         name: "Rychlá smrt",
-        description: <>Zasáhněte jiného hráče v plné síle kartou <i>BANG!</i>.</>,
+        description: <>Zasáhněte jiného hráče v plné síle kartou <i>BANG!</i></>,
         titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
