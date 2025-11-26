@@ -1167,11 +1167,11 @@ export const CARDS_CZECH: CardRegistry = {
 
     SHOT: {
         name: "Panák",
-        description: <>Hráč dle vašeho výběru (i vy) získá zpět 1 život.</>,
+        description: <>Libovolný hráč (včetně tebe) si přidá 1 život.</>,
     },
     BOTTLE: {
         name: "Láhev",
-        description: <>Lze hrát jako <i>Panika!</i>, <i>Pivo</i> nebo <i>BANG!</i></>,
+        description: <>Po zahrání této karty proveď efekt jedné z následujících karet: <i>Panika!</i>, <i>Pivo</i> nebo <i>BANG!</i></>,
     },
     BOTTLE_PANIC: {
         name: "Láhev jako Panika!",
@@ -1182,20 +1182,20 @@ export const CARDS_CZECH: CardRegistry = {
         hideTitle: true,
     },
     BOTTLE_BANG: {
-        name: "Láhev jako Bang!",
+        name: "Láhev jako BANG!",
         hideTitle: true,
     },
     CALUMET: {
         name: "Kalumet",
-        description: <>Karty diamantů zahrané ostatními hráči na vás nemají žádný vliv.</>,
+        description: <>Kárové karty ♦, které zahrají protihráči na tebe nemají žádný efekt.</>,
     },
     GUN_BELT: {
         name: "Nábojový pás",
-        description: <>Limit velikosti vaší ruky na konci vašeho tahu je 8 karet.</>,
+        description: <>Tvůj limit karet na konci tahu je 8.</>,
     },
     PARDNER: {
         name: "Komplic",
-        description: <>Lze hrát jako <i>Obchod se smíšeným zbožím</i>, <i>Souboj</i> nebo <i>Kočka Balou</i>.</>,
+        description: <>Po zahrání této karty proveď efekt jedné z následujících karet: <i>Hokynářství</i>, <i>Duel</i> nebo <i>Cat Balou</i>.</>,
     },
     PARDNER_GENERAL_STORE: {
         name: "Komplic jako Hokynářství",
@@ -1213,43 +1213,43 @@ export const CARDS_CZECH: CardRegistry = {
     },
     GOLD_RUSH: {
         name: "Zlatá horečka",
-        description: <>Tvůj tah končí. Získej zpět všechny své životy a pak hraj další tah.</>,
+        description: <>Tvůj tah končí. Doplň si životy na maximum a poté zahraj ještě jeden tah.</>,
     },
     HORSESHOE: {
         name: "Podkova",
-        description: <>Pokaždé, když si „doberete!“, otočte jednu kartu navíc a vyberte si výsledek.</>,
+        description: <>Vždy když máš sejmout, otoč o 1 kartu navíc a vyber si, kterou použiješ.</>,
     },
     PICKAXE: {
         name: "Krumpáč",
-        description: <>Během fáze 1 vašeho tahu si doberte 1 kartu navíc.</>,
+        description: <>V 1. fázi svého tahu si dobíráš o 1 kartu více.</>,
     },
     WANTED: {
         name: "Wanted",
-        description: <>Hrajte proti libovolnému hráči. Kdokoli, kdo tohoto hráče vyřadí, si vezme 2 karty a 1 zlatý nuget.</>,
+        description: <>Zahraj na libovolného hráče. Pokud někdo tohoto hráče vyřadí ze hry, dobere si 2 karty z balíčku a získá 1 valoun zlata.</>,
     },
     RHUM: {
         name: "Rum",
-        description: <>Tahání! 4 karty: za každou jinou barvu získáte 1 život.</>,
+        description: <>Sejmi vrchní 4 karty z balíčku a doplň si 1 život za každou karetní barvu (srdce, káry, piky a kříže).</>,
     },
     GOLD_PAN: {
         name: "Rýžovací mísa",
-        description: <>Zaplaťte 1 zlatý nuget a líznete si 1 kartu z balíčku. Tuto schopnost můžete použít až 2krát za kolo.</>,
+        description: <>Až dvakrát během svého tahu můžeš zaplatit 1 valoun zlata a dobrat si 1 kartu z balíčku.</>,
     },
     BOOTS: {
         name: "Boty",
-        description: <>Pokaždé, když ztratíte 1 život, doberte si 1 kartu z balíčku.</>,
+        description: <>Za každý svůj ztracený život si dober 1 kartu z balíčku.</>,
     },
     LUCKY_CHARM: {
         name: "Talisman",
-        description: <>Pokaždé, když ztratíte 1 život, vezměte si 1 zlatý nuget.</>,
+        description: <>Za každý svůj ztracený život získáš 1 valoun zlata.</>,
     },
     UNION_PACIFIC: {
         name: "Union Pacific",
-        description: <>Doberte si 4 karty z balíčku.</>,
+        description: <>Dober si 4 karty z balíčku.</>,
     },
     RUCKSACK: {
         name: "Batoh",
-        description: <>Zaplaťte 2 zlaté nugety, abyste získali zpět 1 život.</>,
+        description: <>Zaplať 2 valouny zlata a přidej si 1 život.</>,
     },
 
     // The Great Train Robbery cards
@@ -1936,7 +1936,7 @@ export const CARDS_CZECH: CardRegistry = {
         description: <>Zůstaň poslední ve hře!</>,
     },
     ROLE_DEPUTY_3P: {
-        name: "Zástupce šerifa",
+        name: "Pomocník šerifa",
         description: <>Zabij Odpadlíka!</>,
     },
     ROLE_OUTLAW_3P: {
@@ -1948,7 +1948,7 @@ export const CARDS_CZECH: CardRegistry = {
         description: <>Zabijte Banditu!</>,
     },
     ROLE_SHADOW_DEPUTY: {
-        name: "Stínový zástupce šerifa",
+        name: "Stínový pomocník šerifa",
         description: <>Ochraňuj Šerifa! Zabij všechny Bandity!</>,
     },
     ROLE_SHADOW_OUTLAW: {
