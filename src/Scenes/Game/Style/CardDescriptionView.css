@@ -223,13 +223,9 @@
 }
 
 .card-view .card-description-inner {
-    font-size: 3.5pt;
-    line-height: 2pt;
-    color: gray;
-}
-
-.card-view .text-smallest .card-description-inner {
-    font-size: 2.5pt;
+    font-size: 2.4pt;
+    line-height: 2.4pt;
+    color: rgb(100, 100, 100);
 }
 
 .card-view .text-bigger .card-description-inner {
@@ -238,7 +234,7 @@
 
 .card-view .card-title {
     font-size: 3pt;
-    color: gray;
+    color: rgb(100, 100, 100);
 }
 
 .card-view .train-title {
@@ -248,7 +244,7 @@
 
 .card-view .feats-title {
     font-size: 3pt;
-    color: gray;
+    color: rgb(100, 100, 100);
 }
 
 .card-view .legends-description .card-description-inner {
@@ -261,12 +257,8 @@
     }
 
     .card-view .card-description-inner {
-        font-size: 1.5pt;
-        line-height: 1.4pt;
-    }
-
-    .card-view .text-smallest .card-description-inner {
         font-size: 1.2pt;
+        line-height: 1.5pt;
     }
 
     .card-view .text-bigger .card-description-inner {
