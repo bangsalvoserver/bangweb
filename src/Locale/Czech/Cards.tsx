@@ -1114,52 +1114,52 @@ export const CARDS_CZECH: CardRegistry = {
 
     GAG: {
         name: "Roubík",
-        description: <>Hráči nesmí mluvit (mohou gestikulovat, sténat, ...). Kdokoli promluví, ztratí 1 život.</>,
+        description: <>Hráči nesmí mluvit (mohou gestikulovat, sténat atd.). Kdo promluví, ztrácí 1 život.</>,
         titleClass: "card-title card-title-higher",
     },
     BONE_ORCHARD: {
         name: "Hřbitov",
-        description: <>Na začátku svého tahu se všichni vyřazení hráči vracejí do hry s 1 životem. Jejich role se rozdávají náhodně podle rolí vyřazených hráčů.</>,
+        description: <>Na začátku svého tahu se všichni vyřazení hráči vrátí do hry s 1 životem. Role vyřazených hráčů zamíchejte a rozdejte náhodně.</>,
         titleClass: "card-title card-title-higher",
     },
     DARLING_VALENTINE: {
         name: "Miláček Valentýn",
-        description: <>Na začátku svého tahu každý hráč odhodí své karty z ruky a dobere si stejný počet karet z balíčku.</>,
+        description: <>Na začátku svého tahu odhodí každý hráč všechny karty z ruky a stejný počet karet si dobere z balíčku.</>,
         titleClass: "card-title card-title-higher",
     },
     DOROTHY_RAGE: {
         name: "Zuřivá Dorothy",
-        description: <>Během svého tahu může každý hráč donutit jiného hráče, aby zahrál jednu z jeho karet.</>,
+        description: <>Hráč na tahu může říct název karty a vybrat hráče, který ji musí zahrát (pokud ji má).</>,
         titleClass: "card-title card-title-higher",
     },
     HELENA_ZONTERO: {
         name: "Helena Zontero",
-        description: <>Když se do hry dostane Helena, „doberte si!“: na Srdce nebo Diamanty zamíchejte všechny aktivní role kromě Šerifa a náhodně je rozdejte.</>,
+        description: <>Když přijde Helena do hry, sejměte: Jsou-li to srdce ♥ nebo káry ♦, zamíchejte všechny aktivní role s vyjímkou Šerifa a znovu je náhodně a tajně rozdejte. Každý hráč se podívá na svou novou roli.</>,
         titleClass: "card-title card-title-higher",
     },
     LADY_ROSA_OF_TEXAS: {
         name: "Lady Rosa z Texasu",
-        description: <>Během svého tahu si každý hráč může vyměnit místo s hráčem po své pravici, který tak svůj další tah přeskočí.</>,
+        description: <>Během svého tahu si může každý hráč vyměnit místo s hráčem po své pravici a ten tak přeskočí svůj nejbližší tah.</>,
         titleClass: "card-title card-title-higher",
     },
     MISS_SUSANNA: {
         name: "Slečna Zuzana",
-        description: <>Během svého tahu musí každý hráč zahrát alespoň 3 karty. Pokud tak neučiní, ztratí 1 život.</>,
+        description: <>Během svého tahu musí každý hráč zahrát alespoň 3 karty. Kdo tak neudělá, ztrácí 1 život.</>,
         titleClass: "card-title card-title-higher",
     },
     SHOWDOWN: {
         name: "Zůčtování",
-        description: <>Všechny karty lze zahrát tak, jak byly <i>BAMF!</i> Všechny <i>BAMF!</i> lze zahrát pouze tak, jak byly <i>Minuly!</i></>,
+        description: <>Každá karta může být hrána, jako by to byla karta <i>BANG!</i> Každá karta <i>BANG!</i> musí být hrána, jako by to byla karta <i>Vedle!</i></>,
         titleClass: "card-title card-title-higher",
     },
     SACAGAWAY: {
         name: "Sacagaway",
-        description: <>Všichni hráči hrají s odhalenými rukama (s výjimkou svých rolí!).</>,
+        description: <>Všichni hráči hrají s odhalenými kartami v ruce (vyjma svých rolí).</>,
         titleClass: "card-title card-title-higher",
     },
     WILD_WEST_SHOW: {
         name: "Divoký západ",
-        description: <>Cílem každého hráče se stává: „Být posledním ve hře!“</>,
+        description: <>Cílem každého hráče se stává: „Zůstaň poslední ve hře!“</>,
         titleClass: "card-title card-title-higher",
     },
 
