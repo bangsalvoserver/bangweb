@@ -1066,47 +1066,47 @@ export const CARDS_CZECH: CardRegistry = {
     },
     PEYOTE: {
         name: "Peyote",
-        description: <>Místo losování ve fázi 1 každý hráč hádá, zda je barva vrchní karty v balíčku červená nebo černá. Poté si losuje kartu a ukáže ji: pokud uhodl správně, kartu si ponechá a může hádat znovu, jinak pokračuje do fáze 2.</>,
+        description: <>V 1. fázi svého tahu si místo běžného dobírání tipni, zda je vrchní karta z balíčku červená nebo černá. Poté tuto kartu otoč. Jestliže ses trefil, vezmi si ji do ruky a hádej znovu. V opačném případě kartu odhoď a přejdi ke 2. fázi svého tahu.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smallest line-smaller"
     },
     PEYOTE_RED: {
-        name: "Peyote: Prohlašuju červenou",
+        name: "Peyote: Tipuji červenou",
         hideTitle: true,
         description: <>♥️♦️</>,
         descriptionClass: "card-description text-bigger"
     },
     PEYOTE_BLACK: {
-        name: "Peyote: Prohlašuju černou",
+        name: "Peyote: Tipuji černou",
         hideTitle: true,
         description: <>♣️♠️</>,
         descriptionClass: "card-description text-bigger"
     },
     RANCH: {
         name: "Ranč",
-        description: <>Na konci své fáze 1 může každý hráč jednou odhodit libovolný počet karet z ruky, aby si z balíčku lízl stejný počet karet.</>,
+        description: <>Na konci 1. fáze svého tahu můžeš odhodit libovolný počet karet z ruky a dobrat si stejný počet nových.</>,
         titleClass: "card-title card-title-lower",
     },
     RICOCHET: {
         name: "Odražená střela",
-        description: <>Každý hráč může odhodit karty <i>BANG!</i> proti kartám zahraným před jakýmkoli hráčem: každá karta je odhozena, pokud její majitel za každou z nich nezahraje <i>Vedle!</i></>,
+        description: <>Ve svém tahu můžeš použít kartu <i>BANG!</i> na libovolnou kartu ve hře. Pokud není tento <i>BANG!</i> zrušen efektem Vedle! cílová karta se odhodí.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller line-smaller"
     },
     RUSSIAN_ROULETTE: {
         name: "Ruská ruleta",
-        description: <>Když se do hry dostane Ruská ruleta, počínaje šerifem každý hráč odhodí kartu Nezměněno!, dokud jeden z hráčů neodhodí kartu Nezměněno!: ztratí 2 životy a ruleta se zastaví.</>,
+        description: <>Když přijde <i>Ruská ruleta</i> do hry, musí každý hráč postupně použít efekt Vedle! (začíná Šerif a dále se postupuje po směru hodinových ručiček). První hráč, který tak neučiní, ztrácí 2 životy a ruská ruleta tím končí.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smaller line-smaller"
     },
     VENDETTA: {
         name: "Vendeta",
-        description: <>Na konci svého tahu si každý hráč „lízne!“: na srdci hraje další tah (ale znovu si „nelízne!“).</>,
+        description: <>Na konci svého tahu sejmi. Pokud je sejmutá karta srdcová, odehraj ihned ještě jeden tah (na jeho konci už si nesnímáš).</>,
         titleClass: "card-title card-title-lower",
     },
     A_FISTFUL_OF_CARDS: {
         name: "Fistful",
-        description: <>Na začátku svého tahu je hráč terčem tolika <i>BANG!</i>, kolik karet má v ruce.</>,
+        description: <>Na začátku svého tahu se stáváš cílem tolika efektů BANG!, kolik máš v ruce karet.</>,
         titleClass: "card-title card-title-lower",
     },
     
