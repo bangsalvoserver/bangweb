@@ -732,7 +732,7 @@ export const CARDS_CZECH: CardRegistry = {
     EVELYN_SHEBANG_2: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>>V 1. fázi svého tahu si smíš dobrat o 1 kartu méně. Pokud tak učiníš, můžeš použít BANG! navíc na hráče ve vzdálenosti 1.</>,
+        description: <>V 1. fázi svého tahu si smíš dobrat o 1 kartu méně. Pokud tak učiníš, můžeš použít BANG! navíc na hráče ve vzdálenosti 1.</>,
         descriptionClass: "character-description"
     },
     HENRY_BLOCK: {
