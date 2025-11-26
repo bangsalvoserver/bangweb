@@ -23,7 +23,6 @@ export const CARDS_CZECH: CardRegistry = {
     },
     JAIL: {
         name: "Vězení",
-        hideTitle: true,
         description: <>Odhoď <i>Vězení</i> a pokračuj normálně ve svém tahu. Jinak odhoď <i>Vězení</i> a vynechej svůj tah.</>,
         descriptionClass: "draw-description",
     },
@@ -76,7 +75,6 @@ export const CARDS_CZECH: CardRegistry = {
     },
     INDIANS: {
         name: "Indiáni!",
-        hideTitle: true,
         description: <>Všichni ostatní hráči mohou odhodit kartu <i>BANG!</i> jinak ztrácí 1 život.</>
     },
     MISSED: {
@@ -269,8 +267,11 @@ export const CARDS_CZECH: CardRegistry = {
     },
     LAST_CALL: {
         name: "Poslední pivo",
-        description: <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>,
-        descriptionClass: "card-description bg-white" // this covers the beer symbol, what do we do here?
+        description: [
+            <>Tuto kartu můžeš zahrát i tehdy, pokud už zbývají pouze 2 hráči, ale nikoli mimo svůj tah.</>,
+            <img src='/cards/misc/icon_beer.webp' alt='' />
+        ],
+        descriptionClass: "draw-description text-smaller bg-white"
     },
 
     // Armed & Dangerous cards
@@ -731,7 +732,7 @@ export const CARDS_CZECH: CardRegistry = {
     EVELYN_SHEBANG_2: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>>V 1. fázi svého tahu si smíš dobrat o 1 kartu méně. Pokud tak učiníš, můžeš použít BANG! navíc na hráče ve vzdálenosti 1.</>,
+        description: <>V 1. fázi svého tahu si smíš dobrat o 1 kartu méně. Pokud tak učiníš, můžeš použít BANG! navíc na hráče ve vzdálenosti 1.</>,
         descriptionClass: "character-description"
     },
     HENRY_BLOCK: {
@@ -1264,6 +1265,7 @@ export const CARDS_CZECH: CardRegistry = {
     EVADED: {
         name: "K zemi!",
         description: <>Doberte si kartu, kterou jste právě <i>minuli!</i></>,
+        descriptionClass: "card-description-lower"
     },
     FULL_STEAM: {
         name: "Plnou parou vpřed",
@@ -1296,6 +1298,7 @@ export const CARDS_CZECH: CardRegistry = {
     NEXT_STOP: {
         name: "Příští stanice",
         description: <>Posuňte vlak o 1 stanici.</>,
+        descriptionClass: "card-description-lower"
     },
     REFUND: {
         name: "Odškodnění",
