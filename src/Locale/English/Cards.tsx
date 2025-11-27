@@ -409,7 +409,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     DISARM: {
         name: "Disarm",
-        description: <>Counts as a <i>Missed!</i> card.<br/>Also the player who shot must discard an hand card.</>
+        description: <>Counts as a <i>Missed!</i> card.<br/>Also the player who shot must discard a hand card.</>
     },
     MOLOTOV: {
         name: "Molotov",
@@ -431,7 +431,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     TAXMAN: {
         name: "Taxman",
-        description: <>Play on any player. At the beginnning of his turn, he must "draw!": on Spades or Clubs, he draws one card less in phase 1.</>
+        description: <>Play on any player. At the beginning of his turn, he must "draw!": on Spades or Clubs, he draws one card less in phase 1.</>
     },
     BROTHEL: {
         name: "Brothel",
@@ -483,7 +483,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     BLACK_JACK: {
         name: "Black Jack",
         hideTitle: true,
-        description: <>He shows the second card he draws. On Heart or Diamonds, he draws one more card.</>,
+        description: <>He shows the second card he draws. On Hearts or Diamonds, he draws one more card.</>,
         descriptionClass: "character-description"
     },
     CALAMITY_JANET: {
@@ -656,7 +656,7 @@ export const CARDS_ENGLISH: CardRegistry = {
         descriptionClass: "character-description"
     },
     JOSE_DELGADO: {
-        name: "Josè Delgado",
+        name: "José Delgado",
         hideTitle: true,
         description: <>Twice in his turn, he may discard a blue card from the hand to draw 2 cards.</>,
         descriptionClass: "character-description"
@@ -940,7 +940,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     THE_DALTONS: {
         name: "The Daltons",
-        description: <>When <i>The Daltons</i> enter play, each player who has any blue cards in fron of him, chooses one of them and discards it.</>,
+        description: <>When <i>The Daltons</i> enter play, each player who has any blue cards in front of him, chooses one of them and discards it.</>,
         titleClass: "card-title card-title-lower"
     },
     THE_DOCTOR: {
@@ -955,7 +955,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     TRAIN_ARRIVAL: {
         name: "Train Arrival",
-        description: <>Each player draws one extra card at te end of phase 1 of his turn.</>,
+        description: <>Each player draws one extra card at the end of phase 1 of his turn.</>,
         titleClass: "card-title card-title-lower"
     },
     CURSE: {
@@ -1074,7 +1074,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     PEYOTE: {
         name: "Peyote",
         hideTitle: false,
-        description: <>Instead of drawing in his phase 1, each player guesses if the suit of the top card of the deck is red or black. He them draws and shows it: if he guessed right, he keeps it and may guess again, otherwise he proceeds to phase 2.</>,
+        description: <>Instead of drawing in his phase 1, each player guesses if the suit of the top card of the deck is red or black. He then draws and shows it: if he guessed right, he keeps it and may guess again, otherwise he proceeds to phase 2.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smallest line-smaller"
     },
@@ -1130,7 +1130,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     BONE_ORCHARD: {
         name: "Bone Orchard",
-        description: <>At the start of their turn, all eliminated players return to play with 1 life points. Deal their roles at random from those of the eliminated players.</>,
+        description: <>At the start of their turn, all eliminated players return to play with 1 life point. Deal their roles at random from those of the eliminated players.</>,
         titleClass: "card-title card-title-higher"
     },
     DARLING_VALENTINE: {
@@ -1235,7 +1235,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     },
     HORSESHOE: {
         name: "Horseshoe",
-        description: <>Each time you "draw!", flip one additinal card and choose the result.</>
+        description: <>Each time you "draw!", flip one additional card and choose the result.</>
     },
     PICKAXE: {
         name: "Pickaxe",
@@ -1462,7 +1462,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     BUFFALO_BELL: {
         name: "Buffalo Bell",
         hideTitle: true,
-        description: <>Whenever he'd be hit, he may discard an hand card to avoid the hit. Played card + discarded card: if ≥ 13 = <i>Missed!</i>, ≥ 17 = <i>Dodge</i>; ≥ 20 = <i>Backfire</i>.</>,
+        description: <>Whenever he'd be hit, he may discard a hand card to avoid the hit. Played card + discarded card: if ≥ 13 = <i>Missed!</i>, ≥ 17 = <i>Dodge</i>; ≥ 20 = <i>Backfire</i>.</>,
         descriptionClass: "character-description"
     },
     CLASH_THE_STAMPEDE: {
@@ -1480,7 +1480,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     EVA_PLACE: {
         name: "Eva Place",
         hideTitle: true,
-        description: <>Once in her turn she may discard an hand card to draw another one from the deck. On a Diamond, she may draw again.</>,
+        description: <>Once in her turn she may discard a hand card to draw another one from the deck. On a Diamond, she may draw again.</>,
         descriptionClass: "character-description"
     },
     JOSEY_BASSETT: {
@@ -1492,7 +1492,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     LAURA_BILLION: {
         name: "Laura Billion",
         hideTitle: true,
-        description: <>Whenever a card is "drawn!", she may discard an hand card to get the drawn card.</>,
+        description: <>Whenever a card is "drawn!", she may discard a hand card to get the drawn card.</>,
         descriptionClass: "character-description"
     },
     SID_CURRY: {
@@ -1734,7 +1734,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     LEGEND_EL_GRINGO: {
         name: "El Gringo",
         hideTitle: true,
-        description: <>If you are hit by a plyer, draw 1 card from their hand and the card that hit you.</>,
+        description: <>If you are hit by a player, draw 1 card from their hand and the card that hit you.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_JESSE_JONES: {
@@ -1776,7 +1776,7 @@ export const CARDS_ENGLISH: CardRegistry = {
     LEGEND_ROSE_DOOLAN: {
         name: "Rose Doolan",
         hideTitle: true,
-        description: <>You may see all players at distance 1. Once during your turn, you may discard one of your blue cards, in hand or inplay, as a <i>Panic!</i></>,
+        description: <>You may see all players at distance 1. Once during your turn, you may discard one of your blue cards, in hand or in play, as a <i>Panic!</i></>,
         descriptionClass: "legends-description",
     },
     LEGEND_SID_KETCHUM: {

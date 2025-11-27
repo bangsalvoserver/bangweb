@@ -674,7 +674,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     EMILIANO: {
         name: "Emiliano",
         hideTitle: true,
-        description: <>Quando un tuo <i>BANG!</i> viene <i>Mancato!</i>, pesca quel <i>Mancato!</i>; quandi manchi un <i>BANG!</i>, pesca quel <i>BANG!</i></>,
+        description: <>Quando un tuo <i>BANG!</i> viene <i>Mancato!</i>, pesca quel <i>Mancato!</i>; quando manchi un <i>BANG!</i>, pesca quel <i>BANG!</i></>,
         descriptionClass: "character-description"
     },
 
@@ -683,7 +683,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     APACHE_KID: {
         name: "Apache Kid",
         hideTitle: true,
-        description: <>Le carte di Quadri giocate dagli avversari non hanno effeto su di lui.</>,
+        description: <>Le carte di Quadri giocate dagli avversari non hanno effetto su di lui.</>,
         descriptionClass: "character-description"
     },
     BELLE_STAR: {
@@ -725,11 +725,11 @@ export const CARDS_ITALIAN: CardRegistry = {
     HERB_HUNTER: {
         name: "Herb Hunter",
         hideTitle: true,
-        description: <>Quando un peronaggio è eliminato, pesca 2 carte extra.</>,
+        description: <>Quando un personaggio è eliminato, pesca 2 carte extra.</>,
         descriptionClass: "character-description"
     },
     JOSE_DELGADO: {
-        name: Math.random() < 0.95 ? "Josè Delgado" : "Josè Degrado",
+        name: Math.random() < 0.95 ? "José Delgado" : "José Degrado",
         hideTitle: true,
         description: <>Due volte nel suo turno può scartare una carta blu dalla mano per pescare 2 carte.</>,
         descriptionClass: "character-description"
@@ -1039,7 +1039,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     HANGOVER: {
         name: "Sbornia",
         hideTitle: true,
-        description: <>I presonaggio perdono le loro abilità speciali.</>
+        description: <>I presonaggi perdono le loro abilità speciali.</>
     },
     SERMON: {
         name: "Sermone",
@@ -1151,7 +1151,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     PEYOTE: {
         name: "Peyote",
         hideTitle: true,
-        description: <>Invece di pescare nella fase 1, il giocatore prova a indovinare se il seme della carta in cima al mazzo è rosso o nero. Poi pesca e mostra la carta: se ha indovinato, la tiene e può indovinare ancora, altrimentri passa alla fase 2.</>,
+        description: <>Invece di pescare nella fase 1, il giocatore prova a indovinare se il seme della carta in cima al mazzo è rosso o nero. Poi pesca e mostra la carta: se ha indovinato, la tiene e può indovinare ancora, altrimenti passa alla fase 2.</>,
         descriptionClass: "card-description text-smallest line-smaller"
     },
     PEYOTE_RED: {
@@ -1730,7 +1730,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     SLEEPER_CAR: {
         name: "Sleeper Car",
         hideTitle: true,
-        description: <>Una volta per turno, poi scartare un'altra tua carta a bordo blu (incluso un vagone) come un <i>BANG!</i> extra.</>,
+        description: <>Una volta per turno, puoi scartare un'altra tua carta a bordo blu (incluso un vagone) come un <i>BANG!</i> extra.</>,
         descriptionClass: "train-description",
     },
 
@@ -1739,7 +1739,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     IRONHORSE: {
         name: "Ironhorse",
         hideTitle: true,
-        description: <>Al capolinea ogni gioctore è bersaglio di un <i>BANG!</i></>,
+        description: <>Al capolinea ogni giocatore è bersaglio di un <i>BANG!</i></>,
         descriptionClass: "locomotive-description",
     },
     LELAND: {
