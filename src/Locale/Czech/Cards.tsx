@@ -1266,7 +1266,7 @@ export const CARDS_CZECH: CardRegistry = {
     EVADED: {
         name: "K zemi!",
         description: <>Vezmi si kartu, proti které jsi použil efekt <i>Vedle!</i> z této karty.</>,
-        descriptionClass: "card-description-lower"
+        descriptionClass: "card-description-lower text-smaller"
     },
     FULL_STEAM: {
         name: "Plnou parou vpřed",
@@ -1316,6 +1316,7 @@ export const CARDS_CZECH: CardRegistry = {
     TRAIN_ROBBERY: {
         name: "Vlaková loupež",
         description: <>Počítá se do limitu 1 karty <i>BANG!</i> za tah. Hráč, který je cílem této karty, se musí za každou svou kartu ve hře rozhodnout: buď ji odhodí, nebo se stane cílem efektu BANG!</>,
+        descriptionClass: "card-description text-smaller line-smaller"
     },
     TRAIN_ROBBERY_DISCARD: {
         name: "Vlaková loupež: Odhoď kartu",
@@ -1616,7 +1617,7 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Spací vůz",
         description: <>Jednou za tah můžeš odhodit jednu svou modrou kartu nebo kartu vagonu (kromě této karty). Toto se považuje za zahrání karty <i>BANG!</i> (nepočítá se ale do limitu 1 karty <i>BANG!</i> za tah).</>,
         titleClass: "train-title",
-        descriptionClass: "train-description"
+        descriptionClass: "train-description text-smaller line-smaller"
     },
 
     // The Great Train Robbery locomotive cards
@@ -1737,7 +1738,7 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Lucky Duke",
         hideTitle: true,
         description: <>Kdykoli nějaká hrací karta vyžaduje sejmutí, otoč vrchní dvě karty z dobíracího balíčku a vyber, která se použije. Pokud k sejmutí dojde ve tvém tahu, vezmi si vybranou kartu do ruky.</>,
-        descriptionClass: "legends-description",
+        descriptionClass: "legends-description text-smallest line-smaller",
     },
     LEGEND_PAUL_REGRET: {
         name: "Paul Regret",
@@ -1755,13 +1756,13 @@ export const CARDS_CZECH: CardRegistry = {
         name: "Rose Doolan",
         hideTitle: true,
         description: <>Pokud chceš, všichni hráči se pro tebe nachází ve vzdálenosti 1. Jednou během svého tahu můžeš odhodit svou modrou kartu z ruky nebo ze hry a získat tak efekt Panika!</>,
-        descriptionClass: "legends-description text-smaller line-smaller",
+        descriptionClass: "legends-description text-smallest line-smaller",
     },
     LEGEND_SID_KETCHUM: {
         name: "Sid Ketchum",
         hideTitle: true,
         description: <>Kdykoli můžeš odhodit 2 karty a vyléčit si tak 1 život. Pokud ve svém tahu získáš alespoň 1 život, můžeš použít 1 efekt BANG! bez zahrání karty.</>,
-        descriptionClass: "legends-description",
+        descriptionClass: "legends-description text-smaller line-smaller",
     },
     LEGEND_SLAB_THE_KILLER: {
         name: "Slab the Killer",
