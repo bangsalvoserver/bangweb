@@ -655,7 +655,7 @@ export const CARDS_CZECH: CardRegistry = {
         descriptionClass: "character-description"
     },
     JOSE_DELGADO: {
-        name: "Josè Delgado",
+        name: "José Delgado",
         hideTitle: true,
         description: <>Až dvakrát během svého tahu můžeš odhodit z ruky 1 modrou kartu a dobrat si 2 karty.</>,
         descriptionClass: "character-description"
