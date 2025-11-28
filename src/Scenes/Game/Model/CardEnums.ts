@@ -92,17 +92,20 @@ export type TablePocketType =
 
 export type PocketType = 'none' | PlayerPocketType | TablePocketType;
 
-export type PlayerRole =
-    'unknown' |
-    'sheriff' |
-    'deputy' |
-    'outlaw' |
-    'renegade' |
-    'deputy_3p' |
-    'outlaw_3p' |
-    'renegade_3p' |
-    'shadow_deputy' |
-    'shadow_outlaw';
+export const PLAYER_ROLES = [
+    'unknown',
+    'sheriff',
+    'deputy',
+    'outlaw',
+    'renegade',
+    'deputy_3p',
+    'outlaw_3p',
+    'renegade_3p',
+    'shadow_deputy',
+    'shadow_outlaw'
+] as const;
+
+export type PlayerRole = typeof PLAYER_ROLES[number];
 
 export type TokenType =
     'gold' |

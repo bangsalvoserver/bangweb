@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 import useEvent from "react-use-event-hook";
 import { getCardUrl } from "../Scenes/Game/CardView";
-import { SoundId } from "../Scenes/Game/Model/CardEnums";
+import { PLAYER_ROLES, SoundId } from "../Scenes/Game/Model/CardEnums";
 import { PreloadAssets } from "../Scenes/Game/Model/GameUpdate";
 import makeMapCache from "./MapCache";
 import { loadAudio, loadImage } from "./FileUtils";
+import { getRoleImage } from "../Scenes/Game/RoleView";
 
 const loadCardImage = makeMapCache((name: string) => loadImage(getCardUrl(name)));
 const loadGameSound = makeMapCache((name: SoundId) => loadAudio(`/sounds/${name}.mp3`));
@@ -53,6 +54,7 @@ const PRELOAD_TIMEOUT = 10000;
 export async function preloadAssets({ images, sounds }: PreloadAssets) {
     return Promise.race([
         Promise.allSettled([
+            ...PLAYER_ROLES.map(role => loadCardImage(getRoleImage(role))),
             ...images.map(loadCardImage),
             ...sounds.map(loadGameSound)
         ]),

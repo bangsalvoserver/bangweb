@@ -11,15 +11,21 @@ export interface RoleProps {
 
 const SUFFIX_3P = '_3p';
 
-function getRoleImage(role: PlayerRole): CardImage {
-    const name = 'ROLE_' + role.toUpperCase();
-    let image = 'role/' + role;
+export function getRoleImage(role: PlayerRole): string {
     if (role === 'unknown') {
-        image = 'backface/role';
+        return 'backface/role';
     } else if (role.endsWith(SUFFIX_3P)) {
-        image = 'role/' + role.substring(0, role.length - SUFFIX_3P.length);
+        return 'role/' + role.substring(0, role.length - SUFFIX_3P.length);
+    } else {
+        return 'role/' + role;
     }
-    return { name, image };
+}
+
+function getRoleCardImage(role: PlayerRole): CardImage {
+    return {
+        name: 'ROLE_' + role.toUpperCase(),
+        image: getRoleImage(role)
+    };
 }
 
 export default function RoleView({ player }: RoleProps) {
@@ -46,14 +52,14 @@ export default function RoleView({ player }: RoleProps) {
         classes.push('card-animation', 'card-animation-flip');
     }
 
-    const frontfaceImage = getRoleImage(frontRole);
+    const frontfaceImage = getRoleCardImage(frontRole);
 
     useCardOverlay(frontfaceImage, divRef);
 
     return <div className='pocket-view'>
         <div key={animationKey} ref={divRef} style={style} className={classes.join(' ')}>
             <CardImageView className="card-front" cardImage={frontfaceImage} />
-            {animationKey ? <CardImageView className="card-back-flip" cardImage={getRoleImage(backRole)} /> : null}
+            {animationKey ? <CardImageView className="card-back-flip" cardImage={getRoleCardImage(backRole)} /> : null}
         </div>
     </div>;
 }
