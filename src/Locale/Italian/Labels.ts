@@ -20,6 +20,7 @@ export const LABELS_ITALIAN: LabelRegistry = {
         only_base_characters:   "Solo Personaggi Base",
         allow_bot_rejoin:       "Permetti Controllo Bot",
         scenario_deck_size:     "Carte Scenario",
+        duration_coefficient:   "Velocità Animazioni",
         auto_resolve_timer:     "Timer Autorisoluzione",
         damage_timer:           "Timer Danno",
         escape_timer:           "Timer Fuga",

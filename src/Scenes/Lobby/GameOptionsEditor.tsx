@@ -63,53 +63,46 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         }
     }, [gameOptions.expansions]);
 
-    const numberSetter = useCallback((prop: GameOptionsOf<number>['prop'], min?: number, max?: number) => {
+    type NumberTransform = (value: number) => number;
+
+    const numberSetter = useCallback((prop: GameOptionsOf<number>['prop'], min?: number, max?: number, transform?: NumberTransform) => {
         if (setGameOptions) return (event: ChangeEvent<HTMLInputElement>) => {
             if (event.target.value.length === 0) {
                 setGameOptions({ [prop]: undefined });
             } else if (event.target.validity.valid) {
-                const newValue = event.target.valueAsNumber;
+                let newValue = event.target.valueAsNumber;
                 if (newValue >= 0 && (min === undefined || newValue >= min) && (max === undefined || newValue <= max)) {
+                    if (transform) newValue = transform(newValue);
                     setGameOptions({ [prop]: newValue });
                 }
             }
         };
     }, [setGameOptions]);
 
-    const OptionNumber = useCallback(({ prop, value, min, max }: GameOptionsOf<number> & { min?: number, max?: number }) => {
-        const handleNumberChange = numberSetter(prop, min, max);
+    const OptionNumber = useCallback(({ prop, value, min, max, withSlider, step, transform, reverseTransform }: GameOptionsOf<number> & {
+        min?: number;
+        max?: number;
+        withSlider?: boolean;
+        step?: number;
+        transform?: NumberTransform;
+        reverseTransform?: NumberTransform;
+    }) => {
+        const handleNumberChange = numberSetter(prop, min, max, transform);
+        if (value !== undefined && reverseTransform) value = reverseTransform(value);
         return (<div className="option-row">
             <div className="option-left-column">
                 <label htmlFor={prop}>{getLabel(language, 'GameOptions', prop)}</label>
                 <Tooltip group='GameOptionsTooltip' name={prop} />
             </div>
             <div className="option-right-column">
-                <input id={prop} type="number"
-                    value={value ?? ''}
-                    pattern='[0-9]{0,5}'
-                    onChange={handleNumberChange}
-                    readOnly={handleNumberChange === undefined}
-                />
-            </div>
-        </div>);
-    }, [language, numberSetter]);
-
-    const OptionSlider = useCallback(({ prop, value, min, max, step }: GameOptionsOf<number> & { min?: number, max?: number, step?: number }) => {
-        const handleNumberChange = numberSetter(prop, min, max);
-        return (<div className="option-row">
-            <div className="option-left-column">
-                <label htmlFor={prop}>{getLabel(language, 'GameOptions', prop)}</label>
-                <Tooltip group='GameOptionsTooltip' name={prop} />
-            </div>
-            <div className="option-right-column">
-                <input id={prop} type="range"
+                {withSlider && <input id={prop + '_range'} type="range"
                     min={min} max={max} step={step}
                     value={value}
                     onChange={handleNumberChange}
                     readOnly={handleNumberChange === undefined}
-                />
+                />}
                 <input id={prop} type="number"
-                    value={value}
+                    value={value ?? ''}
                     pattern='[0-9]{0,5}'
                     onChange={handleNumberChange}
                     readOnly={handleNumberChange === undefined}
@@ -139,7 +132,29 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         if (prop in gameOptions) {
             value = gameOptions[prop] as T;
         }
-        return {prop, value};
+        return {prop, value} as GameOptionsOf<T>;
+    };
+
+    const maxCoefficient = 4.0;
+
+    const transformVelocity = (value: number) => {
+        if (value < 50) {
+            // 0-50 maps to max-1 linearly
+            return ((1.0 - maxCoefficient) / 50.0) * value + maxCoefficient;
+        } else {
+            // 50-100 maps to 1-0 linearly
+            return -0.02 * value + 2.0;
+        }
+    };
+
+    const reverseTransformVelocity = (coefficient: number) => {
+        if (coefficient < 1) {
+            // 0-1 maps to 100-50 linearly
+            return Math.round(-50.0 * coefficient + 100.0);
+        } else {
+            // 1-max maps to 50-0 linearly
+            return Math.round((50.0 * (coefficient - maxCoefficient)) / (1.0 - maxCoefficient));
+        }
     };
 
     return (<div className="game-options-editor">
@@ -171,23 +186,24 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         </div>
         <div className="game-options-group">
             <Collapsible label={getLabel(language, 'ui', 'GAME_OPTIONS')} storageKey="expand_options">
-                <OptionSlider {...getOption('character_choice')} min={1} max={3} />
-                <OptionSlider {...getOption('max_players')} min={3} max={8} />
+                <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider />
+                <OptionNumber {...getOption('max_players')} min={3} max={8} withSlider />
                 <OptionCheckbox {...getOption('add_bots')} />
                 <OptionCheckbox {...getOption('allow_bot_rejoin')} />
                 <OptionCheckbox {...getOption('only_base_characters')} />
                 <OptionCheckbox {...getOption('quick_discard_all')} />
                 <OptionCheckbox {...getOption('auto_pick_predraw')} />
                 <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
-                    <OptionSlider {...getOption('scenario_deck_size')} max={30} />
+                    <OptionNumber {...getOption('scenario_deck_size')} max={30} withSlider />
                 </ConditionalOnExpansion>
-                <OptionSlider {...getOption('auto_resolve_timer')} max={5000} step={50} />
-                <OptionSlider {...getOption('bot_play_timer')} max={10000} step={50} />
+                <OptionNumber {...getOption('duration_coefficient')} min={0} max={100} withSlider transform={transformVelocity} reverseTransform={reverseTransformVelocity} />
+                <OptionNumber {...getOption('auto_resolve_timer')} max={5000} step={50} withSlider />
+                <OptionNumber {...getOption('bot_play_timer')} max={10000} step={50} withSlider />
                 <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu','canyondiablo']}>
-                    <OptionSlider {...getOption('damage_timer')} max={5000} step={50} />
+                    <OptionNumber {...getOption('damage_timer')} max={5000} step={50} withSlider />
                 </ConditionalOnExpansion>
                 <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu']}>
-                    <OptionSlider {...getOption('escape_timer')} max={10000} step={50} />
+                    <OptionNumber {...getOption('escape_timer')} max={10000} step={50} withSlider />
                 </ConditionalOnExpansion>
                 <OptionNumber {...getOption('game_seed')} />
             </Collapsible>

@@ -203,6 +203,7 @@ export type GameOptions = Partial<{
     escape_timer: Milliseconds;
     bot_play_timer: Milliseconds;
     game_seed: number;
+    duration_coefficient: number;
 }>;
 
 export type GameTableUpdate = 

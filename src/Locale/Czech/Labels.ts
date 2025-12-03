@@ -20,6 +20,7 @@ export const LABELS_CZECH: LabelRegistry = {
         only_base_characters:   "Jen základní postavy",
         allow_bot_rejoin:       "Povolit převzetí botů",
         scenario_deck_size:     "Velikost balíčku scénářů",
+        duration_coefficient:   "Rychlost animace",
         auto_resolve_timer:     "Automatické řešení efektů",
         damage_timer:           "Časovač poškození",
         escape_timer:           "Časovač úniku",
