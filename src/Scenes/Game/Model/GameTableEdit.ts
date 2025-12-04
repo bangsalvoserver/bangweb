@@ -6,7 +6,7 @@ import { CardId, PocketPosition, TokenPosition } from "./GameUpdate";
 
 export type CardMapper = UpdateFunction<CardId[]>;
 
-export function editPocketMap(
+function editPocketMap(
     pockets: TablePockets, players: PlayerRecord, pocket: PocketId,
     cardMapper: CardMapper): [TablePockets, PlayerRecord]
 {
@@ -27,6 +27,11 @@ export function editPocketMap(
     return [pockets, players];
 }
 
+/// Changes a card to another
+export function exchangeCard(pockets: TablePockets, players: PlayerRecord, pocket: PocketId, cardFrom: CardId, cardTo: CardId) {
+    return editPocketMap(pockets, players, pocket, cards => cards.map(card => card === cardFrom ? cardTo : card));
+}
+
 /// Adds a list of cards to a pocket
 export function addToPocket(pockets: TablePockets, players: PlayerRecord, pocket: PocketId, cardsToAdd: CardId[], position: PocketPosition = 'end') {
     return editPocketMap(pockets, players, pocket, cards => position === 'end' ? cards.concat(cardsToAdd) : cardsToAdd.concat(cards));
@@ -35,6 +40,11 @@ export function addToPocket(pockets: TablePockets, players: PlayerRecord, pocket
 /// Removes a list of cards from a pocket
 export function removeFromPocket(pockets: TablePockets, players: PlayerRecord, pocket: PocketId, cardsToRemove: CardId[]) {
     return editPocketMap(pockets, players, pocket, cards => cards.filter(id => !cardsToRemove.includes(id)));
+}
+
+/// Moves a card to the end of a pocket
+export function moveCardToEnd(pockets: TablePockets, players: PlayerRecord, pocket: PocketId, card: CardId) {
+    return editPocketMap(pockets, players, pocket, cards => cards.filter(id => id !== card).concat(card));
 }
 
 export function setAnimation<T extends { animation: unknown; animationKey: number; }>(value: T, animation: T['animation']): T {

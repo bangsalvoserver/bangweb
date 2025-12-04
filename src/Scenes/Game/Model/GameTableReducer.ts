@@ -4,9 +4,8 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { parseCardData } from "./CardData";
 import { GameFlag, TablePocketType } from "./CardEnums";
-import { addToPocket, clearAnimation, editPocketMap, removeFromPocket, setAnimation } from "./GameTableEdit";
-import { addTokens } from "./GameTableEdit";
 import { CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, getTablePocket, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
+import { addTokens, addToPocket, clearAnimation, exchangeCard, moveCardToEnd, removeFromPocket, setAnimation } from "./GameTableEdit";
 import { TableUpdate } from "./GameUpdate";
 
 const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
@@ -161,7 +160,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Adds a card to another pocket
     move_card ({ card, player, pocket, position, duration }) {
         const fromPocket = getCard(this, card).pocket;
-        let [pockets, players] = editPocketMap(this.pockets, this.players, fromPocket, cards => cards.map(id => id === card ? CARD_SLOT_ID_FROM : id));
+        let [pockets, players] = exchangeCard(this.pockets, this.players, fromPocket, card, CARD_SLOT_ID_FROM);
 
         const toPocket = newPocketId(pocket, player);
         [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], position);
@@ -178,7 +177,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         let [pockets, players] = removeFromPocket(this.pockets, this.players, fromPocket, [CARD_SLOT_ID_FROM]);
 
         const toPocket = newPocketId(pocket, player);
-        [pockets, players] = editPocketMap(pockets, players, toPocket, cards => cards.map(id => id === CARD_SLOT_ID_TO ? card: id));
+        [pockets, players] = exchangeCard(pockets, players, toPocket, CARD_SLOT_ID_TO, card);
 
         return clearAnimation({
             ...this,
@@ -224,11 +223,11 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     show_card ({ card, info, duration }) {
         let [pockets, players] = [this.pockets, this.players];
 
-        const cardObj = getCard(this, card);
-        switch (cardObj.pocket?.name) {
+        const pocket = getCard(this, card).pocket;
+        switch (pocket?.name) {
         case 'main_deck':
         case 'discard_pile':
-            [pockets, players] = editPocketMap(pockets, players, cardObj.pocket, cards => cards.filter(id => id !== card).concat(card));
+            [pockets, players] = moveCardToEnd(pockets, players, pocket, card);
         }
         return {
             ...this, pockets, players,
