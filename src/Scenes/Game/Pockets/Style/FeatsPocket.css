@@ -1,0 +1,61 @@
+.feats-cards * {
+    --card-scale: 0.3;
+    --card-width-unscaled: 423px;
+    --card-height-unscaled: 231px;
+    --card-width: calc(var(--card-scale) * var(--card-width-unscaled));
+    --card-height: calc(var(--card-scale) * var(--card-height-unscaled));
+    --card-width-plus-margin: calc(var(--card-width) + 2 * var(--card-margin));
+    --card-height-plus-margin: calc(var(--card-height) + 2 * var(--card-margin));
+}
+
+.feats-pocket {
+    display: grid;
+}
+
+.feats-pocket > :nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.feats-pocket > :nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.feats-pocket > :nth-child(3) {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.feats-pocket > :nth-child(4) {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.feats-pocket .card-tokens {
+    position: absolute;
+    width: 100%;
+    top: unset;
+    bottom: 0.2em;
+    text-align: center;
+    white-space: normal;
+    line-height: 0;
+}
+
+.feats-row {
+    display: inline-flex;
+    vertical-align: middle;
+    flex-direction: row;
+}
+
+.feats-col {
+    display: flex;
+    flex-direction: column;
+    width: var(--card-width-plus-margin);
+}
+
+@media (max-width:1200px) {
+    .feats-cards * {
+        --card-scale: 0.18;
+    }
+}

@@ -32,6 +32,7 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
+import FeatsPocket from "./Pockets/FeatsPocket";
 
 export interface GameProps {
   connection: BangConnection;
@@ -97,9 +98,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
             <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={getTablePocket(table, 'feats_discard')} />
           </div>
         </div>
-        <div className="feats-pocket">
-          <PocketView pocketRef={setRef('feats')} cards={getTablePocket(table, 'feats')} />
-        </div>
+        <FeatsPocket pocketRef={setRef('feats')} cards={getTablePocket(table, 'feats')} />
       </div>
     </div>
   );

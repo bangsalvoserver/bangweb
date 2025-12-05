@@ -163,7 +163,11 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         let [pockets, players] = exchangeCard(this.pockets, this.players, fromPocket, card, CARD_SLOT_ID_FROM);
 
         const toPocket = newPocketId(pocket, player);
-        [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], position);
+        if (pocket === 'feats' && getTablePocket(this, pocket).includes(CARD_SLOT_ID_FROM)) {
+            [pockets, players] = exchangeCard(pockets, players, toPocket, CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO);
+        } else {
+            [pockets, players] = addToPocket(pockets, players, toPocket, [CARD_SLOT_ID_TO], position);
+        }
 
         return setAnimation(
             { ...this, players, pockets },
@@ -174,7 +178,11 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Removes a card from its pocket
     move_card_end ({ card, player, pocket }) {
         const fromPocket = getCard(this, card).pocket;
-        let [pockets, players] = removeFromPocket(this.pockets, this.players, fromPocket, [CARD_SLOT_ID_FROM]);
+        
+        let [pockets, players] = [this.pockets, this.players];
+        if (fromPocket?.name !== 'feats') {
+            [pockets, players] = removeFromPocket(pockets, players, fromPocket, [CARD_SLOT_ID_FROM]);
+        }
 
         const toPocket = newPocketId(pocket, player);
         [pockets, players] = exchangeCard(pockets, players, toPocket, CARD_SLOT_ID_TO, card);
