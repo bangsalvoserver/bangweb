@@ -16,41 +16,41 @@
         margin: 0.9em 0.3em;
     }
 
-    .player-grid-item[player-index="0"] { grid-column: 1 / span 2; grid-row: 1; text-align: center; }
+    .player-grid-item:nth-child(1) { grid-column: 1 / span 2; grid-row: 1; text-align: center; }
 
-    .player-grid[num-players="2"] .player-grid-item[player-index="1"] { grid-column: 1 / span 2; grid-row: 2; text-align: center; }
+    .player-grid[num-players="2"] .player-grid-item:nth-child(2) { grid-column: 1 / span 2; grid-row: 2; text-align: center; }
 
-    .player-grid[num-players="3"] .player-grid-item[player-index="2"] { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
-    .player-grid[num-players="3"] .player-grid-item[player-index="1"] { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
+    .player-grid[num-players="3"] .player-grid-item:nth-child(3) { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
+    .player-grid[num-players="3"] .player-grid-item:nth-child(2) { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
 
-    .player-grid[num-players="4"] .player-grid-item[player-index="3"] { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
-    .player-grid[num-players="4"] .player-grid-item[player-index="1"] { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
-    .player-grid[num-players="4"] .player-grid-item[player-index="2"] { grid-column: 1 / span 2; grid-row: 3; text-align: center; }
+    .player-grid[num-players="4"] .player-grid-item:nth-child(4) { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
+    .player-grid[num-players="4"] .player-grid-item:nth-child(2) { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
+    .player-grid[num-players="4"] .player-grid-item:nth-child(3) { grid-column: 1 / span 2; grid-row: 3; text-align: center; }
 
-    .player-grid[num-players="5"] .player-grid-item[player-index="4"] { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
-    .player-grid[num-players="5"] .player-grid-item[player-index="1"] { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
-    .player-grid[num-players="5"] .player-grid-item[player-index="3"] { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
-    .player-grid[num-players="5"] .player-grid-item[player-index="2"] { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
+    .player-grid[num-players="5"] .player-grid-item:nth-child(5) { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
+    .player-grid[num-players="5"] .player-grid-item:nth-child(2) { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
+    .player-grid[num-players="5"] .player-grid-item:nth-child(4) { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
+    .player-grid[num-players="5"] .player-grid-item:nth-child(3) { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
 
-    .player-grid[num-players="6"] .player-grid-item[player-index="5"] { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
-    .player-grid[num-players="6"] .player-grid-item[player-index="1"] { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
-    .player-grid[num-players="6"] .player-grid-item[player-index="4"] { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
-    .player-grid[num-players="6"] .player-grid-item[player-index="2"] { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
-    .player-grid[num-players="6"] .player-grid-item[player-index="3"] { grid-column: 1 / span 2; grid-row: 4; text-align: center; }
+    .player-grid[num-players="6"] .player-grid-item:nth-child(6) { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
+    .player-grid[num-players="6"] .player-grid-item:nth-child(2) { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
+    .player-grid[num-players="6"] .player-grid-item:nth-child(5) { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
+    .player-grid[num-players="6"] .player-grid-item:nth-child(3) { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
+    .player-grid[num-players="6"] .player-grid-item:nth-child(4) { grid-column: 1 / span 2; grid-row: 4; text-align: center; }
 
-    .player-grid[num-players="7"] .player-grid-item[player-index="6"] { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
-    .player-grid[num-players="7"] .player-grid-item[player-index="1"] { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
-    .player-grid[num-players="7"] .player-grid-item[player-index="5"] { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
-    .player-grid[num-players="7"] .player-grid-item[player-index="2"] { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
-    .player-grid[num-players="7"] .player-grid-item[player-index="4"] { grid-column: 1 / span 1; grid-row: 4; text-align: right; }
-    .player-grid[num-players="7"] .player-grid-item[player-index="3"] { grid-column: 2 / span 1; grid-row: 4; text-align: left; }
+    .player-grid[num-players="7"] .player-grid-item:nth-child(7) { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
+    .player-grid[num-players="7"] .player-grid-item:nth-child(2) { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
+    .player-grid[num-players="7"] .player-grid-item:nth-child(6) { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
+    .player-grid[num-players="7"] .player-grid-item:nth-child(3) { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
+    .player-grid[num-players="7"] .player-grid-item:nth-child(5) { grid-column: 1 / span 1; grid-row: 4; text-align: right; }
+    .player-grid[num-players="7"] .player-grid-item:nth-child(4) { grid-column: 2 / span 1; grid-row: 4; text-align: left; }
 
-    .player-grid[num-players="8"] .player-grid-item[player-index="7"] { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
-    .player-grid[num-players="8"] .player-grid-item[player-index="1"] { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
-    .player-grid[num-players="8"] .player-grid-item[player-index="6"] { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
-    .player-grid[num-players="8"] .player-grid-item[player-index="2"] { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
-    .player-grid[num-players="8"] .player-grid-item[player-index="5"] { grid-column: 1 / span 1; grid-row: 4; text-align: right; }
-    .player-grid[num-players="8"] .player-grid-item[player-index="3"] { grid-column: 2 / span 1; grid-row: 4; text-align: left; }
-    .player-grid[num-players="8"] .player-grid-item[player-index="4"] { grid-column: 1 / span 2; grid-row: 5; text-align: center; }
+    .player-grid[num-players="8"] .player-grid-item:nth-child(8) { grid-column: 1 / span 1; grid-row: 2; text-align: right; }
+    .player-grid[num-players="8"] .player-grid-item:nth-child(2) { grid-column: 2 / span 1; grid-row: 2; text-align: left; }
+    .player-grid[num-players="8"] .player-grid-item:nth-child(7) { grid-column: 1 / span 1; grid-row: 3; text-align: right; }
+    .player-grid[num-players="8"] .player-grid-item:nth-child(3) { grid-column: 2 / span 1; grid-row: 3; text-align: left; }
+    .player-grid[num-players="8"] .player-grid-item:nth-child(6) { grid-column: 1 / span 1; grid-row: 4; text-align: right; }
+    .player-grid[num-players="8"] .player-grid-item:nth-child(4) { grid-column: 2 / span 1; grid-row: 4; text-align: left; }
+    .player-grid[num-players="8"] .player-grid-item:nth-child(5) { grid-column: 1 / span 2; grid-row: 5; text-align: center; }
 
 }
