@@ -10,6 +10,7 @@
 
 .feats-pocket {
     display: grid;
+    grid-template-rows: repeat(2, 50%);
 }
 
 .feats-pocket > :nth-child(1) {
