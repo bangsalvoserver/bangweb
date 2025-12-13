@@ -21,6 +21,7 @@ export const GAME_STRINGS_CZECH: GameStringRegistry = {
     PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                     <>Zahráním {card} pro vyléčení {amount === 1 ? "jednoho života" : `${amount} životů`} bys promarnil {max_amount === 1 ? "jeden život" : twoToFour(max_amount) ? `${max_amount} životy` : `${max_amount} životů`}. Pokračovat?</>,
     PROMPT_SUICIDE: (card) =>                                               <>Zahrání {card} vede k sebevraždě. Pokračovat?</>,
     PROMPT_DEATH: () =>                                                     <>Můžeš zahrát pivo, abys se zachránil. Pokračovat?</>,
+    PROMPT_CLAIM_NO_TARGET: () =>                                           <>Ve hře není žádná legenda k zasažení. Chceš pokračovat?</>,
     PROMPT_CANCEL_PERFORM_FEAT: () =>                                       <>Chceš zrušit vykonání činu?</>,
     PROMPT_CANCEL_BOAST_FEAT: () =>                                         <>Chceš zrušit vychloubání se činem?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card} : Zahrát kartu nebo ji odhodit?</>,
