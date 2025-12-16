@@ -158,6 +158,11 @@ export default function useGameState(gameChannel: GameChannel, myUserId: UserId,
                 tableDispatch({ hide_card: update });
                 delayDispatch(update.duration, () => tableDispatch({ card_animation_end: update.card }));
             },
+
+            exchange_card(update) {
+                tableDispatch({ exchange_card: update });
+                delayDispatch(update.duration, () => tableDispatch({ card_animation_end: update.new_card }));
+            },
         
             tap_card(update) {
                 tableDispatch({ tap_card: update });

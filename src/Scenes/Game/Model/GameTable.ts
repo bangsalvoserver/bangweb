@@ -39,43 +39,19 @@ interface CardBase<T extends CardDeckOrData> {
 export type Card = CardBase<CardDeckOrData>;
 export type KnownCard = CardBase<CardData>;
 
-function parseCardImage(image: string, deck: string): string {
-    return image.includes('/') ? image : `${deck}/${image}`;
-}
-
-function substringBefore(value: string, separator: string) {
-    const index = value.indexOf(separator);
-    return index >= 0 ? value.substring(0, index) : value;
-}
-
-function substringAfter(value: string, separator: string) {
-    const index = value.indexOf(separator);
-    return index >= 0 ? value.substring(index + separator.length) : undefined;
-}
-
 export function getCardImage(card: Card): CardImage | undefined {
     if (isCardKnown(card)) {
-        const cardData = card.cardData;
+        const {name, image, deck, sign} = card.cardData;
         return {
-            name: substringBefore(cardData.name, ':'),
-            image: parseCardImage(substringBefore(cardData.image, ':'), cardData.deck),
-            sign: cardData.sign.rank !== 'none' && cardData.sign.suit !== 'none' ? cardData.sign : undefined
+            name,
+            image: image.includes('/') ? image : `${deck}/${image}`,
+            sign: sign.rank !== 'none' && sign.suit !== 'none' ? sign : undefined
         };
     }
     return undefined;
 };
 
 export function getCardBackface(card: Card): CardImage {
-    if (isCardKnown(card)) {
-        const cardData = card.cardData;
-        const image = substringAfter(cardData.image, ':');
-        if (image !== undefined) {
-            return {
-                name: substringAfter(cardData.name, ':'),
-                image: parseCardImage(image, cardData.deck)
-            };
-        }
-    }
     return { image: 'backface/' + card.cardData.deck };
 }
 

@@ -1,5 +1,5 @@
 import { group, intersect, parseContainer, rotateToFirstOf, subtract } from "../../../Utils/ArrayUtils";
-import { editById, editByIds, removeByIds } from "../../../Utils/RecordUtils";
+import { editById, editByIds, removeById, removeByIds } from "../../../Utils/RecordUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { parseCardData } from "./CardData";
@@ -255,6 +255,22 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
                 { type: 'flipping', cardImage: getCardImage(card), backface: getCardBackface(card), duration },
             ))
         };
+    },
+
+    // Changes one card for another
+    exchange_card({ card, new_card, info, duration }) {
+        const oldCard = getCard(this, card);
+        const [pockets, players] = exchangeCard(this.pockets, this.players, oldCard.pocket, card, new_card);
+
+        const cards = {
+            ...removeById(this.cards, card),
+            [new_card]: setAnimation(
+                { ...newCard(new_card, oldCard.cardData.deck, oldCard.pocket), cardData: parseCardData(info) },
+                { type: 'flipping', backface: getCardImage(oldCard), duration }
+            )
+        };
+
+        return { ...this, cards, pockets, players };
     },
 
     // Sets the inactive field

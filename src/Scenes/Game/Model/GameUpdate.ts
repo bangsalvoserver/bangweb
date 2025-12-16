@@ -82,6 +82,12 @@ export interface HideCardUpdate {
     card: CardId;
 }
 
+export interface ExchangeCardUpdate {
+    card: CardId;
+    new_card: CardId;
+    info: CardDataArgs;
+}
+
 export interface TapCardUpdate {
     card: CardId;
     inactive: boolean;
@@ -219,6 +225,7 @@ export type GameTableUpdate =
     { deck_shuffled: DeckShuffledUpdate & Duration } |
     { show_card: ShowCardUpdate & Duration } |
     { hide_card: HideCardUpdate & Duration } |
+    { exchange_card: ExchangeCardUpdate & Duration } |
     { tap_card: TapCardUpdate & Duration } |
     { flash_card: FlashCardUpdate & Duration } |
     { short_pause: ShortPauseUpdate & Duration } |
