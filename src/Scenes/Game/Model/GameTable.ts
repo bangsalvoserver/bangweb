@@ -76,10 +76,10 @@ export function newPocketId(pocketName: PocketType, player: PlayerId | null = nu
     }
 }
 
-export function newCard(id: CardId, deck: DeckType, pocket: PocketId): Card {
+export function newCard(id: CardId, cardData: CardDeckOrData, pocket: PocketId): Card {
     return {
         id,
-        cardData: { deck },
+        cardData,
         pocket,
         inactive: false,
         tokens: {},

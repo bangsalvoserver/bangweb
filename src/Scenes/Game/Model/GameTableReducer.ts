@@ -16,7 +16,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const [pockets, players] = addToPocket(this.pockets, this.players, pocketRef, card_ids.map(card => card.id));
         let newCards: CardRecord = { ...this.cards };
         for (const { id, deck } of card_ids) {
-            newCards[id] = newCard(id, deck, pocketRef);
+            newCards[id] = newCard(id, { deck }, pocketRef);
         }
         return { ...this, cards: newCards, pockets, players };
     },
@@ -265,7 +265,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const cards = {
             ...removeById(this.cards, card),
             [new_card]: setAnimation(
-                { ...newCard(new_card, oldCard.cardData.deck, oldCard.pocket), cardData: parseCardData(info) },
+                newCard(new_card, parseCardData(info), oldCard.pocket),
                 { type: 'flipping', backface: getCardImage(oldCard), duration }
             )
         };
