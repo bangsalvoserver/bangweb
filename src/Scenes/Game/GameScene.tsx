@@ -68,7 +68,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     || (table.animation.type === 'deck_shuffle' && table.animation.pocket === 'shop_deck')
   ) && (
     <div className="pocket-group">
-      <StackPocket showCount pocketRef={setRef('shop_deck')} cards={getTablePocket(table, 'shop_deck')} />
+      <StackPocket showCount faded pocketRef={setRef('shop_deck')} cards={getTablePocket(table, 'shop_deck')} />
       <PocketView pocketRef={setRef('shop_selection')} cards={getTablePocket(table, 'shop_selection').slice(0).reverse()} />
     </div>
   );
@@ -94,9 +94,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
       <div className="feats-row">
         <div className="feats-col">
           <StackPocket slice={2} showCount pocketRef={setRef('feats_deck')} cards={getTablePocket(table, 'feats_deck')} />
-          <div className="card-faded">
-            <StackPocket slice={10} pocketRef={setRef('feats_discard')} cards={getTablePocket(table, 'feats_discard')} />
-          </div>
+          <StackPocket faded slice={10} pocketRef={setRef('feats_discard')} cards={getTablePocket(table, 'feats_discard')} />
         </div>
         <FeatsPocket pocketRef={setRef('feats')} cards={getTablePocket(table, 'feats')} />
       </div>
@@ -125,9 +123,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
       || getTablePocket(table, 'wws_scenario_deck').length !== 0 || getTablePocket(table, 'wws_scenario_card').length !== 0)
     && <div className="pocket-group">
       {(getTablePocket(table, 'scenario_deck').length !== 0 || getTablePocket(table, 'scenario_card').length !== 0) && <>
-        <div className="inline-block card-faded">
-          <StackPocket showCount pocketRef={setRef('scenario_deck')} cards={getTablePocket(table, 'scenario_deck')} />
-        </div>
+        <StackPocket faded showCount pocketRef={setRef('scenario_deck')} cards={getTablePocket(table, 'scenario_deck')} />
         <StackPocket slice={2}
           pocketRef={setRef('scenario_card')}
           cards={getTablePocket(table, 'scenario_card')} />

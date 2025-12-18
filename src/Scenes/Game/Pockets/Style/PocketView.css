@@ -33,7 +33,7 @@
     margin: 0 0.3em;
 }
 
-.card-faded .card-front::after {
+.card-faded :nth-last-child(1 of .card-view):not(.card-origin, .card-modified, .card-current) .card-front::after {
     pointer-events: none;
     content: "";
     display: block;
