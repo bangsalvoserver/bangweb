@@ -4,7 +4,7 @@ import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
 import { parseCardData } from "./CardData";
 import { GameFlag, TablePocketType } from "./CardEnums";
-import { CardRecord, GameTable, getCard, getCardBackface, getCardImage, getPlayer, getTablePocket, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
+import { CardRecord, GameTable, getCard, getCardImage, getPlayer, getTablePocket, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
 import { addTokens, addToPocket, clearAnimation, exchangeCard, moveCardToEnd, removeFromPocket, setAnimation } from "./GameTableEdit";
 import { TableUpdate } from "./GameUpdate";
 
@@ -252,7 +252,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
             ...this,
             cards: editById(this.cards, card, card => setAnimation(
                 { ...card, cardData: { deck: card.cardData.deck }},
-                { type: 'flipping', cardImage: getCardImage(card), backface: getCardBackface(card), duration },
+                { type: 'flipping', cardImage: getCardImage(card), duration },
             ))
         };
     },

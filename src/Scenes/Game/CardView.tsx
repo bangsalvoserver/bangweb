@@ -150,8 +150,10 @@ export default function CardView({ cardRef, card, showBackface }: CardProps) {
             backface = card.animation.backface;
         }
         if (card.animation.cardImage) {
+            // flipping from cardImage to backface
             cardImage = card.animation.cardImage;
         } else {
+            // flipping from backface to cardImage
             classes.push('card-animation-reverse');
         }
         break;
