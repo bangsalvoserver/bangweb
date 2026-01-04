@@ -19,6 +19,7 @@ export const GAME_STRINGS_CZECH: GameStringRegistry = {
     PROMPT_NO_BANGS_PLAYED: (card) =>                                       <>Nezahrál jsi žádný Bang, zahrání {card} by nemělo efekt. Pokračovat?</>,
     PROMPT_TARGET_SELF_GHOST_CARD: () =>                                    <>Odhazuješ svou duchovní kartu. Pokračovat?</>,
     PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                     <>Zahráním {card} pro vyléčení {amount === 1 ? "jednoho života" : `${amount} životů`} bys promarnil {max_amount === 1 ? "jeden život" : twoToFour(max_amount) ? `${max_amount} životy` : `${max_amount} životů`}. Pokračovat?</>,
+    PROMPT_MISS_SUSANNA: (card, count, max_count) =>                        <>Zahráli jste pouze {count === 1 ? "jednu kartu" : twoToFour(count) ? `${count} karty` : `${count} karet`} z {max_count}. Kvůli {card} ztratíte jeden život. Pokračovat?</>,
     PROMPT_SUICIDE: (card) =>                                               <>Zahrání {card} vede k sebevraždě. Pokračovat?</>,
     PROMPT_DEATH: () =>                                                     <>Můžeš zahrát pivo, abys se zachránil. Pokračovat?</>,
     PROMPT_CLAIM_NO_TARGET: () =>                                           <>Ve hře není žádná legenda k zasažení. Chceš pokračovat?</>,
