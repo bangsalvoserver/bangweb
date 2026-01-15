@@ -147,7 +147,7 @@ export type EffectContext = Partial<{
     repeat_card: CardId,
     card_choice: CardId,
     train_card: CardId,
-    train_advance: number,
+    train_advance: boolean,
     ignore_distances: boolean,
 }>;
 
