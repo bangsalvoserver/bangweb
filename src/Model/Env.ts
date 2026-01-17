@@ -1,4 +1,4 @@
-export const LANGUAGES = [ 'it', 'en', 'cs' ] as const;
+export const LANGUAGES = [ 'it', 'en', 'cs', 'hu' ] as const;
 export type Language = typeof LANGUAGES[number];
 
 const Env = (() => {
