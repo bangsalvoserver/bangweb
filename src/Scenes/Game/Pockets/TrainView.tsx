@@ -32,12 +32,11 @@ export default function TrainView({ pocketRef }: TrainProps) {
         } as CSSProperties;
         break;
     case 'none':
-        const trainAdvance = getModifierContext(selector, 'train_advance') ?? 0;
-        if (trainAdvance > 0) {
+        if (getModifierContext(selector, 'train_advance')) {
             classes.push('train-advance-transition');
             trainPositionStyle = {
                 ...trainPositionStyle,
-                '--train-position-diff': trainAdvance
+                '--train-position-diff': 1
             } as CSSProperties;
         }
         break;

@@ -83,7 +83,7 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
 }
 
 function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSelector {
-    const cardId = getModifierContext(selector, 'repeat_card') ?? getModifierContext(selector, 'playing_card');
+    const cardId = getModifierContext(selector, 'repeat_card') ?? getModifierContext(selector, 'train_card');
     if (cardId) {
         const card = getCard(table, cardId);
         if (!isCardCurrent(selector, card) && isCardKnown(card) && isCardPlayable(selector, card)) {
