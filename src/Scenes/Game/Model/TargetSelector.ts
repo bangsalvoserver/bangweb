@@ -129,7 +129,7 @@ export function selectorCanConfirm(table: GameTable, selector: TargetSelector) {
     if (selectorIsTargeting(selector)) {
         const { effects, targets, index } = getTargetSelectorStatus(table, selector);
         if (index < targets.length) {
-            return targetDispatch.isSelectionConfirmable(table, targets[index], effects[index]);
+            return targetDispatch.isSelectionConfirmable(table, selector, targets[index], effects[index]);
         }
     }
     return false;
