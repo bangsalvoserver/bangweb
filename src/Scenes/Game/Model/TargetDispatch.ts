@@ -164,6 +164,12 @@ const getValidCardTargets = (table: GameTable, selector: TargetSelector, effect:
         .filter(card => checkCardFilter(table, selector, effect.card_filter, card));
 };
 
+const checkAdjacentPlayers = (table: GameTable, selector: TargetSelector, target1: Player, target2: Player, max_distance: number) => {
+    return target1.id !== target2.id && target2.id !== table.self_player
+        && isPlayerInGame(target2)
+        && calcPlayerDistance(table, selector, target1.id, target2.id) <= max_distance;
+};
+
 const checkId = <T extends {id: U}, U>(target: T, value: T): boolean => {
     return target.id === value.id;
 };
@@ -222,18 +228,13 @@ const targetDispatch = buildDispatch({
         isPlayerSelected: containsId,
         appendPlayerTarget: (target, effect, player) => (target ?? []).concat(player),
         isSelectionFinished: (table, selector, target, effect) => target.length === 2 || (
-            target.length === 1 && !table.alive_players.some(target2 => {
-                const target1 = target[0].id;
-                return target1 !== target2 && target2 !== table.self_player
-                    && calcPlayerDistance(table, selector, target1, target2) <= effect.max_distance;
-            })
+            target.length === 1 && !table.alive_players.some(player =>
+                checkAdjacentPlayers(table, selector, target[0], getPlayer(table, player), effect.max_distance)
+            )
         ),
         isValidPlayerTarget: (table, selector, target, effect, player) => {
             if (target) {
-                const target1 = target[0].id;
-                return target1 !== player.id && player.id !== table.self_player
-                    && isPlayerInGame(player)
-                    && calcPlayerDistance(table, selector, target1, player.id) <= effect.max_distance;
+                return checkAdjacentPlayers(table, selector, target[0], player, effect.max_distance);
             } else {
                 return checkPlayerFilter(table, selector, effect.player_filter, player);
             }
