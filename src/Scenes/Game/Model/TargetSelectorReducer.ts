@@ -40,13 +40,13 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
     }
 }
 
-function appendCardTarget(selector: TargetSelector, card: Card): TargetListMapper {
-    const { effects, targets, index } = getTargetSelectorStatus(selector);
+function appendCardTarget(table: GameTable, selector: TargetSelector, card: Card): TargetListMapper {
+    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
     return targets.slice(0, index).concat(targetDispatch.appendCardTarget(targets.at(index), effects[index], card));
 }
 
-function appendPlayerTarget(selector: TargetSelector, player: Player): TargetListMapper {
-    const { effects, targets, index } = getTargetSelectorStatus(selector);
+function appendPlayerTarget(table: GameTable, selector: TargetSelector, player: Player): TargetListMapper {
+    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
     return targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(targets.at(index), effects[index], player));
 }
 
@@ -118,7 +118,7 @@ function handleEndPreselection(table: GameTable, selector: TargetSelector, remov
 }
 
 function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSelector {
-    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
 
     if (index >= effects.length) {
         switch (selector.mode) {
@@ -206,11 +206,11 @@ const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTabl
     },
 
     addCardTarget (table, card) {
-        return handleEndPreselection(table, editSelectorTargets(this, appendCardTarget(this, card)));
+        return handleEndPreselection(table, editSelectorTargets(this, appendCardTarget(table, this, card)));
     },
 
     addPlayerTarget (table, player) {
-        return handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(this, player)));
+        return handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(table, this, player)));
     },
 
     addEquipTarget (table, player) {

@@ -14,6 +14,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     PROMPT_BANG_STRENGTH: (ncards) =>                                       <>Devi rispondere con {ncards} Mancato! Continuare?</>,
     PROMPT_NO_BANGS_PLAYED: (card) =>                                       <>Non hai giocato nessun Bang, giocare {card} non avrebbe effetto. Continuare?</>,
     PROMPT_TARGET_SELF_GHOST_CARD: () =>                                    <>Stai scartando la tua carta fantasma. Continuare?</>,
+    PROMPT_SINGLE_TARGET: (card) =>                                         <>Stai giocando {card} contro un solo giocatore. Continuare?</>,
     PROMPT_WASTEFUL_HEAL: (card, amount, max_amount) =>                     <>Giocare {card} per curarsi di {amount === 1 ? "un punto vita" : `${amount} punti vita`} sprecherebbe {max_amount === 1 ? "un punto vita" : `${max_amount} punti vita`}. Continuare?</>,
     PROMPT_MISS_SUSANNA: (card, count, max_count) =>                        <>Hai giocato solo {count === 1 ? "una carta" : `${count} carte`} su {max_count}. Prenderai un danno per {card}. Continuare?</>,
     PROMPT_SUICIDE: (card) =>                                               <>Giocare {card} porta al suicidio. Continuare?</>,
