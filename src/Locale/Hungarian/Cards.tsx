@@ -230,7 +230,8 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     POKER: {
         name: "Póker",
-        description: <>A többi játékos eldob 1-1 lapot a kezéből. Ha nem dobtak el ászt, akkor felvehetsz ezek közül 2 lapot.</>
+        description: <>A többi játékos eldob 1-1 lapot a kezéből. Ha nem dobtak el ászt, akkor felvehetsz ezek közül 2 lapot.</>,
+        titleClass: "card-title card-title-lower"
     },
     BACKFIRE: {
         name: "Visszacsapás",
@@ -257,11 +258,13 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     TORNADO: {
         name: "Tornádó",
-        description: <>Minden játékos eldob (ha tud) a kezéből 1 lapot. Ezután mindenki húz 2 lapot.</>
+        description: <>Minden játékos eldob (ha tud) a kezéből 1 lapot. Ezután mindenki húz 2 lapot.</>,
+        titleClass: "card-title card-title-lower"
     },
     TORNADO_2: {
         name: "Tornádó",
-        description: <>Minden játékosnak át kell adnia 2 lapot a kezéből a tőle balra ülőnek.</>
+        description: <>Minden játékosnak át kell adnia 2 lapot a kezéből a tőle balra ülőnek.</>,
+        titleClass: "card-title card-title-lower"
     },
     LAST_CALL: {
         name: "Végső harc"
@@ -325,7 +328,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     BIG_FIFTY: {
         name: "Nagy Ötvenes",
         description: <>Hatástalanítsd a célpont játékos képességét és a játékban lévő kártyáinak hatását!</>,
-        descriptionClass: "cube-description"
+        descriptionClass: "cube-description text-smallest"
     },
     BOMB: {
         name: "Bomba",
@@ -427,7 +430,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     BROTHEL: {
         name: "Bordélyház",
         description: <>Dobd el a lapot és folytasd a játékot, de a következő körig elveszted a karaktered képességét. Ha mást húztál, dobd el, és folytasd a játékot a megszokott módon.</>,
-        descriptionClass: "draw-description"
+        descriptionClass: "draw-description text-smallest"
     },
     BRONCO: {
         name: "Vadló",
@@ -1622,6 +1625,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     SLEEPER_CAR: {
         name: "Hálókocsi",
         description: <>Körönként egyszer eldobhatod egy másik kék szegélyű kártyádat (akár vonatkocsit is) egy további <i>BANG!</i>-ként.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
 
@@ -1635,8 +1639,9 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     LELAND: {
         name: "Leland",
-        hideTitle: true,
+        // hideTitle: true, // IMO this should be false because ironhorse has a visible title
         description: <>A végállomáson egy <i>Szatócsbolt</i> hatásával bír.</>,
+        titleClass: "train-title",
         descriptionClass: "locomotive-description"
     },
 
