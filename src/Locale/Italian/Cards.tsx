@@ -1039,7 +1039,7 @@ export const CARDS_ITALIAN: CardRegistry = {
     HANGOVER: {
         name: "Sbornia",
         hideTitle: true,
-        description: <>I presonaggi perdono le loro abilità speciali.</>
+        description: <>I personaggi perdono le loro abilità speciali.</>
     },
     SERMON: {
         name: "Sermone",

@@ -102,13 +102,13 @@ function getCurrentTargetSelection(selector: TargetSelector) {
     }
 }
 
-export function getTargetSelectorStatus(selector: TargetSelector) {
+export function getTargetSelectorStatus(table: GameTable, selector: TargetSelector) {
     const { card, targets } = getCurrentTargetSelection(selector);
 
     const effects = getCardEffects(card, isResponse(selector));
     
     let index = targets.length - 1;
-    if (targets.length === 0 || targetDispatch.isSelectionFinished(targets[index], effects[index])) {
+    if (targets.length === 0 || targetDispatch.isSelectionFinished(table, selector, targets[index], effects[index])) {
         ++index;
     }
     return { effects, targets, index } as const;
@@ -127,9 +127,9 @@ export function selectorIsTargeting(selector: TargetSelector) {
 
 export function selectorCanConfirm(table: GameTable, selector: TargetSelector) {
     if (selectorIsTargeting(selector)) {
-        const { effects, targets, index } = getTargetSelectorStatus(selector);
+        const { effects, targets, index } = getTargetSelectorStatus(table, selector);
         if (index < targets.length) {
-            return targetDispatch.isSelectionConfirmable(table, targets[index], effects[index]);
+            return targetDispatch.isSelectionConfirmable(table, selector, targets[index], effects[index]);
         }
     }
     return false;
@@ -288,12 +288,12 @@ export function countSelectableCubes(table: GameTable, selector: TargetSelector)
 }
 
 export function isValidCubeTarget(table: GameTable, selector: TargetSelector, card: Card): boolean {
-    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
     return targetDispatch.isValidCubeTarget(table, selector, targets.at(index), effects[index], card);
 }
 
 export function isValidCardTarget(table: GameTable, selector: TargetSelector, card: Card): boolean {
-    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
     const target = targets.at(index);
     const effect = effects[index];
     return targetDispatch.isValidCubeTarget(table, selector, target, effect, card)
@@ -301,7 +301,7 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
 }
 
 export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, player: Player): boolean {
-    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
     return targetDispatch.isValidPlayerTarget(table, selector, targets.at(index), effects[index], player);
 }
 
