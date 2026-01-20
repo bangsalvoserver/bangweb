@@ -39,7 +39,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     VOLCANIC: {
         name: "Gyorstüzelő",
         description: <>Akárhány <i>BANG!</i> kártyát kijátszhatsz, de csak 1 távolságra</>,
-        descriptionClass: "weapon-description"
+        descriptionClass: "weapon-description text-smallest"
     },
     WINCHESTER: {
         name: "Winchester",
@@ -61,7 +61,8 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     DUEL: {
         name: "Párbaj",
-        description: <>A játékos, akit párbajra hívsz, kijátszik egy <i>BANG!</i> kártyát, majd te is egyet, majd megint ő stb. Akinek előbb elfogy a <i>BANG!</i> kártyája, veszít 1 életpontot.</>
+        description: <>A játékos, akit párbajra hívsz, kijátszik egy <i>BANG!</i> kártyát, majd te is egyet, majd megint ő stb. Akinek előbb elfogy a <i>BANG!</i> kártyája, veszít 1 életpontot.</>,
+        descriptionClass: "card-description text-smaller"
     },
     GENERAL_STORE: {
         name: "Szatócsbolt",
@@ -215,11 +216,13 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     ESCAPE: {
         name: "Szökés",
-        description: <>Körön kívül is kijátszható. Elkerülheted egy barna szegélyű lap hatását (ami nem egy <i>BANG!</i>), amelynek célpontja vagy.</>
+        description: <>Körön kívül is kijátszható. Elkerülheted egy barna szegélyű lap hatását (ami nem egy <i>BANG!</i>), amelynek célpontja vagy.</>,
+        descriptionClass: "card-description text-smaller"
     },
     ESCAPE_2: {
         name: "Szökés",
-        description: <>Ha egyedüli célpontja vagy a lapnak (kivéve <i>BANG!</i>), dobd el ezt a lapot, hogy elkerüld a hatását.</>
+        description: <>Ha egyedüli célpontja vagy a lapnak (kivéve <i>BANG!</i>), dobd el ezt a lapot, hogy elkerüld a hatását.</>,
+        descriptionClass: "card-description text-smaller"
     },
     AIM: {
         name: "Célpont",
@@ -235,16 +238,18 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     SAVED: {
         name: "Megmentve!",
-        description: <>Körön kívül is kijátszható. Megakadályozza, hogy egy másik játékos 1 életpontot veszítsen. Ha túléli, húzz 2 lapot a kezéből vagy a pakliból (te döntésed).</>
+        description: <>Körön kívül is kijátszható. Megakadályozza, hogy egy másik játékos 1 életpontot veszítsen. Ha túléli, húzz 2 lapot a kezéből vagy a pakliból (te döntésed).</>,
+        descriptionClass: "card-description text-smaller"
     },
     SAVED_2: {
         name: "Megmentve!",
-        description: <>Csak körön kívül játszható ki. Megakadályozza, hogy egy masik játékos 1 életpontot veszítsen. Ha bárkit megmentesz a kieséstől, húzz 2 lapot a kezéből.</>
+        description: <>Csak körön kívül játszható ki. Megakadályozza, hogy egy másik játékos 1 életpontot veszítsen. Ha bárkit megmentesz a kieséstől, húzz 2 lapot a kezéből.</>,
+        descriptionClass: "card-description text-smaller"
     },
     FANNING: {
         name: "Sortűz",
-        description: <><i>BANG!"</i> kijátszásának számít. Válassz egy második célpontot az elsőtől 1 távolságra.</>,
-        descriptionClass: "card-description text-smaller"
+        description: <><i>BANG!</i> kijátszásának számít. Válassz egy második célpontot az elsőtől 1 távolságra.</>,
+        descriptionClass: "card-description"
     },
     TOMAHAWK: {
         name: "Tomahawk",
@@ -278,7 +283,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     FLINTLOCK: {
         name: "Kovás puska",
         description: <>Ha hatástalanították, vedd vissza ezt a kártyát a kezedbe.</>,
-        descriptionClass: "cube-description-lower"
+        descriptionClass: "cube-description-lower text-smallest"
     },
     ARROW: {
         name: "Nyílvessző",
@@ -360,7 +365,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
         name: "Sörös hordó"
     },
     LOCKPICK: {
-        name: "Zárfeltőrés",
+        name: "Zárfeltörés",
         description: <>Húzz 1 lapot bármelyik játékos kezéből!</>,
         descriptionClass: "cube-description"
     },
@@ -699,7 +704,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     COLORADO_BILL_2: {
         name: "Colorado Bill",
         hideTitle: true,
-        description: <>Ha a célpont <i>Nem talált!</i> lapot játszik ki a <i>BANG!</i> lapodra, akkor "húzz". Ha pikk, akkor a <i>Nem talált!</i> lapnak nincs hatása, és a célpont 1 éltpontot veszít.</>  ,
+        description: <>Ha a célpont <i>Nem talált!</i> lapot játszik ki a <i>BANG!</i> lapodra, akkor "húzz". Ha pikk, akkor a <i>Nem talált!</i> lapnak nincs hatása, és a célpont 1 életpontot veszít.</>  ,
         descriptionClass: "character-description"
     },
     DER_SPOT_BURST_RINGER: {
@@ -807,7 +812,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     AL_PREACHER: {
         name: "Al Preacher",
         hideTitle: true,
-        description: <>Ha egy másik játákos kék vagy narancs szegélyű lapot játszik ki, 2 📦 jelölőért cserébe húzhatsz 1 lapot a pakliból.</>,
+        description: <>Ha egy másik játékos kék vagy narancs szegélyű lapot játszik ki, 2 📦 jelölőért cserébe húzhatsz 1 lapot a pakliból.</>,
         descriptionClass: "character-description"
     },
     BASS_GREEVES: {
@@ -825,7 +830,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     FRANKIE_CANTON: {
         name: "Frankie Canton",
         hideTitle: true,
-        description: <>A körödben egyszer 1 📦 jelőlőt áttehetsz erre a kártyára bármely másik lapról.</>,
+        description: <>A körödben egyszer 1 📦 jelölőt áttehetsz erre a kártyára bármely másik lapról.</>,
         descriptionClass: "character-description"
     },
     JULIE_CUTTER: {
@@ -914,7 +919,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     GHOST_TOWN: {
         name: "Szellemváros",
         description: <>A kiesett játékosok visszatérnek szellemként a körükben. 3 lapot húznak 2 helyett, és nem eshetnek ki. A körük legvégén újra kiesnek.</>,
-        descriptionClass: "card-description text-smallest",
+        descriptionClass: "card-description",
         titleClass: "card-title card-title-lower"
     },
     INVERT_ROTATION: {
@@ -974,21 +979,25 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     HANDCUFFS_HEARTS: {
         name: "Bilincs: Kőr",
+        hideTitle: true,
         description: <>♥️</>,
         descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_DIAMONDS: {
         name: "Bilincs: Káró",
+        hideTitle: true,
         description: <>♦️</>,
         descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_CLUBS: {
         name: "Bilincs: Treff",
+        hideTitle: true,
         description: <>♣️</>,
         descriptionClass: "card-description text-bigger"
     },
     HANDCUFFS_SPADES: {
         name: "Bilincs: Pikk ",
+        hideTitle: true,
         description: <>♠️</>,
         descriptionClass: "card-description text-bigger"
     },
@@ -996,7 +1005,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
         name: "Új identitás",
         description: <>A köre elején a játékos húz egy másik karakterkártyát. Átválthat az új karakterre a játék hátralévő részében, 2 életponttal kezdve.</>,
         titleClass: "card-title card-title-lower",
-        descriptionClass: "card-description text-smallest"
+        descriptionClass: "card-description"
     },
     HIGH_NOON: {
         name: "Délidő",
@@ -1014,6 +1023,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     SNIPER: {
         name: "Orvlövész",
         description: <>A köre során a játékos eldobhat egyszerre 2 <i>BANG!</i> lapot egy másik játékos ellen. Ez egy <i>BANG!</i>-nek számít, de 2 <i>Nem talált!</i> lappal lehet kivédeni.</>,
+        descriptionClass: "card-description text-smaller",
         titleClass: "card-title card-title-lower"
     },
     DEAD_MAN: {
@@ -1024,11 +1034,12 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     BLOOD_BROTHERS: {
         name: "Vértestvérek",
         description: <>A köre elején minden játékos feláldozhatja 1 életpontját (kivéve az utolsót), hogy azt egy általa választott másik játékosnak adja.</>,
+        descriptionClass: "card-description text-smaller",
         titleClass: "card-title card-title-lower"
     },
     THE_JUDGE: {
         name: "A bíró",
-        description: <>A játékosol nem játszhatnal ki lapokat se maguk, se mások elé.</>,
+        description: <>A játékosok nem játszhatnak ki lapokat sem maguk, sem mások elé.</>,
         titleClass: "card-title card-title-lower"
     },
     LASSO: {
@@ -1043,12 +1054,13 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     HARD_LIQUOR: {
         name: "Tüzes víz",
-        description: <>Minden játékos kihagyhatja köre 1. fázisát, hogy visszakapjon 1 életpontot.</>,
+        description: <>Minden játékos kihagyhatja a köre 1. fázisát, hogy visszakapjon 1 életpontot.</>,
         titleClass: "card-title card-title-lower"
     },
     ABANDONED_MINE: {
         name: "Elhagyatott bánya",
         description: <>Minden játékos, köre 1. fázisában, a dobópakliból húz (ha az elfogyott, a húzópakliból). A 3. fázisban pedig a húzópaklira lefordítva dobja el a lapjait.</>,
+        descriptionClass: "card-description text-smallest",
         titleClass: "card-title card-title-lower"
     },
     PEYOTE: {
@@ -1059,11 +1071,13 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     PEYOTE_RED: {
         name: "Meszkalinkaktusz: Piros szín",
+        hideTitle: true,
         description: <>♥️♦️</>,
         descriptionClass: "card-description text-bigger"
     },
     PEYOTE_BLACK: {
         name: "Meszkalinkaktusz: Fekete szín",
+        hideTitle: true,
         description: <>♣️♠️</>,
         descriptionClass: "card-description text-bigger"
     },
@@ -1071,13 +1085,13 @@ export const CARDS_HUNGARIAN: CardRegistry = {
         name: "Farm",
         description: <>Minden játékos, körének 1. fázisa végén, eldobhat egyszer bármennyi lapot a kezéből, majd húzhat ugyanannyit a pakliból.</>,
         titleClass: "card-title card-title-lower",
-        descriptionClass: "card-description text-smallest"
+        descriptionClass: "card-description"
     },
     RICOCHET: {
         name: "Lepattanó lövés",
         description: <>A játékos eldobhat <i>BANG!</i> lapokat bármelyik játékos játékban lévő lapjára. Ezeket a lapokat el kell dobni, kivéve, ha a tulajdonosuk megvédi őket <i>Nem talált!</i> lapok eldobásával.</>,
         titleClass: "card-title card-title-lower",
-        descriptionClass: "card-description text-smallest"
+        descriptionClass: "card-description text-smallest line-smaller"
     },
     RUSSIAN_ROULETTE: {
         name: "Orosz rulett",
@@ -1106,7 +1120,8 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     BONE_ORCHARD: {
         name: "Csontok kertje",
         description: <>A körük elején a kiesett játékosok visszakerülnek a játékba 1 életponttal. A játékos húzzon egy szerepet véletlenszerűen a kiesett játékosok szerepei közül.</>,
-        titleClass: "card-title card-title-higher"
+        titleClass: "card-title card-title-higher",
+        descriptionClass: "card-description text-smaller line-smaller"
     },
     DARLING_VALENTINE: {
         name: "Darling Valentine",
@@ -1139,7 +1154,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     SHOWDOWN: {
         name: "Leszámolás",
-        description: <>Minden lap kijátszható <i>BANG!</i> lapként. Minden <i>BANG!</i> kijátszható <i>Nem talált!</i> lapként</>,
+        description: <>Minden lap kijátszható <i>BANG!</i> lapként. Minden <i>BANG!</i> kijátszható <i>Nem talált!</i> lapként.</>,
         titleClass: "card-title card-title-higher"
     },
     SACAGAWAY: {
@@ -1162,16 +1177,19 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     BOTTLE: {
         name: "Palack",
-        description: <>Kijátszható <i>Pánik!</i>-ként, <i>Sör</i>-ként vagy <i>BANG!</i>-ként</>
+        description: <>Kijátszható <i>Pánik!</i>-ként, <i>Sör</i>-ként vagy <i>BANG!</i>-ként.</>
     },
     BOTTLE_PANIC: {
         name: "Palack Pánik!-ként",
+        hideTitle: true
     },
     BOTTLE_BEER: {
         name: "Palack Sör-ként",
+        hideTitle: true
     },
     BOTTLE_BANG: {
         name: "Palack Bang!-ként",
+        hideTitle: true
     },
     CALUMET: {
         name: "Békepipa",
@@ -1187,13 +1205,16 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     PARDNER_GENERAL_STORE: {
         name: "Partner Szatócsbolt-ként",
+        hideTitle: true,
         description: <>Fordíts fel annyi lapot, ahány játékos játszik! Mindenki választ egyet.</>
     },
     PARDNER_DUEL: {
         name: "Partner Párbaj-ként",
+        hideTitle: true,
         description: <>A játékos, akit párbajra hívsz, eldob egy <i>BANG!</i> lapot, majd te is egyet, majd megint ő stb. Akinek előbb elfogy a <i>BANG!</i> lapja, veszít 1 életpontot.</>
     },
     PARDNER_CAT_BALOU: {
+        hideTitle: true,
         name: "Partner Cat Balou-ként",
     },
     GOLD_RUSH: {
@@ -1259,9 +1280,11 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     FULL_STEAM_NO_EFFECT: {
         name: "Teljes gőzzel: Mozdony hatás kihagyása",
+        hideTitle: true
     },
     FULL_STEAM_DOUBLE_EFFECT: {
         name: "Teljes gőzzel: Mozdony hatás megduplázása",
+        hideTitle: true
     },
     KNIFE_REVOLVER: {
         name: "Késrevolver",
@@ -1298,14 +1321,16 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     TRAIN_ROBBERY: {
         name: "Vonatrablás",
-        description: <>1 <i>BANG!</i>-nek számít a körödben.<br/>Minden játékban lévő kártyája után a cépont eldöntheti: eldobja azt vagy egy <i>BANG!</i> éri</>,
+        description: <>1 <i>BANG!</i>-nek számít a körödben.<br/>Minden játékban lévő kártyája után a célpont eldöntheti: eldobja azt vagy egy <i>BANG!</i> éri</>,
         descriptionClass: "card-description text-smaller"
     },
     TRAIN_ROBBERY_DISCARD: {
         name: "Vonatrablás: Lap eldobása",
+        hideTitle: true
     },
     TRAIN_ROBBERY_BANG: {
         name: "Vonatrablás: BANG! ér",
+        hideTitle: true
     },
     WATER_TOWER: {
         name: "Víztorony",
@@ -1373,31 +1398,37 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     ANNIE_OAKEY_RED: {
         name: "Annie Oakey: Piros",
+        hideTitle: true,
         description: <>♥️♦️</>,
         descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_HEARTS: {
         name: "Annie Oakey: Kőr",
+        hideTitle: true,
         description: <>♥️</>,
         descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_DIAMONDS: {
         name: "Annie Oakey: Káró",
+        hideTitle: true,
         description: <>♦️</>,
         descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_BLACK: {
         name: "Annie Oakey: Fekete",
+        hideTitle: true,
         description: <>♣️♠️</>,
         descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_CLUBS: {
         name: "Annie Oakey: Treff",
+        hideTitle: true,
         description: <>♣️</>,
         descriptionClass: "character-description text-bigger"
     },
     ANNIE_OAKEY_SPADES: {
         name: "Annie Oakey: Pikk",
+        hideTitle: true,
         description: <>♠️</>,
         descriptionClass: "character-description text-bigger"
     },
@@ -1476,7 +1507,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     WYATT_EARL: {
         name: "Wyatt Earl",
         hideTitle: true,
-        description: <>A több játékostra is hatással lévő lapok nem hatnak rá.</>,
+        description: <>A több játékosra is hatással lévő lapok nem hatnak rá.</>,
         descriptionClass: "character-description"
     },
 
@@ -1485,93 +1516,112 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     BAGGAGE_CAR: {
         name: "Poggyászkocsi",
         description: <>Dobd el egy <i>Nem talált!</i>, <i>Pánik!</i>, <i>Cat Balou</i> vagy extra <i>BANG!</i> kártyaként.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     BAGGAGE_CAR_MISSED: {
         name: "Poggyászkocsi Nem talált!-ként",
+        hideTitle: true
     },
     BAGGAGE_CAR_PANIC: {
         name: "Poggyászkocsi Pánik!-ként",
+        hideTitle: true
     },
     BAGGAGE_CAR_CAT_BALOU: {
         name: "Poggyászkocsi Cat Balou-ként",
+        hideTitle: true
     },
     BAGGAGE_CAR_BANG: {
         name: "Poggyászkocsi Bang!-ként",
+        hideTitle: true
     },
     CABOOSE: {
         name: "Fékezőkocsi",
-        description: <>Eldobhatod egy másik kék szegélyű kártyádat (akár vonatkocsit is) <i>Nem talált!</i>-ként</>,
+        description: <>Eldobhatod egy másik kék szegélyű kártyádat (akár vonatkocsit is) <i>Nem talált!</i>-ként.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     CATTLE_TRUCK: {
         name: "Marhavagon",
         description: <>Dobd el ezt a kártyát, hogy megnézhesd a dobópakli legfelső 3 lapját, majd válassz közülük 1 lapot.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     CIRCUS_WAGON: {
         name: "Cirkuszi kocsi",
         description: <>Dobd el ezt a kártyát: minden más játékos dobja el az egyik játékban lévő lapját.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     COAL_HOPPER: {
         name: "Szeneskocsi",
         description: <>Dobd el ezt a kártyát, hogy húzz 1 lapot, és dobass el 1 vasúti kocsit egy általad választott játékos elől.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     DINING_CAR: {
         name: "Étkezőkocsi",
         description: <>A köröd elején "húzz":<br/>ha kőr, visszakapsz 1 életpontot.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     EXPRESS_CAR: {
         name: "Első osztály",
-        description: <>Dobd el ezt a kártyát: a köröd azonnal véget ér. Dobd el az összes kezeben lévő kártyát, majd játssz még egy kört.</>,
+        description: <>Dobd el ezt a kártyát: a köröd azonnal véget ér. Dobd el az összes kezedben lévő kártyát, majd játssz még egy kört.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     GHOST_CAR: {
         name: "Szellemkocsi",
         description: <>Játszd ki bárkire kivéve a <i>Seriffet</i>.<br/>Ha kiesnél, ehelyett életben maradsz, azonban nem szerezhetsz vagy veszíthetsz életpontokat.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     LOUNGE_CAR: {
         name: "Szalonkocsi",
         description: <>Dobd el ezt a kártyát, hogy húzz 2 vasúti kocsit a pakliból, majd helyezd az egyiket magad, a másikat egy másik játékos elé.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     LUMBER_FLATCAR: {
         name: "Rönkszállító",
         description: <>Játszd ki bárkire.<br/>Minden játékost 1-gyel távolabbról látsz.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     MAIL_CAR: {
         name: "Postakocsi",
         description: <>Dobd el ezt a kártyát, hogy húzz 3 lapot, és az egyiket add egy másik játékosnak.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     OBSERVATION_CAR: {
         name: "Kilátókocsi",
         description: <>Minden játékost 1-gyel közelebbről látsz.<br/>A többi játékos 1-gyel távolabbról lát.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     PASSENGER_CAR: {
         name: "Utazókocsi",
         description: <>Dobd el ezt a kártyát: húzz 1 lapot egy másik játékostól (magad elé vagy a kezedbe).</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     PRISONER_CAR: {
         name: "Rabszállító",
         description: <>Nem hat rád a más játékosok által kijátszott <i>Indiánok!</i> és <i>Párbaj</i> kártya.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     PRIVATE_CAR: {
         name: "Privát kocsi",
         description: <>Ha éppen nincs kártya a kezedben, nem lehetsz <i>BANG!</i> kártya célpontja.</>,
+        titleClass: "train-title",
         descriptionClass: "train-description"
     },
     SLEEPER_CAR: {
         name: "Hálókocsi",
-        description: <>Körönként egyszer eldobhatod egy másik kék szegélyű kártyádat (akár vonatkocsit is) egy további <i>BANG!</i>- ként.</>,
+        description: <>Körönként egyszer eldobhatod egy másik kék szegélyű kártyádat (akár vonatkocsit is) egy további <i>BANG!</i>-ként.</>,
         descriptionClass: "train-description"
     },
 
@@ -1580,6 +1630,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     IRONHORSE: {
         name: "Vasparipa",
         description: <>A végállomáson minden játékost egy <i>BANG!</i> ér.</>,
+        titleClass: "train-title",
         descriptionClass: "locomotive-description"
     },
     LELAND: {
@@ -1679,8 +1730,8 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     LEGEND_JOURDONNAIS: {
         name: "Jourdonnais",
         hideTitle: true,
-        description: <>Amikor barna szegélyű kártya célpontjává válsz, "húzz" egy lapot, és tedd a dobópaklira. Ha ez a lap J, Q, K vagy A, hagyd figyelmen kívül a kártya hatását, aminek a célpontja vagy.</>,
-        descriptionClass: "legends-description",
+        description: <>Amikor barna szegélyű kártya célpontjává válsz, "húzz". Ha ez a lap J, Q, K vagy A, hagyd figyelmen kívül a kártya hatását, aminek a célpontja vagy.</>,
+        descriptionClass: "legends-description text-smallest",
     },
     LEGEND_KIT_CARLSON: {
         name: "Kit Carlson",
@@ -1692,13 +1743,13 @@ export const CARDS_HUNGARIAN: CardRegistry = {
         name: "Lucky Duke",
         hideTitle: true,
         description: <>Amikor egy kártya hatására valakinek lapot kell "húznia", csapj fel 2 kártyát, és válaszd ki, melyik számítson. Ha a te köröd van, vedd is a kezedbe a választott lapot.</>,
-        descriptionClass: "legends-description",
+        descriptionClass: "legends-description text-smallest",
     },
     LEGEND_PAUL_REGRET: {
         name: "Paul Regret",
         hideTitle: true,
-        description: <>A többi játékos 1-gyel tavolabbról lát.<br/>Ahhoz, hogy egy <i>BANG!</i>-et játszanak ki ellened, a játékonak el kell dobnia egy lapot a kezéből.</>,
-        descriptionClass: "legends-description",
+        description: <>A többi játékos 1-gyel távolabbról lát.<br/>Ahhoz, hogy egy <i>BANG!</i>-et játszanak ki ellened, a játékosnak el kell dobnia egy lapot a kezéből.</>,
+        descriptionClass: "legends-description text-smallest",
     },
     LEGEND_PEDRO_RAMIREZ: {
         name: "Pedro Ramirez",
@@ -1709,38 +1760,38 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     LEGEND_ROSE_DOOLAN: {
         name: "Rose Doolan",
         hideTitle: true,
-        description: <>Minden játékost 1 távolságból látsz. A körödben egyszer eldobhatsz 1 kék szegélyű lapot, a kezedből vagy előled, egy <i>Pánik!</i>-ként</>,
+        description: <>Minden játékost 1 távolságból látsz. A körödben egyszer eldobhatsz 1 kék szegélyű lapot, a kezedből vagy előled, egy <i>Pánik!</i>-ként.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_SID_KETCHUM: {
         name: "Sid Ketchum",
         hideTitle: true,
-        description: <>Eldobhatsz 2 lapot, hogy visszakapj 1 életpontot. A körödben egyszer, ha vissakaptál 1 életpontot, lőhetsz egy ingyen <i>BANG!</i>-et.</>,
+        description: <>Eldobhatsz 2 lapot, hogy visszakapj 1 életpontot. A körödben egyszer, ha visszakaptál 1 életpontot, lőhetsz egy ingyen <i>BANG!</i>-et.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_SLAB_THE_KILLER: {
         name: "Slab the Killer",
         hideTitle: true,
         description: <>A <i>BANG!</i> kártyáidat nem lehet kivédeni.<br/>Amikor kisajátítasz egy hőstettet, azzal egy játékos utolsó életpontját is elveheted.</>,
-        descriptionClass: "legends-description",
+        descriptionClass: "legends-description text-smaller",
     },
     LEGEND_SUZY_LAFAYETTE: {
         name: "Suzy Lafayette",
         hideTitle: true,
-        description: <>Ha kevesebb, mint 2 káryta van a kezedben, húzz annyit, hogy 2 legyen.</>,
+        description: <>Ha kevesebb, mint 2 kártya van a kezedben, húzz annyit, hogy 2 legyen.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_VULTURE_SAM: {
         name: "Vulture Sam",
         hideTitle: true,
-        description: <>Valahányszor egy játékos kiesik a játékból, megkapja a lelőtt játékos megmaradt lapjait. Ha te esnél ki, játékban maradsz: 4 életpontod lesz, és fordítsd vissza a karakterkártyádat a hagyományos oldalára.</>,
-        descriptionClass: "legends-description",
+        description: <>Valahányszor egy játékos kiesik, megkapod a megmaradt lapjait. Ha te esnél ki, játékban maradsz 4 életponttal, de vissza kell fordítanod ez a kártyát a másik oldalára.</>,
+        descriptionClass: "legends-description text-smallest",
     },
     LEGEND_WILLY_THE_KID: {
         name: "Willy the Kid",
         hideTitle: true,
         description: <>Akárhány <i>BANG!</i> kártyát kijátszhatsz.<br/>Hőstett kisajátítása helyett leadhatsz egy lövést úgy, mintha <i>BANG!</i> kártyát játszottál volna ki.</>,
-        descriptionClass: "legends-description",
+        descriptionClass: "legends-description text-smallest",
     },
 
     // Legends feats cards
@@ -1789,7 +1840,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     THE_LAST_HERO: {
         name: "A legutolsó zsivány",
-        description: <>Dobj el egy játékban lévő, kék szegélyű lapodat.</>,
+        description: <>Dobd el egy játékban lévő, kék szegélyű lapodat.</>,
         titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
@@ -1837,7 +1888,7 @@ export const CARDS_HUNGARIAN: CardRegistry = {
     },
     A_QUICK_DEATH: {
         name: "Gyors halál",
-        description: <>Lőjj egy másik teljes életponttú játékosra egy <i>BANG!</i> kártyával.</>,
+        description: <>Lőjj egy másik teljes életpontú játékosra egy <i>BANG!</i> kártyával.</>,
         titleClass: "feats-title",
         descriptionClass: "feats-description"
     },
