@@ -34,7 +34,7 @@ export type CardTargetTypes = {
         effect: { [K in ContainerKey]: PlayerTargetArgsBase<K> }
     },
     adjacent_players: {
-        value: Player[],
+        value: {players: Player[], finished: boolean},
         target: PlayerId[],
         effect: { [K in ContainerKey]: PlayerTargetArgsBase<K> & { max_distance: number } }
     },
