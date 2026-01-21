@@ -74,7 +74,7 @@ export type CardTargetTypes = {
         effect: { [K in ContainerKey]: CardTargetArgsBase<K> & { ncards: number } }
     },
     bang_or_cards: {
-        value: { cards: Card[], confirmed: boolean },
+        value: { cards: Card[], state: 'bang' | 'cards' | 'finished' },
         target: CardId[],
         effect: { [K in ContainerKey]: CardTargetArgsBase<K> & { ncards: number } }
     },

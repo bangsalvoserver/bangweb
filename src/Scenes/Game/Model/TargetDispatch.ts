@@ -32,7 +32,7 @@ interface TargetDispatchOf<
     getCubesSelected: (target: TargetValueType, cubeSlot: Card, card: Card) => number;
 
     isSelectionFinished: (target: TargetValueType, effect: CardEffectType) => boolean;
-    isSelectionConfirmable: (table: GameTable, target: TargetValueType, effect: CardEffectType) => boolean;
+    isSelectionConfirmable: (target: TargetValueType, effect: CardEffectType) => boolean;
     confirmSelection: (target: TargetValueType) => TargetValueType;
 }
 
@@ -105,9 +105,9 @@ function buildDispatch(dispatchMap: DispatchMap): TargetDispatch {
             const fn = getDispatch(target.type).isSelectionFinished;
             return fn === undefined || fn(target.value, effect);
         },
-        isSelectionConfirmable: (table, target, effect) => {
+        isSelectionConfirmable: (target, effect) => {
             const fn = getDispatch(effect.target).isSelectionConfirmable;
-            return fn !== undefined && fn(table, target.value, effect);
+            return fn !== undefined && fn(target.value, effect);
         },
         confirmSelection: target => {
             const fn = getDispatch(target.type).confirmSelection;
@@ -257,7 +257,7 @@ const targetDispatch = buildDispatch({
         getCubesSelected: ({cubes}, cubeSlot, card) => countIds(cubes, card),
         isPlayerSelected: ({players}, player) => containsId(players, player),
         isSelectionFinished: ({cubes, max_cubes, players}, effect) => cubes.length === max_cubes && players.length === cubes.length + effect.extra_players,
-        isSelectionConfirmable: (table, {cubes, players}, effect) => players.length === cubes.length + effect.extra_players,
+        isSelectionConfirmable: ({cubes, players}, effect) => players.length === cubes.length + effect.extra_players,
         confirmSelection: ({cubes, players}) => ({cubes, max_cubes: cubes.length, players}),
         buildAutoTarget: (table, selector, effect) => {
             const cubeCount = countSelectableCubes(table, selector);
@@ -314,7 +314,7 @@ const targetDispatch = buildDispatch({
         isCardSelected: ({ cards }, card) => containsId(cards, card),
         appendCardTarget: (table, selector, { cards, max_cards }, effect, card) => ({ cards: cards.concat(card), max_cards }),
         isValidCardTarget,
-        isSelectionConfirmable: (table, { cards }, effect) => cards.length !== 0,
+        isSelectionConfirmable: ({ cards }, effect) => cards.length !== 0,
         isSelectionFinished: ({ cards, max_cards }, effect) => cards.length === max_cards,
         confirmSelection: ({ cards }) => ({ cards, max_cards: cards.length }),
         buildAutoTarget: (table, selector, effect) => {
@@ -329,11 +329,19 @@ const targetDispatch = buildDispatch({
     }),
     bang_or_cards: {
         isCardSelected: ({ cards }, card) => containsId(cards, card),
-        appendCardTarget: (table, selector, target, effect, card) => ({ cards: (target?.cards ?? []).concat(card), confirmed: false }),
-        isSelectionFinished: ({ cards, confirmed }, effect) => confirmed || cards.length === effect.ncards,
+        appendCardTarget: (table, selector, target, effect, card) => {
+            if (target) {
+                return { cards: target.cards.concat(card), state: 'cards' };
+            } else if (isBangCard(getPlayer(table, table.self_player!), card)) {
+                return { cards: [card], state: 'bang' };
+            } else {
+                return { cards: [card], state: 'cards' };
+            }
+        },
+        isSelectionFinished: ({ cards, state }, effect) => state === 'finished' || cards.length === effect.ncards,
         isValidCardTarget,
-        isSelectionConfirmable: (table, { cards }) => cards.length === 1 && isBangCard(getPlayer(table, table.self_player!), cards[0]),
-        confirmSelection: ({ cards }) => ({ cards, confirmed: true }),
+        isSelectionConfirmable: ({ state }) => state === 'bang',
+        confirmSelection: ({ cards }) => ({ cards, state: 'finished' }),
         generateTarget: ({ cards }) => mapIds(cards),
         parseCardEffect
     },
@@ -439,7 +447,7 @@ const targetDispatch = buildDispatch({
                 && getCubeCount(card) < 4 - countIds(cards, card);
         },
         isCardSelected: ({cards}, card) => containsId(cards, card),
-        isSelectionConfirmable: (table, { cards }) => cards.length !== 0,
+        isSelectionConfirmable: ({ cards }) => cards.length !== 0,
         isSelectionFinished: ({ cards, max_cubes }) => cards.length === max_cubes,
         confirmSelection: ({ cards }) => ({ cards, max_cubes: cards.length }),
         getCubesSelected: ({ cards }, cubeSlot, card) => {
@@ -474,7 +482,7 @@ const targetDispatch = buildDispatch({
         appendCardTarget: (table, selector, { cubes, max_cubes }, effect, card) => ({ cubes: cubes.concat(card), max_cubes }),
         isValidCubeTarget,
         getCubesSelected: ({ cubes }, cubeSlot, card) => countIds(cubes, card),
-        isSelectionConfirmable: (table, {cubes}) => cubes.length === 0,
+        isSelectionConfirmable: ({cubes}) => cubes.length === 0,
         isSelectionFinished: ({cubes, max_cubes}) => cubes.length === max_cubes,
         confirmSelection: ({cubes, max_cubes}) => ({cubes, max_cubes: cubes.length}),
         buildAutoTarget: (table, selector, effect) => {
@@ -491,7 +499,7 @@ const targetDispatch = buildDispatch({
         appendPlayerTarget: (table, selector, { cubes, max_cubes }, effect, player) => ({ cubes, max_cubes, player }),
         isValidPlayerTarget: (table, selector, { player }, effect, target) => player === null && checkPlayerFilter(table, selector, effect.player_filter, target),
         isPlayerSelected: ({ player }, target) => player?.id === target.id,
-        isSelectionConfirmable: (table, {cubes, player}) => cubes.length === 0 && player !== null,
+        isSelectionConfirmable: ({cubes, player}) => cubes.length === 0 && player !== null,
         isSelectionFinished: ({cubes, max_cubes, player}) => cubes.length === max_cubes && player !== null,
         confirmSelection: ({player}) => ({ cubes: [], max_cubes: 0, player }),
         buildAutoTarget: (table, selector, effect) => {
@@ -505,7 +513,7 @@ const targetDispatch = buildDispatch({
         appendCardTarget: (table, selector, { cubes, max_cubes }, effect, card) => ({ cubes: cubes.concat(card), max_cubes }),
         isValidCubeTarget,
         getCubesSelected: ({ cubes }, cubeSlot, card) => countIds(cubes, card),
-        isSelectionConfirmable: (table, { cubes }, effect) => cubes.length % effect.ncubes === 0,
+        isSelectionConfirmable: ({ cubes }, effect) => cubes.length % effect.ncubes === 0,
         isSelectionFinished: ({ cubes, max_cubes }) => cubes.length === max_cubes,
         confirmSelection: ({ cubes }) => ({ cubes, max_cubes: cubes.length }),
         buildAutoTarget: (table, selector, effect) => {
