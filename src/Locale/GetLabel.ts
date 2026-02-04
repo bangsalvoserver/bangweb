@@ -1,5 +1,4 @@
-import { Language } from "../Model/Env";
-import { getRegistries } from "./Registry";
+import { getRegistries, Language } from "./Registry";
 
 export function hasLabel(language: Language, group: string, name: string) {
     const { labelRegistry } = getRegistries(language);

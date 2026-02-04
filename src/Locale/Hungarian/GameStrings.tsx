@@ -1,6 +1,6 @@
 import { GameStringRegistry } from "../Registry";
 
-export const GAME_STRINGS_HUNGARIAN: GameStringRegistry = {
+export const GAME_STRINGS: GameStringRegistry = {
 
     PROMPT_CARD_NO_EFFECT: (card) =>                                            <>A(z) {card} lap kijátszásának nem lenne hatása. Folytatod?</>,
     PROMPT_CARD_NO_TARGET: (card) =>                                            <>A(z) {card} lapot játszod ki célpont nélkül. Folytatod?</>,

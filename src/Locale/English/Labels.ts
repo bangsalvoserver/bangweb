@@ -1,6 +1,6 @@
 import { LabelRegistry } from "../Registry";
 
-export const LABELS_ENGLISH: LabelRegistry = {
+export const LABELS: LabelRegistry = {
 
     LobbyState: {
         waiting:                "Waiting",

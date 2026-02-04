@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import getLabel from "../../Locale/GetLabel";
-import { CardRegistryEntry, getRegistries, useLanguage } from "../../Locale/Registry";
-import { Language } from "../../Model/Env";
+import { CardRegistryEntry, getRegistries, Language, useLanguage } from "../../Locale/Registry";
 import { createUnionDispatch } from "../../Utils/UnionUtils";
 import { getUser, LobbyContext } from "../Lobby/Lobby";
 import { clipUsername } from "../Lobby/LobbyUser";

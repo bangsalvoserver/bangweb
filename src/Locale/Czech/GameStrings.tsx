@@ -4,7 +4,7 @@ function twoToFour(value: unknown) {
     return value as number >= 2 && value as number <= 4;
 }
 
-export const GAME_STRINGS_CZECH: GameStringRegistry = {
+export const GAME_STRINGS: GameStringRegistry = {
 
     PROMPT_CARD_NO_EFFECT: (card) =>                                        <>Zahrání {card} by nemělo žádný efekt. Pokračovat?</>,
     PROMPT_CARD_NO_TARGET: (card) =>                                        <>Hraješ {card} bez cílení na nikoho. Pokračovat?</>,

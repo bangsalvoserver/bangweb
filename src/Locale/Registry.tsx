@@ -1,17 +1,14 @@
-import { createContext, ReactNode, useContext, useLayoutEffect, useMemo } from "react";
-import Env, { Language } from "../Model/Env";
-import { CARDS_CZECH } from "./Czech/Cards";
-import { GAME_STRINGS_CZECH } from "./Czech/GameStrings";
-import { LABELS_CZECH } from "./Czech/Labels";
-import { CARDS_ENGLISH } from "./English/Cards";
-import { GAME_STRINGS_ENGLISH } from "./English/GameStrings";
-import { LABELS_ENGLISH } from "./English/Labels";
-import { CARDS_ITALIAN } from "./Italian/Cards";
-import { GAME_STRINGS_ITALIAN } from "./Italian/GameStrings";
-import { LABELS_ITALIAN } from "./Italian/Labels";
-import { CARDS_HUNGARIAN } from "./Hungarian/Cards";
-import { GAME_STRINGS_HUNGARIAN } from "./Hungarian/GameStrings";
-import { LABELS_HUNGARIAN } from "./Hungarian/Labels";
+import { createContext, ReactNode, useContext, useLayoutEffect, useMemo, useState } from "react";
+import Env from "../Model/Env";
+
+export const LANGUAGES = {
+    'it': 'Italian',
+    'en': 'English',
+    'cs': 'Czech',
+    'hu': 'Hungarian'
+} as const;
+
+export type Language = keyof typeof LANGUAGES;
 
 export type Format<T, U> = U | ((...formatArgs: T[]) => U);
 
@@ -36,15 +33,28 @@ export interface LanguageRegistries {
     gameStringRegistry: GameStringRegistry;
 }
 
-const registries: Record<Language, LanguageRegistries> = {
-    'it': { cardRegistry: CARDS_ITALIAN, labelRegistry: LABELS_ITALIAN, gameStringRegistry: GAME_STRINGS_ITALIAN},
-    'en': { cardRegistry: CARDS_ENGLISH, labelRegistry: LABELS_ENGLISH, gameStringRegistry: GAME_STRINGS_ENGLISH},
-    'cs': { cardRegistry: CARDS_CZECH, labelRegistry: LABELS_CZECH, gameStringRegistry: GAME_STRINGS_CZECH},
-    'hu': { cardRegistry: CARDS_HUNGARIAN, labelRegistry: LABELS_HUNGARIAN, gameStringRegistry: GAME_STRINGS_HUNGARIAN},
+let registries: Partial<Record<Language, LanguageRegistries>> = {};
+
+const EMPTY_REGISTRIES: LanguageRegistries = {
+    cardRegistry: {},
+    labelRegistry: {},
+    gameStringRegistry: {}
 };
 
 export function getRegistries(language: Language) {
-    return registries[language];
+    return registries[language] ?? EMPTY_REGISTRIES;
+}
+
+async function loadRegistries(language: Language): Promise<LanguageRegistries> {
+    const languageName = LANGUAGES[language];
+    
+    const [cardRegistry, labelRegistry, gameStringRegistry] = await Promise.all([
+        import(`./${languageName}/Cards.tsx`).then(value => value.CARDS as CardRegistry),
+        import(`./${languageName}/Labels.ts`).then(value => value.LABELS as LabelRegistry),
+        import(`./${languageName}/GameStrings.tsx`).then(value => value.GAME_STRINGS as GameStringRegistry)
+    ]);
+
+    return { cardRegistry, labelRegistry, gameStringRegistry };
 }
 
 function getSystemLanguage(selectedLanguage: Language | undefined): Language {
@@ -85,12 +95,22 @@ export function useLanguage() {
 
 export function LanguageProvider({ selected, children }: { selected?: Language, children: ReactNode }) {
     const language = useMemo(() => getSystemLanguage(selected), [selected]);
+
+    const [loadedLanguage, setLoadedLanguage] = useState<Language>();
     
     useLayoutEffect(() => {
         document.documentElement.lang = language;
+        if (language in registries) {
+            setLoadedLanguage(language);
+        } else {
+            loadRegistries(language).then(value => {
+                registries[language] = value;
+                setLoadedLanguage(language);
+            });
+        }
     }, [language]);
 
-    return <LanguageContext.Provider value={language}>
+    return <LanguageContext.Provider value={loadedLanguage!}>
         {children}
     </LanguageContext.Provider>
 }

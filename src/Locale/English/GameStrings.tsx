@@ -1,6 +1,6 @@
 import { GameStringRegistry } from "../Registry";
 
-export const GAME_STRINGS_ENGLISH: GameStringRegistry = {
+export const GAME_STRINGS: GameStringRegistry = {
 
     PROMPT_CARD_NO_EFFECT: (card) =>                                        <>Playing {card} would have no effect. Continue?</>,
     PROMPT_CARD_NO_TARGET: (card) =>                                        <>You're playing {card} without targeting anyone. Continue?</>,

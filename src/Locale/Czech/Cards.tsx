@@ -1,6 +1,6 @@
 import { CardRegistry } from "../Registry";
 
-export const CARDS_CZECH: CardRegistry = {
+export const CARDS: CardRegistry = {
 
     // Base game cards
 
