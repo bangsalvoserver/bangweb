@@ -24,7 +24,7 @@ export const CARDS_SPANISH: CardRegistry = {
     JAIL: {
         name: "Cárcel",
         description: <>Coloca esta carta frente a otro jugador. Al inicio de su turno, desenfunda una carta: si es ♥, juega normalmente; si no, pierde el turno.</>,
-        descriptionClass: "draw-description"
+        descriptionClass: "draw-description text-smaller"
     },
     REMINGTON: {
         name: "Remington",
@@ -220,11 +220,11 @@ export const CARDS_SPANISH: CardRegistry = {
         description: <>Todos los demás jugadores descartan una carta <i>¡Bang!</i> o 2 cartas de su mano a su elección.</>
     },
     ESCAPE: {
-        name: "Escape",
+        name: "Escape", // ?
         description: <>Puede jugarse fuera de tu turno. Evita los efectos de una carta marrón (distinta de <i>¡Bang!</i>) que te tenga como objetivo.</>
     },
     ESCAPE_2: {
-        name: "Escape",
+        name: "Escape", // ?
         description: <>Si eres el único objetivo de una carta distinta de <i>¡Bang!</i>, descarta esta carta para evitar su efecto.</>
     },
     AIM: {
@@ -416,7 +416,7 @@ export const CARDS_SPANISH: CardRegistry = {
         name: "Bulldog",
         hideTitle: true,
         description: <>Una vez durante tu turno, puedes jugar una carta <i>¡Bang!</i> como si fuera <i>Ametralladora</i> descartando otra carta adicional.</>,
-        descriptionClass: "weapon-description"
+        descriptionClass: "weapon-description text-smaller line-smaller"
     },
     LAST_WILL: {
         name: "Última voluntad",
@@ -438,7 +438,8 @@ export const CARDS_SPANISH: CardRegistry = {
     BRONCO: {
         name: "Bronco",
         hideTitle: true,
-        description: <>Los demás jugadores te ven a una distancia de +1. No puede estar en juego junto con <i>Mustang</i>. También puede descartarse descartando 2 cartas.</>
+        description: <>Los demás jugadores te ven a una distancia de +1. No puede estar en juego junto con <i>Mustang</i>. También puede descartarse descartando 2 cartas.</>,
+        descriptionClass: "card-description text-smaller"
     },
     PACK_MULE: {
         name: "Mula Humilde",
@@ -498,7 +499,7 @@ export const CARDS_SPANISH: CardRegistry = {
     JESSE_JONES: {
         name: "Jesse Jones",
         hideTitle: true,
-        description: <>Puede robar su primera carta de la mano de un jugador..</>,
+        description: <>Puede robar su primera carta de la mano de un jugador.</>,
         descriptionClass: "character-description"
     },
     JOURDONNAIS: {
@@ -710,7 +711,7 @@ export const CARDS_SPANISH: CardRegistry = {
         name: "Colorado Bill",
         hideTitle: true,
         description: <>Cada vez que otro jugador juega una carta de <i>¡Fallaste!</i> contra un <i>¡BANG!</i> de <i>Colorado Bill</i>, "¡Desenfunda!": si es Picas, la carta de <i>¡Fallaste!</i> no tiene efecto y el jugador atacado pierde 1 punto de vida.</>  ,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description text-smaller"
     },
     DER_SPOT_BURST_RINGER: {
         name: "Der Spot - Burst Ringer",
@@ -721,7 +722,7 @@ export const CARDS_SPANISH: CardRegistry = {
     EVELYN_SHEBANG: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>Puedes rechazar robar cartas en tu fase de robo. Por cada carta que rechaces, dispara un <i>¡BANG!</i> a un objetivo diferente a distancia alcanzable..</>,
+        description: <>Puedes rechazar robar cartas en tu fase de robo. Por cada carta que rechaces, dispara un <i>¡BANG!</i> a un objetivo diferente a distancia alcanzable.</>,
         descriptionClass: "character-description"
     },
     EVELYN_SHEBANG_2: {
@@ -930,6 +931,7 @@ export const CARDS_SPANISH: CardRegistry = {
     INVERT_ROTATION: {
         name: "Gold Rush",
         description: <>El juego procede en sentido contrario a las agujas del reloj durante una ronda, comenzando siempre con el Sheriff. Todos los efectos de cartas proceden en sentido horario.</>,
+        descriptionClass: "card-description text-smallest",
         titleClass: "card-title card-title-lower"
     },
     THE_DALTONS: {
@@ -1028,7 +1030,8 @@ export const CARDS_SPANISH: CardRegistry = {
     SNIPER: {
         name: "Francotirador",
         description:  <>Durante su turno, el jugador puede descartar 2 cartas de <i>¡BANG!</i> juntas contra un jugador: esto cuenta como un <i>¡BANG!</i> pero solo puede ser cancelado con 2 cartas de <i>¡Fallaste!</i>.</>,
-        titleClass: "card-title card-title-lower"
+        titleClass: "card-title card-title-lower",
+        descriptionClass: "card-description text-smallest"
     },
     DEAD_MAN: {
         name: "Hombre Muerto",
