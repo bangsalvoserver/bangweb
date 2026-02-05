@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import '../../App.css';
-import getLabel from "../../Locale/GetLabel";
-import { Language, LanguageProvider, LANGUAGES } from "../../Locale/Registry";
+import { getLanguages, Language, LanguageProvider } from "../../Locale/Registry";
 import Env from "../../Model/Env";
 import useFetch from "../../Utils/UseFetch";
 import { Converter, stringConverter, useSessionStorage } from "../../Utils/UseLocalStorage";
@@ -104,7 +103,7 @@ export default function AllCards() {
                 <option value='none'>Hidden Deck</option>
             </select>
             <select value={language} onChange={handleChangeLanguage} className="m-2 p-1">
-                {Object.keys(LANGUAGES).map(value => <option key={value} value={value}>{getLabel(value as Language, 'ui', 'LANGUAGE_NAME')}</option>)}
+                {getLanguages().map(([lang, name]) => <option key={lang} value={lang}>{name}</option>)}
             </select>
         </div>
         { deck && <AllCardsInner deck={deck} /> }

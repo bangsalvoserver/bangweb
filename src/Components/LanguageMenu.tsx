@@ -1,5 +1,4 @@
-import getLabel from "../Locale/GetLabel";
-import { Language, LANGUAGES, useLanguage } from "../Locale/Registry";
+import { getLanguages, Language, useLanguage } from "../Locale/Registry";
 import { UserMenuItem } from "./UserMenu";
 
 export interface LanguageProps {
@@ -12,10 +11,9 @@ export default function LanguageMenu({ setLanguage }: LanguageProps) {
         absolute top-10 right-0
         text-base list-none rounded-lg shadow bg-gray-700 divide-gray-600'
     >
-        {Object.keys(LANGUAGES).map(lang =>
+        {getLanguages().map(([lang, name]) =>
             <UserMenuItem key={lang} onClick={() => setLanguage(lang as Language)}>
-                {lang === language && <>● </>}
-                {getLabel(lang as Language, 'ui', 'LANGUAGE_NAME')}
+                {lang === language && <>● </>}{name}
             </UserMenuItem>
         )}
     </div>

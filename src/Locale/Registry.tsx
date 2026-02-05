@@ -1,18 +1,22 @@
 import { createContext, ReactNode, useContext, useLayoutEffect, useMemo, useState } from "react";
 import Env from "../Model/Env";
 import { CARDS as CARDS_ENGLISH } from "./English/Cards";
-import { LABELS as LABELS_ENGLISH } from "./English/Labels";
 import { GAME_STRINGS as GAME_STRINGS_ENGLISH } from "./English/GameStrings";
+import { LABELS as LABELS_ENGLISH } from "./English/Labels";
 
-export const LANGUAGES = {
-    'it': 'Italian',
-    'en': 'English',
-    'es': 'Spanish',
-    'cs': 'Czech',
-    'hu': 'Hungarian'
+const LANGUAGES = {
+    'it': [ 'Italian', 'Italiano' ],
+    'en': [ 'English', 'English' ],
+    'es': [ 'Spanish', 'Español' ],
+    'cs': [ 'Czech', 'Čeština' ],
+    'hu': [ 'Hungarian', 'Magyar' ],
 } as const;
 
 export type Language = keyof typeof LANGUAGES;
+
+export function getLanguages() {
+    return Object.entries(LANGUAGES).map(([language, [, name]]) => [ language as Language, name ]);
+}
 
 export type Format<T, U> = U | ((...formatArgs: T[]) => U);
 
@@ -48,12 +52,12 @@ export function getRegistries(language: Language) {
 }
 
 async function loadRegistries(language: Language): Promise<LanguageRegistries> {
-    const languageName = LANGUAGES[language];
+    const folder = LANGUAGES[language][0];
     
     const [cardRegistry, labelRegistry, gameStringRegistry] = await Promise.all([
-        import(`./${languageName}/Cards.tsx`).then(value => value.CARDS as CardRegistry),
-        import(`./${languageName}/Labels.ts`).then(value => value.LABELS as LabelRegistry),
-        import(`./${languageName}/GameStrings.tsx`).then(value => value.GAME_STRINGS as GameStringRegistry)
+        import(`./${folder}/Cards.tsx`).then(value => value.CARDS as CardRegistry),
+        import(`./${folder}/Labels.ts`).then(value => value.LABELS as LabelRegistry),
+        import(`./${folder}/GameStrings.tsx`).then(value => value.GAME_STRINGS as GameStringRegistry)
     ]);
 
     return { cardRegistry, labelRegistry, gameStringRegistry };
@@ -100,7 +104,7 @@ export function useLanguage() {
 export function LanguageProvider({ selected, children }: { selected?: Language, children: ReactNode }) {
     const language = useMemo(() => getSystemLanguage(selected), [selected]);
 
-    const [loadedLanguage, setLoadedLanguage] = useState<Language>();
+    const [loadedLanguage, setLoadedLanguage] = useState<Language>('en');
     
     useLayoutEffect(() => {
         document.documentElement.lang = language;
@@ -114,7 +118,7 @@ export function LanguageProvider({ selected, children }: { selected?: Language, 
         }
     }, [language]);
 
-    return <LanguageContext.Provider value={loadedLanguage!}>
+    return <LanguageContext.Provider value={loadedLanguage}>
         {children}
     </LanguageContext.Provider>
 }

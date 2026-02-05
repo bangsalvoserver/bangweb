@@ -91,7 +91,6 @@ export const LABELS: LabelRegistry = {
     },
 
     ui: {
-        LANGUAGE_NAME: "Čeština",
         APP_TITLE: "Bang!",
         APP_WELCOME: "Vítej na bang.salvoserver.it,\nBang! online se všemi rozšířeními!\nHraj hned zdarma s kamarády!",
         DISCORD_LINK: "Připoj se na oficiální Discord",
