@@ -1,5 +1,8 @@
 import { createContext, ReactNode, useContext, useLayoutEffect, useMemo, useState } from "react";
 import Env from "../Model/Env";
+import { CARDS as CARDS_ENGLISH } from "./English/Cards";
+import { LABELS as LABELS_ENGLISH } from "./English/Labels";
+import { GAME_STRINGS as GAME_STRINGS_ENGLISH } from "./English/GameStrings";
 
 export const LANGUAGES = {
     'it': 'Italian',
@@ -34,13 +37,11 @@ export interface LanguageRegistries {
     gameStringRegistry: GameStringRegistry;
 }
 
-let registries: Partial<Record<Language, LanguageRegistries>> = {};
-
-const EMPTY_REGISTRIES: LanguageRegistries = {
-    cardRegistry: {},
-    labelRegistry: {},
-    gameStringRegistry: {}
+let registries: Partial<Record<Language, LanguageRegistries>> = {
+    'en': { cardRegistry: CARDS_ENGLISH, labelRegistry: LABELS_ENGLISH, gameStringRegistry: GAME_STRINGS_ENGLISH }
 };
+
+const EMPTY_REGISTRIES: LanguageRegistries = { cardRegistry: {}, labelRegistry: {}, gameStringRegistry: {} };
 
 export function getRegistries(language: Language) {
     return registries[language] ?? EMPTY_REGISTRIES;
