@@ -82,16 +82,17 @@ function getSystemLanguage(selectedLanguage: Language | undefined): Language {
         language = navigator.language;
     }
 
-    switch (language.toLowerCase()) {
-        case 'it-it':
-        case 'it': return 'it';
-        case 'es-es':
-        case 'es': return 'es';
-        case 'cs-cz':
-        case 'cs': return 'cs';
-        case 'hu-hu':
-        case 'hu': return 'hu'
-        default: return 'en';
+    language = language.toLowerCase();
+
+    const dashIndex = language.indexOf('-');
+    if (dashIndex > 0) {
+        language = language.substring(0, dashIndex);
+    }
+
+    if (language in LANGUAGES) {
+        return language as Language;
+    } else {
+        return 'en';
     }
 }
 
