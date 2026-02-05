@@ -4,6 +4,7 @@ import Env from "../Model/Env";
 export const LANGUAGES = {
     'it': 'Italian',
     'en': 'English',
+    'es': 'Spanish',
     'cs': 'Czech',
     'hu': 'Hungarian'
 } as const;
@@ -79,6 +80,8 @@ function getSystemLanguage(selectedLanguage: Language | undefined): Language {
     switch (language.toLowerCase()) {
         case 'it-it':
         case 'it': return 'it';
+        case 'es-es':
+        case 'es': return 'es';
         case 'cs-cz':
         case 'cs': return 'cs';
         case 'hu-hu':
