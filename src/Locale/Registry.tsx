@@ -12,6 +12,9 @@ import { LABELS_ITALIAN } from "./Italian/Labels";
 import { CARDS_HUNGARIAN } from "./Hungarian/Cards";
 import { GAME_STRINGS_HUNGARIAN } from "./Hungarian/GameStrings";
 import { LABELS_HUNGARIAN } from "./Hungarian/Labels";
+import { CARDS_SPANISH } from "./Spanish/Cards";
+import { LABELS_SPANISH } from "./Spanish/Labels";
+import { GAME_STRINGS_SPANISH } from "./Spanish/GameStrings";
 
 export type Format<T, U> = U | ((...formatArgs: T[]) => U);
 
@@ -37,10 +40,11 @@ export interface LanguageRegistries {
 }
 
 const registries: Record<Language, LanguageRegistries> = {
-    'it': { cardRegistry: CARDS_ITALIAN, labelRegistry: LABELS_ITALIAN, gameStringRegistry: GAME_STRINGS_ITALIAN},
-    'en': { cardRegistry: CARDS_ENGLISH, labelRegistry: LABELS_ENGLISH, gameStringRegistry: GAME_STRINGS_ENGLISH},
-    'cs': { cardRegistry: CARDS_CZECH, labelRegistry: LABELS_CZECH, gameStringRegistry: GAME_STRINGS_CZECH},
-    'hu': { cardRegistry: CARDS_HUNGARIAN, labelRegistry: LABELS_HUNGARIAN, gameStringRegistry: GAME_STRINGS_HUNGARIAN},
+    'it': { cardRegistry: CARDS_ITALIAN, labelRegistry: LABELS_ITALIAN, gameStringRegistry: GAME_STRINGS_ITALIAN },
+    'en': { cardRegistry: CARDS_ENGLISH, labelRegistry: LABELS_ENGLISH, gameStringRegistry: GAME_STRINGS_ENGLISH },
+    'es': { cardRegistry: CARDS_SPANISH, labelRegistry: LABELS_SPANISH, gameStringRegistry: GAME_STRINGS_SPANISH },
+    'cs': { cardRegistry: CARDS_CZECH, labelRegistry: LABELS_CZECH, gameStringRegistry: GAME_STRINGS_CZECH },
+    'hu': { cardRegistry: CARDS_HUNGARIAN, labelRegistry: LABELS_HUNGARIAN, gameStringRegistry: GAME_STRINGS_HUNGARIAN },
 };
 
 export function getRegistries(language: Language) {
@@ -69,6 +73,8 @@ function getSystemLanguage(selectedLanguage: Language | undefined): Language {
     switch (language.toLowerCase()) {
         case 'it-it':
         case 'it': return 'it';
+        case 'es-es':
+        case 'es': return 'es';
         case 'cs-cz':
         case 'cs': return 'cs';
         case 'hu-hu':

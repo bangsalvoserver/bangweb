@@ -766,7 +766,7 @@ export const CARDS_SPANISH: CardRegistry = {
     BIG_SPENCER: {
         name: "Big Spencer",
         hideTitle: true,
-        description: <>Comienza con 5 cartas. No puede jugar cartas de <i>¡Fallaste!</i>.></>,
+        description: <>Comienza con 5 cartas. No puede jugar cartas de <i>¡Fallaste!</i>.</>,
         descriptionClass: "character-description"
     },
     FLINT_WESTWOOD: {
