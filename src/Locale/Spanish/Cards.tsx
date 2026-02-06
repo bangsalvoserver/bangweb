@@ -23,7 +23,7 @@ export const CARDS: CardRegistry = {
     },
     JAIL: {
         name: "Cárcel",
-        description: <>Coloca esta carta frente a otro jugador. Al inicio de su turno, desenfunda una carta: si es ♥, juega normalmente; si no, pierde el turno.</>,
+        description: <>Coloca esta carta frente a otro jugador. Al inicio de su turno, "¡Desenfunda!" una carta: si es ♥, juega normalmente; si no, pierde el turno.</>,
         descriptionClass: "draw-description text-smaller"
     },
     REMINGTON: {
@@ -72,7 +72,6 @@ export const CARDS: CardRegistry = {
     },
     GATLING: {
         name: "Ametralladora",
-        hideTitle: true
     },
     INDIANS: {
         name: "Indios!",
@@ -197,7 +196,7 @@ export const CARDS: CardRegistry = {
     },
     RATTLESNAKE: {
         name: "Serpiente de Cascabel",
-        description: <>Juega esta carta sobre cualquier jugador. Al inicio de su turno, ese jugador “Desenfunda”: si sale ♠, pierde 1 punto de vida.</>
+        description: <>Juega esta carta sobre cualquier jugador. Al inicio de su turno, ese jugador "¡Desenfunda!": si sale ♠, pierde 1 punto de vida.</>
     },
     SHOTGUN: {
         name: "Escopeta",
@@ -220,11 +219,11 @@ export const CARDS: CardRegistry = {
         description: <>Todos los demás jugadores descartan una carta <i>¡Bang!</i> o 2 cartas de su mano a su elección.</>
     },
     ESCAPE: {
-        name: "Escape", // ?
+        name: "Huida",
         description: <>Puede jugarse fuera de tu turno. Evita los efectos de una carta marrón (distinta de <i>¡Bang!</i>) que te tenga como objetivo.</>
     },
     ESCAPE_2: {
-        name: "Escape", // ?
+        name: "Huida",
         description: <>Si eres el único objetivo de una carta distinta de <i>¡Bang!</i>, descarta esta carta para evitar su efecto.</>
     },
     AIM: {
@@ -335,7 +334,7 @@ export const CARDS: CardRegistry = {
     },
     BOMB: {
         name: "Bomba",
-        description: <>Juega esta carta sobre cualquier jugador. Al inicio de tu turno, “Desenfunda”:<br/>♥♦ = pasa la <i>Bomba</i> a cualquier jugador.<br/>♣♠ = descarta 2 📦; si no puede, pierde 2 puntos de vida.</>,
+        description: <>Juega esta carta sobre cualquier jugador. Al inicio de tu turno, "¡Desenfunda!":<br/>♥♦ = pasa la <i>Bomba</i> a cualquier jugador.<br/>♣♠ = descarta 2 📦; si no puede, pierde 2 puntos de vida.</>,
         descriptionClass: "card-description-higher text-smaller"
     },
     BUNTLINE_SPECIAL: {
@@ -354,7 +353,7 @@ export const CARDS: CardRegistry = {
     },
     TUMBLEWEED: {
         name: "Rodadora",
-        description: <>Haz que cualquier jugador repita un “Desenfundar”.</>,
+        description: <>Haz que cualquier jugador repita un "¡Desenfunda!".</>,
         descriptionClass: "cube-description"
     },
     DOUBLE_BARREL: {
@@ -415,7 +414,7 @@ export const CARDS: CardRegistry = {
     BULLDOG: {
         name: "Bulldog",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes jugar una carta <i>¡Bang!</i> como si fuera <i>Ametralladora</i> descartando otra carta adicional.</>,
+        description: <>Una vez durante tu turno, puedes jugar una carta <i>¡Bang!</i> como si fuera una <i>Ametralladora</i> descartando otra carta adicional.</>,
         descriptionClass: "weapon-description text-smaller line-smaller"
     },
     LAST_WILL: {
@@ -428,11 +427,11 @@ export const CARDS: CardRegistry = {
     },
     TAXMAN: {
         name: "Impuestos",
-        description: <>Juega esta carta sobre cualquier jugador. Al inicio de su turno, debe “robar”: si sale ♠ o ♣, roba una carta menos en la fase 1.</>
+        description: <>Juega esta carta sobre cualquier jugador. Al inicio de su turno, debe "¡Desenfunda!": si sale ♠ o ♣, roba una carta menos en la fase 1.</>
     },
     BROTHEL: {
         name: "Burdel",
-        description: <>Descarta y juega una carta, pero pierdes tu habilidad hasta tu próximo turno. Si no, descarta y juega normalmente.</>,
+        description: <>Juega esta carta sobre cualquier jugador. En su próximo turno, antes de robar, "¡Desenfunda!": si es ♣️ o ♠️, pierde su habilidad de personaje por ese turno.</>,
         descriptionClass: "draw-description"
     },
     BRONCO: {
@@ -560,12 +559,14 @@ export const CARDS: CardRegistry = {
     VULTURE_SAM: {
         name: "Sam \"El Buitre\"",
         description: <>Cada vez que un jugador es eliminado, roba todas las cartas que tenía ese jugador.</>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description",
+        titleClass: "card-title character-title"
     },
     WILLY_THE_KID: {
         name: "Willy el Niño",
         description: <>Puede jugar cualquier cantidad de cartas de <i>¡BANG!</i>.</>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description",
+        titleClass: "card-title character-title"
     },
 
     // Most Wanted characters
@@ -573,7 +574,8 @@ export const CARDS: CardRegistry = {
     CLAUS_THE_SAINT: {
         name: "Claus \"El Santo\"",
         description: <>Roba (cantidad jugadores + 1) cartas. Quédate con 2 y regala 1 a cada jugador.</>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description",
+        titleClass: "card-title character-title"
     },
     JOHNNY_KISCH: {
         name: "Johnny Kisch",
@@ -698,13 +700,13 @@ export const CARDS: CardRegistry = {
     BLACK_FLOWER: {
         name: "Black Flower",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes usar cualquier carta de Tréboles como un <i>¡BANG!</i> adicional.</>,
+        description: <>Una vez durante su turno, puede usar cualquier carta de Tréboles como un <i>¡BANG!</i> adicional.</>,
         descriptionClass: "character-description"
     },
     COLORADO_BILL: {
         name: "Colorado Bill",
         hideTitle: true,
-        description: <>Cada vez que juegas una carta de <i>¡BANG!</i>, "¡Desenfunda!": si es Picas, este disparo no puede ser evitado.</>,
+        description: <>Cada vez que juega una carta de <i>¡BANG!</i>, "¡Desenfunda!": si es Picas, este disparo no puede ser evitado.</>,
         descriptionClass: "character-description"
     },
     COLORADO_BILL_2: {
@@ -716,13 +718,13 @@ export const CARDS: CardRegistry = {
     DER_SPOT_BURST_RINGER: {
         name: "Der Spot - Burst Ringer",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes usar una carta de <i>¡BANG!</i> como una <i>Ametralladora</i>.</>,
+        description: <>Una vez durante su turno, puede usar una carta de <i>¡BANG!</i> como una <i>Ametralladora</i>.</>,
         descriptionClass: "character-description"
     },
     EVELYN_SHEBANG: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>Puedes rechazar robar cartas en tu fase de robo. Por cada carta que rechaces, dispara un <i>¡BANG!</i> a un objetivo diferente a distancia alcanzable.</>,
+        description: <>Puede rechazar robar cartas en su fase de robo. Por cada carta que rechace, dispara un <i>¡BANG!</i> a un objetivo diferente a distancia alcanzable.</>,
         descriptionClass: "character-description"
     },
     EVELYN_SHEBANG_2: {
@@ -734,19 +736,19 @@ export const CARDS: CardRegistry = {
     HENRY_BLOCK: {
         name: "Henry Block",
         hideTitle: true,
-        description: <>Cualquier jugador que robe o descarte una de tus cartas (en tu mano o en juego) se convierte en el objetivo de un <i>¡BANG!</i>.</>,
+        description: <>Cualquier jugador que robe o descarte una de sus cartas (en su mano o en juego) se convierte en el objetivo de un <i>¡BANG!</i>.</>,
         descriptionClass: "character-description"
     },
     LEMONADE_JIM: {
         name: "Lemonade Jim",
         hideTitle: true,
-        description: <>Cada vez que otro jugador juega una carta de <i>Cerveza</i>, puedes descartar cualquier carta de tu mano para también recuperar 1 punto de vida.</>,
+        description: <>Cada vez que otro jugador juega una carta de <i>Cerveza</i>, puede descartar cualquier carta de su mano para también recuperar 1 punto de vida.</>,
         descriptionClass: "character-description"
     },
     MICK_DEFENDER: {
         name: "Mick Defender",
         hideTitle: true,
-        description: <>Si eres el objetivo de una carta marrón que no sea <i>¡BANG!</i>, puedes usar una carta de <i>¡Fallaste!</i> para evitar esa carta.</>,
+        description: <>Si es el objetivo de una carta marrón que no sea <i>¡BANG!</i>, puede usar una carta de <i>¡Fallaste!</i> para evitar esa carta.</>,
         descriptionClass: "character-description"
     },
     MICK_DEFENDER_2: {
@@ -758,7 +760,7 @@ export const CARDS: CardRegistry = {
     TUCO_FRANZISKANER: {
         name: "Tuco Franziskaner",
         hideTitle: true,
-        description: <>Durante tu fase de robo, si no tienes cartas azules en juego, roba 2 cartas adicionales.</>,
+        description: <>Durante su fase de robo, si no tiene cartas azules en juego, roba 2 cartas adicionales.</>,
         descriptionClass: "character-description"
     },
 
@@ -824,43 +826,43 @@ export const CARDS: CardRegistry = {
     BASS_GREEVES: {
         name: "Bass Greeves",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes descartar 1 carta de tu mano para añadir 2 📦 a una de tus cartas.</>,
+        description: <>Una vez durante su turno, puede descartar 1 carta de su mano para añadir 2 📦 a una de tus cartas.</>,
         descriptionClass: "character-description"
     },
     BLOODY_MARY: {
         name: "Bloody Mary",
         hideTitle: true,
-        description: <>Cada vez que tu carta de <i>¡BANG!</i> sea cancelada, roba 1 carta del mazo.</>,
+        description: <>Cada vez que su carta de <i>¡BANG!</i> sea cancelada, roba 1 carta del mazo.</>,
         descriptionClass: "character-description"
     },
     FRANKIE_CANTON: {
         name: "Frankie Canton",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes tomar 1 📦 de cualquier carta y moverlo aquí.</>,
+        description: <>Una vez durante su turno, puede tomar 1 📦 de cualquier carta y moverlo aquí.</>,
         descriptionClass: "character-description"
     },
     JULIE_CUTTER: {
         name: "Julie Cutter",
         hideTitle: true,
-        description: <>Cada vez que un jugador te hace perder al menos 1 punto de vida, "¡Desenfunda!":<br/>♥♦ = ese jugador se convierte en el objetivo de un <i>¡BANG!</i></>,
+        description: <>Cada vez que un jugador le hace perder al menos 1 punto de vida, "¡Desenfunda!":<br/>♥♦ = ese jugador se convierte en el objetivo de un <i>¡BANG!</i></>,
         descriptionClass: "character-description"
     },
     MEXICALI_KID: {
         name: "Mexicali Kid",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes pagar 2 📦 para disparar 1 <i>¡BANG!</i> adicional (sin necesidad de carta).</>,
+        description: <>Una vez durante tu surno, puede pagar 2 📦 para disparar 1 <i>¡BANG!</i> adicional (sin necesidad de carta).</>,
         descriptionClass: "character-description"
     },
     MS_ABIGAIL: {
         name: "Ms. Abigail",
         hideTitle: true,
-        description: <>Puedes ignorar los efectos de las cartas de borde marrón con valores J, Q, K y A si eres el único objetivo.</>,
+        description: <>Puede ignorar los efectos de las cartas de borde marrón con valores J, Q, K y A si es el único objetivo.</>,
         descriptionClass: "character-description"
     },
     RED_RINGO: {
         name: "Red Ringo",
         hideTitle: true,
-        description: <>Comienza con 4 📦. Una vez durante tu turno, puedes mover hasta 2 📦 de aquí a tus cartas.</>,
+        description: <>Comienza con 4 📦. Una vez durante su turno, puede mover hasta 2 📦 de aquí a sus cartas.</>,
         descriptionClass: "character-description"
     },
 
@@ -1096,7 +1098,7 @@ export const CARDS: CardRegistry = {
     },
     RICOCHET: {
         name: "Ricochet",
-        description: <>Cada jugador puede descartar cartas de <i>¡BANG!</i> contra cartas en juego frente a cualquier jugador: cada carta es descartada si su dueño no juega un <i>¡Fallaste!</i> por cada una.</>,
+        description: <>Cada jugador puede descartar cartas de <i>¡BANG!</i> contra cartas en juego frente a cualquier jugador. El dueño debe jugar 1 <i>¡Fallaste!</i> por cada <i>¡BANG!</i> para proteger su carta, de lo contrario es descartada.</>,
         titleClass: "card-title card-title-lower",
         descriptionClass: "card-description text-smallest"
     },
@@ -1232,7 +1234,7 @@ export const CARDS: CardRegistry = {
     },
     HORSESHOE: {
         name: "Herradura",
-        description: <>Cada vez que "¡robas!", voltea una carta adicional y elige el resultado.</>
+        description: <>Cada vez que "¡Desenfundas!", voltea una carta adicional y elige el resultado.</>
     },
     PICKAXE: {
         name: "Pico",
@@ -1244,7 +1246,7 @@ export const CARDS: CardRegistry = {
     },
     RHUM: {
         name: "Ron",
-        description: <>"¡Roba!" 4 cartas: recuperas 1 punto de vida por cada palo diferente.</>
+        description: <>"¡Desenfunda!" 4 cartas: recuperas 1 punto de vida por cada palo diferente.</>
     },
     GOLD_PAN: {
         name: "Charola de Oro",
@@ -1260,7 +1262,7 @@ export const CARDS: CardRegistry = {
     },
     UNION_PACIFIC: {
         name: "Union Pacific",
-        hideTitle: false,
+        hideTitle: true,
         description: <>Roba 4 cartas del mazo.</>
     },
     RUCKSACK: {
@@ -1354,19 +1356,19 @@ export const CARDS: CardRegistry = {
     BENNY_BRAWLER: {
         name: "Benny Brawler",
         hideTitle: true,
-        description: <>Durante tu turno, puedes tomar cualquier cantidad de Vagones del tren.</>,
+        description: <>Durante su turno, puede tomar cualquier cantidad de Vagones del tren.</>,
         descriptionClass: "character-description"
     },
     EVAN_BABBIT: {
         name: "Evan Babbit",
         hideTitle: true,
-        description: <>Si eres el objetivo de una carta de <i>¡BANG!</i>, puedes descartar una carta del mismo palo de tu mano para desviarla a otro jugador a distancia 1.</>,
+        description: <>Si es el objetivo de una carta de <i>¡BANG!</i>, puede descartar una carta del mismo palo de su mano para desviarla a otro jugador a distancia 1.</>,
         descriptionClass: "character-description"
     },
     JIMMY_TEXAS: {
         name: "Jimmy Texas",
         hideTitle: true,
-        description: <>Al final de tu turno, roba 1 carta.</>,
+        description: <>Al final de su turno, roba 1 carta.</>,
         descriptionClass: "character-description"
     },
     MANUELITA: {
@@ -1378,25 +1380,25 @@ export const CARDS: CardRegistry = {
     SANCHO: {
         name: "Sancho",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes tomar 1 Vagón de tu elección del tren gratis.</>,
+        description: <>Una vez durante su turno, puede tomar 1 Vagón de su elección del tren gratis.</>,
         descriptionClass: "character-description"
     },
     SGT_BLAZE: {
         name: "Sgt. Blaze",
         hideTitle: true,
-        description: <>Cuando apuntas a múltiples jugadores con una carta o efecto, puedes eximir a 1 jugador.</>,
+        description: <>Cuando apunta a múltiples jugadores con una carta o efecto, puede eximir a 1 jugador.</>,
         descriptionClass: "character-description"
     },
     SHADE_OCONNOR: {
         name: "Shade O'Connor",
         hideTitle: true,
-        description: <>Cada vez que el tren avanza cuando no es tu turno, puedes descartar 1 carta de tu mano para robar 1 carta.</>,
+        description: <>Cada vez que el tren avanza cuando no es su turno, puede descartar 1 carta de su mano para robar 1 carta.</>,
         descriptionClass: "character-description"
     },
     ZIPPY_ROY: {
         name: "Zippy Roy",
         hideTitle: true,
-        description: <>Una vez durante tu turno, puedes avanzar el tren 1 Estación.</>,
+        description: <>Una vez durante su turno, puedes avanzar el tren 1 Estación.</>,
         descriptionClass: "character-description"
     },
 
@@ -1711,25 +1713,25 @@ export const CARDS: CardRegistry = {
     LEGEND_BART_CASSIDY: {
         name: "Bart Cassidy",
         hideTitle: true,
-        description: <>Si pierdes un punto de vida, roba 2 cartas.</>,
+        description: <>Si pierde un punto de vida, roba 2 cartas.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_BLACK_JACK: {
         name: "Black Jack",
         hideTitle: true,
-        description: <>Puedes voltear cartas hasta que su suma sea mayor que 21. Roba todas esas cartas.</>,
+        description: <>Puede voltear cartas hasta que su suma sea mayor que 21. Roba todas esas cartas.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_CALAMITY_JANET: {
         name: "Calamity Janet",
         hideTitle: true,
-        description: <>Cada una de tus cartas cuenta como <i>¡BANG!</i> o <i>¡Fallaste!</i></>,
+        description: <>Cada una de sus cartas cuenta como <i>¡BANG!</i> o <i>¡Fallaste!</i></>,
         descriptionClass: "legends-description",
     },
     LEGEND_EL_GRINGO: {
         name: "El Gringo",
         hideTitle: true,
-        description: <>Si un jugador te golpea, roba 1 carta de su mano y la carta que te golpeó.</>,
+        description: <>Si un jugador le golpea, roba 1 carta de su mano y la carta que le golpeó.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_JESSE_JONES: {
@@ -1741,25 +1743,25 @@ export const CARDS: CardRegistry = {
     LEGEND_JOURDONNAIS: {
         name: "Jourdonnais",
         hideTitle: true,
-        description: <>Si eres el objetivo de una carta marrón, puedes "¡Desenfundar!":<br/>J, Q, K, A = ignora la carta.</>,
+        description: <>Si es el objetivo de una carta marrón, puede "¡Desenfundar!":<br/>J, Q, K, A = ignora la carta.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_KIT_CARLSON: {
         name: "Kit Carlson",
         hideTitle: true,
-        description: <>Roba 3 cartas. Puedes dar 1 de ellas a cualquier otro jugador.</>,
+        description: <>Roba 3 cartas. Puede dar 1 de ellas a cualquier otro jugador.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_LUCKY_DUKE: {
         name: "Lucky Duke",
         hideTitle: true,
-        description: <>Si una carta requiere "¡Desenfundar!", volteas 2 cartas y eliges 1 para usar. Si es tu turno, entonces roba la carta elegida.</>,
+        description: <>Si una carta requiere "¡Desenfundar!", voltea 2 cartas y elige 1 para usar. Si es su turno, entonces roba la carta elegida.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_PAUL_REGRET: {
         name: "Paul Regret",
         hideTitle: true,
-        description: <>Otros te ven a distancia +1.<br/>Para jugar un <i>¡BANG!</i> contra ti, un jugador debe descartar una carta adicional de su mano.</>,
+        description: <>Otros le ven a distancia +1.<br/>Para jugar un <i>¡BANG!</i> contra el, un jugador debe descartar una carta adicional de su mano.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_PEDRO_RAMIREZ: {
@@ -1771,37 +1773,37 @@ export const CARDS: CardRegistry = {
     LEGEND_ROSE_DOOLAN: {
         name: "Rose Doolan",
         hideTitle: true,
-        description: <>Puedes ver a todos los jugadores a distancia 1. Una vez durante tu turno, puedes descartar una de tus cartas azules, en mano o en juego, como <i>¡Pánico!</i></>,
+        description: <>Puede ver a todos los jugadores a distancia 1. Una vez durante su turno, puede descartar una de sus cartas azules, en mano o en juego, como <i>¡Pánico!</i></>,
         descriptionClass: "legends-description",
     },
     LEGEND_SID_KETCHUM: {
         name: "Sid Ketchum",
         hideTitle: true,
-        description: <>Puedes descartar 2 cartas para ganar 1 punto de vida. Una vez durante tu turno, si ganas 1 punto de vida, puedes disparar un <i>¡BANG!</i> gratis.</>,
+        description: <>Puede descartar 2 cartas para ganar 1 punto de vida. Una vez durante su turno, si gana 1 punto de vida, puede disparar un <i>¡BANG!</i> gratis.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_SLAB_THE_KILLER: {
         name: "Slab the Killer",
         hideTitle: true,
-        description: <>Tu <i>¡BANG!</i> no puede ser cancelado.<br/>Si reclamas una Proeza, puedes eliminar incluso el último punto de vida de un jugador.</>,
+        description: <>Su <i>¡BANG!</i> no puede ser cancelado.<br/>Si reclama una Proeza, puede eliminar incluso el último punto de vida de un jugador.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_SUZY_LAFAYETTE: {
         name: "Suzy Lafayette",
         hideTitle: true,
-        description: <>Si tienes menos de 2 cartas en mano, roba hasta tener 2 cartas.</>,
+        description: <>Si tiene menos de 2 cartas en mano, roba hasta tener 2 cartas.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_VULTURE_SAM: {
         name: "Vulture Sam",
         hideTitle: true,
-        description: <>Si un jugador es eliminado, toma en mano todas sus cartas. Si eres eliminado, permanece en juego con 4 puntos de vida, pero vuelves a ser un personaje normal</>,
+        description: <>Si un jugador es eliminado, toma en mano todas sus cartas. Si es eliminado, permanece en juego con 4 puntos de vida, pero vuelve a ser un personaje normal</>,
         descriptionClass: "legends-description",
     },
     LEGEND_WILLY_THE_KID: {
         name: "Willy the Kid",
         hideTitle: true,
-        description: <>Puedes jugar cualquier cantidad de cartas de <i>¡BANG!</i><br/>En lugar de reclamar una Proeza, puedes disparar un <i>¡BANG!</i> gratis.</>,
+        description: <>Puede jugar cualquier cantidad de cartas de <i>¡BANG!</i><br/>En lugar de reclamar una Proeza, puede disparar un <i>¡BANG!</i> gratis.</>,
         descriptionClass: "legends-description",
     },
 
@@ -1946,7 +1948,6 @@ export const CARDS: CardRegistry = {
     },
     ROLE_DEPUTY: {
         name: "Alguacil",
-        hideTitle: true,
         description: <>¡Protege al Sheriff! ¡Mata a todos los Forajidos y al Renegado!</>
     },
     ROLE_OUTLAW: {
