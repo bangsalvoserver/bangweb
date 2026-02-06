@@ -1960,7 +1960,6 @@ export const CARDS: CardRegistry = {
     },
     ROLE_DEPUTY_3P: {
         name: "Alguacil",
-        hideTitle: true,
         description: <>¡Mata al Renegado!</>
     },
     ROLE_OUTLAW_3P: {
