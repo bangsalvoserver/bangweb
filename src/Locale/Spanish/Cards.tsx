@@ -219,11 +219,11 @@ export const CARDS: CardRegistry = {
         description: <>Todos los demás jugadores descartan una carta <i>¡Bang!</i> o 2 cartas de su mano a su elección.</>
     },
     ESCAPE: {
-        name: "Huida", // ?
+        name: "Huida",
         description: <>Puede jugarse fuera de tu turno. Evita los efectos de una carta marrón (distinta de <i>¡Bang!</i>) que te tenga como objetivo.</>
     },
     ESCAPE_2: {
-        name: "Huida", // ?
+        name: "Huida",
         description: <>Si eres el único objetivo de una carta distinta de <i>¡Bang!</i>, descarta esta carta para evitar su efecto.</>
     },
     AIM: {
@@ -558,24 +558,24 @@ export const CARDS: CardRegistry = {
     },
     VULTURE_SAM: {
         name: "Sam \"El Buitre\"",
-        hideTitle: true,
         description: <>Cada vez que un jugador es eliminado, roba todas las cartas que tenía ese jugador.</>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description",
+        titleClass: "card-title character-title"
     },
     WILLY_THE_KID: {
         name: "Willy el Niño",
-        hideTitle: true,
         description: <>Puede jugar cualquier cantidad de cartas de <i>¡BANG!</i>.</>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description",
+        titleClass: "card-title character-title"
     },
 
     // Most Wanted characters
 
     CLAUS_THE_SAINT: {
         name: "Claus \"El Santo\"",
-        hideTitle: true,
         description: <>Roba (cantidad jugadores + 1) cartas. Quédate con 2 y regala 1 a cada jugador.</>,
-        descriptionClass: "character-description"
+        descriptionClass: "character-description",
+        titleClass: "card-title character-title"
     },
     JOHNNY_KISCH: {
         name: "Johnny Kisch",
