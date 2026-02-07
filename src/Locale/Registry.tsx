@@ -1,8 +1,5 @@
 import { createContext, ReactNode, useContext, useLayoutEffect, useMemo, useState } from "react";
 import Env from "../Model/Env";
-import { CARDS as CARDS_ENGLISH } from "./English/Cards";
-import { GAME_STRINGS as GAME_STRINGS_ENGLISH } from "./English/GameStrings";
-import { LABELS as LABELS_ENGLISH } from "./English/Labels";
 
 const LANGUAGES = {
     'it': [ 'Italian', 'Italiano' ],
@@ -41,9 +38,7 @@ export interface LanguageRegistries {
     gameStringRegistry: GameStringRegistry;
 }
 
-let registries: Partial<Record<Language, LanguageRegistries>> = {
-    'en': { cardRegistry: CARDS_ENGLISH, labelRegistry: LABELS_ENGLISH, gameStringRegistry: GAME_STRINGS_ENGLISH }
-};
+let registries: Partial<Record<Language, LanguageRegistries>> = {};
 
 const EMPTY_REGISTRIES: LanguageRegistries = { cardRegistry: {}, labelRegistry: {}, gameStringRegistry: {} };
 
@@ -105,7 +100,7 @@ export function useLanguage() {
 export function LanguageProvider({ selected, children }: { selected?: Language, children: ReactNode }) {
     const language = useMemo(() => getSystemLanguage(selected), [selected]);
 
-    const [loadedLanguage, setLoadedLanguage] = useState<Language>('en');
+    const [loadedLanguage, setLoadedLanguage] = useState<Language>();
     
     useLayoutEffect(() => {
         document.documentElement.lang = language;
@@ -119,7 +114,9 @@ export function LanguageProvider({ selected, children }: { selected?: Language, 
         }
     }, [language]);
 
-    return <LanguageContext.Provider value={loadedLanguage}>
-        {children}
-    </LanguageContext.Provider>
+    return loadedLanguage && (
+        <LanguageContext.Provider value={loadedLanguage}>
+            {children}
+        </LanguageContext.Provider>
+    );
 }
