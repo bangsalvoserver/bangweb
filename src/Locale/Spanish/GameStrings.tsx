@@ -255,7 +255,7 @@ export const GAME_STRINGS: GameStringRegistry = {
 
     LOG_GAME_START: () =>                                                   <>Juego iniciado</>,
     LOG_REVEAL_SHERIFF: (player) =>                                         <>{player} es el Sheriff.</>,
-    LOG_REVEAL_DEPUTY: (player) =>                                          <>{player} se revela como Alguacil..</>,
+    LOG_REVEAL_DEPUTY: (player) =>                                          <>{player} se revela como Alguacil.</>,
     LOG_REVEAL_OUTLAW: (player) =>                                          <>{player} se revela como Forajido.</>,
     LOG_REVEAL_RENEGADE: (player) =>                                        <>{player} se revela como Renegado.</>,
     LOG_WINNER_SHERIFF: () =>                                               <>¡El Sheriff y los Alguaciles ganan la partida!</>,
