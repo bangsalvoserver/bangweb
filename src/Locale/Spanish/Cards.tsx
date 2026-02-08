@@ -353,7 +353,7 @@ export const CARDS: CardRegistry = {
     },
     TUMBLEWEED: {
         name: "Rodadora",
-        description: <>Haz que cualquier jugador repita un "¡Desenfunda!".</>,
+        description: <>Haz que cualquier jugador repita el efecto de "¡Desenfundar!" de una carta.</>,
         descriptionClass: "cube-description"
     },
     DOUBLE_BARREL: {
@@ -427,12 +427,12 @@ export const CARDS: CardRegistry = {
     },
     TAXMAN: {
         name: "Impuestos",
-        description: <>Juega esta carta sobre cualquier jugador. Al inicio de su turno, debe "¡Desenfunda!": si sale ♠ o ♣, roba una carta menos en la fase 1.</>
+        description: <>Juega esta carta sobre cualquier jugador. Al inicio de su turno, debe "¡Desenfundar!": si sale ♠ o ♣, roba una carta menos en la fase 1.</>
     },
     BROTHEL: {
         name: "Burdel",
         description: <>Juega esta carta sobre cualquier jugador. En su próximo turno, antes de robar, "¡Desenfunda!": si es ♣️ o ♠️, pierde su habilidad de personaje por ese turno.</>,
-        descriptionClass: "draw-description"
+        descriptionClass: "draw-description text-smaller"
     },
     BRONCO: {
         name: "Bronco",
