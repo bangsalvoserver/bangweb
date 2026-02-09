@@ -299,6 +299,8 @@ export const GAME_STRINGS: GameStringRegistry = {
     LOG_PLAYED_TABLE_CARD: (card, player) =>                                <>{player} plays {card} from the table</>,
     LOG_EQUIPPED_CARD: (card, player) =>                                    <>{player} equips {card}</>,
     LOG_EQUIPPED_CARD_TO: (card, player, target) =>                         <>{player} equips {card} on {target}</>,
+    LOG_GAIN_GOLD: (player, amount) =>                                      <>{player} gains {amount === 1 ? 'a gold nugget' : `${amount} gold nuggets`}</>,
+    LOG_PAY_GOLD: (player, amount) =>                                       <>{player} pays {amount === 1 ? 'a gold nugget' : `${amount} gold nuggets`}</>,
     LOG_BOUGHT_CARD: (card, player) =>                                      <>{player} buys and plays {card}</>,
     LOG_BOUGHT_EQUIP: (card, player) =>                                     <>{player} buys and equips {card}</>,
     LOG_BOUGHT_EQUIP_TO: (card, player, target) =>                          <>{player} buys and equips {card} to {target}</>,

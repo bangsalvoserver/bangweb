@@ -303,6 +303,8 @@ export const GAME_STRINGS: GameStringRegistry = {
     LOG_PLAYED_TABLE_CARD: (card, player) =>                                <>{player} hraje {card} ze stolu</>,
     LOG_EQUIPPED_CARD: (card, player) =>                                    <>{player} vybavuje {card}</>,
     LOG_EQUIPPED_CARD_TO: (card, player, target) =>                         <>{player} vybavuje {card} na {target}</>,
+    LOG_GAIN_GOLD: (player, amount) =>                                      <>{player} gains {amount === 1 ? 'a gold nugget' : `${amount} gold nuggets`}</>,
+    LOG_PAY_GOLD: (player, amount) =>                                       <>{player} pays {amount === 1 ? 'a gold nugget' : `${amount} gold nuggets`}</>,
     LOG_BOUGHT_CARD: (card, player) =>                                      <>{player} kupuje a hraje {card}</>,
     LOG_BOUGHT_EQUIP: (card, player) =>                                     <>{player} kupuje a vybavuje {card}</>,
     LOG_BOUGHT_EQUIP_TO: (card, player, target) =>                          <>{player} kupuje a vybavuje {card} na {target}</>,
