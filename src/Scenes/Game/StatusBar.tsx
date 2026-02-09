@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import Button, { ButtonColor } from "../../Components/Button";
 import TimerWidget from "../../Components/TimerWidget";
-import getLabel from "../../Locale/GetLabel";
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import { checkMyUserFlag } from "../../Model/SceneState";
 import { LobbyContext } from "../Lobby/Lobby";
 import { GameStateContext } from "./GameScene";
@@ -9,9 +9,8 @@ import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { getTagValue } from "./Model/Filters";
 import { getCard, getTablePocket, KnownCard } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
-import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
-import { useLanguage } from "../../Locale/Registry";
+import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
 
 export interface StatusProps {
   gameError: GameString | undefined;

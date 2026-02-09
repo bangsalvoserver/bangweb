@@ -1,6 +1,5 @@
-import getLabel, { hasLabel } from "../Locale/GetLabel";
-import { useLanguage } from "../Locale/Registry";
-import "./Style/Tooltip.css"
+import { getLabel, hasLabel, useLanguage } from "../Locale/Registry";
+import "./Style/Tooltip.css";
 
 export interface TooltipProps {
     group: string;

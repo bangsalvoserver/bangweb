@@ -1,7 +1,7 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
 import Button from "../../Components/Button";
 import PlayerIcon from "../../Components/PlayerIcon";
-import getLabel from "../../Locale/GetLabel";
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import { UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
@@ -20,7 +20,6 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { useLanguage } from "../../Locale/Registry";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;

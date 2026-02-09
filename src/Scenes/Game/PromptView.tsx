@@ -1,11 +1,10 @@
 import { Dispatch } from "react";
 import Button from "../../Components/Button";
-import getLabel from "../../Locale/GetLabel";
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import GameStringComponent from "./GameStringComponent";
 import { GamePrompt } from "./Model/TargetSelector";
 import { SelectorUpdate } from "./Model/TargetSelectorReducer";
 import "./Style/PromptView.css";
-import { useLanguage } from "../../Locale/Registry";
 
 export interface PromptProps {
     prompt: GamePrompt;

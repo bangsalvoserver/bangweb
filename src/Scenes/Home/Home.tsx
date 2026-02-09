@@ -1,10 +1,9 @@
 import { SyntheticEvent } from 'react';
-import Button from '../../Components/Button';
-import getLabel from '../../Locale/GetLabel';
 import BangLogo from '../../Components/BangLogo';
+import Button from '../../Components/Button';
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import { MAX_USERNAME_LENGTH } from '../../Model/AppSettings';
 import Env from '../../Model/Env';
-import { useLanguage } from '../../Locale/Registry';
 
 export interface ConnectProps {
   username?: string;

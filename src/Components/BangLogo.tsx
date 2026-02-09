@@ -1,6 +1,5 @@
+import { getLabel, useLanguage } from "../Locale/Registry";
 import './Style/BangLogo.css';
-import getLabel from "../Locale/GetLabel";
-import { useLanguage } from '../Locale/Registry';
 
 export default function BangLogo() {
     const language = useLanguage();

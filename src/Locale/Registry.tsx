@@ -1,13 +1,6 @@
 import { createContext, ReactNode, useContext, useLayoutEffect, useMemo, useState } from "react";
 import Env from "../Model/Env";
-
-const LANGUAGES = {
-    'it': [ 'Italian', 'Italiano' ],
-    'en': [ 'English', 'English' ],
-    'es': [ 'Spanish', 'Español' ],
-    'cs': [ 'Czech', 'Čeština' ],
-    'hu': [ 'Hungarian', 'Magyar' ],
-} as const;
+import LANGUAGES from "./Languages";
 
 export type Language = keyof typeof LANGUAGES;
 
@@ -44,6 +37,30 @@ const EMPTY_REGISTRIES: LanguageRegistries = { cardRegistry: {}, labelRegistry: 
 
 export function getRegistries(language: Language) {
     return registries[language] ?? EMPTY_REGISTRIES;
+}
+
+export function hasLabel(language: Language, group: string, name: string) {
+    const { labelRegistry } = getRegistries(language);
+    if (group in labelRegistry) {
+        return name in labelRegistry[group];
+    }
+    return false;
+}
+
+export function getLabel(language: Language, group: string, name: string, ...formatArgs: string[]): string {
+    const { labelRegistry } = getRegistries(language);
+    if (group in labelRegistry) {
+        const labelGroup = labelRegistry[group];
+        if (name in labelGroup) {
+            const value = labelGroup[name];
+            if (typeof value === 'function') {
+                return value(...formatArgs);
+            } else {
+                return value;
+            }
+        }
+    }
+    return group + '.' + name;
 }
 
 async function loadRegistries(language: Language): Promise<LanguageRegistries> {

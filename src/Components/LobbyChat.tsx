@@ -1,6 +1,5 @@
 import { SyntheticEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import getLabel from "../Locale/GetLabel";
-import { useLanguage } from "../Locale/Registry";
+import { getLabel, useLanguage } from "../Locale/Registry";
 import { LobbyState } from "../Model/SceneState";
 import { ChatMessage, LobbyChatArg } from "../Model/ServerMessage";
 import { BangConnection } from "../Model/UseBangConnection";

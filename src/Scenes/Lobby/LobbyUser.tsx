@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
 import PlayerIcon from "../../Components/PlayerIcon";
 import TimerWidget from "../../Components/TimerWidget";
-import getLabel from "../../Locale/GetLabel";
-import { Language, useLanguage } from "../../Locale/Registry";
+import { getLabel, Language, useLanguage } from "../../Locale/Registry";
 import Env from "../../Model/Env";
 import { UserValue } from "../../Model/ServerMessage";
 import "./Style/LobbyUser.css";

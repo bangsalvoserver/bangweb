@@ -1,6 +1,5 @@
 import { ChangeEvent, useRef } from 'react';
-import getLabel from '../Locale/GetLabel';
-import { Language, useLanguage } from '../Locale/Registry';
+import { getLabel, Language, useLanguage } from "../Locale/Registry";
 import AppSettings from '../Model/AppSettings';
 import { SceneState } from '../Model/SceneState';
 import { BangConnection } from '../Model/UseBangConnection';

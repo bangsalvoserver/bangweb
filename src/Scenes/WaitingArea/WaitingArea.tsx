@@ -1,14 +1,13 @@
 import { SyntheticEvent, useCallback } from "react";
 import BangLogo from "../../Components/BangLogo";
 import Button from "../../Components/Button";
-import getLabel from "../../Locale/GetLabel";
+import PasswordInput from "../../Components/PasswordInput";
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import AppSettings, { MAX_LOBBY_NAME_LENGTH } from "../../Model/AppSettings";
 import { LobbyId, LobbyValue } from "../../Model/ServerMessage";
 import { BangConnection } from "../../Model/UseBangConnection";
 import LobbyElement from "./LobbyElement";
 import './Style/WaitingArea.css';
-import PasswordInput from "../../Components/PasswordInput";
-import { useLanguage } from "../../Locale/Registry";
 
 export interface WaitingAreaProps {
   lobbies: LobbyValue[];

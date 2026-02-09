@@ -1,12 +1,11 @@
 import { ChangeEvent, ReactNode, useCallback } from "react";
 import Collapsible from "../../Components/Collapsible";
 import Tooltip from "../../Components/Tooltip";
-import getLabel from "../../Locale/GetLabel";
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import { ExpansionType } from "../Game/Model/CardEnums";
 import { GameOptions } from "../Game/Model/GameUpdate";
 import { SetGameOptions } from "./Lobby";
 import './Style/GameOptionsEditor.css';
-import { useLanguage } from "../../Locale/Registry";
 
 export interface GameOptionProps {
     gameOptions: GameOptions;
