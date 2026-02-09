@@ -446,21 +446,21 @@ export const CARDS: CardRegistry = {
     },
     WAR_PATH: {
         name: "Senda de guerra",
-        description: <>Todos los demás jugadores descartan una carta <i>¡Bang!</i> o pierden 1 punto de vida.</>
+        description: <>Todos los demás jugadores descartan una carta <i>¡BANG!</i> o pierden 1 punto de vida.</>
     },
     ARSON: {
         name: "Incendio"
     },
     FLYING_BULLET: {
         name: "Bala perdida",
-        description:  <>Cuenta como una carta <i>¡Fallaste!</i>.<br/>Además, un jugador a tu elección a distancia 1 (si existe) es también objetivo del <i>¡Bang!</i>.</>
+        description:  <>Cuenta como una carta <i>¡Fallaste!</i>.<br/>Además, un jugador a tu elección a distancia 1 (si existe) es también objetivo del <i>¡BANG!</i>.</>
     },
     ON_THE_HOUSE: {
         name: "Invita la Casa"
     },
     GUITAR: {
         name: "Guitarra",
-        description: <>Juega esta carta sobre cualquier jugador. Mientras esté en juego, no puede jugar cartas <i>¡Bang!</i> (ni cartas que dependan del alcance del arma).</>
+        description: <>Juega esta carta sobre cualquier jugador. Mientras esté en juego, no puede jugar cartas <i>¡BANG!</i> (ni cartas que dependan del alcance del arma).</>
     },
     SCRAPPER: {
         name: "Chatarrero"
@@ -1198,7 +1198,7 @@ export const CARDS: CardRegistry = {
         hideTitle: true
     },
     BOTTLE_BANG: {
-        name: "Botella como ¡Bang!",
+        name: "Botella como ¡BANG!",
         hideTitle: true
     },
     CALUMET: {
@@ -1546,7 +1546,7 @@ export const CARDS: CardRegistry = {
         hideTitle: true
     },
     BAGGAGE_CAR_BANG: {
-        name: "Vagón de Equipaje como ¡Bang!",
+        name: "Vagón de Equipaje como ¡BANG!",
         hideTitle: true
     },
     CABOOSE: {
