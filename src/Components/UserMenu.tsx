@@ -1,11 +1,10 @@
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import getLabel from "../Locale/GetLabel";
-import { useLanguage } from "../Locale/Registry";
+import { getLabel, useLanguage } from "../Locale/Registry";
 import { MAX_USERNAME_LENGTH } from "../Model/AppSettings";
+import { checkMyUserFlag } from "../Model/SceneState";
 import { clipUsername } from "../Scenes/Lobby/LobbyUser";
 import { HeaderProps } from "./Header";
 import "./Style/UserMenu.css";
-import { checkMyUserFlag } from "../Model/SceneState";
 
 export interface UserMenuItemProps {
   onClick: () => void;

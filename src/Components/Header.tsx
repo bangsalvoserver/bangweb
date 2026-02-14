@@ -1,16 +1,14 @@
 import { ChangeEvent, useRef } from 'react';
-import getLabel from '../Locale/GetLabel';
-import { useLanguage } from '../Locale/Registry';
+import { getLabel, Language, useLanguage } from "../Locale/Registry";
 import AppSettings from '../Model/AppSettings';
-import { Language } from '../Model/Env';
 import { SceneState } from '../Model/SceneState';
 import { BangConnection } from '../Model/UseBangConnection';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
+import { loadFile } from '../Utils/FileUtils';
 import { PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import LanguageMenu from './LanguageMenu';
 import UserMenu from './UserMenu';
-import { loadFile } from '../Utils/FileUtils';
 
 export interface HeaderProps {
   scene: SceneState;

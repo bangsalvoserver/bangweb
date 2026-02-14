@@ -4,7 +4,7 @@ function twoToFour(value: unknown) {
     return value as number >= 2 && value as number <= 4;
 }
 
-export const GAME_STRINGS_CZECH: GameStringRegistry = {
+export const GAME_STRINGS: GameStringRegistry = {
 
     PROMPT_CARD_NO_EFFECT: (card) =>                                        <>Zahrání {card} by nemělo žádný efekt. Pokračovat?</>,
     PROMPT_CARD_NO_TARGET: (card) =>                                        <>Hraješ {card} bez cílení na nikoho. Pokračovat?</>,
@@ -258,6 +258,14 @@ export const GAME_STRINGS_CZECH: GameStringRegistry = {
     ERROR_CARDS_NOT_SAME_NAME: (card1, card2) =>                            <>Karta {card2} nemá stejný název jako {card1}</>,
 
     LOG_GAME_START: () =>                                                   <>Hra začala</>,
+    LOG_REVEAL_SHERIFF: (player) =>                                         <>{player} is the Sheriff.</>,
+    LOG_REVEAL_DEPUTY: (player) =>                                          <>{player} is revealed as Deputy.</>,
+    LOG_REVEAL_OUTLAW: (player) =>                                          <>{player} is revealed as Outlaw.</>,
+    LOG_REVEAL_RENEGADE: (player) =>                                        <>{player} is revealed as Renegade.</>,
+    LOG_WINNER_SHERIFF: () =>                                               <>The Sheriff and Deputies win the game!</>,
+    LOG_WINNER_OUTLAW: () =>                                                <>Outlaws win the game!</>,
+    LOG_WINNER_RENEGADE: () =>                                              <>The Renegade wins the game!</>,
+    LOG_WINNER: (player) =>                                                 <>{player} wins the game!</>,
     LOG_GAME_OVER: () =>                                                    <>Hra skončila</>,
     LOG_DECK_RESHUFFLED: () =>                                              <>Balíček je zamíchán</>,
     LOG_SHOP_RESHUFFLED: () =>                                              <>Balíček obchodu je zamíchán</>,
@@ -273,7 +281,7 @@ export const GAME_STRINGS_CZECH: GameStringRegistry = {
     LOG_STOLEN_CARD: (player, target, card) =>                              <>{player} krade {card} od {target}</>,
     LOG_STOLEN_CARD_FROM_HAND: (player, target) =>                          <>{player} krade kartu z ruky {target}</>,
     LOG_STOLEN_SELF_CARD: (player, card) =>                                 <>{player} získává {card}</>,
-    LOG_STOLEN_SELF_CARD_FROM_HAND: (player) =>                             <>{player} získává kartu z ruky</>,
+    LOG_STOLEN_SELF_CARD_FROM_HAND: (player, card) =>                       <>{player} získává kartu z ruky</>,
     LOG_DRAWN_WITH_CHARACTER: (card, player) =>                             <>{player} táhne pomocí {card}</>,
     LOG_DRAWN_FROM_GENERALSTORE: (player, target_card, card) =>             <>{player} táhne {target_card} díky {card}</>,
     LOG_DRAWN_FEAT: (card) =>                                               <>Je odhalen úspěch {card}</>,
@@ -295,6 +303,8 @@ export const GAME_STRINGS_CZECH: GameStringRegistry = {
     LOG_PLAYED_TABLE_CARD: (card, player) =>                                <>{player} hraje {card} ze stolu</>,
     LOG_EQUIPPED_CARD: (card, player) =>                                    <>{player} vybavuje {card}</>,
     LOG_EQUIPPED_CARD_TO: (card, player, target) =>                         <>{player} vybavuje {card} na {target}</>,
+    LOG_GAIN_GOLD: (player, amount) =>                                      <>{player} gains {amount === 1 ? 'a gold nugget' : `${amount} gold nuggets`}</>,
+    LOG_PAY_GOLD: (player, amount) =>                                       <>{player} pays {amount === 1 ? 'a gold nugget' : `${amount} gold nuggets`}</>,
     LOG_BOUGHT_CARD: (card, player) =>                                      <>{player} kupuje a hraje {card}</>,
     LOG_BOUGHT_EQUIP: (card, player) =>                                     <>{player} kupuje a vybavuje {card}</>,
     LOG_BOUGHT_EQUIP_TO: (card, player, target) =>                          <>{player} kupuje a vybavuje {card} na {target}</>,

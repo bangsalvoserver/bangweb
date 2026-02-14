@@ -41,13 +41,13 @@ function editSelectorTargets(selector: TargetSelector, mapper: TargetListMapper)
 }
 
 function appendCardTarget(table: GameTable, selector: TargetSelector, card: Card): TargetListMapper {
-    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
-    return targets.slice(0, index).concat(targetDispatch.appendCardTarget(targets.at(index), effects[index], card));
+    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    return targets.slice(0, index).concat(targetDispatch.appendCardTarget(table, selector, targets.at(index), effects[index], card));
 }
 
 function appendPlayerTarget(table: GameTable, selector: TargetSelector, player: Player): TargetListMapper {
-    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
-    return targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(targets.at(index), effects[index], player));
+    const { effects, targets, index } = getTargetSelectorStatus(selector);
+    return targets.slice(0, index).concat(targetDispatch.appendPlayerTarget(table, selector, targets.at(index), effects[index], player));
 }
 
 function setSelectorMode(selector: TargetSelector, mode: TargetSelectorMode): TargetSelector {
@@ -118,7 +118,7 @@ function handleEndPreselection(table: GameTable, selector: TargetSelector, remov
 }
 
 function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSelector {
-    const { effects, targets, index } = getTargetSelectorStatus(table, selector);
+    const { effects, targets, index } = getTargetSelectorStatus(selector);
 
     if (index >= effects.length) {
         switch (selector.mode) {

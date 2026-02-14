@@ -1,5 +1,4 @@
-import getLabel from "../Locale/GetLabel";
-import { useLanguage } from "../Locale/Registry";
+import { getLabel, useLanguage } from "../Locale/Registry";
 import { ErrorState } from "../Model/SceneState";
 import Button from "./Button";
 

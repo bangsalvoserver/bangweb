@@ -1,6 +1,6 @@
 import { LabelRegistry } from "../Registry";
 
-export const LABELS_ITALIAN: LabelRegistry = {
+export const LABELS: LabelRegistry = {
 
     LobbyState: {
         waiting:                "In attesa",
@@ -91,7 +91,6 @@ export const LABELS_ITALIAN: LabelRegistry = {
     },
 
     ui: {
-        LANGUAGE_NAME: "Italiano",
         APP_TITLE: "Bang!",
         APP_WELCOME: "Benvenuto in bang.salvoserver.it,\nBang! online con tutte le espansioni!\nGioca gratis adesso con i tuoi amici!",
         DISCORD_LINK: "Entra nel discord ufficiale",

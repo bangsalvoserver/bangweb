@@ -1,6 +1,6 @@
 import { GameStringRegistry } from "../Registry";
 
-export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
+export const GAME_STRINGS: GameStringRegistry = {
 
     PROMPT_CARD_NO_EFFECT: (card) =>                                        <>Giocare {card} non avrebbe effetto. Continuare?</>,
     PROMPT_CARD_NO_TARGET: (card) =>                                        <>Stai giocando {card} senza bersagliare nessuno. Continuare?</>,
@@ -254,6 +254,14 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     ERROR_CARDS_NOT_SAME_NAME: (card1, card2) =>                            <>La carta {card2} non ha lo stesso nome di {card1}</>,
 
     LOG_GAME_START: () =>                                                   <>La partita è iniziata</>,
+    LOG_REVEAL_SHERIFF: (player) =>                                         <>{player} è lo Sceriffo.</>,
+    LOG_REVEAL_DEPUTY: (player) =>                                          <>{player} si rivela come Vice.</>,
+    LOG_REVEAL_OUTLAW: (player) =>                                          <>{player} si rivela come Fuorilegge.</>,
+    LOG_REVEAL_RENEGADE: (player) =>                                        <>{player} si rivela come Rinnegato.</>,
+    LOG_WINNER_SHERIFF: () =>                                               <>Lo Sceriffo e i Vice vincono la partita!</>,
+    LOG_WINNER_OUTLAW: () =>                                                <>I Fuorilegge vincono la partita!</>,
+    LOG_WINNER_RENEGADE: () =>                                              <>Il Rinnegato vince la partita!</>,
+    LOG_WINNER: (player) =>                                                 <>{player} vince la partita!</>,
     LOG_GAME_OVER: () =>                                                    <>La partita è terminata</>,
     LOG_DECK_RESHUFFLED: () =>                                              <>Il mazzo viene rimescolato</>,
     LOG_SHOP_RESHUFFLED: () =>                                              <>Il mazzo dello shop viene rimescolato</>,
@@ -269,7 +277,7 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     LOG_STOLEN_CARD: (player, target, card) =>                              <>{player} ruba {card} di {target}</>,
     LOG_STOLEN_CARD_FROM_HAND: (player, target) =>                          <>{player} ruba una carta dalla mano di {target}</>,
     LOG_STOLEN_SELF_CARD: (player, card) =>                                 <>{player} ripesca {card}</>,
-    LOG_STOLEN_SELF_CARD_FROM_HAND: (player) =>                             <>{player} ripesca una carta dalla mano</>,
+    LOG_STOLEN_SELF_CARD_FROM_HAND: (player, card) =>                       <>{player} ripesca {card} dalla mano</>,
     LOG_DRAWN_WITH_CHARACTER: (card, player) =>                             <>{player} pesca usando {card}</>,
     LOG_DRAWN_FROM_GENERALSTORE: (player, target_card, card) =>             <>{player} pesca {target_card} per {card}</>,
     LOG_DRAWN_FEAT: (card) =>                                               <>Viene rivelata l'impresa {card}</>,
@@ -291,6 +299,8 @@ export const GAME_STRINGS_ITALIAN: GameStringRegistry = {
     LOG_PLAYED_TABLE_CARD: (card, player) =>                                <>{player} gioca {card} da terra</>,
     LOG_EQUIPPED_CARD: (card, player) =>                                    <>{player} equipaggia {card}</>,
     LOG_EQUIPPED_CARD_TO: (card, player, target) =>                         <>{player} equipaggia {card} a {target}</>,
+    LOG_GAIN_GOLD: (player, amount) =>                                      <>{player} guadagna {amount === 1 ? 'una pepita' : `${amount} pepite`}</>,
+    LOG_PAY_GOLD: (player, amount) =>                                       <>{player} paga {amount === 1 ? 'una pepita' : `${amount} pepite`}</>,
     LOG_BOUGHT_CARD: (card, player) =>                                      <>{player} compra e gioca {card}</>,
     LOG_BOUGHT_EQUIP: (card, player) =>                                     <>{player} compra ed equipaggia {card}</>,
     LOG_BOUGHT_EQUIP_TO: (card, player, target) =>                          <>{player} compra ed equipaggia {card} a {target}</>,

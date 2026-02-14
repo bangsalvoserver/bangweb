@@ -1,10 +1,9 @@
 import { Ref, SyntheticEvent, useCallback, useRef, useState } from "react";
 import Button from "../../Components/Button";
 import PasswordInput from "../../Components/PasswordInput";
-import getLabel from "../../Locale/GetLabel";
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import { LobbyId, LobbyStateEnum, LobbyValue } from "../../Model/ServerMessage";
 import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
-import { useLanguage } from "../../Locale/Registry";
 
 interface LobbyPasswordProps {
   passwordInputRef?: Ref<HTMLInputElement>;

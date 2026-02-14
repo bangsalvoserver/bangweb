@@ -1,12 +1,11 @@
 import { ReactNode } from "react";
+import PlayerIcon from "../../Components/PlayerIcon";
 import TimerWidget from "../../Components/TimerWidget";
-import getLabel from "../../Locale/GetLabel";
-import Env, { Language } from "../../Model/Env";
+import { getLabel, Language, useLanguage } from "../../Locale/Registry";
+import Env from "../../Model/Env";
 import { UserValue } from "../../Model/ServerMessage";
 import "./Style/LobbyUser.css";
 import defaultUserPropic from "/media/icon_default_user.png";
-import PlayerIcon from "../../Components/PlayerIcon";
-import { useLanguage } from "../../Locale/Registry";
 
 export interface LobbyUserProps {
     user: UserValue;

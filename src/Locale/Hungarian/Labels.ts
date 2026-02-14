@@ -1,6 +1,6 @@
 import { LabelRegistry } from "../Registry";
 
-export const LABELS_HUNGARIAN: LabelRegistry = {
+export const LABELS: LabelRegistry = {
 
     LobbyState: {
         waiting:                "Várakozik",
@@ -91,7 +91,6 @@ export const LABELS_HUNGARIAN: LabelRegistry = {
     },
 
     ui: {
-        LANGUAGE_NAME: "Magyar",
         APP_TITLE: "Bang!",
         APP_WELCOME: "Üdvözöllek a bang.salvoserver.it szerveren,\nBang! online az összes kiegészítővel!\nJátsz ingyen a barátaiddal!",
         DISCORD_LINK: "Csatlakozz a hivatalos discord szerverre",

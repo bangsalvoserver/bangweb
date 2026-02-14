@@ -1,14 +1,13 @@
 import { createContext } from 'react';
 import useEvent from 'react-use-event-hook';
 import Button from '../../Components/Button';
-import getLabel from '../../Locale/GetLabel';
+import { getLabel, useLanguage } from "../../Locale/Registry";
 import { checkMyUserFlag, LobbyState, newLobbyState } from '../../Model/SceneState';
 import { UserId, UserValue } from '../../Model/ServerMessage';
 import { BangConnection } from '../../Model/UseBangConnection';
 import { GameOptions } from '../Game/Model/GameUpdate';
 import GameOptionsEditor from './GameOptionsEditor';
 import LobbyUser from './LobbyUser';
-import { useLanguage } from '../../Locale/Registry';
 
 export function getUser(users: UserValue[], id: UserId): UserValue {
   const user = users.find(user => user.user_id === id);

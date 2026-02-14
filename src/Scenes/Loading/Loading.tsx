@@ -1,6 +1,5 @@
 import BangLogo from "../../Components/BangLogo";
-import getLabel from "../../Locale/GetLabel";
-import { useLanguage } from "../../Locale/Registry";
+import { getLabel, useLanguage } from "../../Locale/Registry";
 
 export interface LoadingProps {
     message: string;
