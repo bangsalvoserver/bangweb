@@ -245,7 +245,7 @@ export const CARDS: CardRegistry = {
     },
     SAVED_2: {
         name: "Obětavý skok",
-        description: <>Zabráníš jakémukoli jinému hráči ztratit 1 život. Pokud takto zamezíš vyřazení, vezmi si 2 karty z ruky zachráněného hráče nebo z balíčku.</>,
+        description: <>Zabráníš jakémukoli jinému hráči ztratit 1 život. Pokud takto zamezíš vyřazení, vezmi si 2 karty z ruky zachráněného hráče.</>,
         descriptionClass: "card-description text-smaller"
     },
     FANNING: {
