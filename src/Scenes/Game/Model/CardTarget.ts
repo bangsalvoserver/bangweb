@@ -79,7 +79,7 @@ export type CardTargetTypes = {
     max_cards: {
         value: { cards: Card[], max_cards: number },
         target: CardId[],
-        effect: CardTargetMapping<{ ncards: number }>
+        effect: CardTargetMapping<{ ncards: number, confirmable: boolean }>
     },
     bang_or_cards: {
         value: { cards: Card[], state: 'bang' | 'cards' | 'finished' },

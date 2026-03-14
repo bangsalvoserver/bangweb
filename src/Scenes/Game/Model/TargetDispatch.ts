@@ -314,7 +314,7 @@ const targetDispatch = buildDispatch({
         isCardSelected: ({ cards }, card) => containsId(cards, card),
         appendCardTarget: (table, selector, { cards, max_cards }, effect, card) => ({ cards: cards.concat(card), max_cards }),
         isValidCardTarget,
-        isSelectionConfirmable: ({ cards }, effect) => cards.length !== 0,
+        isSelectionConfirmable: ({ cards }, effect) => effect.confirmable && cards.length !== 0,
         isSelectionFinished: ({ cards, max_cards }, effect) => cards.length === max_cards,
         confirmSelection: ({ cards }) => ({ cards, max_cards: cards.length }),
         buildAutoTarget: (table, selector, effect) => {
