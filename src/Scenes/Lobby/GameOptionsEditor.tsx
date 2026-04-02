@@ -164,7 +164,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='fistfulofcards' onSelect={e => e.add('ghost_cards')} />
                 <ExpansionCheckbox name='wildwestshow' onSelect={e => e.add('ghost_cards')} />
                 <ExpansionCheckbox name='goldrush' />
-                <ExpansionCheckbox name='valleyofshadows' onSelect={e => { e.delete('udolistinu'); e.add('ghost_cards') }} />
+                <ExpansionCheckbox name='valleyofshadows' onSelect={e => { e.delete('udolistinu'); e.add('ghost_cards'); }} />
                 <ExpansionCheckbox name='armedanddangerous' />
                 <ExpansionCheckbox name='greattrainrobbery' onSelect={e => e.add('ghost_cards')} />
                 <ExpansionCheckbox name='mostwanted' />
@@ -178,7 +178,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='legends_basemod' onDeselect={e => e.delete('legends')} />
             </Collapsible>
             <Collapsible label={getLabel(language, 'GameOptions', 'extras')} storageKey="expand_extras">
-                <ExpansionCheckbox name='udolistinu' onSelect={e => e.delete('valleyofshadows')} />
+                <ExpansionCheckbox name='udolistinu' onSelect={e => { e.delete('valleyofshadows'); e.add('ghost_cards'); }} />
                 <ExpansionCheckbox name='canyondiablo' />
                 <ExpansionCheckbox name='crazy_greygory' />
             </Collapsible>
