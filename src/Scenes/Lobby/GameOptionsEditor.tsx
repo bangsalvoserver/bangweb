@@ -131,7 +131,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         if (prop in gameOptions) {
             value = gameOptions[prop] as T;
         }
-        return {prop, value} as GameOptionsOf<T>;
+        return { prop, value } as GameOptionsOf<T>;
     };
 
     const maxCoefficient = 4.0;
@@ -160,25 +160,25 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         <div className="game-options-group">
             <Collapsible label={getLabel(language, 'GameOptions', 'expansions')} storageKey="expand_expansions" defaultExpanded>
                 <ExpansionCheckbox name='dodgecity' />
-                <ExpansionCheckbox name='wildwestshow_characters' />
+                <ExpansionCheckbox name='highnoon' onSelect={e => e.add('ghost_cards')} />
+                <ExpansionCheckbox name='fistfulofcards' onSelect={e => e.add('ghost_cards')} />
+                <ExpansionCheckbox name='wildwestshow' onSelect={e => e.add('ghost_cards')} />
                 <ExpansionCheckbox name='goldrush' />
-                <ExpansionCheckbox name='valleyofshadows' onSelect={e => e.delete('udolistinu')} />
-                <ExpansionCheckbox name='udolistinu' onSelect={e => e.delete('valleyofshadows')} />
+                <ExpansionCheckbox name='valleyofshadows' onSelect={e => { e.delete('udolistinu'); e.add('ghost_cards') }} />
                 <ExpansionCheckbox name='armedanddangerous' />
-                <ExpansionCheckbox name='greattrainrobbery' />
-                <ExpansionCheckbox name='legends' onSelect={e => e.add('legends_basemod')} />
-                <ExpansionCheckbox name='legends_basemod' onDeselect={e => e.delete('legends')} />
+                <ExpansionCheckbox name='greattrainrobbery' onSelect={e => e.add('ghost_cards')} />
+                <ExpansionCheckbox name='mostwanted' />
+                <ExpansionCheckbox name='legends' onSelect={e => e.add('legends_basemod')} onDeselect={e => e.delete('legends_basemod')} />
             </Collapsible>
             <Collapsible label={getLabel(language, 'GameOptions', 'variations')} storageKey="expand_variations" defaultExpanded>
                 <ExpansionCheckbox name='ghost_cards' />
-                <ExpansionCheckbox name='highnoon' />
-                <ExpansionCheckbox name='fistfulofcards' />
-                <ExpansionCheckbox name='wildwestshow' />
+                <ExpansionCheckbox name='wildwestshow_characters' />
                 <ExpansionCheckbox name='shadowgunslingers' />
                 <ExpansionCheckbox name='stickofdynamite' />
+                <ExpansionCheckbox name='legends_basemod' onDeselect={e => e.delete('legends')} />
             </Collapsible>
             <Collapsible label={getLabel(language, 'GameOptions', 'extras')} storageKey="expand_extras">
-                <ExpansionCheckbox name='mostwanted' />
+                <ExpansionCheckbox name='udolistinu' onSelect={e => e.delete('valleyofshadows')} />
                 <ExpansionCheckbox name='canyondiablo' />
                 <ExpansionCheckbox name='crazy_greygory' />
             </Collapsible>
@@ -192,16 +192,16 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <OptionCheckbox {...getOption('only_base_characters')} />
                 <OptionCheckbox {...getOption('quick_discard_all')} />
                 <OptionCheckbox {...getOption('auto_pick_predraw')} />
-                <ConditionalOnExpansion expansions={['highnoon','fistfulofcards']}>
+                <ConditionalOnExpansion expansions={['highnoon', 'fistfulofcards']}>
                     <OptionNumber {...getOption('scenario_deck_size')} max={30} withSlider />
                 </ConditionalOnExpansion>
                 <OptionNumber {...getOption('duration_coefficient')} min={0} max={100} withSlider transform={transformVelocity} reverseTransform={reverseTransformVelocity} />
                 <OptionNumber {...getOption('auto_resolve_timer')} max={5000} step={50} withSlider />
                 <OptionNumber {...getOption('bot_play_timer')} max={10000} step={50} withSlider />
-                <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu','canyondiablo']}>
+                <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu', 'canyondiablo']}>
                     <OptionNumber {...getOption('damage_timer')} max={5000} step={50} withSlider />
                 </ConditionalOnExpansion>
-                <ConditionalOnExpansion expansions={['valleyofshadows','udolistinu']}>
+                <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu']}>
                     <OptionNumber {...getOption('escape_timer')} max={10000} step={50} withSlider />
                 </ConditionalOnExpansion>
                 <OptionNumber {...getOption('game_seed')} />
