@@ -13,6 +13,11 @@
     margin: 0.5em auto;
 }
 
+.game-options-group hr {
+    margin: 0.25em 0;
+    border: 0;
+}
+
 .game-options-group .collapsible-visible {
     max-height: 28em;
 }

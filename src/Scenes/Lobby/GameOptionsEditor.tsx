@@ -193,25 +193,32 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         </div>
         <div className="game-options-group">
             <Collapsible label={getLabel(language, 'ui', 'GAME_OPTIONS')} storageKey="expand_options">
-                <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider />
                 <OptionNumber {...getOption('max_players')} min={3} max={8} withSlider />
                 <OptionCheckbox {...getOption('add_bots')} />
-                <OptionCheckbox {...getOption('allow_bot_rejoin')} />
+                <ConditionalOnOption option='add_bots'>
+                    <OptionNumber {...getOption('bot_play_timer')} max={10000} step={50} withSlider />
+                    <OptionCheckbox {...getOption('allow_bot_rejoin')} />
+                </ConditionalOnOption>
+                <hr />
+                <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider />
                 <OptionCheckbox {...getOption('only_base_characters')} />
-                <OptionCheckbox {...getOption('quick_discard_all')} />
-                <OptionCheckbox {...getOption('auto_pick_predraw')} />
+                <hr />
                 <ConditionalOnExpansion expansions={['highnoon', 'fistfulofcards']}>
                     <OptionNumber {...getOption('scenario_deck_size')} max={30} withSlider />
+                    <hr />
                 </ConditionalOnExpansion>
+                <OptionCheckbox {...getOption('quick_discard_all')} />
+                <OptionCheckbox {...getOption('auto_pick_predraw')} />
+                <hr />
                 <OptionNumber {...getOption('duration_coefficient')} min={0} max={100} withSlider transform={transformVelocity} reverseTransform={reverseTransformVelocity} />
                 <OptionNumber {...getOption('auto_resolve_timer')} max={5000} step={50} withSlider />
-                <OptionNumber {...getOption('bot_play_timer')} max={10000} step={50} withSlider />
                 <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu', 'canyondiablo']}>
                     <OptionNumber {...getOption('damage_timer')} max={5000} step={50} withSlider />
                 </ConditionalOnExpansion>
                 <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu']}>
                     <OptionNumber {...getOption('escape_timer')} max={10000} step={50} withSlider />
                 </ConditionalOnExpansion>
+                <hr />
                 <OptionNumber {...getOption('game_seed')} />
             </Collapsible>
         </div>
