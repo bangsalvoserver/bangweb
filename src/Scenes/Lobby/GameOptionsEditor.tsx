@@ -54,8 +54,9 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         </div>);
     }, [language, gameOptions.expansions, setGameOptions]);
 
-    const ConditionalOnExpansion = useCallback(({ expansions, children }: { expansions: ExpansionType[], children: ReactNode }) => {
-        if (expansions.some(value => gameOptions.expansions?.includes(value))) {
+    const ConditionalOnExpansion = useCallback(({ expansions, exclude, children }: { expansions?: ExpansionType[], exclude?: ExpansionType[], children: ReactNode }) => {
+        if ((expansions?.some(value => gameOptions.expansions?.includes(value)) ?? true) &&
+            !exclude?.some(value => gameOptions.expansions?.includes(value))) {
             return children;
         } else {
             return null;
@@ -200,7 +201,9 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                     <OptionCheckbox {...getOption('allow_bot_rejoin')} />
                 </ConditionalOnOption>
                 <hr />
-                <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider />
+                <ConditionalOnExpansion exclude={['crazy_greygory']}>
+                    <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider />
+                </ConditionalOnExpansion>
                 <OptionCheckbox {...getOption('only_base_characters')} />
                 <hr />
                 <ConditionalOnExpansion expansions={['highnoon', 'fistfulofcards']}>
