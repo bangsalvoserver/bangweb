@@ -14,7 +14,7 @@
 }
 
 .game-options-group .collapsible-visible {
-    max-height: 24em;
+    max-height: 28em;
 }
 
 .game-options-group label {
@@ -28,7 +28,7 @@
 }
 
 .option-left-column {
-    width: 13.5em;
+    margin-right: 1em;
 }
 
 .option-left-column label {
@@ -36,6 +36,7 @@
 }
 
 .option-right-column {
+    margin-left: auto;
     width: 10em;
     display: flex;
     align-items: center;
