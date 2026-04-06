@@ -62,6 +62,14 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         }
     }, [gameOptions.expansions]);
 
+    const ConditionalOnOption = useCallback(({ option, children }: { option: keyof GameOptions, children: ReactNode }) => {
+        if (gameOptions[option] === true) {
+            return children;
+        } else {
+            return null;
+        }
+    }, [gameOptions])
+
     type NumberTransform = (value: number) => number;
 
     const numberSetter = useCallback((prop: GameOptionsOf<number>['prop'], min?: number, max?: number, transform?: NumberTransform) => {
