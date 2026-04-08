@@ -15,7 +15,7 @@
 
 .game-options-group hr {
     margin: 0.25em 0;
-    border: 0;
+    border: 1px solid #2d1000ff;
 }
 
 .game-options-group .collapsible-visible {
