@@ -145,11 +145,8 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (isPlayerSelected(selector, target)) return false;
 
-    if (!filter.has('dead_or_alive')
-        && filter.has('dead') === isPlayerInGame(target)
-    ) {
-        return false;
-    }
+    if (filter.has('alive') && !isPlayerInGame(target)) return false;
+    if (filter.has('dead') && isPlayerInGame(target)) return false;
 
     if (filter.has('self') && target.id !== origin?.id) return false;
     if (filter.has('notself') && target.id === origin?.id) return false;
