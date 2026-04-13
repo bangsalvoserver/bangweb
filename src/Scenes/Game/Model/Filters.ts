@@ -159,6 +159,8 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
 
     if (filter.has('notsheriff') && target.status.role === 'sheriff') return false;
 
+    if (filter.has('not_empty') && isEmptyHand(table, target) && isEmptyTable(table, target)) return false;
+
     if (filter.has('not_empty_hand') && isEmptyHand(table, target)) return false;
 
     if (filter.has('not_empty_table') && isEmptyTable(table, target)) return false;
