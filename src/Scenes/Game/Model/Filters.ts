@@ -140,58 +140,41 @@ function isEmptyCubes(table: GameTable, player: Player) {
     return true;
 }
 
+function checkDistance(table: GameTable, selector: TargetSelector, target: Player, range: number) {
+    const distances = selector.request?.distances;
+    return distances !== undefined && range !== 0 && (
+        getModifierContext(selector, 'ignore_distances')
+        || getPlayer(table, table.self_player!).status.flags.has('ignore_distances')
+        || calcPlayerDistance(table, selector, table.self_player!, target.id) <= (distances.range_mod + range)
+    );
+}
+
+type PlayerFilterFunction = (table: GameTable, selector: TargetSelector, target: Player) => boolean;
+
+const PLAYER_FILTERS: Record<PlayerFilter, PlayerFilterFunction> = {
+    'alive':            (table, selector, target) => isPlayerInGame(target),
+    'dead':             (table, selector, target) => !isPlayerInGame(target),
+    'self':             (table, selector, target) => target.id === table.self_player,
+    'notself':          (table, selector, target) => target.id !== table.self_player,
+    'notsheriff':       (table, selector, target) => target.status.role !== 'sheriff',
+    'not_empty':        (table, selector, target) => !isEmptyHand(table, target) || !isEmptyTable(table, target),
+    'not_empty_hand':   (table, selector, target) => !isEmptyHand(table, target),
+    'not_empty_table':  (table, selector, target) => !isEmptyTable(table, target),
+    'not_empty_cubes':  (table, selector, target) => !isEmptyCubes(table, target),
+    'notorigin':        (table, selector, target) => isResponse(selector) && selector.request.origin !== target.id,
+    'target_set':       (table, selector, target) => isResponse(selector) && selector.request.target_set_players.has(target.id),
+    'reachable':        (table, selector, target) => checkDistance(table, selector, target, selector.request?.distances.weapon_range ?? 0),
+    'range_1':          (table, selector, target) => checkDistance(table, selector, target, 1),
+    'range_2':          (table, selector, target) => checkDistance(table, selector, target, 2),
+}
+
 export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: Set<PlayerFilter>, target: Player): boolean {
-    const origin = getPlayer(table, table.self_player!);
+    if (isPlayerSelected(selector, target))
+        return false;
 
-    if (isPlayerSelected(selector, target)) return false;
-
-    if (filter.has('alive') && !isPlayerInGame(target)) return false;
-    if (filter.has('dead') && isPlayerInGame(target)) return false;
-
-    if (filter.has('self') && target.id !== origin?.id) return false;
-    if (filter.has('notself') && target.id === origin?.id) return false;
-
-    if (filter.has('notorigin')) {
-        if (!isResponse(selector) || selector.request.origin === target.id) {
-            return false;
-        }
-    }
-
-    if (filter.has('notsheriff') && target.status.role === 'sheriff') return false;
-
-    if (filter.has('not_empty') && isEmptyHand(table, target) && isEmptyTable(table, target)) return false;
-
-    if (filter.has('not_empty_hand') && isEmptyHand(table, target)) return false;
-
-    if (filter.has('not_empty_table') && isEmptyTable(table, target)) return false;
-
-    if (filter.has('not_empty_cubes') && isEmptyCubes(table, target)) return false;
-
-    if (filter.has('target_set')) {
-        if (!isResponse(selector) || !selector.request.target_set_players.has(target.id)) {
-            return false;
-        }
-    }
-
-    if (filter.has('reachable') || filter.has('range_1') || filter.has('range_2')) {
-        const distances = selector.request?.distances;
-        
-        let range = distances?.range_mod ?? 0;
-        if (filter.has('reachable')) {
-            if (!distances?.weapon_range) {
-                return false;
-            }
-            range += distances.weapon_range;
-        } else if (filter.has('range_1')) {
-            ++range;
-        } else if (filter.has('range_2')) {
-            range += 2;
-        }
-
-        if (!getModifierContext(selector, 'ignore_distances')
-            && !origin.status.flags.has('ignore_distances')
-            && calcPlayerDistance(table, selector, origin.id, target.id) > range
-        ) {
+    for (const value of filter) {
+        const fn = PLAYER_FILTERS[value];
+        if (fn && !fn(table, selector, target)) {
             return false;
         }
     }
@@ -199,93 +182,66 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
     return true;
 }
 
-export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: Set<CardFilter>, target: Card): boolean {
-    const origin = getPlayer(table, table.self_player!);
+type CardFilterFunction = (table: GameTable, selector: TargetSelector, target: Card) => boolean;
 
+const CARD_FILTERS: Record<CardFilter, CardFilterFunction> = {
+    'bang':             (table, selector, target) => isBangCard(getPlayer(table, table.self_player!), target),
+    'used_bang':        (table, selector, target) => isBangCard(getPlayer(table, table.self_player!), target) || table.status.flags.has('showdown'),
+    'bangcard':         (table, selector, target) =>  cardHasTag(target, 'bangcard'),
+    'not_bangcard':     (table, selector, target) => !cardHasTag(target, 'bangcard'),
+    'missed':           (table, selector, target) =>  cardHasTag(target, 'missed'),
+    'missedcard':       (table, selector, target) =>  cardHasTag(target, 'missedcard'),
+    'not_missedcard':   (table, selector, target) => !cardHasTag(target, 'missedcard'),
+    'bronco':           (table, selector, target) =>  cardHasTag(target, 'bronco'),
+    'catbalou_panic':   (table, selector, target) =>  cardHasTag(target, 'catbalou_panic'),
+    'beer':             (table, selector, target) =>  cardHasTag(target, 'beer'),
+    'blue':             (table, selector, target) => getCardColor(target) === 'blue',
+    'train':            (table, selector, target) => getCardColor(target) === 'train',
+    'blue_or_train':    (table, selector, target) => ['blue','train'].includes(getCardColor(target)),
+    'hearts':           (table, selector, target) => getCardSign(target).suit === 'hearts',
+    'diamonds':         (table, selector, target) => getCardSign(target).suit === 'diamonds',
+    'clubs':            (table, selector, target) => getCardSign(target).suit === 'clubs',
+    'spades':           (table, selector, target) => getCardSign(target).suit === 'spades',
+    'two_to_nine':      (table, selector, target) => ['rank_2','rank_3','rank_4','rank_5','rank_6','rank_7','rank_8','rank_9'].includes(getCardSign(target).rank),
+    'ten_to_ace':       (table, selector, target) => ['rank_10','rank_J','rank_Q','rank_K','rank_A'].includes(getCardSign(target).rank),
+    'table':            (table, selector, target) => getCardPocket(target) === 'player_table',
+    'hand':             (table, selector, target) => getCardPocket(target) === 'player_hand',
+    'not_self_hand':    (table, selector, target) => getCardPocket(target) !== 'player_hand' || getCardOwner(target) !== table.self_player,
+    'target_set':       (table, selector, target) => isResponse(selector) && selector.request.target_set_cards.has(target.id),
+    'origin_card_suit': (table, selector, target) => isResponse(selector) && selector.request.origin_card !== null && getCardSign(getCard(table, selector.request.origin_card)).suit === getCardSign(target).suit,
+}
+
+export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: Set<CardFilter>, target: Card): boolean {
     if (isCardSelected(selector, target) || isCardCurrent(selector, target)) return false;
 
-    const targetPocket = getCardPocket(target);
-    const targetOwner = getCardOwner(target);
+    let hasTargetSet = false;
+    let hasSelection = false;
+    let hasBlack = false;
 
-    if (filter.has('target_set')) {
-        if (!isResponse(selector) || !selector.request.target_set_cards.has(target.id)) {
-            return false;
-        }
-    } else {
-        if (filter.has('selection') !== (targetPocket === 'selection')) return false;
-
-        switch (targetPocket) {
-        case 'player_hand':
-        case 'player_table':
-        case 'selection':
-            break;
-        default:
-            return false;
+    for (const value of filter) {
+        switch (value) {
+        case 'target_set': hasTargetSet = true; break;
+        case 'selection': hasSelection = true; break;
+        case 'black': hasBlack = true; break;
         }
     }
+    
+    if (!hasTargetSet) {
+        const targetPocket = getCardPocket(target);
+        if (hasSelection !== (targetPocket === 'selection')) return false;
+        if (!['player_hand','player_table','selection'].includes(targetPocket)) return false;
+    }
+    
+    if (hasBlack !== (getCardColor(target) === 'black')) {
+        return false;
+    }
 
-    if (filter.has('beer') && !cardHasTag(target, 'beer')) return false;
-    if (filter.has('bang') && !isBangCard(origin, target)) return false;
-    if (filter.has('used_bang') && !(table.status.flags.has('showdown') || isBangCard(origin, target))) return false;
-    if (filter.has('bangcard') && !cardHasTag(target, 'bangcard')) return false;
-    if (filter.has('not_bangcard') && cardHasTag(target, 'bangcard')) return false;
-    if (filter.has('missed') && !cardHasTag(target, 'missed')) return false;
-    if (filter.has('missedcard') && !cardHasTag(target, 'missedcard')) return false;
-    if (filter.has('not_missedcard') && cardHasTag(target, 'missedcard')) return false;
-    if (filter.has('bronco') && !cardHasTag(target, 'bronco')) return false;
-    if (filter.has('catbalou_panic') && !cardHasTag(target, 'catbalou_panic')) return false;
-
-    const color = getCardColor(target);
-    if (filter.has('blue') && color !== 'blue') return false;
-    if (filter.has('train') && color !== 'train') return false;
-    if (filter.has('blue_or_train') && color !== 'blue' && color !== 'train') return false;
-    if (filter.has('black') !== (color === 'black')) return false;
-
-    const sign = getCardSign(target);
-    if (filter.has('hearts') && sign.suit !== 'hearts') return false;
-    if (filter.has('diamonds') && sign.suit !== 'diamonds') return false;
-    if (filter.has('clubs') && sign.suit !== 'clubs') return false;
-    if (filter.has('spades') && sign.suit !== 'spades') return false;
-
-    if (filter.has('two_to_nine')) {
-        switch (sign.rank) {
-        case 'rank_2':
-        case 'rank_3':
-        case 'rank_4':
-        case 'rank_5':
-        case 'rank_6':
-        case 'rank_7':
-        case 'rank_8':
-        case 'rank_9':
-            break;
-        default:
+    for (const value of filter) {
+        const fn = CARD_FILTERS[value];
+        if (fn && !fn(table, selector, target)) {
             return false;
         }
     }
-
-    if (filter.has('ten_to_ace')) {
-        switch (sign.rank) {
-        case 'rank_10':
-        case 'rank_J':
-        case 'rank_Q':
-        case 'rank_K':
-        case 'rank_A':
-            break;
-        default:
-            return false;
-        }
-    }
-
-    if (filter.has('origin_card_suit')) {
-        if (!isResponse(selector)) return false;
-        if (!selector.request.origin_card) return false;
-        const reqOriginCard = getCard(table, selector.request.origin_card);
-        if (!(isCardKnown(reqOriginCard) && reqOriginCard.cardData.sign.suit === sign.suit)) return false;
-    }
-
-    if (filter.has('table') && targetPocket !== 'player_table') return false;
-    if (filter.has('hand') && targetPocket !== 'player_hand') return false;
-    if (filter.has('not_self_hand') && targetPocket === 'player_hand' && targetOwner === table.self_player) return false;
 
     return true;
 }
