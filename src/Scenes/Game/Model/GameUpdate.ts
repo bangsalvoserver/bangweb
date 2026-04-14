@@ -1,7 +1,7 @@
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { Container, ContainerKey, parseContainer } from "../../../Utils/ArrayUtils";
 import { Empty } from "../../../Utils/UnionUtils";
-import { CardDataArgs, CardSign } from "./CardData";
+import { CardData, CardSign } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, SoundId, TokenType } from "./CardEnums";
 
 export type CardId = number;
@@ -75,7 +75,7 @@ export interface DeckShuffledUpdate {
 
 export interface ShowCardUpdate {
     card: CardId;
-    info: CardDataArgs;
+    info: CardData;
 }
 
 export interface HideCardUpdate {
@@ -85,7 +85,7 @@ export interface HideCardUpdate {
 export interface ExchangeCardUpdate {
     card: CardId;
     new_card: CardId;
-    info: CardDataArgs;
+    info: CardData;
 }
 
 export interface TapCardUpdate {

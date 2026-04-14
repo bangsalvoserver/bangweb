@@ -1,30 +1,16 @@
-import { Container, ContainerKey } from "../../../Utils/ArrayUtils";
+import { Empty } from "../../../Utils/UnionUtils";
 import { CardFilter, CardSuit, EffectType, PlayerFilter } from "./CardEnums";
 import { Card, Player } from "./GameTable";
 import { CardId, PlayerId } from "./GameUpdate";
 
-interface PlayerTargetArgsBase<K extends ContainerKey> {
-    player_filter: Container<K, PlayerFilter>;
+export interface PlayerTargetArgs {
+    player_filter: PlayerFilter[];
 }
 
-type PlayerTargetMapping<T = unknown> = {
-    [K in ContainerKey]: PlayerTargetArgsBase<K> & T;
-};
-
-export type PlayerTargetArgsArray = PlayerTargetArgsBase<'array'>;
-export type PlayerTargetArgs = PlayerTargetArgsBase<'set'>;
-
-interface CardTargetArgsBase<K extends ContainerKey> {
-    player_filter: Container<K, PlayerFilter>;
-    card_filter: Container<K, CardFilter>;
+export interface CardTargetArgs {
+    player_filter: PlayerFilter[];
+    card_filter: CardFilter[];
 }
-
-type CardTargetMapping<T = unknown> = {
-    [K in ContainerKey]: CardTargetArgsBase<K> & T;
-};
-
-export type CardTargetArgsArray = CardTargetArgsBase<'array'>;
-export type CardTargetArgs = CardTargetArgsBase<'set'>;
 
 export type CardTargetTypes = {
     none: {
@@ -34,72 +20,72 @@ export type CardTargetTypes = {
     player: {
         value: Player,
         target: PlayerId,
-        effect: PlayerTargetMapping
+        effect: PlayerTargetArgs
     },
     conditional_player: {
         value: Player | null,
         target: PlayerId | null,
-        effect: PlayerTargetMapping
+        effect: PlayerTargetArgs
     },
     adjacent_players: {
         value: {players: Player[], finished: boolean},
         target: PlayerId[],
-        effect: PlayerTargetMapping<{ max_distance: number }>
+        effect: PlayerTargetArgs & { max_distance: number }
     },
     player_per_cube: {
         value: { cubes: Card[], max_cubes: number, players: Player[] },
         target: [CardId[], PlayerId[]],
-        effect: PlayerTargetMapping<{ extra_players: number }>
+        effect: PlayerTargetArgs & { extra_players: number }
     },
     card: {
         value: Card,
         target: CardId,
-        effect: CardTargetMapping
+        effect: CardTargetArgs
     },
     random_if_hand_card: {
         value: Card,
         target: CardId,
-        effect: CardTargetMapping
+        effect: CardTargetArgs
     },
     extra_card: {
         value: Card | null,
         target: CardId | null,
-        effect: CardTargetMapping
+        effect: CardTargetArgs
     },
     players: {
         value: Player[],
         target: null,
-        effect: PlayerTargetMapping
+        effect: PlayerTargetArgs
     },
     cards: {
         value: Card[],
         target: CardId[],
-        effect: CardTargetMapping<{ ncards: number }>
+        effect: CardTargetArgs & { ncards: number }
     },
     max_cards: {
         value: { cards: Card[], max_cards: number },
         target: CardId[],
-        effect: CardTargetMapping<{ ncards: number, confirmable: boolean }>
+        effect: CardTargetArgs & { ncards: number, confirmable: boolean }
     },
     bang_or_cards: {
         value: { cards: Card[], state: 'bang' | 'cards' | 'finished' },
         target: CardId[],
-        effect: CardTargetMapping<{ ncards: number }>
+        effect: CardTargetArgs & { ncards: number }
     },
     card_per_player: {
         value: { cards: Card[], max_cards: number },
         target: CardId[],
-        effect: CardTargetMapping
+        effect: CardTargetArgs
     },
     missed_and_same_suit: {
         value: { cards: Card[], targets_by_suit: Partial<Record<CardSuit, Card[]>> },
         target: CardId[],
-        effect: CardTargetMapping<{ ncards: number }>
+        effect: CardTargetArgs & { ncards: number }
     },
     cube_slot: {
         value: Card,
         target: CardId,
-        effect: PlayerTargetMapping<{ stealing: boolean }>
+        effect: PlayerTargetArgs & { stealing: boolean }
     },
     move_cube_slot: {
         value: { cards: Card[], max_cubes: number },
@@ -119,7 +105,7 @@ export type CardTargetTypes = {
     select_cubes_player: {
         value: { cubes: Card[], max_cubes: number, player: Player | null },
         target: [CardId[], PlayerId],
-        effect: PlayerTargetMapping<{ ncubes: number }>
+        effect: PlayerTargetArgs & { ncubes: number }
     },
     select_cubes_repeat: {
         value: { cubes: Card[], max_cubes: number },
@@ -138,14 +124,14 @@ export type TargetType = keyof CardTargetTypes;
 export type CardTarget = { [ K in TargetType ] : { type: K, value: CardTargetTypes[K]['value'] } }[TargetType];
 export type CardTargetGenerated = CardTargetTypes[TargetType]['target'];
 
-export type CardEffectOf<Target extends TargetType, K extends ContainerKey> = {
+export type CardEffectOf<Target extends TargetType> = {
     type: EffectType;
     target: Target;
 } & (CardTargetTypes[Target] extends { effect: infer Effect }
-    ? Effect extends { [P in K]: infer E } ? E : Effect
-    : {});
+    ? Effect
+    : Empty
+);
 
-export type CardEffectBase<K extends ContainerKey> = { [Target in TargetType]: CardEffectOf<Target, K> }[TargetType]
-
-export type CardEffectArgs = CardEffectBase<'array'>;
-export type CardEffect = CardEffectBase<'set'>;
+export type CardEffect = {
+    [Target in TargetType]: CardEffectOf<Target>
+}[TargetType];

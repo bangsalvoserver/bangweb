@@ -2,7 +2,6 @@ import { group, intersect, parseContainer, rotateToFirstOf, subtract } from "../
 import { editById, editByIds, removeById, removeByIds } from "../../../Utils/RecordUtils";
 import { createUnionReducer } from "../../../Utils/UnionUtils";
 import { CARD_SLOT_ID_FROM, CARD_SLOT_ID_TO } from "../Pockets/CardSlot";
-import { parseCardData } from "./CardData";
 import { GameFlag, TablePocketType } from "./CardEnums";
 import { CardRecord, GameTable, getCard, getCardImage, getPlayer, getTablePocket, newCard, newPlayer, newPocketId, PlayerRecord } from "./GameTable";
 import { addTokens, addToPocket, clearAnimation, exchangeCard, moveCardToEnd, removeFromPocket, setAnimation } from "./GameTableEdit";
@@ -240,7 +239,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this, pockets, players,
             cards: editById(this.cards, card, card => setAnimation(
-                { ...card, cardData: parseCardData(info) },
+                { ...card, cardData: info },
                 { type: 'flipping', duration }
             ))
         };
@@ -265,7 +264,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         const cards = {
             ...removeById(this.cards, card),
             [new_card]: setAnimation(
-                newCard(new_card, parseCardData(info), oldCard.pocket),
+                newCard(new_card, info, oldCard.pocket),
                 { type: 'flipping', backface: getCardImage(oldCard), duration }
             )
         };

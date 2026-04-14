@@ -1,7 +1,5 @@
-import { Container, ContainerKey, parseContainer } from "../../../Utils/ArrayUtils";
 import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType } from "./CardEnums";
-import { CardEffectBase } from "./CardTarget";
-import targetDispatch from "./TargetDispatch";
+import { CardEffect } from "./CardTarget";
 
 export interface CardEquip {
     type: EquipType;
@@ -12,11 +10,11 @@ export interface CardSign {
     rank: CardRank;
 }
 
-interface CardDataBase<K extends ContainerKey> {
+export interface CardData {
     name: string;
     image: string;
-    effects: CardEffectBase<K>[];
-    responses: CardEffectBase<K>[];
+    effects: CardEffect[];
+    responses: CardEffect[];
     equips: CardEquip[];
     tags: Record<TagType, number>;
     expansion: ExpansionType[];
@@ -33,19 +31,7 @@ interface CardDataBase<K extends ContainerKey> {
     mth_response: {
         type: MthType | null
     };
-    equip_target: Container<K, PlayerFilter>;
+    equip_target: PlayerFilter[];
     color: CardColor;
     sign: CardSign;
-}
-
-export type CardData = CardDataBase<'set'>;
-export type CardDataArgs = CardDataBase<'array'>;
-
-export function parseCardData(info: CardDataArgs): CardData {
-    return {
-        ...info,
-        effects: info.effects.map(targetDispatch.parseCardEffect),
-        responses: info.responses.map(targetDispatch.parseCardEffect),
-        equip_target: parseContainer(info.equip_target)
-    };
 }

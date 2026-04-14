@@ -15,8 +15,8 @@ export function cardHasTag(card: Card, tagType: TagType): card is KnownCard {
     return getTagValue(card, tagType) !== undefined;
 }
 
-export function getEquipTarget(card: Card): Set<PlayerFilter> {
-    return isCardKnown(card) ? card.cardData.equip_target : new Set();
+export function getEquipTarget(card: Card): PlayerFilter[] {
+    return isCardKnown(card) ? card.cardData.equip_target : [];
 }
 
 export function getCardColor(card: Card): CardColor {
@@ -168,7 +168,7 @@ const PLAYER_FILTERS: Record<PlayerFilter, PlayerFilterFunction> = {
     'range_2':          (table, selector, target) => checkDistance(table, selector, target, 2),
 }
 
-export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: Set<PlayerFilter>, target: Player): boolean {
+export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
     if (isPlayerSelected(selector, target))
         return false;
 
@@ -211,7 +211,7 @@ const CARD_FILTERS: Record<CardFilter, CardFilterFunction> = {
     'origin_card_suit': (table, selector, target) => isResponse(selector) && selector.request.origin_card !== null && getCardSign(getCard(table, selector.request.origin_card)).suit === getCardSign(target).suit,
 }
 
-export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: Set<CardFilter>, target: Card): boolean {
+export function checkCardFilter(table: GameTable, selector: TargetSelector, filter: CardFilter[], target: Card): boolean {
     if (isCardSelected(selector, target) || isCardCurrent(selector, target)) return false;
 
     let hasTargetSet = false;
