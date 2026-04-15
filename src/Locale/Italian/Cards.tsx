@@ -953,7 +953,7 @@ export const CARDS: CardRegistry = {
     DUTCH_WILL: {
         name: "Dutch Will",
         hideTitle: true,
-        description: <>Pesca 2 pepite, ne scarta 1, e prende 1 pepita.</>,
+        description: <>Pesca 2 carte, ne scarta 1, e prende 1 pepita.</>,
         descriptionClass: "character-description"
     },
     JACKY_MURIETA: {
