@@ -193,7 +193,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
             </Collapsible>
         </div>
         <div className="game-options-group">
-            <Collapsible label={getLabel(language, 'ui', 'GAME_OPTIONS')} storageKey="expand_options">
+            <Collapsible label={getLabel(language, 'ui', 'GAME_OPTIONS')} storageKey="expand_options" defaultExpanded>
                 <OptionNumber {...getOption('max_players')} min={3} max={8} withSlider />
                 <OptionCheckbox {...getOption('add_bots')} />
                 <ConditionalOnOption option='add_bots'>
