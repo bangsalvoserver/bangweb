@@ -171,7 +171,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='dodgecity' />
                 <ExpansionCheckbox name='highnoon' onSelect={e => e.add('ghost_cards')} />
                 <ExpansionCheckbox name='fistfulofcards' onSelect={e => e.add('ghost_cards')} />
-                <ExpansionCheckbox name='wildwestshow' onSelect={e => e.add('ghost_cards')} />
+                <ExpansionCheckbox name='wildwestshow' onSelect={e => { e.add('ghost_cards'); e.add('wildwestshow_characters'); }} onDeselect={e => e.delete('wildwestshow_characters')} />
                 <ExpansionCheckbox name='goldrush' />
                 <ExpansionCheckbox name='valleyofshadows' onSelect={e => { e.delete('udolistinu'); e.add('ghost_cards'); }} />
                 <ExpansionCheckbox name='armedanddangerous' />
