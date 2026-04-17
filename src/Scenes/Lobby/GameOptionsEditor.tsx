@@ -212,17 +212,18 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 </ConditionalOnExpansion>
                 <OptionCheckbox {...getOption('quick_discard_all')} />
                 <OptionCheckbox {...getOption('auto_pick_predraw')} />
-                <hr />
-                <OptionNumber {...getOption('duration_coefficient')} min={0} max={100} withSlider transform={transformVelocity} reverseTransform={reverseTransformVelocity} />
-                <OptionNumber {...getOption('auto_resolve_timer')} max={5000} step={50} withSlider />
-                <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu', 'canyondiablo']}>
-                    <OptionNumber {...getOption('damage_timer')} max={5000} step={50} withSlider />
-                </ConditionalOnExpansion>
-                <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu']}>
-                    <OptionNumber {...getOption('escape_timer')} max={10000} step={50} withSlider />
-                </ConditionalOnExpansion>
-                <hr />
-                <OptionNumber {...getOption('game_seed')} />
+                <Collapsible label={<hr/>} storageKey="expand_extra_options">
+                    <OptionNumber {...getOption('duration_coefficient')} min={0} max={100} withSlider transform={transformVelocity} reverseTransform={reverseTransformVelocity} />
+                    <OptionNumber {...getOption('auto_resolve_timer')} max={5000} step={50} withSlider />
+                    <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu', 'canyondiablo']}>
+                        <OptionNumber {...getOption('damage_timer')} max={5000} step={50} withSlider />
+                    </ConditionalOnExpansion>
+                    <ConditionalOnExpansion expansions={['valleyofshadows', 'udolistinu']}>
+                        <OptionNumber {...getOption('escape_timer')} max={10000} step={50} withSlider />
+                    </ConditionalOnExpansion>
+                    <hr />
+                    <OptionNumber {...getOption('game_seed')} />
+                </Collapsible>
             </Collapsible>
         </div>
     </div>);

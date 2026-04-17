@@ -18,6 +18,11 @@
     border: 1px solid #2d1000ff;
 }
 
+.game-options-group .collapsible-header hr {
+    display: inline-block;
+    width: calc(100% - 2em);
+}
+
 .game-options-group .collapsible-visible {
     max-height: 28em;
 }
