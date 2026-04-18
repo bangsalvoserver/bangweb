@@ -40,7 +40,8 @@ export type ExpansionType =
     'legends_basemod' |
     'legends' |
     'canyondiablo' |
-    'crazy_greygory';
+    'crazy_greygory' |
+    'frontier';
 
 export type DeckType =
     'none' |

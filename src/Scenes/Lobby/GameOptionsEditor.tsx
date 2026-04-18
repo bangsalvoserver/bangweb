@@ -186,9 +186,12 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='stickofdynamite' />
                 <ExpansionCheckbox name='legends_basemod' onDeselect={e => e.delete('legends')} />
             </Collapsible>
+            <Collapsible label={getLabel(language, 'GameOptions', 'community')} storageKey="community_expansions">
+                <ExpansionCheckbox name='canyondiablo' />
+                <ExpansionCheckbox name='frontier' onSelect={e => { e.add('armedanddangerous'); }} />
+            </Collapsible>
             <Collapsible label={getLabel(language, 'GameOptions', 'extras')} storageKey="expand_extras">
                 <ExpansionCheckbox name='udolistinu' onSelect={e => { e.delete('valleyofshadows'); e.add('ghost_cards'); }} />
-                <ExpansionCheckbox name='canyondiablo' />
                 <ExpansionCheckbox name='crazy_greygory' />
             </Collapsible>
         </div>
