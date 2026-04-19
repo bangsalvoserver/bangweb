@@ -531,7 +531,8 @@ export const CARDS: CardRegistry = {
         description: <>Players with more than 4 cards in front of them must discard them all.</>
     },
     GEYSER: {
-        name: "Geyser"
+        name: "Geyser",
+        hideTitle: true
     },
     HAWKEN: {
         name: "Hawken",
