@@ -85,6 +85,14 @@
     top: 76%;
 }
 
+.card-description-wider {
+    position: absolute;
+    width: 84%;
+    height: 20%;
+    left: 8%;
+    top: 70%;
+}
+
 .weapon-description {
     position: absolute;
     width: 76%;
