@@ -624,7 +624,8 @@ export const CARDS: CardRegistry = {
         hideTitle: true
     },
     GEYSER: {
-        name: "Geyser"
+        name: "Geyser",
+        hideTitle: true
     },
     HAWKEN: {
         name: "Hawken",
