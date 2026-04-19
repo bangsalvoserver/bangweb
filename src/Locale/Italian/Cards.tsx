@@ -704,7 +704,8 @@ export const CARDS: CardRegistry = {
     TRAP: {
         name: "Trappola",
         description: <>Gioca su un qualsiasi giocatore.<br/>Non può giocare carte blu.<br/>Una volta per turno, può "estrarre!":<br/>♥=Passa questa carta a un altro giocatore.<br/>♠=Scarta questa carta e perdi 1 punto vita.</>,
-        descriptionClass: "card-description-wider text-smallest"
+        descriptionClass: "card-description-wider text-smallest",
+        hideTitle: true
     },
 
     // Base game characters
