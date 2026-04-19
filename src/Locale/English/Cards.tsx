@@ -472,6 +472,146 @@ export const CARDS: CardRegistry = {
         name: "Shylock"
     },
 
+    // Frontier cards
+
+    BALLAD: {
+        name: "Ballad",
+        description: <>Force a player to take all cards in front of him into hand. You may then draw a card from his hand.</>
+    },
+    COFFIN: {
+        name: "Coffin",
+        description: <>At the end of your turn, you are considered out of the game until the start of your next turn. THen, discard this card.</>
+    },
+    UNDERTAKER: {
+        name: "Undertaker",
+        description: <>Track a player.<br/>When he is eliminated, only you can see his role. It cannot be revealed for the rest of the game.</>,
+        descriptionClass: "card-description-higher"
+    },
+    COFFEE: {
+        name: "Coffee",
+        description: <>At the end of this turn, you do not discard cards.</>
+    },
+    CHINATOWN: {
+        name: "Chinatown",
+        description: <>Force a player to discard their entire hand.<br/>They may draw the same amount of cards from the deck.</>,
+        hideTitle: true,
+        descriptionClass: "card-description text-smaller"
+    },
+    CHUCK_WAGON: {
+        name: "Chuck Wagon",
+        description: <>At the end of each of your turns, if you played at least 3 cards, gain 1 life point.</>,
+        hideTitle: true,
+    },
+    CHOLERA: {
+        name: "Cholera",
+        description: <>Play on any player. That player cannot use their special ability.<br/>At the end of your turn, "draw!": on Spades, add 1 📦.</>
+    },
+    COMANCHE: {
+        name: "Comanche",
+        description: <>Track a player.<br/>After drawing, during each of your turns, you have his ability once.</>,
+        hideTitle: true
+    },
+    COMPANION: {
+        name: "Companion",
+        description: <>Track a player.<br/>During your turn, you may play brown cards as if from his position.</>
+    },
+    COYOTES: {
+        name: "Coyotes",
+        description: <>Discard a card or lose 1 life point. Else, pass Coyotes to your left.</>,
+        descriptionClass: "draw-description text-smaller"
+    },
+    FEUD: {
+        name: "Feud",
+        description: <>You may neither play this card nor discard it at the end of your turn.</>
+    },
+    FALCON: {
+        name: "Falcon",
+        description: <>Look at another player's hand.</>,
+        descriptionClass: "card-description-lower"
+    },
+    CAMPFIRE: {
+        name: "Campfire",
+        description: <>Discard your weapon in play. When you play a weapon, discard this card.<br/>You view others at distance 1.</>
+    },
+    STAMPEDE: {
+        name: "Stampede",
+        description: <>Players with more than 4 cards in front of them must discard them all.</>
+    },
+    GEYSER: {
+        name: "Geyser"
+    },
+    HAWKEN: {
+        name: "Hawken",
+        description: <>When you hit a player, you may force him to take all his cards in play back into hand.</>,
+        hideTitle: true,
+        descriptionClass: "weapon-description"
+    },
+    HEAVY_GRUB: {
+        name: "Heavy Grub",
+        description: <>If discarded at the end of your turn, gain 3 life points.</>,
+        hideTitle: true
+    },
+    JACKALOPE: {
+        name: "Jackalope",
+        description: <>If drawn or discarded from your hand by another player, you may draw 2 cards.</>,
+        hideTitle: true
+    },
+    MULE: {
+        name: "Mule"
+    },
+    GRIZZLY: {
+        name: "Grizzly"
+    },
+    PELTS: {
+        name: "Pelts",
+        description: <>If there are 4 📦 on this cards, switch it with another card in play.</>, // TODO fix this?
+        descriptionClass: "cube-description"
+    },
+    FISHING: {
+        name: "Fishing",
+        description: <>Name a suit and "draw!" as many times as the number of other players. You may take all cards of the named suit drawn into hand.</>
+    },
+    PIONEERS: {
+        name: "Pioneers",
+        description: <>Track yourself.<br/>At the start of your turn, pass Pioneers left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
+        descriptionClass: "card-description-higher text-smallest"
+    },
+    POSSE: {
+        name: "Posse",
+        description: <>Track a player.<br/>At the start of your turn, pass Posse left. If passed by the tracked player, discard it and he loses 1 life point.</>,
+        hideTitle: true
+    },
+    SCALP: {
+        name: "Scalp!",
+        description: <>During your turn, use the ability of another character once.</>,
+        hideTitle: true,
+        descriptionClass: "cube-description"
+    },
+    SCORPION: {
+        name: "Scorpion",
+        description: <>Play on any player. Whenever he plays a card in front of anyone, "draw!": on Spades, he must play <i>Missed!</i> or discard the card.</>
+    },
+    SLOCUM: {
+        name: "Slocum",
+        description: <>When you play a <i>BANG!</i> card, draw a card. If you did not play a <i>BANG!</i> card this turn, discard this card.</>,
+        hideTitle: true,
+        descriptionClass: "weapon-description"
+    },
+    TARANTULA_JUICE: {
+        name: "Tarantula Juice",
+        description: <>"Draw!":<br/>♥♦=gain 2 life points.<br/>♣=draw a card.<br/>♠=lose 1 life point.</>,
+        hideTitle: true
+    },
+    CATTLE_DRIVE: {
+        name: "Cattle Drive",
+        description: <>Draw a card for each card in front of you.</>
+    },
+    TRAP: {
+        name: "Trap",
+        description: <>Play on any player. He may not play blue cards.<br/>Once per turn, he may "draw!":<br/>♥=Pass this card to another player.<br/>♠=Discard this card and lose 1 life point.</>,
+        descriptionClass: "card-description text-smallest"
+    },
+
     // Base game characters
 
     BART_CASSIDY: {
@@ -1523,6 +1663,69 @@ export const CARDS: CardRegistry = {
         name: "Wyatt Earl",
         hideTitle: true,
         description: <>Cards that can affect more than one player don't have effect on him.</>,
+        descriptionClass: "character-description"
+    },
+
+    // Frontier characters
+
+    ALEXANDER_NOON: {
+        name: "Alexander Noon",
+        description: <>Before you "draw!", you may draw a card and then choose to discard a card from hand to use as the result of the "draw!".</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    CALEB_BREW: {
+        name: "Caleb Brew",
+        description: <>When you gain a life point, you may discard a card from hand for a player of your choice to gain 1 life point.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    CAYENNE_CHEE: {
+        name: "Cayenne Chee",
+        description: <>Once per round, when you use a card, you may discard a Diamond card with it to take it back into hand.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    JOSEY_STRONG: {
+        name: "Josey Strong",
+        description: <>When you play a <i>BANG!</i> card, you may discard a brown card from hand to make this shot unavoidable.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    JOSIAH_TUNG: {
+        name: "Josiah Tung",
+        description: <>After drawing, you may discard a random card from hand to draw two cards.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    LT_MICAIAH: {
+        name: "Lt. Micaiah",
+        description: <>Once during your turn, you may discard a card from hand to switch 1 of your cards in play with another card in play.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    RAY_OWE: {
+        name: "Ray Owe",
+        description: <>During your turn, you may draw a card from another player. When used or when your turn ends, return it to him.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    SALVO_THE_SHOOTER: {
+        name: "Salvo the Shooter",
+        description: <>Twice per turn, whenever you play a <i>BANG!</i> card, you may shoot another player within range.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    SHANGO_BROTHERS: {
+        name: "Shango Brothers",
+        description: <>During your turn, every time you play 3 cards, you may draw 1 from the deck.</>,
+        hideTitle: true,
+        descriptionClass: "character-description"
+    },
+    STEVE_TENGO: {
+        name: "Steve Tengo",
+        description: <>At the start of your turn, track a player. Whenever you hit him, draw a card.</>,
+        hideTitle: true,
         descriptionClass: "character-description"
     },
 
