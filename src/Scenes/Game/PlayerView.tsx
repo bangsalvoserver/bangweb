@@ -154,7 +154,9 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const tokens = (Object.entries(player.tokens) as [TokenType, number][])
         .map(([token, count]) => (
             <div key={token} className='player-tokens-inner' ref={ref => tokensRef.set(token, ref)}>
-                { count > 0 && <><img key={token} src={getTokenSprite(token)} alt="" />{ count }</> }
+                { count > 0 && <><img key={token} src={getTokenSprite(token)} alt="" />
+                    { !token.startsWith('pardner') && count }</>
+                }
             </div>
         ));
 
