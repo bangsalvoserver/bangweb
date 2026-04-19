@@ -60,7 +60,7 @@ export function isPlayerDead(player: Player): boolean {
 }
 
 export function isPlayerGhost(player: Player): boolean {
-    return ['ghost_1', 'ghost_2', 'temp_ghost', 'shadow']
+    return ['ghost', 'temp_ghost', 'shadow']
         .some(flag => player.status.flags.has(flag));
 }
 
