@@ -480,7 +480,7 @@ export const CARDS: CardRegistry = {
     },
     COFFIN: {
         name: "Coffin",
-        description: <>At the end of your turn, you are considered out of the game until the start of your next turn. THen, discard this card.</>
+        description: <>At the end of your turn, you are considered out of the game until the start of your next turn. Then, discard this card.</>
     },
     UNDERTAKER: {
         name: "Undertaker",
@@ -517,7 +517,7 @@ export const CARDS: CardRegistry = {
     },
     COYOTES: {
         name: "Coyotes",
-        description: <>Discard a card or lose 1 life point. Else, pass Coyotes to your left.</>,
+        description: <>Discard a card or lose 1 life point. Else, pass <i>Coyotes</i> to your left.</>,
         descriptionClass: "draw-description text-smaller"
     },
     FEUD: {
@@ -564,7 +564,7 @@ export const CARDS: CardRegistry = {
     },
     PELTS: {
         name: "Pelts",
-        description: <>If there are 4 📦 on this cards, switch it with another card in play.</>, // TODO fix this?
+        description: <>If there are 4 📦 on this card, switch it with another card in play.</>, // TODO fix this?
         descriptionClass: "cube-description"
     },
     FISHING: {
@@ -573,12 +573,12 @@ export const CARDS: CardRegistry = {
     },
     PIONEERS: {
         name: "Pioneers",
-        description: <>Track yourself.<br/>At the start of your turn, pass Pioneers left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
+        description: <>Track yourself.<br/>At the start of your turn, pass <i>Pioneers</i> left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
         descriptionClass: "card-description-higher text-smallest"
     },
     POSSE: {
         name: "Posse",
-        description: <>Track a player.<br/>At the start of your turn, pass Posse left. If passed by the tracked player, discard it and he loses 1 life point.</>,
+        description: <>Track a player.<br/>At the start of your turn, pass <i>Posse</i> left. If passed by the tracked player, discard it and he loses 1 life point.</>,
         hideTitle: true
     },
     SCALP: {
