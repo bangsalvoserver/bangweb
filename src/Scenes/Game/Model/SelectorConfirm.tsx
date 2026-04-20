@@ -4,7 +4,7 @@ import { GameStateContext } from "../GameScene";
 import { GameAction } from "./GameAction";
 import { Card, GameTable, Player } from "./GameTable";
 import targetDispatch from "./TargetDispatch";
-import { TargetSelector, isResponse, isValidCardTarget, isValidEquipTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
+import { TargetSelector, isResponse, isValidCardTarget, isValidPlayerTarget, selectorCanConfirm, selectorCanPlayCard, selectorCanUndo } from "./TargetSelector";
 import { SelectorUpdate } from "./TargetSelectorReducer";
 
 function getSelectorGameAction(selector: TargetSelector): GameAction | undefined {
@@ -70,11 +70,6 @@ function getClickPlayerUpdate(table: GameTable, selector: TargetSelector, player
     case 'modifier':
         if (isValidPlayerTarget(table, selector, player)) {
             return { addPlayerTarget: player };
-        }
-        break;
-    case 'equip':
-        if (isValidEquipTarget(table, selector, player)) {
-            return { addEquipTarget: player };
         }
     }
 }

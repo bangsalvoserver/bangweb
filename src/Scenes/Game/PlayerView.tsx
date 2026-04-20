@@ -14,7 +14,7 @@ import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
 import { GameTable, getPlayerPocket, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
-import { isPlayerSelected, isPlayerSkipped, isResponse, isValidEquipTarget, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
+import { isPlayerSelected, isPlayerSkipped, isResponse, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
@@ -43,12 +43,6 @@ function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, play
         if (isValidPlayerTarget(table, selector, player)) {
             return 'player-targetable';
         }
-        break;
-    case 'equip':
-        if (isValidEquipTarget(table, selector, player)) {
-            return 'player-targetable';
-        }
-        break;
     }
     return '';
 }

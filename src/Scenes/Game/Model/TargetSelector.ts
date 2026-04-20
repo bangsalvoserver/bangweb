@@ -1,5 +1,5 @@
-import { CardTarget } from "./CardTarget";
-import { checkPlayerFilter, getCardEffects, getCardOwner, getCardPocket, getEquipTarget, isEquipCard } from "./Filters";
+import { CardEffect, CardTarget } from "./CardTarget";
+import { getCardOwner, getCardPocket, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatus, StatusReady } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
@@ -17,7 +17,6 @@ export type TargetSelectorMode =
     | 'modifier' // Selecting target for modifier
     | 'middle' // Modifiers selected, selecting new card
     | 'target' // Selecting target for playing card
-    | 'equip' // Selecting target for equip
     | 'finish' // Last target selected, sending game_action
 
 /*
@@ -25,29 +24,23 @@ export type TargetSelectorMode =
  * 
  *          /--(1)-----------------------------------------------\
  *         /                            +===========+             \
- *        / /--(4)--------------------> | preselect |              \
+ *        / /--(3)--------------------> | preselect |              \
  *       / /                 /--------- +===========+ ---------\    \
- *  (0)  | |                (2)               (8)            (1,9)  |
+ *  (0)  | |                (2)               (6)            (1,7)  |
  *   |   | |                 |                 |               |    |
  *   v   | |                 v                 v               v    v
- *  +=======+         +==========+ --(5)-> +========+         +========+         +========+
- *  | start | --(2)-> | modifier |         | middle | --(1)-> | target | --(6)-> | finish |
+ *  +=======+         +==========+ --(4)-> +========+         +========+         +========+
+ *  | start | --(2)-> | modifier |         | middle | --(1)-> | target | --(5)-> | finish |
  *  +=======+         +==========+ <-(2)-- +========+         +========+         +========+
- *       |                                     |                                     ^
- *       \                                     \--(3)--> +=======+                   |
- *        \                                              | equip | --(7)-------------/
- *         \--(3)--------------------------------------> +=======+
  * 
  *  (0) Start here / player has clicked on 'Undo'
  *  (1) Player has clicked on a playing card
  *  (2) Player has clicked on a modifier card
- *  (3) Player has clicked on an equippable card
- *  (4) Client has received a request with a card tagged 'preselect'
- *  (5) Player has selected the last target for the modifier
- *  (6) Player has selected the last target for the playing card
- *  (7) Player has selected the target for the equippable card
- *  (8) Player has selected the last target for the preselect *modifier* card
- *  (9) Player has added a target for the preselect *playing* card -- targeting state is transfered
+ *  (3) Client has received a request with a card tagged 'preselect'
+ *  (4) Player has selected the last target for the modifier
+ *  (5) Player has selected the last target for the playing card
+ *  (6) Player has selected the last target for the preselect *modifier* card
+ *  (7) Player has added a target for the preselect *playing* card -- targeting state is transfered
  * 
  */
 
@@ -102,10 +95,20 @@ function getCurrentTargetSelection(selector: TargetSelector) {
     }
 }
 
+function getCardEffects(card: KnownCard, selector: TargetSelector): CardEffect[] {
+    if (isEquipCard(card)) {
+        return card.cardData.equip_effects;
+    } else if (isResponse(selector)) {
+        return card.cardData.responses;
+    } else {
+        return card.cardData.effects;
+    }
+}
+
 export function getTargetSelectorStatus(selector: TargetSelector) {
     const { card, targets } = getCurrentTargetSelection(selector);
 
-    const effects = getCardEffects(card, isResponse(selector));
+    const effects = getCardEffects(card, selector);
     
     let index = targets.length - 1;
     if (targets.length === 0 || targetDispatch.isSelectionFinished(targets[index], effects[index])) {
@@ -140,7 +143,6 @@ export function selectorCanUndo(selector: TargetSelector): boolean {
     case 'modifier':
     case 'middle':
     case 'target':
-    case 'equip':
         return selector.preselection === null;
     default:
         return false;
@@ -217,18 +219,17 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
 }
 
 export function *zipSelections(selector: TargetSelector) {
-    const response = isResponse(selector);
     for (const { card, targets } of selector.modifiers) {
-        const effects = getCardEffects(card, response);
+        const effects = getCardEffects(card, selector);
         for (let i = 0; i < targets.length; ++i) {
-            yield [card, targets[i], effects.at(i)] as const;
+            yield [card, targets[i], effects[i]] as const;
         }
     }
     if (selector.selection) {
         const { card, targets } = selector.selection;
-        const effects = getCardEffects(card, response);
+        const effects = getCardEffects(card, selector);
         for (let i = 0; i < targets.length; ++i) {
-            yield [card, targets[i], effects.at(i)] as const;
+            yield [card, targets[i], effects[i]] as const;
         }
     }
 }
@@ -249,7 +250,7 @@ export function isPlayerSelected(selector: TargetSelector, player: Player): bool
 
 export function isPlayerSkipped(selector: TargetSelector, player: Player): boolean {
     for (const [, target, effect] of zipSelections(selector)) {
-        if (target.type === 'player' && effect?.type === 'skip_player') {
+        if (target.type === 'player' && effect.type === 'skip_player') {
             return target.value.id === player.id;
         }
     }
@@ -303,10 +304,4 @@ export function isValidCardTarget(table: GameTable, selector: TargetSelector, ca
 export function isValidPlayerTarget(table: GameTable, selector: TargetSelector, player: Player): boolean {
     const { effects, targets, index } = getTargetSelectorStatus(selector);
     return targetDispatch.isValidPlayerTarget(table, selector, targets.at(index), effects[index], player);
-}
-
-export function isValidEquipTarget(table: GameTable, selector: TargetSelector, player: Player): boolean {
-    return selector.selection !== null
-        && isEquipCard(selector.selection.card)
-        && checkPlayerFilter(table, selector, getEquipTarget(selector.selection.card), player);
 }

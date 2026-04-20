@@ -1,4 +1,4 @@
-import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, MthType, PlayerFilter, TagType } from "./CardEnums";
+import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, MthType, TagType } from "./CardEnums";
 import { CardEffect } from "./CardTarget";
 
 export interface CardEquip {
@@ -15,6 +15,7 @@ export interface CardData {
     image: string;
     effects: CardEffect[];
     responses: CardEffect[];
+    equip_effects: CardEffect[];
     equips: CardEquip[];
     tags: Record<TagType, number>;
     expansion: ExpansionType[];
@@ -31,7 +32,6 @@ export interface CardData {
     mth_response: {
         type: MthType | null
     };
-    equip_target: PlayerFilter[];
     color: CardColor;
     sign: CardSign;
 }

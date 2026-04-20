@@ -14,8 +14,7 @@ export type SelectorUpdate =
     { undoSelection: Empty } |
     { selectPlayingCard: KnownCard } |
     { addCardTarget: Card } |
-    { addPlayerTarget: Player } |
-    { addEquipTarget: Player }
+    { addPlayerTarget: Player }
 ;
 
 type TargetListMapper = SetStateAction<CardTarget[]>;
@@ -143,15 +142,7 @@ function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSe
 }
 
 function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelector {
-    if (isEquipCard(card)) {
-        return {
-            ...selector,
-            prompt: { type: 'none' },
-            preselection: null,
-            selection: { card, targets: [] },
-            mode: card.cardData.equip_target.length === 0 ? 'finish' : 'equip'
-        };
-    } else if (isCardModifier(card, isResponse(selector))) {
+    if (!isEquipCard(card) && isCardModifier(card, isResponse(selector))) {
         return handleAutoTargets(table, {
             ...selector,
             prompt: { type: 'none' },
@@ -168,20 +159,6 @@ function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, car
             mode: 'target'
         });
     }
-}
-
-function handleAddEquipTarget(selector: TargetSelector, player: Player): TargetSelector {
-    if (selector.mode !== 'equip') {
-        throw new Error('TargetSelector: not in equipping mode');
-    }
-    return {
-        ...selector,
-        selection: {
-            ...selector.selection!,
-            targets: [{ type: 'player', value: player }]
-        },
-        mode: 'finish'
-    };
 }
 
 const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTable, SelectorUpdate>({
@@ -211,10 +188,6 @@ const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTabl
 
     addPlayerTarget (table, player) {
         return handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(table, this, player)));
-    },
-
-    addEquipTarget (table, player) {
-        return handleAddEquipTarget(this, player);
     }
     
 });

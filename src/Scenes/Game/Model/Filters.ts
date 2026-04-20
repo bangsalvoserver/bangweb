@@ -1,6 +1,5 @@
 import { CardSign } from "./CardData";
 import { CardColor, CardFilter, PlayerFilter, PocketType, TagType } from "./CardEnums";
-import { CardEffect } from "./CardTarget";
 import { Card, GameTable, getCard, getPlayer, getPlayerCubes, getPlayerPocket, isCardKnown, KnownCard, Player } from "./GameTable";
 import { PlayerId } from "./GameUpdate";
 import { getModifierContext, isCardCurrent, isCardSelected, isPlayerSelected, isResponse, TargetSelector } from "./TargetSelector";
@@ -13,10 +12,6 @@ export function getTagValue(card: Card, tagType: TagType): number | undefined {
 
 export function cardHasTag(card: Card, tagType: TagType): card is KnownCard {
     return getTagValue(card, tagType) !== undefined;
-}
-
-export function getEquipTarget(card: Card): PlayerFilter[] {
-    return isCardKnown(card) ? card.cardData.equip_target : [];
 }
 
 export function getCardColor(card: Card): CardColor {
@@ -33,10 +28,6 @@ export function getCardPocket(card: Card): PocketType {
 
 export function getCardOwner(card: Card): PlayerId | undefined {
     return card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
-}
-
-export function getCardEffects(card: KnownCard, isResponse: boolean): CardEffect[] {
-    return isResponse ? card.cardData.responses : card.cardData.effects;
 }
 
 export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
