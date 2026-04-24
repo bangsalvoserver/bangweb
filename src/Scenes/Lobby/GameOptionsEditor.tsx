@@ -63,14 +63,6 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         }
     }, [gameOptions.expansions]);
 
-    const ConditionalOnOption = useCallback(({ option, children }: { option: keyof GameOptions, children: ReactNode }) => {
-        if (gameOptions[option] === true) {
-            return children;
-        } else {
-            return null;
-        }
-    }, [gameOptions])
-
     type NumberTransform = (value: number) => number;
 
     const numberSetter = useCallback((prop: GameOptionsOf<number>['prop'], min?: number, max?: number, transform?: NumberTransform) => {
@@ -196,10 +188,10 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
             <Collapsible label={getLabel(language, 'ui', 'GAME_OPTIONS')} storageKey="expand_options" defaultExpanded>
                 <OptionNumber {...getOption('max_players')} min={3} max={8} withSlider />
                 <OptionCheckbox {...getOption('add_bots')} />
-                <ConditionalOnOption option='add_bots'>
+                {gameOptions.add_bots && <>
                     <OptionNumber {...getOption('bot_play_timer')} max={10000} step={50} withSlider />
                     <OptionCheckbox {...getOption('allow_bot_rejoin')} />
-                </ConditionalOnOption>
+                </>}
                 <hr />
                 <ConditionalOnExpansion exclude={['crazy_greygory']}>
                     <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider />
