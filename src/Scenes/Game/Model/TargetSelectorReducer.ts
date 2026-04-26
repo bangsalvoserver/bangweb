@@ -1,6 +1,7 @@
 import { SetStateAction } from "react";
 import { mapLast } from "../../../Utils/ArrayUtils";
 import { Empty, createContextUnionReducer } from "../../../Utils/UnionUtils";
+import { EffectListType } from "./CardData";
 import { CardTarget } from "./CardTarget";
 import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
@@ -22,7 +23,8 @@ type TargetListMapper = SetStateAction<CardTarget[]>;
 function mapSelection(selection: TargetSelection, mapper: TargetListMapper): TargetSelection {
     return {
         card: selection.card,
-        targets: typeof(mapper) === 'function' ? mapper(selection.targets) : mapper
+        targets: typeof(mapper) === 'function' ? mapper(selection.targets) : mapper,
+        effect_list: selection.effect_list
     }
 };
 
@@ -53,6 +55,23 @@ function setSelectorMode(selector: TargetSelector, mode: TargetSelectorMode): Ta
     return { ...selector, mode };
 }
 
+function newTargetSelection(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelection {
+    let effect_list: EffectListType;
+    if (isEquipCard(card)) {
+        effect_list = 'equip_effects';
+    } else if (isResponse(selector)) {
+        const forcedPlay = getModifierContext(selector, 'forced_play');
+        if (forcedPlay !== undefined && (card.id === forcedPlay || isCardCurrent(selector, getCard(table, forcedPlay)))) {
+            effect_list = 'effects';
+        } else {
+            effect_list = 'responses';
+        }
+    } else {
+        effect_list = 'effects';
+    }
+    return { card, targets: [], effect_list };
+}
+
 function handleSetRequest(table: GameTable, request: RequestStatusUnion): TargetSelector {
     const selector = newTargetSelector(request);
     if (isResponse(selector)) {
@@ -71,10 +90,7 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
             return handleAutoTargets(table, {
                 ...selector,
                 mode: 'preselect',
-                preselection: {
-                    card: preselectCard,
-                    targets: []
-                }
+                preselection: newTargetSelection(table, selector, preselectCard)
             });
         }
     }
@@ -82,7 +98,10 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
 }
 
 function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSelector {
-    const cardId = getModifierContext(selector, 'repeat_card') ?? getModifierContext(selector, 'train_card');
+    const cardId = getModifierContext(selector, 'forced_play')
+        ?? getModifierContext(selector, 'repeat_card')
+        ?? getModifierContext(selector, 'train_card');
+    
     if (cardId) {
         const card = getCard(table, cardId);
         if (!isCardCurrent(selector, card) && isCardKnown(card) && isCardPlayable(selector, card)) {
@@ -92,16 +111,15 @@ function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSel
     return selector;
 }
 
-function handleEndPreselection(table: GameTable, selector: TargetSelector, remove: boolean = true): TargetSelector {
+function handleEndPreselection(table: GameTable, selector: TargetSelector): TargetSelector {
     if (selector.mode === 'preselect' && selector.preselection !== null) {
-        if (isCardModifier(selector.preselection.card, isResponse(selector))) {
-            return {
+        if (isCardModifier(selector.preselection.card, selector.preselection.effect_list === 'responses')) {
+            return handleAutoSelect(table, {
                 ...selector,
                 prompt: { type: 'none' },
                 modifiers: [selector.preselection],
-                preselection: remove ? null : selector.preselection,
                 mode: 'middle'
-            };
+            });
         } else {
             return handleAutoTargets(table, {
                 ...selector,
@@ -116,13 +134,18 @@ function handleEndPreselection(table: GameTable, selector: TargetSelector, remov
     return handleAutoTargets(table, selector);
 }
 
+function cleanPreselection(selector: TargetSelector): TargetSelector {
+    if (selector.preselection === null) return selector;
+    return { ...selector, preselection: null};
+}
+
 function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSelector {
     const { effects, targets, index } = getTargetSelectorStatus(selector);
 
     if (index >= effects.length) {
         switch (selector.mode) {
         case 'preselect':
-            return handleEndPreselection(table, selector, false);
+            return handleEndPreselection(table, selector);
         case 'target':
             return setSelectorMode(selector, 'finish');
         case 'modifier':
@@ -142,20 +165,19 @@ function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSe
 }
 
 function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelector {
-    if (!isEquipCard(card) && isCardModifier(card, isResponse(selector))) {
+    const selection = newTargetSelection(table, selector, card);
+    if (selection.effect_list !== 'equip_effects' && isCardModifier(card, selection.effect_list === 'responses')) {
         return handleAutoTargets(table, {
             ...selector,
             prompt: { type: 'none' },
-            preselection: null,
-            modifiers: selector.modifiers.concat({ card, targets: [] }),
+            modifiers: selector.modifiers.concat(selection),
             mode: 'modifier'
         });
     } else {
         return handleAutoTargets(table, {
             ...selector,
             prompt: { type: 'none' },
-            preselection: null,
-            selection: { card, targets: [] },
+            selection,
             mode: 'target'
         });
     }
@@ -179,15 +201,15 @@ const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTabl
     },
 
     selectPlayingCard (table, card) {
-        return handleSelectPlayingCard(table, this, card);
+        return cleanPreselection(handleSelectPlayingCard(table, this, card));
     },
 
     addCardTarget (table, card) {
-        return handleEndPreselection(table, editSelectorTargets(this, appendCardTarget(table, this, card)));
+        return cleanPreselection(handleEndPreselection(table, editSelectorTargets(this, appendCardTarget(table, this, card))));
     },
 
     addPlayerTarget (table, player) {
-        return handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(table, this, player)));
+        return cleanPreselection(handleEndPreselection(table, editSelectorTargets(this, appendPlayerTarget(table, this, player))));
     }
     
 });

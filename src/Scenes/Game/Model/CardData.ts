@@ -35,3 +35,7 @@ export interface CardData {
     color: CardColor;
     sign: CardSign;
 }
+
+export type EffectListType = {
+    [K in keyof CardData]: CardData[K] extends CardEffect[] ? K : never
+}[keyof CardData];

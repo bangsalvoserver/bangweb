@@ -145,6 +145,7 @@ export interface TimerStatusArgs {
 
 export type EffectContext = Partial<{
     repeat_card: CardId,
+    forced_play: CardId,
     card_choice: CardId,
     train_card: CardId,
     train_advance: boolean,

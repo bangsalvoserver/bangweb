@@ -1,13 +1,14 @@
 import { CardTargetGenerated } from "./CardTarget";
 import { CardId } from "./GameUpdate";
 
-export interface GameAction {
+export interface GameActionSelection {
     card: CardId;
-    modifiers: {
-        card: CardId;
-        targets: CardTargetGenerated[];
-    }[],
+    is_response: boolean;
     targets: CardTargetGenerated[];
+}
+
+export interface GameAction extends GameActionSelection {
+    modifiers: GameActionSelection[];
     bypass_prompt: boolean;
     timer_id?: number;
 }

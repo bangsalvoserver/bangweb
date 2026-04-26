@@ -1,5 +1,6 @@
+import { EffectListType } from "./CardData";
 import { CardEffect, CardTarget } from "./CardTarget";
-import { getCardOwner, getCardPocket, isEquipCard } from "./Filters";
+import { getCardOwner, getCardPocket } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, isCardKnown } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatus, StatusReady } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
@@ -47,6 +48,7 @@ export type TargetSelectorMode =
 export interface TargetSelection {
     card: KnownCard;
     targets: CardTarget[];
+    effect_list: EffectListType;
 }
 
 interface TargetSelectorBase<T extends RequestStatusUnion> {
@@ -95,20 +97,14 @@ function getCurrentTargetSelection(selector: TargetSelector) {
     }
 }
 
-function getCardEffects(card: KnownCard, selector: TargetSelector): CardEffect[] {
-    if (isEquipCard(card)) {
-        return card.cardData.equip_effects;
-    } else if (isResponse(selector)) {
-        return card.cardData.responses;
-    } else {
-        return card.cardData.effects;
-    }
+function getCardEffects(card: KnownCard, effect_list: EffectListType): CardEffect[] {
+    return card.cardData[effect_list];
 }
 
 export function getTargetSelectorStatus(selector: TargetSelector) {
-    const { card, targets } = getCurrentTargetSelection(selector);
+    const { card, targets, effect_list } = getCurrentTargetSelection(selector);
 
-    const effects = getCardEffects(card, selector);
+    const effects = getCardEffects(card, effect_list);
     
     let index = targets.length - 1;
     if (targets.length === 0 || targetDispatch.isSelectionFinished(targets[index], effects[index])) {
@@ -219,15 +215,15 @@ export function isCardPrompted(selector: TargetSelector, card: Card): card is Kn
 }
 
 export function *zipSelections(selector: TargetSelector) {
-    for (const { card, targets } of selector.modifiers) {
-        const effects = getCardEffects(card, selector);
+    for (const { card, targets, effect_list } of selector.modifiers) {
+        const effects = getCardEffects(card, effect_list);
         for (let i = 0; i < targets.length; ++i) {
             yield [card, targets[i], effects[i]] as const;
         }
     }
     if (selector.selection) {
-        const { card, targets } = selector.selection;
-        const effects = getCardEffects(card, selector);
+        const { card, targets, effect_list } = selector.selection;
+        const effects = getCardEffects(card, effect_list);
         for (let i = 0; i < targets.length; ++i) {
             yield [card, targets[i], effects[i]] as const;
         }
