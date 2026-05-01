@@ -572,6 +572,30 @@ export const CARDS: CardRegistry = {
         name: "Fishing",
         description: <>Name a suit and "draw!" as many times as the number of other players. You may take all cards of the named suit drawn into hand.</>
     },
+    FISHING_HEARTS: {
+        name: "Fishing: Declare Hearts",
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "card-description text-bigger"
+    },
+    FISHING_DIAMONDS: {
+        name: "Fishing: Declare Diamonds",
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "card-description text-bigger"
+    },
+    FISHING_CLUBS: {
+        name: "Fishing: Declare Clubs",
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "card-description text-bigger"
+    },
+    FISHING_SPADES: {
+        name: "Fishing: Declare Spades",
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "card-description text-bigger"
+    },
     PIONEERS: {
         name: "Pioneers",
         description: <>Track yourself.<br/>At the start of your turn, pass <i>Pioneers</i> left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,

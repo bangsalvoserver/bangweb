@@ -662,6 +662,30 @@ export const CARDS: CardRegistry = {
         description: <>Nomina un seme ed "estrai!" tante volte quanti sono gli altri giocatori. Puoi prendere in mano tutte le carte estratte del seme nominato.</>,
         hideTitle: true
     },
+    FISHING_HEARTS: {
+        name: "Pesca: Dichiaro Cuori",
+        hideTitle: true,
+        description: <>♥️</>,
+        descriptionClass: "card-description text-bigger"
+    },
+    FISHING_DIAMONDS: {
+        name: "Pesca: Dichiaro Quadri",
+        hideTitle: true,
+        description: <>♦️</>,
+        descriptionClass: "card-description text-bigger"
+    },
+    FISHING_CLUBS: {
+        name: "Pesca: Dichiaro Fiori",
+        hideTitle: true,
+        description: <>♣️</>,
+        descriptionClass: "card-description text-bigger"
+    },
+    FISHING_SPADES: {
+        name: "Pesca: Dichiaro Picche",
+        hideTitle: true,
+        description: <>♠️</>,
+        descriptionClass: "card-description text-bigger"
+    },
     PIONEERS: {
         name: "Pionieri",
         description: <>Traccia té stesso.<br/>All'inizio del tuo turno, passa <i>Pionieri</i> a sinistra.<br/>Se passata dal giocatore tracciato, scartala e lui pesca tante carte quanti sono gli altri giocatori.</>,
