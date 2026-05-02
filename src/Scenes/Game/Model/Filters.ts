@@ -47,7 +47,8 @@ export function isEquipCard(card: Card): boolean {
 }
 
 export function isPlayerDead(player: Player): boolean {
-    return player.status.flags.has('dead');
+    return ['dead', 'coffin']
+        .some(flag => player.status.flags.has(flag));
 }
 
 export function isPlayerGhost(player: Player): boolean {
