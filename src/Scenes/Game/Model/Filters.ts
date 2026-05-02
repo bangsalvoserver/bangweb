@@ -133,11 +133,11 @@ function isEmptyCubes(table: GameTable, player: Player) {
 
 function checkDistance(table: GameTable, selector: TargetSelector, target: Player, range: number) {
     const distances = selector.request?.distances;
-    return distances !== undefined && range !== 0 && (
-        getModifierContext(selector, 'ignore_distances')
-        || getPlayer(table, table.self_player!).status.flags.has('ignore_distances')
-        || calcPlayerDistance(table, selector, table.self_player!, target.id) <= (distances.range_mod + range)
-    );
+    if (distances === undefined || range === 0) return false;
+    if (getPlayer(table, table.self_player!).status.flags.has('ignore_istances')) return true;
+    if (getModifierContext(selector, 'ignore_distances')) return true;
+    const startPlayer = getModifierContext(selector, 'distance_start') ?? table.self_player!;
+    return calcPlayerDistance(table, selector, startPlayer, target.id) <= (distances.range_mod + range);
 }
 
 type PlayerFilterFunction = (table: GameTable, selector: TargetSelector, target: Player) => boolean;
