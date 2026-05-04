@@ -110,8 +110,6 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     
     const isOrigin = isResponse(selector) && selector.request.origin === player.id;
     const isTarget = isResponse(selector) && selector.request.target === player.id;
-    const isDead = hasDeadFlag(player);
-    const isGhost = hasGhostFlag(player);
     const isWinner = player.status.flags.has('winner');
     const isSkipTurn = player.status.flags.has('skip_turn');
     const hasDynamiteStick = player.status.flags.has('stick_of_dynamite');
@@ -222,7 +220,10 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                 { isSkipTurn && <PlayerIcon name="icon-skip-turn"/> }
                 { hasDynamiteStick && <PlayerIcon name="icon-dynamite"/> }
             </>}
-            { isDead && <PlayerIcon name={isGhost ? "icon-ghost" : "icon-dead"} /> }
+            { hasDeadFlag(player) && (
+                hasGhostFlag(player) ? <PlayerIcon name="icon-ghost" />
+                : <PlayerIcon name="icon-dead" extraClass={player.status.flags.has('not_in_game') ? "" : "icon-faded"} />
+            )}
         </div>
         <div className='player-propic'>
             <LobbyUser user={user} align='horizontal' noUserIcons>
