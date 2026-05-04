@@ -142,7 +142,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
 
   const movingPlayers = table.animation.type === 'move_players' ? table.animation.players.map(p => p.from) : [];
 
-  const playerViews = table.alive_players.map(player_id => {
+  const playerViews = table.visible_players.map(player_id => {
     const player = getPlayer(table, player_id);
     const user = getUser(lobbyState.users, player.user_id);
 
@@ -169,7 +169,7 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
                 </div>
                 {trainPockets}
               </div>
-              <div className="player-grid" num-players={table.alive_players.length}>
+              <div className="player-grid" num-players={table.visible_players.length}>
                 {playerViews}
               </div>
               {selectionPocket}

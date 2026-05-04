@@ -4,7 +4,7 @@ import useCloseOnLoseFocus from "../../Utils/UseCloseOnLoseFocus";
 import { getUser, LobbyContext } from "../Lobby/Lobby";
 import LobbyUser from "../Lobby/LobbyUser";
 import { GameStateContext } from "./GameScene";
-import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
+import { hasDeadFlag, hasGhostFlag } from "./Model/Filters";
 import { Player } from "./Model/GameTable";
 import "./Style/GameUsersView.css";
 
@@ -37,8 +37,8 @@ function GameUserPlayer({ player, user, myUserId }: GameUserProps) {
         let icons: string[] = [];
         if (role) icons.push(role);
         if (isWinner) icons.push('icon-winner');
-        if (player && isPlayerDead(player)) {
-            icons.push(isPlayerGhost(player) ? 'icon-ghost' : 'icon-dead');
+        if (player && hasDeadFlag(player)) {
+            icons.push(hasGhostFlag(player) ? 'icon-ghost' : 'icon-dead');
         }
         return icons;
     }, [player]);

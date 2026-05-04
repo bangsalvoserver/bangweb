@@ -44,7 +44,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Creates new players or updates existing players with specified player_id and user_id
     player_add ({ players }) {
         let newPlayers: PlayerRecord = { ...this.players };
-        let newAlivePlayers = this.alive_players;
+        let newAlivePlayers = this.visible_players;
         let selfPlayer = this.self_player;
         for (const { player_id, user_id } of players) {
             if (player_id in newPlayers) {
@@ -60,7 +60,7 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
         return {
             ...this,
             players: newPlayers,
-            alive_players: rotateToFirstOf(newAlivePlayers, selfPlayer),
+            visible_players: rotateToFirstOf(newAlivePlayers, selfPlayer),
             self_player: selfPlayer
         };
     },
@@ -68,9 +68,9 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Sets the player_death animation and/or the player_move animation
     player_order ({ players, duration }) {
         const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.has('removed'));
-        const filteredPlayers = intersect(this.alive_players, notRemovedPlayers);
+        const filteredPlayers = intersect(this.visible_players, notRemovedPlayers);
         const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
-        const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
+        const removedPlayers = subtract(this.visible_players, notRemovedPlayers);
 
         const movedPlayers = filteredPlayers.flatMap(( player_id, i) => {
             if (rotatedPlayers[i] === player_id) {
@@ -95,14 +95,14 @@ const gameTableReducer = createUnionReducer<GameTable, TableUpdate>({
     // Changes the order of how players are seated
     player_order_end ({ players }) {
         const notRemovedPlayers = players.filter(id => !getPlayer(this, id).status.flags.has('removed'));
-        const filteredPlayers = intersect(this.alive_players, notRemovedPlayers);
+        const filteredPlayers = intersect(this.visible_players, notRemovedPlayers);
         const rotatedPlayers = rotateToFirstOf(notRemovedPlayers, this.self_player, filteredPlayers.at(0));
-        const removedPlayers = subtract(this.alive_players, notRemovedPlayers);
+        const removedPlayers = subtract(this.visible_players, notRemovedPlayers);
 
         return clearAnimation({
             ...this,
             players: editByIds(this.players, removedPlayers, clearAnimation),
-            alive_players: rotatedPlayers
+            visible_players: rotatedPlayers
         })
     },
 

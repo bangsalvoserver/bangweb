@@ -1,7 +1,7 @@
 import { countIf } from "../../../Utils/ArrayUtils";
 import { CardSuit } from "./CardEnums";
 import { CardEffect, CardEffectOf, CardTarget, CardTargetArgs, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, TargetType } from "./CardTarget";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isAlive } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSkipped, TargetSelector } from "./TargetSelector";
@@ -158,7 +158,7 @@ const getValidCardTargets = (table: GameTable, selector: TargetSelector, effect:
 
 const checkAdjacentPlayers = (table: GameTable, selector: TargetSelector, target1: Player, target2: Player, max_distance: number) => {
     return target1.id !== target2.id && target2.id !== table.self_player
-        && isPlayerInGame(target2)
+        && isAlive(target2)
         && calcPlayerDistance(table, selector, target1.id, target2.id) <= max_distance;
 };
 
@@ -194,7 +194,7 @@ const targetDispatch = buildDispatch({
         appendPlayerTarget: (table, selector, target, effect, player) => player,
         isValidPlayerTarget,
         buildAutoTarget: (table, selector, effect) => {
-            if (table.alive_players.every(target => !checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))) {
+            if (table.visible_players.every(target => !checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)))) {
                 return null;
             }
         },
@@ -203,7 +203,7 @@ const targetDispatch = buildDispatch({
     adjacent_players: reservedDispatch({
         isPlayerSelected: ({ players }, player) => containsId(players, player),
         appendPlayerTarget: (table, selector, { players }, effect, player) => {
-            const finished = players.length === 1 || !table.alive_players.some(target2 =>
+            const finished = players.length === 1 || !table.visible_players.some(target2 =>
                 checkAdjacentPlayers(table, selector, player, getPlayer(table, target2), effect.max_distance)
             );
             return { players: players.concat(player), finished };
@@ -236,7 +236,7 @@ const targetDispatch = buildDispatch({
         confirmSelection: ({cubes, players}) => ({cubes, max_cubes: cubes.length, players}),
         buildAutoTarget: (table, selector, effect) => {
             const cubeCount = countSelectableCubes(table, selector);
-            const numPlayers = countIf(table.alive_players, target => checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)));
+            const numPlayers = countIf(table.visible_players, target => checkPlayerFilter(table, selector, effect.player_filter, getPlayer(table, target)));
             const max_cubes = Math.min(cubeCount, numPlayers - effect.extra_players);
             return {cubes:[], max_cubes, players:[]};
         },
@@ -330,7 +330,7 @@ const targetDispatch = buildDispatch({
         },
         buildAutoTarget: (table, selector, effect) => {
             const cardIsValid = (card: CardId) => checkCardFilter(table, selector, effect.card_filter, getCard(table, card));
-            const max_cards = countIf(table.alive_players, target => {
+            const max_cards = countIf(table.visible_players, target => {
                 const targetPlayer = getPlayer(table, target);
                 return !isPlayerSkipped(selector, targetPlayer)
                     && checkPlayerFilter(table, selector, effect.player_filter, targetPlayer)
