@@ -60,15 +60,23 @@ export function isPlayerInGame(player: Player): boolean {
 }
 
 export function isBangCard(origin: Player, card: Card): boolean {
-    return origin.status.flags.has('treat_any_as_bang')
-        || cardHasTag(card, 'bangcard')
-        || (origin.status.flags.has('treat_missed_as_bang') && cardHasTag(card, 'missed'));
+    if (origin.status.flags.has('treat_any_as_bang')) return true;
+    if (cardHasTag(card, 'bangcard')) return true;
+    
+    if (origin.status.flags.has('treat_missed_as_bang')) {
+        return cardHasTag(card, 'missedcard') || cardHasTag(card, 'count_as_missed');
+    }
+    return false;
 }
 
 export function isMissedCard(origin: Player, card: Card): boolean {
-    return origin.status.flags.has('treat_any_as_missed')
-        || cardHasTag(card, 'missedcard')
-        || (origin.status.flags.has('treat_missed_as_bang') && cardHasTag(card, 'bangcard'));
+    if (origin.status.flags.has('treat_any_as_missed')) return true;
+    if (cardHasTag(card, 'missedcard')) return true;
+    
+    if (origin.status.flags.has('treat_missed_as_bang')) {
+        return cardHasTag(card, 'bangcard');
+    }
+    return false;
 }
 
 export function calcPlayerDistance(table: GameTable, selector: TargetSelector, from: PlayerId, to: PlayerId): number {
@@ -180,7 +188,7 @@ const CARD_FILTERS: Record<CardFilter, CardFilterFunction> = {
     'used_bang':        (table, selector, target) => isBangCard(getPlayer(table, table.self_player!), target) || table.status.flags.has('showdown'),
     'bangcard':         (table, selector, target) =>  cardHasTag(target, 'bangcard'),
     'not_bangcard':     (table, selector, target) => !cardHasTag(target, 'bangcard'),
-    'missed':           (table, selector, target) =>  cardHasTag(target, 'missed'),
+    'missed':           (table, selector, target) =>  cardHasTag(target, 'missedcard') || cardHasTag(target, 'count_as_missed'),
     'missedcard':       (table, selector, target) =>  cardHasTag(target, 'missedcard'),
     'not_missedcard':   (table, selector, target) => !cardHasTag(target, 'missedcard'),
     'bronco':           (table, selector, target) =>  cardHasTag(target, 'bronco'),
