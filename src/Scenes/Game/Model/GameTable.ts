@@ -56,8 +56,11 @@ export function getCardBackface(card: Card): CardImage {
 }
 
 export function *getPlayerCubes(table: GameTable, player: Player) {
-    const character = getCard(table, getPlayerPocket(player, 'player_character')[0]);
-    yield [character, getCubeCount(character)] as const;
+    const characters = getPlayerPocket(player, 'player_character');
+    if (characters.length !== 0) {
+        const character = getCard(table, characters[0]);
+        yield [character, getCubeCount(character)] as const;
+    }
     for (const cardId of getPlayerPocket(player, 'player_table')) {
         const card = getCard(table, cardId);
         if (getCardColor(card) === 'orange') {

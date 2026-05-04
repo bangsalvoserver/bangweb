@@ -257,8 +257,8 @@ function getCubeSlot(table: GameTable, card: Card) {
     if (getCardPocket(card) === 'player_character') {
         const player = getCardOwner(card);
         if (player) {
-            const cardId = getPlayerPocket(getPlayer(table, player), 'player_character')[0];
-            if (cardId !== card.id) {
+            const cardId = getPlayerPocket(getPlayer(table, player), 'player_character').at(0);
+            if (cardId !== undefined && cardId !== card.id) {
                 return getCard(table, cardId);
             }
         }
