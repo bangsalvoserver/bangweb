@@ -10,7 +10,7 @@ import { getTokenSprite } from "./CardView";
 import { GameStateContext } from "./GameScene";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
-import { isPlayerDead, isPlayerGhost } from "./Model/Filters";
+import { hasDeadFlag, hasGhostFlag } from "./Model/Filters";
 import { GameTable, getPlayerPocket, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
@@ -110,8 +110,8 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     
     const isOrigin = isResponse(selector) && selector.request.origin === player.id;
     const isTarget = isResponse(selector) && selector.request.target === player.id;
-    const isDead = isPlayerDead(player);
-    const isGhost = isPlayerGhost(player);
+    const isDead = hasDeadFlag(player);
+    const isGhost = hasGhostFlag(player);
     const isWinner = player.status.flags.has('winner');
     const isSkipTurn = player.status.flags.has('skip_turn');
     const hasDynamiteStick = player.status.flags.has('stick_of_dynamite');

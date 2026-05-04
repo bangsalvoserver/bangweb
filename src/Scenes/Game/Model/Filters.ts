@@ -46,17 +46,17 @@ export function isEquipCard(card: Card): boolean {
     }
 }
 
-export function isPlayerDead(player: Player): boolean {
+export function hasDeadFlag(player: Player): boolean {
     return player.status.flags.has('dead');
 }
 
-export function isPlayerGhost(player: Player): boolean {
+export function hasGhostFlag(player: Player): boolean {
     return ['ghost', 'temp_ghost', 'shadow']
         .some(flag => player.status.flags.has(flag));
 }
 
-export function isPlayerInGame(player: Player): boolean {
-    return !isPlayerDead(player) || isPlayerGhost(player);
+export function isAlive(player: Player): boolean {
+    return !hasDeadFlag(player) || hasGhostFlag(player);
 }
 
 export function isBangCard(origin: Player, card: Card): boolean {
@@ -96,7 +96,7 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
     let countCw = 0;
     let countCcw = 0;
 
-    const playersInGame = table.visible_players.map(player => isPlayerInGame(getPlayer(table, player)));
+    const playersInGame = table.visible_players.map(player => isAlive(getPlayer(table, player)));
 
     for (let i = fromIndex; i !== toIndex;) {
         if (playersInGame[i]) {
@@ -151,8 +151,8 @@ function checkDistance(table: GameTable, selector: TargetSelector, target: Playe
 type PlayerFilterFunction = (table: GameTable, selector: TargetSelector, target: Player) => boolean;
 
 const PLAYER_FILTERS: Record<PlayerFilter, PlayerFilterFunction> = {
-    'alive':            (table, selector, target) => isPlayerInGame(target),
-    'dead':             (table, selector, target) => !isPlayerInGame(target),
+    'alive':            (table, selector, target) => isAlive(target),
+    'dead':             (table, selector, target) => !isAlive(target),
     'self':             (table, selector, target) => target.id === table.self_player,
     'notself':          (table, selector, target) => target.id !== table.self_player,
     'notsheriff':       (table, selector, target) => target.status.role !== 'sheriff',

@@ -1,7 +1,7 @@
 import { countIf } from "../../../Utils/ArrayUtils";
 import { CardSuit } from "./CardEnums";
 import { CardEffect, CardEffectOf, CardTarget, CardTargetArgs, CardTargetGenerated, CardTargetTypes, PlayerTargetArgs, TargetType } from "./CardTarget";
-import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isPlayerInGame } from "./Filters";
+import { calcPlayerDistance, checkCardFilter, checkPlayerFilter, getCardColor, getCardOwner, getCardPocket, getCardSign, isBangCard, isMissedCard, isAlive } from "./Filters";
 import { Card, GameTable, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, Player } from "./GameTable";
 import { CardId } from "./GameUpdate";
 import { countSelectableCubes, countSelectedCubes, getModifierContext, isPlayerSkipped, TargetSelector } from "./TargetSelector";
@@ -158,7 +158,7 @@ const getValidCardTargets = (table: GameTable, selector: TargetSelector, effect:
 
 const checkAdjacentPlayers = (table: GameTable, selector: TargetSelector, target1: Player, target2: Player, max_distance: number) => {
     return target1.id !== target2.id && target2.id !== table.self_player
-        && isPlayerInGame(target2)
+        && isAlive(target2)
         && calcPlayerDistance(table, selector, target1.id, target2.id) <= max_distance;
 };
 
