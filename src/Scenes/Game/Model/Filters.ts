@@ -90,20 +90,20 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
         return 1 + distanceMod;
     }
 
-    const fromIndex = table.alive_players.indexOf(from);
-    const toIndex = table.alive_players.indexOf(to);
+    const fromIndex = table.visible_players.indexOf(from);
+    const toIndex = table.visible_players.indexOf(to);
 
     let countCw = 0;
     let countCcw = 0;
 
-    const playersInGame = table.alive_players.map(player => isPlayerInGame(getPlayer(table, player)));
+    const playersInGame = table.visible_players.map(player => isPlayerInGame(getPlayer(table, player)));
 
     for (let i = fromIndex; i !== toIndex;) {
         if (playersInGame[i]) {
             ++countCw;
         }
         ++i;
-        if (i === table.alive_players.length) {
+        if (i === table.visible_players.length) {
             i = 0;
         }
     }
@@ -112,7 +112,7 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
             ++countCcw;
         }
         if (i === 0) {
-            i = table.alive_players.length;
+            i = table.visible_players.length;
         }
         --i;
     }

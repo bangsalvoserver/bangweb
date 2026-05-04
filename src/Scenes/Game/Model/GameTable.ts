@@ -175,7 +175,7 @@ export interface GameTable {
     
     pockets: TablePockets;
 
-    alive_players: PlayerId[];
+    visible_players: PlayerId[];
 
     status: {
         tokens: TokenCount;
@@ -197,7 +197,7 @@ export function newGameTable(myUserId: UserId): GameTable {
 
         pockets: {},
 
-        alive_players: [],
+        visible_players: [],
 
         status: {
             tokens: {},
