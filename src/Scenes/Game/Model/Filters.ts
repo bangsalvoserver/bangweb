@@ -152,7 +152,7 @@ type PlayerFilterFunction = (table: GameTable, selector: TargetSelector, target:
 
 const PLAYER_FILTERS: Record<PlayerFilter, PlayerFilterFunction> = {
     'alive':            (table, selector, target) => isAlive(target),
-    'dead':             (table, selector, target) => !isAlive(target),
+    'dead':             (table, selector, target) => !target.status.flags.has('keep_alive') && !isAlive(target),
     'self':             (table, selector, target) => target.id === table.self_player,
     'notself':          (table, selector, target) => target.id !== table.self_player,
     'notsheriff':       (table, selector, target) => target.status.role !== 'sheriff',
