@@ -1,7 +1,4 @@
 .bang-logo {
-    /* --logo-highlight-color: rgba(255, 255, 255, 70%);
-    filter:
-        drop-shadow(0px 0px 3px var(--logo-highlight-color))
-        drop-shadow(1px 1px 3px var(--logo-highlight-color))
-        drop-shadow(-1px -1px 3px var(--logo-highlight-color)); */
+    height: 12em;
+    margin-bottom: 1em;
 }
