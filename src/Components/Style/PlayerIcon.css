@@ -54,6 +54,10 @@
     --icon-color: #dedbd3;
 }
 
+.icon-faded {
+    opacity: 50%;
+}
+
 .icon-ghost {
     --icon-url: url('/media/icon_ghost.png');
     --icon-color: rgb(169, 189, 196);
