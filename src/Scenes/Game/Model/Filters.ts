@@ -121,6 +121,17 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
     return Math.min(countCw, countCcw) + distanceMod;
 }
 
+function checkMinTableCards(table: GameTable, selector: TargetSelector, target: Player, minCount: number): boolean {
+    let count = 0;
+    for (const cardId of getPlayerPocket(target, 'player_table')) {
+        const card = getCard(table, cardId);
+        if (!isCardCurrent(selector, card) && getCardColor(card) !== 'black') {
+            if (++count >= minCount) return true;
+        }
+    }
+    return false;
+}
+
 function isEmptyHand(table: GameTable, player: Player) {
     return getPlayerPocket(player, 'player_hand').length === 0;
 }
@@ -166,6 +177,7 @@ const PLAYER_FILTERS: Record<PlayerFilter, PlayerFilterFunction> = {
     'reachable':        (table, selector, target) => checkDistance(table, selector, target, selector.request?.distances.weapon_range ?? 0),
     'range_1':          (table, selector, target) => checkDistance(table, selector, target, 1),
     'range_2':          (table, selector, target) => checkDistance(table, selector, target, 2),
+    'min_5_table_cards': (table, selector, target) => checkMinTableCards(table, selector, target, 5),
 }
 
 export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
