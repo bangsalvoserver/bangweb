@@ -207,6 +207,7 @@ const CARD_FILTERS: Record<CardFilter, CardFilterFunction> = {
     'bronco':           (table, selector, target) =>  cardHasTag(target, 'bronco'),
     'catbalou_panic':   (table, selector, target) =>  cardHasTag(target, 'catbalou_panic'),
     'beer':             (table, selector, target) =>  cardHasTag(target, 'beer'),
+    'brown':            (table, selector, target) => getCardColor(target) === 'brown',
     'blue':             (table, selector, target) => getCardColor(target) === 'blue',
     'train':            (table, selector, target) => getCardColor(target) === 'train',
     'blue_or_train':    (table, selector, target) => ['blue','train'].includes(getCardColor(target)),
