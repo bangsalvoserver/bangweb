@@ -562,7 +562,7 @@ export const CARDS: CardRegistry = {
     },
     PELTS: {
         name: "Pelts",
-        description: <>If there are 4 📦 on this card, switch it with another card in play.</>, // TODO fix this?
+        description: <>If there are 4 📦 on this card, switch it with another card in play.</>,
         descriptionClass: "cube-description"
     },
     FISHING: {

@@ -653,7 +653,7 @@ export const CARDS: CardRegistry = {
     },
     PELTS: {
         name: "Pelli",
-        description: <>Se ci sono 4 📦 su questa carta, scambiala con un'altra carta in gioco.</>, // TODO fix this?
+        description: <>Se ci sono 4 📦 su questa carta, scambiala con un'altra carta in gioco.</>,
         hideTitle: true,
         descriptionClass: "cube-description"
     },
