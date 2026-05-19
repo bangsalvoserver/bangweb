@@ -62,6 +62,7 @@ export const LABELS: LabelRegistry = {
         legends:                "Legendák",
         legends_basemod:        "Legendák (Alap játék módosításai)",
         canyondiablo:           "Canyon Diablo",
+        frontier:               "Frontier",
         crazy_greygory:         "Őrült Greygory",
     },
 
@@ -69,6 +70,7 @@ export const LABELS: LabelRegistry = {
         ghost_cards:            "Engedélyez olyan kártyákat, amelyek visszahozhatják a kiesett játékosokat",
         udolistinu:             "Az árnyak völgye eredeti cseh változata",
         canyondiablo:           "Ez egy nem hivatalos kísérleti kiegészítő",
+        frontier:               "A community expansion by AlmostJosiah",
         crazy_greygory:         "Minden játékos Greygory Deck, korlátozások nélkül",
     },
 
