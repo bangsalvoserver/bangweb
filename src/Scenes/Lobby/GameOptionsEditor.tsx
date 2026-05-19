@@ -181,6 +181,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
             <Collapsible label={getLabel(language, 'GameOptions', 'extras')} storageKey="expand_extras">
                 <ExpansionCheckbox name='udolistinu' onSelect={e => { e.delete('valleyofshadows'); e.add('ghost_cards'); }} />
                 <ExpansionCheckbox name='canyondiablo' />
+                <ExpansionCheckbox name='frontier' onSelect={e => { e.add('armedanddangerous'); }} />
                 <ExpansionCheckbox name='crazy_greygory' />
             </Collapsible>
         </div>

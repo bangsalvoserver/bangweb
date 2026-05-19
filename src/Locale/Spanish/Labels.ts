@@ -62,6 +62,7 @@ export const LABELS: LabelRegistry = {
         legends:                "Leyendas",
         legends_basemod:        "Leyendas (mods del juego base)",
         canyondiablo:           "Cañón del Diablo",
+        frontier:               "Frontier",
         crazy_greygory:         "Greygory Manía",
     },
 
@@ -69,6 +70,7 @@ export const LABELS: LabelRegistry = {
         ghost_cards:            "Activa cartas que pueden traer de vuelta a jugadores eliminados",
         udolistinu:             "Versión checa original de Valley Of Shadows",
         canyondiablo:           "Esta es una expansión extra no oficial experimental",
+        frontier:               "A community expansion by AlmostJosiah",
         crazy_greygory:         "Todos los jugadores son Greygory Deck sin limitaciones",
     },
 

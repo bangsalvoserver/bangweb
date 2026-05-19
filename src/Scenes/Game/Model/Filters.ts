@@ -47,7 +47,8 @@ export function isEquipCard(card: Card): boolean {
 }
 
 export function hasDeadFlag(player: Player): boolean {
-    return player.status.flags.has('dead');
+    return ['dead', 'coffin']
+        .some(flag => player.status.flags.has(flag));
 }
 
 export function hasGhostFlag(player: Player): boolean {
@@ -120,6 +121,17 @@ export function calcPlayerDistance(table: GameTable, selector: TargetSelector, f
     return Math.min(countCw, countCcw) + distanceMod;
 }
 
+function checkMinTableCards(table: GameTable, selector: TargetSelector, target: Player, minCount: number): boolean {
+    let count = 0;
+    for (const cardId of getPlayerPocket(target, 'player_table')) {
+        const card = getCard(table, cardId);
+        if (!isCardCurrent(selector, card) && getCardColor(card) !== 'black') {
+            if (++count >= minCount) return true;
+        }
+    }
+    return false;
+}
+
 function isEmptyHand(table: GameTable, player: Player) {
     return getPlayerPocket(player, 'player_hand').length === 0;
 }
@@ -141,11 +153,11 @@ function isEmptyCubes(table: GameTable, player: Player) {
 
 function checkDistance(table: GameTable, selector: TargetSelector, target: Player, range: number) {
     const distances = selector.request?.distances;
-    return distances !== undefined && range !== 0 && (
-        getModifierContext(selector, 'ignore_distances')
-        || getPlayer(table, table.self_player!).status.flags.has('ignore_distances')
-        || calcPlayerDistance(table, selector, table.self_player!, target.id) <= (distances.range_mod + range)
-    );
+    if (distances === undefined || range === 0) return false;
+    if (getPlayer(table, table.self_player!).status.flags.has('ignore_distances')) return true;
+    if (getModifierContext(selector, 'ignore_distances')) return true;
+    const startPlayer = getModifierContext(selector, 'distance_start') ?? table.self_player!;
+    return calcPlayerDistance(table, selector, startPlayer, target.id) <= (distances.range_mod + range);
 }
 
 type PlayerFilterFunction = (table: GameTable, selector: TargetSelector, target: Player) => boolean;
@@ -165,6 +177,7 @@ const PLAYER_FILTERS: Record<PlayerFilter, PlayerFilterFunction> = {
     'reachable':        (table, selector, target) => checkDistance(table, selector, target, selector.request?.distances.weapon_range ?? 0),
     'range_1':          (table, selector, target) => checkDistance(table, selector, target, 1),
     'range_2':          (table, selector, target) => checkDistance(table, selector, target, 2),
+    'min_5_table_cards': (table, selector, target) => checkMinTableCards(table, selector, target, 5),
 }
 
 export function checkPlayerFilter(table: GameTable, selector: TargetSelector, filter: PlayerFilter[], target: Player): boolean {
@@ -194,6 +207,7 @@ const CARD_FILTERS: Record<CardFilter, CardFilterFunction> = {
     'bronco':           (table, selector, target) =>  cardHasTag(target, 'bronco'),
     'catbalou_panic':   (table, selector, target) =>  cardHasTag(target, 'catbalou_panic'),
     'beer':             (table, selector, target) =>  cardHasTag(target, 'beer'),
+    'brown':            (table, selector, target) => getCardColor(target) === 'brown',
     'blue':             (table, selector, target) => getCardColor(target) === 'blue',
     'train':            (table, selector, target) => getCardColor(target) === 'train',
     'blue_or_train':    (table, selector, target) => ['blue','train'].includes(getCardColor(target)),

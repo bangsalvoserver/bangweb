@@ -150,6 +150,7 @@ export type EffectContext = Partial<{
     train_card: CardId,
     train_advance: boolean,
     ignore_distances: boolean,
+    distance_start: PlayerId,
 }>;
 
 export interface PlayableCardInfo {

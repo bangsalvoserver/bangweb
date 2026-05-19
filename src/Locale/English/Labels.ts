@@ -62,6 +62,7 @@ export const LABELS: LabelRegistry = {
         legends:                "Legends",
         legends_basemod:        "Legends (Base game mods)",
         canyondiablo:           "Canyon Diablo",
+        frontier:               "Frontier",
         crazy_greygory:         "Crazy Greygory",
     },
 
@@ -69,6 +70,7 @@ export const LABELS: LabelRegistry = {
         ghost_cards:            "Enables cards that can bring back players that were eliminated",
         udolistinu:             "Original Czech version of Valley Of Shadows",
         canyondiablo:           "This is an extra unofficial experimental expansion",
+        frontier:               "A community expansion by AlmostJosiah",
         crazy_greygory:         "Every player is Greygory Deck without limitations",
     },
 

@@ -62,6 +62,7 @@ export const LABELS: LabelRegistry = {
         legends:                "Legendy",
         legends_basemod:        "Legendy (modifikace základní hry)",
         canyondiablo:           "Canyon Diablo",
+        frontier:               "Frontier",
         crazy_greygory:         "Šílený Greygory",
     },
 
@@ -69,6 +70,7 @@ export const LABELS: LabelRegistry = {
         ghost_cards:            "Povolení karet, které mohou vrátit vyloučené hráče do hry",
         udolistinu:             "Originální česká verze Valley Of Shadows",
         canyondiablo:           "Nepovinné experimentální rozšíření",
+        frontier:               "A community expansion by AlmostJosiah",
         crazy_greygory:         "Každý hráč je Greygory Deck bez omezení",
     },
 
