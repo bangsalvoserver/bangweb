@@ -187,8 +187,6 @@ export const GAME_STRINGS: GameStringRegistry = {
     STATUS_BALLAD_STEAL_OTHER: (target, card, player) =>                    <>{card} ... {target} può rubare una carta dalla mano di {player}</>,
     STATUS_BALLAD: (card, player) =>                                        <>{card} ... {player} ti forza a rimettere in mano tutte le carte di fronte a te.</>,
     STATUS_BALLAD_OTHER: (target, card, player) =>                          <>{card} ... {player} forza {target} a rimettere in mano tutte le carte di fronte a sé.</>,
-    STATUS_CHINATOWN: (card, ncards) =>                                     <>{card} ... puoi pescare {ncards === 1 ? 'una carta' : `${ncards} carte`}.</>,
-    STATUS_CHINATOWN_OTHER: (target, card, ncards) =>                       <>{card} ... {target} può pescare {ncards === 1 ? 'una carta' : `${ncards} carte`}.</>,
     STATUS_COYOTES: (card) =>                                               <>{card} ... scarta una carta o perdi un punto vita.</>,
     STATUS_COYOTES_OTHER: (target, card) =>                                 <>{card} ... {target} deve scartare una carta o perdere un punto vita.</>,
     STATUS_FALCON: (card, player) =>                                        <>{card} ... stai guardando la mano di {player}</>,

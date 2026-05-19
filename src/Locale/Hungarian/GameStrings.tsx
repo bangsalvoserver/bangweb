@@ -187,8 +187,6 @@ export const GAME_STRINGS: GameStringRegistry = {
     STATUS_BALLAD_STEAL_OTHER: (target, card, player) =>                        <>{card} ... {target} can steal a card from {player}'s hand</>,
     STATUS_BALLAD: (card, player) =>                                            <>{card} ... {player} forces you to pick up every card in front of you.</>,
     STATUS_BALLAD_OTHER: (target, card, player) =>                              <>{card} ... {player} forces {target} to pick up every card in game.</>,
-    STATUS_CHINATOWN: (card, ncards) =>                                         <>{card} ... you can draw {ncards === 1 ? 'a card' : `${ncards} cards`}.</>,
-    STATUS_CHINATOWN_OTHER: (target, card, ncards) =>                           <>{card} ... {target} can draw {ncards === 1 ? 'a card' : `${ncards} cards`}.</>,
     STATUS_COYOTES: (card) =>                                                   <>{card} ... discard a card or lose a life point.</>,
     STATUS_COYOTES_OTHER: (target, card) =>                                     <>{card} ... {target} must discard a card or lose a life point.</>,
     STATUS_FALCON: (card, player) =>                                            <>{card} ... you are looking at {player}'s hand</>,
