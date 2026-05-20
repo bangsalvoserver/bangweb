@@ -153,7 +153,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         .map(([token, count]) => (
             <div key={token} className='player-tokens-inner' ref={ref => tokensRef.set(token, ref)}>
                 { count > 0 && <><img key={token} src={getTokenSprite(token)} alt="" />
-                    { !token.startsWith('pardner') && count }</>
+                    { (!token.startsWith('pardner') || count > 1) && count }</>
                 }
             </div>
         ));
