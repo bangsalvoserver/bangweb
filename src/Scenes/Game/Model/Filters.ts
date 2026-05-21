@@ -184,6 +184,9 @@ export function checkPlayerFilter(table: GameTable, selector: TargetSelector, fi
     if (isPlayerSelected(selector, target))
         return false;
 
+    if (target.status.flags.has('coffin'))
+        return false;
+
     for (const value of filter) {
         const fn = PLAYER_FILTERS[value];
         if (fn && !fn(table, selector, target)) {
