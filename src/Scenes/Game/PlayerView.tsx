@@ -10,7 +10,6 @@ import { getTokenSprite } from "./CardView";
 import { GameStateContext } from "./GameScene";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
-import { hasDeadFlag, hasGhostFlag } from "./Model/Filters";
 import { GameTable, getPlayerPocket, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
@@ -20,6 +19,7 @@ import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
+import { isAlive, isGhost } from "./Model/Filters";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;
@@ -222,10 +222,9 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                 { isSkipTurn && <PlayerIcon name="icon-skip-turn"/> }
                 { hasDynamiteStick && <PlayerIcon name="icon-dynamite"/> }
             </>}
-            { hasDeadFlag(player) && (
-                hasGhostFlag(player) ? <PlayerIcon name="icon-ghost" />
-                : <PlayerIcon name="icon-dead" extraClass={player.status.flags.has('keep_alive') ? "icon-faded" : ""} />
-            )}
+            { isAlive(player)
+                ? (isGhost(player) && <PlayerIcon name="icon-ghost" />)
+                : <PlayerIcon name="icon-dead" extraClass={player.status.flags.has('keep_alive') ? "icon-faded" : ""} /> }
         </div>
         <div className='player-propic'>
             <LobbyUser user={user} align='horizontal' noUserIcons>

@@ -46,18 +46,17 @@ export function isEquipCard(card: Card): boolean {
     }
 }
 
-export function hasDeadFlag(player: Player): boolean {
-    return ['dead', 'coffin']
-        .some(flag => player.status.flags.has(flag));
-}
-
-export function hasGhostFlag(player: Player): boolean {
-    return ['ghost', 'temp_ghost', 'shadow']
-        .some(flag => player.status.flags.has(flag));
+export function isGhost(player: Player): boolean {
+    return player.status.flags.has('dead') && (
+        player.status.flags.has('ghost') ||
+        player.status.flags.has('temp_ghost') ||
+        player.status.flags.has('shadow')
+    );
 }
 
 export function isAlive(player: Player): boolean {
-    return !hasDeadFlag(player) || hasGhostFlag(player);
+    return (!player.status.flags.has('dead') || isGhost(player))
+        && !player.status.flags.has('coffin');
 }
 
 export function isBangCard(origin: Player, card: Card): boolean {
