@@ -199,6 +199,8 @@ export const GAME_STRINGS: GameStringRegistry = {
     STATUS_TRACK_PLAYER_OTHER: (player, card) =>                            <>{player} deve scegliere chi tracciare per {card}.</>,
     STATUS_MOVE_TRAP: (card) =>                                             <>Scegli su chi spostare {card}.</>,
     STATUS_MOVE_TRAP_OTHER: (player, card) =>                               <>{player} deve scegliere su chi spostare {card}.</>,
+    STATUS_ALEXANDER_NOON: (card, target_card) =>                           <>Stai per estrarre per {target_card} ... puoi giocare {card}.</>,
+    STATUS_ALEXANDER_NOON_OTHER: (player, card, target_card) =>             <>{player} sta per estrarre per {target_card} e può giocare {card}.</>,
 
     ERROR_INVALID_ACTION: () =>                                             <>Azione non valida</>,
     ERROR_NOT_ENOUGH_GOLD: () =>                                            <>Non hai abbastanza pepite</>,

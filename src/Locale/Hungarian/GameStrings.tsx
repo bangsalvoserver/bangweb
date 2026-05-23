@@ -199,6 +199,8 @@ export const GAME_STRINGS: GameStringRegistry = {
     STATUS_TRACK_PLAYER_OTHER: (player, card) =>                                <>{player} must choose who to track for {card}.</>,
     STATUS_MOVE_TRAP: (card) =>                                                 <>Choose where to move {card}.</>,
     STATUS_MOVE_TRAP_OTHER: (player, card) =>                                   <>{player} must choose where to move {card}.</>,
+    STATUS_ALEXANDER_NOON: (card, target_card) =>                               <>You are about to "draw" for {target_card} ... you can play {card}.</>,
+    STATUS_ALEXANDER_NOON_OTHER: (player, card, target_card) =>                 <>{player} is about to "draw" for {target_card} can can play {card}.</>,
     
     ERROR_INVALID_ACTION: () =>                                                 <>Érvénytelen művelet!</>,
     ERROR_NOT_ENOUGH_GOLD: () =>                                                <>Nincs elég aranyrög!</>,
