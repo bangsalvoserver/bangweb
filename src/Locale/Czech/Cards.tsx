@@ -598,7 +598,7 @@ export const CARDS: CardRegistry = {
     },
     PIONEERS: {
         name: "Pioneers",
-        description: <>Track yourself.<br/>At the start of your turn, pass <i>Pioneers</i> left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
+        description: <>Play on the player on your left and track yourself.<br/>At the start of your turn, pass <i>Pioneers</i> left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
         descriptionClass: "card-description-higher text-smallest"
     },
     POSSE: {
@@ -1722,7 +1722,7 @@ export const CARDS: CardRegistry = {
     },
     SHANGO_BROTHERS: {
         name: "Shango Brothers",
-        description: <>During your turn, every time you play 3 cards, you may draw 1 from the deck.</>,
+        description: <>During your turn, for each 3 played cards, you may draw 1 from the deck (max 3 drawn cards).</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },

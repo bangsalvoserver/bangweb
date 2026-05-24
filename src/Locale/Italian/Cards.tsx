@@ -688,7 +688,7 @@ export const CARDS: CardRegistry = {
     },
     PIONEERS: {
         name: "Pionieri",
-        description: <>Traccia té stesso.<br/>All'inizio del tuo turno, passa <i>Pionieri</i> a sinistra.<br/>Se passata dal giocatore tracciato, scartala e lui pesca tante carte quanti sono gli altri giocatori.</>,
+        description: <>Gioca sul giocatore alla tua sinistra e traccia té stesso.<br/>All'inizio del tuo turno, passa <i>Pionieri</i> a sinistra.<br/>Se passata dal giocatore tracciato, scartala e lui pesca tante carte quanti sono gli altri giocatori.</>,
         hideTitle: true,
         descriptionClass: "card-description-higher text-smallest"
     },
@@ -1857,7 +1857,7 @@ export const CARDS: CardRegistry = {
     },
     SHANGO_BROTHERS: {
         name: "Shango Brothers",
-        description: <>Durante il tuo turno, ogni volta che giochi 3 carte, puoi pescarne 1 dal mazzo.</>,
+        description: <>Durante il tuo turno, per ogni 3 carta che giochi, puoi pescarne 1 dal mazzo (massimo 3 carte pescate).</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
