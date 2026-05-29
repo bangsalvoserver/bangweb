@@ -1731,7 +1731,7 @@ export const CARDS: CardRegistry = {
     },
     SHANGO_BROTHERS: {
         name: "Shango Brothers",
-        description: <>During your turn, for each 3 played cards, you may draw 1 from the deck (max 3 drawn cards).</>,
+        description: <>During your turn, on every third card played, draw 1 from the deck (up to 3 times).</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },

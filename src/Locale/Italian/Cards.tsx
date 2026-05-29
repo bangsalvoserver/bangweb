@@ -1857,7 +1857,7 @@ export const CARDS: CardRegistry = {
     },
     SHANGO_BROTHERS: {
         name: "Shango Brothers",
-        description: <>Durante il tuo turno, per ogni 3 carta che giochi, puoi pescarne 1 dal mazzo (massimo 3 carte pescate).</>,
+        description: <>Durante il tuo turno, per ogni terza carta giocata, pesca 1 carta dal mazzo (fino a 3 volte).</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
