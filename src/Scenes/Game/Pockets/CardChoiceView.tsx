@@ -71,7 +71,7 @@ export default function CardChoiceView({ tracker }: CardChoiceProps) {
     }
 
     let cards: Card[] = [];
-    for (const { card } of getAllPlayableCards(selector)) {
+    for (const { card } of getAllPlayableCards({ ...selector, selection: null })) {
         cards.push(getCard(table, card));
     }
 

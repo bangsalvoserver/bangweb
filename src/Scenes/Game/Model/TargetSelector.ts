@@ -162,6 +162,9 @@ export function *getAllPlayableCards(selector: TargetSelector): Generator<{ card
             }
             ++i;
         }
+        if (selector.selection && selector.selection.card.id !== card) {
+            continue;
+        }
         if (selector.modifiers.length < modifiers.length) {
             const mod = modifiers[selector.modifiers.length];
             yield { card: mod.card, effect_list: mod.effect_list, context };
