@@ -145,7 +145,7 @@ export function selectorCanUndo(selector: TargetSelector): boolean {
     }
 }
 
-export function *getAllPlayableCards(selector: TargetSelector): Generator<[CardId, EffectContext]> {
+export function *getAllPlayableCards(selector: TargetSelector): Generator<{ card: CardId, effect_list: EffectListType, context: EffectContext | null }> {
     let cards: PlayableCardInfo[];
     if (isResponse(selector)) {
         cards = selector.request.respond_cards;
@@ -154,24 +154,26 @@ export function *getAllPlayableCards(selector: TargetSelector): Generator<[CardI
     } else {
         cards = [];
     }
-    outerLoop: for (const { card, modifiers, context } of cards) {
+    outerLoop: for (const { card, modifiers, context, effect_list } of cards) {
         let i = 0;
         for (const { card: modCard } of selector.modifiers) {
-            if (modifiers.at(i) !== modCard.id) {
+            if (modifiers.at(i)?.card !== modCard.id) {
                 continue outerLoop;
             }
             ++i;
         }
-        yield [
-            modifiers.at(selector.modifiers.length) ?? card,
-            context ?? {}
-        ];
+        if (selector.modifiers.length < modifiers.length) {
+            const mod = modifiers[selector.modifiers.length];
+            yield { card: mod.card, effect_list: mod.effect_list, context };
+        } else {
+            yield { card, effect_list, context };
+        }
     }
 }
 
 export function isCardPlayable(selector: TargetSelector, card: Card): boolean {
     if (!selector.selection) {
-        for (const [playableCard, ] of getAllPlayableCards(selector)) {
+        for (const { card: playableCard } of getAllPlayableCards(selector)) {
             if (playableCard === card.id) {
                 return true;
             }
@@ -183,8 +185,8 @@ export function isCardPlayable(selector: TargetSelector, card: Card): boolean {
 export function getModifierContext<K extends keyof EffectContext> (selector: TargetSelector, prop: K): EffectContext[K] {
     let result: EffectContext[K] = undefined;
     if (selector.modifiers.length !== 0) {
-        for (const [, context] of getAllPlayableCards(selector)) {
-            const value = context[prop];
+        for (const { context } of getAllPlayableCards(selector)) {
+            const value = context?.[prop];
             if (value) {
                 if (result === undefined) {
                     result = value;

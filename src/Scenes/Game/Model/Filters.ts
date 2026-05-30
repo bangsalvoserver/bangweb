@@ -34,18 +34,6 @@ export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
     return (isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type) !== null;
 }
 
-export function isEquipCard(card: Card): boolean {
-    switch (getCardPocket(card)) {
-    case 'player_hand':
-    case 'shop_selection':
-        return getCardColor(card) !== 'brown';
-    case 'train':
-        return card.cardData.deck !== 'locomotive';
-    default:
-        return false;
-    }
-}
-
 export function isGhost(player: Player): boolean {
     return player.status.flags.has('dead') && (
         player.status.flags.has('ghost') ||

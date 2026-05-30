@@ -1,12 +1,11 @@
 import { SetStateAction } from "react";
 import { mapLast } from "../../../Utils/ArrayUtils";
 import { Empty, createContextUnionReducer } from "../../../Utils/UnionUtils";
-import { EffectListType } from "./CardData";
 import { CardTarget } from "./CardTarget";
-import { cardHasTag, isCardModifier, isEquipCard } from "./Filters";
+import { cardHasTag, isCardModifier } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
 import targetDispatch from "./TargetDispatch";
-import { GamePrompt, RequestStatusUnion, TargetSelection, TargetSelector, TargetSelectorMode, getModifierContext, getTargetSelectorStatus, isCardCurrent, isCardPlayable, isResponse, newTargetSelector } from "./TargetSelector";
+import { GamePrompt, RequestStatusUnion, TargetSelection, TargetSelector, TargetSelectorMode, getAllPlayableCards, getModifierContext, getTargetSelectorStatus, isCardCurrent, isCardPlayable, isResponse, newTargetSelector } from "./TargetSelector";
 
 export type SelectorUpdate =
     { setRequest: RequestStatusUnion } |
@@ -55,21 +54,13 @@ function setSelectorMode(selector: TargetSelector, mode: TargetSelectorMode): Ta
     return { ...selector, mode };
 }
 
-function newTargetSelection(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelection {
-    let effect_list: EffectListType;
-    if (isEquipCard(card)) {
-        effect_list = 'equip_effects';
-    } else if (isResponse(selector)) {
-        const forcedPlay = getModifierContext(selector, 'forced_play');
-        if (forcedPlay !== undefined && (card.id === forcedPlay || isCardCurrent(selector, getCard(table, forcedPlay)))) {
-            effect_list = 'effects';
-        } else {
-            effect_list = 'responses';
+function newTargetSelection(selector: TargetSelector, card: KnownCard): TargetSelection {
+    for (const { card: playableCard, effect_list } of getAllPlayableCards(selector)) {
+        if (playableCard === card.id) {
+            return { card, targets: [], effect_list };
         }
-    } else {
-        effect_list = 'effects';
     }
-    return { card, targets: [], effect_list };
+    throw Error('Could not create TargetSelection');
 }
 
 function handleSetRequest(table: GameTable, request: RequestStatusUnion): TargetSelector {
@@ -77,7 +68,7 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
     if (isResponse(selector)) {
         let preselectCard: KnownCard | undefined;
         for (const pair of selector.request.respond_cards) {
-            const card = getCard(table, pair.modifiers.at(0) ?? pair.card);
+            const card = getCard(table, pair.modifiers.at(0)?.card ?? pair.card);
             if (cardHasTag(card, 'preselect')) {
                 if (!preselectCard) {
                     preselectCard = card;
@@ -90,7 +81,7 @@ function handleSetRequest(table: GameTable, request: RequestStatusUnion): Target
             return handleAutoTargets(table, {
                 ...selector,
                 mode: 'preselect',
-                preselection: newTargetSelection(table, selector, preselectCard)
+                preselection: newTargetSelection(selector, preselectCard)
             });
         }
     }
@@ -165,7 +156,7 @@ function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSe
 }
 
 function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelector {
-    const selection = newTargetSelection(table, selector, card);
+    const selection = newTargetSelection(selector, card);
     if (selection.effect_list !== 'equip_effects' && isCardModifier(card, selection.effect_list === 'responses')) {
         return handleAutoTargets(table, {
             ...selector,

@@ -1,9 +1,10 @@
+import { EffectListType } from "./CardData";
 import { CardTargetGenerated } from "./CardTarget";
 import { CardId } from "./GameUpdate";
 
 export interface GameActionSelection {
     card: CardId;
-    is_response: boolean;
+    effect_list: EffectListType;
     targets: CardTargetGenerated[];
 }
 

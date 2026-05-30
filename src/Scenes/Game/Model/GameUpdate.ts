@@ -1,7 +1,7 @@
 import { Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { Container, ContainerKey, parseContainer } from "../../../Utils/ArrayUtils";
 import { Empty } from "../../../Utils/UnionUtils";
-import { CardData, CardSign } from "./CardData";
+import { CardData, CardSign, EffectListType } from "./CardData";
 import { DeckType, ExpansionType, GameFlag, PlayerFlag, PlayerRole, PocketType, SoundId, TokenType } from "./CardEnums";
 
 export type CardId = number;
@@ -155,7 +155,11 @@ export type EffectContext = Partial<{
 
 export interface PlayableCardInfo {
     card: CardId;
-    modifiers: CardId[];
+    effect_list: EffectListType;
+    modifiers: {
+        card: CardId,
+        effect_list: EffectListType
+    }[];
     context: EffectContext | null;
 }
 

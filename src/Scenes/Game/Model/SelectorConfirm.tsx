@@ -10,7 +10,7 @@ import { SelectorUpdate } from "./TargetSelectorReducer";
 function buildGameActionSelection({ card, targets, effect_list }: TargetSelection): GameActionSelection {
     return {
         card: card.id,
-        is_response: effect_list === 'responses',
+        effect_list,
         targets: targets.map(targetDispatch.generateTarget)
     };
 }
