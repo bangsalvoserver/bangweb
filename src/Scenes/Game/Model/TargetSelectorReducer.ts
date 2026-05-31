@@ -2,7 +2,7 @@ import { SetStateAction } from "react";
 import { mapLast } from "../../../Utils/ArrayUtils";
 import { Empty, createContextUnionReducer } from "../../../Utils/UnionUtils";
 import { CardTarget } from "./CardTarget";
-import { cardHasTag, isCardModifier } from "./Filters";
+import { cardHasTag } from "./Filters";
 import { Card, GameTable, KnownCard, Player, getCard, isCardKnown } from "./GameTable";
 import targetDispatch from "./TargetDispatch";
 import { GamePrompt, RequestStatusUnion, TargetSelection, TargetSelector, TargetSelectorMode, getAllPlayableCards, getModifierContext, getTargetSelectorStatus, isCardCurrent, isCardPlayable, isResponse, newTargetSelector } from "./TargetSelector";
@@ -21,9 +21,8 @@ type TargetListMapper = SetStateAction<CardTarget[]>;
 
 function mapSelection(selection: TargetSelection, mapper: TargetListMapper): TargetSelection {
     return {
-        card: selection.card,
+        ...selection,
         targets: typeof(mapper) === 'function' ? mapper(selection.targets) : mapper,
-        effect_list: selection.effect_list
     }
 };
 
@@ -55,9 +54,9 @@ function setSelectorMode(selector: TargetSelector, mode: TargetSelectorMode): Ta
 }
 
 function newTargetSelection(selector: TargetSelector, card: KnownCard): TargetSelection {
-    for (const { card: playableCard, effect_list } of getAllPlayableCards(selector)) {
+    for (const { card: playableCard, effect_list, isModifier } of getAllPlayableCards(selector)) {
         if (playableCard === card.id) {
-            return { card, targets: [], effect_list };
+            return { card, targets: [], effect_list, isModifier };
         }
     }
     throw Error('Could not create TargetSelection');
@@ -104,7 +103,7 @@ function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSel
 
 function handleEndPreselection(table: GameTable, selector: TargetSelector): TargetSelector {
     if (selector.mode === 'preselect' && selector.preselection !== null) {
-        if (isCardModifier(selector.preselection.card, selector.preselection.effect_list === 'responses')) {
+        if (selector.preselection.isModifier) {
             return handleAutoSelect(table, {
                 ...selector,
                 prompt: { type: 'none' },
@@ -157,7 +156,7 @@ function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSe
 
 function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelector {
     const selection = newTargetSelection(selector, card);
-    if (selection.effect_list !== 'equip_effects' && isCardModifier(card, selection.effect_list === 'responses')) {
+    if (selection.isModifier) {
         return handleAutoTargets(table, {
             ...selector,
             prompt: { type: 'none' },

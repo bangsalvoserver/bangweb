@@ -49,6 +49,7 @@ export interface TargetSelection {
     card: KnownCard;
     targets: CardTarget[];
     effect_list: EffectListType;
+    isModifier: boolean;
 }
 
 interface TargetSelectorBase<T extends RequestStatusUnion> {
@@ -145,7 +146,14 @@ export function selectorCanUndo(selector: TargetSelector): boolean {
     }
 }
 
-export function *getAllPlayableCards(selector: TargetSelector): Generator<{ card: CardId, effect_list: EffectListType, context: EffectContext | null }> {
+export interface PlayableCard {
+    card: CardId;
+    effect_list: EffectListType;
+    context: EffectContext | null;
+    isModifier: boolean;
+}
+
+export function *getAllPlayableCards(selector: TargetSelector): Generator<PlayableCard> {
     let cards: PlayableCardInfo[];
     if (isResponse(selector)) {
         cards = selector.request.respond_cards;
@@ -167,9 +175,9 @@ export function *getAllPlayableCards(selector: TargetSelector): Generator<{ card
         }
         if (selector.modifiers.length < modifiers.length) {
             const mod = modifiers[selector.modifiers.length];
-            yield { card: mod.card, effect_list: mod.effect_list, context };
+            yield { card: mod.card, effect_list: mod.effect_list, context, isModifier: true };
         } else {
-            yield { card, effect_list, context };
+            yield { card, effect_list, context, isModifier: false };
         }
     }
 }

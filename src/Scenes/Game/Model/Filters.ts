@@ -30,10 +30,6 @@ export function getCardOwner(card: Card): PlayerId | undefined {
     return card.pocket && 'player' in card.pocket ? card.pocket.player : undefined;
 }
 
-export function isCardModifier(card: KnownCard, isResponse: boolean): boolean {
-    return (isResponse ? card.cardData.modifier_response.type : card.cardData.modifier.type) !== null;
-}
-
 export function isGhost(player: Player): boolean {
     return player.status.flags.has('dead') && (
         player.status.flags.has('ghost') ||
