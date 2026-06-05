@@ -24,6 +24,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     PROMPT_CANCEL_BOAST_FEAT: () =>                                         <>Vuoi annullare il vantare un'impresa?</>,
     PROMPT_CANCEL_DRAW: (card) =>                                           <>Vuoi annullare di pescare per {card}?</>,
     PROMPT_TRACK_SELF: (card) =>                                            <>Non c'e' motivo di tracciarti da solo con {card}. Continuare?</>,
+    PROMPT_EQUIP_RETURN: (card, player) =>                                  <>Dopo aver giocato {card}, la carta sarà immediatamente restituita a {player}. Continuare?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card} : Giocare la carta o scartarla?</>,
 
     STATUS_GAME_OVER: () =>                                                 <>Partita Finita</>,
