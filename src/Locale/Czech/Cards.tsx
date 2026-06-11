@@ -500,11 +500,11 @@ export const CARDS: CardRegistry = {
     CHUCK_WAGON: {
         name: "Kuchyňský vůz",
         description: <>Pokud jsi ve svém tahu zahrál alespoň 3 karty, získej na konci tahu 1 život.</>,
-        hideTitle: true,
+        
     },
     CHOLERA: {
         name: "Cholera",
-        description: <>Zahraj na libovolného hráče. Tento hráč nesmí používat schopnost své postavy.<br/>Na konci svého tahu „sejmi“: pokud je to piková karta ♠, přidej na tuto kartu 1 📦.</>
+        description: <>Zahraj na kohokoli. Tento hráč nesmí používat svou schopnost. Na konci tahu „sejmi“: Pokud je to piková karta ♠, přidej na tuto kartu 1 📦.</>
     },
     COMANCHE: {
         name: "Komanč",
@@ -517,7 +517,7 @@ export const CARDS: CardRegistry = {
     },
     COYOTES: {
         name: "Kojoti",
-        description: <>Odhoď kartu z ruky nebo ztrať 1 život. Jinak pošli <i>Kojoti</i> po levici.</>,
+        description: <>Odhoď kartu z ruky nebo ztrať 1 život. Jinak pošli kartu <i>Kojoti</i> po levici.</>,
         descriptionClass: "draw-description text-smaller"
     },
     FEUD: {
@@ -539,7 +539,7 @@ export const CARDS: CardRegistry = {
     },
     GEYSER: {
         name: "Gejzír",
-        hideTitle: true
+        
     },
     HAWKEN: {
         name: "Hawken",
@@ -549,13 +549,13 @@ export const CARDS: CardRegistry = {
     },
     HEAVY_GRUB: {
         name: "Vydatná chálka",
-        description: <>Pokud je tato karta odhozena na konci tvého tahu, získej 3 životy</>,
-        hideTitle: true
+        description: <>Pokud je tato karta odhozena na konci tvého tahu, získej 3 životy.</>,
+        
     },
     JACKALOPE: {
         name: "Zajícovec",
         description: <>Pokud je tato karta z tvé ruky dobrána nebo odhozena jiným hráčem, můžeš si dobrat 2 karty.</>,
-        hideTitle: true
+        
     },
     MULE: {
         name: "Mula"
@@ -603,8 +603,7 @@ export const CARDS: CardRegistry = {
     },
     POSSE: {
         name: "Komando",
-        description: <>Sleduj hráče.<br/>Na začátku svého tahu pošli <i>Komando</i> hráči nalevo. Pokud je pošle sledovaný hráč, odhoď tuto kartu a on ztrácí 1 život.</>,
-        hideTitle: true
+        description: <>Sleduj hráče.<br/>Na začátku tahu pošli <i>Komando</i> hráči nalevo. Pokud je pošle sledovaný hráč, odhoď tuto kartu a on ztrácí 1 život.</>,
     },
     SCALP: {
         name: "Scalp!",
@@ -614,11 +613,11 @@ export const CARDS: CardRegistry = {
     },
     SCORPION: {
         name: "Štír",
-        description: <>Zahraj na libovolného hráče. Kdykoli tento hráč vyloží kartu před kohokoli ve hře, „sejmi“: pokud je to piková karta ♠, musí zahrát <i>Vedle!</i> nebo kartu odhodit.</>
+        description: <>Zahraj na kohokoli. Kdykoli tento hráč vyloží kartu před kohokoli ve hře, „sejmi“: pokud je to ♠, musí zahrát <i>Vedle!</i> nebo kartu odhodit.</>
     },
     SLOCUM: {
         name: "Slocum",
-        description: <>Když zahraješ kartu <i>BANG!</i>, dober si 1 kartu. Pokud jsi v tomto tahu žádnou kartu <i>BANG!</i> nezahrál, odhoď tuto kartu.</>,
+        description: <>Zahraješli kartu <i>BANG!</i>, dober si 1 kartu. Pokud jsi tento tah kartu <i>BANG!</i> nezahrál, odhoď Slocuma.</>,
         hideTitle: true,
         descriptionClass: "weapon-description"
     },
