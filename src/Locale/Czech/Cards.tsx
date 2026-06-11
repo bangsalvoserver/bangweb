@@ -475,165 +475,164 @@ export const CARDS: CardRegistry = {
     // Frontier cards
 
     BALLAD: {
-        name: "Ballad",
-        description: <>Force a player to take all cards in front of him into hand. You may then draw a card from his hand.</>
+        name: "Balada",
+        description: <>Přinuť hráče, aby si vzal všechny karty, které má před sebou, do ruky. Poté si můžeš vzít jednu kartu z jeho ruky.</>
     },
     COFFIN: {
-        name: "Coffin",
-        description: <>At the end of your turn, you are considered out of the game until the start of your next turn. Then, discard this card.</>
+        name: "Rakev",
+        description: <>Na konci svého tahu jsi považován za vyřazeného ze hry až do začátku svého dalšího tahu. Poté tuto kartu odhoď.</>
     },
     UNDERTAKER: {
-        name: "Undertaker",
-        description: <>Track a player.<br/>When he is eliminated, only you can see his role. It cannot be revealed for the rest of the game.</>,
+        name: "Hrobník",
+        description: <>Sleduj hráče.<br/>Když je vyřazen můžeš se podívat na jeho roli. Do konce hry nesmí být odhalena.</>,
         descriptionClass: "card-description-higher"
     },
     COFFEE: {
-        name: "Coffee",
-        description: <>At the end of this turn, you do not discard cards.</>
+        name: "Káva",
+        description: <>Na konci tahu neodhazuj karty.</>
     },
     CHINATOWN: {
         name: "Chinatown",
-        description: <>Force a player to discard their entire hand.<br/>They may draw the same amount of cards from the deck.</>,
+        description: <>Donuť hráče odhodit všechny karty z jeho ruky.<br/>Poté si může vzít stejný počet karet do ruky zpět.</>,
         hideTitle: true,
         descriptionClass: "card-description text-smaller"
     },
     CHUCK_WAGON: {
-        name: "Chuck Wagon",
-        description: <>At the end of each of your turns, if you played at least 3 cards, gain 1 life point.</>,
-        hideTitle: true,
+        name: "Kuchyňský vůz",
+        description: <>Pokud jsi ve svém tahu zahrál alespoň 3 karty, získej na konci tahu 1 život.</>,
+        
     },
     CHOLERA: {
         name: "Cholera",
-        description: <>Play on any player. That player cannot use their special ability.<br/>At the end of your turn, "draw!": on Spades, add 1 📦.</>
+        description: <>Zahraj na kohokoli. Tento hráč nesmí používat svou schopnost. Na konci tahu „sejmi“: Pokud je to piková karta ♠, přidej na tuto kartu 1 📦.</>
     },
     COMANCHE: {
-        name: "Comanche",
-        description: <>Track a player.<br/>After drawing, during each of your turns, you have his ability once.</>,
+        name: "Komanč",
+        description: <>Sleduj hráče.<br/>Po dobrání karet v 1. fázi můžeš během každého svého tahu jednou použít jeho schopnost.</>,
         hideTitle: true
     },
     COMPANION: {
-        name: "Companion",
-        description: <>Track a player.<br/>During your turn, you may play brown cards as if from his position.</>
+        name: "Společník",
+        description: <>Sleduj hráče.<br/>Během svého tahu můžeš hrát hnědé karty, jako bys byl na jeho pozici.</>
     },
     COYOTES: {
-        name: "Coyotes",
-        description: <>Discard a card or lose 1 life point. Else, pass <i>Coyotes</i> to your left.</>,
+        name: "Kojoti",
+        description: <>Odhoď kartu z ruky nebo ztrať 1 život. Jinak pošli kartu <i>Kojoti</i> po levici.</>,
         descriptionClass: "draw-description text-smaller"
     },
     FEUD: {
-        name: "Feud",
-        description: <>You may neither play this card nor discard it at the end of your turn.</>
+        name: "Spor",
+        description: <>Tuto kartu nesmíš zahrát ani odhodit na konci svého tahu.</>
     },
     FALCON: {
-        name: "Falcon",
-        description: <>Look at another player's hand.</>,
+        name: "Sokol",
+        description: <>Podívej se na karty v ruce jiného hráče.</>,
         descriptionClass: "card-description-lower"
     },
     CAMPFIRE: {
-        name: "Campfire",
-        description: <>Discard your weapon in play. When you play a weapon, discard this card.<br/>You view others at distance 1.</>
+        name: "Táborák",
+        description: <>Odhoď svou vyloženou zbraň. Když zahraješ novou zbraň, odhoď tuto kartu. Ostatní hráče vidíš na vzdálenost 1.</>
     },
     STAMPEDE: {
-        name: "Stampede",
-        description: <>Players with more than 4 cards in front of them must discard them all.</>
+        name: "Štvanice",
+        description: <>Hráči, kteří mají před sebou vyloženo více než 4 karty, je musí všechny odhodit.</>
     },
     GEYSER: {
-        name: "Geyser",
-        hideTitle: true
+        name: "Gejzír",
+        
     },
     HAWKEN: {
         name: "Hawken",
-        description: <>When you hit a player, you may force him to take all his cards in play back into hand.</>,
+        description: <>Když zasáhneš hráče, můžeš ho přinutit, aby si vzal všechny své vyložené karty zpět do ruky.</>,
         hideTitle: true,
         descriptionClass: "weapon-description"
     },
     HEAVY_GRUB: {
-        name: "Heavy Grub",
-        description: <>If discarded at the end of your turn, gain 3 life points.</>,
-        hideTitle: true
+        name: "Vydatná chálka",
+        description: <>Pokud je tato karta odhozena na konci tvého tahu, získej 3 životy.</>,
+        
     },
     JACKALOPE: {
-        name: "Jackalope",
-        description: <>If drawn or discarded from your hand by another player, you may draw 2 cards.</>,
-        hideTitle: true
+        name: "Zajícovec",
+        description: <>Pokud je tato karta z tvé ruky dobrána nebo odhozena jiným hráčem, můžeš si dobrat 2 karty.</>,
+        
     },
     MULE: {
-        name: "Mule"
+        name: "Mula"
     },
     GRIZZLY: {
         name: "Grizzly"
     },
     PELTS: {
-        name: "Pelts",
-        description: <>If there are 4 📦 on this card, switch it with another card in play.</>,
+        name: "Kožešiny",
+        description: <>Pokud jsou na této kartě 4 📦, vyměň ji za jinou kartu ve hře.</>,
         descriptionClass: "cube-description"
     },
     FISHING: {
-        name: "Fishing",
-        description: <>Name a suit and "draw!" as many times as the number of other players. You may take all cards of the named suit drawn into hand.</>
+        name: "Rybolov",
+        description: <>Vyber barvu a „sejmi“ tolikrát, kolik je ostatních hráčů. Všechny tažené karty vybrané barvy si můžeš vzít do ruky.</>
     },
     FISHING_HEARTS: {
-        name: "Fishing: Declare Hearts",
+        name: "Rybolov: Vyber srdce",
         hideTitle: true,
         description: <>♥️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_DIAMONDS: {
-        name: "Fishing: Declare Diamonds",
+        name: "Rybolov: Vyber káry",
         hideTitle: true,
         description: <>♦️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_CLUBS: {
-        name: "Fishing: Declare Clubs",
+        name: "Rybolov: Vyber kříže",
         hideTitle: true,
         description: <>♣️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_SPADES: {
-        name: "Fishing: Declare Spades",
+        name: "Rybolov: Vyber piky",
         hideTitle: true,
         description: <>♠️</>,
         descriptionClass: "card-description text-bigger"
     },
     PIONEERS: {
-        name: "Pioneers",
-        description: <>Play on the player on your left and track yourself.<br/>At the start of your turn, pass <i>Pioneers</i> left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
+        name: "Průkopníci",
+        description: <>Zahraj na hráče po své levici a sleduj sám sebe.<br/>Na začátku svého tahu pošli kartu <i>Průkopníci</i> hráči po levici. Pokud je pošle sledovaný hráč, odhoď tuto kartu a on si dobere tolik karet, kolik je ostatních hráčů ve hře.</>,
         descriptionClass: "card-description-higher text-smallest"
     },
     POSSE: {
-        name: "Posse",
-        description: <>Track a player.<br/>At the start of your turn, pass <i>Posse</i> left. If passed by the tracked player, discard it and he loses 1 life point.</>,
-        hideTitle: true
+        name: "Komando",
+        description: <>Sleduj hráče.<br/>Na začátku tahu pošli <i>Komando</i> hráči nalevo. Pokud je pošle sledovaný hráč, odhoď tuto kartu a on ztrácí 1 život.</>,
     },
     SCALP: {
         name: "Scalp!",
-        description: <>During your turn, use the ability of another character once.</>,
+        description: <>Během svého tahu smíš jednou použít schopnost jiné postavy.</>,
         hideTitle: true,
         descriptionClass: "cube-description"
     },
     SCORPION: {
-        name: "Scorpion",
-        description: <>Play on any player. Whenever he plays a card in front of anyone, "draw!": on Spades, he must play <i>Missed!</i> or discard the card.</>
+        name: "Štír",
+        description: <>Zahraj na kohokoli. Kdykoli tento hráč vyloží kartu před kohokoli ve hře, „sejmi“: pokud je to ♠, musí zahrát <i>Vedle!</i> nebo kartu odhodit.</>
     },
     SLOCUM: {
         name: "Slocum",
-        description: <>When you play a <i>BANG!</i> card, draw a card. If you did not play a <i>BANG!</i> card this turn, discard this card.</>,
+        description: <>Zahraješli kartu <i>BANG!</i>, dober si 1 kartu. Pokud jsi tento tah kartu <i>BANG!</i> nezahrál, odhoď Slocuma.</>,
         hideTitle: true,
         descriptionClass: "weapon-description"
     },
     TARANTULA_JUICE: {
-        name: "Tarantula Juice",
-        description: <>"Draw!":<br/>♥♦=gain 2 life points.<br/>♣=draw a card.<br/>♠=lose 1 life point.</>,
+        name: "Tarantulí džus",
+        description: <>„Sejmi!“:<br/>♥♦=získej 2 životy.<br/>♣=dober si 1 kartu.<br/>♠=ztrať 1 život.</>,
         hideTitle: true
     },
     CATTLE_DRIVE: {
-        name: "Cattle Drive",
-        description: <>Draw a card for each card in front of you.</>
+        name: "Přesun dobytka",
+        description: <>Dober si 1 kartu za každou kartu, kterou máš vyloženou před sebou.</>
     },
     TRAP: {
-        name: "Trap",
-        description: <>Play on any player. He may not play blue cards.<br/>Once per turn, he may "draw!":<br/>♥=Pass this card to another player.<br/>♠=Discard this card and lose 1 life point.</>,
+        name: "Past",
+        description: <>Zahraj na libovolného hráče. Tento hráč nesmí hrát modré karty.<br/>Jednou za tah můžeš „sejmout“:<br/>♥=pošli tuto kartu jinému hráči.<br/>♠=odhoď tuto kartu a ztrácíš 1 život.</>,
         descriptionClass: "card-description text-smallest"
     },
 
@@ -1674,61 +1673,61 @@ export const CARDS: CardRegistry = {
 
     ALEXANDER_NOON: {
         name: "Alexander Noon",
-        description: <>Before you "draw!", you may draw a card and then choose to discard a card from hand to use as the result of the "draw!".</>,
+        description: <>Předtím než „sejmeš“, si můžeš dobrat 1 kartu a poté z ruky odhodit kartu, která poslouží jako výsledek tohoto „sejmutí“.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     CALEB_BREW: {
         name: "Caleb Brew",
-        description: <>When you gain a life point, you may discard a card from hand for a player of your choice to gain 1 life point.</>,
+        description: <>Když získáš 1 život, můžeš odhodit 1 kartu z ruky, aby si hráč dle tvého výběru přidal 1 život.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     CAYENNE_CHEE: {
         name: "Cayenne Chee",
-        description: <>Once per round, when you use a card, you may discard a Diamond card with it to take it back into hand.</>,
+        description: <>Jednou za kolo, když použiješ nějakou kartu, s ní můžeš odhodit 1 károvou kartu ♦, aby se ti vrátila zpět do ruky.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     JOSEY_STRONG: {
         name: "Josey Strong",
-        description: <>When you play a <i>BANG!</i> card, you may discard a brown card from hand to make this shot unavoidable.</>,
+        description: <>Když zahraješ kartu <i>BANG!</i>, můžeš z ruky odhodit 1 hnědou kartu, aby se tomuto výstřelu nedalo vyhnout.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     JOSIAH_TUNG: {
         name: "Josiah Tung",
-        description: <>After drawing, you may discard a random card from hand to draw two cards.</>,
+        description: <>Po dobrání karet v 1. fázi můžeš odhodit 1 náhodnou kartu z ruky a dobrat si 2 karty z balíčku.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     LT_MICAIAH: {
         name: "Lt. Micaiah",
-        description: <>Once during your turn, you may discard a card from hand to switch 1 of your cards in play with another card in play.</>,
+        description: <>Jednou během svého tahu můžeš odhodit 1 kartu z ruky a vyměnit 1 svou vyloženou kartu za jinou kartu ve hře.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     RAY_OWE: {
         name: "Ray Owe",
-        description: <>During your turn, you may draw a card from another player. When used or when your turn ends, return it to him.</>,
+        description: <>Během svého tahu si můžeš vzít 1 kartu jiného hráče. Jakmile ji použiješ, nebo na konci tvého tahu, mu ji vrať.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     SALVO_THE_SHOOTER: {
         name: "Salvo the Shooter",
-        description: <>Twice per turn, whenever you play a <i>BANG!</i> card, you may shoot another player within range.</>,
+        description: <>Dvakrát za tah, kdykoli zahraješ kartu <i>BANG!</i>, můžeš vystřelit na dalšího hráče ve svém dostřelu.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     SHANGO_BROTHERS: {
         name: "Shango Brothers",
-        description: <>During your turn, on every third card played, draw 1 from the deck (up to 3 times).</>,
+        description: <>Během svého tahu si za každou třetí zahranou kartu dober 1 kartu z balíčku (až 3x za tah).</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     STEVE_TENGO: {
         name: "Steve Tengo",
-        description: <>At the start of your turn, track a player. Whenever you hit him, draw a card.</>,
+        description: <>Na začátku svého tahu začni sledovat jednoho hráče. Kdykoli ho zasáhneš, dober si 1 kartu.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
