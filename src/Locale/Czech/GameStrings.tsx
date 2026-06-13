@@ -29,6 +29,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     PROMPT_CANCEL_DRAW: (card) =>                                           <>Are you sure you want to cancel drawing for {card}?</>,
     PROMPT_TRACK_SELF: (card) =>                                            <>There is no reason to track yourself with {card}. Continue?</>,
     PROMPT_EQUIP_RETURN: (card, player) =>                                  <>After playing {card}, the card will be immediately returned to {player}. Continue?</>,
+    PROMPT_EQUIP_RETURN: (card, player) =>                                  <>After playing {card}, the card will be immediately returned to {player}. Continue?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card} : Zahrát kartu nebo ji odhodit?</>,
 
     STATUS_GAME_OVER: () =>                                                 <>Konec hry</>,

@@ -24,6 +24,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     PROMPT_CANCEL_BOAST_FEAT: () =>                                         <>¿Estás seguro de que quieres cancelar alardear sobre una proeza?</>,
     PROMPT_CANCEL_DRAW: (card) =>                                           <>Are you sure you want to cancel drawing for {card}?</>,
     PROMPT_TRACK_SELF: (card) =>                                            <>There is no reason to track yourself with {card}. Continue?</>,
+    PROMPT_EQUIP_RETURN: (card, player) =>                                  <>After playing {card}, the card will be immediately returned to {player}. Continue?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card}: ¿Jugar o descartar esta carta?</>,
 
     STATUS_GAME_OVER: () =>                                                 <>Fin del Juego</>,
@@ -202,7 +203,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     STATUS_MOVE_TRAP: (card) =>                                             <>Choose where to move {card}.</>,
     STATUS_MOVE_TRAP_OTHER: (player, card) =>                               <>{player} must choose where to move {card}.</>,
     STATUS_ALEXANDER_NOON: (card, target_card) =>                           <>You are about to "draw" for {target_card} ... you can play {card}.</>,
-    STATUS_ALEXANDER_NOON_OTHER: (player, card, target_card) =>             <>{player} is about to "draw" for {target_card} can can play {card}.</>,
+    STATUS_ALEXANDER_NOON_OTHER: (player, card, target_card) =>             <>{player} is about to "draw" for {target_card} and can play {card}.</>,
 
     ERROR_INVALID_ACTION: () =>                                             <>Acción inválida</>,
     ERROR_NOT_ENOUGH_GOLD: () =>                                            <>No hay suficientes pepitas de oro</>,
