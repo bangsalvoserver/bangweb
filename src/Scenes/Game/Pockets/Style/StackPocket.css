@@ -22,7 +22,7 @@
     --card-highlight-color: unset !important;
 }
 
-.stack-pocket .card-view:not(:last-child).card-highlight {
+.player-hand > .stack-pocket .card-view:not(:last-child).card-highlight {
     --card-highlight-color: unset !important;
 }
 
@@ -52,6 +52,11 @@
 }
 
 .stack-pocket .card-view:not(:last-child).card-current {
+    pointer-events: all;
+    --card-translate-y: -40%;
+}
+
+*:not(.player-hand) > .stack-pocket .card-view:not(:last-child).card-highlight {
     pointer-events: all;
     --card-translate-y: -40%;
 }
