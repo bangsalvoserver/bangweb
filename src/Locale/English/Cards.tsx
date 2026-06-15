@@ -714,7 +714,6 @@ export const CARDS: CardRegistry = {
     SLAB_THE_KILLER: {
         name: "Slab the Killer",
         hideTitle: true,
-        // EDIT: fix grammar
         description: <>Players need 2 <i>Missed!</i> cards to cancel his <i>BANG!</i> cards.</>,
         descriptionClass: "character-description"
     },
@@ -1522,7 +1521,7 @@ export const CARDS: CardRegistry = {
     BENNY_BRAWLER: {
         name: "Benny Brawler",
         hideTitle: true,
-        description: <>During your turn, you may take any number of Railcards from the train.</>,
+        description: <>During your turn, you may take any number of Railcars from the train.</>,
         descriptionClass: "character-description"
     },
     EVAN_BABBIT: {
@@ -1546,7 +1545,7 @@ export const CARDS: CardRegistry = {
     SANCHO: {
         name: "Sancho",
         hideTitle: true,
-        description: <>Once during your turn, you may take 1 Railcard of your choice from the train for free.</>,
+        description: <>Once during your turn, you may take 1 Railcar of your choice from the train for free.</>,
         descriptionClass: "character-description"
     },
     SGT_BLAZE: {
@@ -1681,7 +1680,7 @@ export const CARDS: CardRegistry = {
     TEREN_KILL_2: {
         name: "Teren Kill",
         hideTitle: true,
-        description: <>Each time he would be eliminated, "draws!": if it isn't Spades, stays at 1 life point and draws 1 card.</>,
+        description: <>Each time he would be eliminated, "draw!": if it is not Spades, <i>Teren</i> stays at 1 life point, and draws 1 card.</>,
         descriptionClass: "character-description"
     },
     WYATT_EARL: {

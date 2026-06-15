@@ -134,7 +134,7 @@ export const LABELS: LabelRegistry = {
     },
 
     lobby: {
-        CONNECTION_ERROR: "Errore di connessione",
+        CONNECTION_ERROR: "Connection Error",
         ERROR_INVALID_LOBBY: "Invalid Lobby ID",
         ERROR_PLAYER_IN_LOBBY: "Player already in a lobby",
         ERROR_PLAYER_NOT_IN_LOBBY: "Player not in a lobby",
@@ -154,9 +154,9 @@ export const LABELS: LabelRegistry = {
     chat: {
         HELP_DESCRIPTION: cmd => `${cmd} : print this message`,
         USERS_DESCRIPTION: cmd => `${cmd} : print list of users in this lobby`,
-        KICK_DESCRIPTION: cmd => `${cmd} username_or_id : kick an user in this lobby`,
-        MUTE_DESCRIPTION: cmd => `${cmd} username_or_id : mute an user in this lobby`,
-        UNMUTE_DESCRIPTION: cmd => `${cmd} username_or_id : unmute an user in this lobby`,
+        KICK_DESCRIPTION: cmd => `${cmd} username_or_id : kick a user in this lobby`,
+        MUTE_DESCRIPTION: cmd => `${cmd} username_or_id : mute a user in this lobby`,
+        UNMUTE_DESCRIPTION: cmd => `${cmd} username_or_id : unmute a user in this lobby`,
         APPOINT_DESCRIPTION: cmd => `${cmd} username_or_id : give away ownership of this lobby`,
         GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : print game options`,
         SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : set a game option`,
@@ -178,7 +178,7 @@ export const LABELS: LabelRegistry = {
         ERROR_DISCONNECTED_FROM_SERVER: "Disconnected from the server",
         SERVER_STOP: "The server has been stopped. Wait a few minutes and retry.",
         HANDSHAKE_FAIL: "Error during the connection",
-        RECONNECT_WITH_SAME_SESSION_ID: "Your session has been transfered",
+        RECONNECT_WITH_SAME_SESSION_ID: "Your session has been transferred",
         INACTIVITY: "Disconnected for inactivity",
         QUIT: "Disconnected by user command",
         ERROR_CODE: code => `(Error code: ${code})`,

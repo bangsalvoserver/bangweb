@@ -560,7 +560,7 @@ export const CARDS: CardRegistry = {
     },
     UNDERTAKER: {
         name: "Becchino",
-        description: <>Traccia un giocatore.<br/>Quando viene eliminato, suolo tu puoi vedere il suo ruolo. Non potrà essere rivelato per il resto della partita.</>,
+        description: <>Traccia un giocatore.<br/>Quando viene eliminato, solo tu puoi vedere il suo ruolo. Non potrà essere rivelato per il resto della partita.</>,
         hideTitle: true,
         descriptionClass: "card-description-higher"
     },
@@ -1163,7 +1163,7 @@ export const CARDS: CardRegistry = {
     PRETTY_LUZENA: {
         name: "Pretty Luzena",
         hideTitle: true,
-        description: <>Una volte per turno può pagare un equipaggiamento a costo diminuito di 1.</>,
+        description: <>Una volta per turno può pagare un equipaggiamento a costo diminuito di 1.</>,
         descriptionClass: "character-description"
     },
     RADDIE_SNAKE: {
@@ -1422,7 +1422,7 @@ export const CARDS: CardRegistry = {
         name: "Regolamento di Conti",
         hideTitle: true,
         // EDIT: BANG! cards can *only* be played as Missed!
-        description: <>Tutte le carte possono essere giocare come se fossero <i>BANG!</i>. Le carte <i>BANG!</i> solo come se fossero <i>Mancato!</i></>
+        description: <>Tutte le carte possono essere giocate come se fossero <i>BANG!</i>. Le carte <i>BANG!</i> solo come se fossero <i>Mancato!</i></>
     },
     SACAGAWAY: {
         name: "Sacagaway",
@@ -1839,7 +1839,7 @@ export const CARDS: CardRegistry = {
     },
     LT_MICAIAH: {
         name: "Lt. Micaiah",
-        description: <>Una volta durante il tuo tuno, puoi scartare una carta dalla mano per scambiare una carta davanti a te con una carta davanti a un altro giocatore.</>,
+        description: <>Una volta durante il tuo turno, puoi scartare una carta dalla mano per scambiare una carta davanti a te con una carta davanti a un altro giocatore.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
@@ -2082,7 +2082,7 @@ export const CARDS: CardRegistry = {
     LEGEND_JESSE_JONES: {
         name: "Jesse Jones",
         hideTitle: true,
-        description: <>Guarda le carte in mano a un giocatore, pescane una ,poi pescane un'altra dal mazzo.</>,
+        description: <>Guarda le carte in mano a un giocatore, pescane una, poi pescane un'altra dal mazzo.</>,
         descriptionClass: "legends-description",
     },
     LEGEND_JOURDONNAIS: {
