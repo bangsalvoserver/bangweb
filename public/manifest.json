@@ -1,6 +1,6 @@
 {
   "short_name": "Bang!",
-  "name": "Bang! Web",
+  "name": "Bang! Salvo Server",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,7 +8,7 @@
       "type": "image/x-icon"
     },
     {
-      "src": "salvoserver.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     }
@@ -16,5 +16,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#be8c6a"
 }
