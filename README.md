@@ -48,7 +48,7 @@ A web version of the classic table game **Bang!** made with React and TypeScript
 Clone the repository:
 
 ```bash
-git clone https://github.com/bangsalvoserver/bangweb.git
+git clone --recurse-submodules https://github.com/bangsalvoserver/bangweb
 cd bangweb
 ```
 
