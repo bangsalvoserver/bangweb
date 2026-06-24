@@ -205,6 +205,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 </ConditionalOnExpansion>
                 <OptionCheckbox {...getOption('quick_discard_all')} />
                 <OptionCheckbox {...getOption('auto_pick_predraw')} />
+                <OptionCheckbox {...getOption('prompt_target_immunity')} />
                 <Collapsible label={<hr/>} storageKey="expand_extra_options">
                     <OptionNumber {...getOption('duration_coefficient')} min={0} max={100} withSlider transform={transformVelocity} reverseTransform={reverseTransformVelocity} />
                     <OptionNumber {...getOption('auto_resolve_timer')} max={5000} step={50} withSlider />

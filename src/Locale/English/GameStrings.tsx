@@ -10,6 +10,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     PROMPT_REPLACE: (card, target_card) =>                                  <>Do you want to play {card} to replace {target_card}?</>,
     PROMPT_TARGET_SELF: (card) =>                                           <>Do you want to play {card} on yourself?</>,
     PROMPT_TARGET_GHOST: (card, player) =>                                  <>{player} is a ghost, playing {card} would have no effect. Continue?</>,
+    PROMPT_TARGET_IMMUNE: (card, player) =>                                 <>{player} is immune to {card}. Continue?</>,
     PROMPT_NO_REDRAW: (card) =>                                             <>Do you want to play {card} without redrawing the card?</>,
     PROMPT_BANG_STRENGTH: (ncards) =>                                       <>You have to respond with {ncards} Missed! Continue?</>,
     PROMPT_NO_BANGS_PLAYED: (card) =>                                       <>You haven't played any Bang, playing {card} would have no effect. Continue?</>,

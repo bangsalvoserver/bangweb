@@ -10,6 +10,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     PROMPT_REPLACE: (card, target_card) =>                                      <>Szeretnéd kijátszani a(z) {card} lapot, hogy lecseréld a(z) {target_card} lapot?</>,
     PROMPT_TARGET_SELF: (card) =>                                               <>Szeretnéd kijátszani magadra a(z) {card} lapot?</>,
     PROMPT_TARGET_GHOST: (card, player) =>                                      <>{player} egy szellem, a(z) {card} lap kijátszásának nem lenne hatása. Folytatod?</>,
+    PROMPT_TARGET_IMMUNE: (card, player) =>                                     <>{player} is immune to {card}. Continue?</>,
     PROMPT_NO_REDRAW: (card) =>                                                 <>Szeretnéd kijátszani a(z) {card} lapot anélkül, hogy újrahúznád?</>,
     PROMPT_BANG_STRENGTH: (ncards) =>                                           <>Ki kell játszanod {ncards} <i><i>Nem talált!</i></i> lapot. Folytatod?</>,
     PROMPT_NO_BANGS_PLAYED: (card) =>                                           <>Nem játszottál ki <i>BANG!</i>-et, ezért a(z) {card} lap kijátszásának nem lenne hatása. Folytatod?</>,
