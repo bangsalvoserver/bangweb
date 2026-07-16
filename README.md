@@ -102,6 +102,13 @@ npm run build
 Contributions, issues, and feature requests are welcome!  
 Feel free to [open an issue](https://github.com/bangsalvoserver/bangweb/issues) or submit a pull request.
 
+Consult the documentation:
+
+- [Module documentation - bang-server](https://github.com/bangsalvoserver/bang-server/blob/master/docs/bang-server-module-documentation.md)
+- [Module documentation - bangweb (frontend)](https://github.com/bangsalvoserver/bang-server/blob/master/docs/bangweb-frontend-documentation.md)
+- [Practical examples: how to create a new card in bang-server](https://github.com/bangsalvoserver/bang-server/blob/master/docs/card-creation-examples.md)
+- [Practical example: adding an entire expansion](https://github.com/bangsalvoserver/bang-server/blob/master/docs/adding-an-expansion.md)
+
 ## Community
 
 Join our [Discord server](https://discord.gg/jhQS6ATkgU) to chat, get support, and find other players!
