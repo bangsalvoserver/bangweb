@@ -2,6 +2,8 @@ import { Dispatch } from "react";
 import Button from "../../Components/Button";
 import { getLabel, useLanguage } from "../../Locale/Registry";
 import GameStringComponent from "./GameStringComponent";
+import { isCardKnown } from "./Model/GameTable";
+import { GameString } from "./Model/GameUpdate";
 import { GamePrompt } from "./Model/TargetSelector";
 import { SelectorUpdate } from "./Model/TargetSelectorReducer";
 import "./Style/PromptView.css";
@@ -30,14 +32,14 @@ export default function PromptView({ prompt, selectorDispatch }: PromptProps) {
     } else if (prompt.type === 'playpick') {
         const card = prompt.card;
 
-        const message = {
+        const message: GameString = {
             format_str: 'PROMPT_PLAY_OR_PICK',
             format_args: [
                 {
-                    card: {
+                    card: isCardKnown(card) ? {
                         name: card.cardData.name,
                         sign: card.cardData.sign
-                    }
+                    } : {}
                 }
             ]
         };

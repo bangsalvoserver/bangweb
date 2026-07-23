@@ -7,7 +7,7 @@ import { LobbyContext } from "../Lobby/Lobby";
 import { GameStateContext } from "./GameScene";
 import GameStringComponent, { LocalizedCardName } from "./GameStringComponent";
 import { getTagValue } from "./Model/Filters";
-import { getCard, getTablePocket, KnownCard } from "./Model/GameTable";
+import { Card, getCard, getTablePocket, isCardKnown } from "./Model/GameTable";
 import { GameString } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { isCardCurrent, isResponse, selectorCanPlayCard } from "./Model/TargetSelector";
@@ -18,7 +18,7 @@ export interface StatusProps {
   handleReturnLobby: () => void;
 }
 
-function getCardButtonColor(card: KnownCard): ButtonColor {
+function getCardButtonColor(card: Card): ButtonColor {
   switch (getTagValue(card, 'button_color')) {
   case 0:
   default:
@@ -45,7 +45,7 @@ export default function StatusBar({ gameError, handleClearGameError, handleRetur
     if (selectorCanPlayCard(selector, card) || isCardCurrent(selector, card)) {
       return (
         <Button key={id} color={getCardButtonColor(card)} onClick={handleClickCard(card)}>
-          <LocalizedCardName name={card.cardData.name} />
+          { isCardKnown(card) && <LocalizedCardName name={card.cardData.name} /> }
         </Button>
       );
     }

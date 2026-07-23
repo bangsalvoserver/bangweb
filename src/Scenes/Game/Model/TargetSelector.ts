@@ -1,7 +1,7 @@
 import { EffectListType } from "./CardData";
 import { CardEffect, CardTarget } from "./CardTarget";
 import { getCardOwner, getCardPocket } from "./Filters";
-import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket, isCardKnown } from "./GameTable";
+import { Card, GameTable, KnownCard, Player, getCard, getCubeCount, getPlayer, getPlayerCubes, getPlayerPocket } from "./GameTable";
 import { CardId, EffectContext, GameString, PlayableCardInfo, RequestStatus, StatusReady } from "./GameUpdate";
 import targetDispatch from "./TargetDispatch";
 
@@ -10,7 +10,7 @@ export type RequestStatusUnion = RequestStatus | StatusReady | null;
 export type GamePrompt =
     { type: 'none' } |
     { type: 'yesno', message: GameString, response: boolean } |
-    { type: 'playpick', card: KnownCard };
+    { type: 'playpick', card: Card };
 
 export type TargetSelectorMode =
     | 'start' // No card selected
@@ -210,20 +210,19 @@ export function getModifierContext<K extends keyof EffectContext> (selector: Tar
     return result;
 }
 
-export function selectorCanPlayCard(selector: TargetSelector, card: Card): card is KnownCard {
+export function selectorCanPlayCard(selector: TargetSelector, card: Card): boolean {
     return !isCardCurrent(selector, card)
         && !isCardSelected(selector, card)
-        && isCardPlayable(selector, card)
-        && isCardKnown(card);
+        && isCardPlayable(selector, card);
 }
 
-export function isCardCurrent(selector: TargetSelector, card: Card): card is KnownCard {
+export function isCardCurrent(selector: TargetSelector, card: Card): boolean {
     return selector.selection?.card.id === card.id
         || selector.modifiers.some(selection => selection.card.id === card.id)
         || selector.preselection?.card.id === card.id;
 }
 
-export function isCardPrompted(selector: TargetSelector, card: Card): card is KnownCard {
+export function isCardPrompted(selector: TargetSelector, card: Card): boolean {
     return selector.prompt.type === 'playpick' && selector.prompt.card.id === card.id;
 }
 

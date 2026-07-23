@@ -12,7 +12,7 @@ export type SelectorUpdate =
     { setPrompt: GamePrompt } |
     { confirmSelection: Empty } |
     { undoSelection: Empty } |
-    { selectPlayingCard: KnownCard } |
+    { selectPlayingCard: Card } |
     { addCardTarget: Card } |
     { addPlayerTarget: Player }
 ;
@@ -53,21 +53,33 @@ function setSelectorMode(selector: TargetSelector, mode: TargetSelectorMode): Ta
     return { ...selector, mode };
 }
 
-function newTargetSelection(selector: TargetSelector, card: KnownCard): TargetSelection {
-    for (const { card: playableCard, effect_list, isModifier } of getAllPlayableCards(selector)) {
-        if (playableCard === card.id) {
-            return { card, targets: [], effect_list, isModifier };
+function getKnownCard(selector: TargetSelector, card: Card): KnownCard {
+    if (isCardKnown(card)) {
+        return card;
+    }
+    for (const { card: cardId, info: cardData } of selector.request?.unknown_cards ?? []) {
+        if (cardId === card.id) {
+            return { ...card, cardData };
         }
     }
-    throw Error('Could not create TargetSelection');
+    throw new Error('Could not find card ' + card.id + ' in current request');
+}
+
+function newTargetSelection(selector: TargetSelector, card: Card): TargetSelection {
+    for (const { card: playableCard, effect_list, isModifier } of getAllPlayableCards(selector)) {
+        if (playableCard === card.id) {
+            return { card: getKnownCard(selector, card), targets: [], effect_list, isModifier };
+        }
+    }
+    throw new Error('Could not create TargetSelection');
 }
 
 function handleSetRequest(table: GameTable, request: RequestStatusUnion): TargetSelector {
     const selector = newTargetSelector(request);
     if (isResponse(selector)) {
-        let preselectCard: KnownCard | undefined;
+        let preselectCard: Card | undefined;
         for (const pair of selector.request.respond_cards) {
-            const card = getCard(table, pair.modifiers.at(0)?.card ?? pair.card);
+            const card = getCard(table, pair.modifiers.length === 0 ? pair.card : pair.modifiers[0].card);
             if (cardHasTag(card, 'preselect')) {
                 if (!preselectCard) {
                     preselectCard = card;
@@ -94,7 +106,7 @@ function handleAutoSelect(table: GameTable, selector: TargetSelector): TargetSel
     
     if (cardId) {
         const card = getCard(table, cardId);
-        if (!isCardCurrent(selector, card) && isCardKnown(card) && isCardPlayable(selector, card)) {
+        if (!isCardCurrent(selector, card) && isCardPlayable(selector, card)) {
             return handleSelectPlayingCard(table, selector, card);
         }
     }
@@ -154,7 +166,7 @@ function handleAutoTargets(table: GameTable, selector: TargetSelector): TargetSe
     return selector;
 }
 
-function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, card: KnownCard): TargetSelector {
+function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, card: Card): TargetSelector {
     const selection = newTargetSelection(selector, card);
     if (selection.isModifier) {
         return handleAutoTargets(table, {

@@ -163,12 +163,18 @@ export interface PlayableCardInfo {
     context: EffectContext | null;
 }
 
+export interface UnknownCards {
+    card: CardId;
+    info: CardData;
+}
+
 interface RequestStatusBase<K extends ContainerKey> {
     origin_card: CardId | null;
     origin: PlayerId | null;
     target: PlayerId | null;
     status_text: GameString;
     respond_cards: PlayableCardInfo[];
+    unknown_cards: UnknownCards[];
     highlight_cards: Container<K, CardId>;
     distances: PlayerDistances;
     target_set_players: Container<K, PlayerId>;
@@ -190,6 +196,7 @@ export function parseRequestStatus(request: RequestStatusArgs): RequestStatus {
 
 export interface StatusReady {
     play_cards: PlayableCardInfo[];
+    unknown_cards: UnknownCards[];
     distances: PlayerDistances;
 }
 
