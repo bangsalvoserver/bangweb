@@ -74,8 +74,7 @@ function newTargetSelection(selector: TargetSelector, card: Card): TargetSelecti
     throw new Error('Could not create TargetSelection');
 }
 
-function handleSetRequest(table: GameTable, request: RequestStatusUnion): TargetSelector {
-    const selector = newTargetSelector(request);
+function handlePreselect(table: GameTable, selector: TargetSelector): TargetSelector {
     if (isResponse(selector)) {
         let preselectCard: Card | undefined;
         for (const pair of selector.request.respond_cards) {
@@ -187,7 +186,7 @@ function handleSelectPlayingCard(table: GameTable, selector: TargetSelector, car
 
 const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTable, SelectorUpdate>({
     setRequest (table, request) {
-        return handleSetRequest(table, request);
+        return handlePreselect(table, newTargetSelector(request));
     },
 
     setPrompt (table, prompt) {
@@ -199,7 +198,7 @@ const targetSelectorReducer = createContextUnionReducer<TargetSelector, GameTabl
     },
 
     undoSelection (table) {
-        return handleSetRequest(table, this.request);
+        return handlePreselect(table, newTargetSelector(this.request));
     },
 
     selectPlayingCard (table, card) {
