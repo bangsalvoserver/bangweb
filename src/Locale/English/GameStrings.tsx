@@ -241,6 +241,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     ERROR_TARGET_NOT_TABLE_CARD: () =>                                      <>You can only target cards in play</>,
     ERROR_TARGET_NOT_HAND_CARD: () =>                                       <>You can only target cards from the hand</>,
     ERROR_TARGET_NOT_BLUE_CARD: () =>                                       <>You can only target blue cards</>,
+    ERROR_TARGET_NOT_BROWN_CARD: (origin_card, target) =>                   <>You can't use {origin_card} with {target}: not a brown card.</>,
     ERROR_TARGET_NOT_TRAIN: () =>                                           <>You can only target railcars</>,
     ERROR_TARGET_TRAIN: () =>                                               <>You can't target railcars</>,
     ERROR_TARGET_NOT_BLUE_OR_TRAIN: () =>                                   <>You can only target blue cards or railcars</>,

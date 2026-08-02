@@ -244,6 +244,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     ERROR_TARGET_NOT_TABLE_CARD: () =>                                      <>Můžeš zacílit pouze na karty ve hře</>,
     ERROR_TARGET_NOT_HAND_CARD: () =>                                       <>Můžeš zacílit pouze na karty v ruce</>,
     ERROR_TARGET_NOT_BLUE_CARD: () =>                                       <>Můžeš zacílit pouze na modré karty</>,
+    ERROR_TARGET_NOT_BROWN_CARD: (origin_card, target) =>                   <>You can't use {origin_card} with {target}: not a brown card.</>,
     ERROR_TARGET_NOT_TRAIN: () =>                                           <>Můžeš zacílit pouze na vagóny</>,
     ERROR_TARGET_TRAIN: () =>                                               <>Nemůžeš zacílit na vagóny</>,
     ERROR_TARGET_NOT_BLUE_OR_TRAIN: () =>                                   <>Můžeš zacílit pouze na modré karty nebo vagóny</>,

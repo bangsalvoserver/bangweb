@@ -241,6 +241,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     ERROR_TARGET_NOT_TABLE_CARD: () =>                                      <>Puoi bersagliare solo carte in gioco</>,
     ERROR_TARGET_NOT_HAND_CARD: () =>                                       <>Puoi bersagliare solo carte in mano</>,
     ERROR_TARGET_NOT_BLUE_CARD: () =>                                       <>Puoi bersagliare solo carte blu</>,
+    ERROR_TARGET_NOT_BROWN_CARD: (origin_card, target) =>                   <>Non puoi usare {origin_card} con {target}: non è una carta marrone.</>,
     ERROR_TARGET_NOT_TRAIN: () =>                                           <>Puoi bersagliare solo vagoni</>,
     ERROR_TARGET_TRAIN: () =>                                               <>Non puoi bersagliare vagoni</>,
     ERROR_TARGET_NOT_BLUE_OR_TRAIN: () =>                                   <>Puoi bersagliare solo carte blu o vagoni</>,

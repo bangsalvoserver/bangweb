@@ -241,6 +241,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     ERROR_TARGET_NOT_TABLE_CARD: () =>                                          <>Csak valaki előtt kijátszott lapokat célozhatsz!</>,
     ERROR_TARGET_NOT_HAND_CARD: () =>                                           <>Csak kézben lévő lapokat célozhatsz!</>,
     ERROR_TARGET_NOT_BLUE_CARD: () =>                                           <>Csak kék szegélyű lapokat célozhatsz!</>,
+    ERROR_TARGET_NOT_BROWN_CARD: (origin_card, target) =>                       <>You can't use {origin_card} with {target}: not a brown card.</>,
     ERROR_TARGET_NOT_TRAIN: () =>                                               <>Csak vasúti kocsikat célozhatsz!</>,
     ERROR_TARGET_TRAIN: () =>                                                   <>Nem célozhatsz vasúti kocsikat!</>,
     ERROR_TARGET_NOT_BLUE_OR_TRAIN: () =>                                       <>Csak kék szegélyű lapokat vagy vasúti kocsikat célozhatsz!</>,

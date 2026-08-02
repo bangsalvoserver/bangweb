@@ -241,6 +241,7 @@ export const GAME_STRINGS: GameStringRegistry = {
     ERROR_TARGET_NOT_TABLE_CARD: () =>                                      <>Solo puedes apuntar a cartas en juego</>,
     ERROR_TARGET_NOT_HAND_CARD: () =>                                       <>Solo puedes apuntar a cartas de la mano</>,
     ERROR_TARGET_NOT_BLUE_CARD: () =>                                       <>Solo puedes apuntar a cartas azules</>,
+    ERROR_TARGET_NOT_BROWN_CARD: (origin_card, target) =>                   <>You can't use {origin_card} with {target}: not a brown card.</>,
     ERROR_TARGET_NOT_TRAIN: () =>                                           <>Solo puedes apuntar a vagones</>,
     ERROR_TARGET_TRAIN: () =>                                               <>No puedes apuntar a vagones</>,
     ERROR_TARGET_NOT_BLUE_OR_TRAIN: () =>                                   <>Solo puedes apuntar a cartas azules o vagones</>,
