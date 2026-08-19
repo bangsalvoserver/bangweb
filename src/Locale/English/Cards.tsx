@@ -1753,6 +1753,122 @@ export const CARDS: CardRegistry = {
         descriptionClass: "character-description"
     },
 
+    // Vlcata characters
+
+HOROUS: {
+    name: 'Horouš',
+    description: 'At the end of his turn, he may "draw!". If the card is black (Spades/Clubs), he is considered an eliminated player for the entire next round.'
+},
+MIKI: {
+    name: 'Miki',
+    description: 'During phase 1, he draws 4 cards: he keeps 2 and discards the other 2.'
+},
+MARTIN: {
+    name: 'Martin',
+    description: 'If he does not play any "Bang!" effects during his turn, he draws 1 extra card from the deck at the end of his turn.'
+},
+TUCTUC: {
+    name: 'Tučtuč',
+    description: 'Whenever he regains a life point (heals), he draws 2 cards from the deck. This ability applies even outside of his turn.'
+},
+ELIS: {
+    name: 'Eliš',
+    description: 'He may play non-Spades cards (♠) from his hand as a "Missed!" card.'
+},
+VUDCE: {
+    name: 'Vůdce',
+    description: 'Once during his turn, he may choose a player and name a card. If that player has it in hand, they must discard it immediately.'
+},
+JEDNORUCKA_RIZEK: {
+    name: 'Jednoručka Řízek',
+    description: 'Survives first death: If he is about to be eliminated, he returns in his next turn with 3 life points and 3 cards.'
+},
+PETUNA: {
+    name: 'Peťuna',
+    description: 'At the end of his turn, he may "draw!": If it is a Spade (♠), he loses 1 life point. If it is a red card, he immediately takes another turn. Max. 1x per round.'
+},
+SMIG: {
+    name: 'Smig',
+    description: 'Once during his turn, he may discard a "Bang!" card to target a card in play. Unless the owner plays a "Missed!" card, they must discard it.'
+},
+CYRIL: {
+    name: 'Cyril',
+    description: 'Whenever any player plays a "Bang!" card against Cyril, Cyril draws a card before applying the effect of the Bang.'
+},
+VENA: {
+    name: 'Véna',
+    description: 'Whenever he is about to lose a life point, he may "draw!". If it is a Heart (♥) or a 2, he does not lose the life point.'
+},
+BEJCEK: {
+    name: 'Bejček',
+    description: 'Up to 3x during his turn, he may discard a card from hand and draw a new one. Whenever any player plays a "Bounty" card, Bejček draws 1 card.'
+},
+VERCA: {
+    name: 'Verča',
+    description: 'She may discard a green-bordered card to draw 2 cards. She does not need to "charge" green cards (can play them immediately).'
+},
+HELENA: {
+    name: 'Helena',
+    description: 'Once during her turn, she may choose a player and name a card. If that player has it, they must play it immediately (if legal).'
+},
+ANEZKA: {
+    name: 'Anežka',
+    description: 'She may discard 2 cards (from hand or table) and heal 1 life point for any player (max. once per round to another player).'
+},
+TERKA_P: {
+    name: 'Terka P',
+    description: 'If her first "Bang!" card of the turn hits a target, she may choose to heal 1 life point instead of dealing damage. By discarding 3 cards from hand, she can heal 1 life point even outside her turn.'
+},
+JULKA: {
+    name: 'Julka',
+    description: 'Starts with 5 cards. If she has more than 3 life points at the end of her turn, she automatically loses 1 life point.'
+},
+SIMI: {
+    name: 'Šimi',
+    description: 'Dynamite deals him no damage; if it eliminates a player, he gets their cards. He may discard 2 cards to take Dynamite from the discard pile.'
+},
+LIBOR: {
+    name: 'Libor',
+    description: 'His first "Bang!" card deals 2 damage. After the hit, Libor must play an alcohol card (Beer, Whiskey, etc.), otherwise he loses 1 life point himself.'
+},
+EL_BAGITO: {
+    name: 'El Bagíto',
+    description: 'Whenever another player plays Stagecoach, Wells Fargo, or Pony Express, El Bagíto draws the same number of cards.'
+},
+KRECEK: {
+    name: 'Křeček',
+    description: 'Whenever he plays a weapon card, he draws a card. No other player may have a weapon in play with a longer range than Křeček’s current weapon.'
+},
+EDIE: {
+    name: 'Edie',
+    description: 'Whenever someone takes or discards a card from his hand or in play, Edie may "draw!". If it is not a Spade (♠), Edie discards a random card from the attacker\'s hand.'
+},
+HARRY: {
+    name: 'Harry',
+    description: 'Up to 2x during his turn, he may exchange a card from his hand for a random card from another player\'s hand.'
+},
+PATKA: {
+    name: 'Patka',
+    description: 'Once per turn, he may discard a card affecting all players to draw 2 cards. Once per turn, he may discard any number of cards and draw 1 fewer card than discarded.'
+},
+KOTEL: {
+    name: 'Kotel',
+    description: 'Gets +1 to positive blue cards: Mustang -2, Barrel draws 2 cards, weapons get +1 Range and allow 1 additional Bang! per turn.'
+},
+TERMIT: {
+    name: 'Termit',
+    description: 'If General Store is played, one extra card is revealed and he takes 2. Starts with +1 card if last/next-to-last. Hand limit is +1 if HP < 3.'
+},
+SITEJ: {
+    name: 'Šitej',
+    description: 'At the end of his turn (after discarding cards), he must discard all cards from his hand and draw the same number + 1.'
+},
+BUDHA: {
+    name: 'Budha',
+    description: 'When he plays an alcohol card (Beer, etc.), he flips 3 cards from the deck and, if possible, must play/deploy them in any order; the rest are discarded.'
+},
+
+
     // The Great Train Robbery wagon cards
 
     BAGGAGE_CAR: {
