@@ -182,6 +182,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 <ExpansionCheckbox name='udolistinu' onSelect={e => { e.delete('valleyofshadows'); e.add('ghost_cards'); }} />
                 <ExpansionCheckbox name='canyondiablo' />
                 <ExpansionCheckbox name='frontier' onSelect={e => { e.add('armedanddangerous'); }} />
+		<ExpansionCheckbox name='vlcata' onSelect={e => { e.add('dodgecity'); }} />
                 <ExpansionCheckbox name='crazy_greygory' />
             </Collapsible>
         </div>
