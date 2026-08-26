@@ -1315,7 +1315,7 @@ export const CARDS: CardRegistry = {
     },
     SHOWDOWN: {
         name: "Zůčtování",
-        description: <>Každá karta může být hrána, jako by to byla karta <i>BANG!</i> Každá karta <i>BANG!</i> musí být hrána, jako by to byla karta <i>Vedle!</i></>,
+        description: <>Každá karta musí být hrána, jako by to byla karta <i>BANG!</i> Každá karta <i>BANG!</i> musí být hrána, jako by to byla karta <i>Vedle!</i></>,
         titleClass: "card-title card-title-higher",
     },
     SACAGAWAY: {
