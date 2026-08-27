@@ -189,20 +189,25 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
         <div className="game-options-group">
             <Collapsible label={getLabel(language, 'ui', 'GAME_OPTIONS')} storageKey="expand_options" defaultExpanded>
                 <OptionNumber {...getOption('max_players')} min={3} max={8} withSlider />
+
                 <OptionCheckbox {...getOption('add_bots')} />
                 {gameOptions.add_bots && <>
                     <OptionNumber {...getOption('bot_play_timer')} max={10000} step={50} withSlider />
                     <OptionCheckbox {...getOption('allow_bot_rejoin')} />
                 </>}
+
                 <hr />
                 <ConditionalOnExpansion exclude={['crazy_greygory']}>
                     { !gameOptions.all_characters && <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider /> }
                     <OptionCheckbox {...getOption('all_characters')} />
                 </ConditionalOnExpansion>
                 <OptionCheckbox {...getOption('only_base_characters')} />
+                <OptionCheckbox {...getOption('all_characters')} />
                 <hr />
                 <ConditionalOnExpansion expansions={['highnoon', 'fistfulofcards']}>
-                    <OptionNumber {...getOption('scenario_deck_size')} max={30} withSlider />
+                    <OptionNumber {...getOption('scenario_deck_size')} max={30} 
+
+withSlider />
                     <hr />
                 </ConditionalOnExpansion>
                 <OptionCheckbox {...getOption('quick_discard_all')} />
