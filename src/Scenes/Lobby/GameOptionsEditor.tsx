@@ -195,7 +195,8 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 </>}
                 <hr />
                 <ConditionalOnExpansion exclude={['crazy_greygory']}>
-                    <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider />
+                    { !gameOptions.all_characters && <OptionNumber {...getOption('character_choice')} min={1} max={3} withSlider /> }
+                    <OptionCheckbox {...getOption('all_characters')} />
                 </ConditionalOnExpansion>
                 <OptionCheckbox {...getOption('only_base_characters')} />
                 <hr />

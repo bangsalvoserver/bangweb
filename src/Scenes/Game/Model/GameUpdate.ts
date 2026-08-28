@@ -209,6 +209,7 @@ export function parseStatusReady(request: StatusReadyArgs): StatusReady {
 export type GameOptions = Partial<{
     expansions: ExpansionType[];
     character_choice: number;
+    all_characters: boolean;
     max_players: number;
     add_bots: boolean;
     allow_beer_in_duel: boolean;
