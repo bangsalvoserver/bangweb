@@ -225,6 +225,7 @@ export type GameOptions = Partial<{
     bot_play_timer: Milliseconds;
     game_seed: number;
     duration_coefficient: number;
+    all_characters?: boolean;
 }>;
 
 export type GameTableUpdate = 
