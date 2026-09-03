@@ -1732,6 +1732,122 @@ export const CARDS: CardRegistry = {
         descriptionClass: "character-description"
     },
 
+
+    //Vlcata characters
+HOROUS: {
+    name: 'Horouš',
+    description: <>Na konci svého tahu si může "líznout!". Je-li karta černá (piky/kříže), je po celé další kolo považován za vyřazeného hráče. Schopnost nemění podmínky vítězství.</>
+},
+MIKI: {
+    name: 'Miki',
+    description: <>V 1. fázi si líže 4 karty: 2 si nechá a zbylé 2 odhodí.</>
+},
+MARTIN: {
+    name: 'Martin',
+    description: <>Pokud během svého tahu nezahraje žádný efekt "Bang!", na konci svého tahu si líže 1 kartu navíc z balíčku.</>
+},
+TUCTUC: {
+    name: 'Tučtuč',
+    description: <>Kdykoli získá život (vyléčí se), líže si 2 karty z balíčku. Tato schopnost platí i mimo jeho tah.</>
+},
+ELIS: {
+    name: 'Eliš',
+    description: <>Může hrát nepikové karty (♠) z ruky jako kartu "Vedle!".</>
+},
+VUDCE: {
+    name: 'Vůdce',
+    description: <>Jednou za svůj tah může vybrat hráče a tipnout kartu. Pokud ji daný hráč má na ruce, musí ji okamžitě odhodit.</>
+},
+JEDNORUCKA_RIZEK: {
+    name: 'Jednoručka Řízek',
+    description: <>Přežije první smrt: Pokud má být vyřazen, vrátí se ve svém dalším tahu se 3 životy a 3 kartami. Po zbytek hry smí používat pouze pravou ruku.</>
+},
+PETUNA: {
+    name: 'Peťuna',
+    description: <>Na konci svého tahu si může "líznout!": Je-li to pika (♠), ztrácí 1 život. Je-li to červená karta, hraje okamžitě další tah. Max. 1x za kolo.</>
+},
+SMIG: {
+    name: 'Smig',
+    description: <>Jednou za svůj tah může odhodit kartu "Bang!" a zacílit vyloženou kartu na stole. Pokud majitel nezahraje "Vedle!", musí kartu odhodit.</>
+},
+CYRIL: {
+    name: 'Cyril',
+    description: <>Kdykoli na Cyrila jakýkoliv hráč zahraje kartu "Bang!", Cyril si líže kartu ještě před vyhodnocením efektu Bangu.</>
+},
+VENA: {
+    name: 'Véna',
+    description: <>Kdykoli má ztratit život, může si "líznout!". Je-li to srdce (♥) nebo dvojka (2), život neztrácí.</>
+},
+BEJCEK: {
+    name: 'Bejček',
+    description: <>Až 3x za svůj tah může odhodit kartu z ruky a líznout si novou. Kdykoli jakýkoliv hráč zahraje kartu "Odměna", Bejček si líže 1 kartu.</>
+},
+VERCA: {
+    name: 'Verča',
+    description: <>Může odhodit zelenou kartu a líznout si 2 karty. Nemusí nabíjet zelené karty (může je hrát okamžitě v tahu, kdy je vyložila).</>
+},
+HELENA: {
+    name: 'Helena',
+    description: <>Jednou za svůj tah může vybrat hráče a tipnout kartu. Pokud ji daný hráč má, musí ji okamžitě zahrát (pokud je to legální tah).</>
+},
+ANEZKA: {
+    name: 'Anežka',
+    description: <>Může odhodit 2 karty (z ruky nebo ze stolu) a vyléčit 1 život libovolnému hráči. Jiného hráče smí takto vyléčit max. jednou za kolo.</>
+},
+TERKA_P: {
+    name: 'Terka P',
+    description: <>Pokud její první "Bang!" v tahu zasáhne cíl, může se rozhodnout místo zranění vyléčit 1 život. Odhozením 3 karet z ruky může vyléčit 1 život i mimo svůj tah.</>
+},
+JULKA: {
+    name: 'Julka',
+    description: <>Začíná s 5 kartami. Pokud má na konci svého tahu více než 3 životy, automaticky ztrácí 1 život.</>
+},
+SIMI: {
+    name: 'Šimi',
+    description: <>Dynamit mu nezpůsobuje zranění; pokud dynamit vyřadí hráče, Šimi získá jeho karty. Odhozením 2 karet si může vzít Dynamit z odhazovacího balíčku.</>
+},
+LIBOR: {
+    name: 'Libor',
+    description: <>Jeho první "Bang!" v tahu dává zranění za 2. Po zásahu musí Libor zahrát alkohol (Pivo, Whisky apod.), jinak sám ztratí 1 život.</>
+},
+EL_BAGITO: {
+    name: 'El Bagíto',
+    description: <>Kdykoli jiný hráč zahraje Dostavník, Wells Fargo nebo Pony Express, El Bagíto si líže stejný počet karet.</>
+},
+KRECEK: {
+    name: 'Křeček',
+    description: <>Kdykoli vyloží zbraň, líže si kartu. Žádný jiný hráč nesmí mít ve hře zbraň s větším dostřelem, než má aktuálně vyloženou Křeček.</>
+},
+EDIE: {
+    name: 'Edie',
+    description: <>Kdykoli mu někdo vezme nebo odhodí kartu z ruky či stolu, Edie si může "líznout!". Není-li to pika (♠), útočník musí odhodit náhodnou kartu z ruky.</>
+},
+HARRY: {
+    name: 'Harry',
+    description: <>Až 2x za svůj tah může vyměnit kartu ze své ruky za náhodnou kartu z ruky jiného hráče.</>
+},
+PATKA: {
+    name: 'Patka',
+    description: <>Jednou za tah může odhodit kartu s plošným efektem (Hnát stádo, Salon...) a líznout si 2 karty. Jednou za tah může odhodit libovolný počet karet a líznout o 1 méně.</>
+},
+KOTEL: {
+    name: 'Kotel',
+    description: <>Získává +1 k pozitivním modrým kartám: Mustang -2, Barel líže 2 karty, zbraně mají +1 dostřel a umožňují 1 Bang! navíc za tah.</>
+},
+TERMIT: {
+    name: 'Termit',
+    description: <>Při Koloniálu se otáčí o kartu navíc a bere si 2. Pokud je poslední nebo předposlední na tahu, začíná s +1 kartou. Má-li méně než 3 životy, limit karet v ruce je +1.</>
+},
+SITEJ: {
+    name: 'Šitej',
+    description: <>Na konci svého tahu (po odhození karet) musí odhodit všechny zbývající karty z ruky a líznout si stejný počet + 1.</>
+},
+BUDHA: {
+    name: 'Budha',
+    description: <>Když zahraje alkohol (Pivo apod.), otočí 3 karty z balíčku a pokud je to možné, musí je v libovolném pořadí zahrát/vyložit; zbytek se odhodí.</>
+},
+
+
     // The Great Train Robbery train cards
 
     BAGGAGE_CAR: {
