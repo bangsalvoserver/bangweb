@@ -472,67 +472,67 @@ export const CARDS: CardRegistry = {
     // Frontier cards
 
     BALLAD: {
-        name: "Ballad",
-        description: <>Force a player to take all cards in front of him into hand. You may then draw a card from his hand.</>
+        name: "Balada",
+        description: <>Obliga a un jugador a tomar en su mano todas las cartas que tiene delante. Luego puedes robar una carta de su mano.</>
     },
     COFFIN: {
-        name: "Coffin",
-        description: <>At the end of your turn, you are considered out of the game until the start of your next turn. Then, discard this card.</>
+        name: "Ataúd",
+        description: <>Al final de tu turno, se te considera fuera del juego hasta el inicio de tu próximo turno. Luego, descarta esta carta.</>
     },
     UNDERTAKER: {
-        name: "Undertaker",
-        description: <>Track a player.<br/>When he is eliminated, only you can see his role. It cannot be revealed for the rest of the game.</>,
+        name: "Enterrador",
+        description: <>Vigila a un jugador.<br/>Cuando sea eliminado, solo tú podrás ver su rol. No podrá revelarse durante el resto de la partida.</>,
         descriptionClass: "card-description-higher"
     },
     COFFEE: {
-        name: "Coffee",
-        description: <>At the end of this turn, you do not discard cards.</>
+        name: "Café",
+        description: <>Al final de este turno, no descartas cartas.</>
     },
     CHINATOWN: {
         name: "Chinatown",
-        description: <>Force a player to discard their entire hand.<br/>They may draw the same amount of cards from the deck.</>,
+        description: <>Obliga a un jugador a descartar toda su mano.<br/>Puede robar la misma cantidad de cartas del mazo.</>,
         hideTitle: true,
         descriptionClass: "card-description text-smaller"
     },
     CHUCK_WAGON: {
-        name: "Chuck Wagon",
-        description: <>At the end of each of your turns, if you played at least 3 cards, gain 1 life point.</>,
+        name: "Carro de Cocina",
+        description: <>Al final de cada uno de tus turnos, si jugaste al menos 3 cartas, gana 1 punto de vida.</>,
         hideTitle: true,
     },
     CHOLERA: {
-        name: "Cholera",
-        description: <>Play on any player. That player cannot use their special ability.<br/>At the end of your turn, "draw!": on Spades, add 1 📦.</>
+        name: "Cólera",
+        description: <>Juega sobre cualquier jugador. Ese jugador no puede usar su habilidad especial.<br/>Al final de tu turno, "¡Desenfunda!": si sale Picas, añade 1 📦.</>
     },
     COMANCHE: {
         name: "Comanche",
-        description: <>Track a player.<br/>After drawing, during each of your turns, you have his ability once.</>,
+        description: <>Vigila a un jugador.<br/>Después de robar, durante cada uno de tus turnos, puedes usar su habilidad una vez.</>,
         hideTitle: true
     },
     COMPANION: {
-        name: "Companion",
-        description: <>Track a player.<br/>During your turn, you may play brown cards as if from his position.</>
+        name: "Compañero",
+        description: <>Vigila a un jugador.<br/>Durante tu turno, puedes jugar cartas marrones como si estuvieras en su posición.</>
     },
     COYOTES: {
         name: "Coyotes",
-        description: <>Discard a card or lose 1 life point. Else, pass <i>Coyotes</i> to your left.</>,
+        description: <>Descarta una carta o pierde 1 punto de vida. Si no, pasa <i>Coyotes</i> al jugador de tu izquierda.</>,
         descriptionClass: "draw-description text-smaller"
     },
     FEUD: {
-        name: "Feud",
-        description: <>You may neither play this card nor discard it at the end of your turn.</>
+        name: "Rencilla",
+        description: <>No puedes jugar esta carta ni descartarla al final de tu turno.</>
     },
     FALCON: {
-        name: "Falcon",
-        description: <>Look at another player's hand.</>,
+        name: "Halcón",
+        description: <>Mira la mano de otro jugador.</>,
         descriptionClass: "card-description-lower"
     },
     CAMPFIRE: {
-        name: "Campfire",
-        description: <>Discard your weapon in play. When you play a weapon, discard this card.<br/>You view others at distance 1.</>
+        name: "Fogata",
+        description: <>Descarta tu arma en juego. Cuando juegues un arma, descarta esta carta.<br/>Ves a los demás jugadores a distancia 1.</>
     },
     STAMPEDE: {
-        name: "Stampede",
-        description: <>Players with more than 4 cards in front of them must discard them all.</>
+        name: "Estampida",
+        description: <>Los jugadores con más de 4 cartas frente a ellos deben descartarlas todas.</>
     },
     GEYSER: {
         name: "Geyser",
@@ -540,18 +540,18 @@ export const CARDS: CardRegistry = {
     },
     HAWKEN: {
         name: "Hawken",
-        description: <>When you hit a player, you may force him to take all his cards in play back into hand.</>,
+        description: <>Cuando impactas a un jugador, puedes obligarlo a tomar de vuelta en su mano todas sus cartas en juego.</>,
         hideTitle: true,
         descriptionClass: "weapon-description"
     },
     HEAVY_GRUB: {
-        name: "Heavy Grub",
-        description: <>If discarded at the end of your turn, gain 3 life points.</>,
+        name: "Comida Abundante",
+        description: <>Si se descarta al final de tu turno, gana 3 puntos de vida.</>,
         hideTitle: true
     },
     JACKALOPE: {
         name: "Jackalope",
-        description: <>If drawn or discarded from your hand by another player, you may draw 2 cards.</>,
+        description: <>Si es robada o descartada de tu mano por otro jugador, puedes robar 2 cartas.</>,
         hideTitle: true
     },
     MULE: {
@@ -561,76 +561,76 @@ export const CARDS: CardRegistry = {
         name: "Grizzly"
     },
     PELTS: {
-        name: "Pelts",
-        description: <>If there are 4 📦 on this card, switch it with another card in play.</>,
+        name: "Pieles",
+        description: <>Si hay 4 📦 en esta carta, cámbiala por otra carta en juego.</>,
         descriptionClass: "cube-description"
     },
     FISHING: {
-        name: "Fishing",
-        description: <>Name a suit and "draw!" as many times as the number of other players. You may take all cards of the named suit drawn into hand.</>
+        name: "Pesca",
+        description: <>Nombra un palo y "¡Desenfunda!" tantas veces como el número de otros jugadores. Puedes tomar en tu mano todas las cartas del palo nombrado que hayan salido.</>
     },
     FISHING_HEARTS: {
-        name: "Fishing: Declare Hearts",
+        name: "Pesca: Declarar Corazones",
         hideTitle: true,
         description: <>♥️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_DIAMONDS: {
-        name: "Fishing: Declare Diamonds",
+        name: "Pesca: Declarar Diamantes",
         hideTitle: true,
         description: <>♦️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_CLUBS: {
-        name: "Fishing: Declare Clubs",
+        name: "Pesca: Declarar Tréboles",
         hideTitle: true,
         description: <>♣️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_SPADES: {
-        name: "Fishing: Declare Spades",
+        name: "Pesca: Declarar Picas",
         hideTitle: true,
         description: <>♠️</>,
         descriptionClass: "card-description text-bigger"
     },
     PIONEERS: {
-        name: "Pioneers",
-        description: <>Play on the player on your left and track yourself.<br/>At the start of your turn, pass <i>Pioneers</i> left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
+        name: "Pioneros",
+        description: <>Juega sobre el jugador a tu izquierda y vigílate a ti mismo.<br/>Al inicio de tu turno, pasa <i>Pioneros</i> a la izquierda.<br/>Si la pasa el jugador vigilado, descártala y él roba tantas cartas como el número de otros jugadores.</>,
         descriptionClass: "card-description-higher text-smallest"
     },
     POSSE: {
         name: "Posse",
-        description: <>Track a player.<br/>At the start of your turn, pass <i>Posse</i> left. If passed by the tracked player, discard it and he loses 1 life point.</>,
+        description: <>Vigila a un jugador.<br/>Al inicio de tu turno, pasa <i>Posse</i> a la izquierda. Si la pasa el jugador vigilado, descártala y pierde 1 punto de vida.</>,
         hideTitle: true
     },
     SCALP: {
-        name: "Scalp!",
-        description: <>During your turn, use the ability of another character once.</>,
+        name: "¡Scalp!",
+        description: <>Durante tu turno, usa una vez la habilidad de otro personaje.</>,
         hideTitle: true,
         descriptionClass: "cube-description"
     },
     SCORPION: {
-        name: "Scorpion",
-        description: <>Play on any player. Whenever he plays a card in front of anyone, "draw!": on Spades, he must play <i>Missed!</i> or discard the card.</>
+        name: "Escorpión",
+        description: <>Juega sobre cualquier jugador. Cada vez que juega una carta frente a alguien, "¡Desenfunda!": si sale Picas, debe jugar <i>¡Fallaste!</i> o descartar la carta.</>
     },
     SLOCUM: {
         name: "Slocum",
-        description: <>When you play a <i>BANG!</i> card, draw a card. If you did not play a <i>BANG!</i> card this turn, discard this card.</>,
+        description: <>Cuando juegas una carta de <i>¡BANG!</i>, roba una carta. Si no jugaste una carta de <i>¡BANG!</i> este turno, descarta esta carta.</>,
         hideTitle: true,
         descriptionClass: "weapon-description"
     },
     TARANTULA_JUICE: {
         name: "Tarantula Juice",
-        description: <>"Draw!":<br/>♥♦=gain 2 life points.<br/>♣=draw a card.<br/>♠=lose 1 life point.</>,
+        description: <>"¡Desenfunda!":<br/>♥♦=gana 2 puntos de vida.<br/>♣=roba una carta.<br/>♠=pierde 1 punto de vida.</>,
         hideTitle: true
     },
     CATTLE_DRIVE: {
-        name: "Cattle Drive",
-        description: <>Draw a card for each card in front of you.</>
+        name: "Arreo de Ganado",
+        description: <>Roba una carta por cada carta que tengas delante.</>
     },
     TRAP: {
-        name: "Trap",
-        description: <>Play on any player. He may not play blue cards.<br/>Once per turn, he may "draw!":<br/>♥=Pass this card to another player.<br/>♠=Discard this card and lose 1 life point.</>,
+        name: "Trampa",
+        description: <>Juega sobre cualquier jugador. No puede jugar cartas azules.<br/>Una vez por turno, puede "¡Desenfundar!":<br/>♥=Pasa esta carta a otro jugador.<br/>♠=Descarta esta carta y pierde 1 punto de vida.</>,
         descriptionClass: "card-description text-smallest"
     },
 
@@ -1694,61 +1694,61 @@ export const CARDS: CardRegistry = {
 
     ALEXANDER_NOON: {
         name: "Alexander Noon",
-        description: <>Before you "draw!", you may draw a card and then choose to discard a card from hand to use as the result of the "draw!".</>,
+        description: <>Antes de "¡Desenfundar!", puedes robar una carta y luego elegir descartar una carta de tu mano para usarla como resultado del "¡Desenfundar!".</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     CALEB_BREW: {
         name: "Caleb Brew",
-        description: <>When you gain a life point, you may discard a card from hand for a player of your choice to gain 1 life point.</>,
+        description: <>Cuando ganas un punto de vida, puedes descartar una carta de tu mano para que un jugador de tu elección gane 1 punto de vida.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     CAYENNE_CHEE: {
         name: "Cayenne Chee",
-        description: <>Once per round, when you use a card, you may discard a Diamond card with it to take it back into hand.</>,
+        description: <>Una vez por ronda, cuando usas una carta, puedes descartar una carta de Diamantes junto con ella para recuperarla en tu mano.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     JOSEY_STRONG: {
         name: "Josey Strong",
-        description: <>When you play a <i>BANG!</i> card, you may discard a brown card from hand to make this shot unavoidable.</>,
+        description: <>Cuando juegas una carta de <i>¡BANG!</i>, puedes descartar una carta marrón de tu mano para hacer que este disparo sea inevitable.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     JOSIAH_TUNG: {
         name: "Josiah Tung",
-        description: <>After drawing, you may discard a random card from hand to draw two cards.</>,
+        description: <>Después de robar, puedes descartar una carta aleatoria de tu mano para robar dos cartas.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     LT_MICAIAH: {
         name: "Lt. Micaiah",
-        description: <>Once during your turn, you may discard a card from hand to switch 1 of your cards in play with another card in play.</>,
+        description: <>Una vez durante tu turno, puedes descartar una carta de tu mano para intercambiar 1 de tus cartas en juego con otra carta en juego.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     RAY_OWE: {
         name: "Ray Owe",
-        description: <>During your turn, you may draw a card from another player. When used or when your turn ends, return it to him.</>,
+        description: <>Durante tu turno, puedes robar una carta de otro jugador. Cuando la uses o cuando termine tu turno, devuélvesela.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     SALVO_THE_SHOOTER: {
         name: "Salvo the Shooter",
-        description: <>Twice per turn, whenever you play a <i>BANG!</i> card, you may shoot another player within range.</>,
+        description: <>Dos veces por turno, cada vez que juegas una carta de <i>¡BANG!</i>, puedes disparar a otro jugador dentro de tu alcance.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     SHANGO_BROTHERS: {
         name: "Shango Brothers",
-        description: <>During your turn, on every third card played, draw 1 from the deck (up to 3 times).</>,
+        description: <>Durante tu turno, por cada tercera carta jugada, roba 1 del mazo (hasta 3 veces).</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     STEVE_TENGO: {
         name: "Steve Tengo",
-        description: <>At the start of your turn, track a player. Whenever you hit him, draw a card.</>,
+        description: <>Al inicio de tu turno, vigila a un jugador. Cada vez que lo impactas, roba una carta.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },

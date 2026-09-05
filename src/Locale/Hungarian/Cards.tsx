@@ -468,67 +468,67 @@ export const CARDS: CardRegistry = {
     // Frontier cards
 
     BALLAD: {
-        name: "Ballad",
-        description: <>Force a player to take all cards in front of him into hand. You may then draw a card from his hand.</>
+        name: "Ballada",
+        description: <>Kényszeríts egy játékost, hogy vegye kezébe az összes előtte lévő lapot. Ezután húzhatsz egy lapot a kezéből.</>
     },
     COFFIN: {
-        name: "Coffin",
-        description: <>At the end of your turn, you are considered out of the game until the start of your next turn. Then, discard this card.</>
+        name: "Koporsó",
+        description: <>A köröd végén a játékon kívülinek számítasz a következő köröd kezdetéig. Utána dobd el ezt a lapot.</>
     },
     UNDERTAKER: {
-        name: "Undertaker",
-        description: <>Track a player.<br/>When he is eliminated, only you can see his role. It cannot be revealed for the rest of the game.</>,
+        name: "Sírásó",
+        description: <>Kövess nyomon egy játékost.<br/>Amikor kiesik a játékból, csak te láthatod a szerepét. A játék hátralévő részében nem fedhető fel.</>,
         descriptionClass: "card-description-higher"
     },
     COFFEE: {
-        name: "Coffee",
-        description: <>At the end of this turn, you do not discard cards.</>
+        name: "Kávé",
+        description: <>A kör végén nem kell lapot eldobnod.</>
     },
     CHINATOWN: {
         name: "Chinatown",
-        description: <>Force a player to discard their entire hand.<br/>They may draw the same amount of cards from the deck.</>,
+        description: <>Kényszeríts egy játékost, hogy dobja el az egész kezét.<br/>Ezután ugyanennyi lapot húzhat a pakliból.</>,
         hideTitle: true,
         descriptionClass: "card-description text-smaller"
     },
     CHUCK_WAGON: {
-        name: "Chuck Wagon",
-        description: <>At the end of each of your turns, if you played at least 3 cards, gain 1 life point.</>,
+        name: "Konyhakocsi",
+        description: <>Minden köröd végén, ha legalább 3 lapot kijátszottál, szerezz 1 életpontot.</>,
         hideTitle: true,
     },
     CHOLERA: {
-        name: "Cholera",
-        description: <>Play on any player. That player cannot use their special ability.<br/>At the end of your turn, "draw!": on Spades, add 1 📦.</>
+        name: "Kolera",
+        description: <>Játszd ki bármelyik játékosra. Az a játékos nem használhatja a különleges képességét.<br/>A köröd végén "húzz!": pikk esetén tegyél rá 1 📦 jelölőt.</>
     },
     COMANCHE: {
         name: "Comanche",
-        description: <>Track a player.<br/>After drawing, during each of your turns, you have his ability once.</>,
+        description: <>Kövess nyomon egy játékost.<br/>Húzás után, minden körödben egyszer használhatod a képességét.</>,
         hideTitle: true
     },
     COMPANION: {
-        name: "Companion",
-        description: <>Track a player.<br/>During your turn, you may play brown cards as if from his position.</>
+        name: "Társ",
+        description: <>Kövess nyomon egy játékost.<br/>A köröd során úgy játszhatsz ki barna lapokat, mintha az ő helyéről tennéd.</>
     },
     COYOTES: {
-        name: "Coyotes",
-        description: <>Discard a card or lose 1 life point. Else, pass <i>Coyotes</i> to your left.</>,
+        name: "Kojotok",
+        description: <>Dobj el egy lapot, vagy veszíts 1 életpontot! Egyébként add tovább a(z) <i>Kojotok</i> lapot a tőled balra ülőnek.</>,
         descriptionClass: "draw-description text-smaller"
     },
     FEUD: {
-        name: "Feud",
-        description: <>You may neither play this card nor discard it at the end of your turn.</>
+        name: "Viszály",
+        description: <>Ezt a lapot nem játszhatod ki, és a köröd végén sem dobhatod el.</>
     },
     FALCON: {
-        name: "Falcon",
-        description: <>Look at another player's hand.</>,
+        name: "Sólyom",
+        description: <>Nézd meg egy másik játékos kezét.</>,
         descriptionClass: "card-description-lower"
     },
     CAMPFIRE: {
-        name: "Campfire",
-        description: <>Discard your weapon in play. When you play a weapon, discard this card.<br/>You view others at distance 1.</>
+        name: "Tábortűz",
+        description: <>Dobd el a kijátszott fegyveredet. Amikor fegyvert játszol ki, dobd el ezt a lapot.<br/>A többieket 1 távolságról látod.</>
     },
     STAMPEDE: {
-        name: "Stampede",
-        description: <>Players with more than 4 cards in front of them must discard them all.</>
+        name: "Vágta",
+        description: <>Azok a játékosok, akiknek több mint 4 lapjuk van kijátszva maguk előtt, kötelesek mindet eldobni.</>
     },
     GEYSER: {
         name: "Geyser",
@@ -536,18 +536,18 @@ export const CARDS: CardRegistry = {
     },
     HAWKEN: {
         name: "Hawken",
-        description: <>When you hit a player, you may force him to take all his cards in play back into hand.</>,
+        description: <>Amikor eltalálsz egy játékost, kényszerítheted, hogy vegye vissza a kezébe az összes kijátszott lapját.</>,
         hideTitle: true,
         descriptionClass: "weapon-description"
     },
     HEAVY_GRUB: {
-        name: "Heavy Grub",
-        description: <>If discarded at the end of your turn, gain 3 life points.</>,
+        name: "Dús Lakoma",
+        description: <>Ha a köröd végén eldobod, szerezz 3 életpontot.</>,
         hideTitle: true
     },
     JACKALOPE: {
         name: "Jackalope",
-        description: <>If drawn or discarded from your hand by another player, you may draw 2 cards.</>,
+        description: <>Ha egy másik játékos húzza vagy dobja el ezt a lapot a kezedből, húzhatsz 2 lapot.</>,
         hideTitle: true
     },
     MULE: {
@@ -557,76 +557,76 @@ export const CARDS: CardRegistry = {
         name: "Grizzly"
     },
     PELTS: {
-        name: "Pelts",
-        description: <>If there are 4 📦 on this card, switch it with another card in play.</>,
+        name: "Prémek",
+        description: <>Ha 4 📦 jelölő van ezen a lapon, cseréld ki egy másik kijátszott lapra.</>,
         descriptionClass: "cube-description"
     },
     FISHING: {
-        name: "Fishing",
-        description: <>Name a suit and "draw!" as many times as the number of other players. You may take all cards of the named suit drawn into hand.</>
+        name: "Halászat",
+        description: <>Mondj egy színt, és "húzz!" annyiszor, ahány másik játékos van. Az így felhúzott, megnevezett színű lapokat mind a kezedbe veheted.</>
     },
     FISHING_HEARTS: {
-        name: "Fishing: Declare Hearts",
+        name: "Halászat: Kőr bejelentése",
         hideTitle: true,
         description: <>♥️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_DIAMONDS: {
-        name: "Fishing: Declare Diamonds",
+        name: "Halászat: Káró bejelentése",
         hideTitle: true,
         description: <>♦️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_CLUBS: {
-        name: "Fishing: Declare Clubs",
+        name: "Halászat: Treff bejelentése",
         hideTitle: true,
         description: <>♣️</>,
         descriptionClass: "card-description text-bigger"
     },
     FISHING_SPADES: {
-        name: "Fishing: Declare Spades",
+        name: "Halászat: Pikk bejelentése",
         hideTitle: true,
         description: <>♠️</>,
         descriptionClass: "card-description text-bigger"
     },
     PIONEERS: {
-        name: "Pioneers",
-        description: <>Play on the player on your left and track yourself.<br/>At the start of your turn, pass <i>Pioneers</i> left.<br/>If passed by the tracked player, discard it and he draws as many cards as the number of other players.</>,
+        name: "Úttörők",
+        description: <>Játszd ki a tőled balra ülő játékosra, és kövesd nyomon saját magad.<br/>A köröd elején add tovább a(z) <i>Úttörők</i> lapot balra.<br/>Ha a nyomon követett játékos adja tovább, dobd el, és annyi lapot húz, ahány másik játékos van.</>,
         descriptionClass: "card-description-higher text-smallest"
     },
     POSSE: {
         name: "Posse",
-        description: <>Track a player.<br/>At the start of your turn, pass <i>Posse</i> left. If passed by the tracked player, discard it and he loses 1 life point.</>,
+        description: <>Kövess nyomon egy játékost.<br/>A köröd elején add tovább a(z) <i>Posse</i> lapot balra. Ha a nyomon követett játékos adja tovább, dobd el, és veszít 1 életpontot.</>,
         hideTitle: true
     },
     SCALP: {
-        name: "Scalp!",
-        description: <>During your turn, use the ability of another character once.</>,
+        name: "Skalp!",
+        description: <>A köröd során egyszer használd egy másik karakter képességét.</>,
         hideTitle: true,
         descriptionClass: "cube-description"
     },
     SCORPION: {
-        name: "Scorpion",
-        description: <>Play on any player. Whenever he plays a card in front of anyone, "draw!": on Spades, he must play <i>Missed!</i> or discard the card.</>
+        name: "Skorpió",
+        description: <>Játszd ki bármelyik játékosra. Valahányszor lapot játszik ki bárki elé, "húzz!": pikk esetén ki kell játszania egy <i>Nem talált!</i> lapot, vagy el kell dobnia azt a lapot.</>
     },
     SLOCUM: {
         name: "Slocum",
-        description: <>When you play a <i>BANG!</i> card, draw a card. If you did not play a <i>BANG!</i> card this turn, discard this card.</>,
+        description: <>Amikor <i>BANG!</i> lapot játszol ki, húzz egy lapot! Ha ebben a körben nem játszottál ki <i>BANG!</i> lapot, dobd el ezt a lapot.</>,
         hideTitle: true,
         descriptionClass: "weapon-description"
     },
     TARANTULA_JUICE: {
         name: "Tarantula Juice",
-        description: <>"Draw!":<br/>♥♦=gain 2 life points.<br/>♣=draw a card.<br/>♠=lose 1 life point.</>,
+        description: <>"Húzz!":<br/>♥♦=szerezz 2 életpontot.<br/>♣=húzz egy lapot.<br/>♠=veszíts 1 életpontot.</>,
         hideTitle: true
     },
     CATTLE_DRIVE: {
-        name: "Cattle Drive",
-        description: <>Draw a card for each card in front of you.</>
+        name: "Marhahajtás",
+        description: <>Húzz egy lapot minden előtted lévő lapért.</>
     },
     TRAP: {
-        name: "Trap",
-        description: <>Play on any player. He may not play blue cards.<br/>Once per turn, he may "draw!":<br/>♥=Pass this card to another player.<br/>♠=Discard this card and lose 1 life point.</>,
+        name: "Csapda",
+        description: <>Játszd ki bármelyik játékosra. Nem játszhat ki kék lapokat.<br/>Körönként egyszer "húzhat!":<br/>♥=Add tovább ezt a lapot egy másik játékosnak.<br/>♠=Dobd el ezt a lapot, és veszíts 1 életpontot.</>,
         descriptionClass: "card-description text-smallest"
     },
 
@@ -1683,61 +1683,61 @@ export const CARDS: CardRegistry = {
 
     ALEXANDER_NOON: {
         name: "Alexander Noon",
-        description: <>Before you "draw!", you may draw a card and then choose to discard a card from hand to use as the result of the "draw!".</>,
+        description: <>Mielőtt "húznál!", húzhatsz egy lapot, majd eldobhatsz egy lapot a kezedből, hogy azt használd a "húzás!" eredményeként.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     CALEB_BREW: {
         name: "Caleb Brew",
-        description: <>When you gain a life point, you may discard a card from hand for a player of your choice to gain 1 life point.</>,
+        description: <>Amikor életpontot szerzel, eldobhatsz egy lapot a kezedből, hogy egy általad választott játékos szerezzen 1 életpontot.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     CAYENNE_CHEE: {
         name: "Cayenne Chee",
-        description: <>Once per round, when you use a card, you may discard a Diamond card with it to take it back into hand.</>,
+        description: <>Körönként egyszer, amikor lapot használsz, eldobhatsz vele együtt egy káró lapot, hogy visszavedd a kezedbe.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     JOSEY_STRONG: {
         name: "Josey Strong",
-        description: <>When you play a <i>BANG!</i> card, you may discard a brown card from hand to make this shot unavoidable.</>,
+        description: <>Amikor <i>BANG!</i> lapot játszol ki, eldobhatsz egy barna lapot a kezedből, hogy ez a lövés kivédhetetlen legyen.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     JOSIAH_TUNG: {
         name: "Josiah Tung",
-        description: <>After drawing, you may discard a random card from hand to draw two cards.</>,
+        description: <>Húzás után eldobhatsz egy véletlenszerű lapot a kezedből, hogy két lapot húzz.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     LT_MICAIAH: {
         name: "Lt. Micaiah",
-        description: <>Once during your turn, you may discard a card from hand to switch 1 of your cards in play with another card in play.</>,
+        description: <>A köröd során egyszer eldobhatsz egy lapot a kezedből, hogy kicseréld az egyik kijátszott lapodat egy másik kijátszott lapra.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     RAY_OWE: {
         name: "Ray Owe",
-        description: <>During your turn, you may draw a card from another player. When used or when your turn ends, return it to him.</>,
+        description: <>A köröd során húzhatsz egy lapot egy másik játékostól. Amikor felhasználod, vagy amikor a köröd véget ér, add vissza neki.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     SALVO_THE_SHOOTER: {
         name: "Salvo the Shooter",
-        description: <>Twice per turn, whenever you play a <i>BANG!</i> card, you may shoot another player within range.</>,
+        description: <>Körönként kétszer, valahányszor <i>BANG!</i> lapot játszol ki, lelőhetsz egy másik, hatótávolságon belüli játékost.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     SHANGO_BROTHERS: {
         name: "Shango Brothers",
-        description: <>During your turn, on every third card played, draw 1 from the deck (up to 3 times).</>,
+        description: <>A köröd során minden harmadik kijátszott lap után húzz 1 lapot a pakliból (legfeljebb 3 alkalommal).</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
     STEVE_TENGO: {
         name: "Steve Tengo",
-        description: <>At the start of your turn, track a player. Whenever you hit him, draw a card.</>,
+        description: <>A köröd elején kövess nyomon egy játékost. Valahányszor eltalálod, húzz egy lapot.</>,
         hideTitle: true,
         descriptionClass: "character-description"
     },
