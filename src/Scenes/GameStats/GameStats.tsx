@@ -7,6 +7,8 @@ import Env from "../../Model/Env";
 import { downloadCsv } from "../../Utils/FileUtils";
 import useFetch from "../../Utils/UseFetch";
 import { getLocalizedCardName } from "../Game/GameStringComponent";
+import { GameOptions } from "../Game/Model/GameUpdate";
+import GameOptionsEditor from "../Lobby/GameOptionsEditor";
 import "./Style/GameStats.css";
 
 interface PlayerStats {
@@ -46,6 +48,7 @@ interface GameReport {
     num_players: number;
     num_rounds: number;
     expansions: string[];
+    options: GameOptions;
     players: PlayerGameReport[];
 }
 
@@ -200,6 +203,9 @@ function GameStatsTable({ game }: { game: GameReport }) {
                     </tbody>
                 </table>
             </div>
+        </Collapsible>
+        <Collapsible label={getLabel(language, 'GameStats', 'GAME_CONFIG_TITLE')} storageKey="game-stats-config" defaultExpanded={false}>
+            <GameOptionsEditor gameOptions={game.options} />
         </Collapsible>
         <div className="flex justify-center mt-4">
             <Button color='blue' onClick={handleDownloadCsv}>{getLabel(language, 'GameStats', 'BUTTON_DOWNLOAD_CSV')}</Button>

@@ -124,6 +124,7 @@ export const LABELS: LabelRegistry = {
         COLUMN_DRAW_LUCK: "Štěstí",
         COLUMN_BONUS_DRAWS: "Bonusové doběry",
         COLUMN_EXTRA_BANGS: "Bangy navíc",
+        GAME_CONFIG_TITLE: "Nastavení hry",
     },
 
     ui: {

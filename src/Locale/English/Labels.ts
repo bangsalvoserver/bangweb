@@ -124,6 +124,7 @@ export const LABELS: LabelRegistry = {
         COLUMN_DRAW_LUCK: "Luck",
         COLUMN_BONUS_DRAWS: "Bonus Draws",
         COLUMN_EXTRA_BANGS: "Extra Bangs",
+        GAME_CONFIG_TITLE: "Game Config",
     },
 
     ui: {
