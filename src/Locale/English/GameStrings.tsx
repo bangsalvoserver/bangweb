@@ -28,6 +28,15 @@ export const GAME_STRINGS: GameStringRegistry = {
     PROMPT_EQUIP_RETURN: (card, player) =>                                  <>After playing {card}, the card will be immediately returned to {player}. Continue?</>,
     PROMPT_PLAY_OR_PICK: (card) =>                                          <>{card} : Play or discard this card?</>,
 
+PROMPT_MIKI_DRAW: (card) => <>Miki: Choose 2 cards to keep out of the 4 drawn</>,
+PROMPT_VENA_ABILITY: (card) => <>Véna: Do you want to "draw!" to save your life?</>,
+PROMPT_SMIG_DEFEND: (card, player) => <>Smig targeted your card in play! Play a <b>Missed!</b> to protect it.</>,
+PROMPT_PETUNA_DRAW: (card) => <>Peťuna: Do you want to "draw!" for an extra turn?</>,
+PROMPT_HOROUS_DRAW: (card) => <>Horouš: Do you want to "draw!" to become shadow for 1 round?</>,
+PROMPT_RIZEK_REVIVE: (card) => <>Jednoručka Řízek: Returning next turn with 3 HP and 3 cards!</>,
+PROMPT_LIBOR_ALCOHOL: (card) => <>Libor: You must play a Beer/Alcohol card, or lose 1 life point!</>,
+LOG_HOROUS_SHADOW: (player) => <>{player} is treated as an eliminated player for the next round</>,
+
     STATUS_GAME_OVER: () =>                                                 <>Game Over</>,
     STATUS_YOUR_TURN: () =>                                                 <>Your turn ... Choose how to draw</>,
     STATUS_YOUR_TURN_OTHER: (player) =>                                     <>{player} must choose how to draw</>,

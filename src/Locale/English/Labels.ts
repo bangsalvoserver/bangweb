@@ -34,7 +34,11 @@ export const LABELS: LabelRegistry = {
         max_players:            "Max number of players for this game.",
         add_bots:               "Fill the remaining player slots with bots.",
         character_choice:       "Enables the choice of N characters before the start of the game.",
+<<<<<<< HEAD
         all_characters:         "Every player chooses from all available characters.",
+=======
+	all_characters: "Every player chooses from all available characters.",
+>>>>>>> c7b859b (feat: add All Characters checkbox to lobby options)
         quick_discard_all:      "Automatically resolve actions where the player must discard every card.",
         auto_pick_predraw:      "Automatically choose which card to \"draw\" for before phase 1 of your turn.",
         prompt_target_immunity: "Prompt when targeting a player that is immune to the played card.",
@@ -67,7 +71,9 @@ export const LABELS: LabelRegistry = {
         legends_basemod:        "Legends (Base game mods)",
         canyondiablo:           "Canyon Diablo",
         frontier:               "Frontier",
+	vlcata: 		"Vlčata",
         crazy_greygory:         "Crazy Greygory",
+	
     },
 
     ExpansionTooltip: {

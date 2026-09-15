@@ -67,6 +67,7 @@ export const LABELS: LabelRegistry = {
         legends_basemod:        "Legendy (modifikace základní hry)",
         canyondiablo:           "Canyon Diablo",
         frontier:               "Frontier",
+	vlcata: 		"Vlčata",
         crazy_greygory:         "Šílený Greygory",
     },
 
