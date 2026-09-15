@@ -165,10 +165,12 @@ export const LABELS: LabelRegistry = {
         GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : játék beállításainak kiíratása`,
         SET_OPTION_DESCRIPTION: cmd => `${cmd} név érték : játékbeállítás megváltoztatása`,
         RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : játék beállítások alaphelyzetbe állítása`,
+        GAME_ID_DESCRIPTION: cmd => `${cmd} : print game id`,
         GIVE_CARD_DESCRIPTION: cmd => `${cmd} kártya_neve : kártya odaadása magadnak`,
         GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : véletlenszám-generátor seed kiíratása`,
         QUIT_DESCRIPTION: cmd => `${cmd} : lecsatlakozás a szerverről`,
         
+        GAME_ID: id => `Game id: ${id}`,
         GAME_SEED: seed => `A játék seedje ${seed}`,
         
         USER_JOINED_LOBBY: username => `${username} csatlakozott a lobbiba`,

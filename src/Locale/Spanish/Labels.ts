@@ -165,10 +165,12 @@ export const LABELS: LabelRegistry = {
         GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : muestra las opciones del juego`,
         SET_OPTION_DESCRIPTION: cmd => `${cmd} nombre valor : establecer una opción del juego`,
         RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : reiniciar las opciones del juego`,
+        GAME_ID_DESCRIPTION: cmd => `${cmd} : print game id`,
         GIVE_CARD_DESCRIPTION: cmd => `${cmd} nombre_de_carta : darte una carta a ti mismo`,
         GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : muestra la semilla del generador aleatorio`,
         QUIT_DESCRIPTION: cmd => `${cmd} : desconectar del servidor`,
 
+        GAME_ID: id => `Game id: ${id}`,
         GAME_SEED: seed => `La semilla del juego es ${seed}`,
 
         USER_JOINED_LOBBY: username => `${username} se unió a la sala`,

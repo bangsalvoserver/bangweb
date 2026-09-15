@@ -45,6 +45,7 @@ export default function App() {
         return <GameScene
           connection={connection}
           lobbyState={scene.lobbyState}
+          gameId={scene.gameId}
           gameOptions={scene.gameOptions}
           gameChannel={gameChannel}
           overlayRef={overlayRef}

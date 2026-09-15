@@ -2,7 +2,7 @@ import { RefObject, createContext, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { LobbyState } from "../../Model/SceneState";
-import { UserId } from "../../Model/ServerMessage";
+import { GameId, UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { isMobileDevice } from "../../Utils/MobileCheck";
 import { useMapRef } from "../../Utils/UseMapRef";
@@ -37,17 +37,18 @@ import FeatsPocket from "./Pockets/FeatsPocket";
 export interface GameProps {
   connection: BangConnection;
   lobbyState: LobbyState;
+  gameId: GameId;
   gameOptions: GameOptions;
   gameChannel: GameChannel;
   overlayRef: RefObject<HTMLDivElement>;
   muteSounds?: boolean;
 }
 
-const EMPTY_GAME_STATE = newGameState(0);
+const EMPTY_GAME_STATE = newGameState({ gameId: 0, myUserId: 0 });
 export const GameStateContext = createContext(EMPTY_GAME_STATE);
 
-export default function GameScene({ connection, lobbyState, gameOptions, gameChannel, overlayRef, muteSounds }: GameProps) {
-  const { loaded, state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, lobbyState.myUserId, muteSounds ?? false);
+export default function GameScene({ connection, lobbyState, gameId, gameOptions, gameChannel, overlayRef, muteSounds }: GameProps) {
+  const { loaded, state, selectorDispatch, gameLogs, gameError, clearGameError } = useGameState(gameChannel, gameId, lobbyState.myUserId, muteSounds ?? false);
   const { table, selector } = state;
 
   const pocketRefs = useMapRef<PocketType, PocketRef>();

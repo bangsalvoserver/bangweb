@@ -14,7 +14,8 @@ export default defineConfig({
       input: {
         appGame: fileURLToPath(new URL('./index.html', import.meta.url)),
         appTracking: fileURLToPath(new URL('./tracking.html', import.meta.url)),
-        appAllCards: fileURLToPath(new URL('./all_cards.html', import.meta.url))
+        appAllCards: fileURLToPath(new URL('./all_cards.html', import.meta.url)),
+        appGameStats: fileURLToPath(new URL('./game_stats.html', import.meta.url))
       }
     }
   }
