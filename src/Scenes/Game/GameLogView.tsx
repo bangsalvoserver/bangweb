@@ -43,7 +43,7 @@ export default function GameLogView({ logs }: GameLogProps) {
         <div className={'game-log-box' + (isLogOpen ? '' : ' invisible')}>
             <div className='game-log-box-inner' ref={logBoxRef} onScroll={checkIfAtBottom}>
                 {logs.map((message, index) => (
-                    <p key={index}><GameStringComponent message={message} /></p>
+                    <div className='game-log-row' key={index}><GameStringComponent message={message} /></div>
                 ))}
                 <div ref={messagesEnd} />
             </div>
