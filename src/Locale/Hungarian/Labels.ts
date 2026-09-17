@@ -135,6 +135,7 @@ export const LABELS: LabelRegistry = {
         BUTTON_LEAVE_LOBBY: "Lobbi elhagyása",
         BUTTON_DISCONNECT: "Kilépés",
         BUTTON_REJOIN: "Újracsatlakozás",
+        BUTTON_REPLACE_BOT: "Csere botra",
     },
 
     lobby: {
@@ -149,6 +150,8 @@ export const LABELS: LabelRegistry = {
         ERROR_LOBBY_NOT_WAITING: "A lobbi nem várakozik",
         ERROR_LOBBY_NOT_PLAYING: "A lobbi nincs játékban",
         ERROR_LOBBY_NOT_FINISHED: "A lobbi nincs befejezve" ,
+        ERROR_CANNOT_REPLACE_BOT: "Botot nem lehet lecserélni",
+        ERROR_PLAYER_NOT_DISCONNECTED: "A játékos nincs lecsatlakozva",
         ERROR_PASSWORD_INCORRECT: "Helytelen jelszó",
         ERROR_GAME_CHEATS_NOT_ENABLED: "A csalások nincsenek engedélyezve",
         ERROR_TIMER_EXPIRED: "A rendelkezésre álló idő lejárt",

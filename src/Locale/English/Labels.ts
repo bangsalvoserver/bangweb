@@ -135,6 +135,7 @@ export const LABELS: LabelRegistry = {
         BUTTON_LEAVE_LOBBY: "Leave Lobby",
         BUTTON_DISCONNECT: "Disconnect",
         BUTTON_REJOIN: "Rejoin",
+        BUTTON_REPLACE_BOT: "Replace with Bot",
     },
 
     lobby: {
@@ -149,6 +150,8 @@ export const LABELS: LabelRegistry = {
         ERROR_LOBBY_NOT_WAITING: "Lobby not waiting",
         ERROR_LOBBY_NOT_PLAYING: "Lobby not playing",
         ERROR_LOBBY_NOT_FINISHED: "Lobby not finished" ,
+        ERROR_CANNOT_REPLACE_BOT: "Cannot replace a bot",
+        ERROR_PLAYER_NOT_DISCONNECTED: "Player is not disconnected",
         ERROR_PASSWORD_INCORRECT: "Password incorrect",
         ERROR_GAME_CHEATS_NOT_ENABLED: "Cheats are not enabled",
         ERROR_TIMER_EXPIRED: "Timer has expired",

@@ -27,6 +27,7 @@ export interface PlayerProps {
     user: UserValue;
     player: Player;
     handleRejoin?: () => void;
+    handleReplaceBot?: () => void;
 }
 
 function getSelectorPlayerClass(table: GameTable, selector: TargetSelector, player: Player): string {
@@ -77,7 +78,7 @@ function clampedPocket(pocket: PocketRef, scrollRef: RefObject<Element>): Pocket
     };
 }
 
-export default function PlayerView({ playerRef, gameOptions, user, player, handleRejoin }: PlayerProps) {
+export default function PlayerView({ playerRef, gameOptions, user, player, handleRejoin, handleReplaceBot }: PlayerProps) {
     const { table, selector } = useContext(GameStateContext);
     const { handleClickPlayer } = useSelectorConfirm();
     const language = useLanguage();
@@ -117,6 +118,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const isDisconnected = user.flags.has('disconnected');
     const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
     const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver;
+    const canReplaceBot = isDisconnected && !isGameOver && !!handleReplaceBot;
 
     let classes = ['player-view'];
     if (isWinner) {
@@ -229,6 +231,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
         <div className='player-propic'>
             <LobbyUser user={user} align='horizontal' noUserIcons>
                 { canRejoin && <Button className="button-rejoin" onClick={handleRejoin} color="green">{getLabel(language, 'ui','BUTTON_REJOIN')}</Button> }
+                { canReplaceBot && <Button className="button-replace-bot" onClick={handleReplaceBot} color="red">{getLabel(language, 'ui','BUTTON_REPLACE_BOT')}</Button> }
             </LobbyUser>
         </div>
     </div>

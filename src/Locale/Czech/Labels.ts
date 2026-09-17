@@ -135,6 +135,7 @@ export const LABELS: LabelRegistry = {
         BUTTON_LEAVE_LOBBY: "Opustit lobby",
         BUTTON_DISCONNECT: "Odpojit",
         BUTTON_REJOIN: "Vrátit se",
+        BUTTON_REPLACE_BOT: "Nahradit botem",
     },
 
     lobby: {
@@ -149,6 +150,8 @@ export const LABELS: LabelRegistry = {
         ERROR_LOBBY_NOT_WAITING: "Lobby není v čekání",
         ERROR_LOBBY_NOT_PLAYING: "Lobby není v hraní",
         ERROR_LOBBY_NOT_FINISHED: "Lobby není dokončená",
+        ERROR_CANNOT_REPLACE_BOT: "Nelze nahradit bota",
+        ERROR_PLAYER_NOT_DISCONNECTED: "Hráč není odpojen",
         ERROR_PASSWORD_INCORRECT: "Špatné heslo",
         ERROR_GAME_CHEATS_NOT_ENABLED: "Cheaty nejsou povolené",
         ERROR_TIMER_EXPIRED: "Vypršel čas",
