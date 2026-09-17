@@ -135,6 +135,7 @@ export const LABELS: LabelRegistry = {
         BUTTON_LEAVE_LOBBY: "Abandonar Sala",
         BUTTON_DISCONNECT: "Desconectar",
         BUTTON_REJOIN: "Reunirse",
+        BUTTON_REPLACE_BOT: "Reemplazar con Bot",
     },
 
     lobby: {
@@ -149,6 +150,8 @@ export const LABELS: LabelRegistry = {
         ERROR_LOBBY_NOT_WAITING: "La sala no está en espera",
         ERROR_LOBBY_NOT_PLAYING: "La sala no está jugando",
         ERROR_LOBBY_NOT_FINISHED: "La sala no ha terminado",
+        ERROR_CANNOT_REPLACE_BOT: "No se puede reemplazar a un bot",
+        ERROR_PLAYER_NOT_DISCONNECTED: "El jugador no está desconectado",
         ERROR_PASSWORD_INCORRECT: "Contraseña incorrecta",
         ERROR_GAME_CHEATS_NOT_ENABLED: "Los trucos no están activados",
         ERROR_TIMER_EXPIRED: "El temporizador ha expirado",

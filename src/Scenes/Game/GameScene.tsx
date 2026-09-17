@@ -1,7 +1,7 @@
 import { RefObject, createContext, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
-import { LobbyState } from "../../Model/SceneState";
+import { checkMyUserFlag, LobbyState } from "../../Model/SceneState";
 import { UserId } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { isMobileDevice } from "../../Utils/MobileCheck";
@@ -59,7 +59,10 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
 
   useSendGameAction(selector, connection);
 
+  const isLobbyOwner = checkMyUserFlag(lobbyState, 'lobby_owner');
+
   const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
+  const handleReplaceBot = (user_id: UserId) => () => connection.sendMessage({ game_replace_bot: { user_id }});
 
   const tracker = useCardTracker(playerRefs, pocketRefs, tokensRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
@@ -149,7 +152,9 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     return <div key={player_id} className="player-grid-item">
       {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
-        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} gameOptions={gameOptions} user={user} player={player} handleRejoin={handleRejoin(player.user_id)} />}
+        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} gameOptions={gameOptions} user={user} player={player}
+            handleRejoin={handleRejoin(player.user_id)}
+            handleReplaceBot={isLobbyOwner ? handleReplaceBot(player.user_id) : undefined} />}
     </div>;
   });
   

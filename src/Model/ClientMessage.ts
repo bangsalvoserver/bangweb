@@ -34,4 +34,5 @@ export type ClientMessage =
     {user_spectate: boolean} |
     {game_start: Empty } |
     {game_rejoin: { user_id: UserId }} |
+    {game_replace_bot: { user_id: UserId }} |
     {game_action: GameAction};
