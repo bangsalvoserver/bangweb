@@ -1,6 +1,6 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
-import Button from "../../Components/Button";
 import PlayerIcon from "../../Components/PlayerIcon";
+import { UserMenuItem } from "../../Components/UserMenu";
 import { getLabel, useLanguage } from "../../Locale/Registry";
 import { UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
@@ -10,16 +10,17 @@ import { getTokenSprite } from "./CardView";
 import { GameStateContext } from "./GameScene";
 import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
+import { isAlive, isGhost } from "./Model/Filters";
 import { GameTable, getPlayerPocket, Player } from "./Model/GameTable";
 import { CardId, GameOptions } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { isPlayerSelected, isPlayerSkipped, isResponse, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
+import PlayerMenu from "./PlayerMenu";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import RoleView from "./RoleView";
 import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
-import { isAlive, isGhost } from "./Model/Filters";
 
 export interface PlayerProps {
     gameOptions?: GameOptions;
@@ -117,8 +118,13 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     
     const isDisconnected = user.flags.has('disconnected');
     const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
-    const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver;
-    const canReplaceBot = isDisconnected && !isGameOver && !!handleReplaceBot;
+    const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver && handleRejoin !== undefined;
+    const canReplaceBot = isDisconnected && !isGameOver && handleReplaceBot !== undefined;
+
+    const playerMenu = (canRejoin || canReplaceBot) ? <PlayerMenu>
+        { canRejoin && <UserMenuItem onClick={handleRejoin}>{getLabel(language, 'ui','BUTTON_REJOIN')}</UserMenuItem> }
+        { canReplaceBot && <UserMenuItem onClick={handleReplaceBot}>{getLabel(language, 'ui','BUTTON_REPLACE_BOT')}</UserMenuItem> }
+    </PlayerMenu> : null;
 
     let classes = ['player-view'];
     if (isWinner) {
@@ -229,10 +235,7 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                 : <PlayerIcon name="icon-dead" extraClass={player.status.flags.has('keep_alive') ? "icon-faded" : ""} /> }
         </div>
         <div className='player-propic'>
-            <LobbyUser user={user} align='horizontal' noUserIcons>
-                { canRejoin && <Button className="button-rejoin" onClick={handleRejoin} color="green">{getLabel(language, 'ui','BUTTON_REJOIN')}</Button> }
-                { canReplaceBot && <Button className="button-replace-bot" onClick={handleReplaceBot} color="red">{getLabel(language, 'ui','BUTTON_REPLACE_BOT')}</Button> }
-            </LobbyUser>
+            <LobbyUser user={user} align='horizontal' noUserIcons>{playerMenu}</LobbyUser>
         </div>
     </div>
 }
