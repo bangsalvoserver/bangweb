@@ -12,9 +12,10 @@ import "./Style/PocketView.css";
 export interface PocketProps {
     pocketRef?: Ref<PocketRef>;
     cards: CardId[];
+    className?: string;
 }
 
-export default function PocketView({ pocketRef, cards }: PocketProps) {
+export default function PocketView({ pocketRef, cards, className }: PocketProps) {
     const { table } = useContext(GameStateContext);
     const divRef = useRef<HTMLDivElement>(null);
     const cardRefs = useMapRef<CardId, CardRef>();
@@ -25,7 +26,7 @@ export default function PocketView({ pocketRef, cards }: PocketProps) {
         getCardRect: (card: CardId) => cardRefs.get(card)?.getRect() ?? null
     }), [cardRefs]);
 
-    return <div ref={divRef} className='pocket-view'>
+    return <div ref={divRef} className={`pocket-view ${className ?? ''}`}>
         { cards.map(id => {
             if (id === CARD_SLOT_ID_FROM || id === CARD_SLOT_ID_TO) {
                 if (table.animation.type === 'move_card') {

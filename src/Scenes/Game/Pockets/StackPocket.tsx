@@ -14,10 +14,10 @@ export interface StackPocketProps {
     cards: CardId[];
     slice?: number;
     showCount?: boolean;
-    faded?: boolean;
+    className?: string;
 }
 
-export default function StackPocket({ pocketRef, cards, slice, showCount, faded }: StackPocketProps) {
+export default function StackPocket({ pocketRef, cards, slice, showCount, className }: StackPocketProps) {
     const { table } = useContext(GameStateContext);
     const { handleClickCard } = useSelectorConfirm();
 
@@ -36,10 +36,7 @@ export default function StackPocket({ pocketRef, cards, slice, showCount, faded 
     const lastCard = cards.at(-1);
     const handleClickLastCard = lastCard && lastCard > 0 ? handleClickCard(getCard(table, lastCard)) : undefined;
 
-    let className = 'stack-pocket';
-    if (faded) className += ' card-faded';
-
-    return <div className={className} onClick={handleClickLastCard}>
+    return <div className={`stack-pocket ${className ?? ''}`} onClick={handleClickLastCard}>
         <SelectorConfirmProvider selectorDispatch={null}>
             <PocketView pocketRef={position} cards={ slice ? cards.slice(-slice) : cards} />
         </SelectorConfirmProvider>
