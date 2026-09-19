@@ -205,6 +205,7 @@
     left: 50%;
     top: calc(var(--profile-pic-size) * -0.95);
     transform: translateX(-50%);
+    z-index: 2;
 }
 
 .player-view .lobby-username {
