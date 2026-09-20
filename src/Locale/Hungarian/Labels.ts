@@ -67,6 +67,7 @@ export const LABELS: LabelRegistry = {
         legends_basemod:        "Legendák (Alap játék módosításai)",
         canyondiablo:           "Canyon Diablo",
         frontier:               "Frontier",
+	    vlcata: 		        "Farkaskölykök",
         crazy_greygory:         "Őrült Greygory",
     },
 

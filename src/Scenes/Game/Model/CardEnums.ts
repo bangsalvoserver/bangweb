@@ -41,7 +41,8 @@ export type ExpansionType =
     'legends' |
     'canyondiablo' |
     'crazy_greygory' |
-    'frontier';
+    'frontier' |
+    'vlcata';
 
 export type DeckType =
     'none' |
