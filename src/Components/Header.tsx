@@ -1,17 +1,18 @@
-import { ChangeEvent, useRef } from 'react';
+import { ChangeEvent, useRef } from "react";
 import { getLabel, Language, useLanguage } from "../Locale/Registry";
 import AppSettings from '../Model/AppSettings';
 import { SceneState } from '../Model/SceneState';
 import { BangConnection } from '../Model/UseBangConnection';
 import { DEFAULT_USER_PROPIC } from '../Scenes/Lobby/LobbyUser';
-import { loadFile } from '../Utils/FileUtils';
-import { PROPIC_SIZE, serializeImage } from '../Utils/ImageSerial';
+import { loadFile } from "../Utils/FileUtils";
+import { PROPIC_SIZE, serializeImage } from "../Utils/ImageSerial";
 import useCloseOnLoseFocus from '../Utils/UseCloseOnLoseFocus';
 import { GLOBE_ICON } from './Icons/GlobeIcon';
 import { MENU_ICON } from './Icons/MenuIcon';
 import { MUTED_SOUND_ICON, SOUND_ICON } from './Icons/SoundIcon';
-import LanguageMenu from './LanguageMenu';
-import UserMenu from './UserMenu';
+import ProfileMenu from './Menu/ProfileMenu';
+import LanguageMenu from './Menu/LanguageMenu';
+import UserMenu from './Menu/UserMenu';
 
 export interface HeaderProps {
   scene: SceneState;
@@ -19,9 +20,10 @@ export interface HeaderProps {
   connection: BangConnection;
 }
 
-function Header({ scene, settings, connection }: HeaderProps) {
+export default function Header({ scene, settings, connection }: HeaderProps) {
   const inputFile = useRef<HTMLInputElement>(null);
   
+  const [isProfileMenuOpen, setIsProfileMenuOpen, propicRef] = useCloseOnLoseFocus<HTMLDivElement>();
   const [isLanguageMenuOpen, setIsLanguageMenuOpen, languageMenuRef] = useCloseOnLoseFocus<HTMLDivElement>();
   const [isMenuOpen, setIsMenuOpen, menuRef] = useCloseOnLoseFocus<HTMLDivElement>();
 
@@ -58,12 +60,16 @@ function Header({ scene, settings, connection }: HeaderProps) {
           { scene.lobbyName }
         </div>}
         <div className="flex items-center">
-          <button type="button" className="flex mr-2 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-600">
-            <div className='w-8 h-8 grid place-items-center' onClick={handleClickPropic}>
-              <img className="max-w-8 max-h-8" src={settings.propic ?? DEFAULT_USER_PROPIC} alt="" />
-            </div>
+          <div className='flex relative' ref={propicRef}>
+            <button onClick={() => setIsProfileMenuOpen(value => !value)}
+              type="button" className="flex mr-2 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-600">
+              <div className='w-8 h-8 grid place-items-center'>
+                <img className="max-w-8 max-h-8" src={settings.propic ?? DEFAULT_USER_PROPIC} alt="" />
+              </div>
+            </button>
             <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={handlePropicChange} />
-          </button>
+            { isProfileMenuOpen && <ProfileMenu settings={settings} connection={connection} handleClickPropic={handleClickPropic} closeMenu={() => setIsProfileMenuOpen(false)} /> }
+          </div>
 
           <button onClick={handleToggleSounds}
             type="button" className="inline-flex items-center p-1 ml-1 text-sm rounded-lg focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600">
@@ -78,17 +84,15 @@ function Header({ scene, settings, connection }: HeaderProps) {
             { isLanguageMenuOpen && <LanguageMenu setLanguage={handleSetLanguage} /> }
           </div>
 
-          <div className='flex relative' ref={menuRef}>
+          { (scene.type !== 'home' && scene.type !== 'loading') && <div className='flex relative' ref={menuRef}>
             <button onClick={() => setIsMenuOpen(value => !value)}
               type="button" className="inline-flex items-center p-1 ml-1 text-sm rounded-lg focus:outline-none focus:ring-2 text-gray-400 hover:bg-gray-700 focus:ring-gray-600">
               { MENU_ICON }
             </button>
             { isMenuOpen && <UserMenu scene={scene} settings={settings} connection={connection} closeMenu={() => setIsMenuOpen(false)} /> }
-          </div>
+          </div> }
         </div>
       </div>
     </nav>
   )
 }
-
-export default Header

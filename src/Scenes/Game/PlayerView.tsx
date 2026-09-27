@@ -1,7 +1,5 @@
 import { CSSProperties, Ref, RefObject, useContext, useImperativeHandle, useRef } from "react";
 import PlayerIcon from "../../Components/PlayerIcon";
-import { UserMenuItem } from "../../Components/UserMenu";
-import { getLabel, useLanguage } from "../../Locale/Registry";
 import { UserValue } from "../../Model/ServerMessage";
 import { getDivRect, Rect } from "../../Utils/Rect";
 import { useMapRef } from "../../Utils/UseMapRef";
@@ -12,7 +10,7 @@ import { PocketType, TokenType } from "./Model/CardEnums";
 import { PlayerRef, PocketRef } from "./Model/CardTracker";
 import { isAlive, isGhost } from "./Model/Filters";
 import { GameTable, getPlayerPocket, Player } from "./Model/GameTable";
-import { CardId, GameOptions } from "./Model/GameUpdate";
+import { CardId } from "./Model/GameUpdate";
 import { useSelectorConfirm } from "./Model/SelectorConfirm";
 import { isPlayerSelected, isPlayerSkipped, isResponse, isValidPlayerTarget, TargetSelector } from "./Model/TargetSelector";
 import PlayerMenu from "./PlayerMenu";
@@ -23,7 +21,6 @@ import "./Style/PlayerAnimations.css";
 import "./Style/PlayerView.css";
 
 export interface PlayerProps {
-    gameOptions?: GameOptions;
     playerRef?: Ref<PlayerRef>;
     user: UserValue;
     player: Player;
@@ -79,10 +76,9 @@ function clampedPocket(pocket: PocketRef, scrollRef: RefObject<Element>): Pocket
     };
 }
 
-export default function PlayerView({ playerRef, gameOptions, user, player, handleRejoin, handleReplaceBot }: PlayerProps) {
+export default function PlayerView({ playerRef, user, player, handleRejoin, handleReplaceBot }: PlayerProps) {
     const { table, selector } = useContext(GameStateContext);
     const { handleClickPlayer } = useSelectorConfirm();
-    const language = useLanguage();
 
     const pocketRefs = useMapRef<PocketType, PocketRef>();
     const divRef = useRef<HTMLDivElement>(null);
@@ -115,16 +111,6 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
     const isWinner = player.status.flags.has('winner');
     const isSkipTurn = player.status.flags.has('skip_turn');
     const hasDynamiteStick = player.status.flags.has('stick_of_dynamite');
-    
-    const isDisconnected = user.flags.has('disconnected');
-    const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
-    const canRejoin = !table.self_player && (isDisconnected || isRejoinableBot) && !isGameOver && handleRejoin !== undefined;
-    const canReplaceBot = isDisconnected && !isGameOver && handleReplaceBot !== undefined;
-
-    const playerMenu = (canRejoin || canReplaceBot) ? <PlayerMenu>
-        { canRejoin && <UserMenuItem onClick={handleRejoin}>{getLabel(language, 'ui','BUTTON_REJOIN')}</UserMenuItem> }
-        { canReplaceBot && <UserMenuItem onClick={handleReplaceBot}>{getLabel(language, 'ui','BUTTON_REPLACE_BOT')}</UserMenuItem> }
-    </PlayerMenu> : null;
 
     let classes = ['player-view'];
     if (isWinner) {
@@ -235,7 +221,9 @@ export default function PlayerView({ playerRef, gameOptions, user, player, handl
                 : <PlayerIcon name="icon-dead" extraClass={player.status.flags.has('keep_alive') ? "icon-faded" : ""} /> }
         </div>
         <div className='player-propic'>
-            <LobbyUser user={user} align='horizontal' noUserIcons>{playerMenu}</LobbyUser>
+            <LobbyUser user={user} align='horizontal' noUserIcons>
+                <PlayerMenu handleRejoin={handleRejoin} handleReplaceBot={handleReplaceBot} />
+            </LobbyUser>
         </div>
     </div>
 }

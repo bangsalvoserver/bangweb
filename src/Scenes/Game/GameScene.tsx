@@ -1,13 +1,13 @@
-import { RefObject, createContext, useState } from "react";
+import { createContext, RefObject, useState } from "react";
 import { createPortal } from "react-dom";
 import useEvent from "react-use-event-hook";
 import { checkMyUserFlag, LobbyState } from "../../Model/SceneState";
-import { UserId } from "../../Model/ServerMessage";
+import { UserValue } from "../../Model/ServerMessage";
 import { BangConnection, GameChannel } from "../../Model/UseBangConnection";
 import { isMobileDevice } from "../../Utils/MobileCheck";
 import { useMapRef } from "../../Utils/UseMapRef";
 import LoadingScene from "../Loading/Loading";
-import { LobbyContext, getUser } from "../Lobby/Lobby";
+import { getUser, LobbyContext } from "../Lobby/Lobby";
 import AnimationView from "./Animations/AnimationView";
 import CardOverlayView from "./CardOverlayView";
 import { getTokenSprite } from "./CardView";
@@ -23,6 +23,7 @@ import useGameState, { newGameState } from "./Model/UseGameState";
 import PlayerSlotView from "./PlayerSlotView";
 import PlayerView from "./PlayerView";
 import CardChoiceView from "./Pockets/CardChoiceView";
+import FeatsPocket from "./Pockets/FeatsPocket";
 import PocketView from "./Pockets/PocketView";
 import StackPocket from "./Pockets/StackPocket";
 import StationsView from "./Pockets/StationsView";
@@ -32,7 +33,6 @@ import StatusBar from "./StatusBar";
 import "./Style/GameScene.css";
 import "./Style/PlayerGridDesktop.css";
 import "./Style/PlayerGridMobile.css";
-import FeatsPocket from "./Pockets/FeatsPocket";
 
 export interface GameProps {
   connection: BangConnection;
@@ -59,10 +59,8 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
 
   useSendGameAction(selector, connection);
 
+  const isGameOver = table.status.flags.has('game_over');
   const isLobbyOwner = checkMyUserFlag(lobbyState, 'lobby_owner');
-
-  const handleRejoin = (user_id: UserId) => () => connection.sendMessage({ game_rejoin: { user_id }});
-  const handleReplaceBot = (user_id: UserId) => () => connection.sendMessage({ game_replace_bot: { user_id }});
 
   const tracker = useCardTracker(playerRefs, pocketRefs, tokensRef);
   const [overlayState, setCardOverlayState] = useState<OverlayState>();
@@ -145,6 +143,22 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
 
   const movingPlayers = table.animation.type === 'move_players' ? table.animation.players.map(p => p.from) : [];
 
+  const getHandleRejoin = (user: UserValue) => {
+    if (!isGameOver && !table.self_player) {
+      const isRejoinableBot = user.user_id < 0 && (gameOptions?.allow_bot_rejoin ?? false);
+
+      if (user.flags.has('disconnected') || isRejoinableBot) {
+        return () => connection.sendMessage({ game_rejoin: { user_id: user.user_id }});
+      }
+    }
+  };
+
+  const getHandleReplaceBot = (user: UserValue) => {
+    if (!isGameOver && isLobbyOwner && user.flags.has('disconnected')) {
+      return () => connection.sendMessage({ game_replace_bot: { user_id: user.user_id }});
+    }
+  };
+
   const playerViews = table.visible_players.map(player_id => {
     const player = getPlayer(table, player_id);
     const user = getUser(lobbyState.users, player.user_id);
@@ -152,9 +166,8 @@ export default function GameScene({ connection, lobbyState, gameOptions, gameCha
     return <div key={player_id} className="player-grid-item">
       {movingPlayers.includes(player_id)
         ? <PlayerSlotView playerRef={value => playerRefs.set(player_id, value)} />
-        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} gameOptions={gameOptions} user={user} player={player}
-            handleRejoin={handleRejoin(player.user_id)}
-            handleReplaceBot={isLobbyOwner ? handleReplaceBot(player.user_id) : undefined} />}
+        : <PlayerView playerRef={value => playerRefs.set(player_id, value)} user={user} player={player}
+            handleRejoin={getHandleRejoin(user)} handleReplaceBot={getHandleReplaceBot(user)} />}
     </div>;
   });
   

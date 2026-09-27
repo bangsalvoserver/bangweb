@@ -1,4 +1,4 @@
-import { getLanguages, Language, useLanguage } from "../Locale/Registry";
+import { getLanguages, Language, useLanguage } from "../../Locale/Registry";
 import { UserMenuItem } from "./UserMenu";
 
 export interface LanguageProps {

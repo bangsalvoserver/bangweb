@@ -119,6 +119,7 @@ export const LABELS: LabelRegistry = {
         BUTTON_START_GAME: "Játék indítása",
         BUTTON_SPECTATE_ON: "Csatlakozás nézőként",
         BUTTON_SPECTATE_OFF: "Csatlakozás játékosként",
+        BUTTON_CHANGE_PROPIC: "Profilkép módosítása",
         BUTTON_CLEAR_PROPIC: "Profilkép törlése",
         BUTTON_ENABLE_SOUNDS: "Hangok engedélyezése",
         BUTTON_DISABLE_SOUNDS: "Hangok némítása",

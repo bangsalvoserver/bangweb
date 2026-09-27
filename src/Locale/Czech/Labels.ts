@@ -119,6 +119,7 @@ export const LABELS: LabelRegistry = {
         BUTTON_START_GAME: "Spustit hru",
         BUTTON_SPECTATE_ON: "Připojit se jako divák",
         BUTTON_SPECTATE_OFF: "Připojit se jako hráč",
+        BUTTON_CHANGE_PROPIC: "Změnit profilovku",
         BUTTON_CLEAR_PROPIC: "Smazat profilovku",
         BUTTON_ENABLE_SOUNDS: "Zapnout zvuky",
         BUTTON_DISABLE_SOUNDS: "Vypnout zvuky",

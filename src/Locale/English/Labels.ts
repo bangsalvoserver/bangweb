@@ -119,6 +119,7 @@ export const LABELS: LabelRegistry = {
         BUTTON_START_GAME: "Start Game",
         BUTTON_SPECTATE_ON: "Join as spectator",
         BUTTON_SPECTATE_OFF: "Join as player",
+        BUTTON_CHANGE_PROPIC: "Change profile picture",
         BUTTON_CLEAR_PROPIC: "Clear profile picture",
         BUTTON_ENABLE_SOUNDS: "Enable Sounds",
         BUTTON_DISABLE_SOUNDS: "Disable Sounds",
