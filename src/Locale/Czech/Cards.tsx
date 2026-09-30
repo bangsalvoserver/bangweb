@@ -181,19 +181,19 @@ export const CARDS: CardRegistry = {
     },
     GHOST_2: {
         name: "Duch",
-        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní rolí bez schopností. Nemůže však získat či ztratit žádné životy.</>,
+        description: <>Zahraj tuto kartu na vyřazeného hráče. Tento hráč se vrací zpět do hry se svou původní rolí bez schopností. Nemůže však získat či ztratit žádné životy a hraje normálně, dokud má tuto kartu ve hře.</>,
         descriptionClass: "card-description text-smaller"
     },
     LEMAT: {
         name: "Lemat",
         hideTitle: true,
-        description: <>Během svého tahu můžeš zahrát libovolné karty jako karty <i>BANG!</i></>,
+        description: <>Během svého tahu můžeš zahrát libovolné karty z ruky jako karty <i>BANG!</i></>,
         descriptionClass: "weapon-description",
     },
     LEMAT_2: {
         name: "Lemat",
         hideTitle: true,
-        description: <>Během svého tahu můžeš zahrát libovolné karty (kromě Vedle!) jako karty <i>BANG!</i></>,
+        description: <>Během svého tahu můžeš zahrát libovolné karty z ruky (kromě Vedle!) jako karty <i>BANG!</i></>,
         descriptionClass: "weapon-description",
     },
     RATTLESNAKE: {
@@ -211,7 +211,7 @@ export const CARDS: CardRegistry = {
     },
     BANDIDOS: {
         name: "Divoká banda",
-        description: <>Každý hráč si vypere: odhoď 2 karty z ruky (1 pokud máš 1) nebo si uber 1 život.</>
+        description: <>Každý hráč si vybere: odhodí 2 karty z ruky (1, pokud má jen 1), nebo ztratí 1 život.</>
     },
     BANDIDOS_2: {
         name: "Divoká banda",
@@ -219,7 +219,7 @@ export const CARDS: CardRegistry = {
     },
     ESCAPE: {
         name: "Útěk",
-        description: <>Může být hráno mimo tah. Vyhni se efektu hnědé karty (kromě karty <i>BANG!</i>) pokud si jejím jediným cílem.</>
+        description: <>Může být hráno mimo tah. Vyhni se efektu hnědé karty (kromě karty <i>BANG!</i>), jejímž jsi jedním z cílů.</>
     },
     ESCAPE_2: {
         name: "Útěk",
@@ -232,7 +232,7 @@ export const CARDS: CardRegistry = {
     POKER: {
         name: "Poker",
         hideTitle: true,
-        description: <>Všichni ostatní hráči vyloží po 1 kartě z ruky lícem dolů a poté všechny naráz otočí. Pokud mezi nimi nené žádné A, vezmi si 2 z těchto karet do ruky a zbylé odhoď.</>,
+        description: <>Všichni ostatní hráči vyloží po 1 kartě z ruky lícem dolů a poté všechny naráz otočí. Pokud mezi nimi není žádné A, vezmi si 2 z těchto karet do ruky a zbylé odhoď.</>,
         descriptionClass: "card-description text-smaller"
     },
     BACKFIRE: {
@@ -241,11 +241,11 @@ export const CARDS: CardRegistry = {
     },
     SAVED: {
         name: "Obětavý skok",
-        description: <>Může být hráno mimo tah. Zabraň tomu že jiný hráč ztratí 1 život. Pokud přežije, lízni si 2 karty z jeho ruky nebo z balíčku (tvá volba).</>
+        description: <>Může být hráno mimo tah. Zabraň tomu, že jiný hráč ztratí 1 život. Pokud přežije, lízni si 2 karty z jeho ruky nebo z balíčku (tvá volba).</>
     },
     SAVED_2: {
         name: "Obětavý skok",
-        description: <>Zabráníš jakémukoli jinému hráči ztratit 1 život. Pokud takto zamezíš vyřazení, vezmi si 2 karty z ruky zachráněného hráče.</>,
+        description: <>Hraj pouze mimo svůj tah. Zabráníš jakémukoli jinému hráči ztratit 1 život. Pokud takto zamezíš vyřazení, vezmi si 2 karty z ruky zachráněného hráče.</>,
         descriptionClass: "card-description text-smaller"
     },
     FANNING: {
@@ -890,7 +890,7 @@ export const CARDS: CardRegistry = {
     EVELYN_SHEBANG: {
         name: "Evelyn Shebang",
         hideTitle: true,
-        description: <>V 1. fázi svého tahu si smíš dobrat o 1 kartu méně. Pokud tak učiníš, použij efekt BANG! na hráče ve vzdálenosti 1.</>,
+        description: <>Ve fázi dobírání se můžeš vzdát dobírání karet. Za každou nedobranou kartu použij efekt <i>BANG!</i> na jiného hráče v dostřelu.</>,
         descriptionClass: "character-description"
     },
     EVELYN_SHEBANG_2: {
