@@ -48,6 +48,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 checked={gameOptions.expansions?.includes(name)}
                 onChange={handleExpansionChange}
                 readOnly={readOnly}
+                disabled={readOnly}
             />
             <label htmlFor={name}>{getLabel(language, 'ExpansionType', name)}</label>
             <Tooltip group='ExpansionTooltip' name={name} />
@@ -100,12 +101,14 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                     value={value}
                     onChange={handleNumberChange}
                     readOnly={handleNumberChange === undefined}
+                    disabled={handleNumberChange === undefined}
                 />}
                 <input id={prop} type="number"
                     value={value ?? ''}
                     pattern='[0-9]{0,5}'
                     onChange={handleNumberChange}
                     readOnly={handleNumberChange === undefined}
+                    disabled={handleNumberChange === undefined}
                 />
             </div>
         </div>);
@@ -121,6 +124,7 @@ export default function GameOptionsEditor({ gameOptions, setGameOptions }: GameO
                 checked={value}
                 onChange={handleOptionChange}
                 readOnly={readOnly}
+                disabled={readOnly}
             />
             <label htmlFor={prop}>{getLabel(language, 'GameOptions', prop)}</label>
             <Tooltip group='GameOptionsTooltip' name={prop} />

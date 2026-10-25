@@ -169,10 +169,12 @@ export const LABELS: LabelRegistry = {
         GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : print game options`,
         SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : set a game option`,
         RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : reset game options`,
+        GAME_ID_DESCRIPTION: cmd => `${cmd} : print game id`,
         GIVE_CARD_DESCRIPTION: cmd => `${cmd} card_name : give yourself a card`,
         GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : print rng seed`,
         QUIT_DESCRIPTION: cmd => `${cmd} : disconnect from server`,
         
+        GAME_ID: id => `Game id: ${id}`,
         GAME_SEED: seed => `The game seed is ${seed}`,
         
         USER_JOINED_LOBBY: username => `${username} joined the lobby`,

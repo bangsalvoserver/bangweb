@@ -1,6 +1,6 @@
 import { GameOptions } from "../Scenes/Game/Model/GameUpdate";
 import { createUnionReducer, Empty } from "../Utils/UnionUtils";
-import { ChatMessage, LobbyEntered, LobbyId, LobbyUserFlag, LobbyValue, UserId, UserValue } from "./ServerMessage";
+import { ChatMessage, GameId, GameStarted, LobbyEntered, LobbyId, LobbyUserFlag, LobbyValue, UserId, UserValue } from "./ServerMessage";
 
 export interface LobbyState {
     lobbyId: LobbyId;
@@ -30,7 +30,8 @@ export type SceneState = { error?: ErrorState } & (
     { type: 'home' } |
     { type: 'loading', message: string } |
     { type: 'waiting_area', lobbies: LobbyValue[] } |
-    { type: 'lobby' | 'game', lobbyName: string, gameOptions: GameOptions, lobbyState: LobbyState }
+    { type: 'lobby', lobbyName: string, gameOptions: GameOptions, lobbyState: LobbyState } |
+    { type: 'game', lobbyName: string, gameOptions: GameOptions, lobbyState: LobbyState, gameId: GameId }
 );
 
 export type SceneUpdate =
@@ -38,7 +39,7 @@ export type SceneUpdate =
     { gotoLoading: string } |
     { gotoWaitingArea: Empty } |
     { gotoLobby: LobbyEntered } |
-    { gotoGame: Empty } |
+    { gotoGame: GameStarted } |
     { setError: ErrorState | null } |
     { updateLobbies: LobbyValue } |
     { removeLobby: LobbyId } |
@@ -85,11 +86,11 @@ export const sceneReducer = createUnionReducer<SceneState, SceneUpdate>({
                 : newLobbyState(lobby_id, user_id)
         };
     },
-    gotoGame() {
+    gotoGame({ game_id }) {
         if (this.type !== 'lobby') {
             throw new Error('Invalid scene type for gotoGame: ' + this.type);
         }
-        return { ...this, type: 'game' };
+        return { ...this, type: 'game', gameId: game_id };
     },
     setError(error) {
         return { ...this, error: error ?? undefined };

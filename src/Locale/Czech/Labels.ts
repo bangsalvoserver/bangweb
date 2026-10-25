@@ -169,10 +169,12 @@ export const LABELS: LabelRegistry = {
         GET_OPTIONS_DESCRIPTION: cmd => `${cmd} : zobrazí možnosti hry`,
         SET_OPTION_DESCRIPTION: cmd => `${cmd} name value : nastaví možnost hry`,
         RESET_OPTIONS_DESCRIPTION: cmd => `${cmd} : resetuje možnosti hry`,
+        GAME_ID_DESCRIPTION: cmd => `${cmd} : print game id`,
         GIVE_CARD_DESCRIPTION: cmd => `${cmd} card_name : vezme si kartu`,
         GET_RNG_SEED_DESCRIPTION: cmd => `${cmd} : zobrazí seed hry`,
         QUIT_DESCRIPTION: cmd => `${cmd} : odpojí se ze serveru`,
         
+        GAME_ID: id => `Game id: ${id}`,
         GAME_SEED: seed => `Seed hry je ${seed}`,
         
         USER_JOINED_LOBBY: username => `${username} vstoupil do lobby`,

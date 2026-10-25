@@ -103,8 +103,8 @@ export default function useBangConnection() {
         game_update(update) {
             gameChannel.update(update);
         },
-        game_started() {
-            sceneDispatch({ gotoGame: {} });
+        game_started({ game_id }) {
+            sceneDispatch({ gotoGame: { game_id } });
         },
     })), [connection, settings, gameChannel]);
 

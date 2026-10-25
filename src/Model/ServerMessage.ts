@@ -3,6 +3,7 @@ import { Container, ContainerKey, parseContainer } from "../Utils/ArrayUtils";
 import { Empty } from "../Utils/UnionUtils";
 
 export type LobbyId = number;
+export type GameId = number;
 export type UserId = number;
 export type Milliseconds = number;
 
@@ -73,6 +74,10 @@ export function parseChatMessage(message: ChatMessageArgs): ChatMessage {
     return { ...message, flags: parseContainer(message.flags) };
 }
 
+export interface GameStarted {
+    game_id: GameId;
+}
+
 export type ServerMessage =
     {ping: Empty} |
     {client_accepted: ClientAccepted} |
@@ -85,4 +90,4 @@ export type ServerMessage =
     {lobby_kick: Empty} |
     {lobby_chat: ChatMessageArgs} |
     {game_update: GameUpdate} |
-    {game_started: Empty};
+    {game_started: GameStarted};

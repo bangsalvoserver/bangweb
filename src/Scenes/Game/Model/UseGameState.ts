@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { Milliseconds, UserId } from "../../../Model/ServerMessage";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { GameId, Milliseconds, UserId } from "../../../Model/ServerMessage";
 import { GameChannel } from "../../../Model/UseBangConnection";
 import { createUnionDispatch, createUnionReducer } from "../../../Utils/UnionUtils";
 import { preloadAssets, usePlaySound } from "../../../Utils/UseAssets";
@@ -10,6 +10,7 @@ import { newTargetSelector, TargetSelector } from "./TargetSelector";
 import targetSelectorReducer, { SelectorUpdate } from "./TargetSelectorReducer";
 
 export interface GameState {
+    gameId: GameId;
     table: GameTable;
     selector: TargetSelector;
 }
@@ -27,16 +28,18 @@ const gameStateReducer = createUnionReducer<GameState, GameStateUpdate>({
     }
 });
 
-export function newGameState(myUserId: UserId): GameState {
+export function newGameState({ gameId, myUserId}: { gameId: GameId, myUserId: UserId }): GameState {
     return {
+        gameId,
         table: newGameTable(myUserId),
         selector: newTargetSelector()
     };
 }
 
-export default function useGameState(gameChannel: GameChannel, myUserId: UserId, muteSounds: boolean) {
+export default function useGameState(gameChannel: GameChannel, gameId: GameId, myUserId: UserId, muteSounds: boolean) {
     const [loaded, setLoaded] = useState(false);
-    const [state, stateDispatch] = useReducer(gameStateReducer, myUserId, newGameState);
+    const initArg = useMemo(() => ({ gameId, myUserId }), [gameId, myUserId]);
+    const [state, stateDispatch] = useReducer(gameStateReducer, initArg, newGameState);
 
     const [gameLogs, setGameLogs] = useState<GameString[]>([]);
     const [gameError, setGameError] = useState<GameString>();
