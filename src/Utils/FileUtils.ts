@@ -1,3 +1,23 @@
+function csvEscape(value: string): string {
+    if (/[",\r\n]/.test(value)) {
+        return '"' + value.replace(/"/g, '""') + '"';
+    }
+    return value;
+}
+
+export function downloadCsv(filename: string, rows: string[][]): void {
+    const csvContent = rows.map(row => row.map(csvEscape).join(',')).join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
 export async function loadFile(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();

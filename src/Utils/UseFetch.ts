@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export default function useFetch<T>(url: string): T | undefined {
-    const [result, setResult] = useState<T>();
+export default function useFetch<T, E = undefined>(url: string, errorValue?: E): T | E | undefined {
+    const [result, setResult] = useState<T | E>();
 
     useEffect(() => {
         let fetching = true;
@@ -12,10 +12,12 @@ export default function useFetch<T>(url: string): T | undefined {
                 if (fetching) {
                     setResult(json);
                 }
+            } else {
+                setResult(errorValue);
             }
         })();
         return () => { fetching = false; };
-    }, [url]);
+    }, [url, errorValue]);
 
     return result;
 }

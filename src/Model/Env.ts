@@ -17,8 +17,9 @@ const Env = (() => {
     const bangTrackingUrl = bangServerBaseUrl + 'tracking';
     const bangCardsUrl = bangServerBaseUrl + 'cards';
     const bangImageUrl = bangServerBaseUrl + 'image';
+    const bangGamesUrl = bangServerBaseUrl + 'games';
 
-    return { bangServerUrl, bangTrackingUrl, bangCardsUrl, bangImageUrl, language, discordLink } as const;
+    return { bangServerUrl, bangTrackingUrl, bangCardsUrl, bangImageUrl, bangGamesUrl, language, discordLink } as const;
 })();
 
 export default Env;
