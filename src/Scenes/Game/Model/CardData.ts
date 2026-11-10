@@ -1,4 +1,4 @@
-import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, MthType, TagType } from "./CardEnums";
+import { CardColor, CardRank, CardSuit, DeckType, EquipType, ExpansionType, ModifierType, TagType } from "./CardEnums";
 import { CardEffect } from "./CardTarget";
 
 export interface CardEquip {
@@ -25,12 +25,6 @@ export interface CardData {
     };
     modifier_response: {
         type: ModifierType | null
-    };
-    mth_effect: {
-        type: MthType | null
-    };
-    mth_response: {
-        type: MthType | null
     };
     color: CardColor;
     sign: CardSign;
