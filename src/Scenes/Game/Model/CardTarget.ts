@@ -97,20 +97,10 @@ export type CardTargetTypes = {
         target: CardId[],
         effect: { ncubes: number }
     },
-    select_cubes_optional: {
-        value: { cubes: Card[], max_cubes: number },
-        target: CardId[],
-        effect: { ncubes: number }
-    },
-    select_cubes_player: {
-        value: { cubes: Card[], max_cubes: number, player: Player | null },
-        target: [CardId[], PlayerId],
-        effect: PlayerTargetArgs & { ncubes: number }
-    },
     select_cubes_repeat: {
         value: { cubes: Card[], max_cubes: number },
         target: CardId[],
-        effect: { ncubes: number }
+        effect: { ncubes: number, max_repeats: number }
     },
     self_cubes: {
         value: { num_cubes: number },
